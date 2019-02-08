@@ -1,26 +1,5 @@
-import json
 import math
-from .batch_async_session import BatchAsyncSession
-from .session import Session
-
-
-def create_session(host_address, auth_handler, proxies, is_async):
-    session_type = BatchAsyncSession if is_async else Session
-    session = session_type(host_address, auth_handler=auth_handler, proxies=proxies)
-    return session
-
-
-def get_obj_from_response(response, data_key):
-    if response.content and 200 <= response.status_code < 300:
-        response_json = json.loads(response.content)
-        if "data" in response_json:
-            data = response_json["data"]
-            if data_key == "data":
-                return data
-            if data_key in data:
-                return data[data_key]
-    else:
-        return []
+from code42.sdk.sdkutil import *
 
 
 def for_each_api_item(init_response, obj_retriever, foreach_pg_size, foreach_user_callback=None, foreach_datakey=None,

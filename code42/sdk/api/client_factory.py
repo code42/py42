@@ -1,6 +1,7 @@
-from . import AuthorityAPIClient
+from .authority_api import AuthorityAPIClient
 from .handlers import V1AuthHandler, V3AuthHandler
-from .handlers.http import Session, BasicAuthHandler, util
+from .handlers.http import Session, BasicAuthHandler
+from code42.sdk.sdkutil import create_session
 
 
 def build_credentials_based_authority_client(host_address, username, password, proxies, is_async):
@@ -15,13 +16,13 @@ def build_credentials_based_authority_client(host_address, username, password, p
             response = client.get_current_user()
             if 200 <= response.status_code < 300:
                 if is_async:
-                    session = util.create_session(host_address, handler, proxies, True)
+                    session = create_session(host_address, handler, proxies, True)
 
                 if isinstance(handler, V1AuthHandler):
                     v3_handler = available_handlers[0]
                     v3_session = Session(host_address, auth_handler=v3_handler, proxies=proxies)
                     if is_async:
-                        v3_session = util.create_session(host_address, v3_handler, proxies, True)
+                        v3_session = create_session(host_address, v3_handler, proxies, True)
                     client = AuthorityAPIClient(session, v3_session)
                 else:
                     client = AuthorityAPIClient(session)

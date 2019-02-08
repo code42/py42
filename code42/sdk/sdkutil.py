@@ -1,6 +1,27 @@
+import json
 import Queue
 from threading import Lock
+from .api.handlers.http import Session, BatchAsyncSession
 from .api.handlers.http.threadutils import LogThread
+
+
+def create_session(host_address, auth_handler, proxies, is_async):
+    session_type = BatchAsyncSession if is_async else Session
+    session = session_type(host_address, auth_handler=auth_handler, proxies=proxies)
+    return session
+
+
+def get_obj_from_response(response, data_key):
+    if response.content and 200 <= response.status_code < 300:
+        response_json = json.loads(response.content)
+        if "data" in response_json:
+            data = response_json["data"]
+            if data_key == "data":
+                return data
+            if data_key in data:
+                return data[data_key]
+    else:
+        return []
 
 
 class QueuedLogger(object):

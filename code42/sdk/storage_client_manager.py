@@ -1,6 +1,7 @@
-from code42.util import common, threadutils
-from code42.api import StorageAPIClient
-from code42.util.constants import *
+from .api import StorageAPIClient
+from .api.handlers.http import util, threadutils
+
+STORAGE_CLIENTS_LIST_LOCK = "scll"
 
 
 class StorageClientManager(object):
@@ -38,7 +39,7 @@ class StorageClientManager(object):
 
     def fetch_client_via_plan_info(self, init_plan_uid, init_destination_guid, force_replace=False):
         response = self._storage_logon_client.storage_auth_token(init_plan_uid, init_destination_guid)
-        storage_logon_info = common.get_obj_from_response(response, "data")
+        storage_logon_info = util.get_obj_from_response(response, "data")
         storage_url = storage_logon_info["serverUrl"]
         return self._fetch_client(storage_url, force_replace, StorageAPIClient.create_v1_token_client,
                                   authority_api=self._storage_logon_client,

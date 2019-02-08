@@ -1,8 +1,8 @@
 import Queue
-from session import Session
-from code42.util.threadutils import LogThread
 from threading import Lock
 import time
+from .session import Session
+from .threadutils import LogThread
 
 
 class BatchAsyncSession(Session):

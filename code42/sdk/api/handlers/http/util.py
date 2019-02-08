@@ -1,6 +1,7 @@
 import json
 import math
-from code42.http import Session, BatchAsyncSession
+from .batch_async_session import BatchAsyncSession
+from .session import Session
 
 
 def create_session(host_address, auth_handler, proxies, is_async):

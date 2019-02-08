@@ -1,5 +1,5 @@
-import threading
 import requests.adapters
+import threading
 from urlparse import urlparse, urljoin
 
 

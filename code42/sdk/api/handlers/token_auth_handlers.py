@@ -1,6 +1,6 @@
-from code42.http import Session, MissingHeaderHandler
-from code42.util.constants import *
 import json
+from .constants import *
+from .http import Session, MissingHeaderHandler
 
 
 class V1AuthHandler(MissingHeaderHandler):

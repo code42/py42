@@ -1,7 +1,6 @@
-from code42.http import GenericAPIClient
-from handlers import V1AuthHandler, V3AuthHandler
-import code42.util.common as common
 import json
+from .handlers import V1AuthHandler, V3AuthHandler
+from .handlers.http import GenericAPIClient, util
 
 
 class AuthorityAPIClient(GenericAPIClient):
@@ -16,15 +15,15 @@ class AuthorityAPIClient(GenericAPIClient):
     @classmethod
     def create_v3_token_client(cls, auth_session, is_async):
         handler = V3AuthHandler(auth_session)
-        session = common.create_session(auth_session.host_address, handler, auth_session.proxies, is_async)
+        session = util.create_session(auth_session.host_address, handler, auth_session.proxies, is_async)
         return cls(session)
 
     @classmethod
     def create_v1_token_client(cls, auth_session, is_async):
         v3_handler = V3AuthHandler(auth_session)
-        v3_session = common.create_session(auth_session.host_address, v3_handler, auth_session.proxies, is_async)
+        v3_session = util.create_session(auth_session.host_address, v3_handler, auth_session.proxies, is_async)
         v1_handler = V1AuthHandler(auth_session)
-        v1_session = common.create_session(auth_session.host_address, v1_handler, auth_session.proxies, is_async)
+        v1_session = util.create_session(auth_session.host_address, v1_handler, auth_session.proxies, is_async)
         return cls(v1_session, v3_session)
 
     def wait(self):
@@ -34,7 +33,7 @@ class AuthorityAPIClient(GenericAPIClient):
 
     def for_each_user(self, active=None, org_uid=None, then=None, **kwargs):
         func = self.get_users
-        func(active=active, org_uid=org_uid, page_size=1000, then=common.for_each_api_item, obj_retriever=func,
+        func(active=active, org_uid=org_uid, page_size=1000, then=util.for_each_api_item, obj_retriever=func,
              foreach_pg_size=1000, foreach_user_callback=then, foreach_datakey="users", **kwargs)
 
     def get_users(self, active=None, username=None, email=None, user_uid=None, org_uid=None,

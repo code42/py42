@@ -1,7 +1,6 @@
-from code42.http import Session, BasicAuthHandler
-from code42.api import AuthorityAPIClient
-from code42.api.handlers import V1AuthHandler, V3AuthHandler
-from code42.util import common
+from . import AuthorityAPIClient
+from .handlers import V1AuthHandler, V3AuthHandler
+from .handlers.http import Session, BasicAuthHandler, util
 
 
 def build_credentials_based_authority_client(host_address, username, password, proxies, is_async):
@@ -16,13 +15,13 @@ def build_credentials_based_authority_client(host_address, username, password, p
             response = client.get_current_user()
             if 200 <= response.status_code < 300:
                 if is_async:
-                    session = common.create_session(host_address, handler, proxies, True)
+                    session = util.create_session(host_address, handler, proxies, True)
 
                 if isinstance(handler, V1AuthHandler):
                     v3_handler = available_handlers[0]
                     v3_session = Session(host_address, auth_handler=v3_handler, proxies=proxies)
                     if is_async:
-                        v3_session = common.create_session(host_address, v3_handler, proxies, True)
+                        v3_session = util.create_session(host_address, v3_handler, proxies, True)
                     client = AuthorityAPIClient(session, v3_session)
                 else:
                     client = AuthorityAPIClient(session)

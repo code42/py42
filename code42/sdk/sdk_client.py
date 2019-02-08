@@ -1,5 +1,5 @@
-from storage_client_manager import StorageClientManager
-from client_factory import build_credentials_based_authority_client
+from .api.client_factory import build_credentials_based_authority_client
+from .storage_client_manager import StorageClientManager
 
 
 class SDKClient(object):
@@ -23,4 +23,3 @@ class SDKClient(object):
     @property
     def storage_api(self):
         return self._storage_manager
-

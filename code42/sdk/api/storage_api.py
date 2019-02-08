@@ -1,7 +1,6 @@
-from code42.http import GenericAPIClient
-from handlers import V1StorageNodeAuthHandler
-import code42.util.common as common
 from datetime import datetime
+from .handlers.http import GenericAPIClient, util
+from .handlers import V1StorageNodeAuthHandler
 
 
 class StorageAPIClient(GenericAPIClient):
@@ -10,7 +9,7 @@ class StorageAPIClient(GenericAPIClient):
     def create_v1_token_client(cls, authority_api, init_plan_uid, init_destination_guid, storage_logon_info, is_async):
         storage_url = storage_logon_info["serverUrl"]
         auth_handler = V1StorageNodeAuthHandler(authority_api, init_plan_uid, init_destination_guid, storage_logon_info)
-        session = common.create_session(storage_url, auth_handler, authority_api.proxies, is_async)
+        session = util.create_session(storage_url, auth_handler, authority_api.proxies, is_async)
         return cls(session)
 
     def get_security_detection_events(self, plan_uid, user_uid=None, cursor=None, include_files=None,

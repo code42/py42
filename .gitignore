@@ -2,6 +2,7 @@
 !.gitignore
 !code42/
 !setup.py
+!*.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

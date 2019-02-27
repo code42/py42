@@ -51,9 +51,10 @@ class GenericClient(object):
         try:
             return self._session.request(method, uri, **kwargs)
         except Exception as e:
-            message = "Failed to get a success response from " + method + " request to " + uri + " or a request " \
-                      + "sent by one of its callbacks"
-            raise Exception(message + ", caused by: " + e.message)
+            message = "Failed to get a success response from {0} request to {1} or a request " \
+                      "sent by one of its callbacks, caused by: {2}"
+            message = message.format(method, uri, e.message)
+            raise Exception(message)
 
     def wait(self):
         if "wait" in dir(self._session):

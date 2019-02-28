@@ -1,7 +1,7 @@
 /*
 !.gitignore
-!code42/
-!setup.py
+!py42/
+!*.py
 !*.md
 
 # Byte-compiled / optimized / DLL files

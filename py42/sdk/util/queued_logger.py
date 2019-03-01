@@ -5,7 +5,6 @@ from threading import Lock, Thread
 
 class QueuedLogger(object):
     def __init__(self, logger=None):
-        assert isinstance(logger, logging.Logger)
         self._queue = Queue.Queue()
         self._logger = logger
         self.__started = False

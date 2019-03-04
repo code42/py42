@@ -9,7 +9,7 @@ of session / authentication management.
 
 - Python 2.7.x
 - [requests](http://docs.python-requests.org/en/master/)
-- Code42 Server 6.5.2+
+- Code42 Server 6.8.x+
 
 ## Configuration
 
@@ -46,7 +46,7 @@ current_user = users_client.get_current_user()
 diagnostics = admin_client.get_diagnostics()
 
 # get a list of all devices available to this user.
-devices = devices_client.get_computers()
+devices = devices_client.get_devices()
 
 # get a list of all orgs available to this user.
 orgs = orgs_client.get_orgs()

@@ -8,20 +8,103 @@ of session / authentication management.
 ## Requirements
 
 - Python 2.7.x
-- [requests](http://docs.python-requests.org/en/master/)
+- [requests](http://docs.python-requests.org/en/master/) 2.3+
 - Code42 Server 6.8.x+
+
+## Installation
+
+Run the `setup.py` script to install the py42 package and its dependencies on your system. You will likely need administrative privileges for this.
+
+```bash
+python setup.py install
+```
+
+## Hello, py42
+
+Here's a simple example to verify the installation and your server/account.
+
+Launch the Python interpreter
+
+```bash
+python
+```
+
+Import a couple essentials
+
+```python
+>>> from py42.sdk import SDK
+>>> import py42.util as util
+```
+
+Initialize the client.
+
+```python
+>>> sdk = SDK.create_using_local_account("https://console.us.code42.com", "john.doe", "password")
+```
+
+Get and print your user information.
+
+```python
+>>> response = sdk.authority.administration.users.get_current_user()
+>>> util.print_response(response)
+```
+
+You should see something like the following:
+
+```json
+{
+    "data": {
+        "username": "john.doe",
+        "orgName": "ACME Organization",
+        "userId": 123456,
+        "emailPromo": true,
+        "licenses": [],
+        "modificationDate": "2018-08-29T15:32:56.995-05:00",
+        "blocked": false,
+        "usernameIsAnEmail": true,
+        "userUid": "1234567890abcdef",
+        "userExtRef": null,
+        "email": "john.doe@acme.com",
+        "status": "Active",
+        "localAuthenticationOnly": false,
+        "orgUid": "123456789123456789",
+        "passwordReset": true,
+        "active": true,
+        "creationDate": "2012-01-16T11:25:43.545-06:00",
+        "orgType": "BUSINESS",
+        "firstName": "John",
+        "lastName": "Doe",
+        "notes": null,
+        "orgId": 123456,
+        "quotaInBytes": -1,
+        "invited": false
+    },
+    "metadata": {
+        "timestamp": "2019-03-05T06:06:31.438-06:00",
+        "params": {}
+    }
+}
+```
+
 
 ## Configuration
 
-`py42/settings.py` defines default global settings. To override them, import the settings and override values as
-necessary before creating the client. For example, to disable certificate validation in a dev environment: 
+There are a few default settings that affect the behavior of the client.
+
+| Name | Description |
+| ---- | ----------- |
+| verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.<br>Default: `True` |
+| global_exception_message_handler | Function with one parameter (str), which will be called when global exceptions are thrown. The exception message is passed to this handler. Default: `None` |
+| proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.<br>Default: `None` |
+
+To override these settings, import `py42.settings` and override values as necessary before creating the client. For example, to disable certificate validation in a dev environment: 
 
 ```python
 import py42.settings as settings
 from py42.sdk import SDK
 
 settings.verify_ssl_certs = False
-sdk = SDK.create_using_local_account("https://example.code42.com", "foo", "bar")
+sdk = SDK.create_using_local_account("https://console.us.code42.com", "my_username", "my_password")
 ```
 
 ## Usage
@@ -31,7 +114,7 @@ The SDK object opens availability to APIs across the Code42 environment, includi
 ```python
 from py42.sdk import SDK
 
-sdk = SDK.create_using_local_account("https://example.code42.com", "password", "pw")
+sdk = SDK.create_using_local_account("https://console.us.code42.com", "my_username", "my_password")
 
 # clients are organized by feature groups and accessible under the sdk object
 admin_client = sdk.authority.administration
@@ -55,3 +138,10 @@ orgs = orgs_client.get_orgs()
 storage_api = sdk.storage.fetch_client_using_plan_info(init_plan_uid="12345678", init_destination_guid="23456789")
 storage_api.security.get_security_detection_events(plan_uid="12345678", include_files=True)
 ```
+
+## Additional Resources
+
+For complete documentation on the Code42 web API that backs this SDK, here are some helpful resources:
+
+- [Introduction to the Code42 API](https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Introduction_to_the_Code42_API)
+- [Code42 API documentation viewers](https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Introduction_to_the_Code42_API/Code42_API_documentation_viewer)

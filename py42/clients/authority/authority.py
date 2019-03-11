@@ -1,4 +1,4 @@
-from py42.clients.authority import restore, administration, security, legalhold
+from py42.clients.authority import restore, administration, security, legalhold, archive
 from py42.clients.authority.authority_base import AuthorityTargetedClient
 
 
@@ -10,6 +10,7 @@ class AuthorityClient(AuthorityTargetedClient):
         self._legal_hold_client = legalhold.LegalHoldClient(self._v3_required_session)
         self._restore_client = restore.RestoreClient(default_session)
         self._security_client = security.SecurityClient(self._v3_required_session)
+        self._archive_client = archive.ArchiveClient(default_session)
 
     @property
     def administration(self):
@@ -26,3 +27,7 @@ class AuthorityClient(AuthorityTargetedClient):
     @property
     def security(self):
         return self._security_client
+
+    @property
+    def archive(self):
+        return self._archive_client

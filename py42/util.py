@@ -1,3 +1,4 @@
+from __future__ import print_function
 import json
 import math
 
@@ -45,12 +46,17 @@ def format_json(json_string):
     return json.dumps(parsed, indent=4)
 
 
-def print_response(response):
+def print_response(response, label=None):
+    if label:
+        print(label, end=' ')
     try:
-        print format_json(response.content)
+        print(format_json(response.content))
     except ValueError, e:
-        print response
+        print(response)
 
 
-def print_dict(dict_):
-    print json.dumps(dict_, indent=4)
+def print_dict(dict_, label=None):
+    if label:
+        print(label, end=' ')
+    print(json.dumps(dict_, indent=4))
+

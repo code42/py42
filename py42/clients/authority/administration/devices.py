@@ -29,6 +29,11 @@ class DeviceClient(AuthorityTargetedClient):
         uri = "/api/ComputerDeauthorization/{}".format(computer_id)
         return self.put(uri, **kwargs)
 
+    def get_device_settings(self, guid, keys=None, **kwargs):
+        uri = "/api/v4/device-setting/view"
+        params = {"guid": guid, "keys": keys}
+        return self.get(uri, params=params, **kwargs)
+
     def for_each_device(self, active=None, org_uid=None, user_uid=None, target_computer_guid=None,
                         include_backup_usage=None, include_counts=True, then=None, return_each_page=False):
 

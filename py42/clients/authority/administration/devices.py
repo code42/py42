@@ -1,3 +1,5 @@
+import json
+
 from py42 import util
 from py42.clients.authority.authority_base import AuthorityTargetedClient
 
@@ -8,25 +10,35 @@ class DeviceClient(AuthorityTargetedClient):
                     include_backup_usage=None, include_counts=True, page_num=None, page_size=None, **kwargs):
         uri = "/api/Computer"
         params = {"active": active, "blocked": blocked, "orgUid": org_uid, "userUid": user_uid,
-                  "targetComputerGuid": target_computer_guid,"incBackupUsage": include_backup_usage,
+                  "targetComputerGuid": target_computer_guid, "incBackupUsage": include_backup_usage,
                   "incCounts": include_counts, "pgNum": page_num, "pgSize": page_size}
 
         return self.get(uri, params=params, **kwargs)
 
     def get_device_by_guid(self, guid, **kwargs):
-        uri = "/api/Computer/{}?idType=guid".format(guid)
+        uri = "/api/Computer/{0}?idType=guid".format(guid)
         return self.get(uri, **kwargs)
 
     def block_device(self, computer_id, **kwargs):
-        uri = "/api/ComputerBlock/{}".format(computer_id)
+        uri = "/api/ComputerBlock/{0}".format(computer_id)
         return self.put(uri, **kwargs)
 
     def unblock_device(self, computer_id, **kwargs):
-        uri = "/api/ComputerBlock/{}".format(computer_id)
+        uri = "/api/ComputerBlock/{0}".format(computer_id)
         return self.delete(uri, **kwargs)
 
+    def deactivate_device(self, computer_id, **kwargs):
+        uri = "/api/v4/computer-deactivation/update"
+        data = {"id": computer_id}
+        return self.post(uri, data=json.dumps(data), **kwargs)
+
+    def reactivate_device(self, computer_id, **kwargs):
+        uri = "/api/v4/computer-deactivation/remove"
+        data = {"id": computer_id}
+        return self.post(uri, data=json.dumps(data), **kwargs)
+
     def deauthorize_device(self, computer_id, **kwargs):
-        uri = "/api/ComputerDeauthorization/{}".format(computer_id)
+        uri = "/api/ComputerDeauthorization/{0}".format(computer_id)
         return self.put(uri, **kwargs)
 
     def get_device_settings(self, guid, keys=None, **kwargs):

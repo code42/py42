@@ -13,7 +13,7 @@ class UserClient(AuthorityTargetedClient):
         return self.post(uri, data=json.dumps(data), **kwargs)
 
     def get_user_by_uid(self, user_uid, **kwargs):
-        uri = "/api/User/{}?idType=uid".format(user_uid)
+        uri = "/api/User/{0}?idType=uid".format(user_uid)
         return self.get(uri, **kwargs)
 
     def get_user_by_username(self, username, **kwargs):
@@ -33,13 +33,23 @@ class UserClient(AuthorityTargetedClient):
 
         return self.get(uri, params=params, **kwargs)
 
-    def block_user(self, user_id):
-        uri = "/api/UserBlock/{}".format(user_id)
-        return self.put(uri)
+    def block_user(self, user_id, **kwargs):
+        uri = "/api/UserBlock/{0}".format(user_id)
+        return self.put(uri, **kwargs)
 
-    def unblock_user(self, user_id):
-        uri = "/api/UserBlock/{}".format(user_id)
-        return self.delete(uri)
+    def unblock_user(self, user_id, **kwargs):
+        uri = "/api/UserBlock/{0}".format(user_id)
+        return self.delete(uri, **kwargs)
+
+    def deactivate_user(self, user_id, block_user=None, **kwargs):
+        uri = "/api/UserDeactivation/{0}".format(user_id)
+        data = {"blockUser": block_user}
+        return self.put(uri, data=json.dumps(data), **kwargs)
+
+    def reactivate_user(self, user_id, unblock_user=None, **kwargs):
+        uri = "/api/UserDeactivation/{0}".format(user_id)
+        params = {"unblockUser": unblock_user}
+        return self.delete(uri, params=params, **kwargs)
 
     def for_each_user(self, active=None, email=None, org_uid=None, username=None, user_uid=None, role_id=None,
                       then=None, return_each_page=False):

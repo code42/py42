@@ -25,7 +25,7 @@ class LegalHoldClient(AuthorityTargetedClient):
         return self.get(uri, **kwargs)
 
     def get_legal_hold_by_uid(self, legal_hold_uid, **kwargs):
-        uri = "/api/LegalHold/{}".format(legal_hold_uid, **kwargs)
+        uri = "/api/LegalHold/{0}".format(legal_hold_uid, **kwargs)
         return self.get(uri)
 
     def get_legal_holds(self, legal_hold_uid=None, creator_user_uid=None, active_state="ACTIVE", name=None,
@@ -52,3 +52,12 @@ class LegalHoldClient(AuthorityTargetedClient):
         uri = "/api/LegalHoldMembershipDeactivation"
         data = {"legalHoldMembershipUid": legal_hold_membership_uid}
         return self.post(uri, data=json.dumps(data), **kwargs)
+
+    def deactivate_legal_hold(self, legal_hold_uid, **kwargs):
+        uri = "/api/v4/legal-hold-deactivation/update"
+        data = {"legalHoldUid": legal_hold_uid}
+        return self.post(uri, data=json.dumps(data), **kwargs)
+
+    def reactivate_legal_hold(self, legal_hold_uid, **kwargs):
+        uri = "/api/LegalHoldReactivation/{0}".format(legal_hold_uid)
+        return self.put(uri, **kwargs)

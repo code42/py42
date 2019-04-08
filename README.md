@@ -134,7 +134,7 @@ devices = devices_client.get_devices()
 # get a list of all orgs available to this user.
 orgs = orgs_client.get_orgs()
 
-# get access to a storage node's APIs.
+_storage
 storage_api = sdk.storage.fetch_client_using_plan_info(init_plan_uid="12345678", init_destination_guid="23456789")
 storage_api.security.get_security_detection_events(plan_uid="12345678", include_files=True)
 ```

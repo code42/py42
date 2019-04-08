@@ -1,6 +1,14 @@
 from __future__ import print_function
+
 import json
-import math
+
+
+def wrap_func(func, existing_func):
+    def wrapped(*args, **kwargs):
+        if existing_func is not None:
+            existing_func(*args, **kwargs)
+        func(*args, **kwargs)
+    return wrapped
 
 
 def get_obj_from_response(response, data_key):
@@ -16,31 +24,6 @@ def get_obj_from_response(response, data_key):
         return []
 
 
-def for_each_api_item(init_response, obj_retriever, foreach_page_size, foreach_user_callback=None, foreach_datakey=None,
-                      foreach_return_each_page=False, **kwargs):
-    total_count = get_obj_from_response(init_response, "totalCount")
-    _foreach_response(init_response, foreach_user_callback, foreach_datakey, foreach_return_each_page, **kwargs)
-    pages = int(math.ceil(float(total_count) / float(foreach_page_size)))
-    if pages > 1:
-        for i in range(1, pages):  # skip the first page since we already handled that above
-            page_num = i + 1
-
-            def get_page(response):
-                _foreach_response(response, foreach_user_callback, foreach_datakey,
-                                  foreach_return_each_page, **kwargs)
-
-            obj_retriever(page_num=page_num, page_size=foreach_page_size, then=get_page)
-
-
-def _foreach_response(response, foreach_user_callback, foreach_datakey, foreach_return_each_page, **kwargs):
-    items = get_obj_from_response(response, foreach_datakey)
-    if foreach_return_each_page:
-        foreach_user_callback(items, **kwargs)
-    else:
-        for item in items:
-            foreach_user_callback(item, **kwargs)
-
-
 def format_json(json_string):
     parsed = json.loads(json_string)
     return json.dumps(parsed, indent=4)
@@ -51,7 +34,7 @@ def print_response(response, label=None):
         print(label, end=' ')
     try:
         print(format_json(response.content))
-    except ValueError, e:
+    except ValueError:
         print(response)
 
 
@@ -59,4 +42,3 @@ def print_dict(dict_, label=None):
     if label:
         print(label, end=' ')
     print(json.dumps(dict_, indent=4))
-

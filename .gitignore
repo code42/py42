@@ -1,8 +1,5 @@
-/*
-!.gitignore
-!py42/
-!*.py
-!*.md
+# IDE files
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

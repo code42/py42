@@ -39,7 +39,7 @@ class QueuedLogger(object):
                 if self._logger is not None:
                     self._logger.log(log_item["level"], log_item["message"])
                 else:
-                    print log_item["message"]
+                    print(log_item["message"])
             finally:
                 self._queue.task_done()
 

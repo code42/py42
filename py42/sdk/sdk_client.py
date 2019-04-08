@@ -53,7 +53,7 @@ class SDK(object):
 
     @property
     def restore(self):
-        return self._authority_dependencies.restore_client
+        return self._sdk_dependencies.restore_module
 
     @property
     def security(self):

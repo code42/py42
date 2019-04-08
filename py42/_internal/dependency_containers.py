@@ -1,11 +1,13 @@
 from py42._internal.clients import administration, archive, devices, legal_hold, orgs, restore, security, users
 from py42._internal.modules import security as sec_module
+from py42._internal.modules import restore as restore_module
 from py42._internal.base_classes import BaseArchiveLocatorFactory, BaseAuthStrategy
 from py42._internal.archive_locator_factories import C42AuthorityArchiveLocatorFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.auth_strategies import C42AuthorityAuthStrategy
 from py42._internal.generic_session import Session
 from py42._internal.storage_client_factory import StorageClientFactory
+from py42._internal.modules.restore import FileDownloader
 
 
 class AuthorityDependencies(object):
@@ -81,14 +83,18 @@ class SDKDependencies(object):
 
     def __init__(self, authority_dependencies, storage_dependencies):
         # type: (AuthorityDependencies, StorageDependencies) -> None
+        archive_client = authority_dependencies.archive_client
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
 
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
 
+        downloader = FileDownloader(archive_client, storage_client_factory)
+
         # modules (feature sets that combine info from multiple clients)
         self.security_module = sec_module.SecurityModule(security_client, storage_client_factory)
+        self.restore_module = restore_module.RestoreModule(archive_client, storage_client_factory, downloader)
 
     @classmethod
     def create_c42_api_dependencies(cls, root_session, is_async=False):

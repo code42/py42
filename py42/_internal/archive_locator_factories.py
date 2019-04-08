@@ -29,6 +29,8 @@ class C42AuthorityArchiveLocatorFactory(BaseArchiveLocatorFactory):
             if destination_guid is None:
                 # take the first destination guid we find
                 destination_list = util.get_obj_from_response(response, "backupUsage")
+                if not destination_list:
+                    raise Exception("No destinations found for device guid: {0}".format(device_guid))
                 destination_guid = destination_list[0]["targetComputerGuid"]
             if user_id is None:
                 # use the userId that we found to be the owner of the device

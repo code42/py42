@@ -5,6 +5,7 @@ from urlparse import urljoin, urlparse
 import requests.adapters
 
 import py42.settings as settings
+import py42.util
 
 
 class Session(requests.Session):
@@ -50,6 +51,9 @@ class Session(requests.Session):
             while times_try < self._max_tries:
                 self._add_auth_if_missing()
                 try:
+
+                    # self._log_request(method, url)
+
                     response = super(Session, self).request(method, url,
                                                             params=params,
                                                             data=data,
@@ -124,3 +128,6 @@ class Session(requests.Session):
                 self._exception_message_handler(exception_trace)
             # always raise unhandled exceptions when using a synchronous client
             raise exception
+
+    def _log_request(self, method, url):
+        print("{0}\t{1}".format(method, url))

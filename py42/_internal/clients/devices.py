@@ -15,9 +15,10 @@ class DeviceClient(BaseAuthorityClient):
 
         return self._default_session.get(uri, params=params, **kwargs)
 
-    def get_device_by_guid(self, guid, **kwargs):
+    def get_device_by_guid(self, guid, include_backup_usage=None, **kwargs):
         uri = "/api/Computer/{0}?idType=guid".format(guid)
-        return self._default_session.get(uri, **kwargs)
+        params = {"incBackupUsage": include_backup_usage}
+        return self._default_session.get(uri, params=params, **kwargs)
 
     def block_device(self, computer_id, **kwargs):
         uri = "/api/ComputerBlock/{0}".format(computer_id)

@@ -47,15 +47,15 @@ class FileDownloader(object):
         storage_client = self._storage_client_factory.create_backup_client(device_guid=device_guid,
                                                                            destination_guid=dest_guid)
 
-        return self._restore_file(storage_client, device_guid, dest_guid, data_key_token, file_path, save_as_dir,
+        return self._restore_file(storage_client, device_guid, data_key_token, file_path, save_as_dir,
                                   save_as_filename)
 
-    def _restore_file(self, storage_client, device_guid, dest_guid, data_key_token, file_path, save_as_dir,
+    def _restore_file(self, storage_client, device_guid, data_key_token, file_path, save_as_dir,
                       save_as_filename):
 
         session_id = self._create_web_restore_session(storage_client.restore, device_guid, data_key_token)
 
-        file_selection = self._build_file_selection(storage_client.archive, session_id, device_guid, dest_guid,
+        file_selection = self._build_file_selection(storage_client.archive, session_id, device_guid,
                                                     file_path)
 
         save_as_path = _get_writeable_save_as_path(save_as_dir, _get_filename(file_selection), save_as_filename)
@@ -93,12 +93,12 @@ class FileDownloader(object):
             for chunk in response.iter_content(chunk_size=128):
                 fd.write(chunk)
 
-    def _build_file_selection(self, archive_client, session_id, device_guid, dest_guid, file_path):
-        file_metadata = self._get_metadata_for_file(archive_client, session_id, device_guid, dest_guid, file_path)
+    def _build_file_selection(self, archive_client, session_id, device_guid, file_path):
+        file_metadata = self._get_metadata_for_file(archive_client, session_id, device_guid, file_path)
         file_size_data = self._get_file_size(archive_client, device_guid, file_metadata['id'])
         return _to_file_selection(file_metadata, file_size_data)
 
-    def _get_metadata_for_file(self, archive_client, session_id, device_guid, dest_guid, file_path):
+    def _get_metadata_for_file(self, archive_client, session_id, device_guid, file_path):
         file_metadata = self._get_file_via_walking_tree(archive_client, session_id, device_guid, file_path)
         if not file_metadata:
             raise Exception("File not found in archive for device {0} at path {1}"

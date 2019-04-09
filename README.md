@@ -45,7 +45,7 @@ Initialize the client.
 Get and print your user information.
 
 ```python
->>> response = sdk.authority.administration.users.get_current_user()
+>>> response = sdk.users.get_current_user()
 >>> util.print_response(response)
 ```
 
@@ -117,26 +117,21 @@ from py42.sdk import SDK
 sdk = SDK.create_using_local_account("https://console.us.code42.com", "my_username", "my_password")
 
 # clients are organized by feature groups and accessible under the sdk object
-admin_client = sdk.authority.administration
-devices_client = sdk.authority.administration.devices
-orgs_client = sdk.authority.administration.orgs
-users_client = sdk.authority.administration.users
 
 # get information about the current user.
-current_user = users_client.get_current_user() 
+current_user = sdk.users.get_current_user() 
 
 # get server diagnostic info.
-diagnostics = admin_client.get_diagnostics()
+diagnostics = sdk.administration.get_diagnostics()
 
 # get a list of all devices available to this user.
-devices = devices_client.get_devices()
+devices = sdk.devices.get_devices()
 
 # get a list of all orgs available to this user.
-orgs = orgs_client.get_orgs()
+orgs = sdk.orgs.get_orgs()
 
-_storage
-storage_api = sdk.storage.fetch_client_using_plan_info(init_plan_uid="12345678", init_destination_guid="23456789")
-storage_api.security.get_security_detection_events(plan_uid="12345678", include_files=True)
+# save a copy of a file from an archive this user has access to into the current working directory.
+sdk.restore.download_from_backup("/full/path/to/file.txt", "1234567890")
 ```
 
 ## Additional Resources

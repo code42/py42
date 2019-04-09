@@ -23,17 +23,19 @@ class C42AuthorityArchiveLocatorFactory(BaseArchiveLocatorFactory):
                                                                    node_guid=destination.get("nodeGuid")))
         return locator_list
 
-    def create_backup_archive_locator(self, device_guid, user_id=None, destination_guid=None, *args, **kwargs):
-        if user_id is None or destination_guid is None:
-            response = self._device_client.get_device_by_guid(device_guid, include_backup_usage=True, force_sync=True)
+    def create_backup_archive_locator(self, device_guid, destination_guid=None, *args, **kwargs):
+        try:
             if destination_guid is None:
-                # take the first destination guid we find
-                destination_list = util.get_obj_from_response(response, "backupUsage")
-                if not destination_list:
-                    raise Exception("No destinations found for device guid: {0}".format(device_guid))
-                destination_guid = destination_list[0]["targetComputerGuid"]
-            if user_id is None:
-                # use the userId that we found to be the owner of the device
-                user_id = util.get_obj_from_response(response, "userId")
+                response = self._device_client.get_device_by_guid(device_guid, include_backup_usage=True, force_sync=True)
+                if destination_guid is None:
+                    # take the first destination guid we find
+                    destination_list = util.get_obj_from_response(response, "backupUsage")
+                    if not destination_list:
+                        raise Exception("No destinations found for device guid: {0}".format(device_guid))
+                    destination_guid = destination_list[0]["targetComputerGuid"]
+        except Exception as e:
+            message = "An error occurred while trying to determine a destination for device guid: {0}," \
+                      " caused by: {1}".format(device_guid, e.message)
+            raise Exception(message)
 
-        return C42APILoginTokenProvider(self._auth_session, user_id, device_guid, destination_guid)
+        return C42APILoginTokenProvider(self._auth_session, "my", device_guid, destination_guid)

@@ -140,7 +140,7 @@ class FileDownloader(object):
         return None
 
     @staticmethod
-    def _get_children(self, archive_client, session_id, device_guid, node_id=None):
+    def _get_children(archive_client, session_id, device_guid, node_id=None):
         children_response = archive_client.get_archive_tree_node(session_id, device_guid, node_id)
         return util.get_obj_from_response(children_response, 'data')
 

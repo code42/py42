@@ -5,7 +5,6 @@ from urlparse import urljoin, urlparse
 import requests.adapters
 
 import py42.settings as settings
-import py42.util
 
 
 class Session(requests.Session):

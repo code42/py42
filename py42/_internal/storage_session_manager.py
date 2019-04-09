@@ -1,7 +1,7 @@
 from threading import Lock
 
-from py42._internal.generic_session import Session
 from py42._internal.base_classes import BaseAuthStrategy
+from py42._internal.generic_session import Session
 
 
 class StorageSessionManager(object):

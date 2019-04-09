@@ -1,5 +1,6 @@
-import py42.util as util
 import math
+
+import py42.util as util
 
 
 def for_each_api_item(init_response, obj_retriever, foreach_page_size, foreach_user_callback=None, foreach_datakey=None,

@@ -1,6 +1,6 @@
-from py42._internal.login_providers import C42ApiV1TokenProvider, C42ApiV3TokenProvider
-from py42._internal.base_classes import BaseAuthStrategy
 import py42._internal.session_factory as session_factory
+from py42._internal.base_classes import BaseAuthStrategy
+from py42._internal.login_providers import C42ApiV1TokenProvider, C42ApiV3TokenProvider
 
 
 class C42AuthorityAuthStrategy(BaseAuthStrategy):

@@ -1,13 +1,12 @@
-from py42._internal.clients import administration, archive, devices, legal_hold, orgs, restore, security, users
-from py42._internal.modules import security as sec_module
-from py42._internal.modules import restore as restore_module
-from py42._internal.base_classes import BaseArchiveLocatorFactory, BaseAuthStrategy
 from py42._internal.archive_locator_factories import C42AuthorityArchiveLocatorFactory
-from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.auth_strategies import C42AuthorityAuthStrategy
+from py42._internal.base_classes import BaseArchiveLocatorFactory, BaseAuthStrategy
+from py42._internal.clients import administration, archive, devices, legal_hold, orgs, restore, security, users
 from py42._internal.generic_session import Session
-from py42._internal.storage_client_factory import StorageClientFactory
+from py42._internal.modules import restore as restore_module, security as sec_module
 from py42._internal.modules.restore import FileDownloader
+from py42._internal.storage_client_factory import StorageClientFactory
+from py42._internal.storage_session_manager import StorageSessionManager
 
 
 class AuthorityDependencies(object):
@@ -53,8 +52,7 @@ class AuthorityDependencies(object):
         try:
             response = session.get(test_uri, force_sync=True)
             return 200 <= response.status_code < 300
-        except Exception as e:
-            print e
+        except Exception:
             return False
 
     @staticmethod

@@ -1,7 +1,6 @@
 import os
 import posixpath
 import time
-
 from collections import namedtuple
 
 import py42.util as util

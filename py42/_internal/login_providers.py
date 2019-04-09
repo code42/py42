@@ -1,5 +1,5 @@
-import json
 import base64
+import json
 
 from py42._internal.generic_handling import LoginProvider
 

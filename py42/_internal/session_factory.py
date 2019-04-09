@@ -1,6 +1,6 @@
+from py42._internal.generic_async_session import AsyncSession
 from py42._internal.generic_handling import AuthHandler, CompositeModifier, CookieModifier, HeaderModifier
 from py42._internal.generic_session import Session
-from py42._internal.generic_async_session import AsyncSession
 from py42._internal.login_providers import BasicAuthProvider
 
 

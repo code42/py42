@@ -1,7 +1,7 @@
 import json
 
-from py42._internal.clients import util
 from py42._internal.base_classes import BaseAuthorityClient
+from py42._internal.clients import util
 
 
 class UserClient(BaseAuthorityClient):
@@ -51,6 +51,11 @@ class UserClient(BaseAuthorityClient):
         uri = "/api/UserDeactivation/{0}".format(user_id)
         params = {"unblockUser": unblock_user}
         return self._default_session.delete(uri, params=params, **kwargs)
+
+    def change_user_org_assignment(self, user_id, org_id, **kwargs):
+        uri = "/api/UserMoveProcess"
+        data = {"userId": user_id, "parentOrgId": org_id}
+        return self._default_session.post(uri, data=json.dumps(data), **kwargs)
 
     def for_each_user(self, active=None, email=None, org_uid=None, role_id=None,
                       then=None, return_each_page=False):

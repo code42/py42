@@ -1,5 +1,5 @@
-from py42._internal.base_classes import BaseAuthorityClient
 import py42.util as util
+from py42._internal.base_classes import BaseAuthorityClient
 
 
 def get_normalized_security_event_plan_info(security_client, user_uid, **kwargs):

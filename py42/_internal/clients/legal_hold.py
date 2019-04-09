@@ -29,10 +29,10 @@ class LegalHoldClient(BaseAuthorityClient):
         uri = "/api/LegalHold/{0}".format(legal_hold_uid, **kwargs)
         return self._default_session.get(uri)
 
-    def get_legal_holds(self, legal_hold_uid=None, creator_user_uid=None, active_state="ACTIVE", name=None,
+    def get_legal_holds(self, creator_user_uid=None, active_state="ACTIVE", name=None,
                         hold_ext_ref=None, page_num=None, page_size=None, **kwargs):
         uri = "/api/LegalHold"
-        params = {"legalHoldUid": legal_hold_uid, "creatorUserUid": creator_user_uid, "activeState": active_state,
+        params = {"creatorUserUid": creator_user_uid, "activeState": active_state,
                   "name": name, "holdExtRef": hold_ext_ref, "pgNum": page_num, "pgSize": page_size}
         return self._default_session.get(uri, params=params, **kwargs)
 

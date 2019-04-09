@@ -1,7 +1,7 @@
 import json
 
-from py42._internal.clients import util
 from py42._internal.base_classes import BaseAuthorityClient
+from py42._internal.clients import util
 
 
 class DeviceClient(BaseAuthorityClient):

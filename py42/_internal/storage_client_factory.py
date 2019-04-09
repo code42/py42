@@ -1,6 +1,6 @@
-from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.base_classes import BaseArchiveLocatorFactory
 from py42._internal.clients.storage.storage import StorageClient
+from py42._internal.storage_session_manager import StorageSessionManager
 
 
 class StorageClientFactory(object):

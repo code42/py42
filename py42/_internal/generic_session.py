@@ -4,7 +4,10 @@ from urlparse import urljoin, urlparse
 
 import requests.adapters
 
+import py42.debug as debug
+import py42.debug_level as debug_level
 import py42.settings as settings
+import py42.util as util
 
 
 class Session(requests.Session):
@@ -51,7 +54,8 @@ class Session(requests.Session):
                 self._add_auth_if_missing()
                 try:
 
-                    # self._log_request(method, url)
+                    if debug.will_print_for(debug_level.INFO):
+                        self._print_request(method, url, params=params, data=data)
 
                     response = super(Session, self).request(method, url,
                                                             params=params,
@@ -128,5 +132,13 @@ class Session(requests.Session):
             # always raise unhandled exceptions when using a synchronous client
             raise exception
 
-    def _log_request(self, method, url):
-        print("{0}\t{1}".format(method, url))
+    def _print_request(self, method, url, params=None, data=None):
+        print("{0}{1}".format(str(method).ljust(8), url))
+        if debug.will_print_for(debug_level.TRACE):
+            if self.headers:
+                util.print_dict(self.headers, "  headers")
+        if debug.will_print_for(debug_level.DEBUG):
+            if params:
+                util.print_dict(params, "  params")
+            if data:
+                util.print_dict(data, "  data")

@@ -1,5 +1,10 @@
 # Contributing to the Code42 Python SDK
 
+## Changes
+
+Document all notable changes in CHANGELOG.md per principles and guidelines at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+
 ## Tests
 
 We use the [pytest](https://docs.pytest.org/) test framework.

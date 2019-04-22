@@ -1,6 +1,24 @@
 # Contributing to the Code42 Python SDK
 
+## General
+
+### Do
+
+* Use positional argument specifiers in `str.format()`
+
+## Wrapping web APIs
+
+### Do
+
+* Name the method starting with a verb
+* Specify required arguments as positional arguments
+* Specify optional arguments as keyword arguments
+* Include `**kwargs` as the last parameter
+* Use the newest supported implementation (e.g. v4 instead of v1, even if a related API only has a v1 implementation)
+
 ## Changes
+
+### Do
 
 Document all notable changes in CHANGELOG.md per principles and guidelines at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 

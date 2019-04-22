@@ -7,12 +7,13 @@ class C42AuthorityAuthStrategy(BaseAuthStrategy):
 
     def create_v1_session(self, parent_session, *args, **kwargs):
         provider = C42ApiV1TokenProvider(parent_session)
-        return session_factory.create_c42api_v1_session(provider, is_async=self._is_async)
+        return session_factory.create_c42api_v1_session(self._session_impl, provider, is_async=self._is_async)
 
     def create_jwt_session(self, parent_session, *args, **kwargs):
         provider = C42ApiV3TokenProvider(parent_session)
-        return session_factory.create_c42api_v3_session(provider, is_async=self._is_async)
+        return session_factory.create_c42api_v3_session(self._session_impl, provider, is_async=self._is_async)
 
     def create_storage_session(self, c42_api_login_provider, *args, **kwargs):
-        tmp = session_factory.create_c42api_tmp_storage_session(c42_api_login_provider, is_async=self._is_async)
+        tmp = session_factory.create_c42api_tmp_storage_session(self._session_impl, c42_api_login_provider,
+                                                                is_async=self._is_async)
         return self.create_v1_session(tmp)

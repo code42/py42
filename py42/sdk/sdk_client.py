@@ -1,3 +1,5 @@
+from requests import Session
+
 import py42._internal.session_factory as session_factory
 from py42._internal.dependency_containers import SDKDependencies
 
@@ -5,7 +7,7 @@ from py42._internal.dependency_containers import SDKDependencies
 class SDK(object):
 
     def __init__(self, sdk_dependencies, is_async=False):
-        # type: (SDKDependencies) -> None
+        # type: (SDKDependencies, bool) -> None
         self._is_async = is_async
         self._sdk_dependencies = sdk_dependencies
         self._authority_dependencies = sdk_dependencies.authority_dependencies
@@ -13,8 +15,10 @@ class SDK(object):
 
     @classmethod
     def create_using_local_account(cls, host_address, username, password, is_async=False):
-        basic_auth_session = session_factory.create_basic_auth_session(host_address, username, password)
-        sdk_dependencies = SDKDependencies.create_c42_api_dependencies(basic_auth_session, is_async=is_async)
+        session_impl = Session
+        basic_auth_session = session_factory.create_basic_auth_session(session_impl, host_address, username, password)
+        sdk_dependencies = SDKDependencies.create_c42_api_dependencies(session_impl, basic_auth_session,
+                                                                       is_async=is_async)
         return cls(sdk_dependencies, is_async=is_async)
 
     def wait(self):
@@ -33,7 +37,7 @@ class SDK(object):
 
     @property
     def archive(self):
-        return self._authority_dependencies.archive_client
+        return self._sdk_dependencies.archive_module
 
     @property
     def users(self):
@@ -50,10 +54,6 @@ class SDK(object):
     @property
     def legal_hold(self):
         return self._authority_dependencies.legal_hold_client
-
-    @property
-    def restore(self):
-        return self._sdk_dependencies.restore_module
 
     @property
     def security(self):

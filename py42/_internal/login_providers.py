@@ -1,7 +1,7 @@
 import base64
 import json
 
-from py42._internal.generic_handling import LoginProvider
+from py42._internal.auth_handling import LoginProvider
 
 V3_AUTH = "v3_user_token"
 V3_COOKIE_NAME = "C42_JWT_API_TOKEN"
@@ -97,7 +97,7 @@ class C42APITmpAuthProvider(LoginProvider):
         pass
 
     def get_secret_value(self, force_refresh=False):
-        if force_refresh:
+        if force_refresh or self._cached_info is None:
             self.get_login_info()
 
         return self._cached_info["loginToken"]

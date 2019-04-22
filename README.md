@@ -131,7 +131,7 @@ devices = sdk.devices.get_devices()
 orgs = sdk.orgs.get_orgs()
 
 # save a copy of a file from an archive this user has access to into the current working directory.
-sdk.restore.download_from_backup("/full/path/to/file.txt", "1234567890")
+sdk.archive.download_from_backup("/full/path/to/file.txt", "1234567890")
 ```
 
 ## Additional Resources

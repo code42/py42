@@ -1,10 +1,11 @@
+from py42._internal.archive_access import ArchiveAccessorManager
 from py42._internal.archive_locator_factories import C42AuthorityArchiveLocatorFactory
 from py42._internal.auth_strategies import C42AuthorityAuthStrategy
 from py42._internal.base_classes import BaseArchiveLocatorFactory, BaseAuthStrategy
-from py42._internal.clients import administration, archive, devices, legal_hold, orgs, restore, security, users
-from py42._internal.generic_session import Session
-from py42._internal.modules import restore as restore_module, security as sec_module
-from py42._internal.modules.restore import FileDownloader
+from py42._internal.clients import administration, archive, devices, legal_hold, orgs, security, users
+from py42._internal.modules import archive as archive_module
+from py42._internal.modules import security as sec_module
+from py42._internal.session import Py42Session
 from py42._internal.storage_client_factory import StorageClientFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 
@@ -12,7 +13,7 @@ from py42._internal.storage_session_manager import StorageSessionManager
 class AuthorityDependencies(object):
 
     def __init__(self, auth_strategy, root_session, is_async=False):
-        # type: (BaseAuthStrategy, Session, bool) -> None
+        # type: (BaseAuthStrategy, Py42Session, bool) -> None
         self._set_sessions(auth_strategy, root_session, is_async=is_async)
         default_session = self.default_session
         v3_required_session = self.v3_required_session
@@ -24,11 +25,10 @@ class AuthorityDependencies(object):
         self.org_client = orgs.OrgClient(default_session, v3_required_session)
         self.legal_hold_client = legal_hold.LegalHoldClient(default_session, v3_required_session)
         self.archive_client = archive.ArchiveClient(default_session, v3_required_session)
-        self.restore_client = restore.RestoreClient(default_session, v3_required_session)
         self.security_client = security.SecurityClient(default_session, v3_required_session)
 
     def _set_sessions(self, auth_strategy, root_session, is_async=False):
-        # type: (BaseAuthStrategy, Session, bool) -> None
+        # type: (BaseAuthStrategy, Py42Session, bool) -> None
 
         v3_session = auth_strategy.create_jwt_session(root_session)
         v1_session = auth_strategy.create_v1_session(root_session)
@@ -57,8 +57,7 @@ class AuthorityDependencies(object):
 
     @staticmethod
     def _select_first_valid_session_idx(session_list, test_uri):
-        for idx in range(len(session_list)):
-            session = session_list[idx - 1]
+        for idx, session in enumerate(session_list):
             if AuthorityDependencies.verify_session_supported(session, test_uri):
                 return idx
 
@@ -88,17 +87,17 @@ class SDKDependencies(object):
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
 
-        downloader = FileDownloader(archive_client, storage_client_factory)
+        archive_accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
 
         # modules (feature sets that combine info from multiple clients)
+        self.archive_module = archive_module.ArchiveModule(archive_accessor_manager, archive_client)
         self.security_module = sec_module.SecurityModule(security_client, storage_client_factory)
-        self.restore_module = restore_module.RestoreModule(archive_client, storage_client_factory, downloader)
 
     @classmethod
-    def create_c42_api_dependencies(cls, root_session, is_async=False):
-        # type: (Session, bool) -> SDKDependencies
+    def create_c42_api_dependencies(cls, session_impl, root_session, is_async=False):
+        # type: (type, Py42Session, bool) -> SDKDependencies
         # this configuration is for using c42-hosted endpoints to get v3 or v1 authentication tokens.
-        auth_strategy = C42AuthorityAuthStrategy(is_async=is_async)
+        auth_strategy = C42AuthorityAuthStrategy(session_impl, is_async=is_async)
         authority_dependencies = AuthorityDependencies(auth_strategy, root_session)
         default_session = authority_dependencies.default_session
         security_client = authority_dependencies.security_client

@@ -2,7 +2,7 @@ import py42.debug_level
 
 proxies = None
 
-global_exception_message_handler = None
+global_exception_message_receiver = None
 
 # Controls whether we verify the server's certificate.
 # True, False, or a path to a CA bundle to use.

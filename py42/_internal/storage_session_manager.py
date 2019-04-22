@@ -1,7 +1,7 @@
 from threading import Lock
 
 from py42._internal.base_classes import BaseAuthStrategy
-from py42._internal.generic_session import Session
+from py42._internal.session import Py42Session
 
 
 class StorageSessionManager(object):
@@ -14,7 +14,7 @@ class StorageSessionManager(object):
         self._list_update_lock = Lock()
 
     def using(self, storage_url):
-        # type: (str) -> Session
+        # type: (str) -> Py42Session
         return self._session_list.get(storage_url.lower())
 
     def get_storage_session(self, archive_locator, force_replace=False):

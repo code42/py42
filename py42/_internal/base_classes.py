@@ -10,7 +10,8 @@ class BaseStorageClient(object):
 
 
 class BaseAuthStrategy(object):
-    def __init__(self, is_async=False):
+    def __init__(self, session_impl, is_async=False):
+        self._session_impl = session_impl
         self._is_async = is_async
 
     def create_v1_session(self, *args, **kwargs):

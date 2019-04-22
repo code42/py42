@@ -3,13 +3,13 @@ import traceback
 from Queue import LifoQueue
 from threading import Lock, Thread
 
-from .generic_session import Session
+from .session import Py42Session
 
 
-class AsyncSession(Session):
-    def __init__(self, host_address, auth_handler=None, concurrent_threads=4, max_requests_per_second=36):
+class Py42AsyncSession(Py42Session):
+    def __init__(self, session, host_address, auth_handler=None, concurrent_threads=4, max_requests_per_second=36):
 
-        super(AsyncSession, self).__init__(host_address, auth_handler=auth_handler)
+        super(Py42AsyncSession, self).__init__(session, host_address, auth_handler=auth_handler)
         # Lifo makes it so that callbacks happen sooner after being called instead of being placed all the way
         # to the back of the queue and having to wait again.
         self._request_queue = LifoQueue()
@@ -28,11 +28,11 @@ class AsyncSession(Session):
         if not force_sync:
             self._request_queue.put({"method": method, "path": url, "args": args, "kwargs": kwargs})
         else:
-            return super(AsyncSession, self).request(method, url, *args, **kwargs)
+            return super(Py42AsyncSession, self).request(method, url, *args, **kwargs)
 
     def _process_queue(self):
         new_request = self._request_queue.get
-        send = super(AsyncSession, self).request
+        send = super(Py42AsyncSession, self).request
         # To avoid having calls dropped because of rate limits, we can tweak the number of concurrent threads and
         # the max requests allowed per second and intentionally throttle dispatching requests if
         # they are completing too quickly.
@@ -59,8 +59,8 @@ class AsyncSession(Session):
         try:
             if request_handler is not None:
                 request_handler(exception)
-            elif self._exception_message_handler is not None:
-                self._exception_message_handler(exception_trace)
+            elif self._process_exception_message is not None:
+                self._process_exception_message(exception_trace)
         except:
             # handle errors that occur in the user-supplied exception handlers.
             trace = traceback.format_exc()

@@ -12,16 +12,22 @@ def none_enabled():
 @pytest.fixture
 def info_enabled():
     settings.debug_level = debug_level.INFO
+    yield info_enabled
+    settings.debug_level = debug_level.NONE
 
 
 @pytest.fixture
 def debug_enabled():
     settings.debug_level = debug_level.DEBUG
+    yield debug_enabled
+    settings.debug_level = debug_level.NONE
 
 
 @pytest.fixture
 def trace_enabled():
     settings.debug_level = debug_level.TRACE
+    yield trace_enabled
+    settings.debug_level = debug_level.NONE
 
 
 @pytest.mark.parametrize("level", [debug_level.NONE], ids=["NONE"])

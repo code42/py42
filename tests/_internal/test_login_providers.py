@@ -2,8 +2,11 @@ import pytest
 import base64
 import json
 
+from requests import Response
+
+from py42._internal.session import Py42Session
 from py42._internal.login_providers import BasicAuthProvider, C42ApiV1TokenProvider, C42ApiV3TokenProvider,\
-    C42APILoginTokenProvider, C42APIStorageAuthTokenProvider
+    C42APILoginTokenProvider, C42APIStorageAuthTokenProvider, FileEventLoginProvider
 
 from tests.shared_test_utils import successful_request, MockPy42Session
 
@@ -20,6 +23,10 @@ TMP_LOGIN_TOKEN = "tmplogintokenstring"
 STORAGE_HOST_ADDRESS = "https://testsstorage.code42.com"
 
 NODE_GUID = "nodeguid"
+
+STS_BASE_URL = "https://sts-east.us.code42.com"
+
+SERVER_ENV_EXCEPTION_MESSAGE = "Internal error in /api/ServerEnv"
 
 
 @successful_request
@@ -66,6 +73,50 @@ def storage_auth_token_provider():
     auth_session = MockPy42Session(HOST_ADDRESS, request_handler=tmp_login_token_request_handler)
     provider = C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid", node_guid=NODE_GUID)
     return provider
+
+
+@pytest.fixture
+def file_event_login_provider_with_sts(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+
+    def mock_get(uri, **kwargs):
+        if uri == "/api/ServerEnv":
+            response = mocker.MagicMock(spec=Response)
+            response.content = json.dumps({"stsBaseUrl": STS_BASE_URL})
+            response.status_code = 200
+        elif uri == "/c42api/v3/auth/jwt":
+            response = mocker.MagicMock(spec=Response)
+            response.content = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
+            response.status_code = 200
+        return response
+
+    auth_session.get.side_effect = mock_get
+    return FileEventLoginProvider(auth_session)
+
+
+@pytest.fixture
+def file_event_login_provider_no_sts(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+
+    def mock_get(uri):
+        response = mocker.MagicMock(spec=Response)
+        response.content = json.dumps({})
+        response.status_code = 200
+        return response
+
+    auth_session.get.side_effect = mock_get
+    return FileEventLoginProvider(auth_session)
+
+
+@pytest.fixture
+def file_event_login_provider_server_env_exception(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+
+    def mock_get(uri):
+        raise Exception(SERVER_ENV_EXCEPTION_MESSAGE)
+
+    auth_session.get.side_effect = mock_get
+    return FileEventLoginProvider(auth_session)
 
 
 @pytest.fixture(scope="module")
@@ -152,6 +203,31 @@ def test_storage_auth_token_provider_returns_tmp_login_token(storage_auth_token_
 def test_storage_auth_token_provider_node_guid_matches_supplied(storage_auth_token_provider):
     # type: (C42APIStorageAuthTokenProvider) -> None
     assert storage_auth_token_provider.node_guid == NODE_GUID
+
+
+class TestFileEventLoginProvider(object):
+
+    def test_get_target_host_address_given_sts_base_url_returns_fs_base_url(self, file_event_login_provider_with_sts):
+        host_address = file_event_login_provider_with_sts.get_target_host_address()
+        assert host_address == "https://forensicsearch-east.us.code42.com"
+
+    def test_get_target_host_address_given_no_sts_base_url_raises_exception(self, file_event_login_provider_no_sts):
+        with pytest.raises(Exception) as e:
+            file_event_login_provider_no_sts.get_target_host_address()
+        expected_message = "stsBaseUrl not found. Cannot determine file event service host address."
+        assert e.value.args[0] == expected_message
+
+    def test_get_target_host_address_given_exception_retrieving_server_env_raises_exception(self,
+                                                                        file_event_login_provider_server_env_exception):
+        with pytest.raises(Exception) as e:
+            file_event_login_provider_server_env_exception.get_target_host_address()
+        expected_message = "An error occurred while requesting server environment information, caused by {0}"\
+            .format(SERVER_ENV_EXCEPTION_MESSAGE)
+        assert e.value.args[0] == expected_message
+
+    def test_get_secret_value_given_auth_session_returns_v3_token(self, file_event_login_provider_with_sts):
+        secret = file_event_login_provider_with_sts.get_secret_value()
+        assert secret == V3_TOKEN
 
 
 @pytest.mark.parametrize("tmp_token_provider", ["login_token_provider", "storage_auth_token_provider"],

@@ -1,37 +1,38 @@
 from py42._internal.archive_access import ArchiveAccessorManager
-from py42._internal.archive_locator_factories import C42AuthorityArchiveLocatorFactory
-from py42._internal.auth_strategies import C42AuthorityAuthStrategy
-from py42._internal.base_classes import BaseArchiveLocatorFactory, BaseAuthStrategy
-from py42._internal.clients import administration, archive, devices, legal_hold, orgs, security, users
+from py42._internal.login_provider_factories import C42AuthorityArchiveLocatorFactory
+from py42._internal.base_classes import BaseArchiveLocatorFactory, BaseSessionFactory
 from py42._internal.modules import archive as archive_module
 from py42._internal.modules import security as sec_module
 from py42._internal.session import Py42Session
-from py42._internal.storage_client_factory import StorageClientFactory
-from py42._internal.storage_session_manager import StorageSessionManager
+from py42._internal.login_provider_factories import FileEventLoginProviderFactory
+from py42._internal.client_factories import AuthorityClientFactory, StorageClientFactory, FileEventClientFactory
+from py42._internal.session_manager import SessionManager
 
 
 class AuthorityDependencies(object):
 
-    def __init__(self, auth_strategy, root_session, is_async=False):
-        # type: (BaseAuthStrategy, Py42Session, bool) -> None
-        self._set_sessions(auth_strategy, root_session, is_async=is_async)
+    def __init__(self, session_factory, root_session, is_async=False):
+        # type: (BaseSessionFactory, Py42Session, bool) -> None
+        self._set_sessions(session_factory, root_session, is_async=is_async)
         default_session = self.default_session
         v3_required_session = self.v3_required_session
 
         # authority clients
-        self.administration_client = administration.AdministrationClient(default_session, v3_required_session)
-        self.user_client = users.UserClient(default_session, v3_required_session)
-        self.device_client = devices.DeviceClient(default_session, v3_required_session)
-        self.org_client = orgs.OrgClient(default_session, v3_required_session)
-        self.legal_hold_client = legal_hold.LegalHoldClient(default_session, v3_required_session)
-        self.archive_client = archive.ArchiveClient(default_session, v3_required_session)
-        self.security_client = security.SecurityClient(default_session, v3_required_session)
+        authority_client_factory = AuthorityClientFactory(default_session, v3_required_session)
+        self.administration_client = authority_client_factory.create_administration_client()
+        self.user_client = authority_client_factory.create_user_client()
+        self.device_client = authority_client_factory.create_device_client()
+        self.org_client = authority_client_factory.create_org_client()
+        self.legal_hold_client = authority_client_factory.create_legal_hold_client()
+        self.archive_client = authority_client_factory.create_archive_client()
+        self.security_client = authority_client_factory.create_security_client()
 
-    def _set_sessions(self, auth_strategy, root_session, is_async=False):
-        # type: (BaseAuthStrategy, Py42Session, bool) -> None
+    def _set_sessions(self, session_factory, root_session, is_async=False):
+        # type: (BaseSessionFactory, Py42Session, bool) -> None
 
-        v3_session = auth_strategy.create_jwt_session(root_session)
-        v1_session = auth_strategy.create_v1_session(root_session)
+        self.root_session = root_session
+        v3_session = session_factory.create_jwt_session(root_session)
+        v1_session = session_factory.create_v1_session(root_session)
         sessions = [v3_session, v1_session]
         selected_session_idx = self._select_first_valid_session_idx(sessions, "/api/User/my")
 
@@ -45,7 +46,7 @@ class AuthorityDependencies(object):
 
         self.default_session = selected_session
         self.v3_required_session = v3_required_session
-        self.storage_session_manager = StorageSessionManager(auth_strategy, is_async=is_async)
+        self.session_manager = SessionManager(session_factory, is_async=is_async)
 
     @staticmethod
     def verify_session_supported(session, test_uri):
@@ -72,42 +73,53 @@ class AuthorityDependencies(object):
 class StorageDependencies(object):
     def __init__(self, authority_dependencies, archive_locator_factory):
         # type: (AuthorityDependencies, BaseArchiveLocatorFactory) -> None
-        storage_session_manager = authority_dependencies.storage_session_manager
-        self.storage_client_factory = StorageClientFactory(storage_session_manager, archive_locator_factory)
+        self.storage_client_factory = StorageClientFactory(authority_dependencies.session_manager,
+                                                           archive_locator_factory)
+
+
+class FileEventDependencies(object):
+    def __init__(self, authority_dependencies):
+        # type: (AuthorityDependencies) -> None
+        file_event_login_provider_factory = FileEventLoginProviderFactory(authority_dependencies.root_session)
+        self.file_event_client_factory = FileEventClientFactory(authority_dependencies.session_manager,
+                                                                file_event_login_provider_factory)
 
 
 class SDKDependencies(object):
 
-    def __init__(self, authority_dependencies, storage_dependencies):
-        # type: (AuthorityDependencies, StorageDependencies) -> None
+    def __init__(self, authority_dependencies, storage_dependencies, file_event_dependencies):
+        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies) -> None
         archive_client = authority_dependencies.archive_client
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
+        file_event_client_factory = file_event_dependencies.file_event_client_factory
 
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
+        self.file_event_dependencies = file_event_dependencies
 
         archive_accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
 
         # modules (feature sets that combine info from multiple clients)
         self.archive_module = archive_module.ArchiveModule(archive_accessor_manager, archive_client)
-        self.security_module = sec_module.SecurityModule(security_client, storage_client_factory)
+        self.security_module = sec_module.SecurityModule(security_client, storage_client_factory,
+                                                         file_event_client_factory)
 
     @classmethod
-    def create_c42_api_dependencies(cls, session_impl, root_session, is_async=False):
-        # type: (type, Py42Session, bool) -> SDKDependencies
+    def create_c42_api_dependencies(cls, session_factory, root_session, is_async=False):
+        # type: (type, BaseSessionFactory, Py42Session, bool) -> SDKDependencies
         # this configuration is for using c42-hosted endpoints to get v3 or v1 authentication tokens.
-        auth_strategy = C42AuthorityAuthStrategy(session_impl, is_async=is_async)
-        authority_dependencies = AuthorityDependencies(auth_strategy, root_session)
+        authority_dependencies = AuthorityDependencies(session_factory, root_session)
         default_session = authority_dependencies.default_session
         security_client = authority_dependencies.security_client
         device_client = authority_dependencies.device_client
 
         archive_locator_factory = C42AuthorityArchiveLocatorFactory(default_session, security_client, device_client)
-
         storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
 
-        return cls(authority_dependencies, storage_dependencies)
+        file_event_dependencies = FileEventDependencies(authority_dependencies)
+
+        return cls(authority_dependencies, storage_dependencies, file_event_dependencies)
 
 
 

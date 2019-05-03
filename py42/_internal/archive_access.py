@@ -4,7 +4,7 @@ from collections import namedtuple
 
 import py42.util as util
 from py42._internal.clients.archive import ArchiveClient
-from py42._internal.storage_client_factory import StorageClientFactory
+from py42._internal.client_factories import StorageClientFactory
 
 FileSelection = namedtuple("FileSelection", "path_set, num_files, num_dirs, size")
 

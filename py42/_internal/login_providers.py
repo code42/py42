@@ -140,3 +140,27 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
             message = "An error occurred while requesting a StorageAuthToken, caused by {0}"
             message = message.format(e.message)
             raise Exception(message)
+
+
+class FileEventLoginProvider(C42ApiV3TokenProvider):
+
+    def get_target_host_address(self):
+        # The forensic search base URL can be derived from the STS base URL, which is available from the
+        # /api/ServerEnv resource.
+        uri = "/api/ServerEnv"
+        try:
+            response = self._auth_session.get(uri)
+        except Exception as e:
+            message = "An error occurred while requesting server environment information, caused by {0}"
+            message = message.format(e)
+            raise Exception(message)
+
+        sts_base_url = None
+        if response.content:
+            response_json = json.loads(response.content)
+            if "stsBaseUrl" in response_json:
+                sts_base_url = response_json["stsBaseUrl"]
+        if not sts_base_url:
+            raise Exception("stsBaseUrl not found. Cannot determine file event service host address.")
+        forensic_search_url = str(sts_base_url).replace("sts", "forensicsearch")
+        return forensic_search_url

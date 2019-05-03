@@ -3,6 +3,7 @@ from py42._internal.base_classes import BaseArchiveLocatorFactory
 from py42._internal.clients.devices import DeviceClient
 from py42._internal.clients.security import SecurityClient, get_normalized_security_event_plan_info
 from py42._internal.login_providers import C42APILoginTokenProvider, C42APIStorageAuthTokenProvider
+from py42._internal.login_providers import FileEventLoginProvider
 
 
 class C42AuthorityArchiveLocatorFactory(BaseArchiveLocatorFactory):
@@ -39,3 +40,12 @@ class C42AuthorityArchiveLocatorFactory(BaseArchiveLocatorFactory):
             raise Exception(message)
 
         return C42APILoginTokenProvider(self._auth_session, "my", device_guid, destination_guid)
+
+
+class FileEventLoginProviderFactory(object):
+
+    def __init__(self, auth_session):
+        self._auth_session = auth_session
+
+    def create_file_event_login_provider(self):
+        return FileEventLoginProvider(self._auth_session)

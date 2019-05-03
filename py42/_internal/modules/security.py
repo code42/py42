@@ -1,13 +1,14 @@
 import py42.util as util
 from py42._internal.clients.security import SecurityClient
-from py42._internal.storage_client_factory import StorageClientFactory
+from py42._internal.client_factories import StorageClientFactory, FileEventClientFactory
 
 
 class SecurityModule(object):
-    def __init__(self, security_client, storage_client_factory):
-        # type: (SecurityClient, StorageClientFactory) -> SecurityModule
+    def __init__(self, security_client, storage_client_factory, file_event_client_factory):
+        # type: (SecurityClient, StorageClientFactory, FileEventClientFactory) -> None
         self._security_client = security_client
         self._storage_client_factory = storage_client_factory
+        self._file_event_client_factory = file_event_client_factory
 
     def get_security_event_locations(self, user_uid, catch=None, **kwargs):
         storage_clients = self._storage_client_factory.create_security_plan_clients(user_uid=user_uid, catch=catch)
@@ -30,6 +31,16 @@ class SecurityModule(object):
                                                  include_files=include_files, event_types=event_types,
                                                  min_timestamp=min_timestamp, max_timestamp=max_timestamp,
                                                  summarize=True, **kwargs)
+
+    def search_file_events(self, query, then=None, catch=None, **kwargs):
+        """Search for file events
+        :param query: raw JSON query. See https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API
+        :param then: function to call with the result
+        :param catch: function to call with an exception of one occurrs
+        :return: list of file events as JSON
+        """
+        file_event_client = self._file_event_client_factory.create_file_event_client()
+        return file_event_client.search_file_events(query, then=then, catch=catch, **kwargs)
 
     def _return_first_successful_result(self, func_list, catch=None, *args, **kwargs):
         if len(func_list):

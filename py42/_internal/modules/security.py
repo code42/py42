@@ -34,7 +34,7 @@ class SecurityModule(object):
 
     def search_file_events(self, query, then=None, catch=None, **kwargs):
         """Search for file events
-        :param query: raw JSON query. See https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API
+        :param query: raw JSON query or FileEventQuery object. See https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API
         :param then: function to call with the result
         :param catch: function to call with an exception of one occurrs
         :return: list of file events as JSON

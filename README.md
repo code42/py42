@@ -96,6 +96,7 @@ There are a few default settings that affect the behavior of the client.
 | verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.<br>Default: `True` |
 | global_exception_message_handler | Function with one parameter (str), which will be called when global exceptions are thrown. The exception message is passed to this handler. Default: `None` |
 | proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.<br>Default: `None` |
+| debug_level | Controls print statements for debugging |
 
 To override these settings, import `py42.settings` and override values as necessary before creating the client. For example, to disable certificate validation in a dev environment: 
 
@@ -132,6 +133,11 @@ orgs = sdk.orgs.get_orgs()
 
 # save a copy of a file from an archive this user has access to into the current working directory.
 sdk.archive.download_from_backup("/full/path/to/file.txt", "1234567890")
+
+# search file events
+from py42.sdk.file_event_query import *
+query = FileEventQuery.all(MD5.eq("e804d1eb229298b04522c5504b8131f0"))
+file_events = sdk.security.search_file_events(query)
 ```
 
 ## Additional Resources

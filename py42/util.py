@@ -4,6 +4,8 @@ import json
 import os
 import posixpath
 
+from requests import Response
+
 
 def wrap_func(func, existing_func):
     def wrapped(*args, **kwargs):
@@ -72,3 +74,20 @@ def build_path(filename, directory=None, default_dir=posixpath.curdir):
     if not directory:
         directory = default_dir
     return posixpath.join(directory, filename)
+
+
+def save_content_to_disk(response, file_path):
+    # type: (Response, str) -> None
+    """Save content of Response to disk at the given path
+    :param response: Response object with content
+    :param file_path: path to which the content will be written to disk
+    :return: None
+    """
+    with open(file_path, "wb") as fd:
+        for chunk in response.iter_content(chunk_size=128):
+            fd.write(chunk)
+
+
+def filter_out_none(d):
+    # type: (dict) -> dict
+    return {key: d[key] for key in d if d[key] is not None}

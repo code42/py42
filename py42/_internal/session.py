@@ -1,6 +1,6 @@
 import traceback
 from urlparse import urljoin, urlparse
-
+import json as json_lib
 import requests.adapters
 
 import py42.debug as debug
@@ -81,6 +81,10 @@ class Py42Session(object):
         try:
             url = urljoin(self._host_address, url)
             auth_needed = False
+
+            if json is not None:
+                data = json_lib.dumps(util.filter_out_none(json))
+
             while tries < max_tries:
                 if self._auth_handler is not None:
                     auth_needed = self._auth_handler.try_authorize(self)

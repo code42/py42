@@ -98,7 +98,7 @@ def file_event_login_provider_with_sts(mocker):
 def file_event_login_provider_no_sts(mocker):
     auth_session = mocker.MagicMock(spec=Py42Session)
 
-    def mock_get(uri):
+    def mock_get(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
         response.content = json.dumps({})
         response.status_code = 200
@@ -112,7 +112,7 @@ def file_event_login_provider_no_sts(mocker):
 def file_event_login_provider_server_env_exception(mocker):
     auth_session = mocker.MagicMock(spec=Py42Session)
 
-    def mock_get(uri):
+    def mock_get(uri, **kwargs):
         raise Exception(SERVER_ENV_EXCEPTION_MESSAGE)
 
     auth_session.get.side_effect = mock_get

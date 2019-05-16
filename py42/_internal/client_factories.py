@@ -3,7 +3,7 @@ from py42._internal.clients import administration, archive, devices, legal_hold,
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.storage.storage import StorageClient
 from py42._internal.login_provider_factories import FileEventLoginProviderFactory
-from py42._internal.session_manager import SessionManager
+from py42._internal.session_manager import SessionsManager
 
 
 class AuthorityClientFactory(object):
@@ -36,7 +36,7 @@ class AuthorityClientFactory(object):
 
 class StorageClientFactory(object):
     def __init__(self, session_manager, login_provider_factory):
-        # type: (SessionManager, BaseArchiveLocatorFactory) -> None
+        # type: (SessionsManager, BaseArchiveLocatorFactory) -> None
         self._session_manager = session_manager
         self._login_provider_factory = login_provider_factory
 
@@ -54,7 +54,7 @@ class StorageClientFactory(object):
 
 class FileEventClientFactory(object):
     def __init__(self, session_manager, login_provider_factory):
-        # type: (SessionManager, FileEventLoginProviderFactory) -> None
+        # type: (SessionsManager, FileEventLoginProviderFactory) -> None
         self._session_manager = session_manager
         self._login_provider_factory = login_provider_factory
 

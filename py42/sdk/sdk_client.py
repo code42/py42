@@ -20,15 +20,14 @@ class SDK(object):
         session_factory = SessionFactory(session_impl, SessionModifierFactory(), AuthHandlerFactory(),
                                          is_async=is_async)
         basic_auth_session = session_factory.create_basic_auth_session(host_address, username, password)
-        sdk_dependencies = SDKDependencies.create_c42_api_dependencies(session_factory, basic_auth_session,
-                                                                       is_async=is_async)
+        sdk_dependencies = SDKDependencies.create_c42_api_dependencies(session_factory, basic_auth_session)
         return cls(sdk_dependencies, is_async=is_async)
 
     def wait(self):
         if self._is_async:
             self._authority_dependencies.default_session.wait()
             self._authority_dependencies.v3_required_session.wait()
-            self._authority_dependencies.session_manager.wait_all()
+            self._authority_dependencies.sessions_manager.wait_all()
 
     @property
     def storage(self):

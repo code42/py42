@@ -149,7 +149,7 @@ class FileEventLoginProvider(C42ApiV3TokenProvider):
         # /api/ServerEnv resource.
         uri = "/api/ServerEnv"
         try:
-            response = self._auth_session.get(uri)
+            response = self._auth_session.get(uri, force_sync=True)
         except Exception as e:
             message = "An error occurred while requesting server environment information, caused by {0}"
             message = message.format(e)

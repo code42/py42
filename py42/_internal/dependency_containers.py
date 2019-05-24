@@ -6,7 +6,7 @@ from py42._internal.modules import security as sec_module
 from py42._internal.session import Py42Session
 from py42._internal.login_provider_factories import FileEventLoginProviderFactory
 from py42._internal.client_factories import AuthorityClientFactory, StorageClientFactory, FileEventClientFactory
-from py42._internal.session_manager import SessionManager, SessionsManager
+from py42._internal.session_manager import SessionsManager, StorageSessionManager, FileEventSessionManager
 
 
 class AuthorityDependencies(object):
@@ -46,8 +46,8 @@ class AuthorityDependencies(object):
         self.default_session = selected_session
         self.v3_required_session = v3_required_session
 
-        storage_session_manager = SessionManager(session_factory.create_storage_session)
-        file_event_session_manager = SessionManager(session_factory.create_file_event_session)
+        storage_session_manager = StorageSessionManager(session_factory)
+        file_event_session_manager = FileEventSessionManager(session_factory)
 
         self.sessions_manager = SessionsManager(storage_session_manager, file_event_session_manager)
 

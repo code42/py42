@@ -99,6 +99,7 @@ class ArchiveAccessor(object):
         return self._storage_archive_client.get_archive_tree_node(self._archive_session_id,
                                                                   self._device_guid,
                                                                   file_id=node_id,
+                                                                  show_deleted=True,
                                                                   then=then, **kwargs)
 
     @staticmethod
@@ -140,6 +141,7 @@ class RestoreJobManager(object):
                                                                    file_selection.num_files,
                                                                    file_selection.num_dirs,
                                                                    file_selection.size,
+                                                                   show_deleted=True,
                                                                    then=then, **kwargs)
 
     @staticmethod

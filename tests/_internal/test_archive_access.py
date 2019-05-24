@@ -247,7 +247,7 @@ class GetArchiveTreeNodeResponses(object):
                     "id": "f63aeee85943809ead0cb11cdc773625"
                 }, 
                 {
-                    "deleted": false, 
+                    "deleted": true, 
                     "lastModified": "2019-04-12T12:57:43.000-05:00", 
                     "filename": "terminator-genisys.jpg", 
                     "lastBackup": "2019-04-12T13:05:10.087-05:00", 
@@ -656,6 +656,16 @@ class TestArchiveAccessor(object):
         expected_arg = posixpath.join(SAVE_AS_DIR, SAVE_AS_FILENAME)
         verify_path_writeable.assert_called_with(expected_arg)
 
+    def test_download_from_backup_uses_show_deleted_param_on_get_archive_tree_node(self, mocker, storage_archive_client,
+                                                                                   restore_job_manager):
+        mock_walking_to_downloads_folder(mocker, storage_archive_client)
+        archive_accessor = ArchiveAccessor(DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client,
+                                           restore_job_manager)
+        archive_accessor.download_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+        storage_archive_client.get_archive_tree_node.assert_called_with(WEB_RESTORE_SESSION_ID, DEVICE_GUID,
+                                                                        file_id=mocker.ANY, show_deleted=True,
+                                                                        then=mocker.ANY)
+
 
 class TestRestoreJobManager(object):
 
@@ -683,6 +693,7 @@ class TestRestoreJobManager(object):
                                                                          file_selection.num_files,
                                                                          file_selection.num_dirs,
                                                                          file_selection.size,
+                                                                         show_deleted=True,
                                                                          then=mocker.ANY)
 
     def test_restore_to_local_path_polls_job_status_until_job_is_complete(self, mocker, storage_archive_client,

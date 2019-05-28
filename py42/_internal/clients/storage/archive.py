@@ -30,8 +30,7 @@ class StorageArchiveClient(BaseStorageClient):
 
     def create_web_restore_session(self, device_guid, data_key_token=None, private_password=None, encryption_key=None,
                                    **kwargs):
-        """
-        Create a web restore session.
+        """Creates a web restore session.
         See https://console.us.code42.com/apidocviewer/#WebRestoreSession
         """
         uri = "/api/WebRestoreSession"
@@ -42,8 +41,7 @@ class StorageArchiveClient(BaseStorageClient):
     def submit_web_restore_job(self, guid, web_restore_session_id, path_set, num_files, num_dirs, size, zip_result=None,
                                expire_job=None, show_deleted=None, restore_full_path=None, timestamp=None,
                                exceptions=None, backup_set_id=None, **kwargs):
-        """
-        Submit a web restore job.
+        """Submits a web restore job.
         See https://console.us.code42.com/apidocviewer/#WebRestoreJob-post
         """
         uri = "/api/WebRestoreJob"

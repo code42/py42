@@ -1,5 +1,15 @@
 # Contributing to the Code42 Python SDK
 
+## Development environment
+
+Install py42 and its development dependencies. The "-e" option installs py42 in ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs). 
+
+```bash
+pip install -e .[dev]
+```
+
+If you are using Z shell (zsh), you may need to escape the brackets.
+
 ## General
 
 ### Do
@@ -42,7 +52,7 @@ Put actual before expected values in assert statements. Pytest assumes this orde
 ```python
 a = 4
 assert a % 2 == 0
-``` 
+```
 
 Use failure messages in assertions
 
@@ -59,3 +69,19 @@ Example:
 ```python
 def test_add_one_and_one_equals_two():
 ```
+
+## Documentation
+
+Public functions, classes, and methods should have docstrings. Follow [Google's format](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).
+
+### Generating documentation
+
+py42 uses [Sphinx](http://www.sphinx-doc.org/) to generate documentation.
+
+To build the documentation, run the following from the `docs` directory:
+
+```bash
+make html
+```
+
+To view the resulting documentation, open `docs/_build/html/index.html`.

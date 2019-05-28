@@ -78,10 +78,15 @@ def build_path(filename, directory=None, default_dir=posixpath.curdir):
 
 def save_content_to_disk(response, file_path):
     # type: (Response, str) -> None
-    """Save content of Response to disk at the given path
-    :param response: Response object with content
-    :param file_path: path to which the content will be written to disk
-    :return: None
+    """Saves the content of a Response to disk at the given path
+
+    Args:
+        response: a Response object with content
+        file_path: absolute path to which the content will be written
+
+    Raises:
+        IOError: if the current user does not have permission to write to file_path or an IO error occurs trying
+            to write the content to the file
     """
     with open(file_path, "wb") as fd:
         for chunk in response.iter_content(chunk_size=128):

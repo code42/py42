@@ -10,4 +10,9 @@ setup(
     license="MIT",
     setup_requires=["pytest-runner==4.4"],
     tests_require=["pytest==4.4.0", "pytest-mock==1.10.3"],
+    extras_require={
+        "dev": [
+            "sphinx==1.8.5"
+        ]
+    }
 )

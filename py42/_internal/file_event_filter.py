@@ -5,34 +5,44 @@ def create_file_event_filter(term, operator, value):
     return FileEventFilter(term, operator, value)
 
 
-def create_eq_filter_group(term, value_list):
+def create_eq_filter_group(term, value):
+    filter_list = [create_file_event_filter(term, "IS", value)]
+    return create_filter_group(filter_list, "AND")
+
+
+def create_is_in_filter_group(term, value_list):
     filter_list = [create_file_event_filter(term, "IS", value) for value in value_list]
     return create_filter_group(filter_list, "OR" if len(filter_list) > 1 else "AND")
 
 
-def create_not_eq_filter_group(term, value_list):
+def create_not_in_filter_group(term, value_list):
     filter_list = [create_file_event_filter(term, "IS_NOT", value) for value in value_list]
-    return create_filter_group(filter_list)
+    return create_filter_group(filter_list, "AND")
+
+
+def create_not_eq_filter_group(term, value):
+    filter_list = [create_file_event_filter(term, "IS_NOT", value)]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_on_or_after_filter_group(term, value):
     filter_list = [create_file_event_filter(term, "ON_OR_AFTER", value)]
-    return create_filter_group(filter_list)
+    return create_filter_group(filter_list, "AND")
 
 
 def create_on_or_before_filter_group(term, value):
     filter_list = [create_file_event_filter(term, "ON_OR_BEFORE", value)]
-    return create_filter_group(filter_list)
+    return create_filter_group(filter_list, "AND")
 
 
 def create_in_range_filter_group(term, start_value, end_value):
     filter_list = [create_file_event_filter(term, "ON_OR_AFTER", start_value),
                    create_file_event_filter(term, "ON_OR_BEFORE", end_value)]
-    return create_filter_group(filter_list)
+    return create_filter_group(filter_list, "AND")
 
 
-def create_filter_group(file_event_filter_list, filter_clause="AND"):
-    return FilterGroup(file_event_filter_list, filter_clause=filter_clause)
+def create_filter_group(file_event_filter_list, filter_clause):
+    return FilterGroup(file_event_filter_list, filter_clause)
 
 
 class _FileEventFilterStringField(object):
@@ -41,22 +51,22 @@ class _FileEventFilterStringField(object):
     @classmethod
     def eq(cls, value):
         # type: (str) -> FilterGroup
-        return create_eq_filter_group(cls._term, [value])
+        return create_eq_filter_group(cls._term, value)
 
     @classmethod
     def not_eq(cls, value):
         # type: (str) -> FilterGroup
-        return create_not_eq_filter_group(cls._term, [value])
+        return create_not_eq_filter_group(cls._term, value)
 
     @classmethod
     def is_in(cls, value_list):
         # type: (iter[str]) -> FilterGroup
-        return create_eq_filter_group(cls._term, value_list)
+        return create_is_in_filter_group(cls._term, value_list)
 
     @classmethod
     def not_in(cls, value_list):
         # type: (iter[str]) -> FilterGroup
-        return create_not_eq_filter_group(cls._term, value_list)
+        return create_not_in_filter_group(cls._term, value_list)
 
 
 class _FileEventFilterTimestampField(object):

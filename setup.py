@@ -1,8 +1,18 @@
+
+
+import os
 from setuptools import find_packages, setup
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+about = {}
+with open(os.path.join(here, 'py42', '__version__.py'), 'r') as f:
+    exec(f.read(), about)
+
 
 setup(
     name="py42",
-    version="0.1.3",
+    version=about["__version__"],
     description="Official Code42 API Client",
     packages=find_packages(include=["py42", "py42.*"]),
     python_requires=">=2.7, <3",

@@ -33,6 +33,7 @@ class Py42Session(object):
         self._session.headers = {"Accept": "application/json",
                                  "Content-Type": "application/json",
                                  "Host": host,
+                                 "User-Agent": settings.get_user_agent_string(),
                                  "Accept-Encoding": "gzip, deflate",
                                  "Connection": "keep-alive"}
 

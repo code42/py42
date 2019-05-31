@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+The intended audience of this file is for py42 consumers -- as such, changes that don't affect
+how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
+
+## 0.1.4 - 2019-05-31
+
+### Added
+ - requests made by py42 now use a user agent string that contains the py42 version and python version.
+ This user agent string can be retrieved using `py42.settings.get_user_agent_string()`
+ - A custom suffix can be added to the end of this user agent string by using `py42.settings.set_user_agent_suffix()`.
+ - `SDK.users.get_users()` and `SDK.devices.get_devices()` now both support a `q` parameter that can be used to check
+ common distinguishing fields on those items for an input string (e.g. `SDK.users.get_user(q="test")` will return all
+  users whose username or email address contain "test").
+  
+### Changed
+ - `SDK.archive.download_from_backup()` will now download the most recent non-deleted version of a file. Previously,
+file paths that were deleted would not be downloaded.
+
+### Fixed
+ -  Asynchronously searching for file events and then later attempting to download a file with the same SDK object
+ no longer hangs indefinitely.
+
+
 ## 0.1.3 - 2019-05-08
 
 ### Added

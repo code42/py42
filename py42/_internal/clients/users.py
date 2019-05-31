@@ -27,10 +27,10 @@ class UserClient(BaseAuthorityClient):
         return self._default_session.get(uri, **kwargs)
 
     def get_users(self, active=None, email=None, org_uid=None, user_uid=None, role_id=None, page_num=None,
-                  page_size=None, **kwargs):
+                  page_size=None, q=None, **kwargs):
         uri = "/api/User"
         params = {"active": active, "userUid": user_uid, "email": email, "orgUid": org_uid, "roleId": role_id,
-                  "pgNum": page_num, "pgSize": page_size}
+                  "pgNum": page_num, "pgSize": page_size, "q": q}
 
         return self._default_session.get(uri, params=params, **kwargs)
 

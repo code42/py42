@@ -7,11 +7,11 @@ from py42._internal.clients import util
 class DeviceClient(BaseAuthorityClient):
 
     def get_devices(self, active=None, blocked=None, org_uid=None, user_uid=None, target_computer_guid=None,
-                    include_backup_usage=None, include_counts=True, page_num=None, page_size=None, **kwargs):
+                    include_backup_usage=None, include_counts=True, page_num=None, page_size=None, q=None, **kwargs):
         uri = "/api/Computer"
         params = {"active": active, "blocked": blocked, "orgUid": org_uid, "userUid": user_uid,
                   "targetComputerGuid": target_computer_guid, "incBackupUsage": include_backup_usage,
-                  "incCounts": include_counts, "pgNum": page_num, "pgSize": page_size}
+                  "incCounts": include_counts, "pgNum": page_num, "pgSize": page_size, "q": q}
 
         return self._default_session.get(uri, params=params, **kwargs)
 

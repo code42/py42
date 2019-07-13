@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 0.1.5 - 2019-07-13
+
+### Fixed
+- Bug in the path-matching logic of `archive.download_from_backup` that caused:
+  - downloads to fail if the drive/root path didn't match, case-sensitive
+  - the API to return `None` instead of raising an exception
+
 ## 0.1.4 - 2019-05-31
 
 ### Added

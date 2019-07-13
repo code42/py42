@@ -72,8 +72,10 @@ class ArchiveAccessor(object):
         def handle_archive_roots(response):
             roots = util.get_obj_from_response(response, "data")
             for root in roots:
-                if root["path"] == path_root:
+                if root["path"].lower() == path_root.lower():
                     return self._walk_tree(root, path_parts[1:], then=then, **kwargs)
+
+            raise Exception("File not found in archive for device {0} at path {1}".format(self._device_guid, file_path))
 
         return self._get_children(then=handle_archive_roots, node_id=None)
 

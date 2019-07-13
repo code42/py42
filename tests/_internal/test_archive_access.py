@@ -623,6 +623,33 @@ class TestArchiveAccessor(object):
         assert e.value.args[0] == expected_message
         restore_job_manager.restore_to_local_path.assert_not_called()
 
+    def test_download_from_backup_with_drive_not_in_archive_raises_exception(self, mocker, storage_archive_client,
+                                                                             restore_job_manager):
+        mock_walking_to_downloads_folder(mocker, storage_archive_client)
+        archive_accessor = ArchiveAccessor(DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client,
+                                           restore_job_manager)
+        invalid_path_in_downloads_folder = "C:/Users/qa/Downloads/file-not-in-archive.txt"
+        with pytest.raises(Exception) as e:
+            archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
+        expected_message = "File not found in archive for device device-guid at path {0}".\
+            format(invalid_path_in_downloads_folder)
+        assert e.value.args[0] == expected_message
+        restore_job_manager.restore_to_local_path.assert_not_called()
+
+    def test_download_from_backup_with_case_sensitive_drive_not_in_archive_raises_exception(self, mocker,
+                                                                                            storage_archive_client,
+                                                                                            restore_job_manager):
+        mock_walking_to_downloads_folder(mocker, storage_archive_client)
+        archive_accessor = ArchiveAccessor(DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client,
+                                           restore_job_manager)
+        invalid_path_in_downloads_folder = "c:/Users/qa/Downloads/file-not-in-archive.txt"
+        with pytest.raises(Exception) as e:
+            archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
+        expected_message = "File not found in archive for device device-guid at path {0}".\
+            format(invalid_path_in_downloads_folder)
+        assert e.value.args[0] == expected_message
+        restore_job_manager.restore_to_local_path.assert_not_called()
+
     def test_download_from_backup_with_save_as_dir_calls_verify_path_writeable(self, mocker, storage_archive_client,
                                                                                restore_job_manager):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)

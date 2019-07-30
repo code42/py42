@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from datetime import datetime
 
 
@@ -101,8 +103,11 @@ class FileEventFilter(object):
         self._operator = operator
         self._value = value
 
+    def __unicode__(self):
+        return u'{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(self._operator, self._term, self._value)
+
     def __repr__(self):
-        return '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(self._operator, self._term, self._value)
+        return self.__unicode__().encode("utf-8")
 
 
 class FilterGroup(object):
@@ -110,6 +115,9 @@ class FilterGroup(object):
         self._filter_list = filter_list
         self._filter_clause = filter_clause
 
+    def __unicode__(self):
+        filters_string = ",".join(unicode(filter_item) for filter_item in self._filter_list)
+        return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(self._filter_clause, filters_string)
+
     def __repr__(self):
-        filters_string = ",".join(repr(filter_item) for filter_item in self._filter_list)
-        return '{{"filterClause":"{0}", "filters":[{1}]}}'.format(self._filter_clause, filters_string)
+        return self.__unicode__().encode("utf-8")

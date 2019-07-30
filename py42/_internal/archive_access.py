@@ -75,7 +75,8 @@ class ArchiveAccessor(object):
                 if root["path"].lower() == path_root.lower():
                     return self._walk_tree(root, path_parts[1:], then=then, **kwargs)
 
-            raise Exception("File not found in archive for device {0} at path {1}".format(self._device_guid, file_path))
+            raise Exception(u"File not found in archive for device {0} at path {1}".format(self._device_guid,
+                                                                                           file_path))
 
         return self._get_children(then=handle_archive_roots, node_id=None)
 
@@ -92,8 +93,8 @@ class ArchiveAccessor(object):
                 if child["path"].lower() == target_child_path.lower():
                     return self._walk_tree(child, remaining_path_components[1:], then=then, **kwargs)
 
-            raise Exception("File not found in archive for device {0} at path {1}".format(self._device_guid,
-                                                                                          target_child_path))
+            raise Exception(u"File not found in archive for device {0} at path {1}".format(self._device_guid,
+                                                                                           target_child_path))
 
         return self._get_children(then=handle_get_children, node_id=current_node["id"], **kwargs)
 

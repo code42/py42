@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from py42._internal.file_event_filter import _FileEventFilterStringField, _FileEventFilterTimestampField
 
 
@@ -126,12 +128,15 @@ class FileEventQuery(object):
         self.sort_direction = "asc"
         self.sort_key = "eventId"
 
-    def __repr__(self):
-        groups_string = ",".join(str(group_item) for group_item in self._filter_group_list)
-        json = '{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'\
+    def __unicode__(self):
+        groups_string = ",".join(unicode(group_item) for group_item in self._filter_group_list)
+        json = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}' \
             .format(self._group_clause, groups_string, self.page_number, self.page_size, self.sort_direction,
                     self.sort_key)
         return json
+
+    def __repr__(self):
+        return self.__unicode__().encode("utf-8")
 
     @classmethod
     def any(cls, *args):

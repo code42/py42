@@ -162,31 +162,3 @@ class ExposureType(_FileEventFilterStringField):
     def not_in(cls, value_list):
         # type: (iter[ExposureTypeEnum]) -> FilterGroup
         return super(ExposureType, cls).not_in([repr(value) for value in value_list])
-
-
-class FileEventQuery(object):
-    def __init__(self, *args, **kwargs):
-        # type: (iter[FilterGroup], any) -> None
-        self._filter_group_list = list(args)
-        self._group_clause = kwargs.get("group_clause", "AND")
-        self.page_number = 1
-        self.page_size = 100
-        self.sort_direction = "asc"
-        self.sort_key = "eventId"
-
-    def __repr__(self):
-        groups_string = ",".join(str(group_item) for group_item in self._filter_group_list)
-        json = '{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'\
-            .format(self._group_clause, groups_string, self.page_number, self.page_size, self.sort_direction,
-                    self.sort_key)
-        return json
-
-    @classmethod
-    def any(cls, *args):
-        # type: (iter[FilterGroup]) -> FileEventQuery
-        return cls(*args, group_clause="OR")
-
-    @classmethod
-    def all(cls, *args):
-        # type: (iter[FilterGroup]) -> FileEventQuery
-        return cls(*args)

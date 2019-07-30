@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import json
 import posixpath
 
@@ -619,6 +621,20 @@ class TestArchiveAccessor(object):
         with pytest.raises(Exception) as e:
             archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
         expected_message = "File not found in archive for device device-guid at path {0}".\
+            format(invalid_path_in_downloads_folder)
+        assert e.value.args[0] == expected_message
+        restore_job_manager.restore_to_local_path.assert_not_called()
+
+    def test_download_from_backup_with_unicde_file_path_not_in_archive_raises_exception(self, mocker,
+                                                                                        storage_archive_client,
+                                                                                        restore_job_manager):
+        mock_walking_to_downloads_folder(mocker, storage_archive_client)
+        archive_accessor = ArchiveAccessor(DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client,
+                                           restore_job_manager)
+        invalid_path_in_downloads_folder = u"/Users/qa/Downloads/吞"
+        with pytest.raises(Exception) as e:
+            archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
+        expected_message = u"File not found in archive for device device-guid at path {0}".\
             format(invalid_path_in_downloads_folder)
         assert e.value.args[0] == expected_message
         restore_job_manager.restore_to_local_path.assert_not_called()

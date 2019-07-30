@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pytest
 
 import py42
@@ -9,6 +11,7 @@ from py42._internal.file_event_filter import FileEventFilter, create_filter_grou
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
+VALUE_UNICODE = u"我能吞下玻璃而不伤身体"
 
 JSON_FILE_EVENT_FILTER = '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
                                                                           OPERATOR_STRING,
@@ -26,6 +29,11 @@ def file_event_filter():
 
 
 @pytest.fixture
+def unicode_file_event_filter():
+    return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
+
+
+@pytest.fixture
 def file_event_filter_list(file_event_filter):
     return [file_event_filter for _ in range(3)]
 
@@ -36,6 +44,13 @@ def test_file_event_filter_constructs_successfully():
 
 def test_file_event_filter_str_outputs_correct_json_representation(file_event_filter):
     assert str(file_event_filter) == JSON_FILE_EVENT_FILTER
+
+
+def test_file_event_filter_unicode_outputs_correct_json_representation(unicode_file_event_filter):
+    expected = u'{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(OPERATOR_STRING,
+                                                                           EVENT_FILTER_FIELD_NAME,
+                                                                           VALUE_UNICODE)
+    assert unicode(unicode_file_event_filter) == expected
 
 
 def test_filter_group_constructs_successfully(file_event_filter):

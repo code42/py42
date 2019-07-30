@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 0.1.6 – Unreleased
+
+### Fixed
+- Issues with unicode support in `security.search_file_events()` and `archive.download_from_backup()`
+
 ## 0.1.5 - 2019-07-13
 
 ### Fixed

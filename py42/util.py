@@ -59,14 +59,14 @@ def verify_path_writeable(path):
     # If the file exists, see if we can overwrite it.
     if posixpath.exists(path):
         if not os.access(path, os.W_OK):
-            raise IOError("Insufficient permissions to write to file: {0}".format(path))
+            raise IOError(u"Insufficient permissions to write to file: {0}".format(path))
     else:
         # Otherwise see if we can write to the directory (assuming it already exists)
         directory = posixpath.dirname(path)
         if not posixpath.exists(directory):
-            raise IOError("Directory does not exist: {0}".format(directory))
+            raise IOError(u"Directory does not exist: {0}".format(directory))
         if not os.access(directory, os.W_OK):
-            raise IOError("Insufficient permissions to write to directory: {0}".format(directory))
+            raise IOError(u"Insufficient permissions to write to directory: {0}".format(directory))
     return path
 
 

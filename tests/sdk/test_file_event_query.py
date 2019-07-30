@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pytest
 
 from datetime import datetime
@@ -8,14 +10,19 @@ from py42.sdk.file_event_query import MD5, SHA256, OSHostname, EventTimestamp, E
     FileName, FilePath, PublicIPAddress, PrivateIPAddress, FileEventQuery
 
 from py42._internal.file_event_filter import FilterGroup
-from tests._internal.test_file_event_filter import file_event_filter
+from tests._internal.test_file_event_filter import file_event_filter, unicode_file_event_filter
 
-JSON_QUERY_BASE = '{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
+JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
 
 
 @pytest.fixture
 def event_filter_group(file_event_filter):
     return FilterGroup([file_event_filter])
+
+
+@pytest.fixture
+def unicode_event_filter_group(unicode_file_event_filter):
+    return FilterGroup([unicode_file_event_filter])
 
 
 @pytest.fixture
@@ -35,6 +42,12 @@ def test_file_event_query_str_with_single_filter_gives_correct_json_representati
     file_event_query = FileEventQuery(event_filter_group)
     json_query_str = build_query_json("AND", event_filter_group)
     assert str(file_event_query) == json_query_str
+
+
+def test_file_event_query_unicode_with_single_filter_gives_correct_json_representation(unicode_event_filter_group):
+    file_event_query = FileEventQuery(unicode_event_filter_group)
+    json_query_str = build_query_json("AND", unicode_event_filter_group)
+    assert unicode(file_event_query) == json_query_str
 
 
 def test_file_event_query_str_with_single_filter_and_specified_gives_correct_json_representation(event_filter_group):
@@ -197,6 +210,13 @@ def test_device_username_not_in_sets_filter_properties_correctly(mocker):
     items = ["deviceUserName1", "deviceUserName2", "deviceUserName3"]
     DeviceUsername.not_in(items)
     py42._internal.file_event_filter.create_not_in_filter_group.assert_called_with("deviceUserName", items)
+
+
+def test_unicode_device_username_eq_sets_filter_properties_correctly(mocker):
+    unicode_username = u"我能吞下玻璃而不伤身体"
+    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+    DeviceUsername.eq(unicode_username)
+    py42._internal.file_event_filter.create_eq_filter_group.assert_called_with("deviceUserName", unicode_username)
 
 
 def test_file_name_eq_sets_filter_properties_correctly(mocker):

@@ -8,7 +8,7 @@ class UserClient(BaseAuthorityClient):
 
     def create_user(self, org_uid, username, email=None, password=None, first_name=None, last_name=None, notes=None,
                     **kwargs):
-        uri = "/api/User/"
+        uri = "/api/User"
         data = {"orgUid": org_uid, "username": username, "email": email, "password": password, "firstName": first_name,
                 "lastName": last_name, "notes": notes}
         return self._default_session.post(uri, data=json.dumps(data), **kwargs)
@@ -18,7 +18,7 @@ class UserClient(BaseAuthorityClient):
         return self._default_session.get(uri, **kwargs)
 
     def get_user_by_username(self, username, **kwargs):
-        uri = "/api/User/"
+        uri = "/api/User"
         params = {"username": username}
         return self._default_session.get(uri, params=params, **kwargs)
 

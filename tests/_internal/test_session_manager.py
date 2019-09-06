@@ -30,7 +30,7 @@ class TestSessionManager(object):
         session_managers = get_session_managers(session_factory)
         sessions_manager = SessionsManager(*session_managers)
         sessions_manager.get_file_event_session(login_provider)
-        session_factory.create_file_event_session.assert_called_with(login_provider, force_replace=False)
+        session_factory.create_file_event_session.assert_called_with(login_provider)
 
     def test_get_file_event_session_with_multiple_calls_calls_factory_only_once(self, session_factory, login_provider):
         session_managers = get_session_managers(session_factory)

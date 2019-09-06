@@ -22,13 +22,12 @@ class SessionManager(object):
         if self._session_factory_method is not None:
             url = login_provider.get_target_host_address()
             session = self.using(url)
-            if session is None:
+            if session is None or force_replace:
                 try:
                     with self._list_update_lock:
                         session = self.using(url)
-                        update = session is None or force_replace
-                        if update:
-                            session = self._session_factory_method(login_provider, force_replace=force_replace)
+                        if session is None or force_replace:
+                            session = self._session_factory_method(login_provider)
                             self._session_list.update({url.lower(): session})
                 except Exception as e:
                     message = "Failed to create or retrieve session, caused by: {0}".format(e.message)
@@ -74,7 +73,6 @@ class SessionsManager(object):
         if storage_session is None:
             storage_session = self._storage_session_manager.get_session(login_provider,
                                                                         force_replace=force_replace)
-
         return storage_session
 
     def get_file_event_session(self, login_provider, force_replace=False):

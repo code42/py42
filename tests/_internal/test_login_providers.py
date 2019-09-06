@@ -8,8 +8,6 @@ from py42._internal.session import Py42Session
 from py42._internal.login_providers import BasicAuthProvider, C42ApiV1TokenProvider, C42ApiV3TokenProvider,\
     C42APILoginTokenProvider, C42APIStorageAuthTokenProvider, FileEventLoginProvider
 
-from tests.shared_test_utils import successful_request, MockPy42Session
-
 USERNAME = "username"
 PASSWORD = "password"
 HOST_ADDRESS = "https://test.code42.com"
@@ -29,50 +27,62 @@ STS_BASE_URL = "https://sts-east.us.code42.com"
 SERVER_ENV_EXCEPTION_MESSAGE = "Internal error in /api/ServerEnv"
 
 
-@successful_request
-def v1_auth_token_request_handler(response):
-    response._content = json.dumps({"data": [V1_TOKEN_PART1, V1_TOKEN_PART2]})
-    return response
-
-
-@successful_request
-def v3_auth_token_request_handler(response):
-    response._content = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
-    return response
-
-
-@successful_request
-def tmp_login_token_request_handler(response):
-    response._content = json.dumps({"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}})
-    return response
-
-
-@pytest.fixture(scope="module")
-def v1_auth_provider():
-    auth_session = MockPy42Session(HOST_ADDRESS, request_handler=v1_auth_token_request_handler)
+@pytest.fixture
+def v1_auth_provider(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.host_address = HOST_ADDRESS
+    def mock_post(uri, **kwargs):
+        response = mocker.MagicMock(spec=Response)
+        response.content = json.dumps({"data": [V1_TOKEN_PART1, V1_TOKEN_PART2]})
+        response.status_code = 200
+        return response
+    auth_session.post.side_effect = mock_post
     provider = C42ApiV1TokenProvider(auth_session)
     return provider
 
 
-@pytest.fixture(scope="module")
-def v3_auth_provider():
-    auth_session = MockPy42Session(HOST_ADDRESS, request_handler=v3_auth_token_request_handler)
+@pytest.fixture
+def v3_auth_provider(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.host_address = HOST_ADDRESS
+    def mock_get(uri, **kwargs):
+        response = mocker.MagicMock(spec=Response)
+        response.content = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
+        response.status_code = 200
+        return response
+    auth_session.get.side_effect = mock_get
     provider = C42ApiV3TokenProvider(auth_session)
     return provider
 
 
 @pytest.fixture
-def login_token_provider():
-    auth_session = MockPy42Session(HOST_ADDRESS, request_handler=tmp_login_token_request_handler)
-    provider = C42APILoginTokenProvider(auth_session, "my", "device-guid", "destination-guid")
-    return provider
+def login_token_provider(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.host_address = HOST_ADDRESS
+
+    def mock_post(uri, **kwargs):
+        response = mocker.MagicMock(spec=Response)
+        response.content = json.dumps({"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}})
+        response.status_code = 200
+        return response
+
+    auth_session.post.side_effect = mock_post
+    return C42APILoginTokenProvider(auth_session, "my", "device-guid", "destination-guid")
 
 
 @pytest.fixture
-def storage_auth_token_provider():
-    auth_session = MockPy42Session(HOST_ADDRESS, request_handler=tmp_login_token_request_handler)
-    provider = C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid", node_guid=NODE_GUID)
-    return provider
+def storage_auth_token_provider(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.host_address = HOST_ADDRESS
+
+    def mock_post(uri, **kwargs):
+        response = mocker.MagicMock(spec=Response)
+        response.content = json.dumps({"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}})
+        response.status_code = 200
+        return response
+
+    auth_session.post.side_effect = mock_post
+    return C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid", node_guid=NODE_GUID)
 
 
 @pytest.fixture
@@ -144,8 +154,10 @@ def test_basic_provider_host_address_matches_supplied(basic_auth_provider):
     assert basic_auth_provider.get_target_host_address() == HOST_ADDRESS
 
 
-def test_v1_auth_provider_constructs_successfully():
-    assert C42ApiV1TokenProvider(MockPy42Session(HOST_ADDRESS))
+def test_v1_auth_provider_constructs_successfully(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.host_address = HOST_ADDRESS
+    assert C42ApiV1TokenProvider(auth_session)
 
 
 def test_v1_auth_provider_host_address_matches_supplied(v1_auth_provider):
@@ -157,8 +169,10 @@ def test_v1_auth_provider_secret_returns_v1_token(v1_auth_provider):
     assert v1_auth_provider.get_secret_value() == "{0}-{1}".format(V1_TOKEN_PART1, V1_TOKEN_PART2)
 
 
-def test_v3_auth_provider_constructs_successfully():
-    assert C42ApiV3TokenProvider(MockPy42Session(HOST_ADDRESS))
+def test_v3_auth_provider_constructs_successfully(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.host_address = HOST_ADDRESS
+    assert C42ApiV3TokenProvider(auth_session)
 
 
 def test_v3_auth_provider_host_address_matches_supplied(v3_auth_provider):
@@ -171,8 +185,10 @@ def test_v3_auth_provider_secret_returns_v3_token(v3_auth_provider):
     assert v3_auth_provider.get_secret_value() == V3_TOKEN
 
 
-def test_login_token_provider_constructs_successfully():
-    assert C42APILoginTokenProvider(MockPy42Session(HOST_ADDRESS), "my", "device-guid", "destination-guid")
+def test_login_token_provider_constructs_successfully(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.host_address = HOST_ADDRESS
+    assert C42APILoginTokenProvider(auth_session, "my", "device-guid", "destination-guid")
 
 
 def test_login_token_provider_host_address_returns_storage_url(login_token_provider):
@@ -185,8 +201,10 @@ def test_login_token_provider_secret_returns_tmp_login_token(login_token_provide
     assert login_token_provider.get_secret_value() == TMP_LOGIN_TOKEN
 
 
-def test_storage_auth_token_provider_constructs_successfully():
-    assert C42APIStorageAuthTokenProvider(MockPy42Session(HOST_ADDRESS), "plan-id", "destination-guid",
+def test_storage_auth_token_provider_constructs_successfully(mocker):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.host_address = HOST_ADDRESS
+    assert C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid",
                                           node_guid=NODE_GUID)
 
 

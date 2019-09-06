@@ -99,7 +99,6 @@ class C42APITmpAuthProvider(LoginProvider):
     def get_secret_value(self, force_refresh=False):
         if force_refresh or self._cached_info is None:
             self.get_login_info()
-
         return self._cached_info["loginToken"]
 
 

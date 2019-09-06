@@ -1,5 +1,3 @@
-from threading import Lock
-
 
 class LoginProvider(object):
     def get_target_host_address(self):
@@ -13,36 +11,19 @@ class AuthHandler(object):
     def __init__(self, login_provider, session_modifier):
         self._login_provider = login_provider
         self._session_modifier = session_modifier
-        self._auth_is_valid = False
-        self._auth_lock = Lock()
-        self._initial_auth = True
 
-    def try_authorize(self, session, response=None):
-        # returns whether or not re-authorization was needed
-        if self._response_indicates_unauthorized(response):
-            self._auth_is_valid = False
-            with self._auth_lock:
-                if not self._auth_is_valid:
-                    self._handle_unauthorized(session)
-            # if multiple threads needed re-auth, return true for all of them even though
-            # only one of them actually did the work of re-authing.
-            return True
-        return False
-
-    def _handle_unauthorized(self, session):
+    def renew_authentication(self, session, use_credential_cache=False):
         try:
-            secret = self._login_provider.get_secret_value(force_refresh=not self._initial_auth)
-            if self._initial_auth:
-                self._initial_auth = False
+            secret = self._login_provider.get_secret_value(force_refresh=not use_credential_cache)
             self._session_modifier.modify_session(session, secret)
-            self._auth_is_valid = True
         except Exception as e:
             message = "An error occurred while trying to handle an unauthorized request, caused by: {0}"
             message = message.format(e.message)
             raise Exception(message)
 
-    def _response_indicates_unauthorized(self, response):
-        return self._initial_auth or (response is not None and response.status_code == 401)
+    @staticmethod
+    def response_indicates_unauthorized(response):
+        return response.status_code == 401
 
 
 class SessionModifier(object):

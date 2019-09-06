@@ -1,4 +1,5 @@
 import traceback
+from threading import Lock
 from urlparse import urljoin, urlparse
 import json as json_lib
 import requests.adapters
@@ -12,6 +13,9 @@ import py42.util as util
 class Py42Session(object):
 
     def __init__(self, session, host_address, auth_handler=None):
+        self._initialized = False
+        self._needs_auth_renewal_check = False
+        self._auth_lock = Lock()
         self._session = session
         adapter = requests.adapters.HTTPAdapter(pool_connections=500, pool_maxsize=500)
         if not host_address.startswith("http://") and not host_address.startswith("https://"):
@@ -81,14 +85,13 @@ class Py42Session(object):
         tries = 0
         try:
             url = urljoin(self._host_address, url)
-            auth_needed = False
 
             if json is not None:
                 data = json_lib.dumps(util.filter_out_none(json))
 
+            self._renew_authentication(use_credential_cache=True)
+
             while tries < max_tries:
-                if self._auth_handler is not None:
-                    auth_needed = self._auth_handler.try_authorize(self)
 
                 if debug.will_print_for(debug_level.INFO):
                     self._print_request(method, url, params=params, data=data)
@@ -110,12 +113,13 @@ class Py42Session(object):
 
                 tries += 1
 
-                invalid_credentials = auth_needed and self._auth_handler.try_authorize(self, response=response)
-                if invalid_credentials and tries < max_tries:
+                unauthorized = self._auth_handler and self._auth_handler.response_indicates_unauthorized(response)
+                if unauthorized and tries < max_tries:
                     # retry one more time. if the credentials are valid but simply expired,
                     # we won't hit this condition next time.
+                    self._renew_authentication()
                     continue
-                elif response.status_code >= 400:
+                if response.status_code >= 400:
                     response.raise_for_status()
 
                 if then is not None and response is not None:
@@ -142,6 +146,21 @@ class Py42Session(object):
                 self._process_exception_message(exception_trace)
             # always raise unhandled exceptions when using a synchronous client
             raise exception
+
+    def _renew_authentication(self, use_credential_cache=False):
+        if self._auth_handler:
+            # if multiple threads try to authenticate at the same time, only the first one actually does.
+            # the rest will just wait for that authentication to complete.
+            self._needs_auth_renewal_check = True
+            with self._auth_lock:
+                # only get new credentials if this is the first time we're getting them or we want fresh ones
+                should_renew = not self._initialized or not use_credential_cache
+                if self._needs_auth_renewal_check and should_renew:
+                    self._auth_handler.renew_authentication(self, use_credential_cache=use_credential_cache)
+                    self._needs_auth_renewal_check = False
+
+        # if there's no auth handler or we handled auth without errors, then we've initialized successfully.
+        self._initialized = True
 
     def _print_request(self, method, url, params=None, data=None):
         print("{0}{1}".format(str(method).ljust(8), url))

@@ -7,15 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 0.1.7 - 2019-09-09
 
 ### Fixed
 - Bug in authentication handling logic that caused authentication tokens to not automatically renew properly when
  they expired.
 - Bug in creating security plan clients that caused some clients to not be created for users with multiple plans or
  archives
-
-
 
 ## 0.1.6 – 2019-07-30
 

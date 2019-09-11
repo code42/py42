@@ -10,7 +10,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## 0.1.8 - 2019-09-11
 
 ## Fixed
--Regression that removed an optimization that allowed user to make requests to the same  storage node without 
+-Regression that removed an optimization that allowed user to make requests to the same storage node without 
  getting a new storage auth token for each request 
 
 ## 0.1.7 - 2019-09-09

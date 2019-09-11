@@ -45,9 +45,16 @@ class StorageClientFactory(object):
         session = self._session_manager.get_storage_session(login_provider)
         return StorageClient(session)
 
-    def create_security_plan_clients(self, *args, **kwargs):
+    def create_security_plan_clients(self, catch=None, *args, **kwargs):
         login_providers = self._login_provider_factory.create_security_archive_locators(*args, **kwargs)
-        sessions = [self._session_manager.get_storage_session(provider) for provider in login_providers]
+        sessions = []
+        for provider in login_providers:
+            try:
+                session = self._session_manager.get_storage_session(provider)
+                sessions.append(session)
+            except Exception as e:
+                if catch:
+                    catch(e)
         clients = [StorageClient(session) for session in sessions]
         return clients
 

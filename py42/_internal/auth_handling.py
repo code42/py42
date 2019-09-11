@@ -1,5 +1,12 @@
 
 class LoginProvider(object):
+    def __init__(self):
+        self._session_cache_key = None
+
+    @property
+    def session_cache_key(self):
+        return self._session_cache_key
+
     def get_target_host_address(self):
         pass
 

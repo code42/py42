@@ -127,15 +127,19 @@ class Py42Session(object):
 
                 return response
 
-        except requests.HTTPError as e:
+        except (requests.HTTPError, requests.RequestException, Exception) as e:
+            e = self._wrap_exception_with_message_including_url(url, e)
             trace = traceback.format_exc()
             self._handle_error(e, trace, catch)
-        except requests.RequestException as e:
-            trace = traceback.format_exc()
-            self._handle_error(e, trace, catch)
-        except Exception as e:
-            trace = traceback.format_exc()
-            self._handle_error(e, trace, catch)
+
+    @staticmethod
+    def _wrap_exception_with_message_including_url(url, e):
+        message = "Error making request to {0}. Caused by: {1}"
+        return e.__class__(message.format(url, repr(e)))
+
+    @staticmethod
+    def _build_exception_message_with_exception_and_trace(e, trc):
+        return "{0} {1}".format(e, trc)
 
     def _handle_error(self, exception, exception_trace, request_handler):
         if request_handler is not None:
@@ -143,7 +147,8 @@ class Py42Session(object):
         else:
             # log unhandled exceptions
             if self._process_exception_message is not None:
-                self._process_exception_message(exception_trace)
+                self._process_exception_message(self._build_exception_message_with_exception_and_trace(exception,
+                                                                                                       exception_trace))
             # always raise unhandled exceptions when using a synchronous client
             raise exception
 

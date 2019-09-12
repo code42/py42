@@ -45,7 +45,7 @@ class StorageClientFactory(object):
         session = self._session_manager.get_storage_session(login_provider)
         return StorageClient(session)
 
-    def create_security_plan_clients(self, catch=None, *args, **kwargs):
+    def create_security_plan_clients(self, *args, **kwargs):
         login_providers = self._login_provider_factory.create_security_archive_locators(*args, **kwargs)
         sessions = []
         for provider in login_providers:
@@ -53,8 +53,12 @@ class StorageClientFactory(object):
                 session = self._session_manager.get_storage_session(provider)
                 sessions.append(session)
             except Exception as e:
+                catch = kwargs.get("catch")
+                user_uid = kwargs.get("user_uid")
                 if catch:
-                    catch(e)
+                    message = "Error creating storage session. user_uid={0} node_guid={1} exception={2}"
+                    wrapped_exception = e.__class__(message.format(user_uid, provider.session_cache_key, repr(e)))
+                    catch(wrapped_exception)
         clients = [StorageClient(session) for session in sessions]
         return clients
 

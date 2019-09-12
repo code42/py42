@@ -60,7 +60,8 @@ class Py42AsyncSession(Py42Session):
             if request_handler is not None:
                 request_handler(exception)
             elif self._process_exception_message is not None:
-                self._process_exception_message(exception_trace)
+                exception_message = self._build_exception_message_with_exception_and_trace(exception, exception_trace)
+                self._process_exception_message(exception_message)
         except:
             # handle errors that occur in the user-supplied exception handlers.
             trace = traceback.format_exc()

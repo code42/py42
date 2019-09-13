@@ -34,7 +34,7 @@ class StorageSecurityClient(BaseStorageClient):
 
     def get_security_detection_events_for_user(self, user_uid, cursor=None, include_files=None, event_types=None,
                                                min_timestamp=None, max_timestamp=None, **kwargs):
-        return self.get_security_detection_events(self._session, user_uid=user_uid, cursor=cursor,
+        return self.get_security_detection_events(user_uid=user_uid, cursor=cursor,
                                                   include_files=include_files,
                                                   event_types=event_types,
                                                   min_timestamp=min_timestamp,

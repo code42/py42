@@ -7,14 +7,14 @@ import pytest
 from requests import Response
 
 import py42
+import py42._internal.archive_access as archive_access
 import py42.util
-from py42._internal.archive_access import ArchiveAccessorManager, ArchiveAccessor, RestoreJobManager, FileSelection
-from py42._internal.archive_access import FileType
+from py42._internal.archive_access import ArchiveAccessor, ArchiveAccessorManager, FileSelection, FileType, \
+    RestoreJobManager
+from py42._internal.client_factories import StorageClientFactory
 from py42._internal.clients.archive import ArchiveClient
 from py42._internal.clients.storage.archive import StorageArchiveClient
 from py42._internal.clients.storage.storage import StorageClient
-from py42._internal.client_factories import StorageClientFactory
-import py42._internal.archive_access as archive_access
 
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"

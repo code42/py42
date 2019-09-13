@@ -2,9 +2,8 @@
 
 import pytest
 
-from py42._internal.session import Py42Session
 from py42._internal.clients.users import UserClient
-
+from py42._internal.session import Py42Session
 
 USER_URI = "/api/User"
 

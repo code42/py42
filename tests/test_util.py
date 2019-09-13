@@ -2,9 +2,8 @@
 
 import os
 
-from requests import Response
-
 import pytest
+from requests import Response
 
 import py42.util as util
 

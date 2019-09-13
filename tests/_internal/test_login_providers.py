@@ -1,12 +1,12 @@
-import pytest
 import base64
 import json
 
+import pytest
 from requests import Response
 
+from py42._internal.login_providers import BasicAuthProvider, C42APILoginTokenProvider, C42APIStorageAuthTokenProvider, \
+    C42ApiV1TokenProvider, C42ApiV3TokenProvider, FileEventLoginProvider
 from py42._internal.session import Py42Session
-from py42._internal.login_providers import BasicAuthProvider, C42ApiV1TokenProvider, C42ApiV3TokenProvider,\
-    C42APILoginTokenProvider, C42APIStorageAuthTokenProvider, FileEventLoginProvider
 
 USERNAME = "username"
 PASSWORD = "password"

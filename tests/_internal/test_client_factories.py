@@ -1,7 +1,8 @@
+import pytest
+
 from py42._internal.base_classes import BaseArchiveLocatorFactory
 from py42._internal.client_factories import StorageClientFactory
 from py42._internal.session_manager import SessionsManager
-import pytest
 
 _USER_UID = "user-uid"
 

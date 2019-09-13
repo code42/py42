@@ -2,8 +2,8 @@ import pytest
 from requests import Response
 from requests.cookies import RequestsCookieJar
 
+from py42._internal.auth_handling import AuthHandler, CookieModifier, HeaderModifier, LoginProvider, SessionModifier
 from py42._internal.session import Py42Session
-from py42._internal.auth_handling import HeaderModifier, CookieModifier, AuthHandler, LoginProvider, SessionModifier
 
 ORIGINAL_VALUE = "test-original-value"
 UPDATED_VALUE = "test-updated-value"

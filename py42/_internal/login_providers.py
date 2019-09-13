@@ -9,7 +9,7 @@ V3_COOKIE_NAME = "C42_JWT_API_TOKEN"
 
 class BasicAuthProvider(LoginProvider):
     def __init__(self, host_address, username, password):
-        super(LoginProvider, self).__init__()
+        super(BasicAuthProvider, self).__init__()
         self._host_address = host_address
         self._base64_credentials = base64.encodestring("{0}:{1}".format(username, password)).replace("\n", "")
 
@@ -23,7 +23,7 @@ class BasicAuthProvider(LoginProvider):
 class C42ApiV3TokenProvider(LoginProvider):
 
     def __init__(self, auth_session):
-        super(LoginProvider, self).__init__()
+        super(C42ApiV3TokenProvider, self).__init__()
         self._auth_session = auth_session
 
     def get_target_host_address(self):
@@ -51,7 +51,7 @@ class C42ApiV3TokenProvider(LoginProvider):
 class C42ApiV1TokenProvider(LoginProvider):
 
     def __init__(self, auth_session):
-        super(LoginProvider, self).__init__()
+        super(C42ApiV1TokenProvider, self).__init__()
         self._auth_session = auth_session
 
     def get_target_host_address(self):
@@ -72,7 +72,7 @@ class C42ApiV1TokenProvider(LoginProvider):
 
 class C42APITmpAuthProvider(LoginProvider):
     def __init__(self, node_guid=None):
-        super(LoginProvider, self).__init__()
+        super(C42APITmpAuthProvider, self).__init__()
         self._cached_info = None
         self._session_cache_key = node_guid
 

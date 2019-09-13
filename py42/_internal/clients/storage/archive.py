@@ -1,5 +1,4 @@
 from py42._internal.base_classes import BaseStorageClient
-import json
 
 
 class StorageArchiveClient(BaseStorageClient):

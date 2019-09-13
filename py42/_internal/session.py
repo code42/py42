@@ -1,7 +1,8 @@
+import json as json_lib
 import traceback
 from threading import Lock
 from urlparse import urljoin, urlparse
-import json as json_lib
+
 import requests.adapters
 
 import py42.debug as debug

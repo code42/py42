@@ -1,12 +1,10 @@
 from py42._internal.archive_access import ArchiveAccessorManager
-from py42._internal.login_provider_factories import C42AuthorityArchiveLocatorFactory
 from py42._internal.base_classes import BaseArchiveLocatorFactory, BaseSessionFactory
-from py42._internal.modules import archive as archive_module
-from py42._internal.modules import security as sec_module
+from py42._internal.client_factories import AuthorityClientFactory, FileEventClientFactory, StorageClientFactory
+from py42._internal.login_provider_factories import C42AuthorityArchiveLocatorFactory, FileEventLoginProviderFactory
+from py42._internal.modules import archive as archive_module, security as sec_module
 from py42._internal.session import Py42Session
-from py42._internal.login_provider_factories import FileEventLoginProviderFactory
-from py42._internal.client_factories import AuthorityClientFactory, StorageClientFactory, FileEventClientFactory
-from py42._internal.session_manager import SessionsManager, StorageSessionManager, FileEventSessionManager
+from py42._internal.session_manager import FileEventSessionManager, SessionsManager, StorageSessionManager
 
 
 class AuthorityDependencies(object):

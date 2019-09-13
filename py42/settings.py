@@ -1,4 +1,5 @@
 import sys
+
 import py42.debug_level
 from py42.__version__ import __version__
 

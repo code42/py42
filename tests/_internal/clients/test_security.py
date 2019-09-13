@@ -1,8 +1,7 @@
 import pytest
 from requests import Response
 
-from py42._internal.clients.security import SecurityClient
-from py42._internal.clients.security import get_normalized_security_event_plan_info
+from py42._internal.clients.security import SecurityClient, get_normalized_security_event_plan_info
 
 USER_UID = "user-uid"
 

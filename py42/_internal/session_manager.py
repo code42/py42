@@ -1,8 +1,8 @@
 from threading import Lock
 
-from py42._internal.session import Py42Session
 from py42._internal.base_classes import BaseSessionFactory
 from py42._internal.login_providers import LoginProvider
+from py42._internal.session import Py42Session
 
 
 class SessionManager(object):

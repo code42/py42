@@ -98,6 +98,8 @@ class _FileEventFilterTimestampField(object):
 
 class FileEventFilter(object):
 
+    _term = None
+
     def __init__(self, term, operator, value):
         self._term = term
         self._operator = operator

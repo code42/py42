@@ -2,9 +2,8 @@
 
 import pytest
 
-from py42._internal.session import Py42Session
 from py42._internal.clients.devices import DeviceClient
-
+from py42._internal.session import Py42Session
 
 COMPUTER_URI = "/api/Computer"
 

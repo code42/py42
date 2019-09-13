@@ -2,9 +2,8 @@
 
 import pytest
 
-from py42._internal.session import Py42Session
 from py42._internal.clients.fileevent.file_event import FileEventClient
-
+from py42._internal.session import Py42Session
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 RAW_QUERY = "RAW JSON QUERY"

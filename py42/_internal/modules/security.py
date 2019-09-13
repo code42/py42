@@ -1,6 +1,6 @@
 import py42.util as util
+from py42._internal.client_factories import FileEventClientFactory, StorageClientFactory
 from py42._internal.clients.security import SecurityClient
-from py42._internal.client_factories import StorageClientFactory, FileEventClientFactory
 
 
 class SecurityModule(object):
@@ -47,13 +47,12 @@ class SecurityModule(object):
         return file_event_client.search_file_events(query, then=then, catch=catch, **kwargs)
 
     def _return_first_successful_result(self, func_list, catch=None, *args, **kwargs):
-        if len(func_list):
+        if func_list:
             func = func_list[0]
 
             def catch_and_try_next(ex):
                 func_list.remove(func)
-                if len(func_list):
-                    self._return_first_successful_result(func_list, *args, **kwargs)
+                self._return_first_successful_result(func_list, *args, **kwargs)
 
             catch = util.wrap_func(catch_and_try_next, catch)
             result = func(catch=catch, *args, **kwargs)

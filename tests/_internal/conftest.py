@@ -1,11 +1,11 @@
+# -*- coding: utf-8 -*-
+
 import pytest
-from requests import Session, Response
-
-from requests import HTTPError
-
-from py42._internal.auth_handling import AuthHandler
+from requests import HTTPError, Response, Session
 
 import py42.settings
+from py42._internal.auth_handling import AuthHandler
+from py42._internal.file_event_filter import FileEventFilter
 
 HOST_ADDRESS = "http://example.com"
 
@@ -21,6 +21,12 @@ TEST_RESPONSE_CONTENT = "test_response_content"
 
 REQUEST_EXCEPTION_MESSAGE = "Internal server error"
 TRACEBACK = "Traceback..."
+
+
+EVENT_FILTER_FIELD_NAME = "filter_field_name"
+OPERATOR_STRING = "IS_IN"
+VALUE_STRING = "value_example"
+VALUE_UNICODE = u"我能吞下玻璃而不伤身体"
 
 
 def build_expected_exception_message(host, url, exception_type, exception_message):
@@ -105,3 +111,18 @@ def global_exception_message_receiver(mocker):
 @pytest.fixture
 def exception():
     return Exception()
+
+
+@pytest.fixture
+def file_event_filter_list(file_event_filter):
+    return [file_event_filter for _ in range(3)]
+
+
+@pytest.fixture
+def file_event_filter():
+    return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+
+
+@pytest.fixture
+def unicode_file_event_filter():
+    return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)

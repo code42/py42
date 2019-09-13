@@ -1,9 +1,8 @@
-from py42._internal.base_classes import BaseSessionFactory
-from py42._internal.login_providers import C42ApiV1TokenProvider, C42ApiV3TokenProvider
 from py42._internal.async_session import Py42AsyncSession
 from py42._internal.auth_handling import AuthHandler, CompositeModifier, CookieModifier, HeaderModifier
+from py42._internal.base_classes import BaseSessionFactory
+from py42._internal.login_providers import BasicAuthProvider, C42ApiV1TokenProvider, C42ApiV3TokenProvider
 from py42._internal.session import Py42Session
-from py42._internal.login_providers import BasicAuthProvider
 
 
 class SessionFactory(BaseSessionFactory):

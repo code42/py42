@@ -1,12 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import pytest
-
 import py42
-from py42._internal.file_event_filter import FileEventFilter, create_filter_group, create_eq_filter_group,\
-    create_is_in_filter_group, create_not_eq_filter_group, create_not_in_filter_group, create_on_or_before_filter_group,\
-    create_on_or_after_filter_group, create_in_range_filter_group, create_file_event_filter
-
+from py42._internal.file_event_filter import FileEventFilter, create_eq_filter_group, create_file_event_filter, \
+    create_filter_group, create_in_range_filter_group, create_is_in_filter_group, create_not_eq_filter_group, \
+    create_not_in_filter_group, create_on_or_after_filter_group, create_on_or_before_filter_group
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
@@ -21,21 +18,6 @@ JSON_FILE_EVENT_FILTER = '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.for
 JSON_FILTER_GROUP_BASE = '{{"filterClause":"{0}", "filters":[{1}]}}'
 JSON_FILTER_GROUP_AND = JSON_FILTER_GROUP_BASE.format("AND", JSON_FILE_EVENT_FILTER)
 JSON_FILTER_GROUP_OR = JSON_FILTER_GROUP_BASE.format("OR", JSON_FILE_EVENT_FILTER)
-
-
-@pytest.fixture
-def file_event_filter():
-    return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
-
-
-@pytest.fixture
-def unicode_file_event_filter():
-    return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
-
-
-@pytest.fixture
-def file_event_filter_list(file_event_filter):
-    return [file_event_filter for _ in range(3)]
 
 
 def test_file_event_filter_constructs_successfully():

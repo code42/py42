@@ -2,8 +2,8 @@ import py42.util as util
 from py42._internal.base_classes import BaseArchiveLocatorFactory
 from py42._internal.clients.devices import DeviceClient
 from py42._internal.clients.security import SecurityClient, get_normalized_security_event_plan_info
-from py42._internal.login_providers import C42APILoginTokenProvider, C42APIStorageAuthTokenProvider
-from py42._internal.login_providers import FileEventLoginProvider
+from py42._internal.login_providers import C42APILoginTokenProvider, C42APIStorageAuthTokenProvider, \
+    FileEventLoginProvider
 
 
 class C42AuthorityArchiveLocatorFactory(BaseArchiveLocatorFactory):

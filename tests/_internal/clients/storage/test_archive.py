@@ -1,9 +1,7 @@
 import pytest
-import json
 
 from py42._internal.clients.storage.archive import StorageArchiveClient
 from py42._internal.session import Py42Session
-import py42.util
 
 DATA_KEYWORD = "data"
 JSON_KEYWORD = "json"

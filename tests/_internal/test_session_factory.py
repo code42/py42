@@ -6,7 +6,7 @@ from py42._internal.async_session import Py42AsyncSession
 from py42._internal.auth_handling import AuthHandler, CompositeModifier
 from py42._internal.login_providers import FileEventLoginProvider
 from py42._internal.session import Py42Session
-from py42._internal.session_factory import SessionFactory, SessionModifierFactory, AuthHandlerFactory
+from py42._internal.session_factory import AuthHandlerFactory, SessionFactory, SessionModifierFactory
 
 TARGET_HOST_ADDRESS = "http://target"
 

@@ -1,7 +1,8 @@
-from py42._internal.session_manager import StorageSessionManager, FileEventSessionManager, SessionsManager, SessionManager
+import pytest
+
 from py42._internal.base_classes import BaseSessionFactory
 from py42._internal.login_providers import LoginProvider
-import pytest
+from py42._internal.session_manager import FileEventSessionManager, SessionsManager, StorageSessionManager
 
 
 def get_session_managers(session_factory):

@@ -1,33 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import pytest
-
 from datetime import datetime
 from time import time
 
 import py42
-from py42.sdk.file_event_query import MD5, SHA256, OSHostname, EventTimestamp, EventType, ExposureType, DeviceUsername,\
-    FileName, FilePath, PublicIPAddress, PrivateIPAddress, FileEventQuery
-
 from py42._internal.file_event_filter import FilterGroup
-from tests._internal.test_file_event_filter import file_event_filter, unicode_file_event_filter
+from py42.sdk.file_event_query import DeviceUsername, EventTimestamp, EventType, ExposureType, FileEventQuery, FileName, \
+    FilePath, MD5, OSHostname, PrivateIPAddress, PublicIPAddress, SHA256
 
 JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
-
-
-@pytest.fixture
-def event_filter_group(file_event_filter):
-    return FilterGroup([file_event_filter])
-
-
-@pytest.fixture
-def unicode_event_filter_group(unicode_file_event_filter):
-    return FilterGroup([unicode_file_event_filter])
-
-
-@pytest.fixture
-def event_filter_group_list(event_filter_group):
-    return [event_filter_group for _ in range(3)]
 
 
 def build_query_json(group_clause, group_list):

@@ -3,8 +3,8 @@ import time
 from collections import namedtuple
 
 import py42.util as util
-from py42._internal.clients.archive import ArchiveClient
 from py42._internal.client_factories import StorageClientFactory
+from py42._internal.clients.archive import ArchiveClient
 
 FileSelection = namedtuple("FileSelection", "path_set, num_files, num_dirs, size")
 
@@ -81,7 +81,7 @@ class ArchiveAccessor(object):
         return self._get_children(then=handle_archive_roots, node_id=None)
 
     def _walk_tree(self, current_node, remaining_path_components, then=None, **kwargs):
-        if len(remaining_path_components) == 0 or len(remaining_path_components[0]) == 0:
+        if not remaining_path_components or not remaining_path_components[0]:
             return then(current_node)
 
         def handle_get_children(response):

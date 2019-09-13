@@ -1,7 +1,8 @@
 import pytest
+
 import py42.debug as debug
-import py42.settings as settings
 import py42.debug_level as debug_level
+import py42.settings as settings
 
 
 @pytest.fixture

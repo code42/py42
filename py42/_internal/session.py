@@ -139,7 +139,7 @@ class Py42Session(object):
 
     @staticmethod
     def _build_exception_message_with_exception_and_trace(e, trc):
-        return "{0} {1}".format(e, trc)
+        return str(e) + " " + repr(trc)
 
     def _handle_error(self, exception, exception_trace, request_handler):
         if request_handler is not None:

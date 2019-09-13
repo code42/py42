@@ -29,7 +29,7 @@ def build_expected_exception_message(host, url, exception_type, exception_messag
 
 
 def build_expected_exception_message_with_trace(host, url, exception_type, exception_message, trace):
-    return "{0} {1}".format(build_expected_exception_message(host, url, exception_type, exception_message), trace)
+    return build_expected_exception_message(host, url, exception_type, exception_message) + " " + repr(trace)
 
 
 @pytest.fixture
@@ -38,6 +38,7 @@ def successful_response(mocker):
     response.content = TEST_RESPONSE_CONTENT
     response.status_code = 200
     return response
+
 
 @pytest.fixture
 def error_response(mocker, http_error):

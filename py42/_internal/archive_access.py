@@ -22,12 +22,12 @@ class ArchiveAccessorManager(object):
         self._storage_client_factory = storage_client_factory
 
     def get_archive_accessor(self, device_guid, destination_guid=None):
-        storage_client = self._storage_client_factory.create_backup_client(device_guid=device_guid,
-                                                                           destination_guid=destination_guid)
+        client = self._storage_client_factory.get_storage_client_from_device_guid(device_guid,
+                                                                                  destination_guid=destination_guid)
         data_key_token = self._get_data_key_token(device_guid)
-        session_id = self._create_web_restore_session(storage_client.archive, device_guid, data_key_token)
-        restore_job_manager = create_restore_job_manager(storage_client.archive, device_guid, session_id)
-        return ArchiveAccessor(device_guid, session_id, storage_client.archive, restore_job_manager)
+        session_id = self._create_web_restore_session(client.archive, device_guid, data_key_token)
+        restore_job_manager = create_restore_job_manager(client.archive, device_guid, session_id)
+        return ArchiveAccessor(device_guid, session_id, client.archive, restore_job_manager)
 
     def _get_data_key_token(self, device_guid):
         response = self._archive_client.get_data_key_token(device_guid, force_sync=True)

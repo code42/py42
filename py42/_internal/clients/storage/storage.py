@@ -6,7 +6,6 @@ from py42._internal.clients.storage.security import StorageSecurityClient
 class StorageClient(BaseStorageClient):
     def __init__(self, session):
         super(StorageClient, self).__init__(session)
-        self._session = session
         self._archive_client = StorageArchiveClient(session)
         self._security_client = StorageSecurityClient(session)
 

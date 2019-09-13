@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 0.2.0 - 2019-09-13
+
+## Added
+- `SecurityModule.get_security_detection_event_client`
+
+### Removed
+- The following methods from `SecurityModule`. Use `StorageSecurityClient` (via `SecurityModule.get_security_detection_event_client`) instead.
+    - `get_security_detection_events_for_user()`
+    - `get_security_detection_events_summary()`
+    
+- `get_security_detection_events` from `StorageSecurityClient`. Use `get_security_detection_events_for_plan()`,
+ `get_security_detection_events_for_user()`, or `get_security_detection_event_summary()` instead.
+ 
+- `include_files` and `event_types` parameters from `StorageSecurityClient.get_security_detection_event_summary()`.
+These had no effect.
+
+
 ## 0.1.10 - 2019-09-12
 
 ### Added

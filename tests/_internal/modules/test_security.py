@@ -28,15 +28,15 @@ class TestSecurityModule(object):
 
     @staticmethod
     def return_file_event_client(file_event_client):
-        def mock_create_file_event_client():
+        def mock_get_file_event_client():
             return file_event_client
-        return mock_create_file_event_client
+        return mock_get_file_event_client
 
     def test_search_file_events_with_only_query_calls_through_to_client(self, security_client,
                                                                         storage_client_factory,
                                                                         file_event_client_factory,
                                                                         file_event_client):
-        file_event_client_factory.create_file_event_client.side_effect = self.return_file_event_client(file_event_client)
+        file_event_client_factory.get_file_event_client.side_effect = self.return_file_event_client(file_event_client)
         security_module = SecurityModule(security_client, storage_client_factory, file_event_client_factory)
         security_module.search_file_events(RAW_QUERY)
         file_event_client.search_file_events.assert_called_with(RAW_QUERY, then=None, catch=None)
@@ -45,7 +45,7 @@ class TestSecurityModule(object):
                                                                             storage_client_factory,
                                                                             file_event_client_factory,
                                                                             file_event_client):
-        file_event_client_factory.create_file_event_client.side_effect = self.return_file_event_client(file_event_client)
+        file_event_client_factory.get_file_event_client.side_effect = self.return_file_event_client(file_event_client)
         security_module = SecurityModule(security_client, storage_client_factory, file_event_client_factory)
 
         def then():
@@ -60,7 +60,7 @@ class TestSecurityModule(object):
     def test_search_file_events_with_kwargs_calls_through_to_client(self, security_client,
                                                                     storage_client_factory, file_event_client_factory,
                                                                     file_event_client):
-        file_event_client_factory.create_file_event_client.side_effect = self.return_file_event_client(file_event_client)
+        file_event_client_factory.get_file_event_client.side_effect = self.return_file_event_client(file_event_client)
         security_module = SecurityModule(security_client, storage_client_factory, file_event_client_factory)
         security_module.search_file_events(RAW_QUERY, arg1="arg1")
         file_event_client.search_file_events.assert_called_with(RAW_QUERY, arg1="arg1", catch=None, then=None)

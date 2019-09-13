@@ -43,37 +43,6 @@ class StorageSessionManager(SessionManager):
         # type: (BaseSessionFactory) -> None
         super(StorageSessionManager, self).__init__()
         self._session_factory = session_factory
-        self._cache_key_to_storage_url_map = {}
-        self._cache_update_lock = Lock()
-
-    def get_url_for_cache_key(self, cache_key):
-        return self._cache_key_to_storage_url_map.get(cache_key)
-
-    def get_session(self, login_provider, force_replace=False):
-        storage_session, needs_cache_key_update = self._get_session_from_cache(login_provider, force_replace)
-        if storage_session and needs_cache_key_update:
-            self._add_cache_key_url_mapping(login_provider, storage_session)
-
-        return storage_session
-
-    def _add_cache_key_url_mapping(self, login_provider, storage_session):
-        with self._cache_update_lock:
-            self._cache_key_to_storage_url_map.update({login_provider.session_cache_key: storage_session.host_address})
-
-    def _get_session_from_cache(self, login_provider, force_replace):
-        storage_session = None
-        needs_cache_key_update = False
-
-        if login_provider.session_cache_key is not None and not force_replace:
-            storage_url = self.get_url_for_cache_key(login_provider.session_cache_key)
-            if storage_url is not None:
-                storage_session = self.get_saved_session_for_url(storage_url)
-            else:
-                needs_cache_key_update = True
-
-        if storage_session is None or force_replace:
-            storage_session = super(StorageSessionManager, self).get_session(login_provider, force_replace)
-        return storage_session, needs_cache_key_update
 
     def create_session(self, login_provider, force_replace=False):
         return self._session_factory.create_storage_session(login_provider)

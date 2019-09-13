@@ -1,8 +1,7 @@
-from py42._internal.base_classes import BaseArchiveLocatorFactory
 from py42._internal.clients import administration, archive, devices, legal_hold, orgs, security, users
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.storage.storage import StorageClient
-from py42._internal.login_provider_factories import FileEventLoginProviderFactory
+from py42._internal.login_provider_factories import ArchiveLocatorFactory, FileEventLoginProviderFactory
 from py42._internal.session_manager import SessionsManager
 
 
@@ -36,31 +35,19 @@ class AuthorityClientFactory(object):
 
 class StorageClientFactory(object):
     def __init__(self, session_manager, login_provider_factory):
-        # type: (SessionsManager, BaseArchiveLocatorFactory) -> None
+        # type: (SessionsManager, ArchiveLocatorFactory) -> None
         self._session_manager = session_manager
         self._login_provider_factory = login_provider_factory
 
-    def create_backup_client(self, *args, **kwargs):
-        login_provider = self._login_provider_factory.create_backup_archive_locator(*args, **kwargs)
+    def get_storage_client_from_device_guid(self, device_guid, destination_guid=None):
+        login_provider = self._login_provider_factory.create_backup_archive_locator(device_guid, destination_guid)
         session = self._session_manager.get_storage_session(login_provider)
         return StorageClient(session)
 
-    def create_security_plan_clients(self, *args, **kwargs):
-        login_providers = self._login_provider_factory.create_security_archive_locators(*args, **kwargs)
-        sessions = []
-        for provider in login_providers:
-            try:
-                session = self._session_manager.get_storage_session(provider)
-                sessions.append(session)
-            except Exception as e:
-                catch = kwargs.get("catch")
-                user_uid = kwargs.get("user_uid")
-                if catch:
-                    message = "Error creating storage session. user_uid={0} node_guid={1} exception={2}"
-                    wrapped_exception = e.__class__(message.format(user_uid, provider.session_cache_key, repr(e)))
-                    catch(wrapped_exception)
-        clients = [StorageClient(session) for session in sessions]
-        return clients
+    def get_storage_client_from_plan_uid(self, plan_uid, destination_guid):
+        login_provider = self._login_provider_factory.create_security_archive_locator(plan_uid, destination_guid)
+        session = self._session_manager.get_storage_session(login_provider)
+        return StorageClient(session)
 
 
 class FileEventClientFactory(object):
@@ -69,7 +56,7 @@ class FileEventClientFactory(object):
         self._session_manager = session_manager
         self._login_provider_factory = login_provider_factory
 
-    def create_file_event_client(self):
+    def get_file_event_client(self):
         login_provider = self._login_provider_factory.create_file_event_login_provider()
         session = self._session_manager.get_file_event_session(login_provider)
         return FileEventClient(session)

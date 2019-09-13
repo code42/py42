@@ -31,12 +31,3 @@ class BaseSessionFactory(object):
 
     def create_file_event_session(self, *args, **kwargs):
         pass
-
-
-class BaseArchiveLocatorFactory(object):
-
-    def create_security_archive_locators(self, *args, **kwargs):
-        pass
-
-    def create_backup_archive_locator(self, *args, **kwargs):
-        pass

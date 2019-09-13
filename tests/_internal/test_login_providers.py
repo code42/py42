@@ -218,11 +218,6 @@ def test_storage_auth_token_provider_returns_tmp_login_token(storage_auth_token_
     assert storage_auth_token_provider.get_secret_value() == TMP_LOGIN_TOKEN
 
 
-def test_storage_auth_token_provider_session_cache_key_matches_supplied_node_guid(storage_auth_token_provider):
-    # type: (C42APIStorageAuthTokenProvider) -> None
-    assert storage_auth_token_provider.session_cache_key == NODE_GUID
-
-
 class TestFileEventLoginProvider(object):
 
     def test_get_target_host_address_given_sts_base_url_returns_fs_base_url(self, file_event_login_provider_with_sts):

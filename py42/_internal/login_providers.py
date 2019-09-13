@@ -74,7 +74,6 @@ class C42APITmpAuthProvider(LoginProvider):
     def __init__(self, node_guid=None):
         super(C42APITmpAuthProvider, self).__init__()
         self._cached_info = None
-        self._session_cache_key = node_guid
 
     def get_target_host_address(self):
         if self._cached_info is not None:

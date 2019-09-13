@@ -1,30 +1,22 @@
 import py42.util as util
-from py42._internal.base_classes import BaseArchiveLocatorFactory
 from py42._internal.clients.devices import DeviceClient
-from py42._internal.clients.security import SecurityClient, get_normalized_security_event_plan_info
+from py42._internal.clients.security import SecurityClient
 from py42._internal.login_providers import C42APILoginTokenProvider, C42APIStorageAuthTokenProvider, \
     FileEventLoginProvider
 
 
-class C42AuthorityArchiveLocatorFactory(BaseArchiveLocatorFactory):
+class ArchiveLocatorFactory(object):
 
     def __init__(self, auth_session, security_client, device_client):
-        # type: (object, SecurityClient, DeviceClient) -> C42AuthorityArchiveLocatorFactory
+        # type: (object, SecurityClient, DeviceClient) -> ArchiveLocatorFactory
         self._auth_session = auth_session
         self._security_client = security_client
         self._device_client = device_client
 
-    def create_security_archive_locators(self, user_uid, *args, **kwargs):
-        plan_dict = get_normalized_security_event_plan_info(self._security_client, user_uid, **kwargs)
-        locator_list = []
-        for plan, destination_list in plan_dict.items():
-            for destination in destination_list:
-                locator_list.append(C42APIStorageAuthTokenProvider(self._auth_session, plan,
-                                                                   destination["destinationGuid"],
-                                                                   node_guid=destination.get("nodeGuid")))
-        return locator_list
+    def create_security_archive_locator(self, plan_uid, destination_guid):
+        return C42APIStorageAuthTokenProvider(self._auth_session, plan_uid, destination_guid)
 
-    def create_backup_archive_locator(self, device_guid, destination_guid=None, *args, **kwargs):
+    def create_backup_archive_locator(self, device_guid, destination_guid=None):
         try:
             if destination_guid is None:
                 response = self._device_client.get_device_by_guid(device_guid, include_backup_usage=True, force_sync=True)

@@ -1,6 +1,5 @@
-import py42.util as util
 from py42._internal.client_factories import FileEventClientFactory, StorageClientFactory
-from py42._internal.clients.security import SecurityClient
+from py42._internal.clients.security import SecurityClient, get_normalized_security_event_plan_info
 
 
 class SecurityModule(object):
@@ -10,27 +9,15 @@ class SecurityModule(object):
         self._storage_client_factory = storage_client_factory
         self._file_event_client_factory = file_event_client_factory
 
-    def get_security_event_locations(self, user_uid, catch=None, **kwargs):
-        storage_clients = self._storage_client_factory.create_security_plan_clients(user_uid=user_uid, catch=catch)
-        client_calls = [client.security.get_security_detection_events for client in storage_clients]
-        return self._return_first_successful_result(client_calls, user_uid=user_uid, catch=catch, **kwargs)
+    def get_security_event_locations(self, user_uid, catch=None):
+        # unlike most api calls this does not return the response from /c42api/v3/SecurityEventsLocation in raw form.
+        # This is because the format has changed between versions of the c42 authority and the response has to be
+        # normalized.
 
-    def get_security_detection_events_for_user(self, user_uid, cursor=None, include_files=None, event_types=None,
-                                               min_timestamp=None, max_timestamp=None, **kwargs):
+        return get_normalized_security_event_plan_info(self._security_client, user_uid, catch=catch)
 
-        return self.get_security_event_locations(user_uid=user_uid, cursor=cursor,
-                                                 include_files=include_files,
-                                                 event_types=event_types,
-                                                 min_timestamp=min_timestamp,
-                                                 max_timestamp=max_timestamp, **kwargs)
-
-    def get_security_detection_event_summary(self, user_uid, cursor=None, include_files=None, event_types=None,
-                                             min_timestamp=None, max_timestamp=None, **kwargs):
-
-        return self.get_security_event_locations(user_uid=user_uid, cursor=cursor,
-                                                 include_files=include_files, event_types=event_types,
-                                                 min_timestamp=min_timestamp, max_timestamp=max_timestamp,
-                                                 summarize=True, **kwargs)
+    def get_security_detection_event_client(self, plan_uid, destination_guid):
+        return self._storage_client_factory.get_storage_client_from_plan_uid(plan_uid, destination_guid).security
 
     def search_file_events(self, query, then=None, catch=None, **kwargs):
         """Searches for file events
@@ -43,17 +30,5 @@ class SecurityModule(object):
         Returns:
             list of file events as JSON
         """
-        file_event_client = self._file_event_client_factory.create_file_event_client()
+        file_event_client = self._file_event_client_factory.get_file_event_client()
         return file_event_client.search_file_events(query, then=then, catch=catch, **kwargs)
-
-    def _return_first_successful_result(self, func_list, catch=None, *args, **kwargs):
-        if func_list:
-            func = func_list[0]
-
-            def catch_and_try_next(ex):
-                func_list.remove(func)
-                self._return_first_successful_result(func_list, *args, **kwargs)
-
-            catch = util.wrap_func(catch_and_try_next, catch)
-            result = func(catch=catch, *args, **kwargs)
-            return result

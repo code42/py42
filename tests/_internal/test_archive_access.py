@@ -481,16 +481,15 @@ class TestArchiveAccessManager(object):
                                                                                  storage_client_factory):
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
-        storage_client_factory.create_backup_client.assert_called_with(device_guid=DEVICE_GUID,
-                                                                       destination_guid=None)
+        storage_client_factory.get_storage_client_from_device_guid.assert_called_with(DEVICE_GUID, destination_guid=None)
 
     def test_get_archive_accessor_with_opt_dest_guid_calls_storage_client_factory_with_correct_args(self,
                                                                                                     archive_client,
                                                                                                     storage_client_factory):
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
-        accessor_manager.get_archive_accessor(DEVICE_GUID)
-        storage_client_factory.create_backup_client.assert_called_with(device_guid=DEVICE_GUID,
-                                                                       destination_guid=None)
+        accessor_manager.get_archive_accessor(DEVICE_GUID, destination_guid=DESTINATION_GUID)
+        storage_client_factory.get_storage_client_from_device_guid.assert_called_with(DEVICE_GUID,
+                                                                                      destination_guid=DESTINATION_GUID)
 
     def test_get_archive_accessor_requests_data_key_token_from_archive_client(self, archive_client,
                                                                               storage_client_factory):
@@ -508,7 +507,7 @@ class TestArchiveAccessManager(object):
         archive_client.get_data_key_token.return_value = response
 
         storage_client.archive = storage_archive_client
-        storage_client_factory.create_backup_client.return_value = storage_client
+        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
 
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
@@ -528,7 +527,7 @@ class TestArchiveAccessManager(object):
         storage_archive_client.create_web_restore_session.return_value = response
         storage_client.archive = storage_archive_client
 
-        storage_client_factory.create_backup_client.return_value = storage_client
+        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
 
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
@@ -538,7 +537,7 @@ class TestArchiveAccessManager(object):
 
     def test_get_archive_accessor_raises_exception_when_create_backup_client_raises(self, archive_client,
                                                                                     storage_client_factory):
-        storage_client_factory.create_backup_client.side_effect = Exception("Exception in create_backup_client")
+        storage_client_factory.get_storage_client_from_device_guid.side_effect = Exception("Exception in create_backup_client")
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         with pytest.raises(Exception) as e:
             accessor_manager.get_archive_accessor(INVALID_DEVICE_GUID)

@@ -10,9 +10,6 @@ def get_session_managers(session_factory):
             FileEventSessionManager(session_factory)]
 
 
-TEST_CACHE_KEY = "TEST-CACHE-KEY"
-
-
 @pytest.fixture
 def session_factory(mocker):
     return mocker.MagicMock(spec=BaseSessionFactory)
@@ -20,9 +17,7 @@ def session_factory(mocker):
 
 @pytest.fixture
 def login_provider(mocker):
-    login_provider = mocker.MagicMock(spec=LoginProvider)
-    login_provider.session_cache_key.return_value = None
-    return login_provider
+    return mocker.MagicMock(spec=LoginProvider)
 
 
 class TestSessionsManager(object):
@@ -107,13 +102,6 @@ class TestStorageSessionManager(object):
         expected_message = "Failed to create or retrieve session, caused by: Mock error!"
         assert e.value.args[0] == expected_message
 
-    def test_get_session_with_multiple_calls_calls_factory_only_once_when_provider_has_cache_key(self, session_factory, login_provider):
-        storage_session_manager = StorageSessionManager(session_factory)
-        login_provider.session_cache_key = TEST_CACHE_KEY
-        storage_session_manager.get_session(login_provider)
-        storage_session_manager.get_session(login_provider)
-        session_factory.create_storage_session.assert_called_once()
-
     def test_get_session_get_saved_session_initially_returns_none(self, session_factory):
         storage_session_manager = StorageSessionManager(session_factory)
         assert storage_session_manager.get_saved_session_for_url("TEST-URI") is None
@@ -143,32 +131,3 @@ class TestStorageSessionManager(object):
         assert storage_session_manager.get_saved_session_for_url.call_count == 2
         # still only called once
         storage_session_manager.create_session.assert_called_once()
-
-    def test_get_session_calls_get_url_for_cache_key_if_session_already_created_and_cache_key_used(self, session_factory, login_provider, mocker):
-        storage_session_manager = StorageSessionManager(session_factory)
-        login_provider.session_cache_key = TEST_CACHE_KEY
-        storage_session_manager.create_session = mocker.MagicMock()
-        storage_session_manager.get_session(login_provider)
-        storage_session_manager.create_session.assert_called_once()
-
-        storage_session_manager.get_url_for_cache_key = mocker.MagicMock()
-        storage_session_manager.get_session(login_provider)
-        storage_session_manager.get_session(login_provider)
-        assert storage_session_manager.get_url_for_cache_key.call_count == 2
-        # still only called once
-        storage_session_manager.create_session.assert_called_once()
-
-    def test_get_url_for_cache_key_initially_returns_none(self, session_factory):
-        storage_session_manager = StorageSessionManager(session_factory)
-        assert storage_session_manager.get_url_for_cache_key(TEST_CACHE_KEY) is None
-
-    def test_get_url_for_cache_key_returns_none_after_get_session_when_no_cache_key_used(self, session_factory, login_provider):
-        storage_session_manager = StorageSessionManager(session_factory)
-        storage_session_manager.get_session(login_provider)
-        assert storage_session_manager.get_url_for_cache_key(TEST_CACHE_KEY) is None
-
-    def test_get_url_for_cache_key_returns_url_after_get_session_when_cache_key_used(self, session_factory, login_provider):
-        storage_session_manager = StorageSessionManager(session_factory)
-        login_provider.session_cache_key = TEST_CACHE_KEY
-        storage_session_manager.get_session(login_provider)
-        assert storage_session_manager.get_url_for_cache_key(TEST_CACHE_KEY) is not None

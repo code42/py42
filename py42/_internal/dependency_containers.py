@@ -1,7 +1,7 @@
 from py42._internal.archive_access import ArchiveAccessorManager
-from py42._internal.base_classes import BaseArchiveLocatorFactory, BaseSessionFactory
+from py42._internal.base_classes import BaseSessionFactory
 from py42._internal.client_factories import AuthorityClientFactory, FileEventClientFactory, StorageClientFactory
-from py42._internal.login_provider_factories import C42AuthorityArchiveLocatorFactory, FileEventLoginProviderFactory
+from py42._internal.login_provider_factories import ArchiveLocatorFactory, FileEventLoginProviderFactory
 from py42._internal.modules import archive as archive_module, security as sec_module
 from py42._internal.session import Py42Session
 from py42._internal.session_manager import FileEventSessionManager, SessionsManager, StorageSessionManager
@@ -73,7 +73,7 @@ class AuthorityDependencies(object):
 
 class StorageDependencies(object):
     def __init__(self, authority_dependencies, archive_locator_factory):
-        # type: (AuthorityDependencies, BaseArchiveLocatorFactory) -> None
+        # type: (AuthorityDependencies, ArchiveLocatorFactory) -> None
         self.storage_client_factory = StorageClientFactory(authority_dependencies.sessions_manager,
                                                            archive_locator_factory)
 
@@ -115,7 +115,7 @@ class SDKDependencies(object):
         security_client = authority_dependencies.security_client
         device_client = authority_dependencies.device_client
 
-        archive_locator_factory = C42AuthorityArchiveLocatorFactory(default_session, security_client, device_client)
+        archive_locator_factory = ArchiveLocatorFactory(default_session, security_client, device_client)
         storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
 
         file_event_dependencies = FileEventDependencies(authority_dependencies)

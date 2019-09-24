@@ -32,11 +32,11 @@ class TestDeviceClient(object):
     def test_get_users_calls_get_with_uri_and_params(self, session, v3_required_session):
         client = UserClient(session, v3_required_session)
         client.get_users()
-        session.get.assert_called_with(USER_URI, params=DEFAULT_GET_USERS_PARAMS)
+        session.get.assert_called_once_with(USER_URI, params=DEFAULT_GET_USERS_PARAMS)
 
     def test_unicode_username_get_user_by_username_calls_get_with_username(self, session, v3_required_session):
         username = u"我能吞"
         client = UserClient(session, v3_required_session)
         client.get_user_by_username(username)
         expected_params = {"username": username}
-        session.get.assert_called_with(USER_URI, params=expected_params)
+        session.get.assert_called_once_with(USER_URI, params=expected_params)

@@ -1,7 +1,6 @@
 import py42.settings
-from conftest import *
-
 from py42._internal.async_session import Py42AsyncSession
+from .conftest import *
 
 
 class TestPy42AsyncSession(object):
@@ -21,7 +20,7 @@ class TestPy42AsyncSession(object):
         session.get(URL, force_sync=True)
         message = build_expected_exception_message_with_trace(HOST_ADDRESS, URL, HTTPError, REQUEST_EXCEPTION_MESSAGE,
                                                               TRACEBACK)
-        global_exception_message_receiver.assert_called_with(message)
+        global_exception_message_receiver.assert_called_once_with(message)
 
     def test_request_with_catch_upon_exception_calls_catch_with_exception_message(
             self, error_requests_session, renewing_auth_handler, http_error, catch):

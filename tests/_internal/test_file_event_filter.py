@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import py42
+from py42._internal.compat import str
 from py42._internal.file_event_filter import FileEventFilter, create_eq_filter_group, create_file_event_filter, \
     create_filter_group, create_in_range_filter_group, create_is_in_filter_group, create_not_eq_filter_group, \
     create_not_in_filter_group, create_on_or_after_filter_group, create_on_or_before_filter_group
@@ -32,7 +33,7 @@ def test_file_event_filter_unicode_outputs_correct_json_representation(unicode_f
     expected = u'{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(OPERATOR_STRING,
                                                                            EVENT_FILTER_FIELD_NAME,
                                                                            VALUE_UNICODE)
-    assert unicode(unicode_file_event_filter) == expected
+    assert str(unicode_file_event_filter) == expected
 
 
 def test_filter_group_constructs_successfully(file_event_filter):
@@ -75,7 +76,7 @@ def test_create_eq_filter_group_calls_create_file_event_filter_with_correct_valu
     create_eq_filter_group(term, "eqval")
     op = "IS"
 
-    py42._internal.file_event_filter.create_file_event_filter.assert_called_with(term, op, "eqval")
+    py42._internal.file_event_filter.create_file_event_filter.assert_called_once_with(term, op, "eqval")
 
 
 def test_create_is_in_filter_group_calls_create_file_event_filter_with_correct_values(mocker):
@@ -94,7 +95,7 @@ def test_create_not_eq_filter_group_calls_create_file_event_filter_with_correct_
     create_not_eq_filter_group(term, "noteqtval")
     op = "IS_NOT"
 
-    py42._internal.file_event_filter.create_file_event_filter.assert_called_with(term, op, "noteqtval")
+    py42._internal.file_event_filter.create_file_event_filter.assert_called_once_with(term, op, "noteqtval")
 
 
 def test_create_not_in_filter_group_calls_create_file_event_filter_with_correct_values(mocker):
@@ -112,7 +113,7 @@ def test_create_on_or_before_filter_group_calls_create_file_event_filter_with_co
     term = "test_on_or_before_term"
     create_on_or_before_filter_group(term, "test_formatted_time")
     op = "ON_OR_BEFORE"
-    py42._internal.file_event_filter.create_file_event_filter.assert_called_with(term, op, "test_formatted_time")
+    py42._internal.file_event_filter.create_file_event_filter.assert_called_once_with(term, op, "test_formatted_time")
 
 
 def test_create_on_or_after_filter_group_calls_create_file_event_filter_with_correct_values(mocker):
@@ -120,7 +121,7 @@ def test_create_on_or_after_filter_group_calls_create_file_event_filter_with_cor
     term = "test_on_or_after_term"
     create_on_or_after_filter_group(term, "test_formatted_time")
     op = "ON_OR_AFTER"
-    py42._internal.file_event_filter.create_file_event_filter.assert_called_with(term, op, "test_formatted_time")
+    py42._internal.file_event_filter.create_file_event_filter.assert_called_once_with(term, op, "test_formatted_time")
 
 
 def test_create_in_range_filter_group_calls_create_file_event_filter_with_correct_values(mocker):

@@ -20,8 +20,6 @@ V3_TOKEN = "v3usertokenstring"
 TMP_LOGIN_TOKEN = "tmplogintokenstring"
 STORAGE_HOST_ADDRESS = "https://testsstorage.code42.com"
 
-NODE_GUID = "nodeguid"
-
 STS_BASE_URL = "https://sts-east.us.code42.com"
 
 SERVER_ENV_EXCEPTION_MESSAGE = "Internal error in /api/ServerEnv"
@@ -33,7 +31,7 @@ def v1_auth_provider(mocker):
     auth_session.host_address = HOST_ADDRESS
     def mock_post(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
-        response.content = json.dumps({"data": [V1_TOKEN_PART1, V1_TOKEN_PART2]})
+        response.text = json.dumps({"data": [V1_TOKEN_PART1, V1_TOKEN_PART2]})
         response.status_code = 200
         return response
     auth_session.post.side_effect = mock_post
@@ -47,7 +45,7 @@ def v3_auth_provider(mocker):
     auth_session.host_address = HOST_ADDRESS
     def mock_get(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
-        response.content = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
+        response.text = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
         response.status_code = 200
         return response
     auth_session.get.side_effect = mock_get
@@ -62,7 +60,7 @@ def login_token_provider(mocker):
 
     def mock_post(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
-        response.content = json.dumps({"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}})
+        response.text = json.dumps({"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}})
         response.status_code = 200
         return response
 
@@ -77,12 +75,12 @@ def storage_auth_token_provider(mocker):
 
     def mock_post(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
-        response.content = json.dumps({"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}})
+        response.text = json.dumps({"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}})
         response.status_code = 200
         return response
 
     auth_session.post.side_effect = mock_post
-    return C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid", node_guid=NODE_GUID)
+    return C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid")
 
 
 @pytest.fixture
@@ -92,11 +90,11 @@ def file_event_login_provider_with_sts(mocker):
     def mock_get(uri, **kwargs):
         if uri == "/api/ServerEnv":
             response = mocker.MagicMock(spec=Response)
-            response.content = json.dumps({"stsBaseUrl": STS_BASE_URL})
+            response.text = json.dumps({"stsBaseUrl": STS_BASE_URL})
             response.status_code = 200
         elif uri == "/c42api/v3/auth/jwt":
             response = mocker.MagicMock(spec=Response)
-            response.content = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
+            response.text = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
             response.status_code = 200
         return response
 
@@ -110,7 +108,7 @@ def file_event_login_provider_no_sts(mocker):
 
     def mock_get(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
-        response.content = json.dumps({})
+        response.text = json.dumps({})
         response.status_code = 200
         return response
 
@@ -141,8 +139,8 @@ def test_basic_provider_constructs_successfully():
 def test_basic_provider_secret_returns_base64_credentials(basic_auth_provider):
     # type: (BasicAuthProvider) -> None
 
-    expected_credentials = "{0}:{1}".format(USERNAME, PASSWORD)
-    expected_b64_credentials = base64.encodestring(expected_credentials).replace("\n", "")
+    expected_credentials = "{0}:{1}".format(USERNAME, PASSWORD).encode("utf-8")
+    expected_b64_credentials = base64.b64encode(expected_credentials).decode("utf-8")
 
     provider_credentials = basic_auth_provider.get_secret_value()
 
@@ -204,8 +202,7 @@ def test_login_token_provider_secret_returns_tmp_login_token(login_token_provide
 def test_storage_auth_token_provider_constructs_successfully(mocker):
     auth_session = mocker.MagicMock(spec=Py42Session)
     auth_session.host_address = HOST_ADDRESS
-    assert C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid",
-                                          node_guid=NODE_GUID)
+    assert C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid")
 
 
 def test_storage_auth_token_provider_host_address_returns_storage_url(storage_auth_token_provider):

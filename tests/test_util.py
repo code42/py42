@@ -5,6 +5,7 @@ import os
 import pytest
 from requests import Response
 
+import py42._internal.compat as compat
 import py42.util as util
 
 TEST_FILENAME = "file.txt"
@@ -13,6 +14,7 @@ TEST_PATH = "{0}/{1}".format(TEST_DIR, TEST_FILENAME)
 TEST_UNICODE_FILENAME = u"吞"
 TEST_UNICODE_DIR = u"我能"
 TEST_UNICODE_PATH = u"{0}/{1}".format(TEST_UNICODE_DIR, TEST_UNICODE_FILENAME)
+BUILTIN_MODULE = "__builtin__" if compat.is_py2 else "builtins"
 
 
 def mock_access(can_access=True):
@@ -29,56 +31,56 @@ def mock_dir_only_access():
 
 @pytest.fixture
 def non_existing_dir(monkeypatch):
-    monkeypatch.setattr("posixpath.exists", lambda(path): False)
+    monkeypatch.setattr("posixpath.exists", lambda path: False)
     monkeypatch.setattr("os.access", mock_access(False))
     return TEST_PATH
 
 
 @pytest.fixture
 def non_existent_unicode_dir(monkeypatch):
-    monkeypatch.setattr("posixpath.exists", lambda(path): False)
+    monkeypatch.setattr("posixpath.exists", lambda path: False)
     monkeypatch.setattr("os.access", mock_access(False))
     return TEST_UNICODE_PATH
 
 
 @pytest.fixture
 def existing_dir_not_writeable(monkeypatch):
-    monkeypatch.setattr("posixpath.exists", lambda(path): path == TEST_DIR)
+    monkeypatch.setattr("posixpath.exists", lambda path: path == TEST_DIR)
     monkeypatch.setattr("os.access", mock_access(False))
     return TEST_PATH
 
 
 @pytest.fixture
 def existing_unicode_dir_not_writeable(monkeypatch):
-    monkeypatch.setattr("posixpath.exists", lambda(path): path == TEST_UNICODE_DIR)
+    monkeypatch.setattr("posixpath.exists", lambda path: path == TEST_UNICODE_DIR)
     monkeypatch.setattr("os.access", mock_access(False))
     return TEST_UNICODE_PATH
 
 
 @pytest.fixture
 def non_existing_file_writeable(monkeypatch):
-    monkeypatch.setattr("posixpath.exists", lambda(path): path == TEST_DIR)
+    monkeypatch.setattr("posixpath.exists", lambda path: path == TEST_DIR)
     monkeypatch.setattr("os.access", mock_access())
     return TEST_PATH
 
 
 @pytest.fixture
 def existing_file_writeable(monkeypatch):
-    monkeypatch.setattr("posixpath.exists", lambda(path): True)
+    monkeypatch.setattr("posixpath.exists", lambda path: True)
     monkeypatch.setattr("os.access", mock_access())
     return TEST_PATH
 
 
 @pytest.fixture
 def existing_file_not_writeable(monkeypatch):
-    monkeypatch.setattr("posixpath.exists", lambda(path): True)
+    monkeypatch.setattr("posixpath.exists", lambda path: True)
     monkeypatch.setattr("os.access", mock_dir_only_access())
     return TEST_PATH
 
 
 @pytest.fixture
 def existing_unicode_file_not_writeable(monkeypatch):
-    monkeypatch.setattr("posixpath.exists", lambda(path): True)
+    monkeypatch.setattr("posixpath.exists", lambda path: True)
     monkeypatch.setattr("os.access", mock_dir_only_access())
     return TEST_UNICODE_PATH
 
@@ -87,7 +89,7 @@ def existing_unicode_file_not_writeable(monkeypatch):
 def mock_open(mocker):
     mock_open = mocker.MagicMock()
     mocker.mock_open(mock_open)
-    return mocker.patch('__builtin__.open', mock_open)
+    return mocker.patch("{0}{1}".format(BUILTIN_MODULE, ".open"), mock_open)
 
 
 @pytest.fixture
@@ -104,7 +106,7 @@ def test_verify_path_writeable_if_dir_not_exists_raises_io_error(non_existing_di
     with pytest.raises(Exception) as e:
         util.verify_path_writeable(non_existing_dir)
     assert e.type == IOError
-    assert e.value.args[0] == "Directory does not exist: {0}".format(TEST_DIR)
+    assert e.value.args[0] == u"Directory does not exist: {0}".format(TEST_DIR)
 
 
 def test_verify_path_writeable_if_unicode_dir_not_exists_raises_io_error(non_existent_unicode_dir):
@@ -118,7 +120,7 @@ def test_verify_path_writeable_if_dir_not_writeable_raises_io_error(existing_dir
     with pytest.raises(Exception) as e:
         util.verify_path_writeable(existing_dir_not_writeable)
     assert e.type == IOError
-    assert e.value.args[0] == "Insufficient permissions to write to directory: {0}".format(TEST_DIR)
+    assert e.value.args[0] == u"Insufficient permissions to write to directory: {0}".format(TEST_DIR)
 
 
 def test_verify_path_writeable_if_unicode_dir_not_writeable_raises_io_error(existing_unicode_dir_not_writeable):
@@ -132,7 +134,7 @@ def test_verify_path_writeable_if_file_not_writeable_raises_io_error(existing_fi
     with pytest.raises(Exception) as e:
         util.verify_path_writeable(existing_file_not_writeable)
     assert e.type == IOError
-    assert e.value.args[0] == "Insufficient permissions to write to file: {0}".format(existing_file_not_writeable)
+    assert e.value.args[0] == u"Insufficient permissions to write to file: {0}".format(existing_file_not_writeable)
 
 
 def test_verify_path_writeable_if_unicode_file_not_writeable_raises_io_error(existing_unicode_file_not_writeable):
@@ -175,19 +177,19 @@ def test_build_path_with_filename_none_save_as_dir_and_custom_default_dir_return
 def test_save_content_to_disk_opens_file_at_given_path(mocker, mock_open, response, response_content):
     response.iter_content.return_value = list(response_content)
     util.save_content_to_disk(response, TEST_PATH)
-    mock_open.assert_called_with(TEST_PATH, mocker.ANY)
+    mock_open.assert_called_once_with(TEST_PATH, mocker.ANY)
 
 
 def test_save_content_to_disk_opens_file_in_binary_mode(mocker, mock_open, response, response_content):
     response.iter_content.return_value = list(response_content)
     util.save_content_to_disk(response, TEST_PATH)
-    mock_open.assert_called_with(mocker.ANY, "wb")
+    mock_open.assert_called_once_with(mocker.ANY, "wb")
 
 
 def test_save_content_to_disk_opens_file_once(mock_open, response, response_content):
     response.iter_content.return_value = list(response_content)
     util.save_content_to_disk(response, TEST_PATH)
-    mock_open.assert_called_once()
+    assert mock_open.call_count == 1
 
 
 def test_save_content_to_disk_uses_context_manager(mock_open, response):

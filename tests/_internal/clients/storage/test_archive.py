@@ -106,9 +106,9 @@ class TestStorageArchiveClient(object):
 
         keys = [GUID_KEY, WEB_RESTORE_SESSION_ID_KEY, PATH_SET_KEY, NUM_FILES_KEY, NUM_DIRS_KEY, SIZE_KEY,
                 ZIP_RESULT_KEY, EXPIRE_JOB_KEY, SHOW_DELETED_KEY, RESTORE_FULL_PATH_KEY, TIMESTAMP_KEY, EXCEPTIONS_KEY,
-                BACKUP_SET_ID_KEY, JOB_ID_KEY]
+                BACKUP_SET_ID_KEY]
 
-        assert json_arg.keys().sort() == keys.sort()
+        assert sorted(json_arg.keys()) == sorted(keys)
 
     def test_submit_web_restore_job_with_opt_zip_result_as_false_calls_post_with_zip_result_in_data(self, session):
         storage_archive_client = StorageArchiveClient(session)
@@ -158,7 +158,7 @@ class TestStorageArchiveClient(object):
         storage_archive_client.submit_web_restore_job(DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES,
                                                       NUM_DIRS, SIZE, restore_full_path=True)
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        json_arg.get(RESTORE_FULL_PATH_KEY) is True
+        assert json_arg.get(RESTORE_FULL_PATH_KEY) is True
 
     def test_submit_web_restore_job_with_restore_full_path_false_calls_post_with_restore_full_path_true_in_data(self,
                                                                                                                 session):

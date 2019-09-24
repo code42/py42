@@ -1,8 +1,9 @@
 from json import dumps
 
 import py42.settings
-from conftest import *
+from py42._internal.compat import str
 from py42._internal.session import Py42Session
+from .conftest import *
 
 
 class TestPy42Session(object):
@@ -14,7 +15,7 @@ class TestPy42Session(object):
 
         session.post(URL, json=JSON_VALUE)
 
-        filter_out_none_mock.assert_called()
+        assert filter_out_none_mock.call_count == 1
     
     def test_session_post_with_json_calls_request_with_data_param_with_string_encoded_json(self, success_requests_session):
         session = Py42Session(success_requests_session, HOST_ADDRESS)
@@ -34,7 +35,7 @@ class TestPy42Session(object):
     def test_session_request_returns_response_when_good_status_code(self, success_requests_session):
         session = Py42Session(success_requests_session, HOST_ADDRESS)
         response = session.get(URL)
-        assert response.content == TEST_RESPONSE_CONTENT
+        assert response.text == TEST_RESPONSE_CONTENT
 
     def test_session_request_with_error_status_code_raises_http_error(self, error_requests_session):
         session = Py42Session(error_requests_session, HOST_ADDRESS)
@@ -45,14 +46,14 @@ class TestPy42Session(object):
             self, success_requests_session, valid_auth_handler):
         session = Py42Session(success_requests_session, HOST_ADDRESS, valid_auth_handler)
         session.get(URL)
-        valid_auth_handler.renew_authentication.assert_called_with(session, use_credential_cache=True)
+        valid_auth_handler.renew_authentication.assert_called_once_with(session, use_credential_cache=True)
 
     def test_session_request_calls_auth_handler_renew_authentication_only_once_while_auth_is_valid(
             self, success_requests_session, valid_auth_handler):
         session = Py42Session(success_requests_session, HOST_ADDRESS, valid_auth_handler)
         session.get(URL)
         session.get(URL)
-        valid_auth_handler.renew_authentication.assert_called_once()
+        assert valid_auth_handler.renew_authentication.call_count == 1
 
     def test_session_request_calls_auth_handler_renew_authentication_twice_when_response_unauthorized(
             self, success_requests_session, renewing_auth_handler):
@@ -103,7 +104,7 @@ class TestPy42Session(object):
             session.get(URL)
         message = build_expected_exception_message_with_trace(HOST_ADDRESS, URL, HTTPError, REQUEST_EXCEPTION_MESSAGE,
                                                               TRACEBACK)
-        global_exception_message_receiver.assert_called_with(message)
+        global_exception_message_receiver.assert_called_once_with(message)
 
     def test_request_with_catch_upon_exception_calls_catch_with_exception_of_same_type_raised_internally(
             self, error_response, error_requests_session, renewing_auth_handler, http_error, catch):

@@ -200,42 +200,42 @@ def response(mocker):
 
 @pytest.fixture
 def security_client_one_location(security_client, response):
-    response.content = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
+    response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
     security_client.get_security_event_locations.return_value = response
     return security_client
 
 
 @pytest.fixture
 def security_client_two_plans_one_node(security_client, response):
-    response.content = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
+    response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
     security_client.get_security_event_locations.return_value = response
     return security_client
 
 
 @pytest.fixture
 def security_client_two_plans_two_nodes(security_client, response):
-    response.content = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
+    response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
     security_client.get_security_event_locations.return_value = response
     return security_client
 
 
 @pytest.fixture
 def security_client_one_plan_two_destinations(security_client, response):
-    response.content = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
+    response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
     security_client.get_security_event_locations.return_value = response
     return security_client
 
 
 @pytest.fixture
 def security_client_two_plans_two_destinations(security_client, response):
-    response.content = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
+    response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
     security_client.get_security_event_locations.return_value = response
     return security_client
 
 
 @pytest.fixture
 def security_client_two_plans_two_destinations_three_nodes(security_client, response):
-    response.content = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
+    response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
     security_client.get_security_event_locations.return_value = response
     return security_client
 

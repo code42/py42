@@ -52,25 +52,25 @@ def test_auth_handler_constructs_successfully():
 def test_auth_handler_renew_authentication_using_cache_calls_get_secret_value_on_login_provider_with_correct_params(mock_login_provider, mock_session_modifier):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session, use_credential_cache=True)
-    mock_login_provider.get_secret_value.assert_called_with(force_refresh=False)
+    mock_login_provider.get_secret_value.assert_called_once_with(force_refresh=False)
 
 
 def test_auth_handler_renew_authentication_no_cache_calls_get_secret_value_on_login_provider_with_correct_params(mock_login_provider, mock_session_modifier):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session)
-    mock_login_provider.get_secret_value.assert_called_with(force_refresh=True)
+    mock_login_provider.get_secret_value.assert_called_once_with(force_refresh=True)
 
 
 def test_auth_handler_renew_authentication_using_cache_calls_modify_session_on_session_modifier_with_correct_params(mock_login_provider, mock_session_modifier):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session, use_credential_cache=True)
-    mock_session_modifier.modify_session.assert_called_with(mock_session, TEST_SECRET)
+    mock_session_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
 
 
 def test_auth_handler_renew_authentication_no_cache_calls_modify_session_on_session_modifier_with_correct_params(mock_login_provider, mock_session_modifier):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session)
-    mock_session_modifier.modify_session.assert_called_with(mock_session, TEST_SECRET)
+    mock_session_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
 
 
 def test_auth_handler_response_indicates_unauthorized_returns_true_for_401(mocker):

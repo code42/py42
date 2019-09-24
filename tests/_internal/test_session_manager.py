@@ -40,13 +40,13 @@ class TestFileEventSessionManager(object):
     def test_get_session_calls_session_factory_with_login_provider(self, session_factory, login_provider):
         file_event_session_manager = FileEventSessionManager(session_factory)
         file_event_session_manager.get_session(login_provider)
-        session_factory.create_file_event_session.assert_called_with(login_provider)
+        session_factory.create_file_event_session.assert_called_once_with(login_provider)
 
     def test_get_session_with_multiple_calls_calls_factory_only_once(self, session_factory, login_provider):
         file_event_session_manager = FileEventSessionManager(session_factory)
         file_event_session_manager.get_session(login_provider)
         file_event_session_manager.get_session(login_provider)
-        session_factory.create_file_event_session.assert_called_once()
+        assert session_factory.create_file_event_session.call_count == 1
 
     def test_get_session_with_multiple_calls_returns_same_session(self, session_factory, login_provider):
         file_event_session_manager = FileEventSessionManager(session_factory)
@@ -74,13 +74,13 @@ class TestStorageSessionManager(object):
     def test_get_session_calls_session_factory_with_login_provider(self, session_factory, login_provider):
         storage_session_manager = StorageSessionManager(session_factory)
         storage_session_manager.get_session(login_provider)
-        session_factory.create_storage_session.assert_called_with(login_provider)
+        assert session_factory.create_storage_session.call_count == 1
 
     def test_get_session_with_multiple_calls_calls_factory_only_once(self, session_factory, login_provider):
         storage_session_manager = StorageSessionManager(session_factory)
         storage_session_manager.get_session(login_provider)
         storage_session_manager.get_session(login_provider)
-        session_factory.create_storage_session.assert_called_once()
+        assert session_factory.create_storage_session.call_count == 1
 
     def test_get_session_with_multiple_calls_returns_same_session(self, session_factory, login_provider):
         storage_session_manager = StorageSessionManager(session_factory)
@@ -117,17 +117,17 @@ class TestStorageSessionManager(object):
         storage_session_manager.create_session = mocker.MagicMock()
         storage_session_manager.get_session(login_provider)
         storage_session_manager.get_session(login_provider)
-        storage_session_manager.create_session.assert_called_once()
+        assert storage_session_manager.create_session.call_count == 1
 
     def test_get_session_calls_get_saved_session_for_url_if_session_already_created(self, session_factory, login_provider, mocker):
         storage_session_manager = StorageSessionManager(session_factory)
         storage_session_manager.create_session = mocker.MagicMock()
         storage_session_manager.get_session(login_provider)
-        storage_session_manager.create_session.assert_called_once()
+        assert storage_session_manager.create_session.call_count == 1
 
         storage_session_manager.get_saved_session_for_url = mocker.MagicMock()
         storage_session_manager.get_session(login_provider)
         storage_session_manager.get_session(login_provider)
         assert storage_session_manager.get_saved_session_for_url.call_count == 2
         # still only called once
-        storage_session_manager.create_session.assert_called_once()
+        assert storage_session_manager.create_session.call_count == 1

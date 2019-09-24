@@ -36,12 +36,12 @@ class TestDeviceClient(object):
         client.get_devices(q="TEST-HOSTNAME")
         expected_params = DEFAULT_GET_DEVICES_PARAMS
         expected_params["q"] = "TEST-HOSTNAME"
-        session.get.assert_called_with(COMPUTER_URI, params=DEFAULT_GET_DEVICES_PARAMS)
+        session.get.assert_called_once_with(COMPUTER_URI, params=DEFAULT_GET_DEVICES_PARAMS)
 
     def test_unicode_hostname_get_devices_calls_get_with_unicode_q_param(self, session, v3_required_session):
-        unicode_hostname = u"我能吞"
+        unicode_hostname = "我能吞"
         client = DeviceClient(session, v3_required_session)
         client.get_devices(q=unicode_hostname)
         expected_params = DEFAULT_GET_DEVICES_PARAMS
         expected_params["q"] = unicode_hostname
-        session.get.assert_called_with(COMPUTER_URI, params=expected_params)
+        session.get.assert_called_once_with(COMPUTER_URI, params=expected_params)

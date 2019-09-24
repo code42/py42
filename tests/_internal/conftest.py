@@ -5,6 +5,7 @@ from requests import HTTPError, Response, Session
 
 import py42.settings
 from py42._internal.auth_handling import AuthHandler
+from py42._internal.compat import str
 from py42._internal.file_event_filter import FileEventFilter
 
 HOST_ADDRESS = "http://example.com"
@@ -30,18 +31,18 @@ VALUE_UNICODE = u"我能吞下玻璃而不伤身体"
 
 
 def build_expected_exception_message(host, url, exception_type, exception_message):
-    message_format = "Error making request to {0}{1}. Caused by: {2}('{3}',)"
-    return message_format.format(host, url, exception_type.__name__, exception_message)
+    message_format = "Error making request to {0}{1}. Caused by: {2}"
+    return message_format.format(host, url, exception_message)
 
 
 def build_expected_exception_message_with_trace(host, url, exception_type, exception_message, trace):
-    return build_expected_exception_message(host, url, exception_type, exception_message) + " " + repr(trace)
+    return build_expected_exception_message(host, url, exception_type, exception_message) + " " + str(trace)
 
 
 @pytest.fixture
 def successful_response(mocker):
     response = mocker.MagicMock(spec=Response)
-    response.content = TEST_RESPONSE_CONTENT
+    response.text = TEST_RESPONSE_CONTENT
     response.status_code = 200
     return response
 
@@ -49,7 +50,7 @@ def successful_response(mocker):
 @pytest.fixture
 def error_response(mocker, http_error):
     response = mocker.MagicMock(spec=Response)
-    response.content = ""
+    response.text = ""
     response.status_code = 500
     response.raise_for_status.side_effect = http_error
     return response

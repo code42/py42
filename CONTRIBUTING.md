@@ -2,23 +2,21 @@
 
 ## Development environment
 
-Install py42 and its development dependencies. The "-e" option installs py42 in ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs). 
+Install py42 and its development dependencies. The `-e` option installs py42 in ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs). 
 
 ```bash
 pip install -e .[dev]
 ```
 
-If you are using Z shell (zsh), you may need to escape the brackets.
+If you are using `zsh`, you may need to escape the brackets.
 
 ## General
 
-### Do
-
 * Use positional argument specifiers in `str.format()`
+* Use syntax and built-in modules that are compatible with both Python 2 and 3.
+Use the `py42._internal.compat` module to create abstractions around functionality that differs between 2 and 3.
 
 ## Wrapping web APIs
-
-### Do
 
 * Name the method starting with a verb
 * Specify required arguments as positional arguments
@@ -28,36 +26,38 @@ If you are using Z shell (zsh), you may need to escape the brackets.
 
 ## Changes
 
-### Do
-
-Document all notable changes in CHANGELOG.md per principles and guidelines at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
-
+Document all notable consumer-affecting changes in CHANGELOG.md per principles and guidelines at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Tests
 
-We use the [pytest](https://docs.pytest.org/) test framework.
+We use [tox](https://tox.readthedocs.io/en/latest/#) to run the [pytest](https://docs.pytest.org/) test framework on Python 2.7, 3.5, 3.6, and 3.7.
 
 To run all tests, run this at the root of the repo:
 
 ```bash
-python setup.py test
+$ tox
+```
+
+If you're using a virtual environment, this will only run the tests within that environment/version of Python.
+To run the tests on all supported versions of Python in a local dev environment, we recommend using [pyenv](https://github.com/pyenv/pyenv) and tox in your system (non-virtual) environment:
+
+```bash
+$ pip install tox
+$ pyenv install 2.7.16
+$ pyenv install 3.5.7
+$ pyenv install 3.6.9
+$ pyenv install 3.7.4
+$ pyenv local 2.7.16 3.5.7 3.6.9 3.7.4
+$ tox
 ```
 
 ### Writing tests
-
-#### Do
 
 Put actual before expected values in assert statements. Pytest assumes this order.
 
 ```python
 a = 4
 assert a % 2 == 0
-```
-
-Use failure messages in assertions
-
-```python
-assert a % 2 == 0, "value was odd, should be even"
 ```
 
 Use the following naming convention with test methods:  

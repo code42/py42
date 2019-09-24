@@ -7,8 +7,7 @@ of session / authentication management.
 
 ## Requirements
 
-- Python 2.7.x
-- [requests](http://docs.python-requests.org/en/master/) 2.3+
+- Python 2.7.x or 3.5.0+
 - Code42 Server 6.8.x+
 
 ## Installation
@@ -16,7 +15,7 @@ of session / authentication management.
 Run the `setup.py` script to install the py42 package and its dependencies on your system. You will likely need administrative privileges for this.
 
 ```bash
-python setup.py install
+$ python setup.py install
 ```
 
 ## Hello, py42
@@ -26,7 +25,7 @@ Here's a simple example to verify the installation and your server/account.
 Launch the Python interpreter
 
 ```bash
-python
+$ python
 ```
 
 Import a couple essentials
@@ -91,12 +90,12 @@ You should see something like the following:
 
 There are a few default settings that affect the behavior of the client.
 
-| Name | Description |
-| ---- | ----------- |
-| verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.<br>Default: `True` |
-| global_exception_message_handler | Function with one parameter (str), which will be called when global exceptions are thrown. The exception message is passed to this handler. Default: `None` |
-| proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.<br>Default: `None` |
-| debug_level | Controls print statements for debugging |
+| Name | Description | Default |
+| ---- | ----------- | ------- |
+| verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.| `True`
+| global_exception_message_handler | Function with one parameter (str), which will be called when global exceptions are thrown. The exception message is passed to this handler.| `None`
+| proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.| `None`
+| debug_level | Controls print statements for debugging | `py42.debug_level.NONE`
 
 To override these settings, import `py42.settings` and override values as necessary before creating the client. For example, to disable certificate validation in a dev environment: 
 

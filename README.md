@@ -1,6 +1,9 @@
 
 # py42, the Code42 Python SDK
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+
 `py42` is a Python wrapper around the Code42 REST APIs that also provides several other useful utility methods.
 It is designed to be used for developing your own tools for working with Code42 data while avoiding the overhead
 of session / authentication management. 

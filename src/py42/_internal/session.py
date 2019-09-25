@@ -12,7 +12,6 @@ from py42._internal.compat import str, urljoin, urlparse
 
 
 class Py42Session(object):
-
     def __init__(self, session, host_address, auth_handler=None):
         self._initialized = False
         self._needs_auth_renewal_check = False
@@ -35,12 +34,14 @@ class Py42Session(object):
         parsed_host = urlparse(self._host_address)
         host = parsed_host.netloc
 
-        self._session.headers = {u"Accept": u"application/json",
-                                 u"Content-Type": u"application/json",
-                                 u"Host": host,
-                                 u"User-Agent": settings.get_user_agent_string(),
-                                 u"Accept-Encoding": u"gzip, deflate",
-                                 u"Connection": u"keep-alive"}
+        self._session.headers = {
+            u"Accept": u"application/json",
+            u"Content-Type": u"application/json",
+            u"Host": host,
+            u"User-Agent": settings.get_user_agent_string(),
+            u"Accept-Encoding": u"gzip, deflate",
+            u"Connection": u"keep-alive",
+        }
 
     @property
     def host_address(self):
@@ -79,9 +80,28 @@ class Py42Session(object):
     def delete(self, url, **kwargs):
         return self.request(u"DELETE", url, **kwargs)
 
-    def request(self, method, url, params=None, data=None, headers=None, cookies=None, files=None, auth=None,
-                timeout=None, allow_redirects=True, proxies=None, hooks=None, stream=None, verify=None, cert=None,
-                json=None, force_sync=None, then=None, catch=None):
+    def request(
+        self,
+        method,
+        url,
+        params=None,
+        data=None,
+        headers=None,
+        cookies=None,
+        files=None,
+        auth=None,
+        timeout=None,
+        allow_redirects=True,
+        proxies=None,
+        hooks=None,
+        stream=None,
+        verify=None,
+        cert=None,
+        json=None,
+        force_sync=None,
+        then=None,
+        catch=None,
+    ):
         max_tries = 2
         tries = 0
         try:
@@ -97,24 +117,30 @@ class Py42Session(object):
                 if debug.will_print_for(debug_level.INFO):
                     self._print_request(method, url, params=params, data=data)
 
-                response = self._session.request(method, url,
-                                                 params=params,
-                                                 data=data,
-                                                 headers=headers,
-                                                 cookies=cookies,
-                                                 files=files,
-                                                 auth=auth,
-                                                 timeout=timeout,
-                                                 allow_redirects=allow_redirects,
-                                                 proxies=proxies,
-                                                 hooks=hooks,
-                                                 stream=stream,
-                                                 verify=verify,
-                                                 cert=cert)
+                response = self._session.request(
+                    method,
+                    url,
+                    params=params,
+                    data=data,
+                    headers=headers,
+                    cookies=cookies,
+                    files=files,
+                    auth=auth,
+                    timeout=timeout,
+                    allow_redirects=allow_redirects,
+                    proxies=proxies,
+                    hooks=hooks,
+                    stream=stream,
+                    verify=verify,
+                    cert=cert,
+                )
 
                 tries += 1
 
-                unauthorized = self._auth_handler and self._auth_handler.response_indicates_unauthorized(response)
+                unauthorized = (
+                    self._auth_handler
+                    and self._auth_handler.response_indicates_unauthorized(response)
+                )
                 if unauthorized and tries < max_tries:
                     # retry one more time. if the credentials are valid but simply expired,
                     # we won't hit this condition next time.
@@ -149,8 +175,11 @@ class Py42Session(object):
             # log unhandled exceptions
             if self._process_exception_message is not None:
                 # pylint: disable=not-callable
-                self._process_exception_message(self._build_exception_message_with_exception_and_trace(exception,
-                                                                                                       exception_trace))
+                self._process_exception_message(
+                    self._build_exception_message_with_exception_and_trace(
+                        exception, exception_trace
+                    )
+                )
             # always raise unhandled exceptions when using a synchronous client
             raise exception
 
@@ -163,7 +192,9 @@ class Py42Session(object):
                 # only get new credentials if this is the first time we're getting them or we want fresh ones
                 should_renew = not self._initialized or not use_credential_cache
                 if self._needs_auth_renewal_check and should_renew:
-                    self._auth_handler.renew_authentication(self, use_credential_cache=use_credential_cache)
+                    self._auth_handler.renew_authentication(
+                        self, use_credential_cache=use_credential_cache
+                    )
                     self._needs_auth_renewal_check = False
 
         # if there's no auth handler or we handled auth without errors, then we've initialized successfully.

@@ -4,8 +4,14 @@ import json
 import pytest
 from requests import Response
 
-from py42._internal.login_providers import BasicAuthProvider, C42APILoginTokenProvider, C42APIStorageAuthTokenProvider, \
-    C42ApiV1TokenProvider, C42ApiV3TokenProvider, FileEventLoginProvider
+from py42._internal.login_providers import (
+    BasicAuthProvider,
+    C42APILoginTokenProvider,
+    C42APIStorageAuthTokenProvider,
+    C42ApiV1TokenProvider,
+    C42ApiV3TokenProvider,
+    FileEventLoginProvider,
+)
 from py42._internal.session import Py42Session
 
 USERNAME = "username"
@@ -29,11 +35,13 @@ SERVER_ENV_EXCEPTION_MESSAGE = "Internal error in /api/ServerEnv"
 def v1_auth_provider(mocker):
     auth_session = mocker.MagicMock(spec=Py42Session)
     auth_session.host_address = HOST_ADDRESS
+
     def mock_post(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
         response.text = json.dumps({"data": [V1_TOKEN_PART1, V1_TOKEN_PART2]})
         response.status_code = 200
         return response
+
     auth_session.post.side_effect = mock_post
     provider = C42ApiV1TokenProvider(auth_session)
     return provider
@@ -43,11 +51,13 @@ def v1_auth_provider(mocker):
 def v3_auth_provider(mocker):
     auth_session = mocker.MagicMock(spec=Py42Session)
     auth_session.host_address = HOST_ADDRESS
+
     def mock_get(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
         response.text = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
         response.status_code = 200
         return response
+
     auth_session.get.side_effect = mock_get
     provider = C42ApiV3TokenProvider(auth_session)
     return provider
@@ -60,7 +70,9 @@ def login_token_provider(mocker):
 
     def mock_post(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
-        response.text = json.dumps({"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}})
+        response.text = json.dumps(
+            {"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}}
+        )
         response.status_code = 200
         return response
 
@@ -75,7 +87,9 @@ def storage_auth_token_provider(mocker):
 
     def mock_post(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
-        response.text = json.dumps({"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}})
+        response.text = json.dumps(
+            {"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}}
+        )
         response.status_code = 200
         return response
 
@@ -216,35 +230,47 @@ def test_storage_auth_token_provider_returns_tmp_login_token(storage_auth_token_
 
 
 class TestFileEventLoginProvider(object):
-
-    def test_get_target_host_address_given_sts_base_url_returns_fs_base_url(self, file_event_login_provider_with_sts):
+    def test_get_target_host_address_given_sts_base_url_returns_fs_base_url(
+        self, file_event_login_provider_with_sts
+    ):
         host_address = file_event_login_provider_with_sts.get_target_host_address()
         assert host_address == "https://forensicsearch-east.us.code42.com"
 
-    def test_get_target_host_address_given_no_sts_base_url_raises_exception(self, file_event_login_provider_no_sts):
+    def test_get_target_host_address_given_no_sts_base_url_raises_exception(
+        self, file_event_login_provider_no_sts
+    ):
         with pytest.raises(Exception) as e:
             file_event_login_provider_no_sts.get_target_host_address()
         expected_message = "stsBaseUrl not found. Cannot determine file event service host address."
         assert e.value.args[0] == expected_message
 
-    def test_get_target_host_address_given_exception_retrieving_server_env_raises_exception(self,
-                                                                        file_event_login_provider_server_env_exception):
+    def test_get_target_host_address_given_exception_retrieving_server_env_raises_exception(
+        self, file_event_login_provider_server_env_exception
+    ):
         with pytest.raises(Exception) as e:
             file_event_login_provider_server_env_exception.get_target_host_address()
-        expected_message = "An error occurred while requesting server environment information, caused by {0}"\
-            .format(SERVER_ENV_EXCEPTION_MESSAGE)
+        expected_message = "An error occurred while requesting server environment information, caused by {0}".format(
+            SERVER_ENV_EXCEPTION_MESSAGE
+        )
         assert e.value.args[0] == expected_message
 
-    def test_get_secret_value_given_auth_session_returns_v3_token(self, file_event_login_provider_with_sts):
+    def test_get_secret_value_given_auth_session_returns_v3_token(
+        self, file_event_login_provider_with_sts
+    ):
         secret = file_event_login_provider_with_sts.get_secret_value()
         assert secret == V3_TOKEN
 
 
-@pytest.mark.parametrize("tmp_token_provider", ["login_token_provider", "storage_auth_token_provider"],
-                         ids=["login_token_provider", "storage_auth_token_provider"])
-def test_tmp_token_provider_uses_cache_after_get_target_host_address_called(tmp_token_provider, request, mocker):
+@pytest.mark.parametrize(
+    "tmp_token_provider",
+    ["login_token_provider", "storage_auth_token_provider"],
+    ids=["login_token_provider", "storage_auth_token_provider"],
+)
+def test_tmp_token_provider_uses_cache_after_get_target_host_address_called(
+    tmp_token_provider, request, mocker
+):
     tmp_token_provider = request.getfixturevalue(tmp_token_provider)
-    mocker.spy(tmp_token_provider, 'get_tmp_auth_token')
+    mocker.spy(tmp_token_provider, "get_tmp_auth_token")
     tmp_token_provider.get_target_host_address()
     assert tmp_token_provider.get_tmp_auth_token.call_count == 1, "get_tmp_auth_token never called"
     tmp_token_provider.get_target_host_address()
@@ -255,11 +281,16 @@ def test_tmp_token_provider_uses_cache_after_get_target_host_address_called(tmp_
     assert call_count == 1, message
 
 
-@pytest.mark.parametrize("tmp_token_provider", ["login_token_provider", "storage_auth_token_provider"],
-                         ids=["login_token_provider", "storage_auth_token_provider"])
-def test_tmp_token_provider_uses_cache_after_get_secret_value_called(tmp_token_provider, request, mocker):
+@pytest.mark.parametrize(
+    "tmp_token_provider",
+    ["login_token_provider", "storage_auth_token_provider"],
+    ids=["login_token_provider", "storage_auth_token_provider"],
+)
+def test_tmp_token_provider_uses_cache_after_get_secret_value_called(
+    tmp_token_provider, request, mocker
+):
     tmp_token_provider = request.getfixturevalue(tmp_token_provider)
-    mocker.spy(tmp_token_provider, 'get_tmp_auth_token')
+    mocker.spy(tmp_token_provider, "get_tmp_auth_token")
     tmp_token_provider.get_secret_value()
     assert tmp_token_provider.get_tmp_auth_token.call_count == 1, "get_tmp_auth_token never called"
     tmp_token_provider.get_secret_value()

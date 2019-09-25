@@ -4,12 +4,23 @@ from py42._internal.base_classes import BaseAuthorityClient
 
 
 class OrgClient(BaseAuthorityClient):
-
-    def create_org(self, org_name, org_ext_ref=None, notes=None,
-                   parent_org_uid=None, classification=None, **kwargs):
+    def create_org(
+        self,
+        org_name,
+        org_ext_ref=None,
+        notes=None,
+        parent_org_uid=None,
+        classification=None,
+        **kwargs
+    ):
         uri = u"/api/Org/"
-        data = {u"orgName": org_name, u"orgExtRef": org_ext_ref, u"notes": notes, u"parentOrgUid": parent_org_uid,
-                u"classification": classification}
+        data = {
+            u"orgName": org_name,
+            u"orgExtRef": org_ext_ref,
+            u"notes": notes,
+            u"parentOrgUid": parent_org_uid,
+            u"classification": classification,
+        }
         return self._default_session.post(uri, data=json.dumps(data), **kwargs)
 
     def get_org_by_uid(self, org_uid, **kwargs):

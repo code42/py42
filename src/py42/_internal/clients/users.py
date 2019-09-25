@@ -5,12 +5,27 @@ from py42._internal.clients import util
 
 
 class UserClient(BaseAuthorityClient):
-
-    def create_user(self, org_uid, username, email=None, password=None, first_name=None, last_name=None, notes=None,
-                    **kwargs):
+    def create_user(
+        self,
+        org_uid,
+        username,
+        email=None,
+        password=None,
+        first_name=None,
+        last_name=None,
+        notes=None,
+        **kwargs
+    ):
         uri = u"/api/User"
-        data = {u"orgUid": org_uid, u"username": username, u"email": email, u"password": password, u"firstName": first_name,
-                u"lastName": last_name, u"notes": notes}
+        data = {
+            u"orgUid": org_uid,
+            u"username": username,
+            u"email": email,
+            u"password": password,
+            u"firstName": first_name,
+            u"lastName": last_name,
+            u"notes": notes,
+        }
         return self._default_session.post(uri, data=json.dumps(data), **kwargs)
 
     def get_user_by_uid(self, user_uid, **kwargs):
@@ -26,11 +41,29 @@ class UserClient(BaseAuthorityClient):
         uri = u"/api/User/my"
         return self._default_session.get(uri, **kwargs)
 
-    def get_users(self, active=None, email=None, org_uid=None, user_uid=None, role_id=None, page_num=None,
-                  page_size=None, q=None, **kwargs):
+    def get_users(
+        self,
+        active=None,
+        email=None,
+        org_uid=None,
+        user_uid=None,
+        role_id=None,
+        page_num=None,
+        page_size=None,
+        q=None,
+        **kwargs
+    ):
         uri = u"/api/User"
-        params = {u"active": active, u"userUid": user_uid, u"email": email, u"orgUid": org_uid, u"roleId": role_id,
-                  u"pgNum": page_num, u"pgSize": page_size, u"q": q}
+        params = {
+            u"active": active,
+            u"userUid": user_uid,
+            u"email": email,
+            u"orgUid": org_uid,
+            u"roleId": role_id,
+            u"pgNum": page_num,
+            u"pgSize": page_size,
+            u"q": q,
+        }
 
         return self._default_session.get(uri, params=params, **kwargs)
 
@@ -57,11 +90,19 @@ class UserClient(BaseAuthorityClient):
         data = {u"userId": user_id, u"parentOrgId": org_id}
         return self._default_session.post(uri, data=json.dumps(data), **kwargs)
 
-    def for_each_user(self, active=None, email=None, org_uid=None, role_id=None,
-                      then=None, return_each_page=False):
+    def for_each_user(
+        self, active=None, email=None, org_uid=None, role_id=None, then=None, return_each_page=False
+    ):
         func = self.get_users
 
         def for_each(response):
             util.for_each_api_item(response, func, 1000, then, u"users", return_each_page)
 
-        func(active=active, email=email, org_uid=org_uid, role_id=role_id, page_size=1000, then=for_each)
+        func(
+            active=active,
+            email=email,
+            org_uid=org_uid,
+            role_id=role_id,
+            page_size=1000,
+            then=for_each,
+        )

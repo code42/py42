@@ -23,7 +23,6 @@ class BasicAuthProvider(LoginProvider):
 
 
 class C42ApiV3TokenProvider(LoginProvider):
-
     def __init__(self, auth_session):
         super(C42ApiV3TokenProvider, self).__init__()
         self._auth_session = auth_session
@@ -51,7 +50,6 @@ class C42ApiV3TokenProvider(LoginProvider):
 
 
 class C42ApiV1TokenProvider(LoginProvider):
-
     def __init__(self, auth_session):
         super(C42ApiV1TokenProvider, self).__init__()
         self._auth_session = auth_session
@@ -90,7 +88,9 @@ class C42APITmpAuthProvider(LoginProvider):
             self._cached_info = logon_info
             return logon_info
         except Exception as ex:
-            message = u"An error occurred while trying to retrieve storage logon info, caused by {0}"
+            message = (
+                u"An error occurred while trying to retrieve storage logon info, caused by {0}"
+            )
             message = message.format(str(ex))
             raise Exception(message)
 
@@ -114,7 +114,11 @@ class C42APILoginTokenProvider(C42APITmpAuthProvider):
     def get_tmp_auth_token(self):
         try:
             uri = u"/api/LoginToken"
-            data = {u"userId": self._user_id, u"sourceGuid": self._device_guid, u"destinationGuid": self._destination_guid}
+            data = {
+                u"userId": self._user_id,
+                u"sourceGuid": self._device_guid,
+                u"destinationGuid": self._destination_guid,
+            }
             response = self._auth_session.post(uri, data=json.dumps(data), force_sync=True)
             return response
         except Exception as ex:
@@ -143,7 +147,6 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
 
 
 class FileEventLoginProvider(C42ApiV3TokenProvider):
-
     def get_target_host_address(self):
         # The forensic search base URL can be derived from the STS base URL, which is available from the
         # /api/ServerEnv resource.
@@ -151,7 +154,9 @@ class FileEventLoginProvider(C42ApiV3TokenProvider):
         try:
             response = self._auth_session.get(uri, force_sync=True)
         except Exception as ex:
-            message = u"An error occurred while requesting server environment information, caused by {0}"
+            message = (
+                u"An error occurred while requesting server environment information, caused by {0}"
+            )
             message = message.format(ex)
             raise Exception(message)
 
@@ -161,6 +166,8 @@ class FileEventLoginProvider(C42ApiV3TokenProvider):
             if u"stsBaseUrl" in response_json:
                 sts_base_url = response_json[u"stsBaseUrl"]
         if not sts_base_url:
-            raise Exception(u"stsBaseUrl not found. Cannot determine file event service host address.")
+            raise Exception(
+                u"stsBaseUrl not found. Cannot determine file event service host address."
+            )
         forensic_search_url = str(sts_base_url).replace(u"sts", u"forensicsearch")
         return forensic_search_url

@@ -4,16 +4,22 @@ from py42._internal.base_classes import BaseAuthorityClient
 
 
 class LegalHoldClient(BaseAuthorityClient):
-
     def create_legal_hold_policy(self, name, policy=None, **kwargs):
         uri = u"/api/v4/legal-hold-policy/create"
         data = {u"name": name, u"policy": policy}
         return self._default_session.post(uri, data=json.dumps(data), **kwargs)
 
-    def create_legal_hold(self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None, **kwargs):
+    def create_legal_hold(
+        self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None, **kwargs
+    ):
         uri = u"/api/LegalHold"
-        data = {u"name": name, u"holdPolicyUid": hold_policy_uid, u"description": description, u"notes": notes,
-                u"holdExtRef": hold_ext_ref}
+        data = {
+            u"name": name,
+            u"holdPolicyUid": hold_policy_uid,
+            u"description": description,
+            u"notes": notes,
+            u"holdExtRef": hold_ext_ref,
+        }
         return self._default_session.post(uri, data=json.dumps(data), **kwargs)
 
     def get_legal_hold_policy_by_uid(self, legal_hold_policy_uid, **kwargs):
@@ -29,25 +35,53 @@ class LegalHoldClient(BaseAuthorityClient):
         uri = u"/api/LegalHold/{0}".format(legal_hold_uid, **kwargs)
         return self._default_session.get(uri)
 
-    def get_legal_holds(self, creator_user_uid=None, active_state=u"ACTIVE", name=None,
-                        hold_ext_ref=None, page_num=None, page_size=None, **kwargs):
+    def get_legal_holds(
+        self,
+        creator_user_uid=None,
+        active_state=u"ACTIVE",
+        name=None,
+        hold_ext_ref=None,
+        page_num=None,
+        page_size=None,
+        **kwargs
+    ):
         uri = u"/api/LegalHold"
-        params = {u"creatorUserUid": creator_user_uid, u"activeState": active_state,
-                  u"name": name, u"holdExtRef": hold_ext_ref, u"pgNum": page_num, u"pgSize": page_size}
+        params = {
+            u"creatorUserUid": creator_user_uid,
+            u"activeState": active_state,
+            u"name": name,
+            u"holdExtRef": hold_ext_ref,
+            u"pgNum": page_num,
+            u"pgSize": page_size,
+        }
         return self._default_session.get(uri, params=params, **kwargs)
 
-    def get_legal_hold_memberships(self, legal_hold_membership_uid=None, legal_hold_uid=None, user_uid=None, user=None,
-                                   active_state=None, page_num=None, page_size=None, **kwargs):
-        params = {u"legalHoldMembershipUid": legal_hold_membership_uid, u"legalHoldUid": legal_hold_uid,
-                  u"userUid": user_uid, u"user": user, u"activeState": active_state, u"pgNum": page_num,
-                  u"pgSize": page_size}
+    def get_legal_hold_memberships(
+        self,
+        legal_hold_membership_uid=None,
+        legal_hold_uid=None,
+        user_uid=None,
+        user=None,
+        active_state=None,
+        page_num=None,
+        page_size=None,
+        **kwargs
+    ):
+        params = {
+            u"legalHoldMembershipUid": legal_hold_membership_uid,
+            u"legalHoldUid": legal_hold_uid,
+            u"userUid": user_uid,
+            u"user": user,
+            u"activeState": active_state,
+            u"pgNum": page_num,
+            u"pgSize": page_size,
+        }
         uri = u"/api/LegalHoldMembership"
         return self._default_session.get(uri, params=params, **kwargs)
 
     def add_user_to_legal_hold(self, user_uid, legal_hold_uid, **kwargs):
         uri = u"/api/LegalHoldMembership"
-        data = {u"legalHoldUid": legal_hold_uid,
-                u"userUid": user_uid}
+        data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
         return self._default_session.post(uri, data=json.dumps(data), **kwargs)
 
     def remove_user_from_legal_hold(self, legal_hold_membership_uid, **kwargs):

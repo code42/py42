@@ -17,7 +17,9 @@ class SecurityModule(object):
         return get_normalized_security_event_plan_info(self._security_client, user_uid, catch=catch)
 
     def get_security_detection_event_client(self, plan_uid, destination_guid):
-        return self._storage_client_factory.get_storage_client_from_plan_uid(plan_uid, destination_guid).security
+        return self._storage_client_factory.get_storage_client_from_plan_uid(
+            plan_uid, destination_guid
+        ).security
 
     def search_file_events(self, query, then=None, catch=None, **kwargs):
         """Searches for file events

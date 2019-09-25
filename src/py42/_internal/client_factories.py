@@ -1,12 +1,22 @@
-from py42._internal.clients import administration, archive, devices, legal_hold, orgs, security, users
+from py42._internal.clients import (
+    administration,
+    archive,
+    devices,
+    legal_hold,
+    orgs,
+    security,
+    users,
+)
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.storage.storage import StorageClient
-from py42._internal.login_provider_factories import ArchiveLocatorFactory, FileEventLoginProviderFactory
+from py42._internal.login_provider_factories import (
+    ArchiveLocatorFactory,
+    FileEventLoginProviderFactory,
+)
 from py42._internal.session_manager import SessionsManager
 
 
 class AuthorityClientFactory(object):
-
     def __init__(self, default_session, v3_required_session):
         self.default_session = default_session
         self.v3_required_session = v3_required_session
@@ -40,12 +50,16 @@ class StorageClientFactory(object):
         self._login_provider_factory = login_provider_factory
 
     def get_storage_client_from_device_guid(self, device_guid, destination_guid=None):
-        login_provider = self._login_provider_factory.create_backup_archive_locator(device_guid, destination_guid)
+        login_provider = self._login_provider_factory.create_backup_archive_locator(
+            device_guid, destination_guid
+        )
         session = self._session_manager.get_storage_session(login_provider)
         return StorageClient(session)
 
     def get_storage_client_from_plan_uid(self, plan_uid, destination_guid):
-        login_provider = self._login_provider_factory.create_security_archive_locator(plan_uid, destination_guid)
+        login_provider = self._login_provider_factory.create_security_archive_locator(
+            plan_uid, destination_guid
+        )
         session = self._session_manager.get_storage_session(login_provider)
         return StorageClient(session)
 

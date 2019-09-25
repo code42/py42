@@ -38,7 +38,9 @@ def get_normalized_security_event_plan_info(security_client, user_uid, catch=Non
                 plan_uid: [{u"destinationGuid": destination}] for destination in destination_list
             }
         else:
-            destinations = util.get_obj_from_response(response, u"securityPlanLocationsByDestination")
+            destinations = util.get_obj_from_response(
+                response, u"securityPlanLocationsByDestination"
+            )
             for destination in destinations:
                 for node in destination[u"securityPlanLocationsByNode"]:
                     for plan_uid in node[u"securityPlanUids"]:
@@ -46,13 +48,16 @@ def get_normalized_security_event_plan_info(security_client, user_uid, catch=Non
                         if plan_locations is None:
                             archive_locations_by_plan[plan_uid] = []
                             plan_locations = archive_locations_by_plan.get(plan_uid)
-                        plan_locations.append({u"destinationGuid": destination[u"destinationGuid"],
-                                               u"nodeGuid": node[u"nodeGuid"]})
+                        plan_locations.append(
+                            {
+                                u"destinationGuid": destination[u"destinationGuid"],
+                                u"nodeGuid": node[u"nodeGuid"],
+                            }
+                        )
     return archive_locations_by_plan
 
 
 class SecurityClient(BaseAuthorityClient):
-
     def get_security_event_locations(self, user_uid, **kwargs):
         uri = u"/c42api/v3/SecurityEventsLocation"
         params = {u"userUid": user_uid}

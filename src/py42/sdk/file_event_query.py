@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from py42._internal.compat import str
-from py42._internal.file_event_filter import _FileEventFilterStringField, _FileEventFilterTimestampField
+from py42._internal.file_event_filter import (
+    _FileEventFilterStringField,
+    _FileEventFilterTimestampField,
+)
 
 
 class MD5(_FileEventFilterStringField):
@@ -95,8 +98,16 @@ class ExposureType(_FileEventFilterStringField):
 
     @classmethod
     def any(cls):
-        return cls.is_in([cls.SHARED_VIA_LINK, cls.SHARED_TO_DOMAIN, cls.APPLICATION_READ, cls.CLOUD_STORAGE,
-                          cls.REMOVABLE_MEDIA, cls.IS_PUBLIC])
+        return cls.is_in(
+            [
+                cls.SHARED_VIA_LINK,
+                cls.SHARED_TO_DOMAIN,
+                cls.APPLICATION_READ,
+                cls.CLOUD_STORAGE,
+                cls.REMOVABLE_MEDIA,
+                cls.IS_PUBLIC,
+            ]
+        )
 
     @classmethod
     def eq(cls, value):
@@ -131,9 +142,14 @@ class FileEventQuery(object):
 
     def __str__(self):
         groups_string = ",".join(str(group_item) for group_item in self._filter_group_list)
-        json = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}' \
-            .format(self._group_clause, groups_string, self.page_number, self.page_size, self.sort_direction,
-                    self.sort_key)
+        json = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'.format(
+            self._group_clause,
+            groups_string,
+            self.page_number,
+            self.page_size,
+            self.sort_direction,
+            self.sort_key,
+        )
         return json
 
     def __repr__(self):

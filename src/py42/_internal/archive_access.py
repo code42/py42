@@ -15,15 +15,15 @@ class FileType(object):
 
 
 class ArchiveAccessorManager(object):
-
     def __init__(self, archive_client, storage_client_factory):
         # type: (ArchiveClient, StorageClientFactory) -> None
         self._archive_client = archive_client
         self._storage_client_factory = storage_client_factory
 
     def get_archive_accessor(self, device_guid, destination_guid=None):
-        client = self._storage_client_factory.get_storage_client_from_device_guid(device_guid,
-                                                                                  destination_guid=destination_guid)
+        client = self._storage_client_factory.get_storage_client_from_device_guid(
+            device_guid, destination_guid=destination_guid
+        )
         data_key_token = self._get_data_key_token(device_guid)
         session_id = self._create_web_restore_session(client.archive, device_guid, data_key_token)
         restore_job_manager = create_restore_job_manager(client.archive, device_guid, session_id)
@@ -35,8 +35,9 @@ class ArchiveAccessorManager(object):
 
     @staticmethod
     def _create_web_restore_session(storage_archive_client, device_guid, data_key_token):
-        response = storage_archive_client.create_web_restore_session(device_guid, data_key_token=data_key_token,
-                                                                     force_sync=True)
+        response = storage_archive_client.create_web_restore_session(
+            device_guid, data_key_token=data_key_token, force_sync=True
+        )
         return util.get_obj_from_response(response, u"webRestoreSessionId")
 
 
@@ -45,23 +46,30 @@ class ArchiveAccessor(object):
     DEFAULT_DIRECTORY_DOWNLOAD_NAME = u"download"
     JOB_POLLING_INTERVAL = 1
 
-    def __init__(self, device_guid, archive_session_id, storage_archive_client, restore_job_manager):
+    def __init__(
+        self, device_guid, archive_session_id, storage_archive_client, restore_job_manager
+    ):
         self._device_guid = device_guid
         self._archive_session_id = archive_session_id
         self._storage_archive_client = storage_archive_client
         self._restore_job_manager = restore_job_manager
 
-    def download_from_backup(self, file_path, save_as_dir=None, save_as_filename=None, then=None, **kwargs):
-
+    def download_from_backup(
+        self, file_path, save_as_dir=None, save_as_filename=None, then=None, **kwargs
+    ):
         def handle_file_metadata(metadata):
             file_selection = self._build_file_selection(metadata[u"path"], metadata[u"type"])
 
             # get and verify we can write to the save-as path before attempting to download the file
-            filename = save_as_filename or get_download_filename(metadata[u"path"], metadata[u"type"])
+            filename = save_as_filename or get_download_filename(
+                metadata[u"path"], metadata[u"type"]
+            )
             save_as_path = util.build_path(filename, directory=save_as_dir)
             save_as_path = util.verify_path_writeable(save_as_path)
 
-            return self._restore_job_manager.restore_to_local_path(file_selection, save_as_path, then=then)
+            return self._restore_job_manager.restore_to_local_path(
+                file_selection, save_as_path, then=then
+            )
 
         return self._get_file_via_walking_tree(file_path, then=handle_file_metadata, **kwargs)
 
@@ -75,8 +83,11 @@ class ArchiveAccessor(object):
                 if root["path"].lower() == path_root.lower():
                     return self._walk_tree(root, path_parts[1:], then=then, **kwargs)
 
-            raise Exception(u"File not found in archive for device {0} at path {1}".format(self._device_guid,
-                                                                                           file_path))
+            raise Exception(
+                u"File not found in archive for device {0} at path {1}".format(
+                    self._device_guid, file_path
+                )
+            )
 
         return self._get_children(then=handle_archive_roots, node_id=None)
 
@@ -91,19 +102,27 @@ class ArchiveAccessor(object):
 
             for child in children:
                 if child[u"path"].lower() == target_child_path.lower():
-                    return self._walk_tree(child, remaining_path_components[1:], then=then, **kwargs)
+                    return self._walk_tree(
+                        child, remaining_path_components[1:], then=then, **kwargs
+                    )
 
-            raise Exception(u"File not found in archive for device {0} at path {1}".format(self._device_guid,
-                                                                                           target_child_path))
+            raise Exception(
+                u"File not found in archive for device {0} at path {1}".format(
+                    self._device_guid, target_child_path
+                )
+            )
 
         return self._get_children(then=handle_get_children, node_id=current_node[u"id"], **kwargs)
 
     def _get_children(self, then=None, node_id=None, **kwargs):
-        return self._storage_archive_client.get_archive_tree_node(self._archive_session_id,
-                                                                  self._device_guid,
-                                                                  file_id=node_id,
-                                                                  show_deleted=True,
-                                                                  then=then, **kwargs)
+        return self._storage_archive_client.get_archive_tree_node(
+            self._archive_session_id,
+            self._device_guid,
+            file_id=node_id,
+            show_deleted=True,
+            then=then,
+            **kwargs
+        )
 
     @staticmethod
     def _build_file_selection(file_path, file_type):
@@ -117,15 +136,19 @@ class RestoreJobManager(object):
 
     JOB_POLLING_INTERVAL_SECONDS = 1
 
-    def __init__(self, storage_archive_client, device_guid, archive_session_id,
-                 job_polling_interval=JOB_POLLING_INTERVAL_SECONDS):
+    def __init__(
+        self,
+        storage_archive_client,
+        device_guid,
+        archive_session_id,
+        job_polling_interval=JOB_POLLING_INTERVAL_SECONDS,
+    ):
         self._storage_archive_client = storage_archive_client
         self._device_guid = device_guid
         self._archive_session_id = archive_session_id
         self._job_polling_interval = job_polling_interval
 
     def restore_to_local_path(self, file_selection, save_as_path, then=None, **kwargs):
-
         def do_download(response):
             job_id = util.get_obj_from_response(response, u"jobId")
             while not self.is_job_complete(job_id):
@@ -135,24 +158,29 @@ class RestoreJobManager(object):
         return self._submit_web_restore_job(file_selection, then=do_download, **kwargs)
 
     def is_job_complete(self, job_id, **kwargs):
-        response = self._storage_archive_client.get_web_restore_job(job_id, force_sync=True, **kwargs)
+        response = self._storage_archive_client.get_web_restore_job(
+            job_id, force_sync=True, **kwargs
+        )
         return self._get_completion_status(response)
 
     def _submit_web_restore_job(self, file_selection, then=None, **kwargs):
-        return self._storage_archive_client.submit_web_restore_job(self._device_guid, self._archive_session_id,
-                                                                   file_selection.path_set,
-                                                                   file_selection.num_files,
-                                                                   file_selection.num_dirs,
-                                                                   file_selection.size,
-                                                                   show_deleted=True,
-                                                                   then=then, **kwargs)
+        return self._storage_archive_client.submit_web_restore_job(
+            self._device_guid,
+            self._archive_session_id,
+            file_selection.path_set,
+            file_selection.num_files,
+            file_selection.num_dirs,
+            file_selection.size,
+            show_deleted=True,
+            then=then,
+            **kwargs
+        )
 
     @staticmethod
     def _get_completion_status(response):
         return util.get_obj_from_response(response, u"done")
 
     def _download_result(self, job_id, file_path, then=None, **kwargs):
-
         def write_file(response):
             util.save_content_to_disk(response, file_path)
 
@@ -160,7 +188,9 @@ class RestoreJobManager(object):
                 then(file_path)
             return file_path
 
-        return self._storage_archive_client.get_web_restore_job_result(job_id, stream=True, then=write_file, **kwargs)
+        return self._storage_archive_client.get_web_restore_job_result(
+            job_id, stream=True, then=write_file, **kwargs
+        )
 
 
 def get_download_filename(file_path, file_type, default_dir_name=u"download"):

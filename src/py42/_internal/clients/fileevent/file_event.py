@@ -3,7 +3,6 @@ from py42._internal.compat import str
 
 
 class FileEventClient(BaseFileEventClient):
-
     def search_file_events(self, query, **kwargs):
         query = str(query)
         uri = u"/forensic-search/queryservice/api/v1/fileevent"

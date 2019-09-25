@@ -11,7 +11,6 @@ RAW_UNICODE_QUERY = u"RAW UNICODE JSON QUERY 我能吞"
 
 
 class TestFileEventClient(object):
-
     @pytest.fixture
     def session(self, mocker):
         return mocker.MagicMock(spec=Py42Session)

@@ -20,12 +20,14 @@ BUILTIN_MODULE = "__builtin__" if compat.is_py2 else "builtins"
 def mock_access(can_access=True):
     def access(path, int):
         return can_access
+
     return access
 
 
 def mock_dir_only_access():
     def access(path, int):
         return path == TEST_DIR and int == os.W_OK
+
     return access
 
 
@@ -120,28 +122,40 @@ def test_verify_path_writeable_if_dir_not_writeable_raises_io_error(existing_dir
     with pytest.raises(Exception) as e:
         util.verify_path_writeable(existing_dir_not_writeable)
     assert e.type == IOError
-    assert e.value.args[0] == u"Insufficient permissions to write to directory: {0}".format(TEST_DIR)
+    assert e.value.args[0] == u"Insufficient permissions to write to directory: {0}".format(
+        TEST_DIR
+    )
 
 
-def test_verify_path_writeable_if_unicode_dir_not_writeable_raises_io_error(existing_unicode_dir_not_writeable):
+def test_verify_path_writeable_if_unicode_dir_not_writeable_raises_io_error(
+    existing_unicode_dir_not_writeable
+):
     with pytest.raises(Exception) as e:
         util.verify_path_writeable(existing_unicode_dir_not_writeable)
     assert e.type == IOError
-    assert e.value.args[0] == u"Insufficient permissions to write to directory: {0}".format(TEST_UNICODE_DIR)
+    assert e.value.args[0] == u"Insufficient permissions to write to directory: {0}".format(
+        TEST_UNICODE_DIR
+    )
 
 
 def test_verify_path_writeable_if_file_not_writeable_raises_io_error(existing_file_not_writeable):
     with pytest.raises(Exception) as e:
         util.verify_path_writeable(existing_file_not_writeable)
     assert e.type == IOError
-    assert e.value.args[0] == u"Insufficient permissions to write to file: {0}".format(existing_file_not_writeable)
+    assert e.value.args[0] == u"Insufficient permissions to write to file: {0}".format(
+        existing_file_not_writeable
+    )
 
 
-def test_verify_path_writeable_if_unicode_file_not_writeable_raises_io_error(existing_unicode_file_not_writeable):
+def test_verify_path_writeable_if_unicode_file_not_writeable_raises_io_error(
+    existing_unicode_file_not_writeable
+):
     with pytest.raises(Exception) as e:
         util.verify_path_writeable(existing_unicode_file_not_writeable)
     assert e.type == IOError
-    assert e.value.args[0] == u"Insufficient permissions to write to file: {0}".format(existing_unicode_file_not_writeable)
+    assert e.value.args[0] == u"Insufficient permissions to write to file: {0}".format(
+        existing_unicode_file_not_writeable
+    )
 
 
 def test_verify_path_writeable_when_existing_file_writeable_returns_path(existing_file_writeable):
@@ -149,7 +163,9 @@ def test_verify_path_writeable_when_existing_file_writeable_returns_path(existin
     assert path == existing_file_writeable
 
 
-def test_verify_path_writeable_when_non_existing_file_writeable_returns_path(non_existing_file_writeable):
+def test_verify_path_writeable_when_non_existing_file_writeable_returns_path(
+    non_existing_file_writeable
+):
     path = util.verify_path_writeable(non_existing_file_writeable)
     assert path == non_existing_file_writeable
 
@@ -174,13 +190,17 @@ def test_build_path_with_filename_none_save_as_dir_and_custom_default_dir_return
     assert path == "/temp/{0}".format(TEST_FILENAME)
 
 
-def test_save_content_to_disk_opens_file_at_given_path(mocker, mock_open, response, response_content):
+def test_save_content_to_disk_opens_file_at_given_path(
+    mocker, mock_open, response, response_content
+):
     response.iter_content.return_value = list(response_content)
     util.save_content_to_disk(response, TEST_PATH)
     mock_open.assert_called_once_with(TEST_PATH, mocker.ANY)
 
 
-def test_save_content_to_disk_opens_file_in_binary_mode(mocker, mock_open, response, response_content):
+def test_save_content_to_disk_opens_file_in_binary_mode(
+    mocker, mock_open, response, response_content
+):
     response.iter_content.return_value = list(response_content)
     util.save_content_to_disk(response, TEST_PATH)
     mock_open.assert_called_once_with(mocker.ANY, "wb")
@@ -199,13 +219,17 @@ def test_save_content_to_disk_uses_context_manager(mock_open, response):
         util.save_content_to_disk(response, TEST_PATH)
 
 
-def test_save_content_to_disk_calls_write_for_each_content_chunk(mock_open, response, response_content):
+def test_save_content_to_disk_calls_write_for_each_content_chunk(
+    mock_open, response, response_content
+):
     response.iter_content.return_value = list(response_content)
     util.save_content_to_disk(response, TEST_PATH)
     assert mock_open.return_value.write.call_count == len(response_content)
 
 
-def test_save_content_to_disk_calls_write_with_the_correct_content(mocker, mock_open, response, response_content):
+def test_save_content_to_disk_calls_write_with_the_correct_content(
+    mocker, mock_open, response, response_content
+):
     response.iter_content.return_value = list(response_content)
     util.save_content_to_disk(response, TEST_PATH)
     expected_calls = [mocker.call(chunk) for chunk in response_content]

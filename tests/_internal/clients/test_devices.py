@@ -17,12 +17,11 @@ DEFAULT_GET_DEVICES_PARAMS = {
     "incCounts": True,
     "pgNum": None,
     "pgSize": None,
-    "q": None
+    "q": None,
 }
 
 
 class TestDeviceClient(object):
-
     @pytest.fixture
     def session(self, mocker):
         return mocker.MagicMock(spec=Py42Session)
@@ -38,7 +37,9 @@ class TestDeviceClient(object):
         expected_params["q"] = "TEST-HOSTNAME"
         session.get.assert_called_once_with(COMPUTER_URI, params=DEFAULT_GET_DEVICES_PARAMS)
 
-    def test_unicode_hostname_get_devices_calls_get_with_unicode_q_param(self, session, v3_required_session):
+    def test_unicode_hostname_get_devices_calls_get_with_unicode_q_param(
+        self, session, v3_required_session
+    ):
         unicode_hostname = "我能吞"
         client = DeviceClient(session, v3_required_session)
         client.get_devices(q=unicode_hostname)

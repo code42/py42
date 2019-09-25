@@ -6,7 +6,6 @@ from py42._internal.session import Py42Session
 
 
 class TestAuthorityDependencies(object):
-
     def test_constructs_successfully(self, mocker):
         session_factory = mocker.MagicMock(spec=BaseSessionFactory)
 

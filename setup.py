@@ -25,9 +25,10 @@ setup(
     zip_safe=False,
     extras_require={
         "dev": [
+            "pre-commit==1.18.3",
+            "pytest==4.6.5",
             "sphinx==1.8.5",
-            "tox==3.14.0",
-            "pytest==4.6.5"
+            "tox==3.14.0"
         ]
     }
 )

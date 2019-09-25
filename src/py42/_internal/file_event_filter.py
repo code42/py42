@@ -40,8 +40,10 @@ def create_on_or_before_filter_group(term, value):
 
 
 def create_in_range_filter_group(term, start_value, end_value):
-    filter_list = [create_file_event_filter(term, u"ON_OR_AFTER", start_value),
-                   create_file_event_filter(term, u"ON_OR_BEFORE", end_value)]
+    filter_list = [
+        create_file_event_filter(term, u"ON_OR_AFTER", start_value),
+        create_file_event_filter(term, u"ON_OR_BEFORE", end_value),
+    ]
     return create_filter_group(filter_list, u"AND")
 
 
@@ -108,7 +110,9 @@ class FileEventFilter(object):
         self._value = value
 
     def __str__(self):
-        return u'{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(self._operator, self._term, self._value)
+        return u'{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+            self._operator, self._term, self._value
+        )
 
 
 class FilterGroup(object):
@@ -118,4 +122,6 @@ class FilterGroup(object):
 
     def __str__(self):
         filters_string = u",".join(str(filter_item) for filter_item in self._filter_list)
-        return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(self._filter_clause, filters_string)
+        return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(
+            self._filter_clause, filters_string
+        )

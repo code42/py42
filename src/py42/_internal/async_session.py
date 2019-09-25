@@ -7,7 +7,14 @@ from .session import Py42Session
 
 
 class Py42AsyncSession(Py42Session):
-    def __init__(self, session, host_address, auth_handler=None, concurrent_threads=4, max_requests_per_second=36):
+    def __init__(
+        self,
+        session,
+        host_address,
+        auth_handler=None,
+        concurrent_threads=4,
+        max_requests_per_second=36,
+    ):
 
         super(Py42AsyncSession, self).__init__(session, host_address, auth_handler=auth_handler)
         # Lifo makes it so that callbacks happen sooner after being called instead of being placed all the way
@@ -26,7 +33,9 @@ class Py42AsyncSession(Py42Session):
                 self.__started = True
             self.__start_lock.release()
         if not force_sync:
-            self._request_queue.put({u"method": method, u"path": url, u"args": args, u"kwargs": kwargs})
+            self._request_queue.put(
+                {u"method": method, u"path": url, u"args": args, u"kwargs": kwargs}
+            )
         else:
             return super(Py42AsyncSession, self).request(method, url, *args, **kwargs)
 
@@ -60,7 +69,9 @@ class Py42AsyncSession(Py42Session):
             if request_handler is not None:
                 request_handler(exception)
             elif self._process_exception_message is not None:
-                exception_message = self._build_exception_message_with_exception_and_trace(exception, exception_trace)
+                exception_message = self._build_exception_message_with_exception_and_trace(
+                    exception, exception_trace
+                )
                 self._process_exception_message(exception_message)  # pylint: disable=not-callable
         except:
             # handle errors that occur in the user-supplied exception handlers.

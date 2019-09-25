@@ -5,10 +5,19 @@
 Install py42 and its development dependencies. The `-e` option installs py42 in ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs). 
 
 ```bash
-pip install -e .[dev]
+$ pip install -e .[dev]
 ```
 
 If you are using `zsh`, you may need to escape the brackets.
+
+We use [black](https://black.readthedocs.io/en/stable/) to automatically format our code. After installing dependencies, be sure to run:
+
+```bash
+$ pre-commit install
+```
+
+This will set up a pre-commit hook that will automatically format your code to our desired styles whenever you commit.
+It requires python 3.6 to run, so be sure to have a python 3.6 executable of some kind in your PATH when you commit.
 
 ## General
 

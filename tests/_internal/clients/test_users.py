@@ -15,12 +15,11 @@ DEFAULT_GET_USERS_PARAMS = {
     "roleId": None,
     "pgNum": None,
     "pgSize": None,
-    "q": None
+    "q": None,
 }
 
 
 class TestDeviceClient(object):
-
     @pytest.fixture
     def session(self, mocker):
         return mocker.MagicMock(spec=Py42Session)
@@ -34,7 +33,9 @@ class TestDeviceClient(object):
         client.get_users()
         session.get.assert_called_once_with(USER_URI, params=DEFAULT_GET_USERS_PARAMS)
 
-    def test_unicode_username_get_user_by_username_calls_get_with_username(self, session, v3_required_session):
+    def test_unicode_username_get_user_by_username_calls_get_with_username(
+        self, session, v3_required_session
+    ):
         username = u"我能吞"
         client = UserClient(session, v3_required_session)
         client.get_user_by_username(username)

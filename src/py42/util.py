@@ -12,6 +12,7 @@ def wrap_func(func, existing_func):
         if existing_func is not None:
             existing_func(*args, **kwargs)
         func(*args, **kwargs)
+
     return wrapped
 
 

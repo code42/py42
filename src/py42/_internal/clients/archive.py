@@ -4,7 +4,6 @@ from py42._internal.base_classes import BaseAuthorityClient
 
 
 class ArchiveClient(BaseAuthorityClient):
-
     def get_data_key_token(self, computer_guid, **kwargs):
         uri = u"/api/DataKeyToken"
         data = {u"computerGuid": computer_guid}

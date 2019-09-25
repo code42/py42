@@ -235,7 +235,9 @@ def security_client_two_plans_two_destinations(security_client, response):
 
 @pytest.fixture
 def security_client_two_plans_two_destinations_three_nodes(security_client, response):
-    response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
+    response.text = (
+        GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
+    )
     security_client.get_security_event_locations.return_value = response
     return security_client
 
@@ -252,40 +254,80 @@ def test_get_normalized_security_event_plan_info_one_location(security_client_on
     assert plan_info == expected
 
 
-def test_get_normalized_security_event_plan_info_two_plans_one_node(security_client_two_plans_one_node):
-    plan_info = get_normalized_security_event_plan_info(security_client_two_plans_one_node, USER_UID)
-    expected = {"111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}],
-                "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "41"}]}
+def test_get_normalized_security_event_plan_info_two_plans_one_node(
+    security_client_two_plans_one_node
+):
+    plan_info = get_normalized_security_event_plan_info(
+        security_client_two_plans_one_node, USER_UID
+    )
+    expected = {
+        "111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}],
+        "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "41"}],
+    }
     assert plan_info == expected
 
 
-def test_get_normalized_security_event_plan_info_two_plans_two_nodes(security_client_two_plans_two_nodes):
-    plan_info = get_normalized_security_event_plan_info(security_client_two_plans_two_nodes, USER_UID)
-    expected = {"111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}],
-                "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "42"}]}
+def test_get_normalized_security_event_plan_info_two_plans_two_nodes(
+    security_client_two_plans_two_nodes
+):
+    plan_info = get_normalized_security_event_plan_info(
+        security_client_two_plans_two_nodes, USER_UID
+    )
+    expected = {
+        "111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}],
+        "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "42"}],
+    }
     assert plan_info == expected
 
 
-def test_get_normalized_security_event_plan_info_one_plan_two_destinations(security_client_one_plan_two_destinations):
-    plan_info = get_normalized_security_event_plan_info(security_client_one_plan_two_destinations, USER_UID)
-    expected = {"111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"},
-                                       {"destinationGuid": "5", "nodeGuid": "51"}]}
+def test_get_normalized_security_event_plan_info_one_plan_two_destinations(
+    security_client_one_plan_two_destinations
+):
+    plan_info = get_normalized_security_event_plan_info(
+        security_client_one_plan_two_destinations, USER_UID
+    )
+    expected = {
+        "111111111111111111": [
+            {"destinationGuid": "4", "nodeGuid": "41"},
+            {"destinationGuid": "5", "nodeGuid": "51"},
+        ]
+    }
     assert plan_info == expected
 
 
-def test_get_normalized_security_event_plan_info_two_plans_two_destinations(security_client_two_plans_two_destinations):
-    plan_info = get_normalized_security_event_plan_info(security_client_two_plans_two_destinations, USER_UID)
-    expected = {"111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"},
-                                       {"destinationGuid": "5", "nodeGuid": "51"}],
-                "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "41"},
-                                       {"destinationGuid": "5", "nodeGuid": "51"}]}
+def test_get_normalized_security_event_plan_info_two_plans_two_destinations(
+    security_client_two_plans_two_destinations
+):
+    plan_info = get_normalized_security_event_plan_info(
+        security_client_two_plans_two_destinations, USER_UID
+    )
+    expected = {
+        "111111111111111111": [
+            {"destinationGuid": "4", "nodeGuid": "41"},
+            {"destinationGuid": "5", "nodeGuid": "51"},
+        ],
+        "222222222222222222": [
+            {"destinationGuid": "4", "nodeGuid": "41"},
+            {"destinationGuid": "5", "nodeGuid": "51"},
+        ],
+    }
     assert plan_info == expected
 
 
-def test_get_normalized_security_event_plan_info_two_plans_two_destinations_three_nodes(security_client_two_plans_two_destinations_three_nodes):
-    plan_info = get_normalized_security_event_plan_info(security_client_two_plans_two_destinations_three_nodes, USER_UID)
-    expected = {"111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"},
-                                       {"destinationGuid": "5", "nodeGuid": "51"}],
-                "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "41"},
-                                       {"destinationGuid": "5", "nodeGuid": "52"}]}
+def test_get_normalized_security_event_plan_info_two_plans_two_destinations_three_nodes(
+    security_client_two_plans_two_destinations_three_nodes
+):
+    plan_info = get_normalized_security_event_plan_info(
+        security_client_two_plans_two_destinations_three_nodes, USER_UID
+    )
+    expected = {
+        "111111111111111111": [
+            {"destinationGuid": "4", "nodeGuid": "41"},
+            {"destinationGuid": "5", "nodeGuid": "51"},
+        ],
+        "222222222222222222": [
+            {"destinationGuid": "4", "nodeGuid": "41"},
+            {"destinationGuid": "5", "nodeGuid": "52"},
+        ],
+    }
     assert plan_info == expected

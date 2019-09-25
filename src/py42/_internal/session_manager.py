@@ -68,11 +68,15 @@ class SessionsManager(object):
 
     def get_storage_session(self, login_provider, force_replace=False):
         # type: (LoginProvider, bool) -> Py42Session
-        return self._storage_session_manager.get_session(login_provider, force_replace=force_replace)
+        return self._storage_session_manager.get_session(
+            login_provider, force_replace=force_replace
+        )
 
     def get_file_event_session(self, login_provider, force_replace=False):
         # type: (LoginProvider, bool) -> Py42Session
-        return self._file_event_session_manager.get_session(login_provider, force_replace=force_replace)
+        return self._file_event_session_manager.get_session(
+            login_provider, force_replace=force_replace
+        )
 
     def wait_all(self):
         # TODO: INTEG-235 describes in detail a bug that needs to be addressed here.

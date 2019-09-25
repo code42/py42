@@ -1,11 +1,14 @@
 from requests import Session
 
 from py42._internal.dependency_containers import SDKDependencies
-from py42._internal.session_factory import AuthHandlerFactory, SessionFactory, SessionModifierFactory
+from py42._internal.session_factory import (
+    AuthHandlerFactory,
+    SessionFactory,
+    SessionModifierFactory,
+)
 
 
 class SDK(object):
-
     def __init__(self, sdk_dependencies, is_async=False):
         # type: (SDKDependencies, bool) -> None
         self._is_async = is_async
@@ -17,10 +20,15 @@ class SDK(object):
     @classmethod
     def create_using_local_account(cls, host_address, username, password, is_async=False):
         session_impl = Session
-        session_factory = SessionFactory(session_impl, SessionModifierFactory(), AuthHandlerFactory(),
-                                         is_async=is_async)
-        basic_auth_session = session_factory.create_basic_auth_session(host_address, username, password)
-        sdk_dependencies = SDKDependencies.create_c42_api_dependencies(session_factory, basic_auth_session)
+        session_factory = SessionFactory(
+            session_impl, SessionModifierFactory(), AuthHandlerFactory(), is_async=is_async
+        )
+        basic_auth_session = session_factory.create_basic_auth_session(
+            host_address, username, password
+        )
+        sdk_dependencies = SDKDependencies.create_c42_api_dependencies(
+            session_factory, basic_auth_session
+        )
         return cls(sdk_dependencies, is_async=is_async)
 
     def wait(self):

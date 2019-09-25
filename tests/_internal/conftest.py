@@ -35,8 +35,14 @@ def build_expected_exception_message(host, url, exception_type, exception_messag
     return message_format.format(host, url, exception_message)
 
 
-def build_expected_exception_message_with_trace(host, url, exception_type, exception_message, trace):
-    return build_expected_exception_message(host, url, exception_type, exception_message) + " " + str(trace)
+def build_expected_exception_message_with_trace(
+    host, url, exception_type, exception_message, trace
+):
+    return (
+        build_expected_exception_message(host, url, exception_type, exception_message)
+        + " "
+        + str(trace)
+    )
 
 
 @pytest.fixture

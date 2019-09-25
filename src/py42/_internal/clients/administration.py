@@ -2,7 +2,6 @@ from py42._internal.base_classes import BaseAuthorityClient
 
 
 class AdministrationClient(BaseAuthorityClient):
-
     def get_diagnostics(self, include_volumes=None, **kwargs):
         uri = u"/api/Diagnostic"
         params = {u"incVolumes": include_volumes}

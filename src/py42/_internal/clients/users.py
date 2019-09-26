@@ -28,6 +28,10 @@ class UserClient(BaseAuthorityClient):
         }
         return self._default_session.post(uri, data=json.dumps(data), **kwargs)
 
+    def get_user_by_id(self, user_id, **kwargs):
+        uri = u"/api/User/{0}".format(user_id)
+        return self._default_session.get(uri, **kwargs)
+
     def get_user_by_uid(self, user_uid, **kwargs):
         uri = u"/api/User/{0}?idType=uid".format(user_uid)
         return self._default_session.get(uri, **kwargs)

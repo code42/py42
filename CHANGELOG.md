@@ -11,6 +11,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 - Python 3.5.0+ support.
+- `users.get_user_by_id()`
+- `orgs.get_org_by_id()`
+- `devices.get_device_by_id()`
 
 ## 0.2.0 - 2019-09-13
 

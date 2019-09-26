@@ -40,9 +40,16 @@ class TestDeviceClient(object):
     def test_unicode_hostname_get_devices_calls_get_with_unicode_q_param(
         self, session, v3_required_session
     ):
-        unicode_hostname = "我能吞"
+        unicode_hostname = u"您已经发现了秘密信息"
         client = DeviceClient(session, v3_required_session)
         client.get_devices(q=unicode_hostname)
         expected_params = DEFAULT_GET_DEVICES_PARAMS
         expected_params["q"] = unicode_hostname
         session.get.assert_called_once_with(COMPUTER_URI, params=expected_params)
+
+    def test_get_device_by_id_calls_get_with_uri_and_params(self, session, v3_required_session):
+        client = DeviceClient(session, v3_required_session)
+        client.get_device_by_id("DEVICE_ID", include_backup_usage=True)
+        expected_params = {"incBackupUsage": True}
+        uri = "{0}/{1}".format(COMPUTER_URI, "DEVICE_ID")
+        session.get.assert_called_once_with(uri, params=expected_params)

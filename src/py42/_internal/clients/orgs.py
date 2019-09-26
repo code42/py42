@@ -23,6 +23,10 @@ class OrgClient(BaseAuthorityClient):
         }
         return self._default_session.post(uri, data=json.dumps(data), **kwargs)
 
+    def get_org_by_id(self, org_id, **kwargs):
+        uri = u"/api/Org/{0}".format(org_id)
+        return self._default_session.get(uri, **kwargs)
+
     def get_org_by_uid(self, org_uid, **kwargs):
         uri = u"/api/Org/{0}?idType=orgUid".format(org_uid)
         return self._default_session.get(uri, **kwargs)

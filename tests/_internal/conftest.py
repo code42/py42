@@ -27,7 +27,7 @@ TRACEBACK = "Traceback..."
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
-VALUE_UNICODE = u"我能吞下玻璃而不伤身体"
+VALUE_UNICODE = u"您已经发现了秘密信息"
 
 
 def build_expected_exception_message(host, url, exception_type, exception_message):

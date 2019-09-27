@@ -11,8 +11,8 @@ import py42.util as util
 TEST_FILENAME = "file.txt"
 TEST_DIR = "/Users/john.doe"
 TEST_PATH = "{0}/{1}".format(TEST_DIR, TEST_FILENAME)
-TEST_UNICODE_FILENAME = u"吞"
-TEST_UNICODE_DIR = u"我能"
+TEST_UNICODE_FILENAME = u"文件"
+TEST_UNICODE_DIR = u"夹"
 TEST_UNICODE_PATH = u"{0}/{1}".format(TEST_UNICODE_DIR, TEST_UNICODE_FILENAME)
 BUILTIN_MODULE = "__builtin__" if compat.is_py2 else "builtins"
 

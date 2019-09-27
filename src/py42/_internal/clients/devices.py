@@ -79,14 +79,27 @@ class DeviceClient(BaseAuthorityClient):
         user_uid=None,
         target_computer_guid=None,
         include_backup_usage=None,
-        include_counts=True,
         then=None,
         return_each_page=False,
     ):
         func = self.get_devices
+        page_size = 1000
 
         def for_each(response):
-            util.for_each_api_item(response, func, 1000, then, u"computers", return_each_page)
+            util.for_each_api_item(
+                response,
+                func,
+                page_size,
+                then,
+                u"computers",
+                return_each_page,
+                active=active,
+                org_uid=org_uid,
+                user_uid=user_uid,
+                target_computer_guid=target_computer_guid,
+                include_backup_usage=include_backup_usage,
+                include_counts=True,
+            )
 
         func(
             active=active,
@@ -94,7 +107,8 @@ class DeviceClient(BaseAuthorityClient):
             user_uid=user_uid,
             target_computer_guid=target_computer_guid,
             include_backup_usage=include_backup_usage,
-            include_counts=include_counts,
-            page_size=1000,
+            include_counts=True,
+            page_num=1,
+            page_size=page_size,
             then=for_each,
         )

@@ -98,15 +98,28 @@ class UserClient(BaseAuthorityClient):
         self, active=None, email=None, org_uid=None, role_id=None, then=None, return_each_page=False
     ):
         func = self.get_users
+        page_size = 1000
 
         def for_each(response):
-            util.for_each_api_item(response, func, 1000, then, u"users", return_each_page)
+            util.for_each_api_item(
+                response,
+                func,
+                page_size,
+                then,
+                u"users",
+                return_each_page,
+                active=active,
+                email=email,
+                org_uid=org_uid,
+                role_id=role_id,
+            )
 
         func(
             active=active,
             email=email,
             org_uid=org_uid,
             role_id=role_id,
-            page_size=1000,
+            page_num=1,
+            page_size=page_size,
             then=for_each,
         )

@@ -15,6 +15,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `orgs.get_org_by_id()`
 - `devices.get_device_by_id()`
 
+## Fixed
+- Issue that caused `users.for_each_user()` and `devices.for_each_device()` to only apply filter criteria to the first 1000 items returned.
+
 ## 0.2.0 - 2019-09-13
 
 ### Added

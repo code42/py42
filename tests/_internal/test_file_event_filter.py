@@ -18,7 +18,7 @@ from py42._internal.file_event_filter import (
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
-VALUE_UNICODE = u"我能吞下玻璃而不伤身体"
+VALUE_UNICODE = u"您已经发现了秘密信息"
 
 JSON_FILE_EVENT_FILTER = '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
     OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING

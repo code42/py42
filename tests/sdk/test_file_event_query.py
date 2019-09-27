@@ -257,7 +257,7 @@ def test_device_username_not_in_sets_filter_properties_correctly(mocker):
 
 
 def test_unicode_device_username_eq_sets_filter_properties_correctly(mocker):
-    unicode_username = "我能吞下玻璃而不伤身体"
+    unicode_username = u"您已经发现了秘密信息"
     mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
     DeviceUsername.eq(unicode_username)
     py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(

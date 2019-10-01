@@ -121,6 +121,16 @@ def test_file_event_query_str_with_sort_key_gives_correct_json_representation(ev
     assert str(file_event_query) == json_query_str
 
 
+def test_md5_exists_sets_filter_properties_correctly(exists_filter_creator):
+    MD5.exists()
+    exists_filter_creator.assert_called_once_with("md5Checksum")
+
+
+def test_md5_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    MD5.not_exists()
+    not_exists_filter_creator.assert_called_once_with("md5Checksum")
+
+
 def test_md5_eq_sets_filter_properties_correctly(eq_filter_creator):
     MD5.eq("test_md5")
     eq_filter_creator.assert_called_once_with("md5Checksum", "test_md5")
@@ -141,6 +151,16 @@ def test_md5_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["md51", "md52", "md53"]
     MD5.not_in(items)
     not_in_filter_creator.assert_called_once_with("md5Checksum", items)
+
+
+def test_sha256_exists_sets_filter_properties_correctly(exists_filter_creator):
+    SHA256.exists()
+    exists_filter_creator.assert_called_once_with("sha256Checksum")
+
+
+def test_sha256_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    SHA256.not_exists()
+    not_exists_filter_creator.assert_called_once_with("sha256Checksum")
 
 
 def test_sha256_eq_sets_filter_properties_correctly(eq_filter_creator):
@@ -165,6 +185,16 @@ def test_sha256_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     not_in_filter_creator.assert_called_once_with("sha256Checksum", items)
 
 
+def test_os_hostname_exists_sets_filter_properties_correctly(exists_filter_creator):
+    OSHostname.exists()
+    exists_filter_creator.assert_called_once_with("osHostName")
+
+
+def test_os_hostname_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    OSHostname.not_exists()
+    not_exists_filter_creator.assert_called_once_with("osHostName")
+
+
 def test_os_hostname_eq_sets_filter_properties_correctly(eq_filter_creator):
     OSHostname.eq("test_osHostName")
     eq_filter_creator.assert_called_once_with("osHostName", "test_osHostName")
@@ -185,6 +215,16 @@ def test_os_hostname_not_in_sets_filter_properties_correctly(not_in_filter_creat
     items = ["osHostName1", "osHostName2", "osHostName3"]
     OSHostname.not_in(items)
     not_in_filter_creator.assert_called_once_with("osHostName", items)
+
+
+def test_device_username_exists_sets_filter_properties_correctly(exists_filter_creator):
+    DeviceUsername.exists()
+    exists_filter_creator.assert_called_once_with("deviceUserName")
+
+
+def test_device_username_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    DeviceUsername.not_exists()
+    not_exists_filter_creator.assert_called_once_with("deviceUserName")
 
 
 def test_device_username_eq_sets_filter_properties_correctly(eq_filter_creator):
@@ -215,6 +255,16 @@ def test_unicode_device_username_eq_sets_filter_properties_correctly(eq_filter_c
     eq_filter_creator.assert_called_once_with("deviceUserName", unicode_username)
 
 
+def test_file_name_exists_sets_filter_properties_correctly(exists_filter_creator):
+    FileName.exists()
+    exists_filter_creator.assert_called_once_with("fileName")
+
+
+def test_file_name_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    FileName.not_exists()
+    not_exists_filter_creator.assert_called_once_with("fileName")
+
+
 def test_file_name_eq_sets_filter_properties_correctly(eq_filter_creator):
     FileName.eq("test_fileName")
     eq_filter_creator.assert_called_once_with("fileName", "test_fileName")
@@ -235,6 +285,16 @@ def test_file_name_not_in_sets_filter_properties_correctly(not_in_filter_creator
     items = ["fileName1", "fileName2", "fileName3"]
     FileName.not_in(items)
     not_in_filter_creator.assert_called_once_with("fileName", items)
+
+
+def test_file_path_exists_sets_filter_properties_correctly(exists_filter_creator):
+    FilePath.exists()
+    exists_filter_creator.assert_called_once_with("filePath")
+
+
+def test_file_path_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    FilePath.not_exists()
+    not_exists_filter_creator.assert_called_once_with("filePath")
 
 
 def test_file_path_eq_sets_filter_properties_correctly(eq_filter_creator):
@@ -259,6 +319,16 @@ def test_file_path_not_in_sets_filter_properties_correctly(not_in_filter_creator
     not_in_filter_creator.assert_called_once_with("filePath", items)
 
 
+def test_public_ip_exists_sets_filter_properties_correctly(exists_filter_creator):
+    PublicIPAddress.exists()
+    exists_filter_creator.assert_called_once_with("publicIpAddress")
+
+
+def test_public_ip_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    PublicIPAddress.not_exists()
+    not_exists_filter_creator.assert_called_once_with("publicIpAddress")
+
+
 def test_public_ip_address_eq_sets_filter_properties_correctly(eq_filter_creator):
     PublicIPAddress.eq("test_publicIp")
     eq_filter_creator.assert_called_once_with("publicIpAddress", "test_publicIp")
@@ -279,6 +349,16 @@ def test_public_ip_address_not_in_sets_filter_properties_correctly(not_in_filter
     items = ["publicIpAddress1", "publicIpAddress2", "publicIpAddress3"]
     PublicIPAddress.not_in(items)
     not_in_filter_creator.assert_called_once_with("publicIpAddress", items)
+
+
+def test_private_ip_exists_sets_filter_properties_correctly(exists_filter_creator):
+    PrivateIPAddress.exists()
+    exists_filter_creator.assert_called_once_with("privateIpAddresses")
+
+
+def test_private_ip_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    PrivateIPAddress.not_exists()
+    not_exists_filter_creator.assert_called_once_with("privateIpAddresses")
 
 
 def test_private_ip_address_eq_sets_filter_properties_correctly(eq_filter_creator):
@@ -303,6 +383,16 @@ def test_private_ip_address_not_in_sets_filter_properties_correctly(not_in_filte
     not_in_filter_creator.assert_called_once_with("privateIpAddresses", items)
 
 
+def test_event_type_exists_sets_filter_properties_correctly(exists_filter_creator):
+    EventType.exists()
+    exists_filter_creator.assert_called_once_with("eventType")
+
+
+def test_event_type_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    EventType.not_exists()
+    not_exists_filter_creator.assert_called_once_with("eventType")
+
+
 def test_event_type_eq_sets_filter_properties_correctly(eq_filter_creator):
     EventType.eq("test_eventType")
     eq_filter_creator.assert_called_once_with("eventType", "test_eventType")
@@ -325,17 +415,14 @@ def test_event_type_not_in_sets_filter_properties_correctly(not_in_filter_creato
     not_in_filter_creator.assert_called_once_with("eventType", items)
 
 
-def test_exposure_type_any_sets_filter_properties_correctly(is_in_filter_creator):
-    items = [
-        str(ExposureType.SHARED_VIA_LINK),
-        str(ExposureType.SHARED_TO_DOMAIN),
-        str(ExposureType.APPLICATION_READ),
-        str(ExposureType.CLOUD_STORAGE),
-        str(ExposureType.REMOVABLE_MEDIA),
-        str(ExposureType.IS_PUBLIC),
-    ]
-    ExposureType.any()
-    is_in_filter_creator.assert_called_once_with("exposure", items)
+def test_exposure_type_exists_sets_filter_properties_correctly(exists_filter_creator):
+    ExposureType.exists()
+    exists_filter_creator.assert_called_once_with("exposure")
+
+
+def test_exposure_type_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
+    ExposureType.not_exists()
+    not_exists_filter_creator.assert_called_once_with("exposure")
 
 
 def test_exposure_type_eq_sets_filter_properties_correctly(eq_filter_creator):

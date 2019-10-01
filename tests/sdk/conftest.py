@@ -36,6 +36,16 @@ def unicode_file_event_filter():
 
 
 @pytest.fixture
+def exists_filter_creator(mocker):
+    return mocker.patch(create_filter_creator_path("exists"))
+
+
+@pytest.fixture
+def not_exists_filter_creator(mocker):
+    return mocker.patch(create_filter_creator_path("not_exists"))
+
+
+@pytest.fixture
 def eq_filter_creator(mocker):
     return mocker.patch(create_filter_creator_path("eq"))
 

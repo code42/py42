@@ -5,7 +5,7 @@ from datetime import datetime
 from py42._internal.compat import str
 
 
-def create_file_event_filter(term, operator, value):
+def create_file_event_filter(term, operator, value=None):
     return FileEventFilter(term, operator, value)
 
 
@@ -47,12 +47,30 @@ def create_in_range_filter_group(term, start_value, end_value):
     return create_filter_group(filter_list, u"AND")
 
 
+def create_exists_filter_group(term):
+    filter_list = [create_file_event_filter(term, u"EXISTS")]
+    return create_filter_group(filter_list, u"AND")
+
+
+def create_not_exists_filter_group(term):
+    filter_list = [create_file_event_filter(term, u"DOES_NOT_EXIST")]
+    return create_filter_group(filter_list, u"AND")
+
+
 def create_filter_group(file_event_filter_list, filter_clause):
     return FilterGroup(file_event_filter_list, filter_clause)
 
 
 class _FileEventFilterStringField(object):
     _term = u"override_string_field_name"
+
+    @classmethod
+    def exists(cls):
+        return create_exists_filter_group(cls._term)
+
+    @classmethod
+    def not_exists(cls):
+        return create_not_exists_filter_group(cls._term)
 
     @classmethod
     def eq(cls, value):
@@ -104,14 +122,15 @@ class FileEventFilter(object):
 
     _term = None
 
-    def __init__(self, term, operator, value):
+    def __init__(self, term, operator, value=None):
         self._term = term
         self._operator = operator
         self._value = value
 
     def __str__(self):
-        return u'{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
-            self._operator, self._term, self._value
+        value = u"null" if self._value is None else u'"{0}"'.format(self._value)
+        return u'{{"operator":"{0}", "term":"{1}", "value":{2}}}'.format(
+            self._operator, self._term, value
         )
 
 

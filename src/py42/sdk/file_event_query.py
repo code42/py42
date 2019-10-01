@@ -101,19 +101,6 @@ class ExposureType(_FileEventFilterStringField):
     IS_PUBLIC = ExposureTypeEnum(u"IsPublic")
 
     @classmethod
-    def any(cls):
-        return cls.is_in(
-            [
-                cls.SHARED_VIA_LINK,
-                cls.SHARED_TO_DOMAIN,
-                cls.APPLICATION_READ,
-                cls.CLOUD_STORAGE,
-                cls.REMOVABLE_MEDIA,
-                cls.IS_PUBLIC,
-            ]
-        )
-
-    @classmethod
     def eq(cls, value):
         # type: (ExposureTypeEnum) -> FilterGroup
         return super(ExposureType, cls).eq(str(value))

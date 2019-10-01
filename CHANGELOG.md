@@ -9,7 +9,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Changed
+- `ExposureType.any` has been renamed to `ExposureType.exists`
+
 ### Added
+- `exists` and `not_exists` added to `file_event_query` string fields.
 - `InsertionTimestamp` file event filter support
 
 ## 0.2.1 - 2019-09-24

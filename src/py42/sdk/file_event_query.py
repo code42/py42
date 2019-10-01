@@ -43,6 +43,10 @@ class EventTimestamp(_FileEventFilterTimestampField):
     _term = u"eventTimestamp"
 
 
+class InsertionTimestamp(_FileEventFilterTimestampField):
+    _term = u"insertionTimestamp"
+
+
 class EventType(_FileEventFilterStringField):
     _term = u"eventType"
 

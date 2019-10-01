@@ -9,6 +9,7 @@ from py42._internal.file_event_filter import FilterGroup
 from py42.sdk.file_event_query import (
     DeviceUsername,
     EventTimestamp,
+    InsertionTimestamp,
     EventType,
     ExposureType,
     FileEventQuery,
@@ -120,323 +121,211 @@ def test_file_event_query_str_with_sort_key_gives_correct_json_representation(ev
     assert str(file_event_query) == json_query_str
 
 
-def test_md5_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_md5_eq_sets_filter_properties_correctly(eq_filter_creator):
     MD5.eq("test_md5")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "md5Checksum", "test_md5"
-    )
+    eq_filter_creator.assert_called_once_with("md5Checksum", "test_md5")
 
 
-def test_md5_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_md5_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     MD5.not_eq("test_md5")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "md5Checksum", "test_md5"
-    )
+    not_eq_filter_creator.assert_called_once_with("md5Checksum", "test_md5")
 
 
-def test_md5_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_md5_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["md51", "md52", "md53"]
     MD5.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "md5Checksum", items
-    )
+    is_in_filter_creator.assert_called_once_with("md5Checksum", items)
 
 
-def test_md5_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_md5_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["md51", "md52", "md53"]
     MD5.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "md5Checksum", items
-    )
+    not_in_filter_creator.assert_called_once_with("md5Checksum", items)
 
 
-def test_sha256_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_sha256_eq_sets_filter_properties_correctly(eq_filter_creator):
     SHA256.eq("test_sha256")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "sha256Checksum", "test_sha256"
-    )
+    eq_filter_creator.assert_called_once_with("sha256Checksum", "test_sha256")
 
 
-def test_sha256_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_sha256_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     SHA256.not_eq("test_sha256")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "sha256Checksum", "test_sha256"
-    )
+    not_eq_filter_creator.assert_called_once_with("sha256Checksum", "test_sha256")
 
 
-def test_sha256_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_sha256_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["sha2561", "sha2562", "sha2563"]
     SHA256.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "sha256Checksum", items
-    )
+    is_in_filter_creator.assert_called_once_with("sha256Checksum", items)
 
 
-def test_sha256_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_sha256_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["sha2561", "sha2562", "sha2563"]
     SHA256.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "sha256Checksum", items
-    )
+    not_in_filter_creator.assert_called_once_with("sha256Checksum", items)
 
 
-def test_os_hostname_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_os_hostname_eq_sets_filter_properties_correctly(eq_filter_creator):
     OSHostname.eq("test_osHostName")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "osHostName", "test_osHostName"
-    )
+    eq_filter_creator.assert_called_once_with("osHostName", "test_osHostName")
 
 
-def test_os_hostname_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_os_hostname_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     OSHostname.not_eq("test_osHostName")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "osHostName", "test_osHostName"
-    )
+    not_eq_filter_creator.assert_called_once_with( "osHostName", "test_osHostName")
 
 
-def test_os_hostname_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_os_hostname_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["osHostName1", "osHostName2", "osHostName3"]
     OSHostname.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "osHostName", items
-    )
+    is_in_filter_creator.assert_called_once_with("osHostName", items)
 
 
-def test_os_hostname_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_os_hostname_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["osHostName1", "osHostName2", "osHostName3"]
     OSHostname.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "osHostName", items
-    )
+    not_in_filter_creator.assert_called_once_with("osHostName", items)
 
 
-def test_device_username_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_device_username_eq_sets_filter_properties_correctly(eq_filter_creator):
     DeviceUsername.eq("test_deviceUserName")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "deviceUserName", "test_deviceUserName"
-    )
+    eq_filter_creator.assert_called_once_with("deviceUserName", "test_deviceUserName")
 
 
-def test_device_username_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_device_username_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     DeviceUsername.not_eq("test_deviceUsername")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "deviceUserName", "test_deviceUsername"
-    )
+    not_eq_filter_creator.assert_called_once_with("deviceUserName", "test_deviceUsername")
 
 
-def test_device_username_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_device_username_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["deviceUserName1", "deviceUserName2", "deviceUserName3"]
     DeviceUsername.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "deviceUserName", items
-    )
+    is_in_filter_creator.assert_called_once_with("deviceUserName", items)
 
 
-def test_device_username_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_device_username_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["deviceUserName1", "deviceUserName2", "deviceUserName3"]
     DeviceUsername.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "deviceUserName", items
-    )
+    not_in_filter_creator.assert_called_once_with("deviceUserName", items)
 
 
-def test_unicode_device_username_eq_sets_filter_properties_correctly(mocker):
+def test_unicode_device_username_eq_sets_filter_properties_correctly(eq_filter_creator):
     unicode_username = u"您已经发现了秘密信息"
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
     DeviceUsername.eq(unicode_username)
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "deviceUserName", unicode_username
-    )
+    eq_filter_creator.assert_called_once_with("deviceUserName", unicode_username)
 
 
-def test_file_name_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_file_name_eq_sets_filter_properties_correctly(eq_filter_creator):
     FileName.eq("test_fileName")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "fileName", "test_fileName"
-    )
+    eq_filter_creator.assert_called_once_with("fileName", "test_fileName")
 
 
-def test_file_name_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_file_name_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     FileName.not_eq("test_fileName")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "fileName", "test_fileName"
-    )
+    not_eq_filter_creator.assert_called_once_with("fileName", "test_fileName")
 
 
-def test_file_name_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_file_name_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["fileName", "fileName", "fileName"]
     FileName.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "fileName", items
-    )
+    is_in_filter_creator.assert_called_once_with("fileName", items)
 
 
-def test_file_name_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_file_name_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["fileName1", "fileName2", "fileName3"]
     FileName.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "fileName", items
-    )
+    not_in_filter_creator.assert_called_once_with("fileName", items)
 
 
-def test_file_path_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_file_path_eq_sets_filter_properties_correctly(eq_filter_creator):
     FilePath.eq("test_filePath")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "filePath", "test_filePath"
-    )
+    eq_filter_creator.assert_called_once_with("filePath", "test_filePath")
 
 
-def test_file_path_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_file_path_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     FilePath.not_eq("test_filePath")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "filePath", "test_filePath"
-    )
+    not_eq_filter_creator.assert_called_once_with("filePath", "test_filePath")
 
 
-def test_file_path_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_file_path_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["filePath1", "filePath2", "filePath3"]
     FilePath.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "filePath", items
-    )
+    is_in_filter_creator.assert_called_once_with("filePath", items)
 
 
-def test_file_path_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_file_path_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["filePath1", "filePath2", "filePath3"]
     FilePath.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "filePath", items
-    )
+    not_in_filter_creator.assert_called_once_with("filePath", items)
 
 
-def test_public_ip_address_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_public_ip_address_eq_sets_filter_properties_correctly(eq_filter_creator):
     PublicIPAddress.eq("test_publicIp")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "publicIpAddress", "test_publicIp"
-    )
+    eq_filter_creator.assert_called_once_with("publicIpAddress", "test_publicIp")
 
 
-def test_public_ip_address_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_public_ip_address_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     PublicIPAddress.not_eq("test_publicIp")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "publicIpAddress", "test_publicIp"
-    )
+    not_eq_filter_creator.assert_called_once_with("publicIpAddress", "test_publicIp")
 
 
-def test_public_ip_address_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_public_ip_address_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["publicIpAddress1", "publicIpAddress2", "publicIpAddress3"]
     PublicIPAddress.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "publicIpAddress", items
-    )
+    is_in_filter_creator.assert_called_once_with("publicIpAddress", items)
 
 
-def test_public_ip_address_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_public_ip_address_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["publicIpAddress1", "publicIpAddress2", "publicIpAddress3"]
     PublicIPAddress.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "publicIpAddress", items
-    )
+    not_in_filter_creator.assert_called_once_with("publicIpAddress", items)
 
 
-def test_private_ip_address_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_private_ip_address_eq_sets_filter_properties_correctly(eq_filter_creator):
     PrivateIPAddress.eq("test_privateIp")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "privateIpAddresses", "test_privateIp"
-    )
+    eq_filter_creator.assert_called_once_with("privateIpAddresses", "test_privateIp")
 
 
-def test_private_ip_address_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_private_ip_address_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     PrivateIPAddress.not_eq("test_privateIp")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "privateIpAddresses", "test_privateIp"
-    )
+    not_eq_filter_creator.assert_called_once_with("privateIpAddresses", "test_privateIp")
 
 
-def test_private_ip_address_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_private_ip_address_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["privateIp1", "privateIp2", "privateIp3"]
     PrivateIPAddress.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "privateIpAddresses", items
-    )
+    is_in_filter_creator.assert_called_once_with("privateIpAddresses", items)
 
 
-def test_private_ip_address_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_private_ip_address_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["privateIp1", "privateIp2", "privateIp3"]
     PrivateIPAddress.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "privateIpAddresses", items
-    )
+    not_in_filter_creator.assert_called_once_with("privateIpAddresses", items)
 
 
-def test_event_type_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_event_type_eq_sets_filter_properties_correctly(eq_filter_creator):
     EventType.eq("test_eventType")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "eventType", "test_eventType"
-    )
+    eq_filter_creator.assert_called_once_with("eventType", "test_eventType")
 
 
-def test_event_type_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_event_type_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     EventType.not_eq("test_eventType")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "eventType", "test_eventType"
-    )
+    not_eq_filter_creator.assert_called_once_with("eventType", "test_eventType")
 
 
-def test_event_type_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_event_type_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["eventType1", "eventType2", "eventType3"]
     EventType.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "eventType", items
-    )
+    is_in_filter_creator.assert_called_once_with("eventType", items)
 
 
-def test_event_type_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_event_type_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["eventType1", "eventType2", "eventType3"]
     EventType.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "eventType", items
-    )
+    not_in_filter_creator.assert_called_once_with("eventType", items)
 
 
-def test_exposure_type_any_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_exposure_type_any_sets_filter_properties_correctly(is_in_filter_creator):
     items = [
         str(ExposureType.SHARED_VIA_LINK),
         str(ExposureType.SHARED_TO_DOMAIN),
@@ -446,72 +335,80 @@ def test_exposure_type_any_sets_filter_properties_correctly(mocker):
         str(ExposureType.IS_PUBLIC),
     ]
     ExposureType.any()
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "exposure", items
-    )
+    is_in_filter_creator.assert_called_once_with("exposure", items)
 
 
-def test_exposure_type_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_eq_filter_group")
+def test_exposure_type_eq_sets_filter_properties_correctly(eq_filter_creator):
     ExposureType.eq("test_exposure")
-    py42._internal.file_event_filter.create_eq_filter_group.assert_called_once_with(
-        "exposure", "test_exposure"
-    )
+    eq_filter_creator.assert_called_once_with("exposure", "test_exposure")
 
 
-def test_exposure_type_not_eq_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_eq_filter_group")
+def test_exposure_type_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     ExposureType.not_eq("test_exposure")
-    py42._internal.file_event_filter.create_not_eq_filter_group.assert_called_once_with(
-        "exposure", "test_exposure"
-    )
+    not_eq_filter_creator.assert_called_once_with("exposure", "test_exposure")
 
 
-def test_exposure_type_is_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_is_in_filter_group")
+def test_exposure_type_is_in_sets_filter_properties_correctly(is_in_filter_creator):
     items = ["exposure1", "exposure2", "exposure3"]
     ExposureType.is_in(items)
-    py42._internal.file_event_filter.create_is_in_filter_group.assert_called_once_with(
-        "exposure", items
-    )
+    is_in_filter_creator.assert_called_once_with("exposure", items)
 
 
-def test_exposure_type_not_in_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_not_in_filter_group")
+def test_exposure_type_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["exposure1", "exposure2", "exposure3"]
     ExposureType.not_in(items)
-    py42._internal.file_event_filter.create_not_in_filter_group.assert_called_once_with(
-        "exposure", items
-    )
+    not_in_filter_creator.assert_called_once_with("exposure", items)
 
 
-def test_event_timestamp_on_or_after_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_on_or_after_filter_group")
+def test_event_timestamp_on_or_after_sets_filter_properties_correctly(on_or_after_filter_creator):
     test_time = time()
-    formatted = datetime.fromtimestamp(test_time).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    formatted = format_timestamp(test_time)
     EventTimestamp.on_or_after(test_time)
-    py42._internal.file_event_filter.create_on_or_after_filter_group.assert_called_once_with(
-        "eventTimestamp", formatted
-    )
+    on_or_after_filter_creator.assert_called_once_with("eventTimestamp", formatted)
 
 
-def test_event_timestamp_on_or_before_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_on_or_before_filter_group")
+def test_event_timestamp_on_or_before_sets_filter_properties_correctly(on_or_before_filter_creator):
     test_time = time()
-    formatted = datetime.fromtimestamp(test_time).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    formatted = format_timestamp(test_time)
     EventTimestamp.on_or_before(test_time)
-    py42._internal.file_event_filter.create_on_or_before_filter_group.assert_called_once_with(
-        "eventTimestamp", formatted
-    )
+    on_or_before_filter_creator.assert_called_once_with("eventTimestamp", formatted)
 
 
-def test_event_timestamp_in_range_sets_filter_properties_correctly(mocker):
-    mocker.patch("py42._internal.file_event_filter.create_in_range_filter_group")
+def test_event_timestamp_in_range_sets_filter_properties_correctly(in_range_filter_creator):
     test_before_time = time()
     test_after_time = time() + 30  # make sure timestamps are actually different
-    formatted_before = datetime.fromtimestamp(test_before_time).strftime("%Y-%m-%dT%H:%M:%S.000Z")
-    formatted_after = datetime.fromtimestamp(test_after_time).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    formatted_before = format_timestamp(test_before_time)
+    formatted_after = format_timestamp(test_after_time)
     EventTimestamp.in_range(test_before_time, test_after_time)
-    py42._internal.file_event_filter.create_in_range_filter_group.assert_called_once_with(
+    in_range_filter_creator.assert_called_once_with(
         "eventTimestamp", formatted_before, formatted_after
     )
+
+
+def test_insertion_timestamp_on_or_after_sets_filter_properties_correctly(on_or_after_filter_creator):
+    test_time = time()
+    formatted = format_timestamp(test_time)
+    InsertionTimestamp.on_or_after(test_time)
+    on_or_after_filter_creator.assert_called_once_with("insertionTimestamp", formatted)
+
+
+def test_insertion_timestamp_on_or_before_sets_filter_properties_correctly(on_or_before_filter_creator):
+    test_time = time()
+    formatted = format_timestamp(test_time)
+    InsertionTimestamp.on_or_before(test_time)
+    on_or_before_filter_creator.assert_called_once_with("insertionTimestamp", formatted)
+
+
+def test_insertion_timestamp_in_range_sets_filter_properties_correctly(in_range_filter_creator):
+    test_before_time = time()
+    test_after_time = time() + 30  # make sure timestamps are actually different
+    formatted_before = format_timestamp(test_before_time)
+    formatted_after = format_timestamp(test_after_time)
+    InsertionTimestamp.in_range(test_before_time, test_after_time)
+    in_range_filter_creator.assert_called_once_with(
+        "insertionTimestamp", formatted_before, formatted_after
+    )
+
+
+def format_timestamp(test_time):
+    return datetime.fromtimestamp(test_time).strftime("%Y-%m-%dT%H:%M:%S.000Z")

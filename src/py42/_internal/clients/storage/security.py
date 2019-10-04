@@ -21,11 +21,14 @@ class StorageSecurityClient(BaseStorageClient):
         min_time_str = None
         max_time_str = None
 
+        def get_time_str_from_timestamp(timestamp):
+            return datetime.utcfromtimestamp(timestamp).strftime(u"%Y-%m-%dT%H:%M:%S.%fZ")
+
         if min_timestamp:
-            min_time_str = datetime.fromtimestamp(min_timestamp).strftime(u"%Y-%m-%dT%H:%M:%S.%fZ")
+            min_time_str = get_time_str_from_timestamp(min_timestamp)
 
         if max_timestamp:
-            max_time_str = datetime.fromtimestamp(max_timestamp).strftime(u"%Y-%m-%dT%H:%M:%S.%fZ")
+            max_time_str = get_time_str_from_timestamp(max_timestamp)
 
         params = {
             u"userUid": user_uid,

@@ -97,9 +97,10 @@ class _FileEventFilterTimestampField(object):
     _term = u"override_timestamp_field_name"
 
     @staticmethod
-    def _to_timestamp_string(int_value):
+    def _to_timestamp_string(timestamp):
         # "2018-12-01T00:00:00.000Z"
-        return datetime.fromtimestamp(int_value).strftime(u"%Y-%m-%dT%H:%M:%S.000Z")
+        prefix = datetime.utcfromtimestamp(timestamp).strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
+        return "{0}Z".format(prefix)
 
     @classmethod
     def on_or_after(cls, value):

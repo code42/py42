@@ -498,4 +498,6 @@ def test_insertion_timestamp_in_range_sets_filter_properties_correctly(in_range_
 
 
 def format_timestamp(test_time):
-    return datetime.fromtimestamp(test_time).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    prefix = datetime.utcfromtimestamp(test_time).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
+    timestamp_str = "{0}Z".format(prefix)
+    return timestamp_str

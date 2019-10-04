@@ -12,6 +12,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Changed
 - `ExposureType.any` has been renamed to `ExposureType.exists`
 
+### Fixed
+- Issue where `_FileEventFilterTimestampField` disguised localized times as UTC
+- Issue where `_FileEventFilterTimestampField` ignored milliseconds
+
 ### Added
 - `exists` and `not_exists` added to `file_event_query` string fields.
 - `InsertionTimestamp` file event filter support

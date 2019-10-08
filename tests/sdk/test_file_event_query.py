@@ -3,9 +3,7 @@
 from datetime import datetime
 from time import time
 
-import py42
 from py42._internal.compat import str
-from py42._internal.file_event_filter import FilterGroup
 from py42.sdk.file_event_query import (
     DeviceUsername,
     EventTimestamp,
@@ -27,6 +25,15 @@ JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize"
 
 def build_query_json(group_clause, group_list):
     return JSON_QUERY_BASE.format(group_clause, group_list, 1, 100, "asc", "eventId")
+
+
+def test_file_event_query_repr_does_not_throw_type_error():
+    # On python 2, `repr` doesn't throw.
+    # On python 3, if `repr` doesn't return type `str`, then an exception is thrown.
+    try:
+        _ = repr(FileEventQuery())
+    except TypeError:
+        assert False
 
 
 def test_file_event_query_constructs_successfully(event_filter_group):

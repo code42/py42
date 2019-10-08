@@ -15,6 +15,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Fixed
 - Issue where `_FileEventFilterTimestampField` disguised localized times as UTC
 - Issue where `_FileEventFilterTimestampField` ignored milliseconds
+- Issue on Python 3 where `FileEventQuery.__repr__` did not return type `str`
 
 ### Added
 - `exists` and `not_exists` added to `file_event_query` string fields.

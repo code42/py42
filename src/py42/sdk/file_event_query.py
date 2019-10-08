@@ -143,9 +143,6 @@ class FileEventQuery(object):
         )
         return json
 
-    def __repr__(self):
-        return self.__str__().encode(u"utf-8")
-
     @classmethod
     def any(cls, *args):
         # type: (iter[FilterGroup]) -> FileEventQuery

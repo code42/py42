@@ -1,4 +1,4 @@
-name: Build py42
+name: build
 
 on: [push, pull_request]
 

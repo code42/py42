@@ -30,7 +30,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `devices.get_device_by_id()`
 
 ## Fixed
-- Issue that caused `users.for_each_user()` and `devices.for_each_device()` to only apply filter criteria to the first 1000 items returned.
+- Issue that caused `users.for_each_user()` and `devices.for_each_device()` to only apply filter criteria to the first
+ 1000 items returned.
 
 ## 0.2.0 - 2019-09-13
 
@@ -38,7 +39,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `SecurityModule.get_security_detection_event_client`
 
 ### Removed
-- The following methods from `SecurityModule`. Use `StorageSecurityClient` (via `SecurityModule.get_security_detection_event_client`) instead.
+- The following methods from `SecurityModule`. 
+Use `StorageSecurityClient` (via `SecurityModule.get_security_detection_event_client`) instead.
     - `get_security_detection_events_for_user()`
     - `get_security_detection_events_summary()`
     

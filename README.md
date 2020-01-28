@@ -16,7 +16,8 @@ of session / authentication management.
 
 ## Installation
 
-Run the `setup.py` script to install the py42 package and its dependencies on your system. You will likely need administrative privileges for this.
+Run the `setup.py` script to install the py42 package and its dependencies on your system. 
+You will likely need administrative privileges for this.
 
 ```bash
 $ python setup.py install
@@ -101,7 +102,8 @@ There are a few default settings that affect the behavior of the client.
 | proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.| `None`
 | debug_level | Controls print statements for debugging | `py42.debug_level.NONE`
 
-To override these settings, import `py42.settings` and override values as necessary before creating the client. For example, to disable certificate validation in a dev environment: 
+To override these settings, import `py42.settings` and override values as necessary before creating the client.
+ For example, to disable certificate validation in a dev environment: 
 
 ```python
 import py42.settings as settings

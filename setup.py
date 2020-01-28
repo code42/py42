@@ -11,7 +11,7 @@ with io.open(join(dirname(__file__), "src", "py42", "__version__.py"), encoding=
 setup(
     name="py42",
     version=about["__version__"],
-    description="Official Code42 API Client",
+    description="The Official Code42 Python API Client",
     packages=find_packages("src"),
     package_dir={"": "src"},
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4",

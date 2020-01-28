@@ -23,7 +23,7 @@ class ArchiveLocatorFactory(object):
         try:
             if destination_guid is None:
                 response = self._device_client.get_device_by_guid(
-                    device_guid, include_backup_usage=True, force_sync=True
+                    device_guid, include_backup_usage=True
                 )
                 if destination_guid is None:
                     # take the first destination guid we find

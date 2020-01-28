@@ -7,7 +7,6 @@ about = {}
 with io.open(join(dirname(__file__), "src", "py42", "__version__.py"), encoding="utf8") as fh:
     exec(fh.read(), about)
 
-
 setup(
     name="py42",
     version=about["__version__"],
@@ -21,11 +20,12 @@ setup(
     zip_safe=False,
     extras_require={
         "dev": [
-            "pre-commit==1.18.3",
+            "pre-commit",
             "pytest==4.6.5",
-            "pytest-mock==1.10.4",
-            "sphinx==1.8.5",
-            "tox==3.14.0",
+            "pytest-cov == 2.8.1",
+            "pytest-mock==2.0.0",
+            "sphinx",
+            "tox==3.14.3",
         ]
     },
 )

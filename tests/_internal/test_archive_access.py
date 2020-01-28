@@ -537,7 +537,7 @@ class TestArchiveAccessManager(object):
         accessor_manager.get_archive_accessor(DEVICE_GUID)
 
         storage_archive_client.create_web_restore_session.assert_called_once_with(
-            DEVICE_GUID, data_key_token=DATA_KEY_TOKEN, force_sync=True
+            DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
         )
 
     def test_get_archive_accessor_calls_create_restore_job_manager_with_correct_args(
@@ -865,7 +865,7 @@ class TestRestoreJobManager(object):
         )
         restore_job_manager.restore_to_local_path(file_selection, save_as_path)
         job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
-        expected_call = mocker.call(job_id, force_sync=True)
+        expected_call = mocker.call(job_id)
         storage_archive_client.get_web_restore_job.assert_has_calls(
             [expected_call, expected_call, expected_call]
         )

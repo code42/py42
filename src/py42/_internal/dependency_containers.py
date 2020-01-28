@@ -62,7 +62,7 @@ class AuthorityDependencies(object):
     @staticmethod
     def verify_session_supported(session, test_uri):
         try:
-            response = session.get(test_uri, force_sync=True)
+            response = session.get(test_uri)
             return 200 <= response.status_code < 300
         except Exception:
             return False

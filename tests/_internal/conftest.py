@@ -30,21 +30,6 @@ VALUE_STRING = "value_example"
 VALUE_UNICODE = u"您已经发现了秘密信息"
 
 
-def build_expected_exception_message(host, url, exception_type, exception_message):
-    message_format = "Error making request to {0}{1}. Caused by: {2}"
-    return message_format.format(host, url, exception_message)
-
-
-def build_expected_exception_message_with_trace(
-    host, url, exception_type, exception_message, trace
-):
-    return (
-        build_expected_exception_message(host, url, exception_type, exception_message)
-        + " "
-        + str(trace)
-    )
-
-
 @pytest.fixture
 def successful_response(mocker):
     response = mocker.MagicMock(spec=Response)
@@ -101,18 +86,6 @@ def renewing_auth_handler(mocker):
     # initialized, unauthorized, corrected
     auth_handler.response_indicates_unauthorized.side_effect = [False, True, False]
     return auth_handler
-
-
-@pytest.fixture
-def catch(mocker):
-    return mocker.MagicMock()
-
-
-@pytest.fixture
-def global_exception_message_receiver(mocker):
-    receiver = mocker.MagicMock()
-    py42.settings.global_exception_message_receiver = receiver
-    return receiver
 
 
 @pytest.fixture

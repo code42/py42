@@ -15,9 +15,8 @@ class BaseFileEventClient(object):
 
 
 class BaseSessionFactory(object):
-    def __init__(self, session_impl, is_async=False):
+    def __init__(self, session_impl):
         self._session_impl = session_impl
-        self._is_async = is_async
 
     def create_v1_session(self, *args, **kwargs):
         pass

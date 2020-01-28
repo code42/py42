@@ -30,13 +30,13 @@ class ArchiveAccessorManager(object):
         return ArchiveAccessor(device_guid, session_id, client.archive, restore_job_manager)
 
     def _get_data_key_token(self, device_guid):
-        response = self._archive_client.get_data_key_token(device_guid, force_sync=True)
+        response = self._archive_client.get_data_key_token(device_guid)
         return util.get_obj_from_response(response, u"dataKeyToken")
 
     @staticmethod
     def _create_web_restore_session(storage_archive_client, device_guid, data_key_token):
         response = storage_archive_client.create_web_restore_session(
-            device_guid, data_key_token=data_key_token, force_sync=True
+            device_guid, data_key_token=data_key_token
         )
         return util.get_obj_from_response(response, u"webRestoreSessionId")
 
@@ -158,9 +158,7 @@ class RestoreJobManager(object):
         return self._submit_web_restore_job(file_selection, then=do_download, **kwargs)
 
     def is_job_complete(self, job_id, **kwargs):
-        response = self._storage_archive_client.get_web_restore_job(
-            job_id, force_sync=True, **kwargs
-        )
+        response = self._storage_archive_client.get_web_restore_job(job_id, **kwargs)
         return self._get_completion_status(response)
 
     def _submit_web_restore_job(self, file_selection, then=None, **kwargs):

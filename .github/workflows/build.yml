@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
-      - name: Install all dependencies
-        run: pip install -e .[dev]
+      - name: Install tox
+        run: pip install tox==3.14.3
       - name: Run Tox
         run: tox -e py  # Run tox using the version of Python in `PATH`

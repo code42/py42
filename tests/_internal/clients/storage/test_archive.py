@@ -366,4 +366,4 @@ class TestStorageArchiveClient(object):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.get_web_restore_job_result(WEB_RESTORE_JOB_ID)
         expected_url = WEB_RESTORE_JOB_RESULT_URL + "/" + WEB_RESTORE_JOB_ID
-        session.get.assert_called_once_with(expected_url)
+        session.get.assert_called_once_with(expected_url, stream=True)

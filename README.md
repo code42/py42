@@ -98,7 +98,6 @@ There are a few default settings that affect the behavior of the client.
 | Name | Description | Default |
 | ---- | ----------- | ------- |
 | verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.| `True`
-| global_exception_message_handler | Function with one parameter (str), which will be called when global exceptions are thrown. The exception message is passed to this handler.| `None`
 | proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.| `None`
 | debug_level | Controls print statements for debugging | `py42.debug_level.NONE`
 

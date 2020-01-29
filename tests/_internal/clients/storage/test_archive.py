@@ -101,12 +101,6 @@ class TestStorageArchiveClient(object):
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(ENCRYPTION_KEY_KEY) == ENCRYPTION_KEY
 
-    def test_create_web_restore_session_with_kwarg_passes_kwarg_to_post(self, mocker, session):
-        mock_then = mocker.MagicMock()
-        storage_archive_client = StorageArchiveClient(session)
-        storage_archive_client.create_web_restore_session(DEVICE_GUID, then=mock_then)
-        session.post.assert_called_once_with(mocker.ANY, json=mocker.ANY, then=mock_then)
-
     def test_submit_web_restore_job_calls_post_with_correct_url(self, session):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.submit_web_restore_job(
@@ -356,12 +350,6 @@ class TestStorageArchiveClient(object):
         expected_url = WEB_RESTORE_JOB_URL + "/" + WEB_RESTORE_JOB_ID
         session.get.assert_called_once_with(expected_url)
 
-    def test_get_web_restore_job_with_kwargs_calls_get_with_kwargs(self, session):
-        storage_archive_client = StorageArchiveClient(session)
-        storage_archive_client.get_web_restore_job(WEB_RESTORE_JOB_ID, kwarg_1=True, kwarg_2="val")
-        expected_url = WEB_RESTORE_JOB_URL + "/" + WEB_RESTORE_JOB_ID
-        session.get.assert_called_once_with(expected_url, kwarg_1=True, kwarg_2="val")
-
     def test_cancel_web_restore_job_calls_delete_with_correct_url(self, mocker, session):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.cancel_web_restore_job(WEB_RESTORE_JOB_ID)
@@ -374,26 +362,8 @@ class TestStorageArchiveClient(object):
         expected_data = {JOB_ID_KEY: WEB_RESTORE_JOB_ID}
         assert json_arg == expected_data
 
-    def test_cancel_web_restore_job_with_kwargs_calls_delete_with_kwargs(self, session):
-        storage_archive_client = StorageArchiveClient(session)
-        storage_archive_client.cancel_web_restore_job(
-            WEB_RESTORE_JOB_ID, kwarg_1=True, kwarg_2="val"
-        )
-        kwargs = session.delete.call_args[KWARGS_INDEX]
-        assert kwargs.get("kwarg_1") is True
-        assert kwargs.get("kwarg_2") == "val"
-
     def test_get_web_restore_job_result_calls_get_with_correct_url(self, session):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.get_web_restore_job_result(WEB_RESTORE_JOB_ID)
         expected_url = WEB_RESTORE_JOB_RESULT_URL + "/" + WEB_RESTORE_JOB_ID
         session.get.assert_called_once_with(expected_url)
-
-    def test_get_web_restore_job_result_with_kwargs_calls_get_with_kwargs(self, session):
-        storage_archive_client = StorageArchiveClient(session)
-        storage_archive_client.get_web_restore_job_result(
-            WEB_RESTORE_JOB_ID, kwarg_1=True, kwarg_2="val"
-        )
-        kwargs = session.get.call_args[KWARGS_INDEX]
-        assert kwargs.get("kwarg_1") is True
-        assert kwargs.get("kwarg_2") == "val"

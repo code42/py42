@@ -21,15 +21,14 @@ class SecurityModule(object):
             plan_uid, destination_guid
         ).security
 
-    def search_file_events(self, query, then=None, **kwargs):
+    def search_file_events(self, query):
         """Searches for file events
 
         Args:
             query: raw JSON query or FileEventQuery object. See https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API
-            then: function to call with the result
 
         Returns:
             list of file events as JSON
         """
         file_event_client = self._file_event_client_factory.get_file_event_client()
-        return file_event_client.search_file_events(query, then=then, **kwargs)
+        return file_event_client.search_file_events(query)

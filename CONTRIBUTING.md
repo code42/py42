@@ -1,4 +1,4 @@
-# Contributing to the Code42 Python SDK
+# Contributing to py42
 
 ## Development environment
 
@@ -25,14 +25,13 @@ It requires python 3.6 to run, so be sure to have a python 3.6 executable of som
 
 * Use positional argument specifiers in `str.format()`
 * Use syntax and built-in modules that are compatible with both Python 2 and 3.
-Use the `py42._internal.compat` module to create abstractions around functionality that differs between 2 and 3.
+* Use the `py42._internal.compat` module to create abstractions around functionality that differs between 2 and 3.
 
 ## Wrapping web APIs
 
 * Name the method starting with a verb
 * Specify required arguments as positional arguments
 * Specify optional arguments as keyword arguments
-* Include `**kwargs` as the last parameter
 * Use the newest supported implementation (e.g. v4 instead of v1, even if a related API only has a v1 implementation)
 
 ## Changes

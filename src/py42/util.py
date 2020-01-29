@@ -7,15 +7,6 @@ import posixpath
 from requests import Response
 
 
-def wrap_func(func, existing_func):
-    def wrapped(*args, **kwargs):
-        if existing_func is not None:
-            existing_func(*args, **kwargs)
-        func(*args, **kwargs)
-
-    return wrapped
-
-
 def get_obj_from_response(response, data_key):
     if response.text and 200 <= response.status_code < 300:
         response_json = json.loads(response.text)

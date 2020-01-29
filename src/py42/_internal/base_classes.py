@@ -12,20 +12,3 @@ class BaseStorageClient(object):
 class BaseFileEventClient(object):
     def __init__(self, session):
         self._session = session
-
-
-class BaseSessionFactory(object):
-    def __init__(self, session_impl):
-        self._session_impl = session_impl
-
-    def create_v1_session(self, *args, **kwargs):
-        pass
-
-    def create_jwt_session(self, *args, **kwargs):
-        pass
-
-    def create_storage_session(self, *args, **kwargs):
-        pass
-
-    def create_file_event_session(self, *args, **kwargs):
-        pass

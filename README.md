@@ -1,5 +1,5 @@
 
-# py42, the Code42 Python SDK
+# py42, the official Code42 Python SDK
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 ![Build status](https://github.com/code42/py42/workflows/build/badge.svg)

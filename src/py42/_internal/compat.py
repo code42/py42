@@ -8,11 +8,6 @@ import sys
 
 _ver = sys.version_info
 
-try:
-    import Queue as queue
-except ImportError:
-    import queue
-
 #: Python 2.x?
 is_py2 = _ver[0] == 2
 

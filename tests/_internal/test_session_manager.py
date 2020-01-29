@@ -1,6 +1,6 @@
 import pytest
 
-from py42._internal.base_classes import BaseSessionFactory
+from py42._internal.session_factory import SessionFactory
 from py42._internal.login_providers import LoginProvider
 from py42._internal.session_manager import (
     FileEventSessionManager,
@@ -15,7 +15,7 @@ def get_session_managers(session_factory):
 
 @pytest.fixture
 def session_factory(mocker):
-    return mocker.MagicMock(spec=BaseSessionFactory)
+    return mocker.MagicMock(spec=SessionFactory)
 
 
 @pytest.fixture

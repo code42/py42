@@ -1,7 +1,6 @@
 import json
 
 from py42._internal.base_classes import BaseAuthorityClient
-from py42._internal.clients import util
 
 
 class DeviceClient(BaseAuthorityClient):
@@ -17,7 +16,6 @@ class DeviceClient(BaseAuthorityClient):
         page_num=None,
         page_size=None,
         q=None,
-        **kwargs
     ):
         uri = u"/api/Computer"
         params = {
@@ -33,82 +31,41 @@ class DeviceClient(BaseAuthorityClient):
             u"q": q,
         }
 
-        return self._default_session.get(uri, params=params, **kwargs)
+        return self._default_session.get(uri, params=params)
 
-    def get_device_by_id(self, device_id, include_backup_usage=None, **kwargs):
+    def get_device_by_id(self, device_id, include_backup_usage=None):
         uri = u"/api/Computer/{0}".format(device_id)
         params = {u"incBackupUsage": include_backup_usage}
-        return self._default_session.get(uri, params=params, **kwargs)
+        return self._default_session.get(uri, params=params)
 
-    def get_device_by_guid(self, guid, include_backup_usage=None, **kwargs):
+    def get_device_by_guid(self, guid, include_backup_usage=None):
         uri = u"/api/Computer/{0}?idType=guid".format(guid)
         params = {u"incBackupUsage": include_backup_usage}
-        return self._default_session.get(uri, params=params, **kwargs)
+        return self._default_session.get(uri, params=params)
 
-    def block_device(self, computer_id, **kwargs):
+    def block_device(self, computer_id):
         uri = u"/api/ComputerBlock/{0}".format(computer_id)
-        return self._default_session.put(uri, **kwargs)
+        return self._default_session.put(uri)
 
-    def unblock_device(self, computer_id, **kwargs):
+    def unblock_device(self, computer_id):
         uri = u"/api/ComputerBlock/{0}".format(computer_id)
-        return self._default_session.delete(uri, **kwargs)
+        return self._default_session.delete(uri)
 
-    def deactivate_device(self, computer_id, **kwargs):
+    def deactivate_device(self, computer_id):
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": computer_id}
-        return self._v3_required_session.post(uri, data=json.dumps(data), **kwargs)
+        return self._v3_required_session.post(uri, data=json.dumps(data))
 
-    def reactivate_device(self, computer_id, **kwargs):
+    def reactivate_device(self, computer_id):
         uri = u"/api/v4/computer-deactivation/remove"
         data = {u"id": computer_id}
-        return self._v3_required_session.post(uri, data=json.dumps(data), **kwargs)
+        return self._v3_required_session.post(uri, data=json.dumps(data))
 
-    def deauthorize_device(self, computer_id, **kwargs):
+    def deauthorize_device(self, computer_id):
         uri = u"/api/ComputerDeauthorization/{0}".format(computer_id)
-        return self._default_session.put(uri, **kwargs)
+        return self._default_session.put(uri)
 
-    def get_device_settings(self, guid, keys=None, **kwargs):
+    def get_device_settings(self, guid, keys=None):
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
-        return self._v3_required_session.get(uri, params=params, **kwargs)
-
-    def for_each_device(
-        self,
-        active=None,
-        org_uid=None,
-        user_uid=None,
-        target_computer_guid=None,
-        include_backup_usage=None,
-        then=None,
-        return_each_page=False,
-    ):
-        func = self.get_devices
-        page_size = 1000
-
-        def for_each(response):
-            util.for_each_api_item(
-                response,
-                func,
-                page_size,
-                then,
-                u"computers",
-                return_each_page,
-                active=active,
-                org_uid=org_uid,
-                user_uid=user_uid,
-                target_computer_guid=target_computer_guid,
-                include_backup_usage=include_backup_usage,
-                include_counts=True,
-            )
-
-        func(
-            active=active,
-            org_uid=org_uid,
-            user_uid=user_uid,
-            target_computer_guid=target_computer_guid,
-            include_backup_usage=include_backup_usage,
-            include_counts=True,
-            page_num=1,
-            page_size=page_size,
-            then=for_each,
-        )
+        return self._v3_required_session.get(uri, params=params)

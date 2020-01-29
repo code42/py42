@@ -1,5 +1,5 @@
 from py42._internal.archive_access import ArchiveAccessorManager
-from py42._internal.base_classes import BaseSessionFactory
+from py42._internal.session_factory import SessionFactory
 from py42._internal.client_factories import (
     AuthorityClientFactory,
     FileEventClientFactory,
@@ -20,7 +20,7 @@ from py42._internal.session_manager import (
 
 class AuthorityDependencies(object):
     def __init__(self, session_factory, root_session):
-        # type: (BaseSessionFactory, Py42Session) -> None
+        # type: (SessionFactory, Py42Session) -> None
         self._set_sessions(session_factory, root_session)
         default_session = self.default_session
         v3_required_session = self.v3_required_session
@@ -36,7 +36,7 @@ class AuthorityDependencies(object):
         self.security_client = authority_client_factory.create_security_client()
 
     def _set_sessions(self, session_factory, root_session):
-        # type: (BaseSessionFactory, Py42Session) -> None
+        # type: (SessionFactory, Py42Session) -> None
         self.root_session = root_session
         v3_session = session_factory.create_jwt_session(root_session)
         v1_session = session_factory.create_v1_session(root_session)
@@ -126,7 +126,7 @@ class SDKDependencies(object):
 
     @classmethod
     def create_c42_api_dependencies(cls, session_factory, root_session):
-        # type: (type, BaseSessionFactory, Py42Session) -> SDKDependencies
+        # type: (type, SessionFactory, Py42Session) -> SDKDependencies
         # this configuration is for using c42-hosted endpoints to get v3 or v1 authentication tokens.
         authority_dependencies = AuthorityDependencies(session_factory, root_session)
         default_session = authority_dependencies.default_session

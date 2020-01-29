@@ -388,12 +388,12 @@ def file_content_chunks():
 
 def mock_submit_web_restore_job_response(mocker, storage_archive_client, response):
     def mock_submit_web_restore_job(
-        device_guid, session_id, path_set, num_files, num_dires, size, then=None, **kwargs
+        device_guid, session_id, path_set, num_files, num_dires, size, **kwargs
     ):
         submit_web_restore_job_response = mocker.MagicMock(spec=Response)
         submit_web_restore_job_response.text = response
         submit_web_restore_job_response.status_code = 200
-        return then(submit_web_restore_job_response)
+        return submit_web_restore_job_response
 
     storage_archive_client.submit_web_restore_job.side_effect = mock_submit_web_restore_job
 
@@ -411,9 +411,9 @@ def mock_get_web_restore_job_responses(mocker, storage_archive_client, json_resp
 def get_get_web_restore_job_result_response_mock(mocker, storage_archive_client, chunks):
     get_web_restore_job_result_response = mocker.MagicMock(spec=Response)
 
-    def mock_get_web_restore_job_result(job_id, then=None, **kwargs):
+    def mock_get_web_restore_job_result(job_id, **kwargs):
         get_web_restore_job_result_response.iter_content.return_value = chunks
-        return then(get_web_restore_job_result_response)
+        return get_web_restore_job_result_response
 
     storage_archive_client.get_web_restore_job_result.side_effect = mock_get_web_restore_job_result
 
@@ -450,9 +450,7 @@ def get_get_archive_tree_node_mock(mocker, session_id, device_guid, responses):
         get_archive_tree_node_response = mocker.MagicMock(spec=Response)
         get_archive_tree_node_response.text = file_id_responses[file_id]
         get_archive_tree_node_response.status_code = 200
-        then = kwargs["then"]
-        if then:
-            return then(get_archive_tree_node_response)
+
         return get_archive_tree_node_response
 
     return mock_get_archive_tree_node
@@ -592,7 +590,7 @@ class TestArchiveAccessor(object):
         expected_file_selection = get_file_selection(FileType.DIRECTORY, "/")
         expected_file_name = "./download.zip"
         restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name, then=None
+            expected_file_selection, expected_file_name
         )
 
     def test_download_from_backup_with_root_level_folder_calls_restore_to_local_path(
@@ -610,7 +608,7 @@ class TestArchiveAccessor(object):
         expected_file_selection = get_file_selection(FileType.DIRECTORY, USERS_DIR)
         expected_file_name = "." + USERS_DIR + ".zip"
         restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name, then=None
+            expected_file_selection, expected_file_name
         )
 
     def test_download_from_backup_with_file_path_calls_restore_to_local_path(
@@ -626,7 +624,7 @@ class TestArchiveAccessor(object):
         )
         expected_file_name = "./{0}".format(posixpath.basename(PATH_TO_FILE_IN_DOWNLOADS_FOLDER))
         restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name, then=None
+            expected_file_selection, expected_file_name
         )
 
     def test_download_from_backup_with_save_as_filename_calls_restore_to_local_path(
@@ -645,7 +643,7 @@ class TestArchiveAccessor(object):
             FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER
         )
         restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name, then=None
+            expected_file_selection, expected_file_name
         )
 
     def test_download_from_backup_with_save_as_dir_and_filename_calls_restore_to_local_path(
@@ -666,7 +664,7 @@ class TestArchiveAccessor(object):
             FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER
         )
         restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name, then=None
+            expected_file_selection, expected_file_name
         )
 
     def test_download_from_backup_with_file_not_in_archive_raises_exception(
@@ -788,11 +786,7 @@ class TestArchiveAccessor(object):
         )
         archive_accessor.download_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
         storage_archive_client.get_archive_tree_node.assert_called_with(
-            WEB_RESTORE_SESSION_ID,
-            DEVICE_GUID,
-            file_id=mocker.ANY,
-            show_deleted=True,
-            then=mocker.ANY,
+            WEB_RESTORE_SESSION_ID, DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
         )
 
 
@@ -827,6 +821,16 @@ class TestRestoreJobManager(object):
     def test_restore_to_local_path_calls_submit_web_restore_job_with_correct_args(
         self, mocker, storage_archive_client, file_selection, save_as_path
     ):
+        mock_submit_web_restore_job_response(
+            mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
+        )
+
+        mock_get_web_restore_job_responses(
+            mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
+        )
+
+        get_save_content_to_disk_mock(mocker)
+
         restore_job_manager = RestoreJobManager(
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
@@ -839,7 +843,6 @@ class TestRestoreJobManager(object):
             file_selection.num_dirs,
             file_selection.size,
             show_deleted=True,
-            then=mocker.ANY,
         )
 
     def test_restore_to_local_path_polls_job_status_until_job_is_complete(
@@ -857,6 +860,7 @@ class TestRestoreJobManager(object):
                 GetWebRestoreJobResponses.DONE,
             ],
         )
+        get_save_content_to_disk_mock(mocker)
         restore_job_manager = RestoreJobManager(
             storage_archive_client,
             DEVICE_GUID,

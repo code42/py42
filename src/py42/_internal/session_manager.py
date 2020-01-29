@@ -1,6 +1,6 @@
 from threading import Lock
 
-from py42._internal.base_classes import BaseSessionFactory
+from py42._internal.session_factory import SessionFactory
 from py42._internal.compat import str
 from py42._internal.login_providers import LoginProvider
 from py42._internal.session import Py42Session
@@ -42,7 +42,7 @@ class SessionManager(object):
 
 class StorageSessionManager(SessionManager):
     def __init__(self, session_factory):
-        # type: (BaseSessionFactory) -> None
+        # type: (SessionFactory) -> None
         super(StorageSessionManager, self).__init__()
         self._session_factory = session_factory
 
@@ -52,7 +52,7 @@ class StorageSessionManager(SessionManager):
 
 class FileEventSessionManager(SessionManager):
     def __init__(self, session_factory):
-        # type: (BaseSessionFactory) -> None
+        # type: (SessionFactory) -> None
         super(FileEventSessionManager, self).__init__()
         self._session_factory = session_factory
 

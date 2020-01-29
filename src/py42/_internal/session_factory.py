@@ -4,7 +4,6 @@ from py42._internal.auth_handling import (
     CookieModifier,
     HeaderModifier,
 )
-from py42._internal.base_classes import BaseSessionFactory
 from py42._internal.login_providers import (
     BasicAuthProvider,
     C42ApiV1TokenProvider,
@@ -13,9 +12,9 @@ from py42._internal.login_providers import (
 from py42._internal.session import Py42Session
 
 
-class SessionFactory(BaseSessionFactory):
+class SessionFactory(object):
     def __init__(self, session_impl, session_modifier_factory, auth_handler_factory):
-        super(SessionFactory, self).__init__(session_impl)
+        self._session_impl = session_impl
         self._session_modifier_factory = session_modifier_factory
         self._auth_handler_factory = auth_handler_factory
 
@@ -24,12 +23,12 @@ class SessionFactory(BaseSessionFactory):
         header_modifier = self._session_modifier_factory.create_header_modifier(u"Basic {0}")
         return self._create_session(self._session_impl, provider, header_modifier)
 
-    def create_v1_session(self, parent_session, *args, **kwargs):
+    def create_v1_session(self, parent_session):
         provider = C42ApiV1TokenProvider(parent_session)
         header_modifier = self._session_modifier_factory.create_header_modifier(u"token {0}")
         return self._create_session(self._session_impl, provider, header_modifier)
 
-    def create_jwt_session(self, parent_session, *args, **kwargs):
+    def create_jwt_session(self, parent_session):
         provider = C42ApiV3TokenProvider(parent_session)
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
         return self._create_session(self._session_impl, provider, header_modifier)
@@ -39,7 +38,7 @@ class SessionFactory(BaseSessionFactory):
         tmp = self._create_session(self._session_impl, c42_api_login_provider, header_modifier)
         return self.create_v1_session(tmp)
 
-    def create_file_event_session(self, file_event_login_provider, *args, **kwargs):
+    def create_file_event_session(self, file_event_login_provider):
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
         return self._create_session(self._session_impl, file_event_login_provider, header_modifier)
 

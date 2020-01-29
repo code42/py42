@@ -58,8 +58,8 @@ def get_normalized_security_event_plan_info(security_client, user_uid):
 
 
 class SecurityClient(BaseAuthorityClient):
-    def get_security_event_locations(self, user_uid, **kwargs):
+    def get_security_event_locations(self, user_uid):
         uri = u"/c42api/v3/SecurityEventsLocation"
         params = {u"userUid": user_uid}
 
-        return self._v3_required_session.get(uri, params=params, **kwargs)
+        return self._v3_required_session.get(uri, params=params)

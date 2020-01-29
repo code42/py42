@@ -20,16 +20,6 @@ class TestFileEventClient(object):
         client.search_file_events(RAW_QUERY)
         session.post.assert_called_once_with(FILE_EVENT_URI, data=RAW_QUERY)
 
-    def test_search_file_events_calls_post_with_uri_query_and_one_kwarg(self, session):
-        client = FileEventClient(session)
-        client.search_file_events(RAW_QUERY, arg1="arg1")
-        session.post.assert_called_once_with(FILE_EVENT_URI, arg1="arg1", data=RAW_QUERY)
-
-    def test_search_file_events_calls_post_with_uri_query_and_multiple_kwargs(self, session):
-        client = FileEventClient(session)
-        client.search_file_events(RAW_QUERY, arg1="arg1", arg2=2)
-        session.post.assert_called_once_with(FILE_EVENT_URI, arg1="arg1", arg2=2, data=RAW_QUERY)
-
     def test_unicode_query_search_file_event_calls_post_with_query(self, session):
         client = FileEventClient(session)
         client.search_file_events(RAW_UNICODE_QUERY)

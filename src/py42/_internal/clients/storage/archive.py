@@ -127,4 +127,4 @@ class StorageArchiveClient(BaseStorageClient):
 
     def get_web_restore_job_result(self, job_id):
         uri = u"/api/WebRestoreJobResult/{}".format(job_id)
-        return self._session.get(uri)
+        return self._session.get(uri, stream=True)

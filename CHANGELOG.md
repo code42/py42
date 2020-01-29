@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Removed
+- `py42.sdk.util.queued_logger`. Use loggers in Python's `logging` namespace instead (they are threadsafe.)
+- `is_async` option from `sdk.create_from_local_account`. This was an intentionally undocumented feature.
+- `force_sync`, `then`, and `catch` options from all client requests. These were only meaningful when used with `is_async`.
+- `users.for_each_user()`. Loop over `response["data"]["users"]` instead.
+- `devices.for_each_device()`. `response["data"]["computers"]` instead.
+- `py42.settings.global_exception_receiver`. Handle your exceptions as you otherwise normally would instead.
+
 ## 0.2.2 - 2019-10-15
 
 ### Changed

@@ -160,7 +160,7 @@ class RestoreJobManager(object):
         return util.get_obj_from_response(response, u"done")
 
     def _download_result(self, job_id, file_path):
-        response = self._storage_archive_client.get_web_restore_job_result(job_id, stream=True)
+        response = self._storage_archive_client.get_web_restore_job_result(job_id)
         util.save_content_to_disk(response, file_path)
 
         return file_path

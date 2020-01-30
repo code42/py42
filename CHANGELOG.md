@@ -10,11 +10,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## Unreleased
 
 ### Removed
-- `py42.sdk.util.queued_logger`. Use loggers in Python's `logging` namespace instead (they are threadsafe.)
+- `py42.sdk.util.queued_logger`. Use loggers in Python's `logging` namespace instead (they are threadsafe).
 - `is_async` option from `sdk.create_from_local_account`. This was an intentionally undocumented feature.
 - `force_sync`, `then`, and `catch` options from all client requests. These were only meaningful when used with `is_async`.
 - `users.for_each_user()`. Loop over `response["data"]["users"]` instead.
-- `devices.for_each_device()`. `response["data"]["computers"]` instead.
+- `devices.for_each_device()`. Loop over `response["data"]["computers"]` instead.
 - `py42.settings.global_exception_receiver`. Handle your exceptions as you otherwise normally would instead.
 
 ## 0.2.2 - 2019-10-15

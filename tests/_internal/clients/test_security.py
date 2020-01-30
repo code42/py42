@@ -255,7 +255,7 @@ def test_get_normalized_security_event_plan_info_one_location(security_client_on
 
 
 def test_get_normalized_security_event_plan_info_two_plans_one_node(
-    security_client_two_plans_one_node
+    security_client_two_plans_one_node,
 ):
     plan_info = get_normalized_security_event_plan_info(
         security_client_two_plans_one_node, USER_UID
@@ -268,7 +268,7 @@ def test_get_normalized_security_event_plan_info_two_plans_one_node(
 
 
 def test_get_normalized_security_event_plan_info_two_plans_two_nodes(
-    security_client_two_plans_two_nodes
+    security_client_two_plans_two_nodes,
 ):
     plan_info = get_normalized_security_event_plan_info(
         security_client_two_plans_two_nodes, USER_UID
@@ -281,7 +281,7 @@ def test_get_normalized_security_event_plan_info_two_plans_two_nodes(
 
 
 def test_get_normalized_security_event_plan_info_one_plan_two_destinations(
-    security_client_one_plan_two_destinations
+    security_client_one_plan_two_destinations,
 ):
     plan_info = get_normalized_security_event_plan_info(
         security_client_one_plan_two_destinations, USER_UID
@@ -296,7 +296,7 @@ def test_get_normalized_security_event_plan_info_one_plan_two_destinations(
 
 
 def test_get_normalized_security_event_plan_info_two_plans_two_destinations(
-    security_client_two_plans_two_destinations
+    security_client_two_plans_two_destinations,
 ):
     plan_info = get_normalized_security_event_plan_info(
         security_client_two_plans_two_destinations, USER_UID
@@ -315,7 +315,7 @@ def test_get_normalized_security_event_plan_info_two_plans_two_destinations(
 
 
 def test_get_normalized_security_event_plan_info_two_plans_two_destinations_three_nodes(
-    security_client_two_plans_two_destinations_three_nodes
+    security_client_two_plans_two_destinations_three_nodes,
 ):
     plan_info = get_normalized_security_event_plan_info(
         security_client_two_plans_two_destinations_three_nodes, USER_UID

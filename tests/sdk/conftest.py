@@ -82,4 +82,3 @@ def in_range_filter_creator(mocker):
 
 def create_filter_creator_path(query_filter_string):
     return "py42._internal.file_event_filter.create_{0}_filter_group".format(query_filter_string)
-

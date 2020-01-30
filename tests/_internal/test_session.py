@@ -1,7 +1,5 @@
 from json import dumps
 
-import py42.settings
-from py42._internal.compat import str
 from py42._internal.session import Py42Session
 from .conftest import *
 

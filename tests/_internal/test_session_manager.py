@@ -1,7 +1,7 @@
 import pytest
 
-from py42._internal.session_factory import SessionFactory
 from py42._internal.login_providers import LoginProvider
+from py42._internal.session_factory import SessionFactory
 from py42._internal.session_manager import (
     FileEventSessionManager,
     SessionsManager,

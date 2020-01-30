@@ -7,12 +7,12 @@ from py42._internal.compat import str
 from py42.sdk.file_event_query import (
     DeviceUsername,
     EventTimestamp,
-    InsertionTimestamp,
     EventType,
     ExposureType,
     FileEventQuery,
     FileName,
     FilePath,
+    InsertionTimestamp,
     MD5,
     OSHostname,
     PrivateIPAddress,

@@ -1,9 +1,8 @@
 import pytest
 from requests import Session
 
-from py42._internal.auth_handling import AuthHandler, CompositeModifier
+from py42._internal.auth_handling import CompositeModifier
 from py42._internal.login_providers import FileEventLoginProvider
-from py42._internal.session import Py42Session
 from py42._internal.session_factory import (
     AuthHandlerFactory,
     SessionFactory,

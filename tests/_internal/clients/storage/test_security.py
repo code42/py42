@@ -1,9 +1,9 @@
 from datetime import datetime
+
 import pytest
 
 from py42._internal.clients.storage.security import StorageSecurityClient
 from py42._internal.session import Py42Session
-
 
 uri = u"/api/SecurityDetectionEvent"
 mock_min_ts = 1000000

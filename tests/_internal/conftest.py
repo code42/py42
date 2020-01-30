@@ -3,9 +3,7 @@
 import pytest
 from requests import HTTPError, Response, Session
 
-import py42.settings
 from py42._internal.auth_handling import AuthHandler
-from py42._internal.compat import str
 from py42._internal.file_event_filter import FileEventFilter
 
 HOST_ADDRESS = "http://example.com"

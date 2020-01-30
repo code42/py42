@@ -10,7 +10,7 @@ from py42._internal.session_factory import (
 
 class SDK(object):
     def __init__(self, sdk_dependencies):
-        # type: (SDKDependencies, bool) -> None
+        # type: (SDKDependencies) -> None
         self._sdk_dependencies = sdk_dependencies
         self._authority_dependencies = sdk_dependencies.authority_dependencies
         self._storage_dependencies = sdk_dependencies.storage_dependencies

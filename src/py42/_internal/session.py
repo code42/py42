@@ -1,5 +1,4 @@
 import json as json_lib
-import traceback
 from threading import Lock
 
 import requests.adapters

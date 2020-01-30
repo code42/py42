@@ -7,12 +7,12 @@ from py42._internal.compat import str
 from py42.sdk.file_event_query import (
     DeviceUsername,
     EventTimestamp,
-    InsertionTimestamp,
     EventType,
     ExposureType,
     FileEventQuery,
     FileName,
     FilePath,
+    InsertionTimestamp,
     MD5,
     OSHostname,
     PrivateIPAddress,
@@ -41,7 +41,7 @@ def test_file_event_query_constructs_successfully(event_filter_group):
 
 
 def test_file_event_query_str_with_single_filter_gives_correct_json_representation(
-    event_filter_group
+    event_filter_group,
 ):
     file_event_query = FileEventQuery(event_filter_group)
     json_query_str = build_query_json("AND", event_filter_group)
@@ -49,7 +49,7 @@ def test_file_event_query_str_with_single_filter_gives_correct_json_representati
 
 
 def test_file_event_query_unicode_with_single_filter_gives_correct_json_representation(
-    unicode_event_filter_group
+    unicode_event_filter_group,
 ):
     file_event_query = FileEventQuery(unicode_event_filter_group)
     json_query_str = build_query_json("AND", unicode_event_filter_group)
@@ -57,7 +57,7 @@ def test_file_event_query_unicode_with_single_filter_gives_correct_json_represen
 
 
 def test_file_event_query_str_with_single_filter_and_specified_gives_correct_json_representation(
-    event_filter_group
+    event_filter_group,
 ):
     file_event_query = FileEventQuery(event_filter_group, group_clause="AND")
     json_query_str = build_query_json("AND", event_filter_group)
@@ -65,7 +65,7 @@ def test_file_event_query_str_with_single_filter_and_specified_gives_correct_jso
 
 
 def test_file_event_query_str_with_single_filter_or_specified_gives_correct_json_representation(
-    event_filter_group
+    event_filter_group,
 ):
     file_event_query = FileEventQuery(event_filter_group, group_clause="OR")
     json_query_str = build_query_json("OR", event_filter_group)
@@ -73,7 +73,7 @@ def test_file_event_query_str_with_single_filter_or_specified_gives_correct_json
 
 
 def test_file_event_query_str_with_many_filters_gives_correct_json_representation(
-    event_filter_group_list
+    event_filter_group_list,
 ):
     file_event_query = FileEventQuery(event_filter_group_list)
     json_query_str = build_query_json("AND", event_filter_group_list)
@@ -81,7 +81,7 @@ def test_file_event_query_str_with_many_filters_gives_correct_json_representatio
 
 
 def test_file_event_query_str_with_many_filters_and_specified_gives_correct_json_representation(
-    event_filter_group_list
+    event_filter_group_list,
 ):
     file_event_query = FileEventQuery(event_filter_group_list, group_clause="AND")
     json_query_str = build_query_json("AND", event_filter_group_list)
@@ -89,7 +89,7 @@ def test_file_event_query_str_with_many_filters_and_specified_gives_correct_json
 
 
 def test_file_event_query_str_with_many_filters_or_specified_gives_correct_json_representation(
-    event_filter_group_list
+    event_filter_group_list,
 ):
     file_event_query = FileEventQuery(event_filter_group_list, group_clause="OR")
     json_query_str = build_query_json("OR", event_filter_group_list)
@@ -111,7 +111,7 @@ def test_file_event_query_str_with_page_size_gives_correct_json_representation(e
 
 
 def test_file_event_query_str_with_sort_direction_gives_correct_json_representation(
-    event_filter_group
+    event_filter_group,
 ):
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.sort_direction = "desc"
@@ -209,7 +209,7 @@ def test_os_hostname_eq_sets_filter_properties_correctly(eq_filter_creator):
 
 def test_os_hostname_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     OSHostname.not_eq("test_osHostName")
-    not_eq_filter_creator.assert_called_once_with( "osHostName", "test_osHostName")
+    not_eq_filter_creator.assert_called_once_with("osHostName", "test_osHostName")
 
 
 def test_os_hostname_is_in_sets_filter_properties_correctly(is_in_filter_creator):
@@ -479,14 +479,18 @@ def test_event_timestamp_in_range_sets_filter_properties_correctly(in_range_filt
     )
 
 
-def test_insertion_timestamp_on_or_after_sets_filter_properties_correctly(on_or_after_filter_creator):
+def test_insertion_timestamp_on_or_after_sets_filter_properties_correctly(
+    on_or_after_filter_creator,
+):
     test_time = time()
     formatted = format_timestamp(test_time)
     InsertionTimestamp.on_or_after(test_time)
     on_or_after_filter_creator.assert_called_once_with("insertionTimestamp", formatted)
 
 
-def test_insertion_timestamp_on_or_before_sets_filter_properties_correctly(on_or_before_filter_creator):
+def test_insertion_timestamp_on_or_before_sets_filter_properties_correctly(
+    on_or_before_filter_creator,
+):
     test_time = time()
     formatted = format_timestamp(test_time)
     InsertionTimestamp.on_or_before(test_time)

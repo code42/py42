@@ -2,7 +2,7 @@ import py42.util as util
 from py42._internal.base_classes import BaseAuthorityClient
 
 
-def get_normalized_security_event_plan_info(security_client, user_uid, catch=None):
+def get_normalized_security_event_plan_info(security_client, user_uid):
     """Returns a dictionary of plan UIDs to their locations.
 
     Raises:
@@ -27,7 +27,7 @@ def get_normalized_security_event_plan_info(security_client, user_uid, catch=Non
     # transformations on the response in order to standardize.
     # TODO: once we have proper types this should be refactored to not use so many magical strings
     archive_locations_by_plan = {}
-    response = security_client.get_security_event_locations(user_uid, force_sync=True, catch=catch)
+    response = security_client.get_security_event_locations(user_uid)
     if response is not None:
         # Prior to Code42 6.7, the SecurityEventLocation api returned data back in a different format,
         # complete with an array of destinationGuids incorrectly labeled as "storageNodeGuids."
@@ -58,8 +58,8 @@ def get_normalized_security_event_plan_info(security_client, user_uid, catch=Non
 
 
 class SecurityClient(BaseAuthorityClient):
-    def get_security_event_locations(self, user_uid, **kwargs):
+    def get_security_event_locations(self, user_uid):
         uri = u"/c42api/v3/SecurityEventsLocation"
         params = {u"userUid": user_uid}
 
-        return self._v3_required_session.get(uri, params=params, **kwargs)
+        return self._v3_required_session.get(uri, params=params)

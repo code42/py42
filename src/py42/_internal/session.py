@@ -1,5 +1,4 @@
 import json as json_lib
-import traceback
 from threading import Lock
 
 import requests.adapters
@@ -22,7 +21,6 @@ class Py42Session(object):
             host_address = u"https://{0}".format(host_address)
 
         self._host_address = host_address
-        self._process_exception_message = settings.global_exception_message_receiver
         self._auth_handler = auth_handler
 
         self._session.proxies = settings.proxies
@@ -98,9 +96,6 @@ class Py42Session(object):
         verify=None,
         cert=None,
         json=None,
-        force_sync=None,
-        then=None,
-        catch=None,
     ):
         max_tries = 2
         tries = 0
@@ -149,15 +144,10 @@ class Py42Session(object):
                 if response.status_code >= 400:
                     response.raise_for_status()
 
-                if then is not None and response is not None:
-                    return then(response)
-
                 return response
 
         except (requests.HTTPError, requests.RequestException, Exception) as ex:
-            ex = self._wrap_exception_with_message_including_url(url, ex)
-            trace = traceback.format_exc()
-            self._handle_error(ex, trace, catch)
+            raise ex
 
     @staticmethod
     def _wrap_exception_with_message_including_url(url, ex):
@@ -167,21 +157,6 @@ class Py42Session(object):
     @staticmethod
     def _build_exception_message_with_exception_and_trace(ex, trc):
         return str(ex) + u" " + str(trc)
-
-    def _handle_error(self, exception, exception_trace, request_handler):
-        if request_handler is not None:
-            request_handler(exception)
-        else:
-            # log unhandled exceptions
-            if self._process_exception_message is not None:
-                # pylint: disable=not-callable
-                self._process_exception_message(
-                    self._build_exception_message_with_exception_and_trace(
-                        exception, exception_trace
-                    )
-                )
-            # always raise unhandled exceptions when using a synchronous client
-            raise exception
 
     def _renew_authentication(self, use_credential_cache=False):
         if self._auth_handler:

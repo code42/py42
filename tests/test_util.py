@@ -128,7 +128,7 @@ def test_verify_path_writeable_if_dir_not_writeable_raises_io_error(existing_dir
 
 
 def test_verify_path_writeable_if_unicode_dir_not_writeable_raises_io_error(
-    existing_unicode_dir_not_writeable
+    existing_unicode_dir_not_writeable,
 ):
     with pytest.raises(Exception) as e:
         util.verify_path_writeable(existing_unicode_dir_not_writeable)
@@ -148,7 +148,7 @@ def test_verify_path_writeable_if_file_not_writeable_raises_io_error(existing_fi
 
 
 def test_verify_path_writeable_if_unicode_file_not_writeable_raises_io_error(
-    existing_unicode_file_not_writeable
+    existing_unicode_file_not_writeable,
 ):
     with pytest.raises(Exception) as e:
         util.verify_path_writeable(existing_unicode_file_not_writeable)
@@ -164,7 +164,7 @@ def test_verify_path_writeable_when_existing_file_writeable_returns_path(existin
 
 
 def test_verify_path_writeable_when_non_existing_file_writeable_returns_path(
-    non_existing_file_writeable
+    non_existing_file_writeable,
 ):
     path = util.verify_path_writeable(non_existing_file_writeable)
     assert path == non_existing_file_writeable

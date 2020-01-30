@@ -14,7 +14,6 @@ class StorageSecurityClient(BaseStorageClient):
         min_timestamp=None,
         max_timestamp=None,
         summarize=None,
-        **kwargs
     ):
         uri = u"/api/SecurityDetectionEvent"
 
@@ -41,7 +40,7 @@ class StorageSecurityClient(BaseStorageClient):
             u"summarize": summarize,
         }
 
-        return self._session.get(uri, params=params, **kwargs)
+        return self._session.get(uri, params=params)
 
     def get_security_detection_events_for_plan(
         self,
@@ -51,7 +50,6 @@ class StorageSecurityClient(BaseStorageClient):
         event_types=None,
         min_timestamp=None,
         max_timestamp=None,
-        **kwargs
     ):
         return self._get_security_detection_events(
             plan_uid=plan_uid,
@@ -60,7 +58,6 @@ class StorageSecurityClient(BaseStorageClient):
             event_types=event_types,
             min_timestamp=min_timestamp,
             max_timestamp=max_timestamp,
-            **kwargs
         )
 
     def get_security_detection_events_for_user(
@@ -71,7 +68,6 @@ class StorageSecurityClient(BaseStorageClient):
         event_types=None,
         min_timestamp=None,
         max_timestamp=None,
-        **kwargs
     ):
         return self._get_security_detection_events(
             user_uid=user_uid,
@@ -80,11 +76,10 @@ class StorageSecurityClient(BaseStorageClient):
             event_types=event_types,
             min_timestamp=min_timestamp,
             max_timestamp=max_timestamp,
-            **kwargs
         )
 
     def get_security_detection_event_summary(
-        self, user_uid, cursor=None, min_timestamp=None, max_timestamp=None, **kwargs
+        self, user_uid, cursor=None, min_timestamp=None, max_timestamp=None
     ):
         return self._get_security_detection_events(
             user_uid=user_uid,
@@ -92,5 +87,4 @@ class StorageSecurityClient(BaseStorageClient):
             min_timestamp=min_timestamp,
             max_timestamp=max_timestamp,
             summarize=True,
-            **kwargs
         )

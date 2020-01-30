@@ -1,7 +1,6 @@
 import json
 
 from py42._internal.base_classes import BaseAuthorityClient
-from py42._internal.clients import util
 
 
 class UserClient(BaseAuthorityClient):
@@ -14,7 +13,6 @@ class UserClient(BaseAuthorityClient):
         first_name=None,
         last_name=None,
         notes=None,
-        **kwargs
     ):
         uri = u"/api/User"
         data = {
@@ -26,24 +24,24 @@ class UserClient(BaseAuthorityClient):
             u"lastName": last_name,
             u"notes": notes,
         }
-        return self._default_session.post(uri, data=json.dumps(data), **kwargs)
+        return self._default_session.post(uri, data=json.dumps(data))
 
-    def get_user_by_id(self, user_id, **kwargs):
+    def get_user_by_id(self, user_id):
         uri = u"/api/User/{0}".format(user_id)
-        return self._default_session.get(uri, **kwargs)
+        return self._default_session.get(uri)
 
-    def get_user_by_uid(self, user_uid, **kwargs):
+    def get_user_by_uid(self, user_uid):
         uri = u"/api/User/{0}?idType=uid".format(user_uid)
-        return self._default_session.get(uri, **kwargs)
+        return self._default_session.get(uri)
 
-    def get_user_by_username(self, username, **kwargs):
+    def get_user_by_username(self, username):
         uri = u"/api/User"
         params = {u"username": username}
-        return self._default_session.get(uri, params=params, **kwargs)
+        return self._default_session.get(uri, params=params)
 
-    def get_current_user(self, **kwargs):
+    def get_current_user(self):
         uri = u"/api/User/my"
-        return self._default_session.get(uri, **kwargs)
+        return self._default_session.get(uri)
 
     def get_users(
         self,
@@ -71,55 +69,25 @@ class UserClient(BaseAuthorityClient):
 
         return self._default_session.get(uri, params=params, **kwargs)
 
-    def block_user(self, user_id, **kwargs):
+    def block_user(self, user_id):
         uri = u"/api/UserBlock/{0}".format(user_id)
-        return self._default_session.put(uri, **kwargs)
+        return self._default_session.put(uri)
 
-    def unblock_user(self, user_id, **kwargs):
+    def unblock_user(self, user_id):
         uri = u"/api/UserBlock/{0}".format(user_id)
-        return self._default_session.delete(uri, **kwargs)
+        return self._default_session.delete(uri)
 
-    def deactivate_user(self, user_id, block_user=None, **kwargs):
+    def deactivate_user(self, user_id, block_user=None):
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         data = {u"blockUser": block_user}
-        return self._default_session.put(uri, data=json.dumps(data), **kwargs)
+        return self._default_session.put(uri, data=json.dumps(data))
 
-    def reactivate_user(self, user_id, unblock_user=None, **kwargs):
+    def reactivate_user(self, user_id, unblock_user=None):
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         params = {u"unblockUser": unblock_user}
-        return self._default_session.delete(uri, params=params, **kwargs)
+        return self._default_session.delete(uri, params=params)
 
-    def change_user_org_assignment(self, user_id, org_id, **kwargs):
+    def change_user_org_assignment(self, user_id, org_id):
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}
-        return self._default_session.post(uri, data=json.dumps(data), **kwargs)
-
-    def for_each_user(
-        self, active=None, email=None, org_uid=None, role_id=None, then=None, return_each_page=False
-    ):
-        func = self.get_users
-        page_size = 1000
-
-        def for_each(response):
-            util.for_each_api_item(
-                response,
-                func,
-                page_size,
-                then,
-                u"users",
-                return_each_page,
-                active=active,
-                email=email,
-                org_uid=org_uid,
-                role_id=role_id,
-            )
-
-        func(
-            active=active,
-            email=email,
-            org_uid=org_uid,
-            role_id=role_id,
-            page_num=1,
-            page_size=page_size,
-            then=for_each,
-        )
+        return self._default_session.post(uri, data=json.dumps(data))

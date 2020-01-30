@@ -61,7 +61,7 @@ def test_filter_group_with_or_specified_str_gives_correct_json_representation(fi
 
 
 def test_filter_group_with_multiple_filters_str_gives_correct_json_representation(
-    file_event_filter_list
+    file_event_filter_list,
 ):
     filters_string = ",".join([JSON_FILE_EVENT_FILTER for _ in range(3)])
     json_multi_filter_group = JSON_FILTER_GROUP_BASE.format("AND", filters_string)
@@ -69,7 +69,7 @@ def test_filter_group_with_multiple_filters_str_gives_correct_json_representatio
 
 
 def test_filter_group_with_multiple_filters_and_specified_str_gives_correct_json_representation(
-    file_event_filter_list
+    file_event_filter_list,
 ):
     filters_string = ",".join([JSON_FILE_EVENT_FILTER for _ in range(3)])
     json_multi_filter_group = JSON_FILTER_GROUP_BASE.format("AND", filters_string)
@@ -77,7 +77,7 @@ def test_filter_group_with_multiple_filters_and_specified_str_gives_correct_json
 
 
 def test_filter_group_with_multiple_filters_or_specified_str_gives_correct_json_representation(
-    file_event_filter_list
+    file_event_filter_list,
 ):
     filters_string = ",".join([JSON_FILE_EVENT_FILTER for _ in range(3)])
     json_multi_filter_group = JSON_FILTER_GROUP_BASE.format("OR", filters_string)
@@ -139,7 +139,7 @@ def test_create_not_in_filter_group_calls_create_file_event_filter_with_correct_
 
 
 def test_create_on_or_before_filter_group_calls_create_file_event_filter_with_correct_values(
-    mocker
+    mocker,
 ):
     mocker.patch("py42._internal.file_event_filter.create_file_event_filter")
     term = "test_on_or_before_term"

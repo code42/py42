@@ -1,8 +1,9 @@
-# Contributing to the Code42 Python SDK
+# Contributing to py42
 
 ## Development environment
 
-Install py42 and its development dependencies. The `-e` option installs py42 in ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs). 
+Install py42 and its development dependencies. The `-e` option installs py42 in 
+["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs). 
 
 ```bash
 $ pip install -e .[dev]
@@ -10,7 +11,8 @@ $ pip install -e .[dev]
 
 If you are using `zsh`, you may need to escape the brackets.
 
-We use [black](https://black.readthedocs.io/en/stable/) to automatically format our code. After installing dependencies, be sure to run:
+We use [black](https://black.readthedocs.io/en/stable/) to automatically format our code.
+After installing dependencies, be sure to run:
 
 ```bash
 $ pre-commit install
@@ -23,23 +25,24 @@ It requires python 3.6 to run, so be sure to have a python 3.6 executable of som
 
 * Use positional argument specifiers in `str.format()`
 * Use syntax and built-in modules that are compatible with both Python 2 and 3.
-Use the `py42._internal.compat` module to create abstractions around functionality that differs between 2 and 3.
+* Use the `py42._internal.compat` module to create abstractions around functionality that differs between 2 and 3.
 
 ## Wrapping web APIs
 
 * Name the method starting with a verb
 * Specify required arguments as positional arguments
 * Specify optional arguments as keyword arguments
-* Include `**kwargs` as the last parameter
 * Use the newest supported implementation (e.g. v4 instead of v1, even if a related API only has a v1 implementation)
 
 ## Changes
 
-Document all notable consumer-affecting changes in CHANGELOG.md per principles and guidelines at [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+Document all notable consumer-affecting changes in CHANGELOG.md per principles and guidelines at 
+[Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Tests
 
-We use [tox](https://tox.readthedocs.io/en/latest/#) to run the [pytest](https://docs.pytest.org/) test framework on Python 2.7, 3.5, 3.6, and 3.7.
+We use [tox](https://tox.readthedocs.io/en/latest/#) to run the 
+[pytest](https://docs.pytest.org/) test framework on Python 2.7, 3.5, 3.6, and 3.7.
 
 To run all tests, run this at the root of the repo:
 
@@ -48,7 +51,8 @@ $ tox
 ```
 
 If you're using a virtual environment, this will only run the tests within that environment/version of Python.
-To run the tests on all supported versions of Python in a local dev environment, we recommend using [pyenv](https://github.com/pyenv/pyenv) and tox in your system (non-virtual) environment:
+To run the tests on all supported versions of Python in a local dev environment, we recommend using 
+[pyenv](https://github.com/pyenv/pyenv) and tox in your system (non-virtual) environment:
 
 ```bash
 $ pip install tox
@@ -81,7 +85,8 @@ def test_add_one_and_one_equals_two():
 
 ## Documentation
 
-Public functions, classes, and methods should have docstrings. Follow [Google's format](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).
+Public functions, classes, and methods should have docstrings. 
+Follow [Google's format](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).
 
 ### Generating documentation
 

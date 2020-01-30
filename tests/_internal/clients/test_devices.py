@@ -40,11 +40,11 @@ class TestDeviceClient(object):
 
     @pytest.fixture
     def mock_get_devices(self, mocker):
-        def get_devices(then=None, *args, **kwargs):
+        def get_devices(*args, **kwargs):
             response = mocker.MagicMock(spec=Response)
             response.status_code = 200
             response.text = MOCK_GET_DEVICE_RESPONSE
-            return then(response)
+            return response
 
         return get_devices
 
@@ -64,46 +64,6 @@ class TestDeviceClient(object):
         expected_params = DEFAULT_GET_DEVICES_PARAMS
         expected_params["q"] = unicode_hostname
         session.get.assert_called_once_with(COMPUTER_URI, params=expected_params)
-
-    def test_for_each_device_calls_get_devices_once_per_page(
-        self, session, v3_required_session, mocker, mock_get_devices
-    ):
-        client = DeviceClient(session, v3_required_session)
-        client.get_devices = mocker.MagicMock()
-        client.get_devices.side_effect = mock_get_devices
-
-        client.for_each_device(then=self._mock_callback)
-        assert client.get_devices.call_count == 3
-
-    def test_for_each_device_calls_get_devices_with_same_args_each_time(
-        self, session, v3_required_session, mocker, mock_get_devices
-    ):
-        client = DeviceClient(session, v3_required_session)
-        client.get_devices = mocker.MagicMock()
-        client.get_devices.side_effect = mock_get_devices
-
-        calls = []
-        for i in range(3):
-            mocker.call(
-                active="active",
-                org_uid="org_uid",
-                user_uid="user_uid",
-                target_computer_guid="target_computer_guid",
-                include_backup_usage=False,
-                include_counts=True,
-                page_num=i + 1,
-                page_size=mocker.ANY,
-                then=mocker.ANY,
-            )
-        client.for_each_device(
-            active="active",
-            org_uid="org_uid",
-            user_uid="user_uid",
-            target_computer_guid="target_computer_guid",
-            include_backup_usage=False,
-            then=self._mock_callback,
-        )
-        client.get_devices.assert_has_calls(calls)
 
     def test_get_device_by_id_calls_get_with_uri_and_params(self, session, v3_required_session):
         client = DeviceClient(session, v3_required_session)

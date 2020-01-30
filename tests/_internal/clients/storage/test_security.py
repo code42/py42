@@ -1,9 +1,9 @@
 from datetime import datetime
+
 import pytest
 
 from py42._internal.clients.storage.security import StorageSecurityClient
 from py42._internal.session import Py42Session
-
 
 uri = u"/api/SecurityDetectionEvent"
 mock_min_ts = 1000000
@@ -37,15 +37,15 @@ def get_time_str_from_timestamp(timestamp):
 @pytest.fixture
 def security_detection_events_params(min_time_str, max_time_str):
     return {
-            u"userUid": None,
-            u"planUid": None,
-            u"cursor": "Cursor",
-            u"incFiles": None,
-            u"eventType": None,
-            u"minTs": min_time_str,
-            u"maxTs": max_time_str,
-            u"summarize": None,
-        }
+        u"userUid": None,
+        u"planUid": None,
+        u"cursor": "Cursor",
+        u"incFiles": None,
+        u"eventType": None,
+        u"minTs": min_time_str,
+        u"maxTs": max_time_str,
+        u"summarize": None,
+    }
 
 
 @pytest.fixture
@@ -76,10 +76,7 @@ def security_detection_event_summary_params(security_detection_events_params):
 
 class TestStorageSecurityClient(object):
     def test_get_security_detection_events_for_plan_calls_get_with_correct_params(
-            self,
-            storage_security_client,
-            py42session,
-            security_detection_events_for_plan_params
+        self, storage_security_client, py42session, security_detection_events_for_plan_params
     ):
         params = security_detection_events_for_plan_params
         storage_security_client.get_security_detection_events_for_plan(
@@ -93,10 +90,7 @@ class TestStorageSecurityClient(object):
         py42session.get.assert_called_once_with(uri, params=params)
 
     def test_get_security_detection_events_for_user_calls_get_with_correct_params(
-            self,
-            storage_security_client,
-            py42session,
-            security_detection_events_for_user_params
+        self, storage_security_client, py42session, security_detection_events_for_user_params
     ):
         params = security_detection_events_for_user_params
         storage_security_client.get_security_detection_events_for_user(
@@ -110,10 +104,7 @@ class TestStorageSecurityClient(object):
         py42session.get.assert_called_once_with(uri, params=params)
 
     def test_get_security_detection_event_summary_calls_get_with_correct_params(
-            self,
-            storage_security_client,
-            py42session,
-            security_detection_event_summary_params
+        self, storage_security_client, py42session, security_detection_event_summary_params
     ):
         params = security_detection_event_summary_params
         storage_security_client.get_security_detection_event_summary(
@@ -123,5 +114,3 @@ class TestStorageSecurityClient(object):
             max_timestamp=mock_max_ts,
         )
         py42session.get.assert_called_once_with(uri, params=params)
-
-

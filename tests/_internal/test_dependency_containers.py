@@ -1,13 +1,13 @@
 from requests import Response
 
-from py42._internal.base_classes import BaseSessionFactory
 from py42._internal.dependency_containers import AuthorityDependencies
 from py42._internal.session import Py42Session
+from py42._internal.session_factory import SessionFactory
 
 
 class TestAuthorityDependencies(object):
     def test_constructs_successfully(self, mocker):
-        session_factory = mocker.MagicMock(spec=BaseSessionFactory)
+        session_factory = mocker.MagicMock(spec=SessionFactory)
 
         response = mocker.MagicMock(spec=Response)
         response.status_code = 200

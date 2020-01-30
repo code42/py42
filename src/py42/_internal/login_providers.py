@@ -34,12 +34,12 @@ class C42ApiV3TokenProvider(LoginProvider):
         uri = u"/c42api/v3/auth/jwt"
         params = {u"useBody": True}
         try:
-            response = self._auth_session.get(uri, force_sync=True, params=params)
+            response = self._auth_session.get(uri, params=params)
             if response.text:
                 response_data = json.loads(response.text)[u"data"]
                 token = str(response_data[V3_AUTH])
             else:
-                # some older versions only return the v3 token in a cookie instead of a response header.
+                # some older versions only return the v3 token in a cookie.
                 token = self._auth_session.cookies.get_dict().get(V3_COOKIE_NAME)
 
             return token
@@ -60,7 +60,7 @@ class C42ApiV1TokenProvider(LoginProvider):
     def get_secret_value(self, force_refresh=False):
         uri = u"/api/AuthToken"
         try:
-            response = self._auth_session.post(uri, force_sync=True, data=None)
+            response = self._auth_session.post(uri, data=None)
             response_data = json.loads(response.text)[u"data"]
             token = u"{0}-{1}".format(response_data[0], response_data[1])
             return token
@@ -119,7 +119,7 @@ class C42APILoginTokenProvider(C42APITmpAuthProvider):
                 u"sourceGuid": self._device_guid,
                 u"destinationGuid": self._destination_guid,
             }
-            response = self._auth_session.post(uri, data=json.dumps(data), force_sync=True)
+            response = self._auth_session.post(uri, data=json.dumps(data))
             return response
         except Exception as ex:
             message = u"An error occurred while requesting a LoginToken, caused by {0}"
@@ -138,7 +138,7 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
         try:
             uri = u"/api/StorageAuthToken"
             data = {u"planUid": self._plan_uid, u"destinationGuid": self._destination_guid}
-            response = self._auth_session.post(uri, data=json.dumps(data), force_sync=True)
+            response = self._auth_session.post(uri, data=json.dumps(data))
             return response
         except Exception as ex:
             message = u"An error occurred while requesting a StorageAuthToken, caused by {0}"
@@ -152,7 +152,7 @@ class FileEventLoginProvider(C42ApiV3TokenProvider):
         # /api/ServerEnv resource.
         uri = u"/api/ServerEnv"
         try:
-            response = self._auth_session.get(uri, force_sync=True)
+            response = self._auth_session.get(uri)
         except Exception as ex:
             message = (
                 u"An error occurred while requesting server environment information, caused by {0}"

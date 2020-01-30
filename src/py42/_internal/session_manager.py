@@ -34,11 +34,6 @@ class SessionManager(object):
     def create_session(self, login_provider, force_replace=False):
         pass
 
-    def wait_all(self):
-        with self._list_update_lock:
-            for key in self._session_cache:
-                self._session_cache[key].wait()
-
 
 class StorageSessionManager(SessionManager):
     def __init__(self, session_factory):
@@ -77,10 +72,3 @@ class SessionsManager(object):
         return self._file_event_session_manager.get_session(
             login_provider, force_replace=force_replace
         )
-
-    def wait_all(self):
-        # TODO: INTEG-235 describes in detail a bug that needs to be addressed here.
-        # currently the order in which we wait for sessions to complete must be the same as the order
-        # in which they made their requests -- we need to make this more bulletproof.
-        self._file_event_session_manager.wait_all()
-        self._storage_session_manager.wait_all()

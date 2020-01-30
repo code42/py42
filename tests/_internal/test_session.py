@@ -56,9 +56,7 @@ class TestPy42Session(object):
     ):
         session = Py42Session(success_requests_session, HOST_ADDRESS, valid_auth_handler)
         session.get(URL)
-        valid_auth_handler.renew_authentication.assert_called_once_with(
-            session, use_credential_cache=True
-        )
+        valid_auth_handler.renew_authentication.assert_called_once_with(session, use_cache=True)
 
     def test_session_request_calls_auth_handler_renew_authentication_only_once_while_auth_is_valid(
         self, success_requests_session, valid_auth_handler

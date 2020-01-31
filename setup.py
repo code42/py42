@@ -4,10 +4,10 @@ from os.path import dirname, join
 from setuptools import find_packages, setup
 
 about = {}
-with open(join(dirname(__file__), "src", "py42", "__version__.py"), encoding="utf8") as fh:
+with io.open(join(dirname(__file__), "src", "py42", "__version__.py"), encoding="utf8") as fh:
     exec(fh.read(), about)
 
-with open("README.md", "r", encoding="utf-8") as f:
+with io.open("README.md", "r", encoding="utf-8") as f:
     readme = f.read()
 
 

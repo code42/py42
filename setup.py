@@ -1,16 +1,16 @@
 import io
 from os import path
 from setuptools import find_packages, setup
+from codecs import open
 
-this_directory = path.abspath(path.dirname(__file__))
+here = path.abspath(path.dirname(__file__))
 
 about = {}
-with open(path.join(this_directory, "src", "py42", "__version__.py"), encoding="utf8") as fh:
+with open(path.join(here, "src", "py42", "__version__.py"), encoding="utf8") as fh:
     exec(fh.read(), about)
 
-with io.open(path.join(this_directory, "README.md"), "r", encoding="utf-8") as f:
+with open("README.md", "r", "utf-8") as f:
     readme = f.read()
-
 
 setup(
     name="py42",

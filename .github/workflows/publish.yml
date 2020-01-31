@@ -24,9 +24,9 @@ jobs:
       run: |
           src_file=( ./dist/*.tar.gz )
           wheel_file=( ./dist/*.whl )
-          echo ::set-env name=RELEASE_ID::$(jq --raw-output '.release.id' $GITHUB_EVENT_PATH)
-          echo ::set-env name=SOURCE_DIST_FILE::$(basename $src_file)
-          echo ::set-env name=WHEEL_FILE::$(basename $wheel_file)
+          echo "::set-env name=RELEASE_ID::$(jq --raw-output '.release.id' $GITHUB_EVENT_PATH)"
+          echo "::set-env name=SOURCE_DIST_FILE::$(basename $src_file)"
+          echo "::set-env name=WHEEL_FILE::$(basename $wheel_file)"
           echo "Release ID: $RELEASE_ID"
           echo "Source Dist File: $SOURCE_DIST_FILE"
           echo "Wheel File: $WHEEL_FILE"

@@ -11,6 +11,8 @@ setup(
     name="py42",
     version=about["__version__"],
     description="The Official Code42 Python API Client",
+    long_description=readme,
+    long_description_content_type="text/markdown",
     packages=find_packages("src"),
     package_dir={"": "src"},
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4",
@@ -28,4 +30,18 @@ setup(
             "tox==3.14.3",
         ]
     },
+    classifiers=[
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: Implementation :: CPython",
+    ],
 )

@@ -1,13 +1,14 @@
 import io
-from os.path import dirname, join
-
+from os import path
 from setuptools import find_packages, setup
 
+this_directory = path.abspath(path.dirname(__file__))
+
 about = {}
-with io.open(join(dirname(__file__), "src", "py42", "__version__.py"), encoding="utf8") as fh:
+with open(path.join(this_directory, "src", "py42", "__version__.py"), encoding="utf8") as fh:
     exec(fh.read(), about)
 
-with io.open(join(dirname(__file__), "README.md"), "r", encoding="utf-8") as f:
+with io.open(path.join(this_directory, "README.md"), "r", encoding="utf-8") as f:
     readme = f.read()
 
 

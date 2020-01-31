@@ -7,6 +7,10 @@ about = {}
 with io.open(join(dirname(__file__), "src", "py42", "__version__.py"), encoding="utf8") as fh:
     exec(fh.read(), about)
 
+with io.open(join(dirname(__file__), "README.md"), encoding="utf8") as f:
+    readme = f.read()
+
+
 setup(
     name="py42",
     version=about["__version__"],

@@ -9,7 +9,7 @@ about = {}
 with open(path.join(here, "src", "py42", "__version__.py"), encoding="utf8") as fh:
     exec(fh.read(), about)
 
-with open(path.join(here, "README.md", "r", "utf-8")) as f:
+with open(path.join(here, "README.md"), "r", "utf-8") as f:
     readme = f.read()
 
 setup(

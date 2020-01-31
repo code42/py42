@@ -41,7 +41,7 @@ jobs:
           echo "::set-output name=source_dist_path::./dist/${SOURCE_DIST_FILE}"
           echo "::set-output name=source_dist_name::${SOURCE_DIST_FILE}"
           echo "::set-output name=wheel_path::./dist/${WHEEL_FILE}"
-          echo "::set-output name=upload_url::${SOURCE_DIST_FILE}"
+          echo "::set-output name=upload_url::${UPLOAD_URL}"
     - name: Upload Source Distribution to GitHub release
       uses: actions/upload-release-asset@v1.0.1
       env:

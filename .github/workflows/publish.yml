@@ -20,13 +20,14 @@ jobs:
     - name: Build Release
       run: |
           python setup.py sdist bdist_wheel
-    - name: Set Env Variables
+    - name: Set File Names and Release IDs
       run: |
           src_file=( ./dist/*.tar.gz )
           wheel_file=( ./dist/*.whl )
           echo "::set-env name=RELEASE_ID::$(jq --raw-output '.release.id' $GITHUB_EVENT_PATH)"
           echo "::set-env name=SOURCE_DIST_FILE::$(basename $src_file)"
           echo "::set-env name=WHEEL_FILE::$(basename $wheel_file)"
+    - name: Set Upload Urls
           echo "::set-env name=SOURCE_DIST_URL::"https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${SOURCE_DIST_FILE}"
           echo "::set-env name=WHEEL_URL::"https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${WHEEL_FILE}"
     - name: Output Variables For Uploading

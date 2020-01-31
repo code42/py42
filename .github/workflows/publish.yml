@@ -27,26 +27,37 @@ jobs:
           echo "::set-env name=RELEASE_ID::$(jq --raw-output '.release.id' $GITHUB_EVENT_PATH)"
           echo "::set-env name=SOURCE_DIST_FILE::$(basename $src_file)"
           echo "::set-env name=WHEEL_FILE::$(basename $wheel_file)"
-    - name: Print Env Variables
+          echo "::set-env name=SOURCE_DIST_URL::"https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${SOURCE_DIST_FILE}"
+          echo "::set-env name=WHEEL_URL::"https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${WHEEL_FILE}"
+    - name: Output Variables For Uploading
+      id: get_upload_vars
       run: |
           echo "Release ID: $RELEASE_ID"
           echo "Source Dist File: $SOURCE_DIST_FILE"
+          echo "Source Dist Upload Url: $SOURCE_DIST_URL"
           echo "Wheel File: $WHEEL_FILE"
+          echo "Wheel Upload Url: $WHEEL_URL"
+          echo "::set-output name=source_dist_path::./dist/${SOURCE_DIST_FILE}"
+          echo "::set-output name=source_dist_name::${SOURCE_DIST_FILE}"
+          echo "::set-output name=source_dist_url::${SOURCE_DIST_FILE}"
+          echo "::set-output name=wheel_path::./dist/${WHEEL_FILE}"
+          echo "::set-output name=wheel_name::${WHEEL_FILE}"
+          echo "::set-output name=wheel_url::${SOURCE_DIST_FILE}"
     - name: Upload Source Distribution to GitHub release
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${SOURCE_DIST_FILE}"
-        asset_path: "./dist/${SOURCE_DIST_FILE}"
-        asset_name: "${SOURCE_DIST_FILE}"
+        upload_url: ${{ steps.get_upload_vars.outputs.source_dist_url }}
+        asset_path: ${{ steps.get_upload_vars.outputs.source_dist_path }}
+        asset_name: ${{ steps.get_upload_vars.outputs.source_dist_name }}
         asset_content_type: application/x-gzip
     - name: Upload Wheel to GitHub Release
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: "https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets?name=${WHEEL_FILE}"
-        asset_path: "./dist/${WHEEL_DIST_FILE}"
-        asset_name: "${WHEEL_DIST_FILE}"
+        upload_url: ${{ steps.get_upload_vars.outputs.wheel_url }}
+        asset_path: ${{ steps.get_upload_vars.outputs.wheel_path }}
+        asset_name: ${{ steps.get_upload_vars.outputs.wheel_name }}
         asset_content_type: application/zip

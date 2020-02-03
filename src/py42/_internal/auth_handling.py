@@ -14,9 +14,9 @@ class AuthHandler(object):
         self._login_provider = login_provider
         self._session_modifier = session_modifier
 
-    def renew_authentication(self, session, use_credential_cache=False):
+    def renew_authentication(self, session, use_cache=False):
         try:
-            secret = self._login_provider.get_secret_value(force_refresh=not use_credential_cache)
+            secret = self._login_provider.get_secret_value(force_refresh=not use_cache)
             self._session_modifier.modify_session(session, secret)
         except Exception as ex:
             message = (

@@ -105,7 +105,7 @@ class Py42Session(object):
             if json is not None:
                 data = json_lib.dumps(util.filter_out_none(json))
 
-            self._renew_authentication(use_credential_cache=True)
+            self._renew_authentication(use_cache=True)
 
             while tries < max_tries:
 
@@ -149,30 +149,21 @@ class Py42Session(object):
         except (requests.HTTPError, requests.RequestException, Exception) as ex:
             raise ex
 
-    @staticmethod
-    def _wrap_exception_with_message_including_url(url, ex):
-        message = u"Error making request to {0}. Caused by: {1}"
-        return ex.__class__(message.format(url, str(ex)))
-
-    @staticmethod
-    def _build_exception_message_with_exception_and_trace(ex, trc):
-        return str(ex) + u" " + str(trc)
-
-    def _renew_authentication(self, use_credential_cache=False):
+    def _renew_authentication(self, use_cache=False):
         if self._auth_handler:
-            # if multiple threads try to authenticate at the same time, only the first one actually does.
+            # if multiple threads try to authenticate at once, only the first one actually does.
             # the rest will just wait for that authentication to complete.
             self._needs_auth_renewal_check = True
             with self._auth_lock:
-                # only get new credentials if this is the first time we're getting them or we want fresh ones
-                should_renew = not self._initialized or not use_credential_cache
-                if self._needs_auth_renewal_check and should_renew:
-                    self._auth_handler.renew_authentication(
-                        self, use_credential_cache=use_credential_cache
-                    )
+                # only get new credentials if this is the first time or we want fresh ones
+                should_renew = (
+                    not self._initialized or not use_cache
+                ) and self._needs_auth_renewal_check
+                if should_renew:
+                    self._auth_handler.renew_authentication(self, use_cache=use_cache)
                     self._needs_auth_renewal_check = False
 
-        # if there's no auth handler or we handled auth without errors, then we've initialized successfully.
+        # if there's no auth handler or we handled auth without errors, initialization is done.
         self._initialized = True
 
     def _print_request(self, method, url, params=None, data=None):

@@ -59,7 +59,7 @@ def test_auth_handler_renew_authentication_using_cache_calls_get_secret_value_on
     mock_login_provider, mock_session_modifier
 ):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
-    auth_handler.renew_authentication(mock_session, use_credential_cache=True)
+    auth_handler.renew_authentication(mock_session, use_cache=True)
     mock_login_provider.get_secret_value.assert_called_once_with(force_refresh=False)
 
 
@@ -75,7 +75,7 @@ def test_auth_handler_renew_authentication_using_cache_calls_modify_session_on_s
     mock_login_provider, mock_session_modifier
 ):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
-    auth_handler.renew_authentication(mock_session, use_credential_cache=True)
+    auth_handler.renew_authentication(mock_session, use_cache=True)
     mock_session_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
 
 

@@ -27,7 +27,7 @@ jobs:
           echo "::set-env name=RELEASE_ID::$(jq --raw-output '.release.id' $GITHUB_EVENT_PATH)"
           echo "::set-env name=SOURCE_DIST_FILE::$(basename $src_file)"
           echo "::set-env name=WHEEL_FILE::$(basename $wheel_file)"
-    - name: Set Upload Urls
+    - name: Set Upload Url
       run: |
           echo "::set-env name=UPLOAD_URL::https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets{?name,label}"
     - name: Output Variables For Uploading
@@ -61,3 +61,9 @@ jobs:
         asset_path: ${{ steps.get_upload_vars.outputs.wheel_path }}
         asset_name: ${{ steps.get_upload_vars.outputs.wheel_name }}
         asset_content_type: application/zip
+    - name: Publish Build to PyPI
+      env:
+        TWINE_USERNAME: '__token__'
+        TWINE_PASSWORD: ${{ secrets.PYPI_ACCESS_TOKEN }}
+      run: |
+        twine upload dist/*

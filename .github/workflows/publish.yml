@@ -29,7 +29,7 @@ jobs:
           echo "::set-env name=WHEEL_FILE::$(basename $wheel_file)"
     - name: Set Upload Urls
       run: |
-          echo "::set-env name=UPLOAD_URL::https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets\{?name,label}"
+          echo "::set-env name=UPLOAD_URL::https://uploads.github.com/repos/${GITHUB_REPOSITORY}/releases/${RELEASE_ID}/assets{?name,label}"
     - name: Output Variables For Uploading
       id: get_upload_vars
       run: |
@@ -37,7 +37,7 @@ jobs:
           echo "Source Dist File: $SOURCE_DIST_FILE"
           echo "Source Dist Upload Url: $SOURCE_DIST_URL"
           echo "Wheel File: $WHEEL_FILE"
-          echo "Wheel Upload Url: $WHEEL_URL"
+          echo "Upload Url: $UPLOAD_URL"
           echo "::set-output name=source_dist_path::./dist/${SOURCE_DIST_FILE}"
           echo "::set-output name=source_dist_name::${SOURCE_DIST_FILE}"
           echo "::set-output name=wheel_path::./dist/${WHEEL_FILE}"

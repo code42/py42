@@ -12,3 +12,8 @@ class BaseStorageClient(object):
 class BaseFileEventClient(object):
     def __init__(self, session):
         self._session = session
+
+
+class BaseDetectionClient(object):
+    def __init__(self, session):
+        self._session = session

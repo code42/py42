@@ -3,12 +3,18 @@ from py42._internal.client_factories import (
     AuthorityClientFactory,
     FileEventClientFactory,
     StorageClientFactory,
+    DetectionClientFactory,
 )
 from py42._internal.login_provider_factories import (
     ArchiveLocatorFactory,
     FileEventLoginProviderFactory,
+    DetectionLoginProviderFactory,
 )
-from py42._internal.modules import archive as archive_module, security as sec_module
+from py42._internal.modules import (
+    archive as archive_module,
+    security as sec_module,
+    detection as detection_module,
+)
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42._internal.session_manager import (
@@ -104,9 +110,27 @@ class FileEventDependencies(object):
         )
 
 
+class DetectionDependencies(object):
+    def __init__(self, authority_dependencies):
+        # type: (AuthorityDependencies) -> None
+        detection_login_provider_factory = DetectionLoginProviderFactory(
+            authority_dependencies.root_session
+        )
+        detection_client_factory = DetectionClientFactory(
+            authority_dependencies.sessions_manager, detection_login_provider_factory
+        )
+        self.departing_employee_client = detection_client_factory.get_departing_employee_client()
+
+
 class SDKDependencies(object):
-    def __init__(self, authority_dependencies, storage_dependencies, file_event_dependencies):
-        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies) -> None
+    def __init__(
+        self,
+        authority_dependencies,
+        storage_dependencies,
+        file_event_dependencies,
+        detection_dependencies,
+    ):
+        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, DetectionDependencies) -> None
         archive_client = authority_dependencies.archive_client
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
@@ -115,6 +139,7 @@ class SDKDependencies(object):
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
         self.file_event_dependencies = file_event_dependencies
+        self.detection_dependencies = detection_dependencies
 
         archive_accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
 
@@ -140,4 +165,11 @@ class SDKDependencies(object):
 
         file_event_dependencies = FileEventDependencies(authority_dependencies)
 
-        return cls(authority_dependencies, storage_dependencies, file_event_dependencies)
+        detection_dependencies = DetectionDependencies(authority_dependencies)
+
+        return cls(
+            authority_dependencies,
+            storage_dependencies,
+            file_event_dependencies,
+            detection_dependencies,
+        )

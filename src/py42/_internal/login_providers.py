@@ -146,9 +146,9 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
             raise Exception(message)
 
 
-class FileEventLoginProvider(C42ApiV3TokenProvider):
-    def get_target_host_address(self):
-        # The forensic search base URL can be derived from the STS base URL, which is available from the
+class MicroserviceLoginProvider(C42ApiV3TokenProvider):
+    def get_default_target_host_address(self):
+        # Microservice URLs can be derived from the STS base URL, which is available from the
         # /api/ServerEnv resource.
         uri = u"/api/ServerEnv"
         try:
@@ -169,5 +169,25 @@ class FileEventLoginProvider(C42ApiV3TokenProvider):
             raise Exception(
                 u"stsBaseUrl not found. Cannot determine file event service host address."
             )
-        forensic_search_url = str(sts_base_url).replace(u"sts", u"forensicsearch")
+
+
+class FileEventLoginProvider(MicroserviceLoginProvider):
+    def get_target_host_address(self):
+        forensic_search_url = self.get_default_target_host_address()
+        forensic_search_url = str(forensic_search_url).replace(u"sts", u"forensicsearch")
         return forensic_search_url
+
+
+class DetectionLoginProvider(MicroserviceLoginProvider):
+    def get_target_host_address(self):
+        skv_url = self.get_default_target_host_address()
+        skv_url = str(skv_url).replace(u"sts", u"simple-key-value-store")
+        skv_url = u"{0}/employeecasemanagement-API_URL".format(skv_url)
+        try:
+            response = self._auth_session.get(skv_url)
+        except Exception as ex:
+            message = u"An error occurred while requesting a URL from simple key value store"
+            message = u"{0}, caused by {1}".format(message, ex)
+            raise Exception(message)
+
+        return response

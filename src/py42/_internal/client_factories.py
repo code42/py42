@@ -7,6 +7,7 @@ from py42._internal.clients import (
     security,
     users,
 )
+from py42._internal.clients.detection.departing_employee import DepartingEmployeeClient
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.storage.storage import StorageClient
 from py42._internal.login_provider_factories import (
@@ -74,3 +75,12 @@ class FileEventClientFactory(object):
         login_provider = self._login_provider_factory.create_file_event_login_provider()
         session = self._session_manager.get_file_event_session(login_provider)
         return FileEventClient(session)
+
+
+class DetectionClientFactory(object):
+    def __init__(self, default_session):
+        self._default_session = default_session
+
+    def get_departing_employee_client(self):
+        session = self._default_session
+        return DepartingEmployeeClient(session)

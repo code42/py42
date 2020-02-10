@@ -8,6 +8,7 @@ class SecurityModule(object):
         self._security_client = security_client
         self._storage_client_factory = storage_client_factory
         self._file_event_client_factory = file_event_client_factory
+        self._file_event_client = None
 
     def get_security_event_locations(self, user_uid):
         # unlike most api calls this does not return the response from /c42api/v3/SecurityEventsLocation in raw form.
@@ -30,5 +31,6 @@ class SecurityModule(object):
         Returns:
             list of file events as JSON
         """
-        file_event_client = self._file_event_client_factory.get_file_event_client()
-        return file_event_client.search_file_events(query)
+        if self._file_event_client is None:
+            self._file_event_client = self._file_event_client_factory.get_file_event_client()
+        return self._file_event_client.search_file_events(query)

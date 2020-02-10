@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## 0.3.0 - 2020-02-03
+## Unreleased
 
 ### Fixed
 - a timeout of 60 seconds is now enforced on all http requests. Previously the timeout was infinite.
 This allowed for the possibility of requests that would hang forever under certain circumstances.
+
+## 0.3.0 - 2020-02-03
 
 ### Removed
 - `py42.sdk.util.queued_logger`. Use loggers in Python's `logging` namespace instead (they are threadsafe).

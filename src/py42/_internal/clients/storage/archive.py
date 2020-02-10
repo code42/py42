@@ -1,7 +1,7 @@
-from py42._internal.base_classes import BaseStorageClient
+from py42._internal.base_classes import BaseClient
 
 
-class StorageArchiveClient(BaseStorageClient):
+class StorageArchiveClient(BaseClient):
     def search_archive(
         self,
         session_id,
@@ -21,7 +21,7 @@ class StorageArchiveClient(BaseStorageClient):
             u"timestamp": timestamp,
             u"showDeleted": show_deleted,
         }
-        return self._session.get(uri, params=params)
+        return self._default_session.get(uri, params=params)
 
     def get_file_size(
         self, device_guid, file_id, timestamp=None, show_deleted=None, backup_set_id=None
@@ -34,7 +34,7 @@ class StorageArchiveClient(BaseStorageClient):
             u"showDeleted": show_deleted,
             u"backupSetId": backup_set_id,
         }
-        return self._session.get(uri, params=params)
+        return self._default_session.get(uri, params=params)
 
     def get_archive_tree_node(
         self,
@@ -61,7 +61,7 @@ class StorageArchiveClient(BaseStorageClient):
             u"backupSetId": backup_set_id,
             u"includeOsMetadata": include_os_metadata,
         }
-        return self._session.get(uri, params=params)
+        return self._default_session.get(uri, params=params)
 
     def create_web_restore_session(
         self, device_guid, data_key_token=None, private_password=None, encryption_key=None
@@ -76,7 +76,7 @@ class StorageArchiveClient(BaseStorageClient):
             u"privatePassword": private_password,
             u"encryptionKey": encryption_key,
         }
-        return self._session.post(uri, json=json_dict)
+        return self._default_session.post(uri, json=json_dict)
 
     def submit_web_restore_job(
         self,
@@ -114,17 +114,17 @@ class StorageArchiveClient(BaseStorageClient):
             u"backupSetId": backup_set_id,
         }
 
-        return self._session.post(uri, json=json_dict)
+        return self._default_session.post(uri, json=json_dict)
 
     def get_web_restore_job(self, job_id):
         uri = u"/api/WebRestoreJob/{}".format(job_id)
-        return self._session.get(uri)
+        return self._default_session.get(uri)
 
     def cancel_web_restore_job(self, job_id):
         uri = u"/api/WebRestoreJob"
         json_dict = {u"jobId": job_id}
-        return self._session.delete(uri, json=json_dict)
+        return self._default_session.delete(uri, json=json_dict)
 
     def get_web_restore_job_result(self, job_id):
         uri = u"/api/WebRestoreJobResult/{}".format(job_id)
-        return self._session.get(uri, stream=True)
+        return self._default_session.get(uri, stream=True)

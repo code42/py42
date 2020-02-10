@@ -88,7 +88,7 @@ class Py42Session(object):
         cookies=None,
         files=None,
         auth=None,
-        timeout=None,
+        timeout=60,
         allow_redirects=True,
         proxies=None,
         hooks=None,

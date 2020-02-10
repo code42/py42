@@ -10,7 +10,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## Unreleased
 
 ### Fixed
-- a timeout of 60 seconds is now enfored on all http requests. Previously the timeout was infinite.
+- a timeout of 60 seconds is now enforced on all http requests. Previously the timeout was infinite.
 This allowed for the possibility of requests that would hang forever under certain circumstances.
 
 ### Removed

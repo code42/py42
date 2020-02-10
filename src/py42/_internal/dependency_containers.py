@@ -17,7 +17,7 @@ from py42._internal.modules import (
 )
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
-from py42._internal.session_manager import StorageSessionManager
+from py42._internal.storage_session_manager import StorageSessionManager
 
 
 class AuthorityDependencies(object):

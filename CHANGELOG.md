@@ -9,6 +9,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Fixed
+- a timeout of 60 seconds is now enfored on all http requests. Previously the timeout was infinite.
+This allowed for the possibility of requests that would hang forever under certain circumstances.
+
 ### Removed
 - `py42.sdk.util.queued_logger`. Use loggers in Python's `logging` namespace instead (they are threadsafe).
 - `is_async` option from `sdk.create_from_local_account`. This was an intentionally undocumented feature.

@@ -16,6 +16,12 @@ class TestPy42Session(object):
 
         assert filter_out_none_mock.call_count == 1
 
+    def test_session_request_calls_requests_with_timeout_param(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        session.request("GET", URL)
+
+        assert success_requests_session.request.call_args[1]["timeout"] == 60
+
     def test_session_post_with_json_calls_request_with_data_param_with_string_encoded_json(
         self, success_requests_session
     ):

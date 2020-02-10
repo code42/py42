@@ -55,11 +55,24 @@ class FileEventSessionManager(SessionManager):
         return self._session_factory.create_file_event_session(login_provider)
 
 
+class DetectionSessionManager(SessionManager):
+    def __init__(self, session_factory):
+        # type: (SessionFactory) -> None
+        super(DetectionSessionManager, self).__init__()
+        self._session_factory = session_factory
+
+    def create_session(self, login_provider, force_replace=False):
+        return self._session_factory.create_detection_session(login_provider)
+
+
 class SessionsManager(object):
-    def __init__(self, storage_session_manager, file_event_session_manager):
-        # type: (StorageSessionManager, FileEventSessionManager) -> None
+    def __init__(
+        self, storage_session_manager, file_event_session_manager, detection_session_manager
+    ):
+        # type: (StorageSessionManager, FileEventSessionManager, DetectionSessionManager) -> None
         self._storage_session_manager = storage_session_manager
         self._file_event_session_manager = file_event_session_manager
+        self._detection_session_manager = detection_session_manager
 
     def get_storage_session(self, login_provider, force_replace=False):
         # type: (LoginProvider, bool) -> Py42Session
@@ -70,5 +83,11 @@ class SessionsManager(object):
     def get_file_event_session(self, login_provider, force_replace=False):
         # type: (LoginProvider, bool) -> Py42Session
         return self._file_event_session_manager.get_session(
+            login_provider, force_replace=force_replace
+        )
+
+    def get_detection_session(self, login_provider, force_replace=False):
+        # type: (LoginProvider, bool) -> Py42Session
+        return self._detection_session_manager.get_session(
             login_provider, force_replace=force_replace
         )

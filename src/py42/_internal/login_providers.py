@@ -1,5 +1,6 @@
 import base64
 import json
+from requests import get
 
 from py42._internal.auth_handling import LoginProvider
 from py42._internal.compat import str
@@ -147,9 +148,9 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
 
 
 class MicroserviceLoginProvider(C42ApiV3TokenProvider):
-    def get_default_target_host_address(self):
-        # Microservice URLs can be derived from the STS base URL, which is available from the
-        # /api/ServerEnv resource.
+    def get_target_host_address(self):
+        # Certain microservice base URLs can be derived from the STS base URL, which is available from
+        # the /api/ServerEnv resource.
         uri = u"/api/ServerEnv"
         try:
             response = self._auth_session.get(uri)
@@ -169,25 +170,27 @@ class MicroserviceLoginProvider(C42ApiV3TokenProvider):
             raise Exception(
                 u"stsBaseUrl not found. Cannot determine file event service host address."
             )
+        return sts_base_url
 
 
 class FileEventLoginProvider(MicroserviceLoginProvider):
     def get_target_host_address(self):
-        forensic_search_url = self.get_default_target_host_address()
+        forensic_search_url = super().get_target_host_address()
         forensic_search_url = str(forensic_search_url).replace(u"sts", u"forensicsearch")
         return forensic_search_url
 
 
 class DetectionLoginProvider(MicroserviceLoginProvider):
     def get_target_host_address(self):
-        skv_url = self.get_default_target_host_address()
+        skv_url = super().get_target_host_address()
         skv_url = str(skv_url).replace(u"sts", u"simple-key-value-store")
-        skv_url = u"{0}/employeecasemanagement-API_URL".format(skv_url)
+        skv_url = u"{0}/v1/employeecasemanagement-API_URL".format(skv_url)
         try:
-            response = self._auth_session.get(skv_url)
+            # This request has to be anonymous
+            response = get(skv_url)
         except Exception as ex:
             message = u"An error occurred while requesting a URL from simple key value store"
             message = u"{0}, caused by {1}".format(message, ex)
             raise Exception(message)
 
-        return response
+        return response.text

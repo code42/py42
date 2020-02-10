@@ -65,4 +65,4 @@ class SDK(object):
 
     @property
     def departing_employee(self):
-        return self._detection_dependencies.departing_employee_client
+        return self._sdk_dependencies.departing_employee

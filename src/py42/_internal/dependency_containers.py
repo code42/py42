@@ -7,15 +7,21 @@ from py42._internal.client_factories import (
 )
 from py42._internal.login_provider_factories import (
     ArchiveLocatorFactory,
-    FileEventLoginProviderFactory
+    FileEventLoginProviderFactory,
+    DetectionLoginProviderFactory,
 )
-from py42._internal.modules import archive as archive_module,security as sec_module
+from py42._internal.modules import (
+    archive as archive_module,
+    security as sec_module,
+    departing_employee as detection_module,
+)
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42._internal.session_manager import (
     FileEventSessionManager,
     SessionsManager,
     StorageSessionManager,
+    DetectionSessionManager,
 )
 
 
@@ -57,8 +63,11 @@ class AuthorityDependencies(object):
 
         storage_session_manager = StorageSessionManager(session_factory)
         file_event_session_manager = FileEventSessionManager(session_factory)
+        detection_session_manager = DetectionSessionManager(session_factory)
 
-        self.sessions_manager = SessionsManager(storage_session_manager, file_event_session_manager)
+        self.sessions_manager = SessionsManager(
+            storage_session_manager, file_event_session_manager, detection_session_manager
+        )
 
     @staticmethod
     def verify_session_supported(session, test_uri):
@@ -108,7 +117,12 @@ class FileEventDependencies(object):
 class DetectionDependencies(object):
     def __init__(self, authority_dependencies):
         # type: (AuthorityDependencies) -> None
-        detection_client_factory = DetectionClientFactory(authority_dependencies.sessions_manager)
+        detection_login_provider_factory = DetectionLoginProviderFactory(
+            authority_dependencies.root_session
+        )
+        detection_client_factory = DetectionClientFactory(
+            authority_dependencies.sessions_manager, detection_login_provider_factory
+        )
         self.departing_employee_client = detection_client_factory.get_departing_employee_client()
 
 
@@ -125,6 +139,8 @@ class SDKDependencies(object):
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
         file_event_client_factory = file_event_dependencies.file_event_client_factory
+        administration_client = authority_dependencies.administration_client
+        departing_employee_client = detection_dependencies.departing_employee_client
 
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
@@ -137,6 +153,9 @@ class SDKDependencies(object):
         self.archive_module = archive_module.ArchiveModule(archive_accessor_manager, archive_client)
         self.security_module = sec_module.SecurityModule(
             security_client, storage_client_factory, file_event_client_factory
+        )
+        self.departing_employee = detection_module.DepartingEmployeeModule(
+            administration_client, departing_employee_client
         )
 
     @classmethod

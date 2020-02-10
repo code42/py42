@@ -13,6 +13,7 @@ from py42._internal.clients.storage.storage import StorageClient
 from py42._internal.login_provider_factories import (
     ArchiveLocatorFactory,
     FileEventLoginProviderFactory,
+    DetectionLoginProviderFactory,
 )
 from py42._internal.session_manager import SessionsManager
 
@@ -78,9 +79,12 @@ class FileEventClientFactory(object):
 
 
 class DetectionClientFactory(object):
-    def __init__(self, default_session):
-        self._default_session = default_session
+    def __init__(self, session_manager, detection_login_provider_factory):
+        # type: (SessionsManager, DetectionLoginProviderFactory) -> None
+        self._session_manager = session_manager
+        self._detection_login_provider_factory = detection_login_provider_factory
 
     def get_departing_employee_client(self):
-        session = self._default_session
+        login_provider = self._detection_login_provider_factory.create_detection_login_provider()
+        session = self._session_manager.get_detection_session(login_provider)
         return DepartingEmployeeClient(session)

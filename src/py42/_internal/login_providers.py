@@ -148,7 +148,7 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
 
 class FileEventLoginProvider(C42ApiV3TokenProvider):
     def __init__(self, auth_session):
-        super(FileEventLoginProvider).__init__(auth_session)
+        super(FileEventLoginProvider, self).__init__(auth_session)
         self._forensic_search_url = None
 
     def get_target_host_address(self):

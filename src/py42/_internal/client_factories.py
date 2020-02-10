@@ -14,7 +14,7 @@ from py42._internal.login_provider_factories import (
     FileEventLoginProviderFactory,
 )
 from py42._internal.session_factory import SessionFactory
-from py42._internal.session_manager import StorageSessionManager
+from py42._internal.storage_session_manager import StorageSessionManager
 
 
 class AuthorityClientFactory(object):

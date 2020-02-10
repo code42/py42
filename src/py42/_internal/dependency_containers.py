@@ -11,11 +11,7 @@ from py42._internal.login_provider_factories import (
 from py42._internal.modules import archive as archive_module, security as sec_module
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
-from py42._internal.session_manager import (
-    FileEventSessionManager,
-    SessionsManager,
-    StorageSessionManager,
-)
+from py42._internal.storage_session_manager import StorageSessionManager
 
 
 class AuthorityDependencies(object):
@@ -27,6 +23,7 @@ class AuthorityDependencies(object):
 
         # authority clients
         authority_client_factory = AuthorityClientFactory(default_session, v3_required_session)
+        self.session_factory = session_factory
         self.administration_client = authority_client_factory.create_administration_client()
         self.user_client = authority_client_factory.create_user_client()
         self.device_client = authority_client_factory.create_device_client()
@@ -53,11 +50,7 @@ class AuthorityDependencies(object):
 
         self.default_session = selected_session
         self.v3_required_session = v3_required_session
-
-        storage_session_manager = StorageSessionManager(session_factory)
-        file_event_session_manager = FileEventSessionManager(session_factory)
-
-        self.sessions_manager = SessionsManager(storage_session_manager, file_event_session_manager)
+        self.storage_sessions_manager = StorageSessionManager(session_factory)
 
     @staticmethod
     def verify_session_supported(session, test_uri):
@@ -89,7 +82,7 @@ class StorageDependencies(object):
     def __init__(self, authority_dependencies, archive_locator_factory):
         # type: (AuthorityDependencies, ArchiveLocatorFactory) -> None
         self.storage_client_factory = StorageClientFactory(
-            authority_dependencies.sessions_manager, archive_locator_factory
+            authority_dependencies.storage_sessions_manager, archive_locator_factory
         )
 
 
@@ -100,7 +93,7 @@ class FileEventDependencies(object):
             authority_dependencies.root_session
         )
         self.file_event_client_factory = FileEventClientFactory(
-            authority_dependencies.sessions_manager, file_event_login_provider_factory
+            authority_dependencies.session_factory, file_event_login_provider_factory
         )
 
 

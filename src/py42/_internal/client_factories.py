@@ -80,12 +80,12 @@ class FileEventClientFactory(object):
 
 
 class DetectionClientFactory(object):
-    def __init__(self, session_manager, detection_login_provider_factory):
-        # type: (SessionsManager, DetectionLoginProviderFactory) -> None
-        self._session_manager = session_manager
+    def __init__(self, session_factory, detection_login_provider_factory):
+        # type: (SessionFactory, DetectionLoginProviderFactory) -> None
+        self._session_factory = session_factory
         self._detection_login_provider_factory = detection_login_provider_factory
 
     def get_departing_employee_client(self):
         login_provider = self._detection_login_provider_factory.create_detection_login_provider()
-        session = self._session_manager.get_detection_session(login_provider)
+        session = self._session_factory.create_detection_session(login_provider)
         return DepartingEmployeeClient(session)

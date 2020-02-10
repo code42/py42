@@ -110,7 +110,7 @@ class DetectionDependencies(object):
             authority_dependencies.root_session
         )
         detection_client_factory = DetectionClientFactory(
-            authority_dependencies.sessions_manager, detection_login_provider_factory
+            authority_dependencies.session_factory, detection_login_provider_factory
         )
         self.departing_employee_client = detection_client_factory.get_departing_employee_client()
 

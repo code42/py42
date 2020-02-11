@@ -20,7 +20,6 @@ class DepartingEmployeeModule(object):
         # type: (AdministrationClient, DepartingEmployeeClient) -> None
         self._administration = administration_client
         self._departing_employee_client = departing_employee_client
-        self._tenant_id = self._get_tenant_id()
 
     def create_departing_employee(
         self,
@@ -31,7 +30,7 @@ class DepartingEmployeeModule(object):
         alerts_enabled=True,
         cloud_usernames=None,
     ):
-        tenant_id = tenant_id if tenant_id else self._tenant_id
+        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         return self._departing_employee_client.create_departing_employee(
             username=username,
             tenant_id=tenant_id,
@@ -46,7 +45,7 @@ class DepartingEmployeeModule(object):
         return self.resolve_case_by_id(case_id)
 
     def resolve_case_by_id(self, case_id, tenant_id=None):
-        tenant_id = tenant_id if tenant_id else self._tenant_id
+        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         return self._departing_employee_client.resolve_departing_employee(tenant_id, case_id)
 
     def search_departing_employees(
@@ -58,7 +57,7 @@ class DepartingEmployeeModule(object):
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
     ):
-        tenant_id = tenant_id if tenant_id else self._tenant_id
+        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         return self._departing_employee_client.search_departing_employees(
             tenant_id=tenant_id,
             page_size=page_size,
@@ -78,7 +77,7 @@ class DepartingEmployeeModule(object):
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
     ):
-        tenant_id = tenant_id if tenant_id else self._tenant_id
+        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         return self._departing_employee_client.search_departing_employees_with_filter(
             tenant_id=tenant_id,
             filter_type=filter_type,
@@ -90,11 +89,11 @@ class DepartingEmployeeModule(object):
         )
 
     def toggle_alerts(self, alerts_enabled, tenant_id=None):
-        tenant_id = tenant_id if tenant_id else self._tenant_id
+        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         return self._departing_employee_client.toggle_alerts(tenant_id, alerts_enabled)
 
     def validate_user(self, username, tenant_id=None):
-        tenant_id = tenant_id if tenant_id else self._tenant_id
+        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         return self._departing_employee_client.validate_user(username, tenant_id)
 
     def get_details_by_username(self, username):
@@ -102,7 +101,7 @@ class DepartingEmployeeModule(object):
         return self.get_details_by_case_id(case_id)
 
     def get_details_by_case_id(self, case_id, tenant_id=None):
-        tenant_id = tenant_id if tenant_id else self._tenant_id
+        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         return self._departing_employee_client.get_case_details(tenant_id, case_id)
 
     def update_case_by_username(
@@ -139,7 +138,7 @@ class DepartingEmployeeModule(object):
         status="OPEN",
         cloud_usernames=None,
     ):
-        tenant_id = tenant_id if tenant_id else self._tenant_id
+        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         display_name = (
             display_name if display_name else self._get_display_name_from_case_id(case_id)
         )
@@ -154,10 +153,12 @@ class DepartingEmployeeModule(object):
             cloud_usernames=cloud_usernames,
         )
 
-    def _get_tenant_id(self):
-        response = self._administration.get_current_tenant()
-        tenant = get_obj_from_response(response, u"data")
-        return tenant.get(u"tenantUid")
+    def _get_current_tenant_id(self):
+        if self._tenant_id is None:
+            response = self._administration.get_current_tenant()
+            tenant = get_obj_from_response(response, u"data")
+            self._tenant_id = tenant.get(u"tenantUid")
+        return self._tenant_id
 
     def _get_case_id_from_username(self, username):
         response = self.search_departing_employees().text

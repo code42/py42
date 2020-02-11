@@ -50,3 +50,11 @@ class FileEventLoginProviderFactory(object):
 
     def create_file_event_login_provider(self):
         return FileEventLoginProvider(self._auth_session)
+
+
+class EmployeeCaseManagementLoginProviderFactory(object):
+    def __init__(self, auth_session):
+        self._auth_session = auth_session
+
+    def create_ecm_login_provider(self):
+        return EmployeeCaseManagementLoginProvider(self._auth_session)

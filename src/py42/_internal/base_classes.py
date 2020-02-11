@@ -14,6 +14,6 @@ class BaseFileEventClient(object):
         self._session = session
 
 
-class BaseDetectionClient(object):
+class BaseEmployeeCaseManagementClient(object):
     def __init__(self, session):
         self._session = session

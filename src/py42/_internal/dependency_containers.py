@@ -5,10 +5,10 @@ from py42._internal.client_factories import (
     StorageClientFactory,
     DetectionClientFactory,
 )
+from py42._internal.login_providers import EmployeeCaseManagementLoginProvider
 from py42._internal.login_provider_factories import (
     ArchiveLocatorFactory,
     FileEventLoginProviderFactory,
-    DetectionLoginProviderFactory,
 )
 from py42._internal.modules import (
     archive as archive_module,
@@ -106,11 +106,11 @@ class FileEventDependencies(object):
 class DetectionDependencies(object):
     def __init__(self, authority_dependencies):
         # type: (AuthorityDependencies) -> None
-        detection_login_provider_factory = DetectionLoginProviderFactory(
+        ecm_login_provider = EmployeeCaseManagementLoginProvider(
             authority_dependencies.root_session
         )
         detection_client_factory = DetectionClientFactory(
-            authority_dependencies.session_factory, detection_login_provider_factory
+            authority_dependencies.session_factory, ecm_login_provider
         )
         self.departing_employee_client = detection_client_factory.get_departing_employee_client()
 

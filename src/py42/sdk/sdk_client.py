@@ -15,7 +15,7 @@ class SDK(object):
         self._authority_dependencies = sdk_dependencies.authority_dependencies
         self._storage_dependencies = sdk_dependencies.storage_dependencies
         self._file_event_dependencies = sdk_dependencies.file_event_dependencies
-        self._detection_dependencies = sdk_dependencies.detection_dependencies
+        self._ecm_dependencies = sdk_dependencies.detection_dependencies
 
     @classmethod
     def create_using_local_account(cls, host_address, username, password):

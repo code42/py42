@@ -7,13 +7,15 @@ from py42._internal.clients import (
     security,
     users,
 )
-from py42._internal.clients.detection.departing_employee import DepartingEmployeeClient
+from py42._internal.clients.employee_case_management.departing_employee import (
+    DepartingEmployeeClient,
+)
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.storage.storage import StorageClient
+from py42._internal.login_providers import EmployeeCaseManagementLoginProvider
 from py42._internal.login_provider_factories import (
     ArchiveLocatorFactory,
     FileEventLoginProviderFactory,
-    DetectionLoginProviderFactory,
 )
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
@@ -80,12 +82,11 @@ class FileEventClientFactory(object):
 
 
 class DetectionClientFactory(object):
-    def __init__(self, session_factory, detection_login_provider_factory):
-        # type: (SessionFactory, DetectionLoginProviderFactory) -> None
+    def __init__(self, session_factory, ecm_login_provider):
+        # type: (SessionFactory, EmployeeCaseManagementLoginProvider) -> None
         self._session_factory = session_factory
-        self._detection_login_provider_factory = detection_login_provider_factory
+        self._login_provider = ecm_login_provider
 
     def get_departing_employee_client(self):
-        login_provider = self._detection_login_provider_factory.create_detection_login_provider()
-        session = self._session_factory.create_detection_session(login_provider)
+        session = self._session_factory.create_ecm_session(self._login_provider)
         return DepartingEmployeeClient(session)

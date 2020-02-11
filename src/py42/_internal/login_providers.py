@@ -180,7 +180,7 @@ class FileEventLoginProvider(MicroserviceLoginProvider):
         return forensic_search_url
 
 
-class DetectionLoginProvider(MicroserviceLoginProvider):
+class EmployeeCaseManagementLoginProvider(MicroserviceLoginProvider):
     def get_target_host_address(self):
         skv_url = super().get_target_host_address()
         skv_url = str(skv_url).replace(u"sts", u"simple-key-value-store")

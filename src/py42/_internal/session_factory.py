@@ -42,7 +42,7 @@ class SessionFactory(object):
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
         return self._create_session(self._session_impl, file_event_login_provider, header_modifier)
 
-    def create_detection_session(self, detection_login_provider):
+    def create_ecm_session(self, detection_login_provider):
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
         return self._create_session(self._session_impl, detection_login_provider, header_modifier)
 

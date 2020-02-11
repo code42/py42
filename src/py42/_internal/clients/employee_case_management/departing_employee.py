@@ -93,7 +93,7 @@ class DepartingEmployeeClient(BaseEmployeeCaseManagementClient):
     def get_case_by_username(self, username, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         case_id = self._get_case_id_from_username(tenant_id, username)
-        return self.get_case_by_id(tenant_id, case_id)
+        return self.get_case_by_id(case_id, tenant_id)
 
     def get_case_by_id(self, case_id, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
@@ -114,7 +114,7 @@ class DepartingEmployeeClient(BaseEmployeeCaseManagementClient):
     ):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         display_name = (
-            display_name if display_name else self._get_display_name_from_case_id(case_id)
+            display_name if display_name else self._get_display_name_from_case_id(tenant_id, case_id)
         )
         uri = self._get_uri(u"update")
         cloud_usernames = cloud_usernames if cloud_usernames else []
@@ -148,8 +148,8 @@ class DepartingEmployeeClient(BaseEmployeeCaseManagementClient):
             if case.get(u"type$") == u"DEPARTING_EMPLOYEE_CASE" and case_user == username:
                 return case.get(u"caseId")
 
-    def _get_display_name_from_case_id(self, case_id):
-        response = self.search_departing_employees().text
+    def _get_display_name_from_case_id(self, tenant_id, case_id):
+        response = self.get_all_departing_employees(tenant_id).text
         cases = json.loads(response).get(u"cases")
         for case in cases:
             this_case_id = case.get(u"caseId")

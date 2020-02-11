@@ -4,6 +4,13 @@ from py42._internal.base_classes import BaseEmployeeCaseManagementClient
 from py42.util import get_obj_from_response
 
 
+class DepartingEmployeeFilterType(object):
+    OPEN = "OPEN"
+    LEAVING_TODAY = "LEAVING_TODAY"
+    EXFILTRATION_24_HOURS = "EXFILTRATION_24_HOURS"
+    EXFILTRATION_30_DAYS = "EXFILTRATION_30_DAYS"
+
+
 class DepartingEmployeeClient(BaseEmployeeCaseManagementClient):
     _base_uri = "/svc/api/v1/departingemployee/"
     _tenant_id = None

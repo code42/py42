@@ -13,7 +13,7 @@ from py42._internal.login_provider_factories import (
 from py42._internal.modules import (
     archive as archive_module,
     security as sec_module,
-    departing_employee as detection_module,
+    employee_case_management as ecm_module,
 )
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
@@ -103,16 +103,18 @@ class FileEventDependencies(object):
         )
 
 
-class DetectionDependencies(object):
+class EmployeeCaseManagementDependencies(object):
     def __init__(self, authority_dependencies):
         # type: (AuthorityDependencies) -> None
         ecm_login_provider_factory = EmployeeCaseManagementLoginProviderFactory(
             authority_dependencies.root_session
         )
-        detection_client_factory = EmployeeCaseManagementClientFactory(
-            authority_dependencies.session_factory, ecm_login_provider_factory
+        ecm_client_factory = EmployeeCaseManagementClientFactory(
+            authority_dependencies.session_factory,
+            ecm_login_provider_factory,
+            authority_dependencies.administration_client,
         )
-        self.departing_employee_client = detection_client_factory.get_departing_employee_client()
+        self.departing_employee_client = ecm_client_factory.get_departing_employee_client()
 
 
 class SDKDependencies(object):
@@ -121,20 +123,20 @@ class SDKDependencies(object):
         authority_dependencies,
         storage_dependencies,
         file_event_dependencies,
-        detection_dependencies,
+        employee_case_management_dependencies,
     ):
-        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, DetectionDependencies) -> None
+        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, EmployeeCaseManagementDependencies) -> None
         archive_client = authority_dependencies.archive_client
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
         file_event_client_factory = file_event_dependencies.file_event_client_factory
         administration_client = authority_dependencies.administration_client
-        departing_employee_client = detection_dependencies.departing_employee_client
+        departing_employee_client = employee_case_management_dependencies.departing_employee_client
 
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
         self.file_event_dependencies = file_event_dependencies
-        self.detection_dependencies = detection_dependencies
+        self.ecm_dependencies = employee_case_management_dependencies
 
         archive_accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
 
@@ -143,8 +145,8 @@ class SDKDependencies(object):
         self.security_module = sec_module.SecurityModule(
             security_client, storage_client_factory, file_event_client_factory
         )
-        self.departing_employee = detection_module.DepartingEmployeeModule(
-            administration_client, departing_employee_client
+        self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
+            self.ecm_dependencies.departing_employee_client
         )
 
     @classmethod
@@ -159,15 +161,11 @@ class SDKDependencies(object):
         archive_locator_factory = ArchiveLocatorFactory(
             default_session, security_client, device_client
         )
+
         storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
-
         file_event_dependencies = FileEventDependencies(authority_dependencies)
-
-        detection_dependencies = DetectionDependencies(authority_dependencies)
+        ecm_dependencies = EmployeeCaseManagementDependencies(authority_dependencies)
 
         return cls(
-            authority_dependencies,
-            storage_dependencies,
-            file_event_dependencies,
-            detection_dependencies,
+            authority_dependencies, storage_dependencies, file_event_dependencies, ecm_dependencies
         )

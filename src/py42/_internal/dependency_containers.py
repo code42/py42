@@ -2,11 +2,13 @@ from py42._internal.archive_access import ArchiveAccessorManager
 from py42._internal.client_factories import (
     AuthorityClientFactory,
     FileEventClientFactory,
+    KeyValueStoreClientFactory,
     StorageClientFactory,
 )
 from py42._internal.login_provider_factories import (
     ArchiveLocatorFactory,
     FileEventLoginProviderFactory,
+    KeyValueStoreLocatorFactory,
 )
 from py42._internal.modules import archive as archive_module, security as sec_module
 from py42._internal.session import Py42Session
@@ -97,13 +99,31 @@ class FileEventDependencies(object):
         )
 
 
+class KeyValueStoreDependencies(object):
+    def __init__(self, authority_dependencies):
+        # type: (AuthorityDependencies) -> None
+        key_value_store_login_provider_factory = KeyValueStoreLocatorFactory(
+            authority_dependencies.root_session
+        )
+        self.key_value_store_client_factory = KeyValueStoreClientFactory(
+            authority_dependencies.session_factory, key_value_store_login_provider_factory
+        )
+
+
 class SDKDependencies(object):
-    def __init__(self, authority_dependencies, storage_dependencies, file_event_dependencies):
-        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies) -> None
+    def __init__(
+        self,
+        authority_dependencies,
+        storage_dependencies,
+        file_event_dependencies,
+        key_value_store_dependencies,
+    ):
+        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, KeyValueStoreDependencies) -> None
         archive_client = authority_dependencies.archive_client
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
         file_event_client_factory = file_event_dependencies.file_event_client_factory
+        key_value_store_client_factory = key_value_store_dependencies.key_value_store_client_factory
 
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
@@ -130,7 +150,12 @@ class SDKDependencies(object):
             default_session, security_client, device_client
         )
         storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
-
         file_event_dependencies = FileEventDependencies(authority_dependencies)
+        key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
 
-        return cls(authority_dependencies, storage_dependencies, file_event_dependencies)
+        return cls(
+            authority_dependencies,
+            storage_dependencies,
+            file_event_dependencies,
+            key_value_store_dependencies,
+        )

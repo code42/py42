@@ -109,12 +109,11 @@ class EmployeeCaseManagementDependencies(object):
         ecm_login_provider_factory = EmployeeCaseManagementLoginProviderFactory(
             authority_dependencies.root_session
         )
-        ecm_client_factory = EmployeeCaseManagementClientFactory(
+        self.employee_case_management_client_factory = EmployeeCaseManagementClientFactory(
             authority_dependencies.session_factory,
             ecm_login_provider_factory,
             authority_dependencies.administration_client,
         )
-        self.departing_employee_client = ecm_client_factory.get_departing_employee_client()
 
 
 class SDKDependencies(object):
@@ -130,8 +129,6 @@ class SDKDependencies(object):
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
         file_event_client_factory = file_event_dependencies.file_event_client_factory
-        administration_client = authority_dependencies.administration_client
-        departing_employee_client = employee_case_management_dependencies.departing_employee_client
 
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
@@ -146,7 +143,7 @@ class SDKDependencies(object):
             security_client, storage_client_factory, file_event_client_factory
         )
         self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
-            self.ecm_dependencies.departing_employee_client
+            self.ecm_dependencies.employee_case_management_client_factory
         )
 
     @classmethod

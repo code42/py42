@@ -1,9 +1,16 @@
-from py42._internal.clients.employee_case_management.departing_employee import (
-    DepartingEmployeeClient,
-)
+from py42._internal.client_factories import EmployeeCaseManagementClientFactory
 
 
 class EmployeeCaseManagementModule(object):
-    def __init__(self, departing_employee_client):
-        # type: (EmployeeCaseManagementModule, DepartingEmployeeClient) -> None
-        self.departing_employee = departing_employee_client
+    def __init__(self, employee_case_management_client_factory):
+        # type: (EmployeeCaseManagementModule, EmployeeCaseManagementClientFactory) -> None
+        self._employee_case_management_client_factory = employee_case_management_client_factory
+        self._departing_employee_client = None
+
+    @property
+    def departing_employee(self):
+        if self._departing_employee_client is None:
+            self._departing_employee_client = (
+                self._employee_case_management_client_factory.get_departing_employee_client()
+            )
+        return self._departing_employee_client

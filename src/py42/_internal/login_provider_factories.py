@@ -6,6 +6,7 @@ from py42._internal.login_providers import (
     C42APILoginTokenProvider,
     C42APIStorageAuthTokenProvider,
     FileEventLoginProvider,
+    KeyValueStoreLoginProvider,
     EmployeeCaseManagementLoginProvider,
 )
 
@@ -50,6 +51,14 @@ class FileEventLoginProviderFactory(object):
 
     def create_file_event_login_provider(self):
         return FileEventLoginProvider(self._auth_session)
+
+
+class KeyValueStoreLocatorFactory(object):
+    def __init__(self, auth_session):
+        self._auth_session = auth_session
+
+    def create_key_value_store_locator(self):
+        return KeyValueStoreLoginProvider(self._auth_session)
 
 
 class EmployeeCaseManagementLoginProviderFactory(object):

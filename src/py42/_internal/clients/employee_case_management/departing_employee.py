@@ -121,7 +121,9 @@ class DepartingEmployeeClient(BaseClient):
     ):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         display_name = (
-            display_name if display_name else self._get_display_name_from_case_id(tenant_id, case_id)
+            display_name
+            if display_name
+            else self._get_display_name_from_case_id(tenant_id, case_id)
         )
         uri = self._get_uri(u"update")
         cloud_usernames = cloud_usernames if cloud_usernames else []

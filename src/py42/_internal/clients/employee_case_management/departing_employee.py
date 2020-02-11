@@ -130,12 +130,6 @@ class DepartingEmployeeClient(BaseEmployeeCaseManagementClient):
         }
         return self._session.post(uri, data=json.dumps(data))
 
-    def validate_user(self, user_name, tenant_id=None):
-        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
-        uri = self._get_uri(u"validateuser")
-        data = {u"userName": user_name, u"tenantId": tenant_id}
-        return self._session.post(uri, data=json.dumps(data))
-
     def _get_uri(self, resource_name):
         return u"{0}{1}".format(self._base_uri, resource_name)
 

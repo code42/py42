@@ -11,6 +11,7 @@ from py42._internal.clients.administration import AdministrationClient
 from py42._internal.clients.employee_case_management.departing_employee import (
     DepartingEmployeeClient,
 )
+from py42._internal.clients.key_value_store import KeyValueStoreClient
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.storage.storage import StorageClient
 from py42._internal.login_provider_factories import (
@@ -92,7 +93,7 @@ class KeyValueStoreClientFactory(object):
     def get_key_value_store_client(self):
         login_provider = self._login_provider_factory.create_key_value_store_locator()
         session = self._session_factory.create_key_value_store_session(login_provider)
-        return FileEventClient(session)
+        return KeyValueStoreClient(session)
 
 
 class EmployeeCaseManagementClientFactory(object):

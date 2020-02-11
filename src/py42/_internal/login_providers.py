@@ -1,6 +1,5 @@
 import base64
 import json
-from requests import get
 
 from py42._internal.auth_handling import LoginProvider
 from py42._internal.compat import str

@@ -62,8 +62,9 @@ class KeyValueStoreLocatorFactory(object):
 
 
 class EmployeeCaseManagementLoginProviderFactory(object):
-    def __init__(self, auth_session):
+    def __init__(self, auth_session, session_factory):
         self._auth_session = auth_session
+        self._session_factory = session_factory
 
     def create_ecm_login_provider(self):
-        return EmployeeCaseManagementLoginProvider(self._auth_session)
+        return EmployeeCaseManagementLoginProvider(self._auth_session, self._session_factory)

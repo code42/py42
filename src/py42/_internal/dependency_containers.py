@@ -107,7 +107,7 @@ class EmployeeCaseManagementDependencies(object):
     def __init__(self, authority_dependencies):
         # type: (AuthorityDependencies) -> None
         ecm_login_provider_factory = EmployeeCaseManagementLoginProviderFactory(
-            authority_dependencies.root_session
+            authority_dependencies.root_session, authority_dependencies.session_factory
         )
         self.employee_case_management_client_factory = EmployeeCaseManagementClientFactory(
             authority_dependencies.session_factory,

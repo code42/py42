@@ -176,17 +176,13 @@ class KeyValueStoreLoginProvider(LoginProvider):
 
 
 class EmployeeCaseManagementLoginProvider(C42ApiV3TokenProvider):
-    def __init__(self, auth_session, session_factory):
+    def __init__(self, auth_session, key_value_store_client):
         super().__init__(auth_session)
-        self._session_factory = session_factory
+        self._key_value_store_client = key_value_store_client
 
     def get_target_host_address(self):
-        sts_base_url = _get_sts_base_url(self._auth_session)
-        skv_url = str(sts_base_url).replace(u"sts", u"simple-key-value-store")
-        skv_url = u"{0}/v1/employeecasemanagement-API_URL".format(skv_url)
         try:
-            session = self._session_factory.create_anonymous_session(skv_url)
-            response = session.get(skv_url)
+            response = self._key_value_store_client.get_stored_value("employeecasemanagement-API_URL")
         except Exception as ex:
             message = u"An error occurred while requesting a URL from simple key value store"
             message = u"{0}, caused by {1}".format(message, ex)

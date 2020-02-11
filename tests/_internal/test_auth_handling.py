@@ -1,6 +1,5 @@
 import pytest
 from requests import Response
-from requests.cookies import RequestsCookieJar
 
 from py42._internal.auth_handling import (
     AuthHandler,
@@ -18,8 +17,6 @@ DEFAULT_HEADER = "Authorization"
 
 TEST_SECRET = "TEST-SECRET"
 
-_cookie_dict = {}
-
 
 @pytest.fixture
 def mock_login_provider(mocker):
@@ -33,30 +30,12 @@ def mock_session_modifier(mocker):
     return mocker.MagicMock(spec=SessionModifier)
 
 
-@pytest.fixture
-def mock_session(mocker):
-    session = mocker.MagicMock(spec=Py42Session)
-    session.headers = {}
-    session.cookies = mocker.MagicMock(spec=RequestsCookieJar)
-
-    def get_cookie(name):
-        return _cookie_dict.get(name, None)
-
-    def set_cookie(name, value):
-        _cookie_dict.update({name: value})
-
-    session.cookies.get = get_cookie
-    session.cookies.set = set_cookie
-
-    return session
-
-
 def test_auth_handler_constructs_successfully():
     assert AuthHandler(LoginProvider(), SessionModifier())
 
 
 def test_auth_handler_renew_authentication_using_cache_calls_get_secret_value_on_login_provider_with_correct_params(
-    mock_login_provider, mock_session_modifier
+    mock_login_provider, mock_session_modifier, mock_session
 ):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session, use_cache=True)
@@ -64,7 +43,7 @@ def test_auth_handler_renew_authentication_using_cache_calls_get_secret_value_on
 
 
 def test_auth_handler_renew_authentication_no_cache_calls_get_secret_value_on_login_provider_with_correct_params(
-    mock_login_provider, mock_session_modifier
+    mock_login_provider, mock_session_modifier, mock_session
 ):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session)
@@ -72,7 +51,7 @@ def test_auth_handler_renew_authentication_no_cache_calls_get_secret_value_on_lo
 
 
 def test_auth_handler_renew_authentication_using_cache_calls_modify_session_on_session_modifier_with_correct_params(
-    mock_login_provider, mock_session_modifier
+    mock_login_provider, mock_session_modifier, mock_session
 ):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session, use_cache=True)
@@ -80,7 +59,7 @@ def test_auth_handler_renew_authentication_using_cache_calls_modify_session_on_s
 
 
 def test_auth_handler_renew_authentication_no_cache_calls_modify_session_on_session_modifier_with_correct_params(
-    mock_login_provider, mock_session_modifier
+    mock_login_provider, mock_session_modifier, mock_session
 ):
     auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session)
@@ -146,7 +125,9 @@ def test_cookie_modifier_constructs_successfully():
 
 
 def test_cookie_modifier_adds_specified_cookie(mock_session):
+    from .conftest import cookie_dict
+
     cookie_modifier = CookieModifier(CUSTOM_NAME)
     cookie_modifier.modify_session(mock_session, ORIGINAL_VALUE)
     assert mock_session.cookies.get(CUSTOM_NAME) is not None
-    _cookie_dict.clear()
+    cookie_dict.clear()

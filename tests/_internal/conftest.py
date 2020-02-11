@@ -2,9 +2,11 @@
 
 import pytest
 from requests import HTTPError, Response, Session
+from requests.cookies import RequestsCookieJar
 
 from py42._internal.auth_handling import AuthHandler
 from py42._internal.file_event_filter import FileEventFilter
+from py42._internal.session import Py42Session
 
 HOST_ADDRESS = "http://example.com"
 
@@ -26,6 +28,8 @@ EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
 VALUE_UNICODE = u"您已经发现了秘密信息"
+
+cookie_dict = {}
 
 
 @pytest.fixture
@@ -104,3 +108,21 @@ def file_event_filter():
 @pytest.fixture
 def unicode_file_event_filter():
     return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
+
+
+@pytest.fixture
+def mock_session(mocker):
+    session = mocker.MagicMock(spec=Py42Session)
+    session.headers = {}
+    session.cookies = mocker.MagicMock(spec=RequestsCookieJar)
+
+    def get_cookie(name):
+        return cookie_dict.get(name, None)
+
+    def set_cookie(name, value):
+        cookie_dict.update({name: value})
+
+    session.cookies.get = get_cookie
+    session.cookies.set = set_cookie
+
+    return session

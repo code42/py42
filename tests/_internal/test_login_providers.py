@@ -11,6 +11,7 @@ from py42._internal.login_providers import (
     C42ApiV1TokenProvider,
     C42ApiV3TokenProvider,
     FileEventLoginProvider,
+    KeyValueStoreLoginProvider,
 )
 from py42._internal.session import Py42Session
 
@@ -98,9 +99,7 @@ def storage_auth_token_provider(mocker):
 
 
 @pytest.fixture
-def file_event_login_provider_with_sts(mocker):
-    auth_session = mocker.MagicMock(spec=Py42Session)
-
+def mock_successful_server_env_get(mocker):
     def mock_get(uri, **kwargs):
         if uri == "/api/ServerEnv":
             response = mocker.MagicMock(spec=Response)
@@ -112,32 +111,67 @@ def file_event_login_provider_with_sts(mocker):
             response.status_code = 200
         return response
 
-    auth_session.get.side_effect = mock_get
-    return FileEventLoginProvider(auth_session)
+    return mock_get
 
 
 @pytest.fixture
-def file_event_login_provider_no_sts(mocker):
-    auth_session = mocker.MagicMock(spec=Py42Session)
-
+def mock_unsuccessful_server_env_get(mocker):
     def mock_get(uri, **kwargs):
         response = mocker.MagicMock(spec=Response)
         response.text = json.dumps({})
         response.status_code = 200
         return response
 
-    auth_session.get.side_effect = mock_get
+    return mock_get
+
+
+@pytest.fixture
+def mock_server_env_exception():
+    def mock_get(uri, **kwargs):
+        raise Exception(SERVER_ENV_EXCEPTION_MESSAGE)
+
+    return mock_get
+
+
+@pytest.fixture
+def file_event_login_provider_with_sts(mocker, mock_successful_server_env_get):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.get.side_effect = mock_successful_server_env_get
     return FileEventLoginProvider(auth_session)
 
 
 @pytest.fixture
-def file_event_login_provider_server_env_exception(mocker):
+def file_event_login_provider_no_sts(mocker, mock_unsuccessful_server_env_get):
     auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.get.side_effect = mock_unsuccessful_server_env_get
+    return FileEventLoginProvider(auth_session)
 
-    def mock_get(uri, **kwargs):
-        raise Exception(SERVER_ENV_EXCEPTION_MESSAGE)
 
-    auth_session.get.side_effect = mock_get
+@pytest.fixture
+def key_value_store_login_provider_with_sts(mocker, mock_successful_server_env_get):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.get.side_effect = mock_successful_server_env_get
+    return KeyValueStoreLoginProvider(auth_session)
+
+
+@pytest.fixture
+def key_value_store_login_provider_no_sts(mocker, mock_unsuccessful_server_env_get):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.get.side_effect = mock_unsuccessful_server_env_get
+    return KeyValueStoreLoginProvider(auth_session)
+
+
+@pytest.fixture
+def file_event_login_provider_server_env_exception(mocker, mock_server_env_exception):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.get.side_effect = mock_server_env_exception
+    return FileEventLoginProvider(auth_session)
+
+
+@pytest.fixture
+def key_value_store_login_provider_server_env_exception(mocker, mock_server_env_exception):
+    auth_session = mocker.MagicMock(spec=Py42Session)
+    auth_session.get.side_effect = mock_server_env_exception
     return FileEventLoginProvider(auth_session)
 
 
@@ -259,6 +293,32 @@ class TestFileEventLoginProvider(object):
     ):
         secret = file_event_login_provider_with_sts.get_secret_value()
         assert secret == V3_TOKEN
+
+
+class TestKeyValueStoreLoginProvider(object):
+    def test_get_target_host_address_given_sts_base_url_returns_fs_base_url(
+        self, key_value_store_login_provider_with_sts
+    ):
+        host_address = key_value_store_login_provider_with_sts.get_target_host_address()
+        assert host_address == "https://simple-key-value-store-east.us.code42.com"
+
+    def test_get_target_host_address_given_no_sts_base_url_raises_exception(
+        self, key_value_store_login_provider_no_sts
+    ):
+        with pytest.raises(Exception) as e:
+            key_value_store_login_provider_no_sts.get_target_host_address()
+        expected_message = "stsBaseUrl not found."
+        assert e.value.args[0] == expected_message
+
+    def test_get_target_host_address_given_exception_retrieving_server_env_raises_exception(
+        self, key_value_store_login_provider_server_env_exception
+    ):
+        with pytest.raises(Exception) as e:
+            key_value_store_login_provider_server_env_exception.get_target_host_address()
+        expected_message = "An error occurred while requesting server environment information, caused by {0}".format(
+            SERVER_ENV_EXCEPTION_MESSAGE
+        )
+        assert e.value.args[0] == expected_message
 
 
 @pytest.mark.parametrize(

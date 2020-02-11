@@ -8,6 +8,7 @@ from py42._internal.clients import (
     users,
 )
 from py42._internal.clients.fileevent.file_event import FileEventClient
+from py42._internal.clients.key_value_store import KeyValueStoreClient
 from py42._internal.clients.storage.storage import StorageClient
 from py42._internal.login_provider_factories import (
     ArchiveLocatorFactory,
@@ -80,11 +81,11 @@ class FileEventClientFactory(object):
 
 class KeyValueStoreClientFactory(object):
     def __init__(self, session_factory, login_provider_factory):
-        # type: (SessionFactory, KeyValueStoreLocatorFactory -> None
+        # type: (SessionFactory, KeyValueStoreLocatorFactory) -> None
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
 
     def get_key_value_store_client(self):
         login_provider = self._login_provider_factory.create_key_value_store_locator()
         session = self._session_factory.create_key_value_store_session(login_provider)
-        return FileEventClient(session)
+        return KeyValueStoreClient(session)

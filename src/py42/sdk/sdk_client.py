@@ -16,6 +16,7 @@ class SDK(object):
         self._storage_dependencies = sdk_dependencies.storage_dependencies
         self._file_event_dependencies = sdk_dependencies.file_event_dependencies
         self._ecm_dependencies = sdk_dependencies.ecm_dependencies
+        self._alert_dependencies = sdk_dependencies.alert_dependencies
 
     @classmethod
     def create_using_local_account(cls, host_address, username, password):
@@ -65,7 +66,7 @@ class SDK(object):
 
     @property
     def alerts(self):
-        return self._sdk_dependencies.alert_client
+        return self._alert_dependencies.alert_client
 
     @property
     def employee_case_management(self):

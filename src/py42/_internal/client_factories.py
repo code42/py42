@@ -20,6 +20,7 @@ from py42._internal.login_provider_factories import (
     FileEventLoginProviderFactory,
     EmployeeCaseManagementLoginProviderFactory,
     KeyValueStoreLocatorFactory,
+    AlertLoginProviderFactory,
 )
 from py42._internal.clients.alerts import AlertClient
 from py42._internal.session_factory import SessionFactory
@@ -113,11 +114,11 @@ class EmployeeCaseManagementClientFactory(object):
 
 class AlertClientFactory(object):
     def __init__(self, session_factory, login_provider_factory):
-        # type: (SessionFactory, EmployeeCaseManagementLoginProviderFactory) -> None
+        # type: (SessionFactory, AlertLoginProviderFactory) -> None
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
 
-    def get_departing_employee_client(self):
-        login_provider = self._login_provider_factory.create_ecm_login_provider()
+    def get_alert_client(self):
+        login_provider = self._login_provider_factory.create_alert_login_provider()
         session = self._session_factory.create_jwt_session_from_provider(login_provider)
         return AlertClient(session)

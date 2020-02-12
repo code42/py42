@@ -1,7 +1,10 @@
-from py42._internal.base_classes import BaseAuthorityClient
+from py42._internal.base_classes import BaseClient
 
 
-class AlertClient(BaseAuthorityClient):
+class AlertClient(BaseClient):
+    def __init__(self, session):
+        super(AlertClient, self).__init__(session)
+
     def get_alert(self):
         pass
 

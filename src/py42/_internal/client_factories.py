@@ -122,5 +122,5 @@ class AlertClientFactory(object):
 
     def get_departing_employee_client(self):
         login_provider = self._login_provider_factory.create_ecm_login_provider()
-        session = self._session_factory.create_alert_session(login_provider)
+        session = self._session_factory.create_jwt_session_from_provider(login_provider)
         return AlertClient(session)

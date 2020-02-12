@@ -42,16 +42,8 @@ class SessionFactory(object):
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
         return self._create_session(self._session_impl, login_provider, header_modifier)
 
-    def create_file_event_session(self, file_event_login_provider):
-        header_modifier = self._session_modifier_factory.create_v3_session_modifier()
-        return self._create_session(self._session_impl, file_event_login_provider, header_modifier)
-
     def create_key_value_store_session(self, key_value_store_login_provider):
         return self._create_session(self._session_impl, key_value_store_login_provider)
-
-    def create_ecm_session(self, ecm_login_provider):
-        header_modifier = self._session_modifier_factory.create_v3_session_modifier()
-        return self._create_session(self._session_impl, ecm_login_provider, header_modifier)
 
     def  create_alerts_session(self, alert_login_provider):
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()

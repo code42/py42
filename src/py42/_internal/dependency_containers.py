@@ -114,7 +114,9 @@ class AlertDependencies(object):
             authority_dependencies.root_session, key_value_store_client_factory
         )
         alert_client_factory = AlertClientFactory(
-            authority_dependencies.session_factory, alert_login_provider_factory
+            authority_dependencies.session_factory,
+            alert_login_provider_factory,
+            authority_dependencies.administration_client
         )
         self.alert_client = alert_client_factory.get_alert_client()
 

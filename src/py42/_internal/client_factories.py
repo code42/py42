@@ -52,9 +52,6 @@ class AuthorityClientFactory(object):
     def create_security_client(self):
         return security.SecurityClient(self.default_session, self.v3_required_session)
 
-    def create_alert_client(self):
-        return alerts.AlertClient(self.default_session, self.v3_required_session)
-
 
 class StorageClientFactory(object):
     def __init__(self, storage_session_manager, login_provider_factory):

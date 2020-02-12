@@ -80,7 +80,7 @@ class FileEventClientFactory(object):
 
     def get_file_event_client(self):
         login_provider = self._login_provider_factory.create_file_event_login_provider()
-        session = self._session_factory.create_file_event_session(login_provider)
+        session = self._session_factory.create_jwt_session_from_provider(login_provider)
         return FileEventClient(session)
 
 

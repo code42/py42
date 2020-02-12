@@ -38,16 +38,12 @@ class SessionFactory(object):
         tmp = self._create_session(self._session_impl, c42_api_login_provider, header_modifier)
         return self.create_v1_session(tmp)
 
-    def create_file_event_session(self, file_event_login_provider):
+    def create_jwt_session_from_provider(self, login_provider):
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
-        return self._create_session(self._session_impl, file_event_login_provider, header_modifier)
+        return self._create_session(self._session_impl, login_provider, header_modifier)
 
     def create_key_value_store_session(self, key_value_store_login_provider):
         return self._create_session(self._session_impl, key_value_store_login_provider)
-
-    def create_ecm_session(self, ecm_login_provider):
-        header_modifier = self._session_modifier_factory.create_v3_session_modifier()
-        return self._create_session(self._session_impl, ecm_login_provider, header_modifier)
 
     def _create_session(self, session_impl, login_provider, modifier=None):
         handler = None

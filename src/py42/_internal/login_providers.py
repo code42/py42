@@ -181,14 +181,7 @@ class AlertLoginProvider(C42ApiV3TokenProvider):
         self._key_value_store_client = key_value_store_client
 
     def get_target_host_address(self):
-        try:
-            response = self._key_value_store_client.get_stored_value(u"AlertService-API_URL")
-        except Exception as ex:
-            message = u"An error occurred while requesting a URL from simple key value store"
-            message = u"{0}, caused by {1}".format(message, ex)
-            raise Exception(message)
-
-        return response.text
+        return _get_url_from_key_value_store(self._key_value_store_client, u"AlertService-API_URL")
 
 
 class EmployeeCaseManagementLoginProvider(C42ApiV3TokenProvider):
@@ -197,16 +190,9 @@ class EmployeeCaseManagementLoginProvider(C42ApiV3TokenProvider):
         self._key_value_store_client = key_value_store_client
 
     def get_target_host_address(self):
-        try:
-            response = self._key_value_store_client.get_stored_value(
-                u"employeecasemanagement-API_URL"
-            )
-        except Exception as ex:
-            message = u"An error occurred while requesting a URL from simple key value store"
-            message = u"{0}, caused by {1}".format(message, ex)
-            raise Exception(message)
-
-        return response.text
+        return _get_url_from_key_value_store(
+            self._key_value_store_client, u"employeecasemanagement-API_URL"
+        )
 
 
 def _get_sts_base_url(session):
@@ -228,3 +214,15 @@ def _get_sts_base_url(session):
     if not sts_base_url:
         raise Exception(u"stsBaseUrl not found.")
     return sts_base_url
+
+
+def _get_url_from_key_value_store(key_value_store, url_key):
+    try:
+        response = key_value_store.get_stored_value(url_key)
+    except Exception as ex:
+        message = u"An error occurred while requesting a URL from simple key value store"
+        message = u"{0}, caused by {1}".format(message, ex)
+        raise Exception(message)
+
+    return response.text
+

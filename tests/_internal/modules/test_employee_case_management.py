@@ -38,7 +38,6 @@ class TestEmployeeCaseManagementModule(object):
             departing_employee_client
         )
         ecm_module = EmployeeCaseManagementModule(client_factory)
-        client = ecm_module.departing_employee
-        client = ecm_module.departing_employee
-
-
+        _ = ecm_module.departing_employee
+        _ = ecm_module.departing_employee
+        assert client_factory.get_departing_employee_client.call_count == 1

@@ -45,10 +45,6 @@ class SessionFactory(object):
     def create_key_value_store_session(self, key_value_store_login_provider):
         return self._create_session(self._session_impl, key_value_store_login_provider)
 
-    def  create_alerts_session(self, alert_login_provider):
-        header_modifier = self._session_modifier_factory.create_v3_session_modifier()
-        return self._create_session(self._session_impl, alert_login_provider, header_modifier)
-
     def _create_session(self, session_impl, login_provider, modifier=None):
         handler = None
         host_address = login_provider.get_target_host_address()

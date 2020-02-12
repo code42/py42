@@ -111,3 +111,7 @@ class EmployeeCaseManagementClientFactory(object):
         login_provider = self._login_provider_factory.create_ecm_login_provider()
         session = self._session_factory.create_ecm_session(login_provider)
         return DepartingEmployeeClient(session, self._administration_client)
+
+
+class AlertClientFactory(object):
+

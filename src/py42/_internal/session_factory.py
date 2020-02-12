@@ -42,17 +42,12 @@ class SessionFactory(object):
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
         return self._create_session(self._session_impl, file_event_login_provider, header_modifier)
 
-<<<<<<< HEAD
-    def create_key_value_store_session(self, key_value_store_locator):
-        return self._create_session(self._session_impl, key_value_store_locator)
-=======
     def create_key_value_store_session(self, key_value_store_login_provider):
         return self._create_session(self._session_impl, key_value_store_login_provider)
 
     def create_ecm_session(self, detection_login_provider):
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
         return self._create_session(self._session_impl, detection_login_provider, header_modifier)
->>>>>>> feature/INTEG-865-departinge-employee
 
     def _create_session(self, session_impl, login_provider, modifier=None):
         handler = None

@@ -41,7 +41,6 @@ class AuthorityDependencies(object):
         self.legal_hold_client = authority_client_factory.create_legal_hold_client()
         self.archive_client = authority_client_factory.create_archive_client()
         self.security_client = authority_client_factory.create_security_client()
-        self.alert_client = authority_client_factory.create_alert_client()
 
     def _set_sessions(self, session_factory, root_session):
         # type: (SessionFactory, Py42Session) -> None
@@ -150,8 +149,9 @@ class SDKDependencies(object):
         storage_dependencies,
         file_event_dependencies,
         employee_case_management_dependencies,
+        alert_dependencies,
     ):
-        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, EmployeeCaseManagementDependencies) -> None
+        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, EmployeeCaseManagementDependencies, AlertDependencies) -> None
         archive_client = authority_dependencies.archive_client
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
@@ -161,6 +161,7 @@ class SDKDependencies(object):
         self.storage_dependencies = storage_dependencies
         self.file_event_dependencies = file_event_dependencies
         self.ecm_dependencies = employee_case_management_dependencies
+        self.alert_dependencies = alert_dependencies
 
         archive_accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
 
@@ -169,7 +170,6 @@ class SDKDependencies(object):
         self.security_module = sec_module.SecurityModule(
             security_client, storage_client_factory, file_event_client_factory
         )
-        self.alert_client = authority_dependencies.alert_client
         self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
             self.ecm_dependencies.employee_case_management_client_factory
         )
@@ -186,13 +186,21 @@ class SDKDependencies(object):
         archive_locator_factory = ArchiveLocatorFactory(
             default_session, security_client, device_client
         )
+        key_value_store_client_factory = key_value_store_dependencies.key_value_store_client_factory
 
         storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
         file_event_dependencies = FileEventDependencies(authority_dependencies)
         ecm_dependencies = EmployeeCaseManagementDependencies(
-            authority_dependencies, key_value_store_dependencies.key_value_store_client_factory
+            authority_dependencies, key_value_store_client_factory
+        )
+        alert_dependencies = AlertDependencies(
+            authority_dependencies, key_value_store_client_factory
         )
 
         return cls(
-            authority_dependencies, storage_dependencies, file_event_dependencies, ecm_dependencies
+            authority_dependencies,
+            storage_dependencies,
+            file_event_dependencies,
+            ecm_dependencies,
+            alert_dependencies,
         )

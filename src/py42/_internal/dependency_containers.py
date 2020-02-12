@@ -143,7 +143,6 @@ class SDKDependencies(object):
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
         file_event_client_factory = file_event_dependencies.file_event_client_factory
-        key_value_store_client_factory = key_value_store_dependencies.key_value_store_client_factory
 
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
@@ -169,7 +168,6 @@ class SDKDependencies(object):
         default_session = authority_dependencies.default_session
         security_client = authority_dependencies.security_client
         device_client = authority_dependencies.device_client
-        key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
 
         archive_locator_factory = ArchiveLocatorFactory(
             default_session, security_client, device_client
@@ -177,6 +175,7 @@ class SDKDependencies(object):
 
         storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
         file_event_dependencies = FileEventDependencies(authority_dependencies)
+        key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
         ecm_dependencies = EmployeeCaseManagementDependencies(
             authority_dependencies, key_value_store_dependencies.key_value_store_client_factory
         )

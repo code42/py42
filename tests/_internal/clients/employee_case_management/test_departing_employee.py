@@ -93,12 +93,17 @@ class TestDepartingEmployeeClient(object):
             True,
             ["test.employee@microsoft.com"],
         )
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            mock_session.post.call_args[1]["data"]
-            == '{"userName": "test.employee@example.com", "tenantId": '
-            '"00000000-0000-0000-0000-000000000000", "notes": "These are notes", '
-            '"departureDate": "12-08-2023", "alertsEnabled": true, "cloudUsernames": '
-            '["test.employee@microsoft.com"]}'
+            posted_data["userName"] == "test.employee@example.com"
+            and posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["notes"] == "These are notes"
+            and posted_data["departureDate"] == "12-08-2023"
+            and posted_data["alertsEnabled"] == True
+            and posted_data["cloudUsernames"] == ["test.employee@microsoft.com"]
         )
 
     def test_create_departing_employee_posts_to_expected_url(
@@ -138,9 +143,13 @@ class TestDepartingEmployeeClient(object):
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
         client.resolve_departing_employee("999")
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            mock_session.post.call_args[1]["data"]
-            == '{"caseId": "999", "tenantId": "00000000-0000-0000-0000-000000000000"}'
+            posted_data["caseId"] == "999"
+            and posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
         )
 
     def test_resolve_departing_employee_posts_to_expected_url(
@@ -180,11 +189,17 @@ class TestDepartingEmployeeClient(object):
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
         client.get_all_departing_employees(None, 101, 2, "09-24-2023", "USERNAME", "ASC")
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            mock_session.post.call_args[1]["data"]
-            == '{"tenantId": "00000000-0000-0000-0000-000000000000", "pgSize": 101, "pgNum": '
-            '2, "departingOnOrAfter": "09-24-2023", "srtKey": "USERNAME", "srtDirection": '
-            '"ASC"}'
+            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["pgSize"] == 101
+            and posted_data["pgNum"] == 2
+            and posted_data["departingOnOrAfter"] == "09-24-2023"
+            and posted_data["srtKey"] == "USERNAME"
+            and posted_data["srtDirection"] == "ASC"
         )
 
     def test_get_all_departing_employees_posts_to_expected_url(
@@ -225,12 +240,21 @@ class TestDepartingEmployeeClient(object):
         self, mock_session, administration_client
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
-        client.search_departing_employees("EXFILTRATION_24_HOURS")
+        client.search_departing_employees(
+            "EXFILTRATION_24_HOURS", None, 200, 4, "test-on-or-after", "SORT KEY", "SORT DIRECTION"
+        )
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            mock_session.post.call_args[1]["data"]
-            == '{"tenantId": "00000000-0000-0000-0000-000000000000", "filterType": '
-            '"EXFILTRATION_24_HOURS", "pgSize": 1, "pgNum": 100, "departingOnOrAfter": '
-            'null, "srtKey": "CREATED_AT", "srtDirection": "DESC"}'
+            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["filterType"] == "EXFILTRATION_24_HOURS"
+            and posted_data["pgSize"] == 200
+            and posted_data["pgNum"] == 4
+            and posted_data["departingOnOrAfter"] == "test-on-or-after"
+            and posted_data["srtKey"] == "SORT KEY"
+            and posted_data["srtDirection"] == "SORT DIRECTION"
         )
 
     def test_search_departing_employees_posts_to_expected_url(
@@ -268,9 +292,13 @@ class TestDepartingEmployeeClient(object):
     def test_toggle_alerts_posts_expected_data(self, mock_session, administration_client):
         client = DepartingEmployeeClient(mock_session, administration_client)
         client.toggle_alerts()
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            mock_session.post.call_args[1]["data"]
-            == '{"tenantId": "00000000-0000-0000-0000-000000000000", "alertsEnabled": true}'
+            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["alertsEnabled"] == True
         )
 
     def test_toggle_alerts_posts_to_expected_url(self, mock_session, administration_client):
@@ -310,9 +338,13 @@ class TestDepartingEmployeeClient(object):
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
         client.get_case_by_username("test.example@example.com")
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            mock_session.post.call_args[1]["data"]
-            == '{"tenantId": "00000000-0000-0000-0000-000000000000", "caseId": "20"}'
+            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["caseId"] == "20"
         )
 
     def test_get_case_by_username_posts_to_expected_url(
@@ -352,9 +384,13 @@ class TestDepartingEmployeeClient(object):
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
         client.get_case_by_id("999")
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            mock_session.post.call_args[1]["data"]
-            == '{"tenantId": "00000000-0000-0000-0000-000000000000", "caseId": "999"}'
+            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["caseId"] == "999"
         )
 
     def test_get_case_by_id_posts_to_expected_url(
@@ -403,12 +439,19 @@ class TestDepartingEmployeeClient(object):
             "EXFILTRATION_24_HOURS",
             ["test@test.com"],
         )
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            mock_session.post.call_args[1]["data"]
-            == '{"tenantId": "00000000-0000-0000-0000-000000000000", "caseId": "697", '
-            '"displayName": "Display Name", "notes": "These are notes", "departureDate": '
-            '"12-12-2023", "alertsEnabled": false, "status": "EXFILTRATION_24_HOURS", '
-            '"cloudUsernames": ["test@test.com"]}'
+            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["caseId"] == "697"
+            and posted_data["displayName"] == "Display Name"
+            and posted_data["notes"] == "These are notes"
+            and posted_data["departureDate"] == "12-12-2023"
+            and posted_data["alertsEnabled"] == False
+            and posted_data["status"] == "EXFILTRATION_24_HOURS"
+            and posted_data["cloudUsernames"] == ["test@test.com"]
         )
 
     def test_update_case_uses_current_data_when_not_provided_uses_excluding_departure_date(
@@ -416,12 +459,19 @@ class TestDepartingEmployeeClient(object):
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
         client.update_case("20")
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            mock_session.post.call_args[1]["data"]
-            == '{"tenantId": "00000000-0000-0000-0000-000000000000", "caseId": "20", '
-            '"displayName": "Test Example", "notes": "", "departureDate": null, '
-            '"alertsEnabled": true, "status": "OPEN", "cloudUsernames": '
-            '["test.example@example.com"]}'
+            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["caseId"] == "20"
+            and posted_data["displayName"] == "Test Example"
+            and posted_data["notes"] == ""
+            and posted_data["departureDate"] is None
+            and posted_data["alertsEnabled"] == True
+            and posted_data["status"] == "OPEN"
+            and posted_data["cloudUsernames"] == ["test.example@example.com"]
         )
 
     def test_update_case_posts_to_expected_url(

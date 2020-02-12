@@ -241,7 +241,7 @@ class TestFileEventLoginProvider(object):
     ):
         with pytest.raises(Exception) as e:
             file_event_login_provider_no_sts.get_target_host_address()
-        expected_message = "stsBaseUrl not found. Cannot determine file event service host address."
+        expected_message = "stsBaseUrl not found."
         assert e.value.args[0] == expected_message
 
     def test_get_target_host_address_given_exception_retrieving_server_env_raises_exception(

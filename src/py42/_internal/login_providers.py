@@ -147,27 +147,50 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
 
 
 class FileEventLoginProvider(C42ApiV3TokenProvider):
-    def get_target_host_address(self):
-        # The forensic search base URL can be derived from the STS base URL, which is available from the
-        # /api/ServerEnv resource.
-        uri = u"/api/ServerEnv"
-        try:
-            response = self._auth_session.get(uri)
-        except Exception as ex:
-            message = (
-                u"An error occurred while requesting server environment information, caused by {0}"
-            )
-            message = message.format(ex)
-            raise Exception(message)
+    def __init__(self, auth_session):
+        super(FileEventLoginProvider, self).__init__(auth_session)
+        self._forensic_search_url = None
 
-        sts_base_url = None
-        if response.text:
-            response_json = json.loads(response.text)
-            if u"stsBaseUrl" in response_json:
-                sts_base_url = response_json[u"stsBaseUrl"]
-        if not sts_base_url:
-            raise Exception(
-                u"stsBaseUrl not found. Cannot determine file event service host address."
-            )
-        forensic_search_url = str(sts_base_url).replace(u"sts", u"forensicsearch")
-        return forensic_search_url
+    def get_target_host_address(self):
+        # HACK: The forensic search base URL can be derived from the STS base URL, which is
+        # available from the /api/ServerEnv resource.
+        if self._forensic_search_url is None:
+            sts_base_url = _get_sts_base_url(self._auth_session)
+            self._forensic_search_url = str(sts_base_url).replace(u"sts", u"forensicsearch")
+        return self._forensic_search_url
+
+
+class KeyValueStoreLoginProvider(LoginProvider):
+    def __init__(self, auth_session):
+        super(KeyValueStoreLoginProvider, self).__init__()
+        self._auth_session = auth_session
+        self._key_value_store_url = None
+
+    def get_target_host_address(self):
+        # HACK: The simple-key-value-store base URL can be derived from the STS base URL, which is
+        # available from the /api/ServerEnv resource.
+        if self._key_value_store_url is None:
+            sts_base_url = _get_sts_base_url(self._auth_session)
+            self._key_value_store_url = str(sts_base_url).replace(u"sts", u"simple-key-value-store")
+        return self._key_value_store_url
+
+
+def _get_sts_base_url(session):
+    uri = u"/api/ServerEnv"
+    try:
+        response = session.get(uri)
+    except Exception as ex:
+        message = (
+            u"An error occurred while requesting server environment information, caused by {0}"
+        )
+        message = message.format(ex)
+        raise Exception(message)
+
+    sts_base_url = None
+    if response.text:
+        response_json = json.loads(response.text)
+        if u"stsBaseUrl" in response_json:
+            sts_base_url = response_json[u"stsBaseUrl"]
+    if not sts_base_url:
+        raise Exception(u"stsBaseUrl not found.")
+    return sts_base_url

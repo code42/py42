@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from py42._internal.base_classes import BaseStorageClient
+from py42._internal.base_classes import BaseClient
 
 
-class StorageSecurityClient(BaseStorageClient):
+class StorageSecurityClient(BaseClient):
     def _get_security_detection_events(
         self,
         user_uid=None,
@@ -40,7 +40,7 @@ class StorageSecurityClient(BaseStorageClient):
             u"summarize": summarize,
         }
 
-        return self._session.get(uri, params=params)
+        return self._default_session.get(uri, params=params)
 
     def get_security_detection_events_for_plan(
         self,

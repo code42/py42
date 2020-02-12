@@ -176,7 +176,8 @@ class DepartingEmployeeClient(BaseClient):
 
     def _get_case_id_from_username(self, tenant_id, username):
         case = self._get_case_from_username(tenant_id, username)
-        return case.get(u"caseId")
+        if case is not None:
+            return case.get(u"caseId")
 
     def _get_case_from_username(self, tenant_id, username):
         return self._get_case_from_key(tenant_id, u"userName", username)

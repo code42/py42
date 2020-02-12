@@ -45,9 +45,9 @@ class SessionFactory(object):
     def create_key_value_store_session(self, key_value_store_login_provider):
         return self._create_session(self._session_impl, key_value_store_login_provider)
 
-    def create_ecm_session(self, detection_login_provider):
+    def create_ecm_session(self, ecm_login_provider):
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
-        return self._create_session(self._session_impl, detection_login_provider, header_modifier)
+        return self._create_session(self._session_impl, ecm_login_provider, header_modifier)
 
     def _create_session(self, session_impl, login_provider, modifier=None):
         handler = None

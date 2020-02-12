@@ -183,7 +183,7 @@ class EmployeeCaseManagementLoginProvider(C42ApiV3TokenProvider):
     def get_target_host_address(self):
         try:
             response = self._key_value_store_client.get_stored_value(
-                "employeecasemanagement-API_URL"
+                u"employeecasemanagement-API_URL"
             )
         except Exception as ex:
             message = u"An error occurred while requesting a URL from simple key value store"

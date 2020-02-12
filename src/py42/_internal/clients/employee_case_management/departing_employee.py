@@ -70,8 +70,8 @@ class DepartingEmployeeClient(BaseClient):
 
     def search_departing_employees(
         self,
+        filter_type,
         tenant_id=None,
-        filter_type="OPEN",
         page_size=1,
         page_num=100,
         departing_on_or_after=None,
@@ -115,16 +115,41 @@ class DepartingEmployeeClient(BaseClient):
         display_name=None,
         notes=None,
         departure_date=None,
-        alerts_enabled=True,
-        status="OPEN",
+        alerts_enabled=None,
+        status=None,
         cloud_usernames=None,
     ):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
-        display_name = (
-            display_name
-            if display_name
-            else self._get_display_name_from_case_id(tenant_id, case_id)
-        )
+
+        # The behavior of this API is to clear values that are not provided.
+        # Therefore, we check current values first as to prevent clearing them when not provided.
+        # departureDate is not cleared, however.
+
+        # Cannot use `self.get_case_by_id()` here because
+        # it does not include cloudUsername or departureDate
+        case = self._get_case_from_id(tenant_id, case_id)
+
+        if display_name is None:
+            display_name = case.get(u"displayName")
+
+        if notes is None:
+            notes = case.get(u"notes")
+
+        if departure_date is None:
+            departure_date = case.get(u"departureDate")
+
+        if alerts_enabled is None:
+            current_alerts_enabled = case.get(u"alertsEnabled")
+            alerts_enabled = current_alerts_enabled if current_alerts_enabled else True
+
+        if status is None:
+            current_status = case.get(u"status")
+            status = current_status if current_status else u"OPEN"
+
+        if cloud_usernames is None:
+            current_cloud_usernames = case.get(u"cloudUsernames")
+            cloud_usernames = current_cloud_usernames if current_cloud_usernames else []
+
         uri = self._get_uri(u"update")
         cloud_usernames = cloud_usernames if cloud_usernames else []
         data = {
@@ -150,17 +175,25 @@ class DepartingEmployeeClient(BaseClient):
         return self._tenant_id
 
     def _get_case_id_from_username(self, tenant_id, username):
-        response = self.get_all_departing_employees(tenant_id).text
-        cases = json.loads(response).get(u"cases")
-        for case in cases:
-            case_user = case.get(u"userName")
-            if case.get(u"type$") == u"DEPARTING_EMPLOYEE_CASE" and case_user == username:
-                return case.get(u"caseId")
+        case = self._get_case_from_username(tenant_id, username)
+        return case.get(u"caseId")
 
-    def _get_display_name_from_case_id(self, tenant_id, case_id):
-        response = self.get_all_departing_employees(tenant_id).text
-        cases = json.loads(response).get(u"cases")
+    def _get_case_from_username(self, tenant_id, username):
+        return self._get_case_from_key(tenant_id, u"userName", username)
+
+    def _get_case_from_id(self, tenant_id, case_id):
+        return self._get_case_from_key(tenant_id, u"caseId", case_id)
+
+    def _get_case_from_key(self, tenant_id, key, value_in_sought_case):
+        cases = self._get_all_departing_employees(tenant_id)
         for case in cases:
-            this_case_id = case.get(u"caseId")
-            if case.get(u"type$") == u"DEPARTING_EMPLOYEE_CASE" and this_case_id == case_id:
-                return case.get(u"displayName")
+            case_value = case.get(key)
+            if (
+                case.get(u"type$") == u"DEPARTING_EMPLOYEE_CASE"
+                and case_value == value_in_sought_case
+            ):
+                return case
+
+    def _get_all_departing_employees(self, tenant_id):
+        response = self.get_all_departing_employees(tenant_id).text
+        return json.loads(response).get(u"cases")

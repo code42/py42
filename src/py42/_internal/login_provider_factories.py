@@ -68,6 +68,4 @@ class EmployeeCaseManagementLoginProviderFactory(object):
 
     def create_ecm_login_provider(self):
         key_value_store_client = self._key_value_store_client_factory.get_key_value_store_client()
-        return EmployeeCaseManagementLoginProvider(
-            self._auth_session, key_value_store_client
-        )
+        return EmployeeCaseManagementLoginProvider(self._auth_session, key_value_store_client)

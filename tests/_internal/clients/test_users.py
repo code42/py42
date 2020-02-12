@@ -18,6 +18,7 @@ DEFAULT_GET_USERS_PARAMS = {
     "q": None,
 }
 
+
 class TestUserClient(object):
     @pytest.fixture
     def session(self, mocker):

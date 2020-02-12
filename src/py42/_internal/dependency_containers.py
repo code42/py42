@@ -182,5 +182,9 @@ class SDKDependencies(object):
         )
 
         return cls(
-            authority_dependencies, storage_dependencies, file_event_dependencies, key_value_store_dependencies, ecm_dependencies
+            authority_dependencies,
+            storage_dependencies,
+            file_event_dependencies,
+            key_value_store_dependencies,
+            ecm_dependencies,
         )

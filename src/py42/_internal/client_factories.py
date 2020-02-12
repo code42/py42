@@ -21,6 +21,7 @@ from py42._internal.login_provider_factories import (
     EmployeeCaseManagementLoginProviderFactory,
     KeyValueStoreLocatorFactory,
 )
+from py42._internal.clients.alerts import AlertClient
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 
@@ -114,4 +115,12 @@ class EmployeeCaseManagementClientFactory(object):
 
 
 class AlertClientFactory(object):
+    def __init__(self, session_factory, login_provider_factory):
+        # type: (SessionFactory, EmployeeCaseManagementLoginProviderFactory) -> None
+        self._session_factory = session_factory
+        self._login_provider_factory = login_provider_factory
 
+    def get_departing_employee_client(self):
+        login_provider = self._login_provider_factory.create_ecm_login_provider()
+        session = self._session_factory.create_alert_session(login_provider)
+        return AlertClient(session)

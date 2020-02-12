@@ -182,8 +182,24 @@ class AlertLoginProvider(C42ApiV3TokenProvider):
 
     def get_target_host_address(self):
         try:
+            response = self._key_value_store_client.get_stored_value(u"AlertService-API_URL")
+        except Exception as ex:
+            message = u"An error occurred while requesting a URL from simple key value store"
+            message = u"{0}, caused by {1}".format(message, ex)
+            raise Exception(message)
+
+        return response.text
+
+
+class EmployeeCaseManagementLoginProvider(C42ApiV3TokenProvider):
+    def __init__(self, auth_session, key_value_store_client):
+        super(EmployeeCaseManagementLoginProvider, self).__init__(auth_session)
+        self._key_value_store_client = key_value_store_client
+
+    def get_target_host_address(self):
+        try:
             response = self._key_value_store_client.get_stored_value(
-                u"AlertService-API_URL"
+                u"employeecasemanagement-API_URL"
             )
         except Exception as ex:
             message = u"An error occurred while requesting a URL from simple key value store"

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-from requests import Response
 
 from py42._internal.clients.users import UserClient
 from py42._internal.session import Py42Session
@@ -19,15 +18,8 @@ DEFAULT_GET_USERS_PARAMS = {
     "q": None,
 }
 
-MOCK_GET_USER_RESPONSE = """{
-  "data": {"totalCount": 3000, "users":[]} 
-}"""
-
 
 class TestUserClient(object):
-    def _mock_callback(self, response):
-        pass
-
     @pytest.fixture
     def session(self, mocker):
         return mocker.MagicMock(spec=Py42Session)
@@ -35,16 +27,6 @@ class TestUserClient(object):
     @pytest.fixture
     def v3_required_session(self, mocker):
         return mocker.MagicMock(spec=Py42Session)
-
-    @pytest.fixture
-    def mock_get_users(self, mocker):
-        def get_users(*args, **kwargs):
-            response = mocker.MagicMock(spec=Response)
-            response.status_code = 200
-            response.text = MOCK_GET_USER_RESPONSE
-            return response
-
-        return get_users
 
     def test_get_users_calls_get_with_uri_and_params(self, session, v3_required_session):
         client = UserClient(session, v3_required_session)

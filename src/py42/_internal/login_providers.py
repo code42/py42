@@ -177,7 +177,7 @@ class KeyValueStoreLoginProvider(LoginProvider):
 
 class EmployeeCaseManagementLoginProvider(C42ApiV3TokenProvider):
     def __init__(self, auth_session, key_value_store_client):
-        super().__init__(auth_session)
+        super(EmployeeCaseManagementLoginProvider, self).__init__(auth_session)
         self._key_value_store_client = key_value_store_client
 
     def get_target_host_address(self):

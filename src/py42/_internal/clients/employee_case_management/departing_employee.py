@@ -16,7 +16,7 @@ class DepartingEmployeeClient(BaseClient):
     _tenant_id = None
 
     def __init__(self, session, administration_client):
-        super().__init__(session)
+        super(DepartingEmployeeClient, self).__init__(session)
         self._administration = administration_client
 
     def create_departing_employee(

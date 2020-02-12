@@ -4,13 +4,6 @@ from py42._internal.base_classes import BaseClient
 from py42.util import get_obj_from_response
 
 
-class DepartingEmployeeFilterType(object):
-    OPEN = "OPEN"
-    LEAVING_TODAY = "LEAVING_TODAY"
-    EXFILTRATION_24_HOURS = "EXFILTRATION_24_HOURS"
-    EXFILTRATION_30_DAYS = "EXFILTRATION_30_DAYS"
-
-
 class DepartingEmployeeClient(BaseClient):
     _base_uri = "/svc/api/v1/departingemployee/"
     _tenant_id = None
@@ -60,29 +53,6 @@ class DepartingEmployeeClient(BaseClient):
         uri = self._get_uri(u"search")
         data = {
             u"tenantId": tenant_id,
-            u"pgSize": page_size,
-            u"pgNum": page_num,
-            u"departingOnOrAfter": departing_on_or_after,
-            u"srtKey": sort_key,
-            u"srtDirection": sort_direction,
-        }
-        return self._default_session.post(uri, data=json.dumps(data))
-
-    def search_departing_employees(
-        self,
-        filter_type,
-        tenant_id=None,
-        page_size=100,
-        page_num=1,
-        departing_on_or_after=None,
-        sort_key="CREATED_AT",
-        sort_direction="DESC",
-    ):
-        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
-        uri = self._get_uri(u"filteredsearch")
-        data = {
-            u"tenantId": tenant_id,
-            u"filterType": filter_type,
             u"pgSize": page_size,
             u"pgNum": page_num,
             u"departingOnOrAfter": departing_on_or_after,

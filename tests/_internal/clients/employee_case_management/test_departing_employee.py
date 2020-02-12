@@ -209,61 +209,6 @@ class TestDepartingEmployeeClient(object):
         client.get_all_departing_employees()
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/search"
 
-    def test_search_departing_employees_gets_tenant_id_from_administration_client_if_needed(
-        self, mock_session, administration_client
-    ):
-        client = DepartingEmployeeClient(mock_session, administration_client)
-        client._tenant_id = None  # Not needed, but just for clarity
-        client.search_departing_employees("EXFILTRATION_24_HOURS")
-        assert client._tenant_id == "00000000-0000-0000-0000-000000000000"
-
-    def test_search_departing_employees_uses_current_tenant_id_over_one_from_administration_client(
-        self, mock_session, administration_client
-    ):
-        client = DepartingEmployeeClient(mock_session, administration_client)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
-        client.search_departing_employees("EXFILTRATION_24_HOURS")
-        assert client._tenant_id == "11111111-1111-1111-1111-111111111111"
-
-    def test_search_departing_employees_uses_given_tenant_id_over_current_id(
-        self, mock_session, administration_client
-    ):
-        client = DepartingEmployeeClient(mock_session, administration_client)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
-        client.search_departing_employees(
-            "EXFILTRATION_24_HOURS", "22222222-2222-2222-2222-222222222222"
-        )
-        post_call_args = json.loads(mock_session.post.call_args[1]["data"])
-        assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
-
-    def test_search_departing_employees_posts_expected_data(
-        self, mock_session, administration_client
-    ):
-        client = DepartingEmployeeClient(mock_session, administration_client)
-        client.search_departing_employees(
-            "EXFILTRATION_24_HOURS", None, 200, 4, "test-on-or-after", "SORT KEY", "SORT DIRECTION"
-        )
-
-        # Have to convert the request data to a dict because
-        # older versions of Python don't have deterministic order.
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
-        assert (
-            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
-            and posted_data["filterType"] == "EXFILTRATION_24_HOURS"
-            and posted_data["pgSize"] == 200
-            and posted_data["pgNum"] == 4
-            and posted_data["departingOnOrAfter"] == "test-on-or-after"
-            and posted_data["srtKey"] == "SORT KEY"
-            and posted_data["srtDirection"] == "SORT DIRECTION"
-        )
-
-    def test_search_departing_employees_posts_to_expected_url(
-        self, mock_session, administration_client
-    ):
-        client = DepartingEmployeeClient(mock_session, administration_client)
-        client.search_departing_employees("EXFILTRATION_24_HOURS")
-        assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/filteredsearch"
-
     def test_toggle_alerts_gets_tenant_id_from_administration_client_if_needed(
         self, mock_session, administration_client
     ):

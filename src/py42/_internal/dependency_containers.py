@@ -3,6 +3,7 @@ from py42._internal.client_factories import (
     AuthorityClientFactory,
     FileEventClientFactory,
     StorageClientFactory,
+    KeyValueStoreClientFactory,
     AlertClientFactory,
 )
 from py42._internal.login_provider_factories import (
@@ -101,10 +102,10 @@ class FileEventDependencies(object):
 
 
 class AlertDependencies(object):
-    def __init__(self, authority_dependencies):
-        # type: (AuthorityDependencies) -> None
+    def __init__(self, authority_dependencies, key_value_store_client_factory):
+        # type: (AuthorityDependencies, KeyValueStoreClientFactory) -> None
         alert_login_provider_factory = AlertLoginProviderFactory(
-            authority_dependencies.root_session
+            authority_dependencies.root_session, key_value_store_client_factory
         )
         self.alert_client_factory = AlertClientFactory(
             authority_dependencies.session_factory, alert_login_provider_factory

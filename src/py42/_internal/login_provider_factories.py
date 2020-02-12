@@ -62,8 +62,10 @@ class KeyValueStoreLocatorFactory(object):
 
 
 class AlertLoginProviderFactory(object):
-    def __init__(self, auth_session):
+    def __init__(self, auth_session, key_value_store_client_factory):
         self._auth_session = auth_session
+        self._key_value_store_client_factory = key_value_store_client_factory
 
     def create_alert_locator(self):
-        return AlertLoginProvider(self._auth_session)
+        key_value_store_client = self._key_value_store_client_factory.get_key_value_store_client()
+        return AlertLoginProvider(self._auth_session, key_value_store_client)

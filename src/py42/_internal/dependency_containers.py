@@ -158,8 +158,6 @@ class SDKDependencies(object):
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
         file_event_client_factory = file_event_dependencies.file_event_client_factory
-        alert_client_factory = alert_dependencies.alert_client_factory
-        key_value_store_client_factory = key_value_store_dependencies.key_value_store_client_factory
 
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies

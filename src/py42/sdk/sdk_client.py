@@ -64,10 +64,9 @@ class SDK(object):
         return self._sdk_dependencies.security_module
 
     @property
-<<<<<<< HEAD
     def alerts(self):
         return self._sdk_dependencies.alert_client
-=======
+
+    @property
     def employee_case_management(self):
         return self._sdk_dependencies.employee_case_management_module
->>>>>>> feature/INTEG-865-departinge-employee

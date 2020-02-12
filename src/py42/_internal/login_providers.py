@@ -225,4 +225,3 @@ def _get_url_from_key_value_store(key_value_store, url_key):
         raise Exception(message)
 
     return response.text
-

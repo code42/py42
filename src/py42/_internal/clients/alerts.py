@@ -12,4 +12,5 @@ class AlertClient(BaseClient):
         pass
 
     def get_file_event_query_from_alert(self):
-        pass
+        uri = u"svc/api/v1/rules/query-rule-metadata"
+

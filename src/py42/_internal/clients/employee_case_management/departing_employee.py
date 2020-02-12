@@ -5,7 +5,7 @@ from py42.util import get_obj_from_response
 
 
 class DepartingEmployeeClient(BaseClient):
-    _base_uri = "/svc/api/v1/departingemployee/"
+    _base_uri = u"/svc/api/v1/departingemployee/"
     _tenant_id = None
 
     def __init__(self, session, administration_client):
@@ -46,8 +46,8 @@ class DepartingEmployeeClient(BaseClient):
         page_size=100,
         page_num=1,
         departing_on_or_after=None,
-        sort_key="CREATED_AT",
-        sort_direction="DESC",
+        sort_key=u"CREATED_AT",
+        sort_direction=u"DESC",
     ):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         uri = self._get_uri(u"search")

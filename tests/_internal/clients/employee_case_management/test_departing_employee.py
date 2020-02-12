@@ -419,9 +419,9 @@ class TestDepartingEmployeeClient(object):
         assert (
             mock_session.post.call_args[1]["data"]
             == '{"tenantId": "00000000-0000-0000-0000-000000000000", "caseId": "20", '
-               '"displayName": "Test Example", "notes": "", "departureDate": null, '
-               '"alertsEnabled": true, "status": "OPEN", "cloudUsernames": '
-               '["test.example@example.com"]}'
+            '"displayName": "Test Example", "notes": "", "departureDate": null, '
+            '"alertsEnabled": true, "status": "OPEN", "cloudUsernames": '
+            '["test.example@example.com"]}'
         )
 
     def test_update_case_posts_to_expected_url(

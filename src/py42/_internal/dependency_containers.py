@@ -135,10 +135,9 @@ class SDKDependencies(object):
         authority_dependencies,
         storage_dependencies,
         file_event_dependencies,
-        key_value_store_dependencies,
         employee_case_management_dependencies,
     ):
-        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, KeyValueStoreDependencies, EmployeeCaseManagementDependencies) -> None
+        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, EmployeeCaseManagementDependencies) -> None
         archive_client = authority_dependencies.archive_client
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
@@ -181,9 +180,5 @@ class SDKDependencies(object):
         )
 
         return cls(
-            authority_dependencies,
-            storage_dependencies,
-            file_event_dependencies,
-            key_value_store_dependencies,
-            ecm_dependencies,
+            authority_dependencies, storage_dependencies, file_event_dependencies, ecm_dependencies
         )

@@ -3,10 +3,12 @@ from py42._internal.client_factories import (
     AuthorityClientFactory,
     FileEventClientFactory,
     StorageClientFactory,
+    AlertClientFactory,
 )
 from py42._internal.login_provider_factories import (
     ArchiveLocatorFactory,
     FileEventLoginProviderFactory,
+    AlertLoginProviderFactory,
 )
 from py42._internal.modules import archive as archive_module, security as sec_module
 from py42._internal.session import Py42Session
@@ -31,6 +33,7 @@ class AuthorityDependencies(object):
         self.legal_hold_client = authority_client_factory.create_legal_hold_client()
         self.archive_client = authority_client_factory.create_archive_client()
         self.security_client = authority_client_factory.create_security_client()
+        self.alert_client = authority_client_factory.create_alert_client()
 
     def _set_sessions(self, session_factory, root_session):
         # type: (SessionFactory, Py42Session) -> None
@@ -97,6 +100,17 @@ class FileEventDependencies(object):
         )
 
 
+class AlertDependencies(object):
+    def __init__(self, authority_dependencies):
+        # type: (AuthorityDependencies) -> None
+        alert_login_provider_factory = AlertLoginProviderFactory(
+            authority_dependencies.root_session
+        )
+        self.alert_client_factory = AlertClientFactory(
+            authority_dependencies.session_factory, alert_login_provider_factory
+        )
+
+
 class SDKDependencies(object):
     def __init__(self, authority_dependencies, storage_dependencies, file_event_dependencies):
         # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies) -> None
@@ -104,6 +118,7 @@ class SDKDependencies(object):
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
         file_event_client_factory = file_event_dependencies.file_event_client_factory
+        alert_client_factory =
 
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
@@ -116,6 +131,7 @@ class SDKDependencies(object):
         self.security_module = sec_module.SecurityModule(
             security_client, storage_client_factory, file_event_client_factory
         )
+        self.alert_client = authority_dependencies.alert_client
 
     @classmethod
     def create_c42_api_dependencies(cls, session_factory, root_session):

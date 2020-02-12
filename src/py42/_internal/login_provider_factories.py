@@ -7,6 +7,7 @@ from py42._internal.login_providers import (
     C42APIStorageAuthTokenProvider,
     FileEventLoginProvider,
     KeyValueStoreLoginProvider,
+    AlertLoginProvider,
 )
 
 
@@ -58,3 +59,11 @@ class KeyValueStoreLocatorFactory(object):
 
     def create_key_value_store_locator(self):
         return KeyValueStoreLoginProvider(self._auth_session)
+
+
+class AlertLoginProviderFactory(object):
+    def __init__(self, auth_session):
+        self._auth_session = auth_session
+
+    def create_alert_locator(self):
+        return AlertLoginProvider(self._auth_session)

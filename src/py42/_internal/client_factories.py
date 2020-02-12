@@ -6,6 +6,7 @@ from py42._internal.clients import (
     orgs,
     security,
     users,
+    alerts,
 )
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.storage.storage import StorageClient
@@ -42,6 +43,9 @@ class AuthorityClientFactory(object):
 
     def create_security_client(self):
         return security.SecurityClient(self.default_session, self.v3_required_session)
+
+    def create_alert_client(self):
+        return alerts.AlertClient(self.default_session, self.v3_required_session)
 
 
 class StorageClientFactory(object):

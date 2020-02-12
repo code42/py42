@@ -61,3 +61,7 @@ class SDK(object):
     @property
     def security(self):
         return self._sdk_dependencies.security_module
+
+    @property
+    def alerts(self):
+        return self._sdk_dependencies.alert_client

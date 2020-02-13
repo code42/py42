@@ -1,7 +1,7 @@
 import pytest
 from requests import Response
 
-from py42._internal.clients.security import SecurityClient, get_normalized_security_event_plan_info
+from py42._internal.clients.security import SecurityClient
 
 USER_UID = "user-uid"
 
@@ -242,92 +242,92 @@ def security_client_two_plans_two_destinations_three_nodes(security_client, resp
     return security_client
 
 
-def test_get_normalized_security_event_plan_info_no_locations_response(security_client):
-    security_client.get_security_event_locations.return_value = None
-    plan_info = get_normalized_security_event_plan_info(security_client, USER_UID)
-    assert plan_info == {}
-
-
-def test_get_normalized_security_event_plan_info_one_location(security_client_one_location):
-    plan_info = get_normalized_security_event_plan_info(security_client_one_location, USER_UID)
-    expected = {"111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}]}
-    assert plan_info == expected
-
-
-def test_get_normalized_security_event_plan_info_two_plans_one_node(
-    security_client_two_plans_one_node,
-):
-    plan_info = get_normalized_security_event_plan_info(
-        security_client_two_plans_one_node, USER_UID
-    )
-    expected = {
-        "111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}],
-        "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "41"}],
-    }
-    assert plan_info == expected
-
-
-def test_get_normalized_security_event_plan_info_two_plans_two_nodes(
-    security_client_two_plans_two_nodes,
-):
-    plan_info = get_normalized_security_event_plan_info(
-        security_client_two_plans_two_nodes, USER_UID
-    )
-    expected = {
-        "111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}],
-        "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "42"}],
-    }
-    assert plan_info == expected
-
-
-def test_get_normalized_security_event_plan_info_one_plan_two_destinations(
-    security_client_one_plan_two_destinations,
-):
-    plan_info = get_normalized_security_event_plan_info(
-        security_client_one_plan_two_destinations, USER_UID
-    )
-    expected = {
-        "111111111111111111": [
-            {"destinationGuid": "4", "nodeGuid": "41"},
-            {"destinationGuid": "5", "nodeGuid": "51"},
-        ]
-    }
-    assert plan_info == expected
-
-
-def test_get_normalized_security_event_plan_info_two_plans_two_destinations(
-    security_client_two_plans_two_destinations,
-):
-    plan_info = get_normalized_security_event_plan_info(
-        security_client_two_plans_two_destinations, USER_UID
-    )
-    expected = {
-        "111111111111111111": [
-            {"destinationGuid": "4", "nodeGuid": "41"},
-            {"destinationGuid": "5", "nodeGuid": "51"},
-        ],
-        "222222222222222222": [
-            {"destinationGuid": "4", "nodeGuid": "41"},
-            {"destinationGuid": "5", "nodeGuid": "51"},
-        ],
-    }
-    assert plan_info == expected
-
-
-def test_get_normalized_security_event_plan_info_two_plans_two_destinations_three_nodes(
-    security_client_two_plans_two_destinations_three_nodes,
-):
-    plan_info = get_normalized_security_event_plan_info(
-        security_client_two_plans_two_destinations_three_nodes, USER_UID
-    )
-    expected = {
-        "111111111111111111": [
-            {"destinationGuid": "4", "nodeGuid": "41"},
-            {"destinationGuid": "5", "nodeGuid": "51"},
-        ],
-        "222222222222222222": [
-            {"destinationGuid": "4", "nodeGuid": "41"},
-            {"destinationGuid": "5", "nodeGuid": "52"},
-        ],
-    }
-    assert plan_info == expected
+# def test_get_normalized_security_event_plan_info_no_locations_response(security_client):
+#     security_client.get_security_event_locations.return_value = None
+#     plan_info = get_normalized_security_event_plan_info(security_client, USER_UID)
+#     assert plan_info == {}
+#
+#
+# def test_get_normalized_security_event_plan_info_one_location(security_client_one_location):
+#     plan_info = get_normalized_security_event_plan_info(security_client_one_location, USER_UID)
+#     expected = {"111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}]}
+#     assert plan_info == expected
+#
+#
+# def test_get_normalized_security_event_plan_info_two_plans_one_node(
+#     security_client_two_plans_one_node,
+# ):
+#     plan_info = get_normalized_security_event_plan_info(
+#         security_client_two_plans_one_node, USER_UID
+#     )
+#     expected = {
+#         "111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}],
+#         "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "41"}],
+#     }
+#     assert plan_info == expected
+#
+#
+# def test_get_normalized_security_event_plan_info_two_plans_two_nodes(
+#     security_client_two_plans_two_nodes,
+# ):
+#     plan_info = get_normalized_security_event_plan_info(
+#         security_client_two_plans_two_nodes, USER_UID
+#     )
+#     expected = {
+#         "111111111111111111": [{"destinationGuid": "4", "nodeGuid": "41"}],
+#         "222222222222222222": [{"destinationGuid": "4", "nodeGuid": "42"}],
+#     }
+#     assert plan_info == expected
+#
+#
+# def test_get_normalized_security_event_plan_info_one_plan_two_destinations(
+#     security_client_one_plan_two_destinations,
+# ):
+#     plan_info = get_normalized_security_event_plan_info(
+#         security_client_one_plan_two_destinations, USER_UID
+#     )
+#     expected = {
+#         "111111111111111111": [
+#             {"destinationGuid": "4", "nodeGuid": "41"},
+#             {"destinationGuid": "5", "nodeGuid": "51"},
+#         ]
+#     }
+#     assert plan_info == expected
+#
+#
+# def test_get_normalized_security_event_plan_info_two_plans_two_destinations(
+#     security_client_two_plans_two_destinations,
+# ):
+#     plan_info = get_normalized_security_event_plan_info(
+#         security_client_two_plans_two_destinations, USER_UID
+#     )
+#     expected = {
+#         "111111111111111111": [
+#             {"destinationGuid": "4", "nodeGuid": "41"},
+#             {"destinationGuid": "5", "nodeGuid": "51"},
+#         ],
+#         "222222222222222222": [
+#             {"destinationGuid": "4", "nodeGuid": "41"},
+#             {"destinationGuid": "5", "nodeGuid": "51"},
+#         ],
+#     }
+#     assert plan_info == expected
+#
+#
+# def test_get_normalized_security_event_plan_info_two_plans_two_destinations_three_nodes(
+#     security_client_two_plans_two_destinations_three_nodes,
+# ):
+#     plan_info = get_normalized_security_event_plan_info(
+#         security_client_two_plans_two_destinations_three_nodes, USER_UID
+#     )
+#     expected = {
+#         "111111111111111111": [
+#             {"destinationGuid": "4", "nodeGuid": "41"},
+#             {"destinationGuid": "5", "nodeGuid": "51"},
+#         ],
+#         "222222222222222222": [
+#             {"destinationGuid": "4", "nodeGuid": "41"},
+#             {"destinationGuid": "5", "nodeGuid": "52"},
+#         ],
+#     }
+#     assert plan_info == expected

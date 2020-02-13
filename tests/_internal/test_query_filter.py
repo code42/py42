@@ -7,7 +7,7 @@ from py42._internal.query_filter import (
     create_eq_filter_group,
     create_query_filter,
     create_filter_group,
-    create_between_filter_group,
+    create_in_range_filter_group,
     create_is_in_filter_group,
     create_not_eq_filter_group,
     create_not_in_filter_group,
@@ -160,12 +160,12 @@ def test_create_on_or_after_filter_group_calls_create_query_filter_with_correct_
     )
 
 
-def test_create_between_filter_group_calls_create_query_filter_with_correct_values(mocker):
+def test_create_in_range_filter_group_calls_create_query_filter_with_correct_values(mocker):
     mocker.patch("py42._internal.query_filter.create_query_filter")
-    term = "test_between_term"
+    term = "test_in_range_term"
     start_time = "start_time"
     end_time = "end_time"
-    create_between_filter_group(term, start_time, end_time)
+    create_in_range_filter_group(term, start_time, end_time)
     calls = [
         mocker.call(term, "ON_OR_BEFORE", end_time),
         mocker.call(term, "ON_OR_AFTER", start_time),
@@ -226,8 +226,8 @@ def test_create_on_or_before_filter_group_returns_obj_with_correct_json_represen
     )
 
 
-def test_create_between_filter_group_returns_obj_with_correct_json_representation():
-    filter_group = create_between_filter_group("rangeterm", "beforevalue", "aftervalue")
+def test_create_in_range_filter_group_returns_obj_with_correct_json_representation():
+    filter_group = create_in_range_filter_group("rangeterm", "beforevalue", "aftervalue")
     assert (
         str(filter_group) == '{"filterClause":"AND",'
         ' "filters":[{"operator":"ON_OR_AFTER", "term":"rangeterm", "value":"beforevalue"},'

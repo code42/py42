@@ -468,13 +468,13 @@ def test_event_timestamp_on_or_before_sets_filter_properties_correctly(on_or_bef
     on_or_before_filter_creator.assert_called_once_with("eventTimestamp", formatted)
 
 
-def test_event_timestamp_between_sets_filter_properties_correctly(between_filter_creator):
+def test_event_timestamp_in_range_sets_filter_properties_correctly(in_range_filter_creator):
     test_before_time = time()
     test_after_time = time() + 30  # make sure timestamps are actually different
     formatted_before = format_timestamp(test_before_time)
     formatted_after = format_timestamp(test_after_time)
-    EventTimestamp.between(test_before_time, test_after_time)
-    between_filter_creator.assert_called_once_with(
+    EventTimestamp.in_range(test_before_time, test_after_time)
+    in_range_filter_creator.assert_called_once_with(
         "eventTimestamp", formatted_before, formatted_after
     )
 
@@ -497,18 +497,37 @@ def test_insertion_timestamp_on_or_before_sets_filter_properties_correctly(
     on_or_before_filter_creator.assert_called_once_with("insertionTimestamp", formatted)
 
 
-def test_insertion_timestamp_between_sets_filter_properties_correctly(between_filter_creator):
+def test_insertion_timestamp_in_range_sets_filter_properties_correctly(in_range_filter_creator):
     test_before_time = time()
     test_after_time = time() + 30  # make sure timestamps are actually different
     formatted_before = format_timestamp(test_before_time)
     formatted_after = format_timestamp(test_after_time)
-    InsertionTimestamp.between(test_before_time, test_after_time)
-    between_filter_creator.assert_called_once_with(
+    InsertionTimestamp.in_range(test_before_time, test_after_time)
+    in_range_filter_creator.assert_called_once_with(
+        "insertionTimestamp", formatted_before, formatted_after
+    )
+
+
+def test_insertion_timestamp_on_sets_filter_properties_correctly(in_range_filter_creator):
+    test_time = time()
+    test_date = datetime.utcfromtimestamp(test_time)
+    start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
+    end_time = datetime(test_date.year, test_date.month, test_date.day, 0, 23, 59)
+    formatted_before = format_datetime(start_time)
+    formatted_after = format_datetime(end_time)
+
+    InsertionTimestamp.on(test_time)
+    in_range_filter_creator.assert_called_once_with(
         "insertionTimestamp", formatted_before, formatted_after
     )
 
 
 def format_timestamp(test_time):
-    prefix = datetime.utcfromtimestamp(test_time).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
+    test_date = datetime.utcfromtimestamp(test_time)
+    return format_datetime(test_date)
+
+
+def format_datetime(test_date):
+    prefix = test_date.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
     timestamp_str = "{0}Z".format(prefix)
     return timestamp_str

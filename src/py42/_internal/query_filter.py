@@ -39,7 +39,7 @@ def create_on_or_before_filter_group(term, value):
     return create_filter_group(filter_list, u"AND")
 
 
-def create_between_filter_group(term, start_value, end_value):
+def create_in_range_filter_group(term, start_value, end_value):
     filter_list = [
         create_query_filter(term, u"ON_OR_AFTER", start_value),
         create_query_filter(term, u"ON_OR_BEFORE", end_value),
@@ -54,6 +54,16 @@ def create_exists_filter_group(term):
 
 def create_not_exists_filter_group(term):
     filter_list = [create_query_filter(term, u"DOES_NOT_EXIST")]
+    return create_filter_group(filter_list, u"AND")
+
+
+def create_contains_group(term):
+    filter_list = [create_query_filter(term, u"CONTAINS")]
+    return create_filter_group(filter_list, u"AND")
+
+
+def create_not_contains_group(term):
+    filter_list = [create_query_filter(term, u"DOES_NOT_CONTAIN")]
     return create_filter_group(filter_list, u"AND")
 
 
@@ -100,7 +110,7 @@ class _QueryFilterTimestampField(object):
     def _to_timestamp_string(timestamp):
         # "2018-12-01T00:00:00.000Z"
         prefix = datetime.utcfromtimestamp(timestamp).strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
-        return "{0}Z".format(prefix)
+        return u"{0}Z".format(prefix)
 
     @classmethod
     def on_or_after(cls, value):
@@ -113,10 +123,19 @@ class _QueryFilterTimestampField(object):
         return create_on_or_before_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
-    def between(cls, start_value, end_value):
+    def in_range(cls, start_value, end_value):
         formatted_start_time = cls._to_timestamp_string(start_value)
         formatted_end_time = cls._to_timestamp_string(end_value)
-        return create_between_filter_group(cls._term, formatted_start_time, formatted_end_time)
+        return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
+
+    @classmethod
+    def on(cls, value):
+        date_from_value = datetime.utcfromtimestamp(value)
+        start_time = datetime(date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0)
+        end_time = datetime(date_from_value.year, date_from_value.month, date_from_value.day, 0, 23, 59)
+        formatted_start_time = u"{0}Z".format(start_time.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3])
+        formatted_end_time = u"{0}Z".format(end_time.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3])
+        return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
 
 
 class QueryFilter(object):

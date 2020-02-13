@@ -76,8 +76,8 @@ def on_or_before_filter_creator(mocker):
 
 
 @pytest.fixture
-def between_filter_creator(mocker):
-    return mocker.patch(create_filter_creator_path("between"))
+def in_range_filter_creator(mocker):
+    return mocker.patch(create_filter_creator_path("in_range"))
 
 
 def create_filter_creator_path(query_filter_string):

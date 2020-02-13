@@ -5,7 +5,7 @@ from requests import HTTPError, Response, Session
 from requests.cookies import RequestsCookieJar
 
 from py42._internal.auth_handling import AuthHandler
-from py42._internal.file_event_filter import FileEventFilter
+from py42._internal.query_filter import QueryFilter
 from py42._internal.session import Py42Session
 
 HOST_ADDRESS = "http://example.com"
@@ -96,18 +96,18 @@ def exception():
 
 
 @pytest.fixture
-def file_event_filter_list(file_event_filter):
-    return [file_event_filter for _ in range(3)]
+def query_filter_list(query_filter):
+    return [query_filter for _ in range(3)]
 
 
 @pytest.fixture
-def file_event_filter():
-    return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+def query_filter():
+    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
 
 
 @pytest.fixture
-def unicode_file_event_filter():
-    return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
+def unicode_query_filter():
+    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
 
 
 @pytest.fixture

@@ -2,7 +2,7 @@
 
 import pytest
 
-from py42._internal.file_event_filter import FileEventFilter, FilterGroup
+from py42._internal.query_filter import QueryFilter, FilterGroup
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
@@ -11,13 +11,13 @@ VALUE_UNICODE = u"您已经发现了秘密信息"
 
 
 @pytest.fixture
-def event_filter_group(file_event_filter):
-    return FilterGroup([file_event_filter])
+def event_filter_group(query_filter):
+    return FilterGroup([query_filter])
 
 
 @pytest.fixture
-def unicode_event_filter_group(unicode_file_event_filter):
-    return FilterGroup([unicode_file_event_filter])
+def unicode_event_filter_group(unicode_query_filter):
+    return FilterGroup([unicode_query_filter])
 
 
 @pytest.fixture
@@ -26,13 +26,13 @@ def event_filter_group_list(event_filter_group):
 
 
 @pytest.fixture
-def file_event_filter():
-    return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+def query_filter():
+    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
 
 
 @pytest.fixture
-def unicode_file_event_filter():
-    return FileEventFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
+def unicode_query_filter():
+    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
 
 
 @pytest.fixture
@@ -81,4 +81,4 @@ def in_range_filter_creator(mocker):
 
 
 def create_filter_creator_path(query_filter_string):
-    return "py42._internal.file_event_filter.create_{0}_filter_group".format(query_filter_string)
+    return "py42._internal.query_filter.create_{0}_filter_group".format(query_filter_string)

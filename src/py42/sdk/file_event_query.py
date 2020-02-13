@@ -1,53 +1,54 @@
 # -*- coding: utf-8 -*-
-
+from py42._internal.base_classes import BaseQuery
 from py42._internal.compat import str
-from py42._internal.file_event_filter import (
-    _FileEventFilterStringField,
-    _FileEventFilterTimestampField,
+from py42._internal.query_filter import (
+    _QueryFilterStringField,
+    _QueryFilterTimestampField,
+    FilterGroup
 )
 
 
-class MD5(_FileEventFilterStringField):
+class MD5(_QueryFilterStringField):
     _term = u"md5Checksum"
 
 
-class SHA256(_FileEventFilterStringField):
+class SHA256(_QueryFilterStringField):
     _term = u"sha256Checksum"
 
 
-class OSHostname(_FileEventFilterStringField):
+class OSHostname(_QueryFilterStringField):
     _term = u"osHostName"
 
 
-class DeviceUsername(_FileEventFilterStringField):
+class DeviceUsername(_QueryFilterStringField):
     _term = u"deviceUserName"
 
 
-class FileName(_FileEventFilterStringField):
+class FileName(_QueryFilterStringField):
     _term = u"fileName"
 
 
-class FilePath(_FileEventFilterStringField):
+class FilePath(_QueryFilterStringField):
     _term = u"filePath"
 
 
-class PublicIPAddress(_FileEventFilterStringField):
+class PublicIPAddress(_QueryFilterStringField):
     _term = u"publicIpAddress"
 
 
-class PrivateIPAddress(_FileEventFilterStringField):
+class PrivateIPAddress(_QueryFilterStringField):
     _term = u"privateIpAddresses"
 
 
-class EventTimestamp(_FileEventFilterTimestampField):
+class EventTimestamp(_QueryFilterTimestampField):
     _term = u"eventTimestamp"
 
 
-class InsertionTimestamp(_FileEventFilterTimestampField):
+class InsertionTimestamp(_QueryFilterTimestampField):
     _term = u"insertionTimestamp"
 
 
-class EventType(_FileEventFilterStringField):
+class EventType(_QueryFilterStringField):
     _term = u"eventType"
 
     class EventTypeEnum(object):
@@ -83,7 +84,7 @@ class EventType(_FileEventFilterStringField):
         return super(EventType, cls).not_in([str(value) for value in value_list])
 
 
-class ExposureType(_FileEventFilterStringField):
+class ExposureType(_QueryFilterStringField):
     _term = u"exposure"
 
     class ExposureTypeEnum(object):
@@ -121,34 +122,5 @@ class ExposureType(_FileEventFilterStringField):
         return super(ExposureType, cls).not_in([str(value) for value in value_list])
 
 
-class FileEventQuery(object):
-    def __init__(self, *args, **kwargs):
-        # type: (iter[FilterGroup], any) -> None
-        self._filter_group_list = list(args)
-        self._group_clause = kwargs.get(u"group_clause", u"AND")
-        self.page_number = 1
-        self.page_size = 100
-        self.sort_direction = u"asc"
-        self.sort_key = u"eventId"
-
-    def __str__(self):
-        groups_string = ",".join(str(group_item) for group_item in self._filter_group_list)
-        json = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'.format(
-            self._group_clause,
-            groups_string,
-            self.page_number,
-            self.page_size,
-            self.sort_direction,
-            self.sort_key,
-        )
-        return json
-
-    @classmethod
-    def any(cls, *args):
-        # type: (iter[FilterGroup]) -> FileEventQuery
-        return cls(*args, group_clause=u"OR")
-
-    @classmethod
-    def all(cls, *args):
-        # type: (iter[FilterGroup]) -> FileEventQuery
-        return cls(*args)
+class FileEventQuery(BaseQuery):
+    pass

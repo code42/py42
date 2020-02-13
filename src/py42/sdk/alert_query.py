@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
 from py42._internal.base_classes import BaseQuery
 from py42._internal.query_filter import (
     _QueryFilterStringField,
     _QueryFilterTimestampField,
 )
-from py42.util import get_obj_from_response
 
 
 class DateObserved(_QueryFilterTimestampField):
@@ -68,4 +68,3 @@ class AlertQueryFactory(object):
         if self._tenant_id is None:
             self._tenant_id = self._administration.get_current_tenant_id()
         return self._tenant_id
-

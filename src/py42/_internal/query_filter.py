@@ -39,7 +39,7 @@ def create_on_or_before_filter_group(term, value):
     return create_filter_group(filter_list, u"AND")
 
 
-def create_in_range_filter_group(term, start_value, end_value):
+def create_between_filter_group(term, start_value, end_value):
     filter_list = [
         create_query_filter(term, u"ON_OR_AFTER", start_value),
         create_query_filter(term, u"ON_OR_BEFORE", end_value),
@@ -113,10 +113,10 @@ class _QueryFilterTimestampField(object):
         return create_on_or_before_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
-    def in_range(cls, start_value, end_value):
+    def between(cls, start_value, end_value):
         formatted_start_time = cls._to_timestamp_string(start_value)
         formatted_end_time = cls._to_timestamp_string(end_value)
-        return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
+        return create_between_filter_group(cls._term, formatted_start_time, formatted_end_time)
 
 
 class QueryFilter(object):

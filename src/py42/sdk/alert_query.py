@@ -1,5 +1,4 @@
 from py42._internal.base_classes import BaseQuery
-from py42._internal.clients.administration import AdministrationClient
 from py42._internal.query_filter import (
     _QueryFilterStringField,
     _QueryFilterTimestampField,
@@ -37,6 +36,9 @@ class AlertQuery(BaseQuery):
         self._tenant_id = tenant_id
         self.sort_key = u"CreatedAt"
 
+        # For alerts, page numbers begin at 0, counter to file event queries
+        self.page_number = 0
+
     def __str__(self):
         groups_string = u",".join(str(group_item) for group_item in self._filter_group_list)
         json = u'{{"tenantId":"{0}", "groupClause":"{1}", "groups":[{2}], "pgNum":{3}, "pgSize":{4}, "srtDir":"{5}", "srtKey":"{6}"}}'.format(
@@ -52,19 +54,18 @@ class AlertQuery(BaseQuery):
 
 
 class AlertQueryFactory(object):
+    """Abstracts away having to get the tenant ID when creating queries"""
     _tenant_id = None
 
     def __init__(self, administration_client):
-        # type: (AlertQueryFactory, AdministrationClient) -> None
         self._administration = administration_client
 
-    def create_alert_for_current_tenant(self, *args, **kwargs):
+    def create_query_for_current_tenant(self, *args, **kwargs):
         tenant_id = self._get_current_tenant_id()
         return AlertQuery(tenant_id, *args, **kwargs)
 
     def _get_current_tenant_id(self):
         if self._tenant_id is None:
-            response = self._administration.get_current_tenant()
-            tenant = get_obj_from_response(response, u"data")
-            self._tenant_id = tenant.get(u"tenantUid")
+            self._tenant_id = self._administration.get_current_tenant_id()
         return self._tenant_id
+

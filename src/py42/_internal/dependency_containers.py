@@ -18,12 +18,10 @@ from py42._internal.modules import (
     archive as archive_module,
     security as sec_module,
     employee_case_management as ecm_module,
-    alerts as alert_module,
 )
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
-from py42.sdk.alert_query import AlertQueryFactory
 
 
 class AuthorityDependencies(object):
@@ -112,16 +110,15 @@ class FileEventDependencies(object):
 class AlertDependencies(object):
     def __init__(self, authority_dependencies, key_value_store_client_factory):
         # type: (AuthorityDependencies, KeyValueStoreClientFactory) -> None
-        administration = authority_dependencies.administration_client
         alert_login_provider_factory = AlertLoginProviderFactory(
             authority_dependencies.root_session, key_value_store_client_factory
         )
         alert_client_factory = AlertClientFactory(
             authority_dependencies.session_factory,
             alert_login_provider_factory,
+            authority_dependencies.administration_client,
         )
         self.alert_client = alert_client_factory.get_alert_client()
-        self.alert_query_factory = AlertQueryFactory(administration)
 
 
 class KeyValueStoreDependencies(object):
@@ -179,7 +176,6 @@ class SDKDependencies(object):
         self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
             self.ecm_dependencies.employee_case_management_client_factory
         )
-        self.alert_module = alert_module.AlertModule(alert_dependencies)
 
     @classmethod
     def create_c42_api_dependencies(cls, session_factory, root_session):

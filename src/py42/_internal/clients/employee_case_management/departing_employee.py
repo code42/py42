@@ -1,7 +1,6 @@
 import json
 
 from py42._internal.base_classes import BaseClient
-from py42.util import get_obj_from_response
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -139,9 +138,7 @@ class DepartingEmployeeClient(BaseClient):
 
     def _get_current_tenant_id(self):
         if self._tenant_id is None:
-            response = self._administration.get_current_tenant()
-            tenant = get_obj_from_response(response, u"data")
-            self._tenant_id = tenant.get(u"tenantUid")
+            self._tenant_id = self._administration.get_current_tenant_id()
         return self._tenant_id
 
     def _get_case_id_from_username(self, tenant_id, username):

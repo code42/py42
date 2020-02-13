@@ -14,16 +14,7 @@ class TestDepartingEmployeeClient(object):
     @pytest.fixture
     def administration_client(self, mocker):
         client = mocker.MagicMock(spec=AdministrationClient)
-        response = mocker.MagicMock(spec=Response)
-        response.text = (
-            '{"data":{"name":"Some SaaS Cloud","registrationKey":"0000000000000000",'
-            '"deploymentModel":"PUBLIC","maintenanceMode":false,'
-            '"tenantUid":"00000000-0000-0000-0000-000000000000",'
-            '"masterServicesAgreement":{"accepted":true,"acceptanceRequired":false}},'
-            '"error":null,"warnings":null}'
-        )
-        response.status_code = 200
-        client.get_current_tenant.return_value = response
+        client.get_current_tenant_id.return_value = "00000000-0000-0000-0000-000000000000"
         return client
 
     @pytest.fixture

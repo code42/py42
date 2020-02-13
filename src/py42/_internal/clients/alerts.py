@@ -30,6 +30,12 @@ class AlertClient(BaseClient):
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
         return self._default_session.post(uri, json.dumps(data))
 
+    def reopen_alert(self, alert_ids, tenant_id=None, reason=None):
+        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
+        uri = self._get_uri(u"reopen-alert")
+        data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
+        return self._default_session.post(uri, json.dumps(data))
+
     def _get_uri(self, resource_name):
         return u"{0}{1}".format(self._base_uri, resource_name)
 

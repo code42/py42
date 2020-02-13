@@ -5,7 +5,7 @@ from py42.util import get_obj_from_response
 
 
 class AlertClient(BaseClient):
-    _base_uri = u"/svc/api/v1/rules/"
+    _base_uri = u"/svc/api/v1/"
     _tenant_id = None
 
     def __init__(self, session, administration_client):
@@ -17,14 +17,15 @@ class AlertClient(BaseClient):
         tenant_id=None,
         groups=None,
         group_clause=u"AND",
-        page_num=0,
-        page_size=100,
+        page_num=1,
+        page_size=10,
         sort_key=u"CreatedAt",
-        sort_direction=u"DESC"
+        sort_direction=u"DESC",
     ):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         groups = groups if groups else []
-        uri = self._get_uri(u"query-rule-metadata")
+        uri = self._get_uri(u"query-alerts")
+
         data = {
             u"tenantId": tenant_id,
             u"groups": groups,
@@ -32,7 +33,8 @@ class AlertClient(BaseClient):
             u"pgNum": page_num,
             u"pgSize": page_size,
             u"srtKey": sort_key,
-            u"srtDirection": sort_direction}
+            u"srtDirection": sort_direction,
+        }
         return self._default_session.post(uri, data=json.dumps(data))
 
     def resolve_alert(self):
@@ -48,4 +50,7 @@ class AlertClient(BaseClient):
             self._tenant_id = tenant.get(u"tenantUid")
         return self._tenant_id
 
-
+    @staticmethod
+    def _get_default_query():
+        _filter = {u"term": u"State", u"operator": u"IS", u"value": u"OPEN"}
+        return [{u"filters": [_filter], u"filterClause": u"AND"}]

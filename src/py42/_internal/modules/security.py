@@ -105,7 +105,9 @@ class SecurityModule(object):
             client = self._storage_client_factory.get_storage_client_from_plan_uid(
                 plan_storage_info.plan_uid, plan_storage_info.destination_guid
             ).security
-            self._client_cache.update({plan_storage_info.node_guid: client})
+
+            with self._client_cache_lock:
+                self._client_cache.update({plan_storage_info.node_guid: client})
 
         return client
 

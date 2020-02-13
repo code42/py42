@@ -1,4 +1,3 @@
-from py42._internal.compat import str
 from py42._internal.query_filter import FilterGroup
 
 
@@ -23,18 +22,6 @@ class BaseQuery(object):
         self.page_size = 100
         self.sort_direction = u"asc"
         self.sort_key = u"eventId"
-
-    def __str__(self):
-        groups_string = u",".join(str(group_item) for group_item in self._filter_group_list)
-        json = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'.format(
-            self._group_clause,
-            groups_string,
-            self.page_number,
-            self.page_size,
-            self.sort_direction,
-            self.sort_key,
-        )
-        return json
 
     @classmethod
     def any(cls, *args):

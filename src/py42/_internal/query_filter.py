@@ -120,7 +120,6 @@ class _QueryFilterTimestampField(object):
 
 
 class QueryFilter(object):
-
     _term = None
 
     def __init__(self, term, operator, value=None):

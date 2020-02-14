@@ -7,7 +7,7 @@ from py42._internal.clients import (
     security,
     users,
 )
-from py42._internal.customer import Customer
+from py42._internal.user_context import UserContext
 from py42._internal.clients.employee_case_management.departing_employee import (
     DepartingEmployeeClient,
 )
@@ -100,7 +100,7 @@ class KeyValueStoreClientFactory(object):
 
 class EmployeeCaseManagementClientFactory(object):
     def __init__(self, session_factory, login_provider_factory, customer):
-        # type: (SessionFactory, EmployeeCaseManagementLoginProviderFactory, Customer) -> None
+        # type: (SessionFactory, EmployeeCaseManagementLoginProviderFactory, UserContext) -> None
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
         self._customer = customer
@@ -113,7 +113,7 @@ class EmployeeCaseManagementClientFactory(object):
 
 class AlertClientFactory(object):
     def __init__(self, session_factory, login_provider_factory, customer):
-        # type: (SessionFactory, AlertLoginProviderFactory, Customer) -> None
+        # type: (SessionFactory, AlertLoginProviderFactory, UserContext) -> None
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
         self._customer = customer

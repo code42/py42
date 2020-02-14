@@ -6,11 +6,10 @@ from py42._internal.base_classes import BaseClient
 
 class AlertClient(BaseClient):
     _uri_prefix = u"/svc/api/v1/{0}"
-    _tenant_id = None
 
-    def __init__(self, session, customer):
+    def __init__(self, session, user_context):
         super(AlertClient, self).__init__(session)
-        self._customer = customer
+        self._user_context = user_context
 
     def search_alerts(self, query):
         query = str(query)
@@ -24,19 +23,14 @@ class AlertClient(BaseClient):
         return self._default_session.post(uri, data=json.dumps(data))
 
     def resolve_alert(self, alert_ids, tenant_id=None, reason=None):
-        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
+        tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         reason = reason if reason else u""
         uri = self._uri_prefix.format(u"resolve-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
         return self._default_session.post(uri, data=json.dumps(data))
 
     def reopen_alert(self, alert_ids, tenant_id=None, reason=None):
-        tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
+        tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"reopen-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
         return self._default_session.post(uri, data=json.dumps(data))
-
-    def _get_current_tenant_id(self):
-        if self._tenant_id is None:
-            self._tenant_id = self._customer.get_current_tenant_id()
-        return self._tenant_id

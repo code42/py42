@@ -63,15 +63,6 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    def test_resolve_alert_sets_tenant_id_from_administration_client_if_needed(
-        self, mock_session, customer
-    ):
-        alert_client = AlertClient(mock_session, customer)
-        alert_client._tenant_id = None
-        alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.resolve_alert(alert_ids)
-        assert alert_client._tenant_id == "00000000-0000-0000-0000-000000000000"
-
     def test_resolve_alert_when_given_tenant_id_posts_expected_data(
         self, mock_session, customer
     ):
@@ -107,15 +98,6 @@ class TestAlertClient(object):
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
-
-    def test_reopen_alert_sets_tenant_id_from_administration_client_if_needed(
-        self, mock_session, customer
-    ):
-        alert_client = AlertClient(mock_session, customer)
-        alert_client._tenant_id = None
-        alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.reopen_alert(alert_ids)
-        assert alert_client._tenant_id == "00000000-0000-0000-0000-000000000000"
 
     def test_reopen_alert_when_given_tenant_id_posts_expected_data(
         self, mock_session, customer

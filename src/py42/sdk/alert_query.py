@@ -119,16 +119,9 @@ class AlertQuery(BaseQuery):
 class AlertQueryFactory(object):
     """Abstracts away having to know the tenant ID when creating queries"""
 
-    _tenant_id = None
-
-    def __init__(self, customer):
-        self._customer = customer
+    def __init__(self, user_context):
+        self._user_context = user_context
 
     def create_query_for_current_tenant(self, *args, **kwargs):
-        tenant_id = self._get_current_tenant_id()
+        tenant_id = self._user_context.get_current_tenant_id()
         return AlertQuery(tenant_id, *args, **kwargs)
-
-    def _get_current_tenant_id(self):
-        if self._tenant_id is None:
-            self._tenant_id = self._customer.get_current_tenant_id()
-        return self._tenant_id

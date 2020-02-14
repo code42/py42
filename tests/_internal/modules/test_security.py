@@ -566,9 +566,3 @@ class TestSecurityModule(object):
             and item.node_guid == node_guid
             for item in storage_info_list
         )
-
-    # def test_get_normalized_security_event_plan_info_no_locations_response(security_client):
-    #     security_client.get_security_event_locations.return_value = None
-    #     plan_info = get_normalized_security_event_plan_info(security_client, USER_UID)
-    #     assert plan_info == {}
-    #

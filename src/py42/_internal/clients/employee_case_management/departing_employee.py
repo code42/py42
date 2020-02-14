@@ -4,7 +4,7 @@ from py42._internal.base_classes import BaseClient
 
 
 class DepartingEmployeeClient(BaseClient):
-    _base_uri = u"/svc/api/v1/departingemployee/"
+    _uri_prefix =  u"/svc/api/v1/departingemployee/{0}"
     _tenant_id = None
 
     def __init__(self, session, administration_client):
@@ -30,12 +30,12 @@ class DepartingEmployeeClient(BaseClient):
             u"alertsEnabled": alerts_enabled,
             u"cloudUsernames": cloud_usernames,
         }
-        uri = u"{0}create".format(self._base_uri)
+        uri = self._uri_prefix.format(u"create")
         return self._default_session.post(uri, data=json.dumps(data))
 
     def resolve_departing_employee(self, case_id, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
-        uri = u"{0}resolve".format(self._base_uri)
+        uri = self._uri_prefix.format(u"resolve")
         data = {u"caseId": case_id, u"tenantId": tenant_id}
         return self._default_session.post(uri, data=json.dumps(data))
 
@@ -49,7 +49,7 @@ class DepartingEmployeeClient(BaseClient):
         sort_direction=u"DESC",
     ):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
-        uri = self._get_uri(u"search")
+        uri = self._uri_prefix.format(u"search")
         data = {
             u"tenantId": tenant_id,
             u"pgSize": page_size,
@@ -62,7 +62,7 @@ class DepartingEmployeeClient(BaseClient):
 
     def toggle_alerts(self, tenant_id=None, alerts_enabled=True):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
-        uri = self._get_uri(u"togglealerts")
+        uri = self._uri_prefix.format(u"togglealerts")
         data = {u"tenantId": tenant_id, u"alertsEnabled": alerts_enabled}
         return self._default_session.post(uri, data=json.dumps(data))
 
@@ -73,7 +73,7 @@ class DepartingEmployeeClient(BaseClient):
 
     def get_case_by_id(self, case_id, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
-        uri = self._get_uri(u"details")
+        uri = self._uri_prefix.format(u"details")
         data = {u"tenantId": tenant_id, u"caseId": case_id}
         return self._default_session.post(uri, data=json.dumps(data))
 
@@ -119,7 +119,7 @@ class DepartingEmployeeClient(BaseClient):
             current_cloud_usernames = case.get(u"cloudUsernames")
             cloud_usernames = current_cloud_usernames if current_cloud_usernames else []
 
-        uri = self._get_uri(u"update")
+        uri = self._uri_prefix.format(u"update")
         cloud_usernames = cloud_usernames if cloud_usernames else []
         data = {
             u"tenantId": tenant_id,
@@ -132,9 +132,6 @@ class DepartingEmployeeClient(BaseClient):
             u"cloudUsernames": cloud_usernames,
         }
         return self._default_session.post(uri, data=json.dumps(data))
-
-    def _get_uri(self, resource_name):
-        return u"{0}{1}".format(self._base_uri, resource_name)
 
     def _get_current_tenant_id(self):
         if self._tenant_id is None:

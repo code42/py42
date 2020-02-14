@@ -47,40 +47,12 @@ def create_in_range_filter_group(term, start_value, end_value):
     return create_filter_group(filter_list, u"AND")
 
 
-def create_exists_filter_group(term):
-    filter_list = [create_query_filter(term, u"EXISTS")]
-    return create_filter_group(filter_list, u"AND")
-
-
-def create_not_exists_filter_group(term):
-    filter_list = [create_query_filter(term, u"DOES_NOT_EXIST")]
-    return create_filter_group(filter_list, u"AND")
-
-
-def create_contains_group(term):
-    filter_list = [create_query_filter(term, u"CONTAINS")]
-    return create_filter_group(filter_list, u"AND")
-
-
-def create_not_contains_group(term):
-    filter_list = [create_query_filter(term, u"DOES_NOT_CONTAIN")]
-    return create_filter_group(filter_list, u"AND")
-
-
 def create_filter_group(query_filter_list, filter_clause):
     return FilterGroup(query_filter_list, filter_clause)
 
 
 class _QueryFilterStringField(object):
     _term = u"override_string_field_name"
-
-    @classmethod
-    def exists(cls):
-        return create_exists_filter_group(cls._term)
-
-    @classmethod
-    def not_exists(cls):
-        return create_not_exists_filter_group(cls._term)
 
     @classmethod
     def eq(cls, value):

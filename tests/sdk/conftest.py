@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+from datetime import datetime
 
 from py42._internal.query_filter import QueryFilter, FilterGroup
 
@@ -82,3 +83,15 @@ def in_range_filter_creator(mocker):
 
 def create_filter_creator_path(query_filter_string):
     return "py42._internal.query_filter.create_{0}_filter_group".format(query_filter_string)
+
+
+def format_timestamp(test_time):
+    test_date = datetime.utcfromtimestamp(test_time)
+    return format_datetime(test_date)
+
+
+def format_datetime(test_date):
+    prefix = test_date.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
+    timestamp_str = "{0}Z".format(prefix)
+    return timestamp_str
+

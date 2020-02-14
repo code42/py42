@@ -5,30 +5,50 @@ from py42._internal.base_classes import BaseQuery
 from py42._internal.query_filter import (
     _QueryFilterStringField,
     _QueryFilterTimestampField,
+    FilterGroup,
+    create_query_filter,
+    create_filter_group,
 )
+
+
+def create_contains_group(term, value):
+    filter_list = [create_query_filter(term, u"CONTAINS", value)]
+    return create_filter_group(filter_list, u"AND")
+
+
+def create_not_contains_group(term, value):
+    filter_list = [create_query_filter(term, u"DOES_NOT_CONTAIN", value)]
+    return create_filter_group(filter_list, u"AND")
+
+
+class _AlertQueryFilterStringField(_QueryFilterStringField):
+    @classmethod
+    def contains(cls, value):
+        # type: (str) -> FilterGroup
+        return create_contains_group(cls._term, value)
 
 
 class DateObserved(_QueryFilterTimestampField):
     _term = u"CreatedAt"
 
 
-class Actor(_QueryFilterStringField):
+class Actor(_AlertQueryFilterStringField):
     _term = u"actor"
 
 
-class Severity(_QueryFilterStringField):
+class Severity(_AlertQueryFilterStringField):
     _term = u"severity"
 
 
-class RuleName(_QueryFilterStringField):
+class RuleName(_AlertQueryFilterStringField):
     _term = u"name"
 
 
-class Description(_QueryFilterStringField):
+class Description(_AlertQueryFilterStringField):
     _term = u"description"
 
 
-class AlertState(_QueryFilterStringField):
+class AlertState(_AlertQueryFilterStringField):
     _term = u"State"
 
 

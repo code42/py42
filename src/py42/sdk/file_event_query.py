@@ -4,39 +4,61 @@ from py42._internal.compat import str
 from py42._internal.query_filter import (
     _QueryFilterStringField,
     _QueryFilterTimestampField,
-    FilterGroup
+    FilterGroup,
+    create_query_filter,
+    create_filter_group,
 )
 
 
-class MD5(_QueryFilterStringField):
+def create_exists_filter_group(term):
+    filter_list = [create_query_filter(term, u"EXISTS")]
+    return create_filter_group(filter_list, u"AND")
+
+
+def create_not_exists_filter_group(term):
+    filter_list = [create_query_filter(term, u"DOES_NOT_EXIST")]
+    return create_filter_group(filter_list, u"AND")
+
+
+class _FileEventFilterStringField(_QueryFilterStringField):
+    @classmethod
+    def exists(cls):
+        return create_exists_filter_group(cls._term)
+
+    @classmethod
+    def not_exists(cls):
+        return create_not_exists_filter_group(cls._term)
+
+
+class MD5(_FileEventFilterStringField):
     _term = u"md5Checksum"
 
 
-class SHA256(_QueryFilterStringField):
+class SHA256(_FileEventFilterStringField):
     _term = u"sha256Checksum"
 
 
-class OSHostname(_QueryFilterStringField):
+class OSHostname(_FileEventFilterStringField):
     _term = u"osHostName"
 
 
-class DeviceUsername(_QueryFilterStringField):
+class DeviceUsername(_FileEventFilterStringField):
     _term = u"deviceUserName"
 
 
-class FileName(_QueryFilterStringField):
+class FileName(_FileEventFilterStringField):
     _term = u"fileName"
 
 
-class FilePath(_QueryFilterStringField):
+class FilePath(_FileEventFilterStringField):
     _term = u"filePath"
 
 
-class PublicIPAddress(_QueryFilterStringField):
+class PublicIPAddress(_FileEventFilterStringField):
     _term = u"publicIpAddress"
 
 
-class PrivateIPAddress(_QueryFilterStringField):
+class PrivateIPAddress(_FileEventFilterStringField):
     _term = u"privateIpAddresses"
 
 
@@ -48,7 +70,7 @@ class InsertionTimestamp(_QueryFilterTimestampField):
     _term = u"insertionTimestamp"
 
 
-class EventType(_QueryFilterStringField):
+class EventType(_FileEventFilterStringField):
     _term = u"eventType"
 
     class EventTypeEnum(object):

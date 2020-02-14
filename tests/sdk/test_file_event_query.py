@@ -3,6 +3,7 @@
 from datetime import datetime
 from time import time
 
+from .conftest import format_timestamp, format_datetime
 from py42._internal.compat import str
 from py42.sdk.file_event_query import (
     DeviceUsername,
@@ -479,6 +480,20 @@ def test_event_timestamp_in_range_sets_filter_properties_correctly(in_range_filt
     )
 
 
+def test_event_timestamp_on_sets_filter_properties_correctly(in_range_filter_creator):
+    test_time = time()
+    test_date = datetime.utcfromtimestamp(test_time)
+    start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
+    end_time = datetime(test_date.year, test_date.month, test_date.day, 0, 23, 59)
+    formatted_before = format_datetime(start_time)
+    formatted_after = format_datetime(end_time)
+
+    EventTimestamp.on(test_time)
+    in_range_filter_creator.assert_called_once_with(
+        "eventTimestamp", formatted_before, formatted_after
+    )
+
+
 def test_insertion_timestamp_on_or_after_sets_filter_properties_correctly(
     on_or_after_filter_creator,
 ):
@@ -520,14 +535,3 @@ def test_insertion_timestamp_on_sets_filter_properties_correctly(in_range_filter
     in_range_filter_creator.assert_called_once_with(
         "insertionTimestamp", formatted_before, formatted_after
     )
-
-
-def format_timestamp(test_time):
-    test_date = datetime.utcfromtimestamp(test_time)
-    return format_datetime(test_date)
-
-
-def format_datetime(test_date):
-    prefix = test_date.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
-    timestamp_str = "{0}Z".format(prefix)
-    return timestamp_str

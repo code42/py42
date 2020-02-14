@@ -7,7 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 0.3.1 - 2020-02-14
+
+## Added
+- `SecurityModule.get_security_plan_storage_info_list()`
+- `SecurityModule.get_user_security_events()`
+- `SecurityModule.get_plan_security_events()`
+
+## Changed
+- Removed `SecurityModule.get_security_event_locations()`. Use `SecurityClient.get_security_event_locations()` instead.
+- Removed `get_normalized_security_event_plan_info().` Support for pre-6.7 format security event plan info responses has
+been removed, and as a result this method is no longer necessary. Use `SecurityClient.get_security_event_locations()` instead.
 
 ### Fixed
 - a timeout of 60 seconds is now enforced on all http requests. Previously the timeout was infinite.

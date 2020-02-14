@@ -92,11 +92,7 @@ class DepartingEmployeeClient(BaseClient):
 
         # The behavior of this API is to clear values that are not provided.
         # Therefore, we check current values first as to prevent clearing them when not provided.
-        # departureDate is not cleared, however.
-
-        # Cannot use `self.get_case_by_id()` here because
-        # it does not include cloudUsername or departureDate
-        case = self._get_case_from_id(tenant_id, case_id)
+        case = self.get_case_by_id(case_id)
 
         if display_name is None:
             display_name = case.get(u"displayName")
@@ -145,9 +141,6 @@ class DepartingEmployeeClient(BaseClient):
 
     def _get_case_from_username(self, tenant_id, username):
         return self._get_case_from_key(tenant_id, u"userName", username)
-
-    def _get_case_from_id(self, tenant_id, case_id):
-        return self._get_case_from_key(tenant_id, u"caseId", case_id)
 
     def _get_case_from_key(self, tenant_id, key, value_in_sought_case):
         cases = self._get_all_departing_employees(tenant_id)

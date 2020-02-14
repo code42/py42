@@ -1,5 +1,6 @@
 import json
 
+from py42._internal.compat import str
 from py42._internal.base_classes import BaseClient
 
 
@@ -92,7 +93,7 @@ class DepartingEmployeeClient(BaseClient):
 
         # The behavior of this API is to clear values that are not provided.
         # Therefore, we check current values first as to prevent clearing them when not provided.
-        case = self.get_case_by_id(case_id)
+        case = self._get_case_by_id(case_id)
 
         if display_name is None:
             display_name = case.get(u"displayName")
@@ -155,3 +156,8 @@ class DepartingEmployeeClient(BaseClient):
     def _get_all_departing_employees(self, tenant_id):
         response = self.get_all_departing_employees(tenant_id).text
         return json.loads(response).get(u"cases")
+
+    def _get_case_by_id(self, case_id):
+        response = self.get_case_by_id(case_id)
+        if response:
+            return json.loads(str(response.text))

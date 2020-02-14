@@ -30,7 +30,9 @@ class SecurityModule(object):
             selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
             if not selected_plan_infos:
                 raise Exception(
-                    u"could not contact any storage nodes for user {0}".format(user_uid)
+                    u"Could not establish a connection to retrieve security events for user {0}".format(
+                        user_uid
+                    )
                 )
 
             return selected_plan_infos

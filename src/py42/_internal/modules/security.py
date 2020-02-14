@@ -17,14 +17,23 @@ class SecurityModule(object):
         self._client_cache_lock = Lock()
 
     def get_security_plan_storage_info_list(self, user_uid):
-        response = self._security_client.get_security_event_locations(user_uid)
-        locations = util.get_obj_from_response(response, u"securityPlanLocationsByDestination")
-        plan_destination_map = _get_plan_destination_map(locations)
-        selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
-        if not selected_plan_infos:
-            raise Exception("could not contact any storage nodes for user {0}".format(user_uid))
+        locations = None
+        try:
+            response = self._security_client.get_security_event_locations(user_uid)
+            locations = util.get_obj_from_response(response, u"securityPlanLocationsByDestination")
+        except Exception:
+            # TODO: only pass if the exception is caused by a 404
+            pass
 
-        return selected_plan_infos
+        if locations:
+            plan_destination_map = _get_plan_destination_map(locations)
+            selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
+            if not selected_plan_infos:
+                raise Exception(
+                    u"could not contact any storage nodes for user {0}".format(user_uid)
+                )
+
+            return selected_plan_infos
 
     def get_plan_security_events(
         self,
@@ -139,7 +148,7 @@ class SecurityModule(object):
                 )
 
                 if response.text:
-                    cursor = json.loads(response.text)["data"].get("cursor")
+                    cursor = json.loads(response.text)[u"data"].get(u"cursor")
                     # if there are no results, we don't get a cursor and have reached the end
                     if cursor:
                         yield response, cursor
@@ -155,7 +164,7 @@ def _get_plan_destination_map(locations_list):
 
 def _get_destinations_in_locations_list(locations_list):
     for destination in locations_list:
-        for node in destination["securityPlanLocationsByNode"]:
+        for node in destination[u"securityPlanLocationsByNode"]:
             yield _get_plans_in_node(destination, node)
 
 
@@ -164,7 +173,7 @@ def _get_plans_in_node(destination, node):
         plan_uid: [
             {u"destinationGuid": destination[u"destinationGuid"], u"nodeGuid": node[u"nodeGuid"]}
         ]
-        for plan_uid in node["securityPlanUids"]
+        for plan_uid in node[u"securityPlanUids"]
     }
 
 

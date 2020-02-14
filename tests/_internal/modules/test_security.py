@@ -4,7 +4,9 @@ from requests import Response
 from py42._internal.client_factories import FileEventClientFactory, StorageClientFactory
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.security import SecurityClient
-from py42._internal.modules.security import SecurityModule
+from py42._internal.clients.storage.storage import StorageClient
+from py42._internal.clients.storage.security import StorageSecurityClient
+from py42._internal.modules.security import SecurityModule, PlanStorageInfo
 
 RAW_QUERY = "RAW JSON QUERY"
 
@@ -352,6 +354,208 @@ class TestSecurityModule(object):
         assert self._storage_info_contains(
             storage_infos, "222222222222222222", "4", "41"
         ) or self._storage_info_contains(storage_infos, "222222222222222222", "5", "52")
+
+    def test_get_user_security_events_calls_security_client_with_expected_params(
+        self,
+        mocker,
+        security_client_one_location,
+        storage_client_factory,
+        file_event_client_factory,
+    ):
+        mock_storage_client = mocker.MagicMock(spec=StorageClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_client.security = mock_storage_security_client
+        response = mocker.MagicMock(spec=Response)
+        response.text = '{"data": {}}'
+        mock_storage_security_client.get_security_detection_events_for_plan.return_value = response
+        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        security_module = SecurityModule(
+            security_client_one_location, storage_client_factory, file_event_client_factory
+        )
+        for page, cursor in security_module.get_user_security_events("foo"):
+            pass
+        mock_storage_security_client.get_security_detection_events_for_plan.assert_called_once_with(
+            "111111111111111111",
+            cursor=None,
+            event_types=None,
+            include_files=True,
+            max_timestamp=None,
+            min_timestamp=None,
+        )
+
+    def test_get_user_security_events_when_cursors_returned_calls_security_client_expected_number_of_times(
+        self,
+        mocker,
+        security_client_one_location,
+        storage_client_factory,
+        file_event_client_factory,
+    ):
+        mock_storage_client = mocker.MagicMock(spec=StorageClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_client.security = mock_storage_security_client
+        response1 = mocker.MagicMock(spec=Response)
+        response1.text = '{"data": {"cursor": "1:1"}}'
+        response2 = mocker.MagicMock(spec=Response)
+        response2.text = '{"data": {}}'
+        mock_storage_security_client.get_security_detection_events_for_plan.side_effect = [
+            response1,
+            response2,
+        ]
+        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        security_module = SecurityModule(
+            security_client_one_location, storage_client_factory, file_event_client_factory
+        )
+        for page, cursor in security_module.get_user_security_events("foo"):
+            pass
+        assert mock_storage_security_client.get_security_detection_events_for_plan.call_count == 2
+
+    def test_get_user_security_events_when_mutliple_plans_returned_calls_security_client_expected_number_of_times(
+        self,
+        mocker,
+        security_client_two_plans_one_node,
+        storage_client_factory,
+        file_event_client_factory,
+    ):
+        mock_storage_client = mocker.MagicMock(spec=StorageClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_client.security = mock_storage_security_client
+        response = mocker.MagicMock(spec=Response)
+        response.text = '{"data": {}}'
+        mock_storage_security_client.get_security_detection_events_for_plan.return_value = response
+        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        security_module = SecurityModule(
+            security_client_two_plans_one_node, storage_client_factory, file_event_client_factory
+        )
+        for page, cursor in security_module.get_user_security_events("foo"):
+            pass
+        assert mock_storage_security_client.get_security_detection_events_for_plan.call_count == 2
+
+    def test_get_user_security_events_when_mutliple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
+        self,
+        mocker,
+        security_client_two_plans_one_node,
+        storage_client_factory,
+        file_event_client_factory,
+    ):
+        mock_storage_client = mocker.MagicMock(spec=StorageClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_client.security = mock_storage_security_client
+        response1 = mocker.MagicMock(spec=Response)
+        response1.text = '{"data": {"cursor": "1:1"}}'
+        response2 = mocker.MagicMock(spec=Response)
+        response2.text = '{"data": {}}'
+        mock_storage_security_client.get_security_detection_events_for_plan.side_effect = [
+            response1,
+            response2,
+            response1,
+            response2,
+        ]
+        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        security_module = SecurityModule(
+            security_client_two_plans_one_node, storage_client_factory, file_event_client_factory
+        )
+        for page, cursor in security_module.get_user_security_events("foo"):
+            pass
+        assert mock_storage_security_client.get_security_detection_events_for_plan.call_count == 4
+
+    def test_get_plan_security_events_calls_security_client_with_expected_params(
+        self, mocker, security_client, storage_client_factory, file_event_client_factory
+    ):
+        mock_storage_client = mocker.MagicMock(spec=StorageClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_client.security = mock_storage_security_client
+        response = mocker.MagicMock(spec=Response)
+        response.text = '{"data": {}}'
+        mock_storage_security_client.get_security_detection_events_for_plan.return_value = response
+        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        security_module = SecurityModule(
+            security_client, storage_client_factory, file_event_client_factory
+        )
+        for page, cursor in security_module.get_plan_security_events(
+            PlanStorageInfo("111111111111111111", "41", "4")
+        ):
+            pass
+        mock_storage_security_client.get_security_detection_events_for_plan.assert_called_once_with(
+            "111111111111111111",
+            cursor=None,
+            event_types=None,
+            include_files=True,
+            max_timestamp=None,
+            min_timestamp=None,
+        )
+
+    def test_get_plan_security_events_when_cursors_returned_calls_security_client_expected_number_of_times(
+        self, mocker, security_client, storage_client_factory, file_event_client_factory
+    ):
+        mock_storage_client = mocker.MagicMock(spec=StorageClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_client.security = mock_storage_security_client
+        response1 = mocker.MagicMock(spec=Response)
+        response1.text = '{"data": {"cursor": "1:1"}}'
+        response2 = mocker.MagicMock(spec=Response)
+        response2.text = '{"data": {}}'
+        mock_storage_security_client.get_security_detection_events_for_plan.side_effect = [
+            response1,
+            response2,
+        ]
+        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        security_module = SecurityModule(
+            security_client, storage_client_factory, file_event_client_factory
+        )
+        for page, cursor in security_module.get_plan_security_events(
+            PlanStorageInfo("111111111111111111", "41", "4")
+        ):
+            pass
+        assert mock_storage_security_client.get_security_detection_events_for_plan.call_count == 2
+
+    def test_get_plan_security_events_when_mutliple_plans_returned_calls_security_client_expected_number_of_times(
+        self, mocker, security_client, storage_client_factory, file_event_client_factory
+    ):
+        mock_storage_client = mocker.MagicMock(spec=StorageClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_client.security = mock_storage_security_client
+        response = mocker.MagicMock(spec=Response)
+        response.text = '{"data": {}}'
+        mock_storage_security_client.get_security_detection_events_for_plan.return_value = response
+        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        security_module = SecurityModule(
+            security_client, storage_client_factory, file_event_client_factory
+        )
+        plans = [
+            PlanStorageInfo("111111111111111111", "41", "4"),
+            PlanStorageInfo("222222222222222222", "41", "4"),
+        ]
+        for page, cursor in security_module.get_plan_security_events(plans):
+            pass
+        assert mock_storage_security_client.get_security_detection_events_for_plan.call_count == 2
+
+    def test_get_plan_security_events_when_mutliple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
+        self, mocker, security_client, storage_client_factory, file_event_client_factory
+    ):
+        mock_storage_client = mocker.MagicMock(spec=StorageClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_client.security = mock_storage_security_client
+        response1 = mocker.MagicMock(spec=Response)
+        response1.text = '{"data": {"cursor": "1:1"}}'
+        response2 = mocker.MagicMock(spec=Response)
+        response2.text = '{"data": {}}'
+        mock_storage_security_client.get_security_detection_events_for_plan.side_effect = [
+            response1,
+            response2,
+            response1,
+            response2,
+        ]
+        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        security_module = SecurityModule(
+            security_client, storage_client_factory, file_event_client_factory
+        )
+        plans = [
+            PlanStorageInfo("111111111111111111", "41", "4"),
+            PlanStorageInfo("222222222222222222", "41", "4"),
+        ]
+        for page, cursor in security_module.get_plan_security_events(plans):
+            pass
+        assert mock_storage_security_client.get_security_detection_events_for_plan.call_count == 4
 
     # the order the items are iterated through is not deterministic in some versions of python,
     # so we simply test that the value returned is one of the _possible_ values.

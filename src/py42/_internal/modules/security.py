@@ -137,10 +137,12 @@ class SecurityModule(object):
                     min_timestamp=min_timestamp,
                     max_timestamp=max_timestamp,
                 )
-                cursor = json.loads(response.text)["data"].get("cursor")
-                # if there are no results, we don't get a cursor and have reached the end
-                if cursor:
-                    yield response, cursor
+
+                if response.text:
+                    cursor = json.loads(response.text)["data"].get("cursor")
+                    # if there are no results, we don't get a cursor and have reached the end
+                    if cursor:
+                        yield response, cursor
 
 
 def _get_plan_destination_map(locations_list):

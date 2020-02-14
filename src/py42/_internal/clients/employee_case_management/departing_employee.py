@@ -91,8 +91,8 @@ class DepartingEmployeeClient(BaseClient):
     ):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
 
-        # The behavior of this API is to clear values that are not provided.
-        # Therefore, we check current values first as to prevent clearing them when not provided.
+        # The behavior of the `update` API is to clear values that are not provided.
+        # Therefore, we get current values first as to prevent clearing them when not provided.
         case = self._get_case_by_id(case_id)
 
         if display_name is None:

@@ -1,5 +1,4 @@
 from py42._internal.base_classes import BaseAuthorityClient
-from py42.util import get_obj_from_response
 
 
 class AdministrationClient(BaseAuthorityClient):

@@ -8,7 +8,6 @@ from py42._internal.clients import (
     users,
 )
 from py42._internal.customer import Customer
-from py42._internal.clients.administration import AdministrationClient
 from py42._internal.clients.employee_case_management.departing_employee import (
     DepartingEmployeeClient,
 )

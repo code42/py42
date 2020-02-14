@@ -121,8 +121,8 @@ class AlertQueryFactory(object):
 
     _tenant_id = None
 
-    def __init__(self, administration_client):
-        self._administration = administration_client
+    def __init__(self, customer):
+        self._customer = customer
 
     def create_query_for_current_tenant(self, *args, **kwargs):
         tenant_id = self._get_current_tenant_id()
@@ -130,5 +130,5 @@ class AlertQueryFactory(object):
 
     def _get_current_tenant_id(self):
         if self._tenant_id is None:
-            self._tenant_id = self._administration.get_current_tenant_id()
+            self._tenant_id = self._customer.get_current_tenant_id()
         return self._tenant_id

@@ -19,6 +19,7 @@ from py42._internal.modules import (
     security as sec_module,
     employee_case_management as ecm_module,
 )
+from py42._internal.customer import Customer
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
@@ -41,6 +42,7 @@ class AuthorityDependencies(object):
         self.legal_hold_client = authority_client_factory.create_legal_hold_client()
         self.archive_client = authority_client_factory.create_archive_client()
         self.security_client = authority_client_factory.create_security_client()
+        self.customer = Customer(self.administration_client)
 
     def _set_sessions(self, session_factory, root_session):
         # type: (SessionFactory, Py42Session) -> None
@@ -116,7 +118,7 @@ class AlertDependencies(object):
         alert_client_factory = AlertClientFactory(
             authority_dependencies.session_factory,
             alert_login_provider_factory,
-            authority_dependencies.administration_client,
+            authority_dependencies.customer
         )
         self.alert_client = alert_client_factory.get_alert_client()
 
@@ -141,7 +143,7 @@ class EmployeeCaseManagementDependencies(object):
         self.employee_case_management_client_factory = EmployeeCaseManagementClientFactory(
             authority_dependencies.session_factory,
             ecm_login_provider_factory,
-            authority_dependencies.administration_client,
+            authority_dependencies.customer,
         )
 
 

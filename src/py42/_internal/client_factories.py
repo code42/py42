@@ -7,6 +7,7 @@ from py42._internal.clients import (
     security,
     users,
 )
+from py42._internal.customer import Customer
 from py42._internal.clients.administration import AdministrationClient
 from py42._internal.clients.employee_case_management.departing_employee import (
     DepartingEmployeeClient,
@@ -99,26 +100,26 @@ class KeyValueStoreClientFactory(object):
 
 
 class EmployeeCaseManagementClientFactory(object):
-    def __init__(self, session_factory, login_provider_factory, administration_client):
-        # type: (SessionFactory, EmployeeCaseManagementLoginProviderFactory, AdministrationClient) -> None
+    def __init__(self, session_factory, login_provider_factory, customer):
+        # type: (SessionFactory, EmployeeCaseManagementLoginProviderFactory, Customer) -> None
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
-        self._administration_client = administration_client
+        self._customer = customer
 
     def get_departing_employee_client(self):
         login_provider = self._login_provider_factory.create_ecm_login_provider()
         session = self._session_factory.create_jwt_session_from_provider(login_provider)
-        return DepartingEmployeeClient(session, self._administration_client)
+        return DepartingEmployeeClient(session, self._customer)
 
 
 class AlertClientFactory(object):
-    def __init__(self, session_factory, login_provider_factory, administration_client):
-        # type: (SessionFactory, AlertLoginProviderFactory, AdministrationClient) -> None
+    def __init__(self, session_factory, login_provider_factory, customer):
+        # type: (SessionFactory, AlertLoginProviderFactory, Customer) -> None
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
-        self._administration_client = administration_client
+        self._customer = customer
 
     def get_alert_client(self):
         login_provider = self._login_provider_factory.create_alert_login_provider()
         session = self._session_factory.create_jwt_session_from_provider(login_provider)
-        return AlertClient(session, self._administration_client)
+        return AlertClient(session, self._customer)

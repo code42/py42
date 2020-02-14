@@ -7,9 +7,9 @@ class DepartingEmployeeClient(BaseClient):
     _uri_prefix = u"/svc/api/v1/departingemployee/{0}"
     _tenant_id = None
 
-    def __init__(self, session, administration_client):
+    def __init__(self, session, customer):
         super(DepartingEmployeeClient, self).__init__(session)
-        self._administration = administration_client
+        self._customer = customer
 
     def create_departing_employee(
         self,
@@ -135,7 +135,7 @@ class DepartingEmployeeClient(BaseClient):
 
     def _get_current_tenant_id(self):
         if self._tenant_id is None:
-            self._tenant_id = self._administration.get_current_tenant_id()
+            self._tenant_id = self._customer.get_current_tenant_id()
         return self._tenant_id
 
     def _get_case_id_from_username(self, tenant_id, username):

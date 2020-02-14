@@ -38,7 +38,7 @@ class SDK(object):
 
     @property
     def administration(self):
-        return self._authority_dependencies.administration_client
+        return self._authority_dependencies.customer
 
     @property
     def archive(self):
@@ -59,6 +59,10 @@ class SDK(object):
     @property
     def legal_hold(self):
         return self._authority_dependencies.legal_hold_client
+
+    @property
+    def customer(self):
+        return self._authority_dependencies.customer
 
     @property
     def security(self):

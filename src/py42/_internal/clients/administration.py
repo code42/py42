@@ -13,8 +13,6 @@ class AdministrationClient(BaseAuthorityClient):
         params = {u"status": status, u"type": alert_type, u"pgNum": page_num, u"pgSize": page_size}
         return self._default_session.get(uri, params=params)
 
-    def get_current_tenant_id(self):
+    def get_current_tenant(self):
         uri = u"/c42api/v3/customer/my"
-        response = self._default_session.get(uri)
-        tenant = get_obj_from_response(response, u"data")
-        return tenant.get(u"tenantUid")
+        return self._default_session.get(uri)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import py42
+import pytest
 from py42._internal.compat import str
 from py42._internal.filters.query_filter import (
     QueryFilter,
@@ -27,6 +27,11 @@ JSON_QUERY_FILTER = '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
 JSON_FILTER_GROUP_BASE = '{{"filterClause":"{0}", "filters":[{1}]}}'
 JSON_FILTER_GROUP_AND = JSON_FILTER_GROUP_BASE.format("AND", JSON_QUERY_FILTER)
 JSON_FILTER_GROUP_OR = JSON_FILTER_GROUP_BASE.format("OR", JSON_QUERY_FILTER)
+
+
+@pytest.fixture
+def filter_creator(mocker):
+    return mocker.patch("py42._internal.filters.query_filter.create_query_filter")
 
 
 def test_query_filter_constructs_successfully():
@@ -84,19 +89,16 @@ def test_filter_group_with_multiple_filters_or_specified_str_gives_correct_json_
     assert str(create_filter_group(query_filter_list, "OR")) == json_multi_filter_group
 
 
-def test_create_eq_filter_group_calls_create_query_filter_with_correct_values(mocker):
-    mocker.patch("py42._internal.filters.query_filter.create_query_filter")
+def test_create_eq_filter_group_calls_create_query_filter_with_correct_values(filter_creator):
     term = "test_eq_term"
     create_eq_filter_group(term, "eqval")
     op = "IS"
-
-    py42._internal.filters.query_filter.create_query_filter.assert_called_once_with(
-        term, op, "eqval"
-    )
+    filter_creator.assert_called_once_with(term, op, "eqval")
 
 
-def test_create_is_in_filter_group_calls_create_query_filter_with_correct_values(mocker):
-    mocker.patch("py42._internal.filters.query_filter.create_query_filter")
+def test_create_is_in_filter_group_calls_create_query_filter_with_correct_values(
+    mocker, filter_creator
+):
     term = "test_is_in_term"
     create_is_in_filter_group(term, ["isinval1", "isinval2", "isinval3"])
     op = "IS"
@@ -106,22 +108,20 @@ def test_create_is_in_filter_group_calls_create_query_filter_with_correct_values
         mocker.call(term, op, "isinval3"),
     ]
 
-    py42._internal.filters.query_filter.create_query_filter.assert_has_calls(calls, any_order=True)
+    filter_creator.assert_has_calls(calls, any_order=True)
 
 
-def test_create_not_eq_filter_group_calls_create_query_filter_with_correct_values(mocker):
-    mocker.patch("py42._internal.filters.query_filter.create_query_filter")
+def test_create_not_eq_filter_group_calls_create_query_filter_with_correct_values(filter_creator):
     term = "test_not_eq_term"
     create_not_eq_filter_group(term, "noteqtval")
     op = "IS_NOT"
 
-    py42._internal.filters.query_filter.create_query_filter.assert_called_once_with(
-        term, op, "noteqtval"
-    )
+    filter_creator.assert_called_once_with(term, op, "noteqtval")
 
 
-def test_create_not_in_filter_group_calls_create_query_filter_with_correct_values(mocker):
-    mocker.patch("py42._internal.filters.query_filter.create_query_filter")
+def test_create_not_in_filter_group_calls_create_query_filter_with_correct_values(
+    mocker, filter_creator
+):
     term = "test_not_in_term"
     create_not_in_filter_group(term, ["notinval1", "notinval2", "notinval3"])
     op = "IS_NOT"
@@ -131,31 +131,30 @@ def test_create_not_in_filter_group_calls_create_query_filter_with_correct_value
         mocker.call(term, op, "notinval3"),
     ]
 
-    py42._internal.filters.query_filter.create_query_filter.assert_has_calls(calls, any_order=True)
+    filter_creator.assert_has_calls(calls, any_order=True)
 
 
-def test_create_on_or_before_filter_group_calls_create_query_filter_with_correct_values(mocker,):
-    mocker.patch("py42._internal.filters.query_filter.create_query_filter")
+def test_create_on_or_before_filter_group_calls_create_query_filter_with_correct_values(
+    filter_creator
+):
     term = "test_on_or_before_term"
     create_on_or_before_filter_group(term, "test_formatted_time")
     op = "ON_OR_BEFORE"
-    py42._internal.filters.query_filter.create_query_filter.assert_called_once_with(
-        term, op, "test_formatted_time"
-    )
+    filter_creator.assert_called_once_with(term, op, "test_formatted_time")
 
 
-def test_create_on_or_after_filter_group_calls_create_query_filter_with_correct_values(mocker):
-    mocker.patch("py42._internal.filters.query_filter.create_query_filter")
+def test_create_on_or_after_filter_group_calls_create_query_filter_with_correct_values(
+    filter_creator
+):
     term = "test_on_or_after_term"
     create_on_or_after_filter_group(term, "test_formatted_time")
     op = "ON_OR_AFTER"
-    py42._internal.filters.query_filter.create_query_filter.assert_called_once_with(
-        term, op, "test_formatted_time"
-    )
+    filter_creator.assert_called_once_with(term, op, "test_formatted_time")
 
 
-def test_create_in_range_filter_group_calls_create_query_filter_with_correct_values(mocker):
-    mocker.patch("py42._internal.filters.query_filter.create_query_filter")
+def test_create_in_range_filter_group_calls_create_query_filter_with_correct_values(
+    mocker, filter_creator
+):
     term = "test_in_range_term"
     start_time = "start_time"
     end_time = "end_time"
@@ -165,7 +164,7 @@ def test_create_in_range_filter_group_calls_create_query_filter_with_correct_val
         mocker.call(term, "ON_OR_AFTER", start_time),
     ]
 
-    py42._internal.filters.query_filter.create_query_filter.assert_has_calls(calls, any_order=True)
+    filter_creator.assert_has_calls(calls, any_order=True)
 
 
 def test_create_eq_filter_group_returns_obj_with_correct_json_representation():

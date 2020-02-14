@@ -7,16 +7,9 @@ from requests import Response
 from py42._internal.clients.employee_case_management.departing_employee import (
     DepartingEmployeeClient,
 )
-from py42._internal.clients.administration import AdministrationClient
 
 
 class TestDepartingEmployeeClient(object):
-    @pytest.fixture
-    def administration_client(self, mocker):
-        client = mocker.MagicMock(spec=AdministrationClient)
-        client.get_current_tenant_id.return_value = "00000000-0000-0000-0000-000000000000"
-        return client
-
     @pytest.fixture
     def mock_get_all_cases_function(self, mocker):
         # Useful for testing get_case_by_username, which first gets all cases.
@@ -45,7 +38,7 @@ class TestDepartingEmployeeClient(object):
         mock.return_value = response
         return mock
 
-    def test_create_departing_employee_gets_tenant_id_from_administration_client_if_needed(
+    def test_create_departing_employee_sets_tenant_id_from_administration_client_if_needed(
         self, mock_session, administration_client
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
@@ -104,7 +97,7 @@ class TestDepartingEmployeeClient(object):
         client.create_departing_employee("test.employee@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/create"
 
-    def test_resolve_departing_employee_gets_tenant_id_from_administration_client_if_needed(
+    def test_resolve_departing_employee_sets_tenant_id_from_administration_client_if_needed(
         self, mock_session, administration_client
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
@@ -150,7 +143,7 @@ class TestDepartingEmployeeClient(object):
         client.resolve_departing_employee("test.employee@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/resolve"
 
-    def test_get_all_departing_employees_gets_tenant_id_from_administration_client_if_needed(
+    def test_get_all_departing_employees_sets_tenant_id_from_administration_client_if_needed(
         self, mock_session, administration_client
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
@@ -200,7 +193,7 @@ class TestDepartingEmployeeClient(object):
         client.get_all_departing_employees()
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/search"
 
-    def test_toggle_alerts_gets_tenant_id_from_administration_client_if_needed(
+    def test_toggle_alerts_sets_tenant_id_from_administration_client_if_needed(
         self, mock_session, administration_client
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
@@ -242,7 +235,7 @@ class TestDepartingEmployeeClient(object):
         client.toggle_alerts()
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/togglealerts"
 
-    def test_get_case_by_username_gets_tenant_id_from_administration_client_if_needed(
+    def test_get_case_by_username_sets_tenant_id_from_administration_client_if_needed(
         self, mock_session, administration_client, mock_get_all_cases_function
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
@@ -290,7 +283,7 @@ class TestDepartingEmployeeClient(object):
         client.get_case_by_username("test.example@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/details"
 
-    def test_get_case_by_id_gets_tenant_id_from_administration_client_if_needed(
+    def test_get_case_by_id_sets_tenant_id_from_administration_client_if_needed(
         self, mock_session, administration_client, mock_get_all_cases_function
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)
@@ -336,7 +329,7 @@ class TestDepartingEmployeeClient(object):
         client.get_case_by_id("999")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/details"
 
-    def test_update_case_gets_tenant_id_from_administration_client_if_needed(
+    def test_update_case_sets_tenant_id_from_administration_client_if_needed(
         self, mock_session, administration_client, mock_get_all_cases_function
     ):
         client = DepartingEmployeeClient(mock_session, administration_client)

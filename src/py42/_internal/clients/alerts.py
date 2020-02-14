@@ -17,8 +17,8 @@ class AlertClient(BaseClient):
         uri = self._uri_prefix.format(u"query-alerts")
         return self._default_session.post(uri, data=query)
 
-    def get_alert_details(self, alert_ids, tenant_id=None):
-        # tenant_id is not required
+    def get_query_details(self, alert_ids, tenant_id=None):
+        # tenant_id is not required for this call
         uri = self._uri_prefix.format(u"query-details")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
         return self._default_session.post(uri, data=json.dumps(data))
@@ -28,13 +28,13 @@ class AlertClient(BaseClient):
         reason = reason if reason else u""
         uri = self._uri_prefix.format(u"resolve-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
-        return self._default_session.post(uri, json.dumps(data))
+        return self._default_session.post(uri, data=json.dumps(data))
 
     def reopen_alert(self, alert_ids, tenant_id=None, reason=None):
         tenant_id = tenant_id if tenant_id else self._get_current_tenant_id()
         uri = self._uri_prefix.format(u"reopen-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
-        return self._default_session.post(uri, json.dumps(data))
+        return self._default_session.post(uri, data=json.dumps(data))
 
     def _get_current_tenant_id(self):
         if self._tenant_id is None:

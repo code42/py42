@@ -103,8 +103,12 @@ class _QueryFilterTimestampField(object):
     @classmethod
     def on(cls, value):
         date_from_value = datetime.utcfromtimestamp(value)
-        start_time = datetime(date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0)
-        end_time = datetime(date_from_value.year, date_from_value.month, date_from_value.day, 0, 23, 59)
+        start_time = datetime(
+            date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0
+        )
+        end_time = datetime(
+            date_from_value.year, date_from_value.month, date_from_value.day, 0, 23, 59
+        )
         formatted_start_time = u"{0}Z".format(start_time.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3])
         formatted_end_time = u"{0}Z".format(end_time.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3])
         return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)

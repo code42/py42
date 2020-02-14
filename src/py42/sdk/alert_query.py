@@ -77,6 +77,7 @@ class AlertQuery(BaseQuery):
 
 class AlertQueryFactory(object):
     """Abstracts away having to get the tenant ID when creating queries"""
+
     _tenant_id = None
 
     def __init__(self, administration_client):

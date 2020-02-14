@@ -4,7 +4,7 @@ from py42._internal.base_classes import BaseClient
 
 
 class DepartingEmployeeClient(BaseClient):
-    _uri_prefix =  u"/svc/api/v1/departingemployee/{0}"
+    _uri_prefix = u"/svc/api/v1/departingemployee/{0}"
     _tenant_id = None
 
     def __init__(self, session, administration_client):

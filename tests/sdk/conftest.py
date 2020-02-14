@@ -94,4 +94,3 @@ def format_datetime(test_date):
     prefix = test_date.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
     timestamp_str = "{0}Z".format(prefix)
     return timestamp_str
-

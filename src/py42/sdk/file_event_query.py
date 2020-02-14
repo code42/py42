@@ -1,33 +1,9 @@
 # -*- coding: utf-8 -*-
+
 from py42._internal.base_classes import BaseQuery
 from py42._internal.compat import str
-from py42._internal.query_filter import (
-    _QueryFilterStringField,
-    _QueryFilterTimestampField,
-    FilterGroup,
-    create_query_filter,
-    create_filter_group,
-)
-
-
-def create_exists_filter_group(term):
-    filter_list = [create_query_filter(term, u"EXISTS")]
-    return create_filter_group(filter_list, u"AND")
-
-
-def create_not_exists_filter_group(term):
-    filter_list = [create_query_filter(term, u"DOES_NOT_EXIST")]
-    return create_filter_group(filter_list, u"AND")
-
-
-class _FileEventFilterStringField(_QueryFilterStringField):
-    @classmethod
-    def exists(cls):
-        return create_exists_filter_group(cls._term)
-
-    @classmethod
-    def not_exists(cls):
-        return create_not_exists_filter_group(cls._term)
+from py42._internal.filters.query_filter import _QueryFilterTimestampField, FilterGroup
+from py42._internal.filters.file_event_filter import _FileEventFilterStringField
 
 
 class MD5(_FileEventFilterStringField):
@@ -106,7 +82,7 @@ class EventType(_FileEventFilterStringField):
         return super(EventType, cls).not_in([str(value) for value in value_list])
 
 
-class ExposureType(_QueryFilterStringField):
+class ExposureType(_FileEventFilterStringField):
     _term = u"exposure"
 
     class ExposureTypeEnum(object):

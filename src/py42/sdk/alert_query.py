@@ -2,30 +2,8 @@
 
 from py42._internal.compat import str
 from py42._internal.base_classes import BaseQuery
-from py42._internal.query_filter import (
-    _QueryFilterStringField,
-    _QueryFilterTimestampField,
-    FilterGroup,
-    create_query_filter,
-    create_filter_group,
-)
-
-
-def create_contains_group(term, value):
-    filter_list = [create_query_filter(term, u"CONTAINS", value)]
-    return create_filter_group(filter_list, u"AND")
-
-
-def create_not_contains_group(term, value):
-    filter_list = [create_query_filter(term, u"DOES_NOT_CONTAIN", value)]
-    return create_filter_group(filter_list, u"AND")
-
-
-class _AlertQueryFilterStringField(_QueryFilterStringField):
-    @classmethod
-    def contains(cls, value):
-        # type: (str) -> FilterGroup
-        return create_contains_group(cls._term, value)
+from py42._internal.filters.query_filter import _QueryFilterTimestampField
+from py42._internal.filters.alert_filter import _AlertQueryFilterStringField
 
 
 class DateObserved(_QueryFilterTimestampField):

@@ -154,24 +154,14 @@ def test_date_observed_on_sets_filter_properties_correctly(in_range_filter_creat
     in_range_filter_creator.assert_called_once_with("CreatedAt", formatted_before, formatted_after)
 
 
-def test_actor_exists_sets_filter_properties_correctly(exists_filter_creator):
-    Actor.exists()
-    exists_filter_creator.assert_called_once_with("actor")
-
-
-def test_actor_not_exists_sets_filter_properties_correctly(not_exists_filter_creator):
-    Actor.not_exists()
-    not_exists_filter_creator.assert_called_once_with("actor")
-
-
 def test_actor_eq_sets_filter_properties_correctly(eq_filter_creator):
     Actor.eq("test.testerson")
-    eq_filter_creator.assert_called_once_with("fileName", "actor")
+    eq_filter_creator.assert_called_once_with("actor", "test.testerson")
 
 
 def test_actor_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
     Actor.not_eq("test.testerson")
-    not_eq_filter_creator.assert_called_once_with("fileName", "actor")
+    not_eq_filter_creator.assert_called_once_with("actor", "test.testerson")
 
 
 def test_actor_is_in_sets_filter_properties_correctly(is_in_filter_creator):
@@ -184,3 +174,6 @@ def test_actor_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     items = ["test.testerson", "flag.flagerson", "mock.mockerson"]
     Actor.not_in(items)
     not_in_filter_creator.assert_called_once_with("actor", items)
+
+
+# def test_actor_contains_sets_filter_properties_correctly()

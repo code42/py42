@@ -62,6 +62,11 @@ def contains_filter_creator(mocker):
 
 
 @pytest.fixture
+def not_contains_filter_creator(mocker):
+    return mocker.patch(create_alert_filter_creator_path("not_contains"))
+
+
+@pytest.fixture
 def is_in_filter_creator(mocker):
     return mocker.patch(create_base_filter_creator_path("is_in"))
 
@@ -91,7 +96,9 @@ def create_base_filter_creator_path(query_filter_string):
 
 
 def create_file_event_filter_creator_path(query_filter_string):
-    return "py42._internal.filters.file_event_filter.create_{0}_filter_group".format(query_filter_string)
+    return "py42._internal.filters.file_event_filter.create_{0}_filter_group".format(
+        query_filter_string
+    )
 
 
 def create_alert_filter_creator_path(query_filter_string):

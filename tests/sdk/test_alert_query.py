@@ -176,4 +176,117 @@ def test_actor_not_in_sets_filter_properties_correctly(not_in_filter_creator):
     not_in_filter_creator.assert_called_once_with("actor", items)
 
 
-# def test_actor_contains_sets_filter_properties_correctly()
+def test_actor_contains_sets_filter_properties_correctly(contains_filter_creator):
+    Actor.contains("test")
+    contains_filter_creator.assert_called_once_with("actor", "test")
+
+
+def test_actor_not_contains_sets_filter_properties_correctly(not_contains_filter_creator):
+    Actor.not_contains("test")
+    not_contains_filter_creator.assert_called_once_with("actor", "test")
+
+
+def test_severity_eq_sets_filter_properties_correctly(eq_filter_creator):
+    Severity.eq("HIGH")
+    eq_filter_creator.assert_called_once_with("severity", "HIGH")
+
+
+def test_severity_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
+    Severity.not_eq("HIGH")
+    not_eq_filter_creator.assert_called_once_with("severity", "HIGH")
+
+
+def test_severity_is_in_sets_filter_properties_correctly(is_in_filter_creator):
+    Severity.is_in(["HIGH", "LOW"])
+    is_in_filter_creator.assert_called_once_with("severity", ["HIGH", "LOW"])
+
+
+def test_severity_not_in_sets_filter_properties_correctly(not_in_filter_creator):
+    Severity.not_in(["HIGH", "LOW"])
+    not_in_filter_creator.assert_called_once_with("severity", ["HIGH", "LOW"])
+
+
+def test_rule_name_eq_sets_filter_properties_correctly(eq_filter_creator):
+    RuleName.eq("Departing Employee")
+    eq_filter_creator.assert_called_once_with("name", "Departing Employee")
+
+
+def test_rule_name_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
+    RuleName.not_eq("Departing Employee")
+    not_eq_filter_creator.assert_called_once_with("name", "Departing Employee")
+
+
+def test_rule_name_is_in_sets_filter_properties_correctly(is_in_filter_creator):
+    items = ["rule 1", "rule 2", "rule 3"]
+    RuleName.is_in(items)
+    is_in_filter_creator.assert_called_once_with("name", items)
+
+
+def test_rule_name_not_in_sets_filter_properties_correctly(not_in_filter_creator):
+    items = ["rule 1", "rule 2", "rule 3"]
+    RuleName.not_in(items)
+    not_in_filter_creator.assert_called_once_with("name", items)
+
+
+def test_rule_name_contains_sets_filter_properties_correctly(contains_filter_creator):
+    RuleName.contains("test")
+    contains_filter_creator.assert_called_once_with("name", "test")
+
+
+def test_rule_name_not_contains_sets_filter_properties_correctly(not_contains_filter_creator):
+    RuleName.not_contains("test")
+    not_contains_filter_creator.assert_called_once_with("name", "test")
+
+
+def test_description_eq_sets_filter_properties_correctly(eq_filter_creator):
+    Description.eq("Departing Employee")
+    eq_filter_creator.assert_called_once_with("description", "Departing Employee")
+
+
+def test_description_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
+    Description.not_eq("Departing Employee")
+    not_eq_filter_creator.assert_called_once_with("description", "Departing Employee")
+
+
+def test_description_is_in_sets_filter_properties_correctly(is_in_filter_creator):
+    items = ["rule 1", "rule 2", "rule 3"]
+    Description.is_in(items)
+    is_in_filter_creator.assert_called_once_with("description", items)
+
+
+def test_description_not_in_sets_filter_properties_correctly(not_in_filter_creator):
+    items = ["rule 1", "rule 2", "rule 3"]
+    Description.not_in(items)
+    not_in_filter_creator.assert_called_once_with("description", items)
+
+
+def test_description_contains_sets_filter_properties_correctly(contains_filter_creator):
+    Description.contains("test")
+    contains_filter_creator.assert_called_once_with("description", "test")
+
+
+def test_description_not_contains_sets_filter_properties_correctly(not_contains_filter_creator):
+    Description.not_contains("test")
+    not_contains_filter_creator.assert_called_once_with("description", "test")
+
+
+def test_alert_state_eq_sets_filter_properties_correctly(eq_filter_creator):
+    AlertState.eq("OPEN")
+    eq_filter_creator.assert_called_once_with("state", "OPEN")
+
+
+def test_alert_state_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
+    AlertState.not_eq("OPEN")
+    not_eq_filter_creator.assert_called_once_with("state", "OPEN")
+
+
+def test_alert_state_is_in_sets_filter_properties_correctly(is_in_filter_creator):
+    items = ["OPEN", "DISMISSED"]
+    AlertState.is_in(items)
+    is_in_filter_creator.assert_called_once_with("state", items)
+
+
+def test_alert_state_not_in_sets_filter_properties_correctly(not_in_filter_creator):
+    items = ["OPEN", "DISMISSED"]
+    AlertState.not_in(items)
+    not_in_filter_creator.assert_called_once_with("state", items)

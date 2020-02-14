@@ -1,4 +1,8 @@
-from py42._internal.filters.query_filter import create_query_filter, create_filter_group, _QueryFilterStringField
+from py42._internal.filters.query_filter import (
+    create_query_filter,
+    create_filter_group,
+    _QueryFilterStringField,
+)
 
 
 def create_exists_filter_group(term):

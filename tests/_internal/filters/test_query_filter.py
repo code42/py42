@@ -90,7 +90,9 @@ def test_create_eq_filter_group_calls_create_query_filter_with_correct_values(mo
     create_eq_filter_group(term, "eqval")
     op = "IS"
 
-    py42._internal.filters.query_filter.create_query_filter.assert_called_once_with(term, op, "eqval")
+    py42._internal.filters.query_filter.create_query_filter.assert_called_once_with(
+        term, op, "eqval"
+    )
 
 
 def test_create_is_in_filter_group_calls_create_query_filter_with_correct_values(mocker):
@@ -113,7 +115,9 @@ def test_create_not_eq_filter_group_calls_create_query_filter_with_correct_value
     create_not_eq_filter_group(term, "noteqtval")
     op = "IS_NOT"
 
-    py42._internal.filters.query_filter.create_query_filter.assert_called_once_with(term, op, "noteqtval")
+    py42._internal.filters.query_filter.create_query_filter.assert_called_once_with(
+        term, op, "noteqtval"
+    )
 
 
 def test_create_not_in_filter_group_calls_create_query_filter_with_correct_values(mocker):

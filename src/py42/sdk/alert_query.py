@@ -100,8 +100,6 @@ class AlertQuery(BaseQuery):
         super(AlertQuery, self).__init__(*args, **kwargs)
         self._tenant_id = tenant_id
         self.sort_key = u"CreatedAt"
-
-        # For alerts, page numbers begin at 0, counter to file event queries
         self.page_number = 0
 
     def __str__(self):
@@ -119,7 +117,7 @@ class AlertQuery(BaseQuery):
 
 
 class AlertQueryFactory(object):
-    """Abstracts away having to get the tenant ID when creating queries"""
+    """Abstracts away having to know the tenant ID when creating queries"""
 
     _tenant_id = None
 

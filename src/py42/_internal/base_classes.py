@@ -18,10 +18,12 @@ class BaseQuery(object):
         # type: (iter[FilterGroup], any) -> None
         self._filter_group_list = list(args)
         self._group_clause = kwargs.get(u"group_clause", u"AND")
-        self.page_number = 1
         self.page_size = 100
         self.sort_direction = u"asc"
-        self.sort_key = u"eventId"
+
+        # Override
+        self.page_number = None
+        self.sort_key = None
 
     @classmethod
     def any(cls, *args):

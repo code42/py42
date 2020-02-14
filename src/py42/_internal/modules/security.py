@@ -99,13 +99,17 @@ class SecurityModule(object):
             pass
 
     def _try_get_security_detection_event_client(self, plan_storage_info):
+        # check if we have already created and stored this client
         client = self._client_cache.get(plan_storage_info.node_guid)
 
+        # otherwise, create it
         if client is None:
             client = self._storage_client_factory.get_storage_client_from_plan_uid(
                 plan_storage_info.plan_uid, plan_storage_info.destination_guid
             ).security
 
+            # store this client via its guid so that we don't have to call StorageAuthToken
+            # just to determine what storage client to use
             with self._client_cache_lock:
                 self._client_cache.update({plan_storage_info.node_guid: client})
 
@@ -117,10 +121,12 @@ class SecurityModule(object):
         if type(plan_storage_infos) is not list:
             plan_storage_infos = [plan_storage_infos]
 
+        # get the storage node client for each plan
         for plan_storage_info in plan_storage_infos:
             client = self._try_get_security_detection_event_client(plan_storage_info)
             started = False
 
+            # get all pages of events for this plan
             while cursor or not started:
                 started = True
                 response = client.get_security_detection_events_for_plan(
@@ -132,6 +138,7 @@ class SecurityModule(object):
                     max_timestamp=max_timestamp,
                 )
                 cursor = json.loads(response.text)["data"].get("cursor")
+                # if there are no results, we don't get a cursor and have reached the end
                 if cursor:
                     yield response, cursor
 

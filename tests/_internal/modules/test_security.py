@@ -272,11 +272,9 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client_one_location, storage_client_factory, file_event_client_factory
         )
-        storage_info_list = security_module.get_security_plan_storage_info_list("foo")
-        assert len(storage_info_list) == 1
-        assert storage_info_list[0].node_guid == "41"
-        assert storage_info_list[0].destination_guid == "4"
-        assert storage_info_list[0].plan_uid == "111111111111111111"
+        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        assert len(storage_infos) == 1
+        assert self._storage_info_contains(storage_infos, "111111111111111111", "4", "41")
 
     def test_get_security_plan_storage_info_two_plans_one_node_returns_both_location_info(
         self, security_client_two_plans_one_node, storage_client_factory, file_event_client_factory
@@ -284,14 +282,10 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client_two_plans_one_node, storage_client_factory, file_event_client_factory
         )
-        storage_info_list = security_module.get_security_plan_storage_info_list("foo")
-        assert len(storage_info_list) == 2
-        assert storage_info_list[0].node_guid == "41"
-        assert storage_info_list[0].destination_guid == "4"
-        assert storage_info_list[0].plan_uid == "111111111111111111"
-        assert storage_info_list[1].node_guid == "41"
-        assert storage_info_list[1].destination_guid == "4"
-        assert storage_info_list[1].plan_uid == "222222222222222222"
+        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        assert len(storage_infos) == 2
+        assert self._storage_info_contains(storage_infos, "111111111111111111", "4", "41")
+        assert self._storage_info_contains(storage_infos, "222222222222222222", "4", "41")
 
     def test_get_security_plan_storage_info_two_plans_two_nodes_returns_both_location_info(
         self, security_client_two_plans_two_nodes, storage_client_factory, file_event_client_factory
@@ -299,14 +293,9 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client_two_plans_two_nodes, storage_client_factory, file_event_client_factory
         )
-        storage_info_list = security_module.get_security_plan_storage_info_list("foo")
-        assert len(storage_info_list) == 2
-        assert storage_info_list[0].node_guid == "41"
-        assert storage_info_list[0].destination_guid == "4"
-        assert storage_info_list[0].plan_uid == "111111111111111111"
-        assert storage_info_list[1].node_guid == "42"
-        assert storage_info_list[1].destination_guid == "4"
-        assert storage_info_list[1].plan_uid == "222222222222222222"
+        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        assert self._storage_info_contains(storage_infos, "111111111111111111", "4", "41")
+        assert self._storage_info_contains(storage_infos, "222222222222222222", "4", "42")
 
     def test_get_security_plan_storage_info_one_plan_two_destinations_returns_one_location(
         self,
@@ -319,11 +308,11 @@ class TestSecurityModule(object):
             storage_client_factory,
             file_event_client_factory,
         )
-        storage_info_list = security_module.get_security_plan_storage_info_list("foo")
-        assert len(storage_info_list) == 1
-        assert storage_info_list[0].node_guid == "51"
-        assert storage_info_list[0].destination_guid == "5"
-        assert storage_info_list[0].plan_uid == "111111111111111111"
+        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        assert len(storage_infos) == 1
+        assert self._storage_info_contains(
+            storage_infos, "111111111111111111", "4", "41"
+        ) or self._storage_info_contains(storage_infos, "111111111111111111", "5", "51")
 
     def test_get_security_plan_storage_info_two_plans_two_destinations_returns_one_location_per_plan(
         self,
@@ -336,14 +325,14 @@ class TestSecurityModule(object):
             storage_client_factory,
             file_event_client_factory,
         )
-        storage_info_list = security_module.get_security_plan_storage_info_list("foo")
-        assert len(storage_info_list) == 2
-        assert storage_info_list[0].node_guid == "51"
-        assert storage_info_list[0].destination_guid == "5"
-        assert storage_info_list[0].plan_uid == "111111111111111111"
-        assert storage_info_list[1].node_guid == "51"
-        assert storage_info_list[1].destination_guid == "5"
-        assert storage_info_list[1].plan_uid == "222222222222222222"
+        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        assert len(storage_infos) == 2
+        assert self._storage_info_contains(
+            storage_infos, "111111111111111111", "4", "41"
+        ) or self._storage_info_contains(storage_infos, "111111111111111111", "5", "51")
+        assert self._storage_info_contains(
+            storage_infos, "222222222222222222", "4", "41"
+        ) or self._storage_info_contains(storage_infos, "222222222222222222", "5", "51")
 
     def test_get_security_plan_storage_info_two_plans_two_destinations_three_nodes_returns_one_location_per_plan(
         self,
@@ -356,14 +345,23 @@ class TestSecurityModule(object):
             storage_client_factory,
             file_event_client_factory,
         )
-        storage_info_list = security_module.get_security_plan_storage_info_list("foo")
-        assert len(storage_info_list) == 2
-        assert storage_info_list[0].node_guid == "51"
-        assert storage_info_list[0].destination_guid == "5"
-        assert storage_info_list[0].plan_uid == "111111111111111111"
-        assert storage_info_list[1].node_guid == "52"
-        assert storage_info_list[1].destination_guid == "5"
-        assert storage_info_list[1].plan_uid == "222222222222222222"
+        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        assert self._storage_info_contains(
+            storage_infos, "111111111111111111", "4", "41"
+        ) or self._storage_info_contains(storage_infos, "111111111111111111", "5", "51")
+        assert self._storage_info_contains(
+            storage_infos, "222222222222222222", "4", "41"
+        ) or self._storage_info_contains(storage_infos, "222222222222222222", "5", "52")
+
+    # the order the items are iterated through is not deterministic in some versions of python,
+    # so we simply test that the value returned is one of the _possible_ values.
+    def _storage_info_contains(self, storage_info_list, plan_uid, destination_guid, node_guid):
+        return any(
+            item.plan_uid == plan_uid
+            and item.destination_guid == destination_guid
+            and item.node_guid == node_guid
+            for item in storage_info_list
+        )
 
     # def test_get_normalized_security_event_plan_info_no_locations_response(security_client):
     #     security_client.get_security_event_locations.return_value = None

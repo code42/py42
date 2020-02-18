@@ -99,26 +99,26 @@ class KeyValueStoreClientFactory(object):
 
 
 class EmployeeCaseManagementClientFactory(object):
-    def __init__(self, session_factory, login_provider_factory, customer):
+    def __init__(self, session_factory, login_provider_factory, user_context):
         # type: (SessionFactory, EmployeeCaseManagementLoginProviderFactory, UserContext) -> None
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
-        self._customer = customer
+        self._user_context = user_context
 
     def get_departing_employee_client(self):
         login_provider = self._login_provider_factory.create_ecm_login_provider()
         session = self._session_factory.create_jwt_session_from_provider(login_provider)
-        return DepartingEmployeeClient(session, self._customer)
+        return DepartingEmployeeClient(session, self._user_context)
 
 
 class AlertClientFactory(object):
-    def __init__(self, session_factory, login_provider_factory, customer):
+    def __init__(self, session_factory, login_provider_factory, user_context):
         # type: (SessionFactory, AlertLoginProviderFactory, UserContext) -> None
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
-        self._customer = customer
+        self._user_context = user_context
 
     def get_alert_client(self):
         login_provider = self._login_provider_factory.create_alert_login_provider()
         session = self._session_factory.create_jwt_session_from_provider(login_provider)
-        return AlertClient(session, self._customer)
+        return AlertClient(session, self._user_context)

@@ -257,34 +257,60 @@ def test_device_username_not_exists_str_gives_correct_json_representation():
 
 def test_device_username_eq_str_gives_correct_json_representation():
     _filter = DeviceUsername.eq("test_deviceUserName")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"deviceUserName", "value":"test_deviceUserName"}]}'
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"IS", '
+        '"term":"deviceUserName", "value":"test_deviceUserName"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_device_username_not_eq_str_gives_correct_json_representation():
     _filter = DeviceUsername.not_eq("test_deviceUsername")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"deviceUserName", "value":"test_deviceUsername"}]}'
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", '
+        '"term":"deviceUserName", "value":"test_deviceUsername"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_device_username_is_in_str_gives_correct_json_representation():
     items = ["deviceUserName1", "deviceUserName2", "deviceUserName3"]
     _filter = DeviceUsername.is_in(items)
-    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"deviceUserName", "value":"deviceUserName1"},{"operator":"IS", "term":"deviceUserName", "value":"deviceUserName2"},{"operator":"IS", "term":"deviceUserName", "value":"deviceUserName3"}]}'
+    expected = (
+        '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"deviceUserName", '
+        '"value":"deviceUserName1"},{"operator":"IS", "term":"deviceUserName", '
+        '"value":"deviceUserName2"},{"operator":"IS", "term":"deviceUserName", '
+        '"value":"deviceUserName3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_device_username_not_in_str_gives_correct_json_representation():
     items = ["deviceUserName1", "deviceUserName2", "deviceUserName3"]
     _filter = DeviceUsername.not_in(items)
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"deviceUserName", "value":"deviceUserName1"},{"operator":"IS_NOT", "term":"deviceUserName", "value":"deviceUserName2"},{"operator":"IS_NOT", "term":"deviceUserName", "value":"deviceUserName3"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", '
+        '"term":"deviceUserName", '
+        '"value":"deviceUserName1"},'
+        '{"operator":"IS_NOT", '
+        '"term":"deviceUserName", '
+        '"value":"deviceUserName2"},'
+        '{"operator":"IS_NOT", '
+        '"term":"deviceUserName",'
+        ' "value":"deviceUserName3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_unicode_device_username_eq_str_gives_correct_json_representation():
     unicode_username = u"您已经发现了秘密信息"
     _filter = DeviceUsername.eq(unicode_username)
-    expected = u'{"filterClause":"AND", "filters":[{"operator":"IS", "term":"deviceUserName", "value":"\u60a8\u5df2\u7ecf\u53d1\u73b0\u4e86\u79d8\u5bc6\u4fe1\u606f"}]}'
+    expected = (
+        u'{"filterClause":"AND", "filters":[{"operator":"IS", '
+        u'"term":"deviceUserName", '
+        u'"value":"\u60a8\u5df2\u7ecf\u53d1\u73b0\u4e86\u79d8\u5bc6\u4fe1\u606f"}]}'
+    )
     assert str(_filter) == expected
 
 
@@ -298,33 +324,55 @@ def test_file_name_exists_str_gives_correct_json_representation():
 
 def test_file_name_not_exists_str_gives_correct_json_representation():
     _filter = FileName.not_exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_EXIST", "term":"fileName", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"DOES_NOT_EXIST", "term":"fileName", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_file_name_eq_str_gives_correct_json_representation():
     _filter = FileName.eq("test_fileName")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"fileName", "value":"test_fileName"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"IS", "term":"fileName", "value":"test_fileName"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_file_name_not_eq_str_gives_correct_json_representation():
     _filter = FileName.not_eq("test_fileName")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"fileName", "value":"test_fileName"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"IS_NOT", "term":"fileName", "value":"test_fileName"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_file_name_is_in_str_gives_correct_json_representation():
     items = ["fileName", "fileName", "fileName"]
     _filter = FileName.is_in(items)
-    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"fileName", "value":"fileName"},{"operator":"IS", "term":"fileName", "value":"fileName"},{"operator":"IS", "term":"fileName", "value":"fileName"}]}'
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":[{"operator":"IS", "term":"fileName", "value":"fileName"},'
+        '{"operator":"IS", "term":"fileName", "value":"fileName"},'
+        '{"operator":"IS", "term":"fileName", "value":"fileName"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_file_name_not_in_str_gives_correct_json_representation():
     items = ["fileName1", "fileName2", "fileName3"]
     _filter = FileName.not_in(items)
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"fileName", "value":"fileName1"},{"operator":"IS_NOT", "term":"fileName", "value":"fileName2"},{"operator":"IS_NOT", "term":"fileName", "value":"fileName3"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"fileName", "value":"fileName1"},'
+        '{"operator":"IS_NOT", "term":"fileName", "value":"fileName2"},'
+        '{"operator":"IS_NOT", "term":"fileName", "value":"fileName3"}]}'
+    )
     assert str(_filter) == expected
 
 
@@ -338,147 +386,238 @@ def test_file_path_exists_str_gives_correct_json_representation():
 
 def test_file_path_not_exists_str_gives_correct_json_representation():
     _filter = FilePath.not_exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_EXIST", "term":"filePath", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"DOES_NOT_EXIST", "term":"filePath", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_file_path_eq_str_gives_correct_json_representation():
     _filter = FilePath.eq("test_filePath")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"filePath", "value":"test_filePath"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS", "term":"filePath", "value":"test_filePath"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_file_path_not_eq_str_gives_correct_json_representation():
     _filter = FilePath.not_eq("test_filePath")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"filePath", "value":"test_filePath"}]}'
+    expected = (
+        '{"filterClause":"AND",'
+        ' "filters":[{"operator":"IS_NOT", "term":"filePath", "value":"test_filePath"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_file_path_is_in_str_gives_correct_json_representation():
     items = ["filePath1", "filePath2", "filePath3"]
     _filter = FilePath.is_in(items)
-    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"filePath", "value":"filePath1"},{"operator":"IS", "term":"filePath", "value":"filePath2"},{"operator":"IS", "term":"filePath", "value":"filePath3"}]}'
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":'
+        '[{"operator":"IS", "term":"filePath", "value":"filePath1"},'
+        '{"operator":"IS", "term":"filePath", "value":"filePath2"},'
+        '{"operator":"IS", "term":"filePath", "value":"filePath3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_file_path_not_in_str_gives_correct_json_representation():
     items = ["filePath1", "filePath2", "filePath3"]
     _filter = FilePath.not_in(items)
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"filePath", "value":"filePath1"},{"operator":"IS_NOT", "term":"filePath", "value":"filePath2"},{"operator":"IS_NOT", "term":"filePath", "value":"filePath3"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"IS_NOT", "term":"filePath", "value":"filePath1"},'
+        '{"operator":"IS_NOT", "term":"filePath", "value":"filePath2"},'
+        '{"operator":"IS_NOT", "term":"filePath", "value":"filePath3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_public_ip_exists_str_gives_correct_json_representation():
     _filter = PublicIPAddress.exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"publicIpAddress", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"EXISTS", "term":"publicIpAddress", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_public_ip_not_exists_str_gives_correct_json_representation():
     _filter = PublicIPAddress.not_exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_EXIST", "term":"publicIpAddress", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"DOES_NOT_EXIST", "term":"publicIpAddress", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_public_ip_address_eq_str_gives_correct_json_representation():
     _filter = PublicIPAddress.eq("test_publicIp")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"publicIpAddress", "value":"test_publicIp"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS", "term":"publicIpAddress", "value":"test_publicIp"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_public_ip_address_not_eq_str_gives_correct_json_representation():
     _filter = PublicIPAddress.not_eq("test_publicIp")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"publicIpAddress", "value":"test_publicIp"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"publicIpAddress", "value":"test_publicIp"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_public_ip_address_is_in_str_gives_correct_json_representation():
     items = ["publicIpAddress1", "publicIpAddress2", "publicIpAddress3"]
     _filter = PublicIPAddress.is_in(items)
-    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"publicIpAddress", "value":"publicIpAddress1"},{"operator":"IS", "term":"publicIpAddress", "value":"publicIpAddress2"},{"operator":"IS", "term":"publicIpAddress", "value":"publicIpAddress3"}]}'
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":'
+        '[{"operator":"IS", "term":"publicIpAddress", "value":"publicIpAddress1"},'
+        '{"operator":"IS", "term":"publicIpAddress", "value":"publicIpAddress2"},'
+        '{"operator":"IS", "term":"publicIpAddress", "value":"publicIpAddress3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_public_ip_address_not_in_str_gives_correct_json_representation():
     items = ["publicIpAddress1", "publicIpAddress2", "publicIpAddress3"]
     _filter = PublicIPAddress.not_in(items)
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"publicIpAddress", "value":"publicIpAddress1"},{"operator":"IS_NOT", "term":"publicIpAddress", "value":"publicIpAddress2"},{"operator":"IS_NOT", "term":"publicIpAddress", "value":"publicIpAddress3"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"publicIpAddress", "value":"publicIpAddress1"},'
+        '{"operator":"IS_NOT", "term":"publicIpAddress", "value":"publicIpAddress2"},'
+        '{"operator":"IS_NOT", "term":"publicIpAddress", "value":"publicIpAddress3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_private_ip_exists_str_gives_correct_json_representation():
     _filter = PrivateIPAddress.exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"privateIpAddresses", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"EXISTS", "term":"privateIpAddresses", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_private_ip_not_exists_str_gives_correct_json_representation():
     _filter = PrivateIPAddress.not_exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_EXIST", "term":"privateIpAddresses", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"DOES_NOT_EXIST", "term":"privateIpAddresses", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_private_ip_address_eq_str_gives_correct_json_representation():
     _filter = PrivateIPAddress.eq("test_privateIp")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"privateIpAddresses", "value":"test_privateIp"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"IS", "term":"privateIpAddresses", "value":"test_privateIp"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_private_ip_address_not_eq_str_gives_correct_json_representation():
     _filter = PrivateIPAddress.not_eq("test_privateIp")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"privateIpAddresses", "value":"test_privateIp"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"IS_NOT", "term":"privateIpAddresses", "value":"test_privateIp"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_private_ip_address_is_in_str_gives_correct_json_representation():
     items = ["privateIp1", "privateIp2", "privateIp3"]
     _filter = PrivateIPAddress.is_in(items)
-    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"privateIpAddresses", "value":"privateIp1"},{"operator":"IS", "term":"privateIpAddresses", "value":"privateIp2"},{"operator":"IS", "term":"privateIpAddresses", "value":"privateIp3"}]}'
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":[{"operator":"IS", "term":"privateIpAddresses", "value":"privateIp1"},'
+        '{"operator":"IS", "term":"privateIpAddresses", "value":"privateIp2"},'
+        '{"operator":"IS", "term":"privateIpAddresses", "value":"privateIp3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_private_ip_address_not_in_str_gives_correct_json_representation():
     items = ["privateIp1", "privateIp2", "privateIp3"]
     _filter = PrivateIPAddress.not_in(items)
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"privateIpAddresses", "value":"privateIp1"},{"operator":"IS_NOT", "term":"privateIpAddresses", "value":"privateIp2"},{"operator":"IS_NOT", "term":"privateIpAddresses", "value":"privateIp3"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"privateIpAddresses", "value":"privateIp1"},'
+        '{"operator":"IS_NOT", "term":"privateIpAddresses", "value":"privateIp2"},'
+        '{"operator":"IS_NOT", "term":"privateIpAddresses", "value":"privateIp3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_event_type_exists_str_gives_correct_json_representation():
     _filter = EventType.exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"eventType", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"EXISTS", "term":"eventType", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_event_type_not_exists_str_gives_correct_json_representation():
     _filter = EventType.not_exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_EXIST", "term":"eventType", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"DOES_NOT_EXIST", "term":"eventType", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_event_type_eq_str_gives_correct_json_representation():
     _filter = EventType.eq("test_eventType")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"eventType", "value":"test_eventType"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS", "term":"eventType", "value":"test_eventType"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_event_type_not_eq_str_gives_correct_json_representation():
     _filter = EventType.not_eq("test_eventType")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"eventType", "value":"test_eventType"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"eventType", "value":"test_eventType"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_event_type_is_in_str_gives_correct_json_representation():
     items = ["eventType1", "eventType2", "eventType3"]
     _filter = EventType.is_in(items)
-    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"eventType", "value":"eventType1"},{"operator":"IS", "term":"eventType", "value":"eventType2"},{"operator":"IS", "term":"eventType", "value":"eventType3"}]}'
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":[{"operator":"IS", "term":"eventType", "value":"eventType1"},'
+        '{"operator":"IS", "term":"eventType", "value":"eventType2"},'
+        '{"operator":"IS", "term":"eventType", "value":"eventType3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_event_type_not_in_str_gives_correct_json_representation():
     items = ["eventType1", "eventType2", "eventType3"]
     _filter = EventType.not_in(items)
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"eventType", "value":"eventType1"},{"operator":"IS_NOT", "term":"eventType", "value":"eventType2"},{"operator":"IS_NOT", "term":"eventType", "value":"eventType3"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"eventType", "value":"eventType1"},'
+        '{"operator":"IS_NOT", "term":"eventType", "value":"eventType2"},'
+        '{"operator":"IS_NOT", "term":"eventType", "value":"eventType3"}]}'
+    )
     assert str(_filter) == expected
 
 
@@ -492,33 +631,52 @@ def test_exposure_type_exists_str_gives_correct_json_representation():
 
 def test_exposure_type_not_exists_str_gives_correct_json_representation():
     _filter = ExposureType.not_exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_EXIST", "term":"exposure", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"DOES_NOT_EXIST", "term":"exposure", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_exposure_type_eq_str_gives_correct_json_representation():
     _filter = ExposureType.eq("test_exposure")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"exposure", "value":"test_exposure"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS", "term":"exposure", "value":"test_exposure"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_exposure_type_not_eq_str_gives_correct_json_representation():
     _filter = ExposureType.not_eq("test_exposure")
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"exposure", "value":"test_exposure"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"exposure", "value":"test_exposure"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_exposure_type_is_in_str_gives_correct_json_representation():
     items = ["exposure1", "exposure2", "exposure3"]
     _filter = ExposureType.is_in(items)
-    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"exposure", "value":"exposure1"},{"operator":"IS", "term":"exposure", "value":"exposure2"},{"operator":"IS", "term":"exposure", "value":"exposure3"}]}'
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":[{"operator":"IS", "term":"exposure", "value":"exposure1"},'
+        '{"operator":"IS", "term":"exposure", "value":"exposure2"},'
+        '{"operator":"IS", "term":"exposure", "value":"exposure3"}]}'
+    )
     assert str(_filter) == expected
 
 
 def test_exposure_type_not_in_str_gives_correct_json_representation():
     items = ["exposure1", "exposure2", "exposure3"]
     _filter = ExposureType.not_in(items)
-    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"exposure", "value":"exposure1"},{"operator":"IS_NOT", "term":"exposure", "value":"exposure2"},{"operator":"IS_NOT", "term":"exposure", "value":"exposure3"}]}'
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"exposure", "value":"exposure1"},'
+        '{"operator":"IS_NOT", "term":"exposure", "value":"exposure2"},'
+        '{"operator":"IS_NOT", "term":"exposure", "value":"exposure3"}]}'
+    )
     assert str(_filter) == expected
 
 
@@ -526,8 +684,10 @@ def test_event_timestamp_on_or_after_str_gives_correct_json_representation():
     test_time = time()
     formatted = format_timestamp(test_time)
     _filter = EventTimestamp.on_or_after(test_time)
-    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}}]}}'.format(
-        formatted
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}}]'
+        "}}".format(formatted)
     )
     assert str(_filter) == expected
 
@@ -536,8 +696,10 @@ def test_event_timestamp_on_or_before_str_gives_correct_json_representation():
     test_time = time()
     formatted = format_timestamp(test_time)
     _filter = EventTimestamp.on_or_before(test_time)
-    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{}"}}]}}'.format(
-        formatted
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{}"}}]'
+        "}}".format(formatted)
     )
     assert str(_filter) == expected
 
@@ -548,8 +710,12 @@ def test_event_timestamp_in_range_str_gives_correct_json_representation():
     formatted_before = format_timestamp(test_before_time)
     formatted_after = format_timestamp(test_after_time)
     _filter = EventTimestamp.in_range(test_before_time, test_after_time)
-    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}},{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{1}"}}]}}'.format(
-        formatted_before, formatted_after
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}},'
+        '{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{1}"}}]}}'.format(
+            formatted_before, formatted_after
+        )
     )
     assert str(_filter) == expected
 
@@ -563,8 +729,12 @@ def test_event_timestamp_on_same_day_str_gives_correct_json_representation():
     formatted_after = format_datetime(end_time)
 
     _filter = EventTimestamp.on_same_day(test_time)
-    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}},{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{1}"}}]}}'.format(
-        formatted_before, formatted_after
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}},'
+        '{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{1}"}}]}}'.format(
+            formatted_before, formatted_after
+        )
     )
     assert str(_filter) == expected
 
@@ -573,8 +743,10 @@ def test_insertion_timestamp_on_or_after_str_gives_correct_json_representation()
     test_time = time()
     formatted = format_timestamp(test_time)
     _filter = InsertionTimestamp.on_or_after(test_time)
-    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"insertionTimestamp", "value":"{0}"}}]}}'.format(
-        formatted
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_AFTER", "term":"insertionTimestamp", "value":"{0}"}}]'
+        "}}".format(formatted)
     )
     assert str(_filter) == expected
 
@@ -583,8 +755,10 @@ def test_insertion_timestamp_on_or_before_str_gives_correct_json_representation(
     test_time = time()
     formatted = format_timestamp(test_time)
     _filter = InsertionTimestamp.on_or_before(test_time)
-    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_BEFORE", "term":"insertionTimestamp", "value":"{0}"}}]}}'.format(
-        formatted
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_BEFORE", "term":"insertionTimestamp", "value":"{0}"}}]'
+        "}}".format(formatted)
     )
     assert str(_filter) == expected
 
@@ -595,8 +769,11 @@ def test_insertion_timestamp_in_range_str_gives_correct_json_representation():
     formatted_before = format_timestamp(test_before_time)
     formatted_after = format_timestamp(test_after_time)
     _filter = InsertionTimestamp.in_range(test_before_time, test_after_time)
-    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"insertionTimestamp", "value":"{0}"}},{{"operator":"ON_OR_BEFORE", "term":"insertionTimestamp", "value":"{1}"}}]}}'.format(
-        formatted_before, formatted_after
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_AFTER", "term":"insertionTimestamp", "value":"{0}"}},'
+        '{{"operator":"ON_OR_BEFORE", "term":"insertionTimestamp", "value":"{1}"}}]'
+        "}}".format(formatted_before, formatted_after)
     )
     assert str(_filter) == expected
 
@@ -610,7 +787,10 @@ def test_insertion_timestamp_on_same_day_str_gives_correct_json_representation()
     formatted_after = format_datetime(end_time)
 
     _filter = InsertionTimestamp.on_same_day(test_time)
-    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"insertionTimestamp", "value":"{0}"}},{{"operator":"ON_OR_BEFORE", "term":"insertionTimestamp", "value":"{1}"}}]}}'.format(
-        formatted_before, formatted_after
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_AFTER", "term":"insertionTimestamp", "value":"{0}"}},'
+        '{{"operator":"ON_OR_BEFORE", "term":"insertionTimestamp", "value":"{1}"}}]'
+        "}}".format(formatted_before, formatted_after)
     )
     assert str(_filter) == expected

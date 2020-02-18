@@ -24,9 +24,7 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         cloud_usernames = cloud_usernames if cloud_usernames else []
         departure_epoch = (
-            convert_timestamp_to_str(departure_epoch)
-            if departure_epoch
-            else departure_epoch
+            convert_timestamp_to_str(departure_epoch) if departure_epoch else departure_epoch
         )
         data = {
             u"userName": username,

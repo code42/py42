@@ -107,7 +107,7 @@ class _QueryFilterTimestampField(object):
             date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0
         )
         end_time = datetime(
-            date_from_value.year, date_from_value.month, date_from_value.day, 0, 23, 59
+            date_from_value.year, date_from_value.month, date_from_value.day, 23, 59, 59
         )
         formatted_start_time = u"{0}Z".format(start_time.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3])
         formatted_end_time = u"{0}Z".format(end_time.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3])

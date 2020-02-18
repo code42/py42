@@ -35,19 +35,6 @@ class TestUserContext(object):
         mock_administration_client.get_current_tenant.return_value = mock_response
         return mock_administration_client
 
-    @pytest.fixture
-    def unsuccessful_administration_client(self, mocker):
-        mock_administration_client = mocker.MagicMock(spec=AdministrationClient)
-
-        def mock_get_tenant():
-            raise Ex
-
-        mock_response = mocker.MagicMock(spec=Response)
-        mock_response.status_code = 400
-        mock_response.text = None
-        mock_administration_client.get_current_tenant.return_value = mock_response
-        return mock_administration_client
-
     def test_get_current_tenant_id_returns_tenant_id_from_administration_client_get_current_tenant(
         self, successful_administration_client
     ):

@@ -17,22 +17,22 @@ class DepartingEmployeeClient(BaseClient):
         username,
         tenant_id=None,
         notes=None,
-        departure_timestamp=None,
+        departure_epoch=None,
         alerts_enabled=True,
         cloud_usernames=None,
     ):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         cloud_usernames = cloud_usernames if cloud_usernames else []
-        departure_timestamp = (
-            convert_timestamp_to_str(departure_timestamp)
-            if departure_timestamp
-            else departure_timestamp
+        departure_epoch = (
+            convert_timestamp_to_str(departure_epoch)
+            if departure_epoch
+            else departure_epoch
         )
         data = {
             u"userName": username,
             u"tenantId": tenant_id,
             u"notes": notes,
-            u"departureDate": departure_timestamp,
+            u"departureDate": departure_epoch,
             u"alertsEnabled": alerts_enabled,
             u"cloudUsernames": cloud_usernames,
         }
@@ -94,7 +94,7 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id=None,
         display_name=None,
         notes=None,
-        departure_timestamp=None,
+        departure_epoch=None,
         alerts_enabled=None,
         status=None,
         cloud_usernames=None,
@@ -112,9 +112,9 @@ class DepartingEmployeeClient(BaseClient):
 
         display_name = display_name if display_name else case.get(u"displayName")
         notes = notes if notes else case.get(u"notes")
-        departure_timestamp = (
-            convert_timestamp_to_str(departure_timestamp)
-            if departure_timestamp
+        departure_epoch = (
+            convert_timestamp_to_str(departure_epoch)
+            if departure_epoch
             else case.get(u"departureDate")
         )
         alerts_enabled = alerts_enabled if changed_alerts_enabled else case.get(u"alertsEnabled")
@@ -127,7 +127,7 @@ class DepartingEmployeeClient(BaseClient):
             u"caseId": case_id,
             u"displayName": display_name,
             u"notes": notes,
-            u"departureDate": departure_timestamp,
+            u"departureDate": departure_epoch,
             u"alertsEnabled": alerts_enabled,
             u"status": status,
             u"cloudUsernames": cloud_usernames,

@@ -90,19 +90,10 @@ class TestDepartingEmployeeClient(object):
         mock.return_value = response
         return mock
 
-    def test_create_departing_employee_uses_current_tenant_id_over_customers(
-        self, mock_session, customer
-    ):
-        client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
-        client.create_departing_employee("test.employee@example.com")
-        assert client._tenant_id == "11111111-1111-1111-1111-111111111111"
-
     def test_create_departing_employee_uses_given_tenant_id_over_current_id(
         self, mock_session, customer
     ):
         client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
         client.create_departing_employee(
             "test.employee@example.com", "22222222-2222-2222-2222-222222222222"
         )
@@ -137,19 +128,10 @@ class TestDepartingEmployeeClient(object):
         client.create_departing_employee("test.employee@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/create"
 
-    def test_resolve_departing_employee_uses_current_tenant_id_over_customers(
-        self, mock_session, customer
-    ):
-        client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
-        client.resolve_departing_employee("999")
-        assert client._tenant_id == "11111111-1111-1111-1111-111111111111"
-
     def test_resolve_departing_employee_uses_given_tenant_id_over_current_id(
         self, mock_session, customer
     ):
         client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
         client.resolve_departing_employee("999", "22222222-2222-2222-2222-222222222222")
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
@@ -171,19 +153,10 @@ class TestDepartingEmployeeClient(object):
         client.resolve_departing_employee("test.employee@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/resolve"
 
-    def test_get_all_departing_employees_uses_current_tenant_id_over_customers(
-        self, mock_session, customer
-    ):
-        client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
-        client.get_all_departing_employees()
-        assert client._tenant_id == "11111111-1111-1111-1111-111111111111"
-
     def test_get_all_departing_employees_uses_given_tenant_id_over_current_id(
         self, mock_session, customer
     ):
         client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
         client.get_all_departing_employees("22222222-2222-2222-2222-222222222222")
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
@@ -209,15 +182,8 @@ class TestDepartingEmployeeClient(object):
         client.get_all_departing_employees()
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/search"
 
-    def test_toggle_alerts_uses_current_tenant_id_over_customers(self, mock_session, customer):
-        client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
-        client.toggle_alerts()
-        assert client._tenant_id == "11111111-1111-1111-1111-111111111111"
-
     def test_toggle_alerts_uses_given_tenant_id_over_current_id(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
         client.toggle_alerts("22222222-2222-2222-2222-222222222222")
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
@@ -239,19 +205,10 @@ class TestDepartingEmployeeClient(object):
         client.toggle_alerts()
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/togglealerts"
 
-    def test_get_case_by_username_uses_current_tenant_id_over_customers(
-        self, mock_session, customer, mock_get_all_cases_function
-    ):
-        client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
-        client.get_case_by_username("test.example@example.com")
-        assert client._tenant_id == "11111111-1111-1111-1111-111111111111"
-
     def test_get_case_by_username_uses_given_tenant_id_over_current_id(
         self, mock_session, customer, mock_get_all_cases_function
     ):
         client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
         client.get_case_by_username(
             "test.example@example.com", "22222222-2222-2222-2222-222222222222"
         )
@@ -279,15 +236,8 @@ class TestDepartingEmployeeClient(object):
         client.get_case_by_username("test.example@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/details"
 
-    def test_get_case_by_id_uses_current_tenant_id_over_customers(self, mock_session, customer):
-        client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
-        client.get_case_by_id("999")
-        assert client._tenant_id == "11111111-1111-1111-1111-111111111111"
-
     def test_get_case_by_id_uses_given_tenant_id_over_current_id(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
         client.get_case_by_id("999", "22222222-2222-2222-2222-222222222222")
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
@@ -309,19 +259,10 @@ class TestDepartingEmployeeClient(object):
         client.get_case_by_id("999")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/details"
 
-    def test_update_case_uses_current_tenant_id_over_customers(
-        self, mock_session, customer, mock_get_case_details_function
-    ):
-        client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
-        client.update_case("697")
-        assert client._tenant_id == "11111111-1111-1111-1111-111111111111"
-
     def test_update_case_uses_given_tenant_id_over_current_id(
         self, mock_session, customer, mock_get_case_details_function
     ):
         client = DepartingEmployeeClient(mock_session, customer)
-        client._tenant_id = "11111111-1111-1111-1111-111111111111"
         client.update_case("697", "22222222-2222-2222-2222-222222222222")
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"

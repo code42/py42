@@ -65,10 +65,6 @@ class TestAlertClient(object):
 
     def test_resolve_alert_when_given_tenant_id_posts_expected_data(self, mock_session, customer):
         alert_client = AlertClient(mock_session, customer)
-
-        # To prove that it used given one in place of existing one
-        alert_client._tenant_id = "orig_tenant_id"
-
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.resolve_alert(alert_ids, "some-tenant-id")
         post_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -99,10 +95,6 @@ class TestAlertClient(object):
 
     def test_reopen_alert_when_given_tenant_id_posts_expected_data(self, mock_session, customer):
         alert_client = AlertClient(mock_session, customer)
-
-        # To prove that it used given one in place of existing one
-        alert_client._tenant_id = "orig_tenant_id"
-
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.reopen_alert(alert_ids, "some-tenant-id")
         post_data = json.loads(mock_session.post.call_args[1]["data"])

@@ -139,7 +139,8 @@ class DepartingEmployeeClient(BaseClient):
             return item.get(u"userName") == username
 
         cases = self._get_all_departing_employees(tenant_id)
-        return next(iter(filter(has_username, cases)))
+        matches = filter(has_username, cases)
+        return next(iter(matches)) if matches else {}
 
     def _get_all_departing_employees(self, tenant_id):
         response = self.get_all_departing_employees(tenant_id).text

@@ -1,14 +1,22 @@
-from py42._internal.client_factories import FileEventClientFactory, StorageClientFactory
+from py42._internal.client_factories import FileEventClientFactory, StorageClientFactory, AlertClientFactory
 from py42._internal.clients.security import SecurityClient, get_normalized_security_event_plan_info
 
 
 class SecurityModule(object):
-    def __init__(self, security_client, storage_client_factory, file_event_client_factory):
-        # type: (SecurityClient, StorageClientFactory, FileEventClientFactory) -> None
+    def __init__(self, security_client, storage_client_factory, file_event_client_factory, alert_client_factory):
+        # type: (SecurityClient, StorageClientFactory, FileEventClientFactory, AlertClientFactory) -> None
         self._security_client = security_client
         self._storage_client_factory = storage_client_factory
         self._file_event_client_factory = file_event_client_factory
+        self._alert_client_factory = alert_client_factory
         self._file_event_client = None
+        self._alert_client = None
+
+    @property
+    def alert_client(self):
+        if self._alert_client is None:
+            self._alert_client = self._alert_client_factory.get_alert_client()
+        return self._alert_client
 
     def get_security_event_locations(self, user_uid):
         # unlike most api calls this does not return the response from /c42api/v3/SecurityEventsLocation in raw form.

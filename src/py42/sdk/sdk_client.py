@@ -69,9 +69,5 @@ class SDK(object):
         return self._sdk_dependencies.security_module
 
     @property
-    def alerts(self):
-        return self._alert_dependencies.alert_client
-
-    @property
     def employee_case_management(self):
         return self._sdk_dependencies.employee_case_management_module

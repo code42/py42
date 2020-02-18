@@ -115,12 +115,11 @@ class AlertDependencies(object):
         alert_login_provider_factory = AlertLoginProviderFactory(
             authority_dependencies.root_session, key_value_store_client_factory
         )
-        alert_client_factory = AlertClientFactory(
+        self.alert_client_factory = AlertClientFactory(
             authority_dependencies.session_factory,
             alert_login_provider_factory,
             authority_dependencies.user_context
         )
-        self.alert_client = alert_client_factory.get_alert_client()
 
 
 class KeyValueStoreDependencies(object):
@@ -173,7 +172,10 @@ class SDKDependencies(object):
         # modules (feature sets that combine info from multiple clients)
         self.archive_module = archive_module.ArchiveModule(archive_accessor_manager, archive_client)
         self.security_module = sec_module.SecurityModule(
-            security_client, storage_client_factory, file_event_client_factory
+            security_client,
+            storage_client_factory,
+            file_event_client_factory,
+            alert_dependencies.alert_client_factory,
         )
         self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
             self.ecm_dependencies.employee_case_management_client_factory

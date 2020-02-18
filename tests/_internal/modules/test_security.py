@@ -22,6 +22,10 @@ class TestSecurityModule(object):
         return mocker.MagicMock(spec=FileEventClientFactory)
 
     @pytest.fixture
+    def alert_client_factory(self, mocker):
+        return mocker.MagicMock(spec=AlertClientFactory)
+
+    @pytest.fixture
     def file_event_client(self, mocker):
         return mocker.MagicMock(spec=FileEventClient)
 

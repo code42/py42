@@ -17,7 +17,7 @@ class AlertClient(BaseClient):
         return self._default_session.post(uri, data=query)
 
     def get_query_details(self, alert_ids, tenant_id=None):
-        # tenant_id is not required for this call
+        tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"query-details")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
         return self._default_session.post(uri, data=json.dumps(data))

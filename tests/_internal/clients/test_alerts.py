@@ -33,7 +33,19 @@ class TestAlertClient(object):
         alert_client.search_alerts(query)
         assert mock_session.post.call_args[0][0] == u"/svc/api/v1/query-alerts"
 
-    def test_get_query_details_posts_expected_data(self, mock_session, user_context):
+    def test_get_query_details_when_not_given_tenant_id_posts_expected_data(self, mock_session,
+                                                                        user_context):
+        alert_client = AlertClient(mock_session, user_context)
+        alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
+        alert_client.get_query_details(alert_ids)
+        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        assert (
+            post_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and post_data["alertIds"][0] == "ALERT_ID_1"
+            and post_data["alertIds"][1] == "ALERT_ID_2"
+        )
+
+    def test_get_query_details_when_given_tenant_id_posts_expected_data(self, mock_session, user_context):
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_query_details(alert_ids, "some-tenant-id")

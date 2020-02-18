@@ -135,15 +135,12 @@ class DepartingEmployeeClient(BaseClient):
             return case.get(u"caseId")
 
     def _get_case_from_username(self, tenant_id, username):
-        return self._get_case_from_key(tenant_id, u"userName", username)
-
-    def _get_case_from_key(self, tenant_id, key, value_in_sought_case):
         cases = self._get_all_departing_employees(tenant_id)
         for case in cases:
-            case_value = case.get(key)
+            case_value = case.get(u"userName")
             if (
                 case.get(u"type$") == u"DEPARTING_EMPLOYEE_CASE"
-                and case_value == value_in_sought_case
+                and case_value == username
             ):
                 return case
 

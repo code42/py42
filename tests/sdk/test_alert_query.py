@@ -142,7 +142,7 @@ def test_date_observed_in_range_sets_filter_properties_correctly(in_range_filter
     in_range_filter_creator.assert_called_once_with("CreatedAt", formatted_before, formatted_after)
 
 
-def test_date_observed_on_sets_filter_properties_correctly(in_range_filter_creator):
+def test_date_observed_on_same_day_sets_filter_properties_correctly(in_range_filter_creator):
     test_time = time()
     test_date = datetime.utcfromtimestamp(test_time)
     start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
@@ -150,7 +150,7 @@ def test_date_observed_on_sets_filter_properties_correctly(in_range_filter_creat
     formatted_before = format_datetime(start_time)
     formatted_after = format_datetime(end_time)
 
-    DateObserved.on(test_time)
+    DateObserved.on_same_day(test_time)
     in_range_filter_creator.assert_called_once_with("CreatedAt", formatted_before, formatted_after)
 
 

@@ -480,7 +480,7 @@ def test_event_timestamp_in_range_sets_filter_properties_correctly(in_range_filt
     )
 
 
-def test_event_timestamp_on_sets_filter_properties_correctly(in_range_filter_creator):
+def test_event_timestamp_on_same_day_sets_filter_properties_correctly(in_range_filter_creator):
     test_time = time()
     test_date = datetime.utcfromtimestamp(test_time)
     start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
@@ -488,7 +488,7 @@ def test_event_timestamp_on_sets_filter_properties_correctly(in_range_filter_cre
     formatted_before = format_datetime(start_time)
     formatted_after = format_datetime(end_time)
 
-    EventTimestamp.on(test_time)
+    EventTimestamp.on_same_day(test_time)
     in_range_filter_creator.assert_called_once_with(
         "eventTimestamp", formatted_before, formatted_after
     )
@@ -523,7 +523,7 @@ def test_insertion_timestamp_in_range_sets_filter_properties_correctly(in_range_
     )
 
 
-def test_insertion_timestamp_on_sets_filter_properties_correctly(in_range_filter_creator):
+def test_insertion_timestamp_on_same_day_sets_filter_properties_correctly(in_range_filter_creator):
     test_time = time()
     test_date = datetime.utcfromtimestamp(test_time)
     start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
@@ -531,7 +531,7 @@ def test_insertion_timestamp_on_sets_filter_properties_correctly(in_range_filter
     formatted_before = format_datetime(start_time)
     formatted_after = format_datetime(end_time)
 
-    InsertionTimestamp.on(test_time)
+    InsertionTimestamp.on_same_day(test_time)
     in_range_filter_creator.assert_called_once_with(
         "insertionTimestamp", formatted_before, formatted_after
     )

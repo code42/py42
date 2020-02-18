@@ -101,7 +101,7 @@ class _QueryFilterTimestampField(object):
         return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
 
     @classmethod
-    def on(cls, value):
+    def on_same_day(cls, value):
         date_from_value = datetime.utcfromtimestamp(value)
         start_time = datetime(
             date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0

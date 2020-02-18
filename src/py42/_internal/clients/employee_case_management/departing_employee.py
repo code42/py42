@@ -94,13 +94,17 @@ class DepartingEmployeeClient(BaseClient):
         # Therefore, we get current values first as to prevent clearing them when not provided.
         case = self._get_case_by_id(case_id)
 
+        changed_status = status is not None and status != case.get(u"status")
+        changed_alerts_enabled = alerts_enabled is not None and alerts_enabled != case.get(
+            u"alertsEnabled")
+
         display_name = display_name if display_name else case.get(u"displayName")
-        notes = notes if notes else case.get(u"displayName")
+        notes = notes if notes else case.get(u"notes")
         departure_date = departure_date if departure_date else case.get(u"departureDate")
-        alerts_enabled = alerts_enabled if alerts_enabled else case.get(u"alertsEnabled")
-        alerts_enabled = alerts_enabled if alerts_enabled else True
-        status = status if status else case.get(u"status")
-        status = status if status else u"OPEN"
+        alerts_enabled = alerts_enabled if changed_alerts_enabled else case.get(u"alertsEnabled")
+        alerts_enabled = alerts_enabled if alerts_enabled is not None else True
+        status = status if changed_status else case.get(u"status")
+        status = status if status is not None else u"OPEN"
         cloud_usernames = cloud_usernames if cloud_usernames else case.get(u"cloudUsernames")
         cloud_usernames = cloud_usernames if cloud_usernames else []
 

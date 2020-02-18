@@ -296,7 +296,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["cloudUsernames"] == ["test@test.com"]
         )
 
-    def test_update_case_uses_current_data_when_not_provided_uses_excluding_departure_date(
+    def test_update_case_uses_current_data_when_not_provided(
         self, mock_session, user_context, mock_get_case_details_function
     ):
         client = DepartingEmployeeClient(mock_session, user_context)

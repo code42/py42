@@ -119,30 +119,39 @@ def test_alert_query_str_with_sort_key_gives_correct_json_representation(event_f
     assert str(alert_query) == json_query_str
 
 
-def test_date_observed_on_or_after_sets_filter_properties_correctly(on_or_after_filter_creator,):
+def test_date_observed_on_or_after_str_gives_correct_json_representation():
     test_time = time()
     formatted = format_timestamp(test_time)
-    DateObserved.on_or_after(test_time)
-    on_or_after_filter_creator.assert_called_once_with("CreatedAt", formatted)
+    _filter = DateObserved.on_or_after(test_time)
+    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"CreatedAt", "value":"{0}"}}]}}'.format(
+        formatted
+    )
+    assert str(_filter) == expected
 
 
-def test_date_observed_on_or_before_sets_filter_properties_correctly(on_or_before_filter_creator,):
+def test_date_observed_on_or_before_str_gives_correct_json_representation():
     test_time = time()
     formatted = format_timestamp(test_time)
-    DateObserved.on_or_before(test_time)
-    on_or_before_filter_creator.assert_called_once_with("CreatedAt", formatted)
+    _filter = DateObserved.on_or_before(test_time)
+    expected = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_BEFORE", "term":"CreatedAt", "value":"{0}"}}]}}'.format(
+        formatted
+    )
+    assert str(_filter) == expected
 
 
-def test_date_observed_in_range_sets_filter_properties_correctly(in_range_filter_creator):
+def test_date_observed_in_range_str_gives_correct_json_representation():
     test_before_time = time()
     test_after_time = time() + 30  # make sure timestamps are actually different
     formatted_before = format_timestamp(test_before_time)
     formatted_after = format_timestamp(test_after_time)
-    DateObserved.in_range(test_before_time, test_after_time)
-    in_range_filter_creator.assert_called_once_with("CreatedAt", formatted_before, formatted_after)
+    _filter = DateObserved.in_range(test_before_time, test_after_time)
+    expected = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"CreatedAt", "value":"{0}"}},{{"operator":"ON_OR_BEFORE", "term":"CreatedAt", "value":"{1}"}}]}}'.format(
+        formatted_before, formatted_after
+    )
+    assert str(_filter) == expected
 
 
-def test_date_observed_on_same_day_sets_filter_properties_correctly(in_range_filter_creator):
+def test_date_observed_on_same_day_str_gives_correct_json_representation():
     test_time = time()
     test_date = datetime.utcfromtimestamp(test_time)
     start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
@@ -150,143 +159,180 @@ def test_date_observed_on_same_day_sets_filter_properties_correctly(in_range_fil
     formatted_before = format_datetime(start_time)
     formatted_after = format_datetime(end_time)
 
-    DateObserved.on_same_day(test_time)
-    in_range_filter_creator.assert_called_once_with("CreatedAt", formatted_before, formatted_after)
+    _filter = DateObserved.on_same_day(test_time)
+    expected = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"CreatedAt", "value":"{0}"}},{{"operator":"ON_OR_BEFORE", "term":"CreatedAt", "value":"{1}"}}]}}'.format(
+        formatted_before, formatted_after
+    )
+    assert str(_filter) == expected
 
 
-def test_actor_eq_sets_filter_properties_correctly(eq_filter_creator):
-    Actor.eq("test.testerson")
-    eq_filter_creator.assert_called_once_with("actor", "test.testerson")
+def test_actor_eq_str_gives_correct_json_representation():
+    _filter = Actor.eq("test.testerson")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"actor", "value":"test.testerson"}]}'
+    assert str(_filter) == expected
 
 
-def test_actor_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
-    Actor.not_eq("test.testerson")
-    not_eq_filter_creator.assert_called_once_with("actor", "test.testerson")
+def test_actor_not_eq_str_gives_correct_json_representation():
+    _filter = Actor.not_eq("test.testerson")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"actor", "value":"test.testerson"}]}'
+    assert str(_filter) == expected
 
 
-def test_actor_is_in_sets_filter_properties_correctly(is_in_filter_creator):
+def test_actor_is_in_str_gives_correct_json_representation():
     items = ["test.testerson", "flag.flagerson", "mock.mockerson"]
-    Actor.is_in(items)
-    is_in_filter_creator.assert_called_once_with("actor", items)
+    _filter = Actor.is_in(items)
+    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"actor", "value":"test.testerson"},{"operator":"IS", "term":"actor", "value":"flag.flagerson"},{"operator":"IS", "term":"actor", "value":"mock.mockerson"}]}'
+    assert str(_filter) == expected
 
 
-def test_actor_not_in_sets_filter_properties_correctly(not_in_filter_creator):
+def test_actor_not_in_str_gives_correct_json_representation():
     items = ["test.testerson", "flag.flagerson", "mock.mockerson"]
-    Actor.not_in(items)
-    not_in_filter_creator.assert_called_once_with("actor", items)
+    _filter = Actor.not_in(items)
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"actor", "value":"test.testerson"},{"operator":"IS_NOT", "term":"actor", "value":"flag.flagerson"},{"operator":"IS_NOT", "term":"actor", "value":"mock.mockerson"}]}'
+    assert str(_filter) == expected
 
 
-def test_actor_contains_sets_filter_properties_correctly(contains_filter_creator):
-    Actor.contains("test")
-    contains_filter_creator.assert_called_once_with("actor", "test")
+def test_actor_contains_str_gives_correct_json_representation():
+    _filter = Actor.contains("test")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"CONTAINS", "term":"actor", "value":"test"}]}'
+    assert str(_filter) == expected
 
 
-def test_actor_not_contains_sets_filter_properties_correctly(not_contains_filter_creator):
-    Actor.not_contains("test")
-    not_contains_filter_creator.assert_called_once_with("actor", "test")
+def test_actor_not_contains_str_gives_correct_json_representation():
+    _filter = Actor.not_contains("test")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_CONTAIN", "term":"actor", "value":"test"}]}'
+    assert str(_filter) == expected
 
 
-def test_severity_eq_sets_filter_properties_correctly(eq_filter_creator):
-    Severity.eq("HIGH")
-    eq_filter_creator.assert_called_once_with("severity", "HIGH")
+def test_severity_eq_str_gives_correct_json_representation():
+    _filter = Severity.eq("HIGH")
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"severity", "value":"HIGH"}]}'
+    )
+    assert str(_filter) == expected
 
 
-def test_severity_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
-    Severity.not_eq("HIGH")
-    not_eq_filter_creator.assert_called_once_with("severity", "HIGH")
+def test_severity_not_eq_str_gives_correct_json_representation():
+    _filter = Severity.not_eq("HIGH")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"severity", "value":"HIGH"}]}'
+    assert str(_filter) == expected
 
 
-def test_severity_is_in_sets_filter_properties_correctly(is_in_filter_creator):
-    Severity.is_in(["HIGH", "LOW"])
-    is_in_filter_creator.assert_called_once_with("severity", ["HIGH", "LOW"])
+def test_severity_is_in_str_gives_correct_json_representation():
+    _filter = Severity.is_in(["HIGH", "LOW"])
+    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"severity", "value":"HIGH"},{"operator":"IS", "term":"severity", "value":"LOW"}]}'
+    assert str(_filter) == expected
 
 
-def test_severity_not_in_sets_filter_properties_correctly(not_in_filter_creator):
-    Severity.not_in(["HIGH", "LOW"])
-    not_in_filter_creator.assert_called_once_with("severity", ["HIGH", "LOW"])
+def test_severity_not_in_str_gives_correct_json_representation():
+    _filter = Severity.not_in(["HIGH", "LOW"])
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"severity", "value":"HIGH"},{"operator":"IS_NOT", "term":"severity", "value":"LOW"}]}'
+    assert str(_filter) == expected
 
 
-def test_rule_name_eq_sets_filter_properties_correctly(eq_filter_creator):
-    RuleName.eq("Departing Employee")
-    eq_filter_creator.assert_called_once_with("name", "Departing Employee")
+def test_rule_name_eq_str_gives_correct_json_representation():
+    _filter = RuleName.eq("Departing Employee")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"name", "value":"Departing Employee"}]}'
+    assert str(_filter) == expected
 
 
-def test_rule_name_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
-    RuleName.not_eq("Departing Employee")
-    not_eq_filter_creator.assert_called_once_with("name", "Departing Employee")
+def test_rule_name_not_eq_str_gives_correct_json_representation():
+    _filter = RuleName.not_eq("Departing Employee")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"name", "value":"Departing Employee"}]}'
+    assert str(_filter) == expected
 
 
-def test_rule_name_is_in_sets_filter_properties_correctly(is_in_filter_creator):
+def test_rule_name_is_in_str_gives_correct_json_representation():
     items = ["rule 1", "rule 2", "rule 3"]
-    RuleName.is_in(items)
-    is_in_filter_creator.assert_called_once_with("name", items)
+    _filter = RuleName.is_in(items)
+    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"name", "value":"rule 1"},{"operator":"IS", "term":"name", "value":"rule 2"},{"operator":"IS", "term":"name", "value":"rule 3"}]}'
+    assert str(_filter) == expected
 
 
-def test_rule_name_not_in_sets_filter_properties_correctly(not_in_filter_creator):
+def test_rule_name_not_in_str_gives_correct_json_representation():
     items = ["rule 1", "rule 2", "rule 3"]
-    RuleName.not_in(items)
-    not_in_filter_creator.assert_called_once_with("name", items)
+    _filter = RuleName.not_in(items)
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"name", "value":"rule 1"},{"operator":"IS_NOT", "term":"name", "value":"rule 2"},{"operator":"IS_NOT", "term":"name", "value":"rule 3"}]}'
+    assert str(_filter) == expected
 
 
-def test_rule_name_contains_sets_filter_properties_correctly(contains_filter_creator):
-    RuleName.contains("test")
-    contains_filter_creator.assert_called_once_with("name", "test")
+def test_rule_name_contains_str_gives_correct_json_representation():
+    _filter = RuleName.contains("test")
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"CONTAINS", "term":"name", "value":"test"}]}'
+    )
+    assert str(_filter) == expected
 
 
-def test_rule_name_not_contains_sets_filter_properties_correctly(not_contains_filter_creator):
-    RuleName.not_contains("test")
-    not_contains_filter_creator.assert_called_once_with("name", "test")
+def test_rule_name_not_contains_str_gives_correct_json_representation():
+    _filter = RuleName.not_contains("test")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_CONTAIN", "term":"name", "value":"test"}]}'
+    assert str(_filter) == expected
 
 
-def test_description_eq_sets_filter_properties_correctly(eq_filter_creator):
-    Description.eq("Departing Employee")
-    eq_filter_creator.assert_called_once_with("description", "Departing Employee")
+def test_description_eq_str_gives_correct_json_representation():
+    _filter = Description.eq("Departing Employee")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"description", "value":"Departing Employee"}]}'
+    assert str(_filter) == expected
 
 
-def test_description_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
-    Description.not_eq("Departing Employee")
-    not_eq_filter_creator.assert_called_once_with("description", "Departing Employee")
+def test_description_not_eq_str_gives_correct_json_representation():
+    _filter = Description.not_eq("Departing Employee")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"description", "value":"Departing Employee"}]}'
+    assert str(_filter) == expected
 
 
-def test_description_is_in_sets_filter_properties_correctly(is_in_filter_creator):
+def test_description_is_in_str_gives_correct_json_representation():
     items = ["rule 1", "rule 2", "rule 3"]
-    Description.is_in(items)
-    is_in_filter_creator.assert_called_once_with("description", items)
+    _filter = Description.is_in(items)
+    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"description", "value":"rule 1"},{"operator":"IS", "term":"description", "value":"rule 2"},{"operator":"IS", "term":"description", "value":"rule 3"}]}'
+    assert str(_filter) == expected
 
 
-def test_description_not_in_sets_filter_properties_correctly(not_in_filter_creator):
+def test_description_not_in_str_gives_correct_json_representation():
     items = ["rule 1", "rule 2", "rule 3"]
-    Description.not_in(items)
-    not_in_filter_creator.assert_called_once_with("description", items)
+    _filter = Description.not_in(items)
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"description", "value":"rule 1"},{"operator":"IS_NOT", "term":"description", "value":"rule 2"},{"operator":"IS_NOT", "term":"description", "value":"rule 3"}]}'
+    assert str(_filter) == expected
 
 
-def test_description_contains_sets_filter_properties_correctly(contains_filter_creator):
-    Description.contains("test")
-    contains_filter_creator.assert_called_once_with("description", "test")
+def test_description_contains_str_gives_correct_json_representation():
+    _filter = Description.contains("test")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"CONTAINS", "term":"description", "value":"test"}]}'
+    assert str(_filter) == expected
 
 
-def test_description_not_contains_sets_filter_properties_correctly(not_contains_filter_creator):
-    Description.not_contains("test")
-    not_contains_filter_creator.assert_called_once_with("description", "test")
+def test_description_not_contains_str_gives_correct_json_representation():
+    _filter = Description.not_contains("test")
+    expected = '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_CONTAIN", "term":"description", "value":"test"}]}'
+    assert str(_filter) == expected
 
 
-def test_alert_state_eq_sets_filter_properties_correctly(eq_filter_creator):
-    AlertState.eq("OPEN")
-    eq_filter_creator.assert_called_once_with("state", "OPEN")
+def test_alert_state_eq_str_gives_correct_json_representation():
+    _filter = AlertState.eq("OPEN")
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"state", "value":"OPEN"}]}'
+    )
+    assert str(_filter) == expected
 
 
-def test_alert_state_not_eq_sets_filter_properties_correctly(not_eq_filter_creator):
-    AlertState.not_eq("OPEN")
-    not_eq_filter_creator.assert_called_once_with("state", "OPEN")
+def test_alert_state_not_eq_str_gives_correct_json_representation():
+    _filter = AlertState.not_eq("OPEN")
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"state", "value":"OPEN"}]}'
+    )
+    assert str(_filter) == expected
 
 
-def test_alert_state_is_in_sets_filter_properties_correctly(is_in_filter_creator):
+def test_alert_state_is_in_str_gives_correct_json_representation():
     items = ["OPEN", "DISMISSED"]
-    AlertState.is_in(items)
-    is_in_filter_creator.assert_called_once_with("state", items)
+    _filter = AlertState.is_in(items)
+    expected = '{"filterClause":"OR", "filters":[{"operator":"IS", "term":"state", "value":"OPEN"},{"operator":"IS", "term":"state", "value":"DISMISSED"}]}'
+    assert str(_filter) == expected
 
 
-def test_alert_state_not_in_sets_filter_properties_correctly(not_in_filter_creator):
+def test_alert_state_not_in_str_gives_correct_json_representation():
     items = ["OPEN", "DISMISSED"]
-    AlertState.not_in(items)
-    not_in_filter_creator.assert_called_once_with("state", items)
+    _filter = AlertState.not_in(items)
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS_NOT", "term":"state", "value":"OPEN"},{"operator":"IS_NOT", "term":"state", "value":"DISMISSED"}]}'
+    assert str(_filter) == expected

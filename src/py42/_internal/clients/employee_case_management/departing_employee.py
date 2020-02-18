@@ -102,11 +102,8 @@ class DepartingEmployeeClient(BaseClient):
         notes = notes if notes else case.get(u"notes")
         departure_date = departure_date if departure_date else case.get(u"departureDate")
         alerts_enabled = alerts_enabled if changed_alerts_enabled else case.get(u"alertsEnabled")
-        alerts_enabled = alerts_enabled if alerts_enabled is not None else True
         status = status if changed_status else case.get(u"status")
-        status = status if status is not None else u"OPEN"
         cloud_usernames = cloud_usernames if cloud_usernames else case.get(u"cloudUsernames")
-        cloud_usernames = cloud_usernames if cloud_usernames else []
 
         uri = self._uri_prefix.format(u"update")
         data = {

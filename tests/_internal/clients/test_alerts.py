@@ -63,7 +63,7 @@ class TestAlertClient(object):
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_query_details(alert_ids)
-        assert mock_session.post.call_args[0][0] == u"/svc/api/v1/query-details"
+        assert mock_session.post.call_args[0][0] == "/svc/api/v1/query-details"
 
     def test_resolve_alert_when_not_given_tenant_id_posts_expected_data(
         self, mock_session, user_context
@@ -95,7 +95,7 @@ class TestAlertClient(object):
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.resolve_alert(alert_ids, "some-tenant-id")
-        assert mock_session.post.call_args[0][0] == u"/svc/api/v1/resolve-alert"
+        assert mock_session.post.call_args[0][0] == "/svc/api/v1/resolve-alert"
 
     def test_reopen_alert_when_not_given_tenant_id_posts_expected_data(
         self, mock_session, user_context
@@ -127,4 +127,4 @@ class TestAlertClient(object):
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.reopen_alert(alert_ids, "some-tenant-id")
-        assert mock_session.post.call_args[0][0] == u"/svc/api/v1/reopen-alert"
+        assert mock_session.post.call_args[0][0] == "/svc/api/v1/reopen-alert"

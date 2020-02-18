@@ -9,7 +9,7 @@ from py42._internal.clients.employee_case_management.departing_employee import (
 )
 
 
-GET_CASE_DETAILS_RESPONSE = """
+_GET_CASE_DETAILS_RESPONSE = """
 {
     "type$":"DEPARTING_EMPLOYEE_CASE",
     "tenantId":"00000000-0000-0000-0000-000000000000",
@@ -27,7 +27,7 @@ GET_CASE_DETAILS_RESPONSE = """
 """
 
 
-GET_ALL_CASES_RESPONSE = """
+_GET_ALL_CASES_RESPONSE = """
 {
     "type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE",
     "cases":
@@ -72,7 +72,7 @@ class TestDepartingEmployeeClient(object):
             "py42._internal.clients.employee_case_management.departing_employee.DepartingEmployeeClient.get_case_by_id"
         )
         response = mocker.MagicMock(spec=Response)
-        response.text = GET_CASE_DETAILS_RESPONSE
+        response.text = _GET_CASE_DETAILS_RESPONSE
         response.status_code = 200
         mock.return_value = response
         return mock
@@ -85,7 +85,7 @@ class TestDepartingEmployeeClient(object):
             "py42._internal.clients.employee_case_management.departing_employee.DepartingEmployeeClient.get_all_departing_employees"
         )
         response = mocker.MagicMock(spec=Response)
-        response.text = GET_ALL_CASES_RESPONSE
+        response.text = _GET_ALL_CASES_RESPONSE
         response.status_code = 200
         mock.return_value = response
         return mock

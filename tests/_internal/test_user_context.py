@@ -4,7 +4,7 @@ from requests import Response
 from py42._internal.user_context import UserContext
 from py42._internal.clients.administration import AdministrationClient
 
-GET_CURRENT_USER = """
+_GET_CURRENT_USER = """
 {
     "data":
         {
@@ -31,7 +31,7 @@ class TestUserContext(object):
         mock_administration_client = mocker.MagicMock(spec=AdministrationClient)
         mock_response = mocker.MagicMock(spec=Response)
         mock_response.status_code = 200
-        mock_response.text = GET_CURRENT_USER
+        mock_response.text = _GET_CURRENT_USER
         mock_administration_client.get_current_tenant.return_value = mock_response
         return mock_administration_client
 

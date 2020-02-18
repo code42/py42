@@ -3,6 +3,7 @@
 from datetime import datetime
 
 from py42._internal.compat import str
+from py42.util import convert_timestamp_to_str, convert_datetime_to_timestamp_str
 
 
 def create_query_filter(term, operator, value=None):
@@ -78,26 +79,20 @@ class _QueryFilterStringField(object):
 class _QueryFilterTimestampField(object):
     _term = u"override_timestamp_field_name"
 
-    @staticmethod
-    def _to_timestamp_string(timestamp):
-        # "2018-12-01T00:00:00.000Z"
-        prefix = datetime.utcfromtimestamp(timestamp).strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
-        return u"{0}Z".format(prefix)
-
     @classmethod
     def on_or_after(cls, value):
-        formatted_timestamp = cls._to_timestamp_string(value)
+        formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_after_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
     def on_or_before(cls, value):
-        formatted_timestamp = cls._to_timestamp_string(value)
+        formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_before_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
     def in_range(cls, start_value, end_value):
-        formatted_start_time = cls._to_timestamp_string(start_value)
-        formatted_end_time = cls._to_timestamp_string(end_value)
+        formatted_start_time = convert_timestamp_to_str(start_value)
+        formatted_end_time = convert_timestamp_to_str(end_value)
         return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
 
     @classmethod
@@ -109,8 +104,8 @@ class _QueryFilterTimestampField(object):
         end_time = datetime(
             date_from_value.year, date_from_value.month, date_from_value.day, 23, 59, 59
         )
-        formatted_start_time = u"{0}Z".format(start_time.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3])
-        formatted_end_time = u"{0}Z".format(end_time.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3])
+        formatted_start_time = convert_datetime_to_timestamp_str(start_time)
+        formatted_end_time = convert_datetime_to_timestamp_str(end_time)
         return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
 
 

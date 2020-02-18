@@ -2,6 +2,7 @@ import json
 
 from py42._internal.compat import str
 from py42._internal.base_classes import BaseClient
+from py42.util import convert_timestamp_to_str
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -16,17 +17,22 @@ class DepartingEmployeeClient(BaseClient):
         username,
         tenant_id=None,
         notes=None,
-        departure_date=None,
+        departure_timestamp=None,
         alerts_enabled=True,
         cloud_usernames=None,
     ):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         cloud_usernames = cloud_usernames if cloud_usernames else []
+        departure_timestamp = (
+            convert_timestamp_to_str(departure_timestamp)
+            if departure_timestamp
+            else departure_timestamp
+        )
         data = {
             u"userName": username,
             u"tenantId": tenant_id,
             u"notes": notes,
-            u"departureDate": departure_date,
+            u"departureDate": departure_timestamp,
             u"alertsEnabled": alerts_enabled,
             u"cloudUsernames": cloud_usernames,
         }
@@ -49,6 +55,11 @@ class DepartingEmployeeClient(BaseClient):
         sort_direction=u"DESC",
     ):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
+        departing_on_or_after = (
+            convert_timestamp_to_str(departing_on_or_after)
+            if departing_on_or_after
+            else departing_on_or_after
+        )
         uri = self._uri_prefix.format(u"search")
         data = {
             u"tenantId": tenant_id,
@@ -83,7 +94,7 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id=None,
         display_name=None,
         notes=None,
-        departure_date=None,
+        departure_timestamp=None,
         alerts_enabled=None,
         status=None,
         cloud_usernames=None,
@@ -101,7 +112,11 @@ class DepartingEmployeeClient(BaseClient):
 
         display_name = display_name if display_name else case.get(u"displayName")
         notes = notes if notes else case.get(u"notes")
-        departure_date = departure_date if departure_date else case.get(u"departureDate")
+        departure_timestamp = (
+            convert_timestamp_to_str(departure_timestamp)
+            if departure_timestamp
+            else case.get(u"departureDate")
+        )
         alerts_enabled = alerts_enabled if changed_alerts_enabled else case.get(u"alertsEnabled")
         status = status if changed_status else case.get(u"status")
         cloud_usernames = cloud_usernames if cloud_usernames else case.get(u"cloudUsernames")
@@ -112,7 +127,7 @@ class DepartingEmployeeClient(BaseClient):
             u"caseId": case_id,
             u"displayName": display_name,
             u"notes": notes,
-            u"departureDate": departure_date,
+            u"departureDate": departure_timestamp,
             u"alertsEnabled": alerts_enabled,
             u"status": status,
             u"cloudUsernames": cloud_usernames,

@@ -106,7 +106,7 @@ class TestDepartingEmployeeClient(object):
             "test.employee@example.com",
             None,
             "These are notes",
-            "12-08-2023",
+            2352463246,
             True,
             ["test.employee@microsoft.com"],
         )
@@ -118,7 +118,7 @@ class TestDepartingEmployeeClient(object):
             posted_data["userName"] == "test.employee@example.com"
             and posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
             and posted_data["notes"] == "These are notes"
-            and posted_data["departureDate"] == "12-08-2023"
+            and posted_data["departureDate"] == "2044-07-18T14:00:46.000Z"
             and posted_data["alertsEnabled"] == True
             and posted_data["cloudUsernames"] == ["test.employee@microsoft.com"]
         )
@@ -163,7 +163,7 @@ class TestDepartingEmployeeClient(object):
 
     def test_get_all_departing_employees_posts_expected_data(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.get_all_departing_employees(None, 101, 2, "09-24-2023", "USERNAME", "ASC")
+        client.get_all_departing_employees(None, 101, 2, 235234626, "USERNAME", "ASC")
 
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
@@ -172,7 +172,7 @@ class TestDepartingEmployeeClient(object):
             posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
             and posted_data["pgSize"] == 101
             and posted_data["pgNum"] == 2
-            and posted_data["departingOnOrAfter"] == "09-24-2023"
+            and posted_data["departingOnOrAfter"] == "1977-06-15T14:57:06.000Z"
             and posted_data["srtKey"] == "USERNAME"
             and posted_data["srtDirection"] == "ASC"
         )
@@ -276,7 +276,7 @@ class TestDepartingEmployeeClient(object):
             None,
             "Display Name",
             "These are notes",
-            "12-12-2023",
+            24642747257,
             False,
             "EXFILTRATION_24_HOURS",
             ["test@test.com"],
@@ -290,7 +290,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["caseId"] == "697"
             and posted_data["displayName"] == "Display Name"
             and posted_data["notes"] == "These are notes"
-            and posted_data["departureDate"] == "12-12-2023"
+            and posted_data["departureDate"] == "2750-11-24T23:34:17.000Z"
             and posted_data["alertsEnabled"] == False
             and posted_data["status"] == "EXFILTRATION_24_HOURS"
             and posted_data["cloudUsernames"] == ["test@test.com"]

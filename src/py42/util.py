@@ -3,6 +3,7 @@ from __future__ import print_function
 import json
 import os
 import posixpath
+from datetime import datetime
 
 from requests import Response
 
@@ -88,3 +89,13 @@ def save_content_to_disk(response, file_path):
 def filter_out_none(_dict):
     # type: (dict) -> dict
     return {key: _dict[key] for key in _dict if _dict[key] is not None}
+
+
+def convert_timestamp_to_str(timestamp):
+    date = datetime.utcfromtimestamp(timestamp)
+    return convert_datetime_to_timestamp_str(date)
+
+
+def convert_datetime_to_timestamp_str(date):
+    prefix = date.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
+    return u"{0}Z".format(prefix)

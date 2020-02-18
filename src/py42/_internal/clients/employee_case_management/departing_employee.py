@@ -94,29 +94,17 @@ class DepartingEmployeeClient(BaseClient):
         # Therefore, we get current values first as to prevent clearing them when not provided.
         case = self._get_case_by_id(case_id)
 
-        if display_name is None:
-            display_name = case.get(u"displayName")
-
-        if notes is None:
-            notes = case.get(u"notes")
-
-        if departure_date is None:
-            departure_date = case.get(u"departureDate")
-
-        if alerts_enabled is None:
-            current_alerts_enabled = case.get(u"alertsEnabled")
-            alerts_enabled = current_alerts_enabled if current_alerts_enabled else True
-
-        if status is None:
-            current_status = case.get(u"status")
-            status = current_status if current_status else u"OPEN"
-
-        if cloud_usernames is None:
-            current_cloud_usernames = case.get(u"cloudUsernames")
-            cloud_usernames = current_cloud_usernames if current_cloud_usernames else []
+        display_name = display_name if display_name else case.get(u"displayName")
+        notes = notes if notes else case.get(u"displayName")
+        departure_date = departure_date if departure_date else case.get(u"departureDate")
+        alerts_enabled = alerts_enabled if alerts_enabled else case.get(u"alertsEnabled")
+        alerts_enabled = alerts_enabled if alerts_enabled else True
+        status = status if status else case.get(u"status")
+        status = status if status else u"OPEN"
+        cloud_usernames = cloud_usernames if cloud_usernames else case.get(u"cloudUsernames")
+        cloud_usernames = cloud_usernames if cloud_usernames else []
 
         uri = self._uri_prefix.format(u"update")
-        cloud_usernames = cloud_usernames if cloud_usernames else []
         data = {
             u"tenantId": tenant_id,
             u"caseId": case_id,

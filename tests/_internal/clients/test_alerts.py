@@ -63,9 +63,7 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    def test_resolve_alert_when_given_tenant_id_posts_expected_data(
-        self, mock_session, customer
-    ):
+    def test_resolve_alert_when_given_tenant_id_posts_expected_data(self, mock_session, customer):
         alert_client = AlertClient(mock_session, customer)
 
         # To prove that it used given one in place of existing one
@@ -99,9 +97,7 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    def test_reopen_alert_when_given_tenant_id_posts_expected_data(
-        self, mock_session, customer
-    ):
+    def test_reopen_alert_when_given_tenant_id_posts_expected_data(self, mock_session, customer):
         alert_client = AlertClient(mock_session, customer)
 
         # To prove that it used given one in place of existing one

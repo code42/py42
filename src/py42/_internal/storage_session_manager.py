@@ -16,19 +16,18 @@ class StorageSessionManager(object):
 
     def get_storage_session(self, login_provider):
         # type: (LoginProvider) -> Py42Session
-        url = login_provider.get_target_host_address()
-        session = self.get_saved_session_for_url(url)
-        if session is None:
-            try:
+        try:
+            url = login_provider.get_target_host_address()
+            session = self.get_saved_session_for_url(url)
+            if session is None:
                 with self._list_update_lock:
                     session = self.get_saved_session_for_url(url)
                     if session is None:
-                        # pylint: disable=assignment-from-no-return
                         session = self.create_storage_session(login_provider)
                         self._session_cache.update({url.lower(): session})
-            except Exception as ex:
-                message = u"Failed to create or retrieve session, caused by: {0}".format(str(ex))
-                raise Exception(message)
+        except Exception as ex:
+            message = u"Failed to create or retrieve session, caused by: {0}".format(str(ex))
+            raise Exception(message)
         return session
 
     def create_storage_session(self, login_provider):

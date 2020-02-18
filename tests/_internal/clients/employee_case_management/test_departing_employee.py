@@ -109,9 +109,7 @@ class TestDepartingEmployeeClient(object):
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
 
-    def test_create_departing_employee_posts_expected_data(
-        self, mock_session, customer
-    ):
+    def test_create_departing_employee_posts_expected_data(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
         client.create_departing_employee(
             "test.employee@example.com",
@@ -134,9 +132,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["cloudUsernames"] == ["test.employee@microsoft.com"]
         )
 
-    def test_create_departing_employee_posts_to_expected_url(
-        self, mock_session, customer
-    ):
+    def test_create_departing_employee_posts_to_expected_url(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
         client.create_departing_employee("test.employee@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/create"
@@ -158,9 +154,7 @@ class TestDepartingEmployeeClient(object):
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
 
-    def test_resolve_departing_employee_posts_expected_data(
-        self, mock_session, customer
-    ):
+    def test_resolve_departing_employee_posts_expected_data(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
         client.resolve_departing_employee("999")
 
@@ -172,9 +166,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
         )
 
-    def test_resolve_departing_employee_posts_to_expected_url(
-        self, mock_session, customer
-    ):
+    def test_resolve_departing_employee_posts_to_expected_url(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
         client.resolve_departing_employee("test.employee@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/resolve"
@@ -196,9 +188,7 @@ class TestDepartingEmployeeClient(object):
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
 
-    def test_get_all_departing_employees_posts_expected_data(
-        self, mock_session, customer
-    ):
+    def test_get_all_departing_employees_posts_expected_data(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
         client.get_all_departing_employees(None, 101, 2, "09-24-2023", "USERNAME", "ASC")
 
@@ -214,24 +204,18 @@ class TestDepartingEmployeeClient(object):
             and posted_data["srtDirection"] == "ASC"
         )
 
-    def test_get_all_departing_employees_posts_to_expected_url(
-        self, mock_session, customer
-    ):
+    def test_get_all_departing_employees_posts_to_expected_url(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
         client.get_all_departing_employees()
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/search"
 
-    def test_toggle_alerts_uses_current_tenant_id_over_customers(
-        self, mock_session, customer
-    ):
+    def test_toggle_alerts_uses_current_tenant_id_over_customers(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
         client._tenant_id = "11111111-1111-1111-1111-111111111111"
         client.toggle_alerts()
         assert client._tenant_id == "11111111-1111-1111-1111-111111111111"
 
-    def test_toggle_alerts_uses_given_tenant_id_over_current_id(
-        self, mock_session, customer
-    ):
+    def test_toggle_alerts_uses_given_tenant_id_over_current_id(self, mock_session, customer):
         client = DepartingEmployeeClient(mock_session, customer)
         client._tenant_id = "11111111-1111-1111-1111-111111111111"
         client.toggle_alerts("22222222-2222-2222-2222-222222222222")
@@ -372,7 +356,7 @@ class TestDepartingEmployeeClient(object):
         )
 
     def test_update_case_uses_current_data_when_not_provided_uses_excluding_departure_date(
-       self, mock_session, customer, mock_get_case_details_function
+        self, mock_session, customer, mock_get_case_details_function
     ):
         client = DepartingEmployeeClient(mock_session, customer)
         client.update_case("20")
@@ -388,7 +372,8 @@ class TestDepartingEmployeeClient(object):
             and posted_data["departureDate"] == "2020-02-13"
             and posted_data["alertsEnabled"] == True
             and posted_data["status"] == "OPEN"
-            and posted_data["cloudUsernames"] == ["test.testerson+partners@code42.com", "test.s@c42fc.com"]
+            and posted_data["cloudUsernames"]
+            == ["test.testerson+partners@code42.com", "test.s@c42fc.com"]
         )
 
     def test_update_case_posts_to_expected_url(

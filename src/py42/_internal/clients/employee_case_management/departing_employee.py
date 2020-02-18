@@ -50,22 +50,22 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id=None,
         page_size=100,
         page_num=1,
-        departing_on_or_after=None,
+        departing_on_or_after_epoch=None,
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
     ):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
-        departing_on_or_after = (
-            convert_timestamp_to_str(departing_on_or_after)
-            if departing_on_or_after
-            else departing_on_or_after
+        departing_on_or_after_epoch = (
+            convert_timestamp_to_str(departing_on_or_after_epoch)
+            if departing_on_or_after_epoch
+            else departing_on_or_after_epoch
         )
         uri = self._uri_prefix.format(u"search")
         data = {
             u"tenantId": tenant_id,
             u"pgSize": page_size,
             u"pgNum": page_num,
-            u"departingOnOrAfter": departing_on_or_after,
+            u"departingOnOrAfter": departing_on_or_after_epoch,
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,
         }

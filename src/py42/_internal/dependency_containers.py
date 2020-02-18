@@ -154,8 +154,9 @@ class SDKDependencies(object):
         file_event_dependencies,
         employee_case_management_dependencies,
         alert_dependencies,
+        key_value_store_dependencies,
     ):
-        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, EmployeeCaseManagementDependencies, AlertDependencies) -> None
+        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, EmployeeCaseManagementDependencies, AlertDependencies, KeyValueStoreDependencies) -> None
         archive_client = authority_dependencies.archive_client
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
@@ -194,15 +195,15 @@ class SDKDependencies(object):
             default_session, security_client, device_client
         )
         key_value_store_client_factory = key_value_store_dependencies.key_value_store_client_factory
-
-        storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
-        file_event_dependencies = FileEventDependencies(authority_dependencies)
         ecm_dependencies = EmployeeCaseManagementDependencies(
             authority_dependencies, key_value_store_client_factory
         )
         alert_dependencies = AlertDependencies(
             authority_dependencies, key_value_store_client_factory
         )
+        storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
+        file_event_dependencies = FileEventDependencies(authority_dependencies)
+        key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
 
         return cls(
             authority_dependencies,
@@ -210,4 +211,5 @@ class SDKDependencies(object):
             file_event_dependencies,
             ecm_dependencies,
             alert_dependencies,
+            key_value_store_dependencies,
         )

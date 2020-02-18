@@ -96,7 +96,8 @@ class DepartingEmployeeClient(BaseClient):
 
         changed_status = status is not None and status != case.get(u"status")
         changed_alerts_enabled = alerts_enabled is not None and alerts_enabled != case.get(
-            u"alertsEnabled")
+            u"alertsEnabled"
+        )
 
         display_name = display_name if display_name else case.get(u"displayName")
         notes = notes if notes else case.get(u"notes")

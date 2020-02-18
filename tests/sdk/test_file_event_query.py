@@ -290,7 +290,9 @@ def test_unicode_device_username_eq_str_gives_correct_json_representation():
 
 def test_file_name_exists_str_gives_correct_json_representation():
     _filter = FileName.exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"fileName", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"fileName", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
@@ -328,7 +330,9 @@ def test_file_name_not_in_str_gives_correct_json_representation():
 
 def test_file_path_exists_str_gives_correct_json_representation():
     _filter = FilePath.exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"filePath", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"filePath", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
@@ -480,7 +484,9 @@ def test_event_type_not_in_str_gives_correct_json_representation():
 
 def test_exposure_type_exists_str_gives_correct_json_representation():
     _filter = ExposureType.exists()
-    expected = '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"exposure", "value":null}]}'
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"exposure", "value":null}]}'
+    )
     assert str(_filter) == expected
 
 
@@ -593,7 +599,6 @@ def test_insertion_timestamp_in_range_str_gives_correct_json_representation():
         formatted_before, formatted_after
     )
     assert str(_filter) == expected
-
 
 
 def test_insertion_timestamp_on_same_day_str_gives_correct_json_representation():

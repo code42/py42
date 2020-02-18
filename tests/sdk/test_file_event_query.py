@@ -484,7 +484,7 @@ def test_event_timestamp_on_same_day_sets_filter_properties_correctly(in_range_f
     test_time = time()
     test_date = datetime.utcfromtimestamp(test_time)
     start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
-    end_time = datetime(test_date.year, test_date.month, test_date.day, 0, 23, 59)
+    end_time = datetime(test_date.year, test_date.month, test_date.day, 23, 59, 59)
     formatted_before = format_datetime(start_time)
     formatted_after = format_datetime(end_time)
 
@@ -527,7 +527,7 @@ def test_insertion_timestamp_on_same_day_sets_filter_properties_correctly(in_ran
     test_time = time()
     test_date = datetime.utcfromtimestamp(test_time)
     start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
-    end_time = datetime(test_date.year, test_date.month, test_date.day, 0, 23, 59)
+    end_time = datetime(test_date.year, test_date.month, test_date.day, 23, 59, 59)
     formatted_before = format_datetime(start_time)
     formatted_after = format_datetime(end_time)
 

@@ -38,7 +38,7 @@ class SDK(object):
 
     @property
     def administration(self):
-        return self._authority_dependencies.user_context
+        return self._authority_dependencies.administration_client
 
     @property
     def archive(self):

@@ -21,7 +21,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Severity`
     - `Actor`
     - `RuleName`
-    New filter operators `.contains` and `.not_contains` for alert string fields.
+    New filter operators `contains` and `not_contains` for alert string fields.
 - Added `EmployeeCaseManagement` module with `departing_employee` with:
     - `create_departing_employee()`
     - `resolve_departing_employee()`

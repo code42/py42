@@ -78,8 +78,7 @@ class DepartingEmployeeClient(BaseClient):
     def get_case_by_username(self, username, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         case_id = self._get_case_id_from_username(tenant_id, username)
-        if case_id:
-            return self.get_case_by_id(case_id, tenant_id)
+        return self.get_case_by_id(case_id, tenant_id)
 
     def get_case_by_id(self, case_id, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()

@@ -7,14 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 0.4.0 - 2020-02-19
 
 ### Added
 - Added `alerts` to `SecurityModule` with
-    - `.search_alerts`
-    - `.get_query_details`
-    - `.resolve_alert`
-    - `.reopen_alert`
+    - `search_alerts()`
+    - `get_query_details()`
+    - `resolve_alert()`
+    - `reopen_alert()`
 - For querying alerts, build an `AlertQuery` object with fields:
     - `AlertState`
     - `Description`
@@ -23,16 +23,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `RuleName`
     New filter operators `.contains` and `.not_contains` for alert string fields.
 - Added `EmployeeCaseManagement` module with `departing_employee` with:
-    - `.create_departing_employee`
-    - `.resolve_departing_employee`
-    - `.get_all_departing_employees`
-    - `.toggle_alerts`
-    - `.get_case_by_username`
-    - `.get_case_by_id`
-    - `.update_case`
+    - `create_departing_employee()`
+    - `resolve_departing_employee()`
+    - `get_all_departing_employees()`
+    - `toggle_alerts()`
+    - `get_case_by_username()`
+    - `get_case_by_id()`
+    - `update_case()`
     Access via `py42.SDK.employee_case_management.departing_employee`
 - Added `get_current_tenant` to `py42.SDK.administration`.
-- Added `py42.SDK.user_context.get_current_tenand_id`.
+- Added `py42.SDK.user_context.get_current_tenant_id`.
 
 ## 0.3.1 - 2020-02-14
 

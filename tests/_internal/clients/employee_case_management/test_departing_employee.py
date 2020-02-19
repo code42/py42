@@ -4,15 +4,18 @@ import pytest
 import json
 from requests import Response
 
+from ..conftest import TENANT_ID_FROM_RESPONSE
 from py42._internal.clients.employee_case_management.departing_employee import (
     DepartingEmployeeClient,
 )
 
+_TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
+
 
 _GET_CASE_DETAILS_RESPONSE = """
-{
+{{
     "type$":"DEPARTING_EMPLOYEE_CASE",
-    "tenantId":"00000000-0000-0000-0000-000000000000",
+    "tenantId":"{0}",
     "caseId":"697",
     "userUid":"921286907298179098",
     "userName":"test.example@example.com",
@@ -23,18 +26,18 @@ _GET_CASE_DETAILS_RESPONSE = """
     "cloudUsernames":["test.testerson+partners@code42.com","test.s@c42fc.com"],
     "departureDate":"2020-02-13",
     "alertsEnabled":true
-}
-"""
+}}
+""".format(TENANT_ID_FROM_RESPONSE)
 
 
 _GET_ALL_CASES_RESPONSE = """
-{
+{{
     "type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE",
     "cases":
         [
-            {
+            {{
                 "type$":"DEPARTING_EMPLOYEE_CASE",
-                "tenantId":"00000000-0000-0000-0000-000000000000",
+                "tenantId":"{0}",
                 "caseId":"697",
                 "userUid":"999999999999999999","userName":
                 "test.testerson@example.com",
@@ -43,10 +46,10 @@ _GET_ALL_CASES_RESPONSE = """
                 "createdAt":"2020-02-11T20:43:58.3611040Z",
                 "status":"OPEN",
                 "alertsEnabled":true
-            },
-            {
+            }},
+            {{
                 "type$":"DEPARTING_EMPLOYEE_CASE",
-                "tenantId":"00000000-0000-0000-0000-000000000000",
+                "tenantId":"{1}",
                 "caseId":"20",
                 "userUid":"888888888888888888",
                 "userName":"test.example@example.com",
@@ -56,11 +59,11 @@ _GET_ALL_CASES_RESPONSE = """
                 "status":"OPEN",
                 "cloudUsernames":["test.example@example.com"],
                 "alertsEnabled":true
-            }
+            }}
         ],
     "totalCount":2
-}
-"""
+}}
+""".format(TENANT_ID_FROM_RESPONSE, TENANT_ID_FROM_RESPONSE)
 
 
 class TestDepartingEmployeeClient(object):
@@ -95,10 +98,10 @@ class TestDepartingEmployeeClient(object):
     ):
         client = DepartingEmployeeClient(mock_session, user_context)
         client.create_departing_employee(
-            "test.employee@example.com", "22222222-2222-2222-2222-222222222222"
+            "test.employee@example.com", _TENANT_ID_PARAM
         )
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
-        assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
+        assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
     def test_create_departing_employee_posts_expected_data(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
@@ -116,7 +119,7 @@ class TestDepartingEmployeeClient(object):
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
             posted_data["userName"] == "test.employee@example.com"
-            and posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["notes"] == "These are notes"
             and posted_data["departureDate"] == "2044-07-18T14:00:46.000Z"
             and posted_data["alertsEnabled"] == True
@@ -132,9 +135,9 @@ class TestDepartingEmployeeClient(object):
         self, mock_session, user_context
     ):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.resolve_departing_employee("999", "22222222-2222-2222-2222-222222222222")
+        client.resolve_departing_employee("999", _TENANT_ID_PARAM)
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
-        assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
+        assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
     def test_resolve_departing_employee_posts_expected_data(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
@@ -145,7 +148,7 @@ class TestDepartingEmployeeClient(object):
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
             posted_data["caseId"] == "999"
-            and posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
         )
 
     def test_resolve_departing_employee_posts_to_expected_url(self, mock_session, user_context):
@@ -157,9 +160,9 @@ class TestDepartingEmployeeClient(object):
         self, mock_session, user_context
     ):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.get_all_departing_employees("22222222-2222-2222-2222-222222222222")
+        client.get_all_departing_employees(_TENANT_ID_PARAM)
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
-        assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
+        assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
     def test_get_all_departing_employees_posts_expected_data(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
@@ -169,7 +172,7 @@ class TestDepartingEmployeeClient(object):
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["pgSize"] == 101
             and posted_data["pgNum"] == 2
             and posted_data["departingOnOrAfter"] == "1977-06-15T14:57:06.000Z"
@@ -184,9 +187,9 @@ class TestDepartingEmployeeClient(object):
 
     def test_toggle_alerts_uses_given_tenant_id_over_current_id(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.toggle_alerts("22222222-2222-2222-2222-222222222222")
+        client.toggle_alerts(_TENANT_ID_PARAM)
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
-        assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
+        assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
     def test_toggle_alerts_posts_expected_data(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
@@ -196,7 +199,7 @@ class TestDepartingEmployeeClient(object):
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["alertsEnabled"] == True
         )
 
@@ -210,10 +213,10 @@ class TestDepartingEmployeeClient(object):
     ):
         client = DepartingEmployeeClient(mock_session, user_context)
         client.get_case_by_username(
-            "test.example@example.com", "22222222-2222-2222-2222-222222222222"
+            "test.example@example.com", _TENANT_ID_PARAM
         )
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
-        assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
+        assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
     def test_get_case_by_username_posts_expected_data(
         self, mock_session, user_context, mock_get_all_cases_function
@@ -225,7 +228,7 @@ class TestDepartingEmployeeClient(object):
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["caseId"] == "20"
         )
 
@@ -238,9 +241,9 @@ class TestDepartingEmployeeClient(object):
 
     def test_get_case_by_id_uses_given_tenant_id_over_current_id(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.get_case_by_id("999", "22222222-2222-2222-2222-222222222222")
+        client.get_case_by_id("999", _TENANT_ID_PARAM)
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
-        assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
+        assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
     def test_get_case_by_id_posts_expected_data(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
@@ -250,7 +253,7 @@ class TestDepartingEmployeeClient(object):
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["caseId"] == "999"
         )
 
@@ -263,9 +266,9 @@ class TestDepartingEmployeeClient(object):
         self, mock_session, user_context, mock_get_case_details_function
     ):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.update_case("697", "22222222-2222-2222-2222-222222222222")
+        client.update_case("697", _TENANT_ID_PARAM)
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
-        assert post_call_args["tenantId"] == "22222222-2222-2222-2222-222222222222"
+        assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
     def test_update_case_posts_expected_data(
         self, mock_session, user_context, mock_get_case_details_function
@@ -286,7 +289,7 @@ class TestDepartingEmployeeClient(object):
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["caseId"] == "697"
             and posted_data["displayName"] == "Display Name"
             and posted_data["notes"] == "These are notes"
@@ -306,7 +309,7 @@ class TestDepartingEmployeeClient(object):
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            posted_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["caseId"] == "20"
             and posted_data["displayName"] == "Test Testerson"
             and posted_data["notes"] == "notes notes notes"

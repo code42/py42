@@ -1,5 +1,6 @@
 import json
 
+from .conftest import TENANT_ID_FROM_RESPONSE
 from py42._internal.clients.alerts import AlertClient
 from py42.sdk.alert_query import AlertState, AlertQueryFactory
 
@@ -13,7 +14,7 @@ class TestAlertClient(object):
         alert_client.search_alerts(query)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            post_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["groupClause"] == "AND"
             and post_data["srtKey"] == "CreatedAt"
             and post_data["srtDir"] == "asc"
@@ -41,7 +42,7 @@ class TestAlertClient(object):
         alert_client.get_query_details(alert_ids)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            post_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
@@ -73,7 +74,7 @@ class TestAlertClient(object):
         alert_client.resolve_alert(alert_ids)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            post_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
@@ -105,7 +106,7 @@ class TestAlertClient(object):
         alert_client.reopen_alert(alert_ids)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            post_data["tenantId"] == "00000000-0000-0000-0000-000000000000"
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )

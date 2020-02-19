@@ -78,7 +78,8 @@ class DepartingEmployeeClient(BaseClient):
     def get_case_by_username(self, username, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         case_id = self._get_case_id_from_username(tenant_id, username)
-        return self.get_case_by_id(case_id, tenant_id)
+        if case_id:
+            return self.get_case_by_id(case_id, tenant_id)
 
     def get_case_by_id(self, case_id, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
@@ -143,7 +144,7 @@ class DepartingEmployeeClient(BaseClient):
 
         cases = self._get_all_departing_employees(tenant_id)
         matches = filter(has_username, cases)
-        return next(iter(matches)) if matches else {}
+        return next(iter(matches)) if matches else None
 
     def _get_all_departing_employees(self, tenant_id):
         response = self.get_all_departing_employees(tenant_id).text

@@ -239,6 +239,12 @@ class TestDepartingEmployeeClient(object):
         client.get_case_by_username("test.example@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/details"
 
+    def test_get_case_by_username_when_username_does_not_exist_returns_none(
+        self, mock_session, user_context, mock_get_all_cases_function
+    ):
+        client = DepartingEmployeeClient(mock_session, user_context)
+        assert client.get_case_by_username("someone else") is None
+
     def test_get_case_by_id_uses_given_tenant_id_over_current_id(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
         client.get_case_by_id("999", _TENANT_ID_PARAM)

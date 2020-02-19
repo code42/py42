@@ -3,12 +3,23 @@ from py42._internal.client_factories import (
     AuthorityClientFactory,
     FileEventClientFactory,
     StorageClientFactory,
+    KeyValueStoreClientFactory,
+    AlertClientFactory,
+    EmployeeCaseManagementClientFactory,
 )
 from py42._internal.login_provider_factories import (
     ArchiveLocatorFactory,
     FileEventLoginProviderFactory,
+    AlertLoginProviderFactory,
+    KeyValueStoreLocatorFactory,
+    EmployeeCaseManagementLoginProviderFactory,
 )
-from py42._internal.modules import archive as archive_module, security as sec_module
+from py42._internal.modules import (
+    archive as archive_module,
+    security as sec_module,
+    employee_case_management as ecm_module,
+)
+from py42._internal.user_context import UserContext
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
@@ -31,6 +42,7 @@ class AuthorityDependencies(object):
         self.legal_hold_client = authority_client_factory.create_legal_hold_client()
         self.archive_client = authority_client_factory.create_archive_client()
         self.security_client = authority_client_factory.create_security_client()
+        self.user_context = UserContext(self.administration_client)
 
     def _set_sessions(self, session_factory, root_session):
         # type: (SessionFactory, Py42Session) -> None
@@ -97,9 +109,54 @@ class FileEventDependencies(object):
         )
 
 
+class AlertDependencies(object):
+    def __init__(self, authority_dependencies, key_value_store_client_factory):
+        # type: (AuthorityDependencies, KeyValueStoreClientFactory) -> None
+        alert_login_provider_factory = AlertLoginProviderFactory(
+            authority_dependencies.root_session, key_value_store_client_factory
+        )
+        self.alert_client_factory = AlertClientFactory(
+            authority_dependencies.session_factory,
+            alert_login_provider_factory,
+            authority_dependencies.user_context,
+        )
+
+
+class KeyValueStoreDependencies(object):
+    def __init__(self, authority_dependencies):
+        # type: (AuthorityDependencies) -> None
+        key_value_store_login_provider_factory = KeyValueStoreLocatorFactory(
+            authority_dependencies.root_session
+        )
+        self.key_value_store_client_factory = KeyValueStoreClientFactory(
+            authority_dependencies.session_factory, key_value_store_login_provider_factory
+        )
+
+
+class EmployeeCaseManagementDependencies(object):
+    def __init__(self, authority_dependencies, key_value_store_client_factory):
+        # type: (AuthorityDependencies, KeyValueStoreClientFactory) -> None
+        ecm_login_provider_factory = EmployeeCaseManagementLoginProviderFactory(
+            authority_dependencies.root_session, key_value_store_client_factory
+        )
+        self.employee_case_management_client_factory = EmployeeCaseManagementClientFactory(
+            authority_dependencies.session_factory,
+            ecm_login_provider_factory,
+            authority_dependencies.user_context,
+        )
+
+
 class SDKDependencies(object):
-    def __init__(self, authority_dependencies, storage_dependencies, file_event_dependencies):
-        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies) -> None
+    def __init__(
+        self,
+        authority_dependencies,
+        storage_dependencies,
+        file_event_dependencies,
+        employee_case_management_dependencies,
+        alert_dependencies,
+        key_value_store_dependencies,
+    ):
+        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, EmployeeCaseManagementDependencies, AlertDependencies, KeyValueStoreDependencies) -> None
         archive_client = authority_dependencies.archive_client
         security_client = authority_dependencies.security_client
         storage_client_factory = storage_dependencies.storage_client_factory
@@ -108,13 +165,21 @@ class SDKDependencies(object):
         self.authority_dependencies = authority_dependencies
         self.storage_dependencies = storage_dependencies
         self.file_event_dependencies = file_event_dependencies
+        self.ecm_dependencies = employee_case_management_dependencies
+        self.alert_dependencies = alert_dependencies
 
         archive_accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
 
         # modules (feature sets that combine info from multiple clients)
         self.archive_module = archive_module.ArchiveModule(archive_accessor_manager, archive_client)
         self.security_module = sec_module.SecurityModule(
-            security_client, storage_client_factory, file_event_client_factory
+            security_client,
+            storage_client_factory,
+            file_event_client_factory,
+            alert_dependencies.alert_client_factory,
+        )
+        self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
+            self.ecm_dependencies.employee_case_management_client_factory
         )
 
     @classmethod
@@ -125,12 +190,26 @@ class SDKDependencies(object):
         default_session = authority_dependencies.default_session
         security_client = authority_dependencies.security_client
         device_client = authority_dependencies.device_client
-
+        key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
         archive_locator_factory = ArchiveLocatorFactory(
             default_session, security_client, device_client
         )
+        key_value_store_client_factory = key_value_store_dependencies.key_value_store_client_factory
+        ecm_dependencies = EmployeeCaseManagementDependencies(
+            authority_dependencies, key_value_store_client_factory
+        )
+        alert_dependencies = AlertDependencies(
+            authority_dependencies, key_value_store_client_factory
+        )
         storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
-
         file_event_dependencies = FileEventDependencies(authority_dependencies)
+        key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
 
-        return cls(authority_dependencies, storage_dependencies, file_event_dependencies)
+        return cls(
+            authority_dependencies,
+            storage_dependencies,
+            file_event_dependencies,
+            ecm_dependencies,
+            alert_dependencies,
+            key_value_store_dependencies,
+        )

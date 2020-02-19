@@ -15,6 +15,8 @@ class SDK(object):
         self._authority_dependencies = sdk_dependencies.authority_dependencies
         self._storage_dependencies = sdk_dependencies.storage_dependencies
         self._file_event_dependencies = sdk_dependencies.file_event_dependencies
+        self._ecm_dependencies = sdk_dependencies.ecm_dependencies
+        self._alert_dependencies = sdk_dependencies.alert_dependencies
 
     @classmethod
     def create_using_local_account(cls, host_address, username, password):
@@ -59,5 +61,13 @@ class SDK(object):
         return self._authority_dependencies.legal_hold_client
 
     @property
+    def user_context(self):
+        return self._authority_dependencies.user_context
+
+    @property
     def security(self):
         return self._sdk_dependencies.security_module
+
+    @property
+    def employee_case_management(self):
+        return self._sdk_dependencies.employee_case_management_module

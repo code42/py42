@@ -43,7 +43,6 @@ class LegalHoldClient(BaseAuthorityClient):
         hold_ext_ref=None,
         page_num=None,
         page_size=None,
-        **kwargs
     ):
         uri = u"/api/LegalHold"
         params = {

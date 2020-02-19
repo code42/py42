@@ -3,74 +3,57 @@
 from datetime import datetime
 
 from py42._internal.compat import str
+from py42.util import convert_timestamp_to_str, convert_datetime_to_timestamp_str
 
 
-def create_file_event_filter(term, operator, value=None):
-    return FileEventFilter(term, operator, value)
+def create_query_filter(term, operator, value=None):
+    return QueryFilter(term, operator, value)
 
 
 def create_eq_filter_group(term, value):
-    filter_list = [create_file_event_filter(term, u"IS", value)]
+    filter_list = [create_query_filter(term, u"IS", value)]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_is_in_filter_group(term, value_list):
-    filter_list = [create_file_event_filter(term, u"IS", value) for value in value_list]
+    filter_list = [create_query_filter(term, u"IS", value) for value in value_list]
     return create_filter_group(filter_list, u"OR" if len(filter_list) > 1 else u"AND")
 
 
 def create_not_in_filter_group(term, value_list):
-    filter_list = [create_file_event_filter(term, u"IS_NOT", value) for value in value_list]
+    filter_list = [create_query_filter(term, u"IS_NOT", value) for value in value_list]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_not_eq_filter_group(term, value):
-    filter_list = [create_file_event_filter(term, u"IS_NOT", value)]
+    filter_list = [create_query_filter(term, u"IS_NOT", value)]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_on_or_after_filter_group(term, value):
-    filter_list = [create_file_event_filter(term, u"ON_OR_AFTER", value)]
+    filter_list = [create_query_filter(term, u"ON_OR_AFTER", value)]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_on_or_before_filter_group(term, value):
-    filter_list = [create_file_event_filter(term, u"ON_OR_BEFORE", value)]
+    filter_list = [create_query_filter(term, u"ON_OR_BEFORE", value)]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_in_range_filter_group(term, start_value, end_value):
     filter_list = [
-        create_file_event_filter(term, u"ON_OR_AFTER", start_value),
-        create_file_event_filter(term, u"ON_OR_BEFORE", end_value),
+        create_query_filter(term, u"ON_OR_AFTER", start_value),
+        create_query_filter(term, u"ON_OR_BEFORE", end_value),
     ]
     return create_filter_group(filter_list, u"AND")
 
 
-def create_exists_filter_group(term):
-    filter_list = [create_file_event_filter(term, u"EXISTS")]
-    return create_filter_group(filter_list, u"AND")
+def create_filter_group(query_filter_list, filter_clause):
+    return FilterGroup(query_filter_list, filter_clause)
 
 
-def create_not_exists_filter_group(term):
-    filter_list = [create_file_event_filter(term, u"DOES_NOT_EXIST")]
-    return create_filter_group(filter_list, u"AND")
-
-
-def create_filter_group(file_event_filter_list, filter_clause):
-    return FilterGroup(file_event_filter_list, filter_clause)
-
-
-class _FileEventFilterStringField(object):
+class _QueryFilterStringField(object):
     _term = u"override_string_field_name"
-
-    @classmethod
-    def exists(cls):
-        return create_exists_filter_group(cls._term)
-
-    @classmethod
-    def not_exists(cls):
-        return create_not_exists_filter_group(cls._term)
 
     @classmethod
     def eq(cls, value):
@@ -93,34 +76,40 @@ class _FileEventFilterStringField(object):
         return create_not_in_filter_group(cls._term, value_list)
 
 
-class _FileEventFilterTimestampField(object):
+class _QueryFilterTimestampField(object):
     _term = u"override_timestamp_field_name"
-
-    @staticmethod
-    def _to_timestamp_string(timestamp):
-        # "2018-12-01T00:00:00.000Z"
-        prefix = datetime.utcfromtimestamp(timestamp).strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
-        return "{0}Z".format(prefix)
 
     @classmethod
     def on_or_after(cls, value):
-        formatted_timestamp = cls._to_timestamp_string(value)
+        formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_after_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
     def on_or_before(cls, value):
-        formatted_timestamp = cls._to_timestamp_string(value)
+        formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_before_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
     def in_range(cls, start_value, end_value):
-        formatted_start_time = cls._to_timestamp_string(start_value)
-        formatted_end_time = cls._to_timestamp_string(end_value)
+        formatted_start_time = convert_timestamp_to_str(start_value)
+        formatted_end_time = convert_timestamp_to_str(end_value)
+        return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
+
+    @classmethod
+    def on_same_day(cls, value):
+        date_from_value = datetime.utcfromtimestamp(value)
+        start_time = datetime(
+            date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0
+        )
+        end_time = datetime(
+            date_from_value.year, date_from_value.month, date_from_value.day, 23, 59, 59
+        )
+        formatted_start_time = convert_datetime_to_timestamp_str(start_time)
+        formatted_end_time = convert_datetime_to_timestamp_str(end_time)
         return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
 
 
-class FileEventFilter(object):
-
+class QueryFilter(object):
     _term = None
 
     def __init__(self, term, operator, value=None):

@@ -11,3 +11,7 @@ class AdministrationClient(BaseAuthorityClient):
         uri = u"/api/AlertLog"
         params = {u"status": status, u"type": alert_type, u"pgNum": page_num, u"pgSize": page_size}
         return self._default_session.get(uri, params=params)
+
+    def get_current_tenant(self):
+        uri = u"/c42api/v3/customer/my"
+        return self._default_session.get(uri)

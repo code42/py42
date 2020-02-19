@@ -6,6 +6,9 @@ from py42._internal.login_providers import (
     C42APILoginTokenProvider,
     C42APIStorageAuthTokenProvider,
     FileEventLoginProvider,
+    KeyValueStoreLoginProvider,
+    AlertLoginProvider,
+    EmployeeCaseManagementLoginProvider,
 )
 
 
@@ -49,3 +52,31 @@ class FileEventLoginProviderFactory(object):
 
     def create_file_event_login_provider(self):
         return FileEventLoginProvider(self._auth_session)
+
+
+class KeyValueStoreLocatorFactory(object):
+    def __init__(self, auth_session):
+        self._auth_session = auth_session
+
+    def create_key_value_store_locator(self):
+        return KeyValueStoreLoginProvider(self._auth_session)
+
+
+class AlertLoginProviderFactory(object):
+    def __init__(self, auth_session, key_value_store_client_factory):
+        self._auth_session = auth_session
+        self._key_value_store_client_factory = key_value_store_client_factory
+
+    def create_alert_login_provider(self):
+        key_value_store_client = self._key_value_store_client_factory.get_key_value_store_client()
+        return AlertLoginProvider(self._auth_session, key_value_store_client)
+
+
+class EmployeeCaseManagementLoginProviderFactory(object):
+    def __init__(self, auth_session, key_value_store_client_factory):
+        self._auth_session = auth_session
+        self._key_value_store_client_factory = key_value_store_client_factory
+
+    def create_ecm_login_provider(self):
+        key_value_store_client = self._key_value_store_client_factory.get_key_value_store_client()
+        return EmployeeCaseManagementLoginProvider(self._auth_session, key_value_store_client)

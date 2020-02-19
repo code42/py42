@@ -7,14 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 0.4.0 - 2020-02-19
+
+### Added
+- Added `alerts` to `SecurityModule` with
+    - `search_alerts()`
+    - `get_query_details()`
+    - `resolve_alert()`
+    - `reopen_alert()`
+- For querying alerts, build an `AlertQuery` object with fields:
+    - `AlertState`
+    - `Description`
+    - `Severity`
+    - `Actor`
+    - `RuleName`
+    New filter operators `contains` and `not_contains` for alert string fields.
+- Added `EmployeeCaseManagement` module with `departing_employee` with:
+    - `create_departing_employee()`
+    - `resolve_departing_employee()`
+    - `get_all_departing_employees()`
+    - `toggle_alerts()`
+    - `get_case_by_username()`
+    - `get_case_by_id()`
+    - `update_case()`
+    Access via `py42.SDK.employee_case_management.departing_employee`
+- Added `get_current_tenant` to `py42.SDK.administration`.
+- Added `py42.SDK.user_context.get_current_tenant_id`.
+
 ## 0.3.1 - 2020-02-14
 
-## Added
+### Added
 - `SecurityModule.get_security_plan_storage_info_list()`
 - `SecurityModule.get_user_security_events()`
 - `SecurityModule.get_plan_security_events()`
 
-## Changed
+### Changed
 - Removed `SecurityModule.get_security_event_locations()`. Use `SecurityClient.get_security_event_locations()` instead.
 - Removed `get_normalized_security_event_plan_info().` Support for pre-6.7 format security event plan info responses has
 been removed, and as a result this method is no longer necessary. Use `SecurityClient.get_security_event_locations()` instead.
@@ -65,14 +92,14 @@ This allowed for the possibility of requests that would hang forever under certa
 - `SecurityModule.get_security_detection_event_client`
 
 ### Removed
-- The following methods from `SecurityModule`. 
+- The following methods from `SecurityModule`.
 Use `StorageSecurityClient` (via `SecurityModule.get_security_detection_event_client`) instead.
     - `get_security_detection_events_for_user()`
     - `get_security_detection_events_summary()`
-    
+
 - `get_security_detection_events` from `StorageSecurityClient`. Use `get_security_detection_events_for_plan()`,
  `get_security_detection_events_for_user()`, or `get_security_detection_event_summary()` instead.
- 
+
 - `include_files` and `event_types` parameters from `StorageSecurityClient.get_security_detection_event_summary()`.
 These had no effect.
 
@@ -90,8 +117,8 @@ These had no effect.
 ## 0.1.8 - 2019-09-11
 
 ### Fixed
-- Regression that removed an optimization that allowed user to make requests to the same storage node without 
- getting a new storage auth token for each request 
+- Regression that removed an optimization that allowed user to make requests to the same storage node without
+ getting a new storage auth token for each request
 
 ## 0.1.7 - 2019-09-09
 
@@ -122,7 +149,7 @@ These had no effect.
  - `SDK.users.get_users()` and `SDK.devices.get_devices()` now both support a `q` parameter that can be used to check
  common distinguishing fields on those items for an input string (e.g. `SDK.users.get_user(q="test")` will return all
   users whose username or email address contain "test").
-  
+
 ### Changed
  - `SDK.archive.download_from_backup()` will now download the most recent non-deleted version of a file. Previously,
 file paths that were deleted would not be downloaded.
@@ -217,7 +244,7 @@ file paths that were deleted would not be downloaded.
     - `cancel_web_restore_job()`
     - `get_web_restore_job_result()`
 - Added setup.py to support package installation
-    
+
 
 ### Changed
 - Renamed `SDK.device.get_computers()` to `SDK.device.get_devices()`

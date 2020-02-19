@@ -2,15 +2,14 @@ import json
 
 from .conftest import TENANT_ID_FROM_RESPONSE
 from py42._internal.clients.alerts import AlertClient
-from py42.sdk.alert_query import AlertState, AlertQueryFactory
+from py42.sdk.alert_query import AlertState, AlertQuery
 
 
 class TestAlertClient(object):
     def test_search_alerts_posts_expected_data(self, mock_session, user_context):
         alert_client = AlertClient(mock_session, user_context)
-        query_factory = AlertQueryFactory(user_context)
         _filter = AlertState.eq("OPEN")
-        query = query_factory.create_query_for_current_tenant(_filter)
+        query = AlertQuery(TENANT_ID_FROM_RESPONSE, _filter)
         alert_client.search_alerts(query)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
@@ -28,9 +27,8 @@ class TestAlertClient(object):
 
     def test_search_alerts_posts_to_expected_url(self, mock_session, user_context):
         alert_client = AlertClient(mock_session, user_context)
-        query_factory = AlertQueryFactory(user_context)
         _filter = AlertState.eq("OPEN")
-        query = query_factory.create_query_for_current_tenant(_filter)
+        query = AlertQuery(TENANT_ID_FROM_RESPONSE, _filter)
         alert_client.search_alerts(query)
         assert mock_session.post.call_args[0][0] == u"/svc/api/v1/query-alerts"
 

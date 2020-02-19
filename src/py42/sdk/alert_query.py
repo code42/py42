@@ -114,14 +114,3 @@ class AlertQuery(BaseQuery):
             self.sort_key,
         )
         return json
-
-
-class AlertQueryFactory(object):
-    """Abstracts away having to know the tenant ID when creating queries"""
-
-    def __init__(self, user_context):
-        self._user_context = user_context
-
-    def create_query_for_current_tenant(self, *args, **kwargs):
-        tenant_id = self._user_context.get_current_tenant_id()
-        return AlertQuery(tenant_id, *args, **kwargs)

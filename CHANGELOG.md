@@ -15,13 +15,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `.get_query_details`
     - `.resolve_alert`
     - `.reopen_alert`
-- For querying alerts, use `alert_query` and `AlertQueryFactory` to query fields:
+- For querying alerts, build an `AlertQuery` object with fields:
     - `AlertState`
     - `Description`
     - `Severity`
     - `Actor`
     - `RuleName`
-    Use `.contains` and `not_contains` in alert string fields.
+    New filter operators `.contains` and `.not_contains` for alert string fields.
 - Added `EmployeeCaseManagement` module with `departing_employee` with:
     - `.create_departing_employee`
     - `.resolve_departing_employee`

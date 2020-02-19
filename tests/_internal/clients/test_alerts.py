@@ -45,6 +45,17 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
+    def test_get_query_details_when_given_single_alert_id_posts_expected_data(
+        self, mock_session, user_context
+    ):
+        alert_client = AlertClient(mock_session, user_context)
+        alert_client.get_query_details("ALERT_ID_1")
+        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        assert (
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and post_data["alertIds"][0] == "ALERT_ID_1"
+        )
+
     def test_get_query_details_when_given_tenant_id_posts_expected_data(
         self, mock_session, user_context
     ):
@@ -77,6 +88,17 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
+    def test_resolve_alert_when_given_single_alert_id_posts_expected_data(
+        self, mock_session, user_context
+    ):
+        alert_client = AlertClient(mock_session, user_context)
+        alert_client.resolve_alert("ALERT_ID_1")
+        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        assert (
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and post_data["alertIds"][0] == "ALERT_ID_1"
+        )
+
     def test_resolve_alert_when_given_tenant_id_posts_expected_data(
         self, mock_session, user_context
     ):
@@ -107,6 +129,17 @@ class TestAlertClient(object):
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
+        )
+
+    def test_reopen_alert_when_given_single_alert_id_posts_expected_data(
+        self, mock_session, user_context
+    ):
+        alert_client = AlertClient(mock_session, user_context)
+        alert_client.reopen_alert("ALERT_ID_1")
+        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        assert (
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and post_data["alertIds"][0] == "ALERT_ID_1"
         )
 
     def test_reopen_alert_when_given_tenant_id_posts_expected_data(

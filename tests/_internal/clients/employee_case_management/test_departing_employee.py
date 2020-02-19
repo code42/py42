@@ -27,7 +27,9 @@ _GET_CASE_DETAILS_RESPONSE = """
     "departureDate":"2020-02-13",
     "alertsEnabled":true
 }}
-""".format(TENANT_ID_FROM_RESPONSE)
+""".format(
+    TENANT_ID_FROM_RESPONSE
+)
 
 
 _GET_ALL_CASES_RESPONSE = """
@@ -63,7 +65,9 @@ _GET_ALL_CASES_RESPONSE = """
         ],
     "totalCount":2
 }}
-""".format(TENANT_ID_FROM_RESPONSE, TENANT_ID_FROM_RESPONSE)
+""".format(
+    TENANT_ID_FROM_RESPONSE, TENANT_ID_FROM_RESPONSE
+)
 
 
 class TestDepartingEmployeeClient(object):
@@ -97,9 +101,7 @@ class TestDepartingEmployeeClient(object):
         self, mock_session, user_context
     ):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.create_departing_employee(
-            "test.employee@example.com", _TENANT_ID_PARAM
-        )
+        client.create_departing_employee("test.employee@example.com", _TENANT_ID_PARAM)
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
@@ -146,10 +148,7 @@ class TestDepartingEmployeeClient(object):
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
-        assert (
-            posted_data["caseId"] == "999"
-            and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
-        )
+        assert posted_data["caseId"] == "999" and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
 
     def test_resolve_departing_employee_posts_to_expected_url(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
@@ -212,9 +211,7 @@ class TestDepartingEmployeeClient(object):
         self, mock_session, user_context, mock_get_all_cases_function
     ):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.get_case_by_username(
-            "test.example@example.com", _TENANT_ID_PARAM
-        )
+        client.get_case_by_username("test.example@example.com", _TENANT_ID_PARAM)
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])
         assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
@@ -227,10 +224,7 @@ class TestDepartingEmployeeClient(object):
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
-        assert (
-            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
-            and posted_data["caseId"] == "20"
-        )
+        assert posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE and posted_data["caseId"] == "20"
 
     def test_get_case_by_username_posts_to_expected_url(
         self, mock_session, user_context, mock_get_all_cases_function
@@ -258,10 +252,7 @@ class TestDepartingEmployeeClient(object):
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
-        assert (
-            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
-            and posted_data["caseId"] == "999"
-        )
+        assert posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE and posted_data["caseId"] == "999"
 
     def test_get_case_by_id_posts_to_expected_url(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)

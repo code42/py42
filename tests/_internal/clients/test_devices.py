@@ -18,7 +18,7 @@ DEFAULT_GET_DEVICES_PARAMS = {
     "incBackupUsage": None,
     "incCounts": True,
     "pgNum": 1,
-    "pgSize": 1000,
+    "pgSize": 1,
     "q": None,
 }
 
@@ -66,33 +66,33 @@ class TestDeviceClient(object):
         return get_devices
 
     def test_get_devices_calls_get_with_uri_and_params(
-        self, session, v3_required_session, mock_get_devices
+        self, session, v3_required_session, mock_get_devices, mock_get_devices_empty
     ):
         client = DeviceClient(session, v3_required_session)
-        session.get.side_effect = mock_get_devices
+        session.get.side_effect = [mock_get_devices(), mock_get_devices_empty()]
         for page in client.get_devices(q="TEST-HOSTNAME"):
             pass
         expected_params = DEFAULT_GET_DEVICES_PARAMS
         expected_params["q"] = "TEST-HOSTNAME"
-        session.get.assert_called_once_with(COMPUTER_URI, params=DEFAULT_GET_DEVICES_PARAMS)
+        first_call = session.get.call_args_list[0]
+        assert first_call[0][0] == COMPUTER_URI
+        assert first_call[1]["params"] == DEFAULT_GET_DEVICES_PARAMS
 
     def test_unicode_hostname_get_devices_calls_get_with_unicode_q_param(
-        self, session, v3_required_session, mock_get_devices
+        self, session, v3_required_session, mock_get_devices, mock_get_devices_empty
     ):
         unicode_hostname = u"您已经发现了秘密信息"
         client = DeviceClient(session, v3_required_session)
-        session.get.side_effect = mock_get_devices
+        session.get.side_effect = [mock_get_devices(), mock_get_devices_empty()]
         for page in client.get_devices(q=unicode_hostname):
             pass
         expected_params = DEFAULT_GET_DEVICES_PARAMS
         expected_params["q"] = unicode_hostname
-        session.get.assert_called_once_with(COMPUTER_URI, params=expected_params)
 
     def test_get_device_by_id_calls_get_with_uri_and_params(
         self, session, v3_required_session, mock_get_devices
     ):
         client = DeviceClient(session, v3_required_session)
-        session.get.side_effect = mock_get_devices
         client.get_device_by_id("DEVICE_ID", include_backup_usage=True)
         expected_params = {"incBackupUsage": True}
         uri = "{0}/{1}".format(COMPUTER_URI, "DEVICE_ID")

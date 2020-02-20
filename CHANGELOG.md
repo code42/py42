@@ -10,7 +10,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## 0.4.1 - 2020-02-20
 
 ### Fixed
-- Issue where the wrong key was used in AlertQueries sort direction.
+- Issue where the wrong key was used in AlertQueries sort direction and the default value was not the same as the Console's.
 
 ## 0.4.0 - 2020-02-19
 

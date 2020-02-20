@@ -13,7 +13,7 @@ JSON_QUERY_BASE = u'{{"tenantId":"{0}", "groupClause":"{1}", "groups":[{2}], "pg
 
 
 def build_query_json(group_clause, group_list):
-    return JSON_QUERY_BASE.format(_TENANT_ID, group_clause, group_list, 0, 100, "asc", "CreatedAt")
+    return JSON_QUERY_BASE.format(_TENANT_ID, group_clause, group_list, 0, 100, "desc", "CreatedAt")
 
 
 def test_alert_query_repr_does_not_throw_type_error():
@@ -87,7 +87,7 @@ def test_alert_query_str_with_page_num_gives_correct_json_representation(event_f
     alert_query = AlertQuery(_TENANT_ID, event_filter_group)
     alert_query.page_number = 5
     json_query_str = JSON_QUERY_BASE.format(
-        _TENANT_ID, "AND", event_filter_group, 5, 100, "asc", "CreatedAt"
+        _TENANT_ID, "AND", event_filter_group, 5, 100, "desc", "CreatedAt"
     )
     assert str(alert_query) == json_query_str
 
@@ -96,16 +96,16 @@ def test_alert_query_str_with_page_size_gives_correct_json_representation(event_
     alert_query = AlertQuery(_TENANT_ID, event_filter_group)
     alert_query.page_size = 500
     json_query_str = JSON_QUERY_BASE.format(
-        _TENANT_ID, "AND", event_filter_group, 0, 500, "asc", "CreatedAt"
+        _TENANT_ID, "AND", event_filter_group, 0, 500, "desc", "CreatedAt"
     )
     assert str(alert_query) == json_query_str
 
 
 def test_alert_query_str_with_sort_direction_gives_correct_json_representation(event_filter_group,):
     alert_query = AlertQuery(_TENANT_ID, event_filter_group)
-    alert_query.sort_direction = "desc"
+    alert_query.sort_direction = "asc"
     json_query_str = JSON_QUERY_BASE.format(
-        _TENANT_ID, "AND", event_filter_group, 0, 100, "desc", "CreatedAt"
+        _TENANT_ID, "AND", event_filter_group, 0, 100, "asc", "CreatedAt"
     )
     assert str(alert_query) == json_query_str
 
@@ -114,7 +114,7 @@ def test_alert_query_str_with_sort_key_gives_correct_json_representation(event_f
     alert_query = AlertQuery(_TENANT_ID, event_filter_group)
     alert_query.sort_key = "some_field_to_sort_by"
     json_query_str = JSON_QUERY_BASE.format(
-        _TENANT_ID, "AND", event_filter_group, 0, 100, "asc", "some_field_to_sort_by"
+        _TENANT_ID, "AND", event_filter_group, 0, 100, "desc", "some_field_to_sort_by"
     )
     assert str(alert_query) == json_query_str
 

@@ -2,6 +2,7 @@ import json
 
 from py42._internal.base_classes import BaseAuthorityClient
 from py42._internal.clients.util import get_all_pages
+import py42.settings as settings
 
 
 class UserClient(BaseAuthorityClient):
@@ -70,7 +71,7 @@ class UserClient(BaseAuthorityClient):
     def get_users(self, active=None, email=None, org_uid=None, role_id=None, q=None):
         return get_all_pages(
             self._get_users,
-            1000,
+            settings.items_per_page,
             u"users",
             active=active,
             email=email,

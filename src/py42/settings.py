@@ -9,6 +9,8 @@ proxies = None
 # True, False, or a path to a CA bundle to use.
 verify_ssl_certs = True
 
+items_per_page = 1000
+
 debug_level = py42.debug_level.NONE
 
 _custom_user_suffix = u""

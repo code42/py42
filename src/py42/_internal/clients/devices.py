@@ -2,6 +2,7 @@ import json
 
 from py42._internal.base_classes import BaseAuthorityClient
 from py42._internal.clients.util import get_all_pages
+import py42.settings as settings
 
 
 class DeviceClient(BaseAuthorityClient):
@@ -48,7 +49,7 @@ class DeviceClient(BaseAuthorityClient):
 
         return get_all_pages(
             self._get_devices,
-            1,
+            settings.items_per_page,
             "computers",
             active=active,
             blocked=blocked,

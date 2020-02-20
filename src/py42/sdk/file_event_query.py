@@ -38,6 +38,10 @@ class PrivateIPAddress(_FileEventFilterStringField):
     _term = u"privateIpAddresses"
 
 
+class Actor(_FileEventFilterStringField):
+    _term = u"actor"
+
+
 class EventTimestamp(_QueryFilterTimestampField):
     _term = u"eventTimestamp"
 

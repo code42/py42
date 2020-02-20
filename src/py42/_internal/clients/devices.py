@@ -1,16 +1,17 @@
 import json
 
 from py42._internal.base_classes import BaseAuthorityClient
+from py42._internal.clients.util import get_all_pages
 
 
 class DeviceClient(BaseAuthorityClient):
-    def get_devices(
+    def _get_devices(
         self,
         active=None,
         blocked=None,
         org_uid=None,
         user_uid=None,
-        target_computer_guid=None,
+        destination_guid=None,
         include_backup_usage=None,
         include_counts=True,
         page_num=None,
@@ -23,7 +24,7 @@ class DeviceClient(BaseAuthorityClient):
             u"blocked": blocked,
             u"orgUid": org_uid,
             u"userUid": user_uid,
-            u"targetComputerGuid": target_computer_guid,
+            u"targetComputerGuid": destination_guid,
             u"incBackupUsage": include_backup_usage,
             u"incCounts": include_counts,
             u"pgNum": page_num,
@@ -32,6 +33,32 @@ class DeviceClient(BaseAuthorityClient):
         }
 
         return self._default_session.get(uri, params=params)
+
+    def get_devices(
+        self,
+        active=None,
+        blocked=None,
+        org_uid=None,
+        user_uid=None,
+        destination_guid=None,
+        include_backup_usage=None,
+        include_counts=True,
+        q=None,
+    ):
+
+        return get_all_pages(
+            self._get_devices,
+            1,
+            "computers",
+            active=active,
+            blocked=blocked,
+            org_uid=org_uid,
+            user_uid=user_uid,
+            destination_guid=destination_guid,
+            include_backup_usage=include_backup_usage,
+            include_counts=include_counts,
+            q=q,
+        )
 
     def get_device_by_id(self, device_id, include_backup_usage=None):
         uri = u"/api/Computer/{0}".format(device_id)

@@ -10,7 +10,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## 0.4.1 - 2020-02-20
 
 ### Fixed
-- Issue where the wrong key name was used in AlertQueries.
+- Issue where the wrong key was used in AlertQueries sort direction.
 
 ## 0.4.0 - 2020-02-19
 

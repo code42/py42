@@ -9,7 +9,7 @@ from py42.sdk.alert_query import AlertQuery
 from py42.sdk.alert_query import DateObserved, Actor, Severity, RuleName, Description, AlertState
 
 _TENANT_ID = u"tenant-id"
-JSON_QUERY_BASE = u'{{"tenantId":"{0}", "groupClause":"{1}", "groups":[{2}], "pgNum":{3}, "pgSize":{4}, "srtDir":"{5}", "srtKey":"{6}"}}'
+JSON_QUERY_BASE = u'{{"tenantId":"{0}", "groupClause":"{1}", "groups":[{2}], "pgNum":{3}, "pgSize":{4}, "srtDirection":"{5}", "srtKey":"{6}"}}'
 
 
 def build_query_json(group_clause, group_list):

@@ -16,7 +16,7 @@ class TestAlertClient(object):
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["groupClause"] == "AND"
             and post_data["srtKey"] == "CreatedAt"
-            and post_data["srtDir"] == "asc"
+            and post_data["srtDirection"] == "asc"
             and post_data["pgSize"] == 100
             and post_data["pgNum"] == 0
             and post_data["groups"][0]["filterClause"] == "AND"

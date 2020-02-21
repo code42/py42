@@ -5,6 +5,8 @@ import json
 from requests import Response
 
 from ..conftest import TENANT_ID_FROM_RESPONSE
+
+import py42
 from py42._internal.clients.employee_case_management.departing_employee import (
     DepartingEmployeeClient,
 )
@@ -70,13 +72,7 @@ _GET_ALL_CASES_RESPONSE = """
 )
 
 _GET_ALL_CASES_EMPTY_RESPONSE = """
-{{
-    "type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE",
-    "cases":
-        [
-        ],
-    "totalCount":0
-}}
+{"type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE","cases":[],"totalCount":0}
 """
 
 
@@ -208,6 +204,25 @@ class TestDepartingEmployeeClient(object):
             break
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/search"
 
+    def test_get_all_departing_employees_calls_post_expected_number_of_times(
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response,
+        mock_get_all_cases_response_empty,
+    ):
+        py42.settings.items_per_page = 1
+        mock_session.post.side_effect = [
+            mock_get_all_cases_response,
+            mock_get_all_cases_response,
+            mock_get_all_cases_response_empty,
+        ]
+        client = DepartingEmployeeClient(mock_session, user_context)
+        for page in client.get_all_departing_employees():
+            pass
+        py42.settings.items_per_page = 1000
+        assert mock_session.post.call_count == 3
+
     def test_toggle_alerts_uses_given_tenant_id_over_current_id(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)
         client.toggle_alerts(_TENANT_ID_PARAM)
@@ -236,8 +251,7 @@ class TestDepartingEmployeeClient(object):
     ):
         mock_session.post.return_value = mock_get_all_cases_response
         client = DepartingEmployeeClient(mock_session, user_context)
-        for page in client.get_case_by_username("test.example@example.com", _TENANT_ID_PARAM):
-            break
+        client.get_case_by_username("test.example@example.com", _TENANT_ID_PARAM)
         first_call = mock_session.post.call_args_list[0]
         post_call_args = json.loads(first_call[1]["data"])
         assert post_call_args["tenantId"] == _TENANT_ID_PARAM

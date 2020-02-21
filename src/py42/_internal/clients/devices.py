@@ -50,7 +50,7 @@ class DeviceClient(BaseAuthorityClient):
         return get_all_pages(
             self._get_devices_page,
             settings.items_per_page,
-            "computers",
+            u"computers",
             active=active,
             blocked=blocked,
             org_uid=org_uid,

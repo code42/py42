@@ -34,7 +34,7 @@ class OrgClient(BaseAuthorityClient):
         return self._default_session.get(uri, params=params)
 
     def get_orgs(self):
-        return get_all_pages(self._get_orgs_page, settings.items_per_page, "orgs")
+        return get_all_pages(self._get_orgs_page, settings.items_per_page, u"orgs")
 
     def block_org(self, org_id):
         uri = u"/api/OrgBlock/{0}".format(org_id)

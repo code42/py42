@@ -63,8 +63,8 @@ class DepartingEmployeeClient(BaseClient):
         uri = self._uri_prefix.format(u"search")
         data = {
             u"tenantId": tenant_id,
-            "pgSize": page_size,
-            "pgNum": page_num,
+            u"pgSize": page_size,
+            u"pgNum": page_num,
             u"departingOnOrAfter": departing_on_or_after_date,
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,

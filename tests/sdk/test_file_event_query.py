@@ -6,6 +6,7 @@ from time import time
 from .conftest import format_timestamp, format_datetime
 from py42._internal.compat import str
 from py42.sdk.file_event_query import (
+    Actor,
     DeviceUsername,
     EventTimestamp,
     EventType,
@@ -631,6 +632,70 @@ def test_private_ip_address_not_in_str_gives_correct_json_representation():
         '{"operator":"IS_NOT", "term":"privateIpAddresses", "value":"privateIp3"}]}'
     )
     assert str(_filter) == expected
+
+
+def test_actor_exists_str_gives_correct_json_representation():
+    _filter = Actor.exists()
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"EXISTS", "term":"actor", "value":null}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_actor_not_exists_str_gives_correct_json_representation():
+    _filter = Actor.not_exists()
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"DOES_NOT_EXIST", "term":"actor", "value":null}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_actor_eq_str_gives_correct_json_representation():
+    _filter = Actor.eq("test_actor")
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"IS", "term":"actor", "value":"test_actor"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_actor_not_eq_str_gives_correct_json_representation():
+    _filter = Actor.not_eq("test_actor")
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"IS_NOT", "term":"actor", "value":"test_actor"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_actor_is_in_str_gives_correct_json_representation():
+    items = ["actor1", "actor2", "actor3"]
+    _filter = Actor.is_in(items)
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":[{"operator":"IS", "term":"actor", "value":"actor1"},'
+        '{"operator":"IS", "term":"actor", "value":"actor2"},'
+        '{"operator":"IS", "term":"actor", "value":"actor3"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_actor_not_in_str_gives_correct_json_representation():
+    items = ["actor1", "actor2", "actor3"]
+    _filter = Actor.not_in(items)
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"actor", "value":"actor1"},'
+        '{"operator":"IS_NOT", "term":"actor", "value":"actor2"},'
+        '{"operator":"IS_NOT", "term":"actor", "value":"actor3"}]}'
+    )
+    assert str(_filter) == expected
+
 
 
 def test_event_type_exists_str_gives_correct_json_representation():

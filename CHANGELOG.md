@@ -9,6 +9,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## 0.4.3 - 2020-02-21
 
+## Added
+- `py42.settings.items_per_page`. This effectively replaces `page_size` for the methods that were changed below.
+
 ## Changed
 The following resources no longer accept `page_num` and `page_size` parameters and no longer return a 
 `requests.Response` object:

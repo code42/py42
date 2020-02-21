@@ -52,9 +52,9 @@ class TestUserClient(object):
         return response
 
     def test_get_users_calls_get_with_uri_and_params(
-        self, session, v3_required_session, mock_get_users
+        self, session, v3_required_session, mock_get_users_response
     ):
-        session.get.side_effect = mock_get_users
+        session.get.side_effect = mock_get_users_response
         client = UserClient(session, v3_required_session)
         for page in client.get_users():
             break

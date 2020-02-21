@@ -7,6 +7,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 0.4.3 - 2020-02-21
+
+## Changed
+The following resources no longer accept `page_num` and `page_size` parameters and no longer return a 
+`requests.Response` object:
+- `UserClient.get_users()`
+- `DeviceClient.get_devices()`
+- `OrgClient.get_orgs()`
+- `LegalHoldClient.get_legal_holds()`
+- `LegalHoldClient.get_legal_hold_memberships`
+
+They instead return a generator object that is iterated over to retrieve all the pages, eliminating the need to
+manually compose loops to retrieve each page. For example, the below snippet will retrieve all pages of users:
+```python
+for page in users.get_users():
+    user_list = json.loads(page.text)["data"]["users"]
+```
+
+
 ## 0.4.2 - 2020-02-20
 
 ### Added

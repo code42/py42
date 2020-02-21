@@ -45,7 +45,7 @@ class UserClient(BaseAuthorityClient):
         uri = u"/api/User/my"
         return self._default_session.get(uri)
 
-    def _get_users(
+    def _get_users_page(
         self,
         active=None,
         email=None,
@@ -70,7 +70,7 @@ class UserClient(BaseAuthorityClient):
 
     def get_users(self, active=None, email=None, org_uid=None, role_id=None, q=None):
         return get_all_pages(
-            self._get_users,
+            self._get_users_page,
             settings.items_per_page,
             u"users",
             active=active,

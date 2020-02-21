@@ -5,7 +5,7 @@ from requests import Response
 
 from py42._internal.clients.orgs import OrgClient
 from py42._internal.session import Py42Session
-import py42.settings as settings
+import py42
 
 COMPUTER_URI = "/api/Org"
 
@@ -16,8 +16,6 @@ MOCK_GET_ORG_RESPONSE = """{
 MOCK_EMPTY_GET_ORGS_RESPONSE = """{
   "data": {"totalCount": 3000, "orgs":[]} 
 }"""
-
-settings.items_per_page = 1
 
 
 class TestOrgClient(object):
@@ -58,8 +56,10 @@ class TestOrgClient(object):
     def test_get_orgs_calls_get_expected_number_of_times(
         self, session, v3_required_session, mock_get_orgs, mock_get_orgs_empty
     ):
+        py42.settings.items_per_page = 1
         client = OrgClient(session, v3_required_session)
         session.get.side_effect = [mock_get_orgs(), mock_get_orgs(), mock_get_orgs_empty()]
         for page in client.get_orgs():
             pass
+        py42.settings.items_per_page = 1000
         assert session.get.call_count == 3

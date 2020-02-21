@@ -69,6 +69,16 @@ _GET_ALL_CASES_RESPONSE = """
     TENANT_ID_FROM_RESPONSE, TENANT_ID_FROM_RESPONSE
 )
 
+_GET_ALL_CASES_EMPTY_RESPONSE = """
+{{
+    "type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE",
+    "cases":
+        [
+        ],
+    "totalCount":0
+}}
+"""
+
 
 class TestDepartingEmployeeClient(object):
     @pytest.fixture
@@ -85,17 +95,22 @@ class TestDepartingEmployeeClient(object):
         return mock
 
     @pytest.fixture
-    def mock_get_all_cases_function(self, mocker):
+    def mock_get_all_cases_response(self, mocker):
         # Useful for testing get_case_by_username, which first gets all cases.
         # Also useful in update_case, which checks current values of case
-        mock = mocker.patch(
-            "py42._internal.clients.employee_case_management.departing_employee.DepartingEmployeeClient.get_all_departing_employees"
-        )
         response = mocker.MagicMock(spec=Response)
         response.text = _GET_ALL_CASES_RESPONSE
         response.status_code = 200
-        mock.return_value = response
-        return mock
+        return response
+
+    @pytest.fixture
+    def mock_get_all_cases_response_empty(self, mocker):
+        # Useful for testing get_case_by_username, which first gets all cases.
+        # Also useful in update_case, which checks current values of case
+        response = mocker.MagicMock(spec=Response)
+        response.text = _GET_ALL_CASES_EMPTY_RESPONSE
+        response.status_code = 200
+        return response
 
     def test_create_departing_employee_uses_given_tenant_id_over_current_id(
         self, mock_session, user_context
@@ -156,32 +171,41 @@ class TestDepartingEmployeeClient(object):
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/resolve"
 
     def test_get_all_departing_employees_uses_given_tenant_id_over_current_id(
-        self, mock_session, user_context
+        self, mock_session, user_context, mock_get_all_cases_response
     ):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.get_all_departing_employees(_TENANT_ID_PARAM)
-        post_call_args = json.loads(mock_session.post.call_args[1]["data"])
+        for page in client.get_all_departing_employees(_TENANT_ID_PARAM):
+            break
+        first_call = mock_session.post.call_args_list[0]
+        post_call_args = json.loads(first_call[1]["data"])
         assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
-    def test_get_all_departing_employees_posts_expected_data(self, mock_session, user_context):
+    def test_get_all_departing_employees_posts_expected_data(
+        self, mock_session, user_context, mock_get_all_cases_response
+    ):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.get_all_departing_employees(None, 101, 2, 235234626, "USERNAME", "ASC")
+        for page in client.get_all_departing_employees(None, 235234626, "USERNAME", "ASC"):
+            break
 
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        first_call = mock_session.post.call_args_list[0]
+        posted_data = json.loads(first_call[1]["data"])
         assert (
             posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
-            and posted_data["pgSize"] == 101
-            and posted_data["pgNum"] == 2
+            and posted_data["pgSize"] == 1000
+            and posted_data["pgNum"] == 1
             and posted_data["departingOnOrAfter"] == "1977-06-15T14:57:06.000Z"
             and posted_data["srtKey"] == "USERNAME"
             and posted_data["srtDirection"] == "ASC"
         )
 
-    def test_get_all_departing_employees_posts_to_expected_url(self, mock_session, user_context):
+    def test_get_all_departing_employees_posts_to_expected_url(
+        self, mock_session, user_context, mock_get_all_cases_response
+    ):
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.get_all_departing_employees()
+        for page in client.get_all_departing_employees():
+            break
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/search"
 
     def test_toggle_alerts_uses_given_tenant_id_over_current_id(self, mock_session, user_context):
@@ -208,16 +232,20 @@ class TestDepartingEmployeeClient(object):
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/togglealerts"
 
     def test_get_case_by_username_uses_given_tenant_id_over_current_id(
-        self, mock_session, user_context, mock_get_all_cases_function
+        self, mock_session, user_context, mock_get_all_cases_response
     ):
+        mock_session.post.return_value = mock_get_all_cases_response
         client = DepartingEmployeeClient(mock_session, user_context)
-        client.get_case_by_username("test.example@example.com", _TENANT_ID_PARAM)
-        post_call_args = json.loads(mock_session.post.call_args[1]["data"])
+        for page in client.get_case_by_username("test.example@example.com", _TENANT_ID_PARAM):
+            break
+        first_call = mock_session.post.call_args_list[0]
+        post_call_args = json.loads(first_call[1]["data"])
         assert post_call_args["tenantId"] == _TENANT_ID_PARAM
 
     def test_get_case_by_username_posts_expected_data(
-        self, mock_session, user_context, mock_get_all_cases_function
+        self, mock_session, user_context, mock_get_all_cases_response
     ):
+        mock_session.post.return_value = mock_get_all_cases_response
         client = DepartingEmployeeClient(mock_session, user_context)
         client.get_case_by_username("test.example@example.com")
 
@@ -227,13 +255,17 @@ class TestDepartingEmployeeClient(object):
         assert posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE and posted_data["caseId"] == "20"
 
     def test_get_case_by_username_posts_to_expected_url(
-        self, mock_session, user_context, mock_get_all_cases_function
+        self, mock_session, user_context, mock_get_all_cases_response
     ):
+        mock_session.post.return_value = mock_get_all_cases_response
         client = DepartingEmployeeClient(mock_session, user_context)
         client.get_case_by_username("test.example@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/details"
 
-    def test_get_case_by_id_uses_given_tenant_id_over_current_id(self, mock_session, user_context):
+    def test_get_case_by_id_uses_given_tenant_id_over_current_id(
+        self, mock_session, user_context, mock_get_all_cases_response
+    ):
+        mock_session.post.return_value = mock_get_all_cases_response
         client = DepartingEmployeeClient(mock_session, user_context)
         client.get_case_by_id("999", _TENANT_ID_PARAM)
         post_call_args = json.loads(mock_session.post.call_args[1]["data"])

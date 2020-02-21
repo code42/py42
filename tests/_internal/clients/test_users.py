@@ -3,9 +3,9 @@
 import pytest
 from requests import Response
 
+import py42
 from py42._internal.clients.users import UserClient
 from py42._internal.session import Py42Session
-import py42.settings as settings
 
 USER_URI = "/api/User"
 
@@ -15,7 +15,7 @@ DEFAULT_GET_USERS_PARAMS = {
     "orgUid": None,
     "roleId": None,
     "pgNum": 1,
-    "pgSize": 1,
+    "pgSize": 1000,
     "q": None,
 }
 
@@ -26,8 +26,6 @@ MOCK_GET_USER_RESPONSE = """{
 MOCK_EMPTY_GET_USER_RESPONSE = """{
   "data": {"totalCount": 3000, "users":[]} 
 }"""
-
-settings.items_per_page = 1
 
 
 class TestUserClient(object):
@@ -60,12 +58,12 @@ class TestUserClient(object):
         return get_devices
 
     def test_get_users_calls_get_with_uri_and_params(
-        self, session, v3_required_session, mock_get_users, mock_get_users_empty
+        self, session, v3_required_session, mock_get_users
     ):
-        session.get.side_effect = [mock_get_users(), mock_get_users_empty()]
+        session.get.side_effect = mock_get_users
         client = UserClient(session, v3_required_session)
         for page in client.get_users():
-            pass
+            break
         first_call = session.get.call_args_list[0]
         assert first_call[0][0] == USER_URI
         assert first_call[1]["params"] == DEFAULT_GET_USERS_PARAMS
@@ -88,8 +86,10 @@ class TestUserClient(object):
     def test_get_users_calls_get_expected_number_of_times(
         self, session, v3_required_session, mock_get_users, mock_get_users_empty
     ):
+        py42.settings.items_per_page = 1
         client = UserClient(session, v3_required_session)
         session.get.side_effect = [mock_get_users(), mock_get_users(), mock_get_users_empty()]
         for page in client.get_users():
             pass
+        py42.settings.items_per_page = 1000
         assert session.get.call_count == 3

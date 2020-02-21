@@ -6,7 +6,7 @@ import py42.settings as settings
 
 
 class DeviceClient(BaseAuthorityClient):
-    def _get_devices(
+    def _get_devices_page(
         self,
         active=None,
         blocked=None,
@@ -48,7 +48,7 @@ class DeviceClient(BaseAuthorityClient):
     ):
 
         return get_all_pages(
-            self._get_devices,
+            self._get_devices_page,
             settings.items_per_page,
             "computers",
             active=active,

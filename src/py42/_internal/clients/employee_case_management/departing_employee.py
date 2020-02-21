@@ -45,14 +45,14 @@ class DepartingEmployeeClient(BaseClient):
         data = {u"caseId": case_id, u"tenantId": tenant_id}
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def _get_all_departing_employees(
+    def _get_departing_employees_page(
         self,
         tenant_id=None,
-        page_size=100,
-        page_num=1,
         departing_on_or_after_epoch=None,
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
+        page_num=None,
+        page_size=None,
     ):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         departing_on_or_after_date = (
@@ -63,8 +63,8 @@ class DepartingEmployeeClient(BaseClient):
         uri = self._uri_prefix.format(u"search")
         data = {
             u"tenantId": tenant_id,
-            u"pgSize": page_size,
-            u"pgNum": page_num,
+            "pgSize": page_size,
+            "pgNum": page_num,
             u"departingOnOrAfter": departing_on_or_after_date,
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,
@@ -79,7 +79,7 @@ class DepartingEmployeeClient(BaseClient):
         sort_direction=u"DESC",
     ):
         return get_all_pages(
-            self._get_all_departing_employees,
+            self._get_departing_employees_page,
             settings.items_per_page,
             u"cases",
             tenant_id=tenant_id,
@@ -157,13 +157,13 @@ class DepartingEmployeeClient(BaseClient):
             return case.get(u"caseId")
 
     def _get_case_from_username(self, tenant_id, username):
-        cases = self._get_all_departing_employees(tenant_id)
-        matches = [c for c in cases if c.get(u"userName") == username]
-        return matches[0] if matches else None
+        for page in self._get_all_departing_employees(tenant_id):
+            matches = [c for c in page if c.get(u"userName") == username]
+            return matches[0] if matches else None
 
     def _get_all_departing_employees(self, tenant_id):
-        response = self.get_all_departing_employees(tenant_id).text
-        return json.loads(response).get(u"cases")
+        for page in self.get_all_departing_employees(tenant_id):
+            yield json.loads(page.text).get(u"cases")
 
     def _get_case_by_id(self, case_id):
         response = self.get_case_by_id(case_id)

@@ -3,9 +3,9 @@
 import pytest
 from requests import Response
 
+import py42
 from py42._internal.clients.devices import DeviceClient
 from py42._internal.session import Py42Session
-import py42.settings as settings
 
 COMPUTER_URI = "/api/Computer"
 
@@ -18,7 +18,7 @@ DEFAULT_GET_DEVICES_PARAMS = {
     "incBackupUsage": None,
     "incCounts": True,
     "pgNum": 1,
-    "pgSize": 1,
+    "pgSize": 1000,
     "q": None,
 }
 
@@ -29,8 +29,6 @@ MOCK_GET_DEVICE_RESPONSE = """{
 MOCK_EMPTY_GET_DEVICE_RESPONSE = """{
   "data": {"totalCount": 3000, "computers":[]} 
 }"""
-
-settings.items_per_page = 1
 
 
 class TestDeviceClient(object):
@@ -66,12 +64,12 @@ class TestDeviceClient(object):
         return get_devices
 
     def test_get_devices_calls_get_with_uri_and_params(
-        self, session, v3_required_session, mock_get_devices, mock_get_devices_empty
+        self, session, v3_required_session, mock_get_devices
     ):
         client = DeviceClient(session, v3_required_session)
-        session.get.side_effect = [mock_get_devices(), mock_get_devices_empty()]
+        session.get.side_effect = mock_get_devices
         for page in client.get_devices(q="TEST-HOSTNAME"):
-            pass
+            break
         expected_params = DEFAULT_GET_DEVICES_PARAMS
         expected_params["q"] = "TEST-HOSTNAME"
         first_call = session.get.call_args_list[0]
@@ -79,15 +77,18 @@ class TestDeviceClient(object):
         assert first_call[1]["params"] == DEFAULT_GET_DEVICES_PARAMS
 
     def test_unicode_hostname_get_devices_calls_get_with_unicode_q_param(
-        self, session, v3_required_session, mock_get_devices, mock_get_devices_empty
+        self, session, v3_required_session, mock_get_devices
     ):
         unicode_hostname = u"您已经发现了秘密信息"
         client = DeviceClient(session, v3_required_session)
-        session.get.side_effect = [mock_get_devices(), mock_get_devices_empty()]
+        session.get.side_effect = mock_get_devices
         for page in client.get_devices(q=unicode_hostname):
-            pass
-        expected_params = DEFAULT_GET_DEVICES_PARAMS
-        expected_params["q"] = unicode_hostname
+            break
+        first_call = session.get.call_args_list[0]
+        assert first_call[0][0] == COMPUTER_URI
+        params = DEFAULT_GET_DEVICES_PARAMS
+        params["q"] = unicode_hostname
+        assert first_call[1]["params"] == params
 
     def test_get_device_by_id_calls_get_with_uri_and_params(
         self, session, v3_required_session, mock_get_devices
@@ -101,8 +102,10 @@ class TestDeviceClient(object):
     def test_get_devices_calls_get_expected_number_of_times(
         self, session, v3_required_session, mock_get_devices, mock_get_devices_empty
     ):
+        py42.settings.items_per_page = 1
         client = DeviceClient(session, v3_required_session)
         session.get.side_effect = [mock_get_devices(), mock_get_devices(), mock_get_devices_empty()]
         for page in client.get_devices():
             pass
+        py42.settings.items_per_page = 1000
         assert session.get.call_count == 3

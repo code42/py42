@@ -18,6 +18,7 @@ The following resources no longer accept `page_num` and `page_size` parameters a
 - `LegalHoldClient.get_legal_holds()`
 - `LegalHoldClient.get_legal_hold_memberships`
 
+
 They instead return a generator object that is iterated over to retrieve all the pages, eliminating the need to
 manually compose loops to retrieve each page. For example, the below snippet will retrieve all pages of users:
 ```python

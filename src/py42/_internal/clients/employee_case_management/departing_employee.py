@@ -157,9 +157,12 @@ class DepartingEmployeeClient(BaseClient):
             return case.get(u"caseId")
 
     def _get_case_from_username(self, tenant_id, username):
+        matches = None
         for page in self._get_all_departing_employees(tenant_id):
             matches = [c for c in page if c.get(u"userName") == username]
-            return matches[0] if matches else None
+            if matches:
+                break
+        return matches[0] if matches else None
 
     def _get_all_departing_employees(self, tenant_id):
         for page in self.get_all_departing_employees(tenant_id):

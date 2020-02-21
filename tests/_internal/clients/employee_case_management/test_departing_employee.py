@@ -92,8 +92,6 @@ class TestDepartingEmployeeClient(object):
 
     @pytest.fixture
     def mock_get_all_cases_response(self, mocker):
-        # Useful for testing get_case_by_username, which first gets all cases.
-        # Also useful in update_case, which checks current values of case
         response = mocker.MagicMock(spec=Response)
         response.text = _GET_ALL_CASES_RESPONSE
         response.status_code = 200
@@ -101,8 +99,6 @@ class TestDepartingEmployeeClient(object):
 
     @pytest.fixture
     def mock_get_all_cases_response_empty(self, mocker):
-        # Useful for testing get_case_by_username, which first gets all cases.
-        # Also useful in update_case, which checks current values of case
         response = mocker.MagicMock(spec=Response)
         response.text = _GET_ALL_CASES_EMPTY_RESPONSE
         response.status_code = 200

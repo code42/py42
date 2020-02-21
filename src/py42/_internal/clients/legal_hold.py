@@ -63,7 +63,7 @@ class LegalHoldClient(BaseAuthorityClient):
         return get_all_pages(
             self._get_legal_holds_page,
             settings.items_per_page,
-            u"",
+            u"legalHolds",
             creator_user_uid=creator_user_uid,
             active_state=active_state,
             name=name,
@@ -103,7 +103,7 @@ class LegalHoldClient(BaseAuthorityClient):
         return get_all_pages(
             self._get_legal_hold_memberships_page,
             settings.items_per_page,
-            u"",
+            u"legalHoldMemberships",
             legal_hold_membership_uid=legal_hold_membership_uid,
             legal_hold_uid=legal_hold_uid,
             user_uid=user_uid,

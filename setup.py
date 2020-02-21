@@ -28,7 +28,7 @@ setup(
         "dev": [
             "pre-commit",
             "pytest==4.6.5",
-            "pytest-cov == 2.8.1",
+            "pytest-cov==2.8.1",
             "pytest-mock==2.0.0",
             "sphinx",
             "tox==3.14.3",

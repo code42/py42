@@ -1,6 +1,8 @@
 import json
 
 from py42._internal.base_classes import BaseAuthorityClient
+from py42._internal.clients.util import get_all_pages
+import py42.settings as settings
 
 
 class LegalHoldClient(BaseAuthorityClient):
@@ -35,7 +37,7 @@ class LegalHoldClient(BaseAuthorityClient):
         uri = u"/api/LegalHold/{0}".format(legal_hold_uid)
         return self._default_session.get(uri)
 
-    def get_legal_holds(
+    def _get_legal_holds_page(
         self,
         creator_user_uid=None,
         active_state=u"ACTIVE",
@@ -55,7 +57,20 @@ class LegalHoldClient(BaseAuthorityClient):
         }
         return self._default_session.get(uri, params=params)
 
-    def get_legal_hold_memberships(
+    def get_legal_holds(
+        self, creator_user_uid=None, active_state=u"ACTIVE", name=None, hold_ext_ref=None
+    ):
+        return get_all_pages(
+            self._get_legal_holds_page,
+            settings.items_per_page,
+            u"legalHolds",
+            creator_user_uid=creator_user_uid,
+            active_state=active_state,
+            name=name,
+            hold_ext_ref=hold_ext_ref,
+        )
+
+    def _get_legal_hold_memberships_page(
         self,
         legal_hold_membership_uid=None,
         legal_hold_uid=None,
@@ -76,6 +91,25 @@ class LegalHoldClient(BaseAuthorityClient):
         }
         uri = u"/api/LegalHoldMembership"
         return self._default_session.get(uri, params=params)
+
+    def get_legal_hold_memberships(
+        self,
+        legal_hold_membership_uid=None,
+        legal_hold_uid=None,
+        user_uid=None,
+        user=None,
+        active_state=None,
+    ):
+        return get_all_pages(
+            self._get_legal_hold_memberships_page,
+            settings.items_per_page,
+            u"legalHoldMemberships",
+            legal_hold_membership_uid=legal_hold_membership_uid,
+            legal_hold_uid=legal_hold_uid,
+            user_uid=user_uid,
+            user=user,
+            active_state=active_state,
+        )
 
     def add_user_to_legal_hold(self, user_uid, legal_hold_uid):
         uri = u"/api/LegalHoldMembership"

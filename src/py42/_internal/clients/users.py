@@ -1,6 +1,8 @@
 import json
 
 from py42._internal.base_classes import BaseAuthorityClient
+from py42._internal.clients.util import get_all_pages
+import py42.settings as settings
 
 
 class UserClient(BaseAuthorityClient):
@@ -43,22 +45,19 @@ class UserClient(BaseAuthorityClient):
         uri = u"/api/User/my"
         return self._default_session.get(uri)
 
-    def get_users(
+    def _get_users_page(
         self,
         active=None,
         email=None,
         org_uid=None,
-        user_uid=None,
         role_id=None,
         page_num=None,
         page_size=None,
         q=None,
-        **kwargs
     ):
         uri = u"/api/User"
         params = {
             u"active": active,
-            u"userUid": user_uid,
             u"email": email,
             u"orgUid": org_uid,
             u"roleId": role_id,
@@ -67,7 +66,19 @@ class UserClient(BaseAuthorityClient):
             u"q": q,
         }
 
-        return self._default_session.get(uri, params=params, **kwargs)
+        return self._default_session.get(uri, params=params)
+
+    def get_users(self, active=None, email=None, org_uid=None, role_id=None, q=None):
+        return get_all_pages(
+            self._get_users_page,
+            settings.items_per_page,
+            u"users",
+            active=active,
+            email=email,
+            org_uid=org_uid,
+            role_id=role_id,
+            q=q,
+        )
 
     def block_user(self, user_id):
         uri = u"/api/UserBlock/{0}".format(user_id)

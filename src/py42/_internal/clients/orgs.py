@@ -1,6 +1,8 @@
 import json
 
 from py42._internal.base_classes import BaseAuthorityClient
+from py42._internal.clients.util import get_all_pages
+import py42.settings as settings
 
 
 class OrgClient(BaseAuthorityClient):
@@ -25,11 +27,14 @@ class OrgClient(BaseAuthorityClient):
         uri = u"/api/Org/{0}?idType=orgUid".format(org_uid)
         return self._default_session.get(uri)
 
-    def get_orgs(self, page_num=None, page_size=None):
+    def _get_orgs_page(self, page_num=None, page_size=None):
         uri = u"/api/Org"
         params = {u"pgNum": page_num, u"pgSize": page_size}
 
         return self._default_session.get(uri, params=params)
+
+    def get_orgs(self):
+        return get_all_pages(self._get_orgs_page, settings.items_per_page, u"orgs")
 
     def block_org(self, org_id):
         uri = u"/api/OrgBlock/{0}".format(org_id)

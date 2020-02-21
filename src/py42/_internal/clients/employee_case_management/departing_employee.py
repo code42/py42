@@ -2,6 +2,8 @@ import json
 
 from py42._internal.compat import str
 from py42._internal.base_classes import BaseClient
+from py42._internal.clients.util import get_all_pages
+import py42.settings as settings
 from py42.util import convert_timestamp_to_str
 
 
@@ -43,14 +45,14 @@ class DepartingEmployeeClient(BaseClient):
         data = {u"caseId": case_id, u"tenantId": tenant_id}
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def get_all_departing_employees(
+    def _get_departing_employees_page(
         self,
         tenant_id=None,
-        page_size=100,
-        page_num=1,
         departing_on_or_after_epoch=None,
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
+        page_num=None,
+        page_size=None,
     ):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         departing_on_or_after_date = (
@@ -68,6 +70,23 @@ class DepartingEmployeeClient(BaseClient):
             u"srtDirection": sort_direction,
         }
         return self._default_session.post(uri, data=json.dumps(data))
+
+    def get_all_departing_employees(
+        self,
+        tenant_id=None,
+        departing_on_or_after_epoch=None,
+        sort_key=u"CREATED_AT",
+        sort_direction=u"DESC",
+    ):
+        return get_all_pages(
+            self._get_departing_employees_page,
+            settings.items_per_page,
+            u"cases",
+            tenant_id=tenant_id,
+            departing_on_or_after_epoch=departing_on_or_after_epoch,
+            sort_key=sort_key,
+            sort_direction=sort_direction,
+        )
 
     def toggle_alerts(self, tenant_id=None, alerts_enabled=True):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
@@ -138,13 +157,16 @@ class DepartingEmployeeClient(BaseClient):
             return case.get(u"caseId")
 
     def _get_case_from_username(self, tenant_id, username):
-        cases = self._get_all_departing_employees(tenant_id)
-        matches = [c for c in cases if c.get(u"userName") == username]
+        matches = None
+        for page in self._get_all_departing_employees(tenant_id):
+            matches = [c for c in page if c.get(u"userName") == username]
+            if matches:
+                break
         return matches[0] if matches else None
 
     def _get_all_departing_employees(self, tenant_id):
-        response = self.get_all_departing_employees(tenant_id).text
-        return json.loads(response).get(u"cases")
+        for page in self.get_all_departing_employees(tenant_id):
+            yield json.loads(page.text).get(u"cases")
 
     def _get_case_by_id(self, case_id):
         response = self.get_case_by_id(case_id)

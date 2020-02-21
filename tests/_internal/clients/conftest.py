@@ -1,6 +1,7 @@
 import pytest
 
 from py42._internal.user_context import UserContext
+from py42._internal.session import Py42Session
 
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"
@@ -11,3 +12,13 @@ def user_context(mocker):
     client = mocker.MagicMock(spec=UserContext)
     client.get_current_tenant_id.return_value = TENANT_ID_FROM_RESPONSE
     return client
+
+
+@pytest.fixture
+def session(mocker):
+    return mocker.MagicMock(spec=Py42Session)
+
+
+@pytest.fixture
+def v3_required_session(mocker):
+    return mocker.MagicMock(spec=Py42Session)

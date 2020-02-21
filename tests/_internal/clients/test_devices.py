@@ -5,7 +5,6 @@ from requests import Response
 
 import py42
 from py42._internal.clients.devices import DeviceClient
-from py42._internal.session import Py42Session
 
 COMPUTER_URI = "/api/Computer"
 
@@ -32,17 +31,6 @@ MOCK_EMPTY_GET_DEVICE_RESPONSE = """{
 
 
 class TestDeviceClient(object):
-    def _mock_callback(self, response):
-        pass
-
-    @pytest.fixture
-    def session(self, mocker):
-        return mocker.MagicMock(spec=Py42Session)
-
-    @pytest.fixture
-    def v3_required_session(self, mocker):
-        return mocker.MagicMock(spec=Py42Session)
-
     @pytest.fixture
     def mock_get_devices_response(self, mocker):
         response = mocker.MagicMock(spec=Response)

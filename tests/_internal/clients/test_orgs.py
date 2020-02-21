@@ -4,7 +4,6 @@ import pytest
 from requests import Response
 
 from py42._internal.clients.orgs import OrgClient
-from py42._internal.session import Py42Session
 import py42
 
 COMPUTER_URI = "/api/Org"
@@ -19,14 +18,6 @@ MOCK_EMPTY_GET_ORGS_RESPONSE = """{
 
 
 class TestOrgClient(object):
-    @pytest.fixture
-    def session(self, mocker):
-        return mocker.MagicMock(spec=Py42Session)
-
-    @pytest.fixture
-    def v3_required_session(self, mocker):
-        return mocker.MagicMock(spec=Py42Session)
-
     @pytest.fixture
     def mock_get_orgs_response(self, mocker):
         response = mocker.MagicMock(spec=Response)

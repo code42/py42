@@ -28,24 +28,18 @@ class TestOrgClient(object):
         return mocker.MagicMock(spec=Py42Session)
 
     @pytest.fixture
-    def mock_get_orgs(self, mocker):
-        def get_devices(*args, **kwargs):
-            response = mocker.MagicMock(spec=Response)
-            response.status_code = 200
-            response.text = MOCK_GET_ORG_RESPONSE
-            return response
-
-        return get_devices
+    def mock_get_orgs_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.text = MOCK_GET_ORG_RESPONSE
+        return response
 
     @pytest.fixture
-    def mock_get_orgs_empty(self, mocker):
-        def get_devices(*args, **kwargs):
-            response = mocker.MagicMock(spec=Response)
-            response.status_code = 200
-            response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
-            return response
-
-        return get_devices
+    def mock_get_orgs_empty_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
+        return response
 
     def test_get_org_by_id_calls_get_with_uri_and_params(self, session, v3_required_session):
         client = OrgClient(session, v3_required_session)
@@ -54,11 +48,15 @@ class TestOrgClient(object):
         session.get.assert_called_once_with(uri)
 
     def test_get_orgs_calls_get_expected_number_of_times(
-        self, session, v3_required_session, mock_get_orgs, mock_get_orgs_empty
+        self, session, v3_required_session, mock_get_orgs_response, mock_get_orgs_empty_response
     ):
         py42.settings.items_per_page = 1
         client = OrgClient(session, v3_required_session)
-        session.get.side_effect = [mock_get_orgs(), mock_get_orgs(), mock_get_orgs_empty()]
+        session.get.side_effect = [
+            mock_get_orgs_response,
+            mock_get_orgs_response,
+            mock_get_orgs_empty_response,
+        ]
         for page in client.get_orgs():
             pass
         py42.settings.items_per_page = 1000

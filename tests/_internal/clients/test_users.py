@@ -38,24 +38,18 @@ class TestUserClient(object):
         return mocker.MagicMock(spec=Py42Session)
 
     @pytest.fixture
-    def mock_get_users(self, mocker):
-        def get_devices(*args, **kwargs):
-            response = mocker.MagicMock(spec=Response)
-            response.status_code = 200
-            response.text = MOCK_GET_USER_RESPONSE
-            return response
-
-        return get_devices
+    def mock_get_users_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.text = MOCK_GET_USER_RESPONSE
+        return response
 
     @pytest.fixture
-    def mock_get_users_empty(self, mocker):
-        def get_devices(*args, **kwargs):
-            response = mocker.MagicMock(spec=Response)
-            response.status_code = 200
-            response.text = MOCK_EMPTY_GET_USER_RESPONSE
-            return response
-
-        return get_devices
+    def mock_get_users_empty_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.text = MOCK_EMPTY_GET_USER_RESPONSE
+        return response
 
     def test_get_users_calls_get_with_uri_and_params(
         self, session, v3_required_session, mock_get_users
@@ -84,11 +78,15 @@ class TestUserClient(object):
         session.get.assert_called_once_with(uri)
 
     def test_get_users_calls_get_expected_number_of_times(
-        self, session, v3_required_session, mock_get_users, mock_get_users_empty
+        self, session, v3_required_session, mock_get_users_response, mock_get_users_empty_response
     ):
         py42.settings.items_per_page = 1
         client = UserClient(session, v3_required_session)
-        session.get.side_effect = [mock_get_users(), mock_get_users(), mock_get_users_empty()]
+        session.get.side_effect = [
+            mock_get_users_response,
+            mock_get_users_response,
+            mock_get_users_empty_response,
+        ]
         for page in client.get_users():
             pass
         py42.settings.items_per_page = 1000

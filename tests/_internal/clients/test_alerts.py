@@ -17,7 +17,7 @@ class TestAlertClient(object):
             and post_data["groupClause"] == "AND"
             and post_data["srtKey"] == "CreatedAt"
             and post_data["srtDirection"] == "desc"
-            and post_data["pgSize"] == 100
+            and post_data["pgSize"] == 10000
             and post_data["pgNum"] == 0
             and post_data["groups"][0]["filterClause"] == "AND"
             and post_data["groups"][0]["filters"][0]["operator"] == "IS"

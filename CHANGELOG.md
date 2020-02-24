@@ -13,6 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Changed
 
 - `py42.settings.items_per_page` no long affects `DepartingEmployeeClient.get_all_departing_employees()`, which is now always set at 100 items per page.
+- `FileEventQuery` and `AlertQuery` objects will now return up to 10,000 results by default (the previous default value was 100).
 
 ### Fixed
 

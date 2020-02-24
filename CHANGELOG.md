@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+## Changed
+Renamed `UserClient` methods to reduce redundancy:
+  - `get_user_by_id()` > `get_by_id()`
+  - `get_user_by_uid()` > `get_by_uid()`
+  - `get_user_by_username()` > `get_by_username()`
+  - `get_current_user()` > `get_current()`
+  - `get_users()` > `get_all()`
+  - `block_user()` > `block()`
+  - `unblock_user()` > `unblock()`
+  - `deactivate_user()` > `deactivate()`
+  - `reactivate_user()` > `reactivate()`
+  - `change_user_org_assignment()` > `change_org_assignment()`
+
 ## 0.4.3 - 2020-02-21
 
 ## Added

@@ -28,24 +28,24 @@ class UserClient(BaseAuthorityClient):
         }
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def get_user_by_id(self, user_id):
+    def get_by_id(self, user_id):
         uri = u"/api/User/{0}".format(user_id)
         return self._default_session.get(uri)
 
-    def get_user_by_uid(self, user_uid):
+    def get_by_uid(self, user_uid):
         uri = u"/api/User/{0}?idType=uid".format(user_uid)
         return self._default_session.get(uri)
 
-    def get_user_by_username(self, username):
+    def get_by_username(self, username):
         uri = u"/api/User"
         params = {u"username": username}
         return self._default_session.get(uri, params=params)
 
-    def get_current_user(self):
+    def get_current(self):
         uri = u"/api/User/my"
         return self._default_session.get(uri)
 
-    def _get_users_page(
+    def _get_page(
         self,
         active=None,
         email=None,
@@ -68,9 +68,9 @@ class UserClient(BaseAuthorityClient):
 
         return self._default_session.get(uri, params=params)
 
-    def get_users(self, active=None, email=None, org_uid=None, role_id=None, q=None):
+    def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None):
         return get_all_pages(
-            self._get_users_page,
+            self._get_page,
             settings.items_per_page,
             u"users",
             active=active,
@@ -80,25 +80,25 @@ class UserClient(BaseAuthorityClient):
             q=q,
         )
 
-    def block_user(self, user_id):
+    def block(self, user_id):
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._default_session.put(uri)
 
-    def unblock_user(self, user_id):
+    def unblock(self, user_id):
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._default_session.delete(uri)
 
-    def deactivate_user(self, user_id, block_user=None):
+    def deactivate(self, user_id, block_user=None):
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         data = {u"blockUser": block_user}
         return self._default_session.put(uri, data=json.dumps(data))
 
-    def reactivate_user(self, user_id, unblock_user=None):
+    def reactivate(self, user_id, unblock_user=None):
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         params = {u"unblockUser": unblock_user}
         return self._default_session.delete(uri, params=params)
 
-    def change_user_org_assignment(self, user_id, org_id):
+    def change_org_assignment(self, user_id, org_id):
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}
         return self._default_session.post(uri, data=json.dumps(data))

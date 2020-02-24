@@ -6,7 +6,7 @@ import py42.settings as settings
 
 
 class DeviceClient(BaseAuthorityClient):
-    def _get_devices_page(
+    def _get_page(
         self,
         active=None,
         blocked=None,
@@ -35,7 +35,7 @@ class DeviceClient(BaseAuthorityClient):
 
         return self._default_session.get(uri, params=params)
 
-    def get_devices(
+    def get_all(
         self,
         active=None,
         blocked=None,
@@ -48,7 +48,7 @@ class DeviceClient(BaseAuthorityClient):
     ):
 
         return get_all_pages(
-            self._get_devices_page,
+            self._get_page,
             settings.items_per_page,
             u"computers",
             active=active,
@@ -61,39 +61,39 @@ class DeviceClient(BaseAuthorityClient):
             q=q,
         )
 
-    def get_device_by_id(self, device_id, include_backup_usage=None):
+    def get_by_id(self, device_id, include_backup_usage=None):
         uri = u"/api/Computer/{0}".format(device_id)
         params = {u"incBackupUsage": include_backup_usage}
         return self._default_session.get(uri, params=params)
 
-    def get_device_by_guid(self, guid, include_backup_usage=None):
+    def get_by_guid(self, guid, include_backup_usage=None):
         uri = u"/api/Computer/{0}?idType=guid".format(guid)
         params = {u"incBackupUsage": include_backup_usage}
         return self._default_session.get(uri, params=params)
 
-    def block_device(self, computer_id):
+    def block(self, computer_id):
         uri = u"/api/ComputerBlock/{0}".format(computer_id)
         return self._default_session.put(uri)
 
-    def unblock_device(self, computer_id):
+    def unblock(self, computer_id):
         uri = u"/api/ComputerBlock/{0}".format(computer_id)
         return self._default_session.delete(uri)
 
-    def deactivate_device(self, computer_id):
+    def deactivate(self, computer_id):
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": computer_id}
         return self._v3_required_session.post(uri, data=json.dumps(data))
 
-    def reactivate_device(self, computer_id):
+    def reactivate(self, computer_id):
         uri = u"/api/v4/computer-deactivation/remove"
         data = {u"id": computer_id}
         return self._v3_required_session.post(uri, data=json.dumps(data))
 
-    def deauthorize_device(self, computer_id):
+    def deauthorize(self, computer_id):
         uri = u"/api/ComputerDeauthorization/{0}".format(computer_id)
         return self._default_session.put(uri)
 
-    def get_device_settings(self, guid, keys=None):
+    def get_settings(self, guid, keys=None):
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
         return self._v3_required_session.get(uri, params=params)

@@ -80,7 +80,7 @@ class DepartingEmployeeClient(BaseClient):
     ):
         return get_all_pages(
             self._get_departing_employees_page,
-            settings.items_per_page,
+            100,
             u"cases",
             tenant_id=tenant_id,
             departing_on_or_after_epoch=departing_on_or_after_epoch,

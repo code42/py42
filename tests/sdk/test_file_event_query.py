@@ -26,7 +26,7 @@ JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize"
 
 
 def build_query_json(group_clause, group_list):
-    return JSON_QUERY_BASE.format(group_clause, group_list, 1, 100, "asc", "eventId")
+    return JSON_QUERY_BASE.format(group_clause, group_list, 1, 10000, "asc", "eventId")
 
 
 def test_file_event_query_repr_does_not_throw_type_error():
@@ -101,7 +101,7 @@ def test_file_event_query_str_with_many_filters_or_specified_gives_correct_json_
 def test_file_event_query_str_with_page_num_gives_correct_json_representation(event_filter_group):
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.page_number = 5
-    json_query_str = JSON_QUERY_BASE.format("AND", event_filter_group, 5, 100, "asc", "eventId")
+    json_query_str = JSON_QUERY_BASE.format("AND", event_filter_group, 5, 10000, "asc", "eventId")
     assert str(file_event_query) == json_query_str
 
 
@@ -117,7 +117,7 @@ def test_file_event_query_str_with_sort_direction_gives_correct_json_representat
 ):
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.sort_direction = "desc"
-    json_query_str = JSON_QUERY_BASE.format("AND", event_filter_group, 1, 100, "desc", "eventId")
+    json_query_str = JSON_QUERY_BASE.format("AND", event_filter_group, 1, 10000, "desc", "eventId")
     assert str(file_event_query) == json_query_str
 
 
@@ -125,7 +125,7 @@ def test_file_event_query_str_with_sort_key_gives_correct_json_representation(ev
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.sort_key = "some_field_to_sort_by"
     json_query_str = JSON_QUERY_BASE.format(
-        "AND", event_filter_group, 1, 100, "asc", "some_field_to_sort_by"
+        "AND", event_filter_group, 1, 10000, "asc", "some_field_to_sort_by"
     )
     assert str(file_event_query) == json_query_str
 
@@ -637,8 +637,7 @@ def test_private_ip_address_not_in_str_gives_correct_json_representation():
 def test_actor_exists_str_gives_correct_json_representation():
     _filter = Actor.exists()
     expected = (
-        '{"filterClause":"AND", '
-        '"filters":[{"operator":"EXISTS", "term":"actor", "value":null}]}'
+        '{"filterClause":"AND", ' '"filters":[{"operator":"EXISTS", "term":"actor", "value":null}]}'
     )
     assert str(_filter) == expected
 
@@ -695,7 +694,6 @@ def test_actor_not_in_str_gives_correct_json_representation():
         '{"operator":"IS_NOT", "term":"actor", "value":"actor3"}]}'
     )
     assert str(_filter) == expected
-
 
 
 def test_event_type_exists_str_gives_correct_json_representation():

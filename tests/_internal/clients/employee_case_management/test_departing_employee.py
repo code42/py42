@@ -185,7 +185,7 @@ class TestDepartingEmployeeClient(object):
         posted_data = json.loads(first_call[1]["data"])
         assert (
             posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
-            and posted_data["pgSize"] == 1000
+            and posted_data["pgSize"] == 100
             and posted_data["pgNum"] == 1
             and posted_data["departingOnOrAfter"] == "1977-06-15T14:57:06.000Z"
             and posted_data["srtKey"] == "USERNAME"
@@ -207,7 +207,6 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response,
         mock_get_all_cases_response_empty,
     ):
-        py42.settings.items_per_page = 1
         mock_session.post.side_effect = [
             mock_get_all_cases_response,
             mock_get_all_cases_response,
@@ -216,8 +215,7 @@ class TestDepartingEmployeeClient(object):
         client = DepartingEmployeeClient(mock_session, user_context)
         for page in client.get_all_departing_employees():
             pass
-        py42.settings.items_per_page = 1000
-        assert mock_session.post.call_count == 3
+        assert mock_session.post.call_count == 1
 
     def test_toggle_alerts_uses_given_tenant_id_over_current_id(self, mock_session, user_context):
         client = DepartingEmployeeClient(mock_session, user_context)

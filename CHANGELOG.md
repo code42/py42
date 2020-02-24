@@ -10,6 +10,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## Unreleased
 
 ## Changed
+
 Renamed client methods to reduce redundancy:
 
 - `UserClient`
@@ -34,7 +35,7 @@ Renamed client methods to reduce redundancy:
     - `reactivate_device()` > `reactivate()`
     - `deauthorize_device()` > `deauthorize()`
     - `get_device_settings()` > `get_settings()`
-
+    
 ## 0.4.3 - 2020-02-21
 
 ## Added

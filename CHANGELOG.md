@@ -10,17 +10,30 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## Unreleased
 
 ## Changed
-Renamed `UserClient` methods to reduce redundancy:
-  - `get_user_by_id()` > `get_by_id()`
-  - `get_user_by_uid()` > `get_by_uid()`
-  - `get_user_by_username()` > `get_by_username()`
-  - `get_current_user()` > `get_current()`
-  - `get_users()` > `get_all()`
-  - `block_user()` > `block()`
-  - `unblock_user()` > `unblock()`
-  - `deactivate_user()` > `deactivate()`
-  - `reactivate_user()` > `reactivate()`
-  - `change_user_org_assignment()` > `change_org_assignment()`
+Renamed client methods to reduce redundancy:
+
+- `UserClient`
+    - `get_user_by_id()` > `get_by_id()`
+    - `get_user_by_uid()` > `get_by_uid()`
+    - `get_user_by_username()` > `get_by_username()`
+    - `get_current_user()` > `get_current()`
+    - `get_users()` > `get_all()`
+    - `block_user()` > `block()`
+    - `unblock_user()` > `unblock()`
+    - `deactivate_user()` > `deactivate()`
+    - `reactivate_user()` > `reactivate()`
+    - `change_user_org_assignment()` > `change_org_assignment()`
+
+- `DeviceClient` 
+    - `get_device_by_id()` > `get_by_id()`
+    - `get_device_by_guid()` > `get_by_guid()`
+    - `get_devices()` > `get_all()`
+    - `block_device()` > `block()`
+    - `unblock_device()` > `unblock()`
+    - `deactivate_device()` > `deactivate()`
+    - `reactivate_device()` > `reactivate()`
+    - `deauthorize_device()` > `deauthorize()`
+    - `get_device_settings()` > `get_settings()`
 
 ## 0.4.3 - 2020-02-21
 

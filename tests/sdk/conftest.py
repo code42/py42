@@ -5,10 +5,26 @@ from datetime import datetime
 
 from py42._internal.filters.query_filter import QueryFilter, FilterGroup
 
+
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
 VALUE_UNICODE = u"您已经发现了秘密信息"
+
+EXISTS = (
+    u'{{"filterClause":"AND", "filters":[{{"operator":"EXISTS", "term":"{0}", "value":null}}]}}'
+)
+NOT_EXISTS = u'{{"filterClause":"AND", "filters":[{{"operator":"DOES_NOT_EXIST", "term":"{0}", "value":null}}]}}'
+IS = u'{{"filterClause":"AND", "filters":[{{"operator":"IS", "term":"{0}", "value":"{1}"}}]}}'
+IS_NOT = (
+    u'{{"filterClause":"AND", "filters":[{{"operator":"IS_NOT", "term":"{0}", "value":"{1}"}}]}}'
+)
+IS_IN = u'{{"filterClause":"OR", "filters":[{{"operator":"IS", "term":"{0}", "value":"{1}"}},{{"operator":"IS", "term":"{0}", "value":"{2}"}},{{"operator":"IS", "term":"{0}", "value":"{3}"}}]}}'
+NOT_IN = u'{{"filterClause":"AND", "filters":[{{"operator":"IS_NOT", "term":"{0}", "value":"{1}"}},{{"operator":"IS_NOT", "term":"{0}", "value":"{2}"}},{{"operator":"IS_NOT", "term":"{0}", "value":"{3}"}}]}}'
+IN_RANGE = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"{0}", "value":"{1}"}},{{"operator":"ON_OR_BEFORE", "term":"{0}", "value":"{2}"}}]}}'
+
+ON_OR_AFTER = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"{0}", "value":"{1}"}}]}}'
+ON_OR_BEFORE = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_BEFORE", "term":"{0}", "value":"{1}"}}]}}'
 
 
 @pytest.fixture

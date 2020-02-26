@@ -132,6 +132,10 @@ class Source(_FileEventFilterStringField):
     _term = u"source"
 
 
+class TabURL(_FileEventFilterStringField):
+    _term = u"tabUrl"
+
+
 class FileEventQuery(BaseQuery):
     def __init__(self, *args, **kwargs):
         super(FileEventQuery, self).__init__(*args, **kwargs)

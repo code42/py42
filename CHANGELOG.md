@@ -12,7 +12,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- Supporting for querying file events by Source.
+- Supporting for querying file events by Source, ProcessOwner, .
 
 ## 0.4.4 - 2020-02-24
 

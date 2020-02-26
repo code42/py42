@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime
 
-from py42._internal.query_filter import QueryFilter, FilterGroup
+from py42._internal.filters.query_filter import QueryFilter, FilterGroup
 
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"

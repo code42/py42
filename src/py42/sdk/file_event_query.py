@@ -116,6 +116,10 @@ class PrivateIPAddress(_FileEventFilterStringField):
     _term = u"privateIpAddresses"
 
 
+class ProcessOwner(_FileEventFilterStringField):
+    _term = u"processOwner"
+
+
 class PublicIPAddress(_FileEventFilterStringField):
     _term = u"publicIpAddress"
 

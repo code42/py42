@@ -18,6 +18,7 @@ from py42.sdk.file_event_query import (
     MD5,
     OSHostname,
     PrivateIPAddress,
+    ProcessOwner,
     PublicIPAddress,
     SHA256,
     Source,
@@ -811,6 +812,69 @@ def test_private_ip_address_not_in_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
+def test_process_owner_exists_str_gives_correct_json_representation():
+    _filter = ProcessOwner.exists()
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"EXISTS", "term":"processOwner", "value":null}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_process_owner_not_exists_str_gives_correct_json_representation():
+    _filter = ProcessOwner.not_exists()
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"DOES_NOT_EXIST", "term":"processOwner", "value":null}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_process_owner_eq_str_gives_correct_json_representation():
+    _filter = ProcessOwner.eq("test_owner")
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"IS", "term":"processOwner", "value":"test_owner"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_process_owner_not_eq_str_gives_correct_json_representation():
+    _filter = ProcessOwner.not_eq("test_owner")
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":'
+        '[{"operator":"IS_NOT", "term":"processOwner", "value":"test_owner"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_process_owner_is_in_str_gives_correct_json_representation():
+    items = ["owner1", "owner2", "owner3"]
+    _filter = ProcessOwner.is_in(items)
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":[{"operator":"IS", "term":"processOwner", "value":"owner1"},'
+        '{"operator":"IS", "term":"processOwner", "value":"owner2"},'
+        '{"operator":"IS", "term":"processOwner", "value":"owner3"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_process_owner_not_in_str_gives_correct_json_representation():
+    items = ["owner1", "owner2", "owner3"]
+    _filter = ProcessOwner.not_in(items)
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"processOwner", "value":"owner1"},'
+        '{"operator":"IS_NOT", "term":"processOwner", "value":"owner2"},'
+        '{"operator":"IS_NOT", "term":"processOwner", "value":"owner3"}]}'
+    )
+    assert str(_filter) == expected
+
+
 def test_public_ip_exists_str_gives_correct_json_representation():
     _filter = PublicIPAddress.exists()
     expected = (
@@ -951,19 +1015,19 @@ def test_source_not_exists_str_gives_correct_json_representation():
 
 
 def test_source_eq_str_gives_correct_json_representation():
-    _filter = Source.eq("test_sha256")
+    _filter = Source.eq("test_source")
     expected = (
         '{"filterClause":"AND", '
-        '"filters":[{"operator":"IS", "term":"source", "value":"test_sha256"}]}'
+        '"filters":[{"operator":"IS", "term":"source", "value":"test_source"}]}'
     )
     assert str(_filter) == expected
 
 
 def test_source_not_eq_str_gives_correct_json_representation():
-    _filter = Source.not_eq("test_sha256")
+    _filter = Source.not_eq("test_source")
     expected = (
         '{"filterClause":"AND", '
-        '"filters":[{"operator":"IS_NOT", "term":"source", "value":"test_sha256"}]}'
+        '"filters":[{"operator":"IS_NOT", "term":"source", "value":"test_source"}]}'
     )
     assert str(_filter) == expected
 

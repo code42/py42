@@ -101,6 +101,10 @@ class FileName(_QueryFilterStringFieldWithExists):
     _term = u"fileName"
 
 
+class FileOwner(_QueryFilterStringFieldWithExists):
+    _term = u"fileOwner"
+
+
 class FilePath(_QueryFilterStringFieldWithExists):
     _term = u"filePath"
 
@@ -131,6 +135,10 @@ class ProcessOwner(_QueryFilterStringFieldWithExists):
 
 class PublicIPAddress(_QueryFilterStringFieldWithExists):
     _term = u"publicIpAddress"
+
+
+class RemovableMediaName(_QueryFilterStringFieldWithExists):
+    _term = u"removableMediaName"
 
 
 class SHA256(_QueryFilterStringFieldWithExists):

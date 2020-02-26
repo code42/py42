@@ -39,7 +39,10 @@ from py42.sdk.file_event_query import (
     SharedWith,
     Source,
     TabURL,
-    Shared)
+    Shared,
+    RemovableMediaName,
+    FileOwner,
+)
 
 JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
 
@@ -349,6 +352,44 @@ def test_exposure_type_not_in_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
+def test_file_owner_exists_str_gives_correct_json_representation():
+    _filter = FileOwner.exists()
+    expected = EXISTS.format("fileOwner")
+    assert str(_filter) == expected
+
+
+def test_file_owner_not_exists_str_gives_correct_json_representation():
+    _filter = FileOwner.not_exists()
+    expected = NOT_EXISTS.format("fileOwner")
+    assert str(_filter) == expected
+
+
+def test_file_owner_eq_str_gives_correct_json_representation():
+    _filter = FileOwner.eq("test_fileName")
+    expected = IS.format("fileOwner", "test_fileName")
+    assert str(_filter) == expected
+
+
+def test_file_owner_not_eq_str_gives_correct_json_representation():
+    _filter = FileOwner.not_eq("test_fileName")
+    expected = IS_NOT.format("fileOwner", "test_fileName")
+    assert str(_filter) == expected
+
+
+def test_file_owner_is_in_str_gives_correct_json_representation():
+    items = ["fileOwner1", "fileOwner2", "fileOwner3"]
+    _filter = FileOwner.is_in(items)
+    expected = IS_IN.format("fileOwner", *items)
+    assert str(_filter) == expected
+
+
+def test_file_owner_not_in_str_gives_correct_json_representation():
+    items = ["fileOwner1", "fileOwner2", "fileOwner3"]
+    _filter = FileOwner.not_in(items)
+    expected = NOT_IN.format("fileOwner", *items)
+    assert str(_filter) == expected
+
+
 def test_file_name_exists_str_gives_correct_json_representation():
     _filter = FileName.exists()
     expected = EXISTS.format("fileName")
@@ -654,13 +695,13 @@ def test_process_name_not_in_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
-def test_public_ip_exists_str_gives_correct_json_representation():
+def test_public_ip_address_exists_str_gives_correct_json_representation():
     _filter = PublicIPAddress.exists()
     expected = EXISTS.format("publicIpAddress")
     assert str(_filter) == expected
 
 
-def test_public_ip_not_exists_str_gives_correct_json_representation():
+def test_public_ip_address_not_exists_str_gives_correct_json_representation():
     _filter = PublicIPAddress.not_exists()
     expected = NOT_EXISTS.format("publicIpAddress")
     assert str(_filter) == expected
@@ -689,6 +730,44 @@ def test_public_ip_address_not_in_str_gives_correct_json_representation():
     items = ["publicIpAddress1", "publicIpAddress2", "publicIpAddress3"]
     _filter = PublicIPAddress.not_in(items)
     expected = NOT_IN.format("publicIpAddress", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_name_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaName.exists()
+    expected = EXISTS.format("removableMediaName")
+    assert str(_filter) == expected
+
+
+def test_removable_media_name_not_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaName.not_exists()
+    expected = NOT_EXISTS.format("removableMediaName")
+    assert str(_filter) == expected
+
+
+def test_removable_media_name_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaName.eq("test_name")
+    expected = IS.format("removableMediaName", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_name_not_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaName.not_eq("test_name")
+    expected = IS_NOT.format("removableMediaName", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_name_is_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaName.is_in(items)
+    expected = IS_IN.format("removableMediaName", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_name_not_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaName.not_in(items)
+    expected = NOT_IN.format("removableMediaName", *items)
     assert str(_filter) == expected
 
 

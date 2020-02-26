@@ -13,11 +13,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Added
 
 Support for querying file events by:
+- FileOwner
 - Source
 - ProcessOwner
 - ProcessName
 - Shared
 - SharedWith
+- RemovableMediaName
 - TabURL
 
 ## 0.4.4 - 2020-02-24

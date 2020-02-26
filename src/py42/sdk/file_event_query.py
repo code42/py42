@@ -2,7 +2,11 @@
 
 from py42._internal.base_classes import BaseQuery
 from py42._internal.compat import str
-from py42._internal.filters.query_filter import _QueryFilterStringField, _QueryFilterTimestampField, FilterGroup
+from py42._internal.filters.query_filter import (
+    _QueryFilterStringField,
+    _QueryFilterTimestampField,
+    FilterGroup,
+)
 from py42._internal.filters.file_event_filter import _FileEventFilterStringField
 
 
@@ -16,6 +20,10 @@ class DeviceUsername(_FileEventFilterStringField):
 
 class DirectoryID(_FileEventFilterStringField):
     _term = u"directoryId"
+
+
+class EmailRecipients(_FileEventFilterStringField):
+    _term = u"emailRecipients"
 
 
 class EmailSender(_FileEventFilterStringField):
@@ -162,6 +170,10 @@ class Source(_FileEventFilterStringField):
 
 class TabURL(_FileEventFilterStringField):
     _term = u"tabUrl"
+
+
+class WindowTitle(_FileEventFilterStringField):
+    _term = u"windowTitle"
 
 
 class FileEventQuery(BaseQuery):

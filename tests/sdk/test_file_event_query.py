@@ -44,7 +44,8 @@ from py42.sdk.file_event_query import (
     DirectoryID,
     FileCategory,
     EmailSender,
-)
+    EmailRecipients,
+    WindowTitle)
 
 JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
 
@@ -262,6 +263,44 @@ def test_directory_id_not_in_str_gives_correct_json_representation():
     items = ["directoryId1", "directoryId2", "directoryId3"]
     _filter = DirectoryID.not_in(items)
     expected = NOT_IN.format("directoryId", *items)
+    assert str(_filter) == expected
+
+
+def test_email_recipients_exists_str_gives_correct_json_representation():
+    _filter = EmailRecipients.exists()
+    expected = EXISTS.format("emailRecipients")
+    assert str(_filter) == expected
+
+
+def test_email_recipients_not_exists_str_gives_correct_json_representation():
+    _filter = EmailRecipients.not_exists()
+    expected = NOT_EXISTS.format("emailRecipients")
+    assert str(_filter) == expected
+
+
+def test_email_recipients_eq_str_gives_correct_json_representation():
+    _filter = EmailRecipients.eq("test_recipient")
+    expected = IS.format("emailRecipients", "test_recipient")
+    assert str(_filter) == expected
+
+
+def test_email_recipients_not_eq_str_gives_correct_json_representation():
+    _filter = EmailRecipients.not_eq("test_recipient")
+    expected = IS_NOT.format("emailRecipients", "test_recipient")
+    assert str(_filter) == expected
+
+
+def test_email_recipients_is_in_str_gives_correct_json_representation():
+    items = ["EmailRecipients1", "EmailRecipients2", "EmailRecipients3"]
+    _filter = EmailRecipients.is_in(items)
+    expected = IS_IN.format("emailRecipients", *items)
+    assert str(_filter) == expected
+
+
+def test_email_recipients_not_in_str_gives_correct_json_representation():
+    items = ["EmailRecipients1", "EmailRecipients2", "EmailRecipients3"]
+    _filter = EmailRecipients.not_in(items)
+    expected = NOT_IN.format("emailRecipients", *items)
     assert str(_filter) == expected
 
 
@@ -1000,4 +1039,42 @@ def test_tab_url_not_in_str_gives_correct_json_representation():
     items = ["tab1", "tab2", "tab3"]
     _filter = TabURL.not_in(items)
     expected = NOT_IN.format("tabUrl", *items)
+    assert str(_filter) == expected
+
+
+def test_window_title_exists_str_gives_correct_json_representation():
+    _filter = WindowTitle.exists()
+    expected = EXISTS.format("windowTitle")
+    assert str(_filter) == expected
+
+
+def test_window_title_not_exists_str_gives_correct_json_representation():
+    _filter = WindowTitle.not_exists()
+    expected = NOT_EXISTS.format("windowTitle")
+    assert str(_filter) == expected
+
+
+def test_window_title_eq_str_gives_correct_json_representation():
+    _filter = WindowTitle.eq("test_window")
+    expected = IS.format("windowTitle", "test_window")
+    assert str(_filter) == expected
+
+
+def test_window_title_not_eq_str_gives_correct_json_representation():
+    _filter = WindowTitle.not_eq("test_window")
+    expected = IS_NOT.format("windowTitle", "test_window")
+    assert str(_filter) == expected
+
+
+def test_window_title_is_in_str_gives_correct_json_representation():
+    items = ["window1", "window2", "window3"]
+    _filter = WindowTitle.is_in(items)
+    expected = IS_IN.format("windowTitle", *items)
+    assert str(_filter) == expected
+
+
+def test_window_title_not_in_str_gives_correct_json_representation():
+    items = ["window1", "window2", "window3"]
+    _filter = WindowTitle.not_in(items)
+    expected = NOT_IN.format("windowTitle", *items)
     assert str(_filter) == expected

@@ -13,16 +13,18 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Added
 
 Support for querying file events by:
+- DirectoryID
+- EmailRecipients
 - EmailSender
 - FileCategory
 - FileOwner
-- DirectoryID
-- Source
 - ProcessOwner
 - ProcessName
-- SharedWith
 - RemovableMediaName
+- SharedWith
+- Source
 - TabURL
+- WindowTitle
 
 ## 0.4.4 - 2020-02-24
 

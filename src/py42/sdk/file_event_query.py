@@ -18,42 +18,6 @@ class EventTimestamp(_QueryFilterTimestampField):
     _term = u"eventTimestamp"
 
 
-class FileName(_FileEventFilterStringField):
-    _term = u"fileName"
-
-
-class FilePath(_FileEventFilterStringField):
-    _term = u"filePath"
-
-
-class InsertionTimestamp(_QueryFilterTimestampField):
-    _term = u"insertionTimestamp"
-
-
-class MD5(_FileEventFilterStringField):
-    _term = u"md5Checksum"
-
-
-class OSHostname(_FileEventFilterStringField):
-    _term = u"osHostName"
-
-
-class PrivateIPAddress(_FileEventFilterStringField):
-    _term = u"privateIpAddresses"
-
-
-class PublicIPAddress(_FileEventFilterStringField):
-    _term = u"publicIpAddress"
-
-
-class SHA256(_FileEventFilterStringField):
-    _term = u"sha256Checksum"
-
-
-class Source(_FileEventFilterStringField):
-    _term = u"source"
-
-
 class EventType(_FileEventFilterStringField):
     _term = u"eventType"
 
@@ -126,6 +90,42 @@ class ExposureType(_FileEventFilterStringField):
     def not_in(cls, value_list):
         # type: (iter[ExposureTypeEnum]) -> FilterGroup
         return super(ExposureType, cls).not_in([str(value) for value in value_list])
+
+
+class FileName(_FileEventFilterStringField):
+    _term = u"fileName"
+
+
+class FilePath(_FileEventFilterStringField):
+    _term = u"filePath"
+
+
+class InsertionTimestamp(_QueryFilterTimestampField):
+    _term = u"insertionTimestamp"
+
+
+class MD5(_FileEventFilterStringField):
+    _term = u"md5Checksum"
+
+
+class OSHostname(_FileEventFilterStringField):
+    _term = u"osHostName"
+
+
+class PrivateIPAddress(_FileEventFilterStringField):
+    _term = u"privateIpAddresses"
+
+
+class PublicIPAddress(_FileEventFilterStringField):
+    _term = u"publicIpAddress"
+
+
+class SHA256(_FileEventFilterStringField):
+    _term = u"sha256Checksum"
+
+
+class Source(_FileEventFilterStringField):
+    _term = u"source"
 
 
 class FileEventQuery(BaseQuery):

@@ -269,6 +269,65 @@ def test_device_username_eq_unicode_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
+def test_event_timestamp_on_or_after_str_gives_correct_json_representation():
+    test_time = time()
+    formatted = format_timestamp(test_time)
+    _filter = EventTimestamp.on_or_after(test_time)
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}}]'
+        "}}".format(formatted)
+    )
+    assert str(_filter) == expected
+
+
+def test_event_timestamp_on_or_before_str_gives_correct_json_representation():
+    test_time = time()
+    formatted = format_timestamp(test_time)
+    _filter = EventTimestamp.on_or_before(test_time)
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{}"}}]'
+        "}}".format(formatted)
+    )
+    assert str(_filter) == expected
+
+
+def test_event_timestamp_in_range_str_gives_correct_json_representation():
+    test_before_time = time()
+    test_after_time = time() + 30  # make sure timestamps are actually different
+    formatted_before = format_timestamp(test_before_time)
+    formatted_after = format_timestamp(test_after_time)
+    _filter = EventTimestamp.in_range(test_before_time, test_after_time)
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}},'
+        '{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{1}"}}]}}'.format(
+            formatted_before, formatted_after
+        )
+    )
+    assert str(_filter) == expected
+
+
+def test_event_timestamp_on_same_day_str_gives_correct_json_representation():
+    test_time = time()
+    test_date = datetime.utcfromtimestamp(test_time)
+    start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
+    end_time = datetime(test_date.year, test_date.month, test_date.day, 23, 59, 59)
+    formatted_before = format_datetime(start_time)
+    formatted_after = format_datetime(end_time)
+
+    _filter = EventTimestamp.on_same_day(test_time)
+    expected = (
+        '{{"filterClause":"AND", '
+        '"filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}},'
+        '{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{1}"}}]}}'.format(
+            formatted_before, formatted_after
+        )
+    )
+    assert str(_filter) == expected
+
+
 def test_event_type_exists_str_gives_correct_json_representation():
     _filter = EventType.exists()
     expected = (
@@ -325,6 +384,65 @@ def test_event_type_not_in_str_gives_correct_json_representation():
         '"filters":[{"operator":"IS_NOT", "term":"eventType", "value":"eventType1"},'
         '{"operator":"IS_NOT", "term":"eventType", "value":"eventType2"},'
         '{"operator":"IS_NOT", "term":"eventType", "value":"eventType3"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_exposure_type_exists_str_gives_correct_json_representation():
+    _filter = ExposureType.exists()
+    expected = (
+        '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"exposure", "value":null}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_exposure_type_not_exists_str_gives_correct_json_representation():
+    _filter = ExposureType.not_exists()
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"DOES_NOT_EXIST", "term":"exposure", "value":null}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_exposure_type_eq_str_gives_correct_json_representation():
+    _filter = ExposureType.eq("test_exposure")
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS", "term":"exposure", "value":"test_exposure"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_exposure_type_not_eq_str_gives_correct_json_representation():
+    _filter = ExposureType.not_eq("test_exposure")
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"exposure", "value":"test_exposure"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_exposure_type_is_in_str_gives_correct_json_representation():
+    items = ["exposure1", "exposure2", "exposure3"]
+    _filter = ExposureType.is_in(items)
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":[{"operator":"IS", "term":"exposure", "value":"exposure1"},'
+        '{"operator":"IS", "term":"exposure", "value":"exposure2"},'
+        '{"operator":"IS", "term":"exposure", "value":"exposure3"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_exposure_type_not_in_str_gives_correct_json_representation():
+    items = ["exposure1", "exposure2", "exposure3"]
+    _filter = ExposureType.not_in(items)
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"exposure", "value":"exposure1"},'
+        '{"operator":"IS_NOT", "term":"exposure", "value":"exposure2"},'
+        '{"operator":"IS_NOT", "term":"exposure", "value":"exposure3"}]}'
     )
     assert str(_filter) == expected
 
@@ -809,123 +927,5 @@ def test_sha256_not_in_str_gives_correct_json_representation():
         '"filters":[{"operator":"IS_NOT", "term":"sha256Checksum", "value":"sha2561"},'
         '{"operator":"IS_NOT", "term":"sha256Checksum", "value":"sha2562"},'
         '{"operator":"IS_NOT", "term":"sha256Checksum", "value":"sha2563"}]}'
-    )
-    assert str(_filter) == expected
-
-
-def test_exposure_type_exists_str_gives_correct_json_representation():
-    _filter = ExposureType.exists()
-    expected = (
-        '{"filterClause":"AND", "filters":[{"operator":"EXISTS", "term":"exposure", "value":null}]}'
-    )
-    assert str(_filter) == expected
-
-
-def test_exposure_type_not_exists_str_gives_correct_json_representation():
-    _filter = ExposureType.not_exists()
-    expected = (
-        '{"filterClause":"AND", '
-        '"filters":[{"operator":"DOES_NOT_EXIST", "term":"exposure", "value":null}]}'
-    )
-    assert str(_filter) == expected
-
-
-def test_exposure_type_eq_str_gives_correct_json_representation():
-    _filter = ExposureType.eq("test_exposure")
-    expected = (
-        '{"filterClause":"AND", '
-        '"filters":[{"operator":"IS", "term":"exposure", "value":"test_exposure"}]}'
-    )
-    assert str(_filter) == expected
-
-
-def test_exposure_type_not_eq_str_gives_correct_json_representation():
-    _filter = ExposureType.not_eq("test_exposure")
-    expected = (
-        '{"filterClause":"AND", '
-        '"filters":[{"operator":"IS_NOT", "term":"exposure", "value":"test_exposure"}]}'
-    )
-    assert str(_filter) == expected
-
-
-def test_exposure_type_is_in_str_gives_correct_json_representation():
-    items = ["exposure1", "exposure2", "exposure3"]
-    _filter = ExposureType.is_in(items)
-    expected = (
-        '{"filterClause":"OR", '
-        '"filters":[{"operator":"IS", "term":"exposure", "value":"exposure1"},'
-        '{"operator":"IS", "term":"exposure", "value":"exposure2"},'
-        '{"operator":"IS", "term":"exposure", "value":"exposure3"}]}'
-    )
-    assert str(_filter) == expected
-
-
-def test_exposure_type_not_in_str_gives_correct_json_representation():
-    items = ["exposure1", "exposure2", "exposure3"]
-    _filter = ExposureType.not_in(items)
-    expected = (
-        '{"filterClause":"AND", '
-        '"filters":[{"operator":"IS_NOT", "term":"exposure", "value":"exposure1"},'
-        '{"operator":"IS_NOT", "term":"exposure", "value":"exposure2"},'
-        '{"operator":"IS_NOT", "term":"exposure", "value":"exposure3"}]}'
-    )
-    assert str(_filter) == expected
-
-
-def test_event_timestamp_on_or_after_str_gives_correct_json_representation():
-    test_time = time()
-    formatted = format_timestamp(test_time)
-    _filter = EventTimestamp.on_or_after(test_time)
-    expected = (
-        '{{"filterClause":"AND", '
-        '"filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}}]'
-        "}}".format(formatted)
-    )
-    assert str(_filter) == expected
-
-
-def test_event_timestamp_on_or_before_str_gives_correct_json_representation():
-    test_time = time()
-    formatted = format_timestamp(test_time)
-    _filter = EventTimestamp.on_or_before(test_time)
-    expected = (
-        '{{"filterClause":"AND", '
-        '"filters":[{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{}"}}]'
-        "}}".format(formatted)
-    )
-    assert str(_filter) == expected
-
-
-def test_event_timestamp_in_range_str_gives_correct_json_representation():
-    test_before_time = time()
-    test_after_time = time() + 30  # make sure timestamps are actually different
-    formatted_before = format_timestamp(test_before_time)
-    formatted_after = format_timestamp(test_after_time)
-    _filter = EventTimestamp.in_range(test_before_time, test_after_time)
-    expected = (
-        '{{"filterClause":"AND", '
-        '"filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}},'
-        '{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{1}"}}]}}'.format(
-            formatted_before, formatted_after
-        )
-    )
-    assert str(_filter) == expected
-
-
-def test_event_timestamp_on_same_day_str_gives_correct_json_representation():
-    test_time = time()
-    test_date = datetime.utcfromtimestamp(test_time)
-    start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
-    end_time = datetime(test_date.year, test_date.month, test_date.day, 23, 59, 59)
-    formatted_before = format_datetime(start_time)
-    formatted_after = format_datetime(end_time)
-
-    _filter = EventTimestamp.on_same_day(test_time)
-    expected = (
-        '{{"filterClause":"AND", '
-        '"filters":[{{"operator":"ON_OR_AFTER", "term":"eventTimestamp", "value":"{0}"}},'
-        '{{"operator":"ON_OR_BEFORE", "term":"eventTimestamp", "value":"{1}"}}]}}'.format(
-            formatted_before, formatted_after
-        )
     )
     assert str(_filter) == expected

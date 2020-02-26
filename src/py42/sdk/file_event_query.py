@@ -2,15 +2,14 @@
 
 from py42._internal.base_classes import BaseQuery
 from py42._internal.compat import str
-from py42._internal.filters.query_filter import _QueryFilterTimestampField, FilterGroup
-from py42._internal.filters.file_event_filter import _FileEventFilterStringField
+from py42._internal.query_filter import _QueryFilterTimestampField, _QueryFilterStringFieldWithExists, FilterGroup
 
 
-class Actor(_FileEventFilterStringField):
+class Actor(_QueryFilterStringFieldWithExists):
     _term = u"actor"
 
 
-class DeviceUsername(_FileEventFilterStringField):
+class DeviceUsername(_QueryFilterStringFieldWithExists):
     _term = u"deviceUserName"
 
 
@@ -18,7 +17,7 @@ class EventTimestamp(_QueryFilterTimestampField):
     _term = u"eventTimestamp"
 
 
-class EventType(_FileEventFilterStringField):
+class EventType(_QueryFilterStringFieldWithExists):
     _term = u"eventType"
 
     class EventTypeEnum(object):
@@ -54,7 +53,7 @@ class EventType(_FileEventFilterStringField):
         return super(EventType, cls).not_in([str(value) for value in value_list])
 
 
-class ExposureType(_FileEventFilterStringField):
+class ExposureType(_QueryFilterStringFieldWithExists):
     _term = u"exposure"
 
     class ExposureTypeEnum(object):
@@ -92,11 +91,11 @@ class ExposureType(_FileEventFilterStringField):
         return super(ExposureType, cls).not_in([str(value) for value in value_list])
 
 
-class FileName(_FileEventFilterStringField):
+class FileName(_QueryFilterStringFieldWithExists):
     _term = u"fileName"
 
 
-class FilePath(_FileEventFilterStringField):
+class FilePath(_QueryFilterStringFieldWithExists):
     _term = u"filePath"
 
 
@@ -104,35 +103,39 @@ class InsertionTimestamp(_QueryFilterTimestampField):
     _term = u"insertionTimestamp"
 
 
-class MD5(_FileEventFilterStringField):
+class MD5(_QueryFilterStringFieldWithExists):
     _term = u"md5Checksum"
 
 
-class OSHostname(_FileEventFilterStringField):
+class OSHostname(_QueryFilterStringFieldWithExists):
     _term = u"osHostName"
 
 
-class PrivateIPAddress(_FileEventFilterStringField):
+class PrivateIPAddress(_QueryFilterStringFieldWithExists):
     _term = u"privateIpAddresses"
 
 
-class ProcessOwner(_FileEventFilterStringField):
+class ProcessName(_QueryFilterStringFieldWithExists):
+    _term = u"processName"
+
+
+class ProcessOwner(_QueryFilterStringFieldWithExists):
     _term = u"processOwner"
 
 
-class PublicIPAddress(_FileEventFilterStringField):
+class PublicIPAddress(_QueryFilterStringFieldWithExists):
     _term = u"publicIpAddress"
 
 
-class SHA256(_FileEventFilterStringField):
+class SHA256(_QueryFilterStringFieldWithExists):
     _term = u"sha256Checksum"
 
 
-class Source(_FileEventFilterStringField):
+class Source(_QueryFilterStringFieldWithExists):
     _term = u"source"
 
 
-class TabURL(_FileEventFilterStringField):
+class TabURL(_QueryFilterStringFieldWithExists):
     _term = u"tabUrl"
 
 

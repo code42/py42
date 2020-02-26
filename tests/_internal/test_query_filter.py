@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import pytest
 from py42._internal.compat import str
-from py42._internal.filters.query_filter import (
+from py42._internal.query_filter import (
     QueryFilter,
     create_eq_filter_group,
     create_query_filter,
@@ -10,9 +9,12 @@ from py42._internal.filters.query_filter import (
     create_in_range_filter_group,
     create_is_in_filter_group,
     create_not_eq_filter_group,
-    create_not_in_filter_group,
     create_on_or_after_filter_group,
     create_on_or_before_filter_group,
+    create_contains_filter_group,
+    create_not_contains_filter_group,
+    create_exists_filter_group,
+    create_not_exists_filter_group,
 )
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
@@ -147,4 +149,42 @@ def test_create_query_filter_returns_obj_with_correct_json_representation():
     query_filter = create_query_filter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
     assert str(query_filter) == '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
         OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
+    )
+
+
+def test_create_contains_filter_group_returns_filter_group_with_correct_json_representation():
+    term = "test_eq_term"
+    value_list = ["item1", "item2"]
+    _group = create_contains_filter_group(term, value_list)
+    assert (
+        str(_group) == '{"filterClause":"AND", "filters":[{"operator":"CONTAINS", '
+        '"term":"test_eq_term", "value":"[\'item1\', \'item2\']"}]}'
+    )
+
+
+def test_create_not_contains_filter_group_returns_filter_group_with_correct_json_representation():
+    term = "test_eq_term"
+    value_list = ["item1", "item2"]
+    _group = create_not_contains_filter_group(term, value_list)
+    assert (
+        str(_group) == '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_CONTAIN", '
+        '"term":"test_eq_term", "value":"[\'item1\', \'item2\']"}]}'
+    )
+
+
+def test_create_exists_filter_returns_filter_group_with_correct_json_representation():
+    term = "test_eq_term"
+    _group = create_exists_filter_group(term)
+    assert (
+        str(_group) == '{"filterClause":"AND", "filters":[{"operator":"EXISTS", '
+        '"term":"test_eq_term", "value":null}]}'
+    )
+
+
+def test_create_not_exists_filter_returns_filter_group_with_correct_json_representation():
+    term = "test_is_in_term"
+    _group = create_not_exists_filter_group(term)
+    assert (
+        str(_group) == '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_EXIST", '
+        '"term":"test_is_in_term", "value":null}]}'
     )

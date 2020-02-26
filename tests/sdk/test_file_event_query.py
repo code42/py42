@@ -30,6 +30,7 @@ from py42.sdk.file_event_query import (
     MD5,
     OSHostname,
     PrivateIPAddress,
+    ProcessName,
     ProcessOwner,
     PublicIPAddress,
     SHA256,
@@ -609,6 +610,44 @@ def test_process_owner_not_in_str_gives_correct_json_representation():
     items = ["owner1", "owner2", "owner3"]
     _filter = ProcessOwner.not_in(items)
     expected = NOT_IN.format("processOwner", *items)
+    assert str(_filter) == expected
+
+
+def test_process_name_exists_str_gives_correct_json_representation():
+    _filter = ProcessName.exists()
+    expected = EXISTS.format("processName")
+    assert str(_filter) == expected
+
+
+def test_process_name_not_exists_str_gives_correct_json_representation():
+    _filter = ProcessName.not_exists()
+    expected = NOT_EXISTS.format("processName")
+    assert str(_filter) == expected
+
+
+def test_process_name_eq_str_gives_correct_json_representation():
+    _filter = ProcessName.eq("test_name")
+    expected = IS.format("processName", "test_name")
+    assert str(_filter) == expected
+
+
+def test_process_name_not_eq_str_gives_correct_json_representation():
+    _filter = ProcessName.not_eq("test_name")
+    expected = IS_NOT.format("processName", "test_name")
+    assert str(_filter) == expected
+
+
+def test_process_name_is_in_str_gives_correct_json_representation():
+    items = ["n1", "n2", "n3"]
+    _filter = ProcessName.is_in(items)
+    expected = IS_IN.format("processName", *items)
+    assert str(_filter) == expected
+
+
+def test_process_name_not_in_str_gives_correct_json_representation():
+    items = ["n1", "n2", "n3"]
+    _filter = ProcessName.not_in(items)
+    expected = NOT_IN.format("processName", *items)
     assert str(_filter) == expected
 
 

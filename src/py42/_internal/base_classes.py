@@ -1,4 +1,4 @@
-from py42._internal.filters.query_filter import FilterGroup
+from py42._internal.query_filter import FilterGroup
 
 
 class BaseClient(object):

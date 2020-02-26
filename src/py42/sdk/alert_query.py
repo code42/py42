@@ -2,27 +2,27 @@
 
 from py42._internal.compat import str
 from py42._internal.base_classes import BaseQuery
-from py42._internal.filters.query_filter import (
+from py42._internal.query_filter import (
     _QueryFilterTimestampField,
     _QueryFilterStringField,
     FilterGroup,
 )
-from py42._internal.filters.alert_filter import _AlertQueryFilterStringField
+from py42._internal.query_filter import _QueryFilterStringFieldWithContains
 
 
 class DateObserved(_QueryFilterTimestampField):
     _term = u"CreatedAt"
 
 
-class Actor(_AlertQueryFilterStringField):
+class Actor(_QueryFilterStringFieldWithContains):
     _term = u"actor"
 
 
-class RuleName(_AlertQueryFilterStringField):
+class RuleName(_QueryFilterStringFieldWithContains):
     _term = u"name"
 
 
-class Description(_AlertQueryFilterStringField):
+class Description(_QueryFilterStringFieldWithContains):
     _term = u"description"
 
 

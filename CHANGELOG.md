@@ -14,6 +14,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 Support for querying file events by:
 - FileOwner
+- DirectoryID
 - Source
 - ProcessOwner
 - ProcessName

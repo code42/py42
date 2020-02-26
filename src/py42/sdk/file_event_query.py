@@ -3,11 +3,12 @@
 from py42._internal.base_classes import BaseQuery
 from py42._internal.compat import str
 from py42._internal.query_filter import (
+    FilterGroup,
     _QueryFilterTimestampField,
     _QueryFilterStringFieldWithExists,
     _QueryFilterStringFieldWithExistsAndContains,
-    FilterGroup,
     _QueryFilterBooleanField,
+    _QueryFilterStringField
 )
 
 
@@ -17,6 +18,10 @@ class Actor(_QueryFilterStringFieldWithExists):
 
 class DeviceUsername(_QueryFilterStringFieldWithExists):
     _term = u"deviceUserName"
+
+
+class DirectoryID(_QueryFilterStringField):
+    _term = u"directoryId"
 
 
 class EventTimestamp(_QueryFilterTimestampField):

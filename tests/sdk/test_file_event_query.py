@@ -42,6 +42,7 @@ from py42.sdk.file_event_query import (
     Shared,
     RemovableMediaName,
     FileOwner,
+    DirectoryID,
 )
 
 JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
@@ -234,6 +235,32 @@ def test_device_username_eq_unicode_str_gives_correct_json_representation():
     expected = IS.format(
         u"deviceUserName", u"\u60a8\u5df2\u7ecf\u53d1\u73b0\u4e86\u79d8\u5bc6\u4fe1\u606f"
     )
+    assert str(_filter) == expected
+
+
+def test_directory_id_eq_str_gives_correct_json_representation():
+    _filter = DirectoryID.eq("test_id")
+    expected = IS.format("directoryId", "test_id")
+    assert str(_filter) == expected
+
+
+def test_directory_id_not_eq_str_gives_correct_json_representation():
+    _filter = DirectoryID.not_eq("test_id")
+    expected = IS_NOT.format("directoryId", "test_id")
+    assert str(_filter) == expected
+
+
+def test_directory_id_is_in_str_gives_correct_json_representation():
+    items = ["directoryId1", "directoryId2", "directoryId3"]
+    _filter = DirectoryID.is_in(items)
+    expected = IS_IN.format("directoryId", *items)
+    assert str(_filter) == expected
+
+
+def test_directory_id_not_in_str_gives_correct_json_representation():
+    items = ["directoryId1", "directoryId2", "directoryId3"]
+    _filter = DirectoryID.not_in(items)
+    expected = NOT_IN.format("directoryId", *items)
     assert str(_filter) == expected
 
 

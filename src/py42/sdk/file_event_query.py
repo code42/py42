@@ -6,20 +6,16 @@ from py42._internal.filters.query_filter import _QueryFilterTimestampField, Filt
 from py42._internal.filters.file_event_filter import _FileEventFilterStringField
 
 
-class MD5(_FileEventFilterStringField):
-    _term = u"md5Checksum"
-
-
-class SHA256(_FileEventFilterStringField):
-    _term = u"sha256Checksum"
-
-
-class OSHostname(_FileEventFilterStringField):
-    _term = u"osHostName"
+class Actor(_FileEventFilterStringField):
+    _term = u"actor"
 
 
 class DeviceUsername(_FileEventFilterStringField):
     _term = u"deviceUserName"
+
+
+class EventTimestamp(_QueryFilterTimestampField):
+    _term = u"eventTimestamp"
 
 
 class FileName(_FileEventFilterStringField):
@@ -30,24 +26,32 @@ class FilePath(_FileEventFilterStringField):
     _term = u"filePath"
 
 
-class PublicIPAddress(_FileEventFilterStringField):
-    _term = u"publicIpAddress"
+class InsertionTimestamp(_QueryFilterTimestampField):
+    _term = u"insertionTimestamp"
+
+
+class MD5(_FileEventFilterStringField):
+    _term = u"md5Checksum"
+
+
+class OSHostname(_FileEventFilterStringField):
+    _term = u"osHostName"
 
 
 class PrivateIPAddress(_FileEventFilterStringField):
     _term = u"privateIpAddresses"
 
 
-class Actor(_FileEventFilterStringField):
-    _term = u"actor"
+class PublicIPAddress(_FileEventFilterStringField):
+    _term = u"publicIpAddress"
 
 
-class EventTimestamp(_QueryFilterTimestampField):
-    _term = u"eventTimestamp"
+class SHA256(_FileEventFilterStringField):
+    _term = u"sha256Checksum"
 
 
-class InsertionTimestamp(_QueryFilterTimestampField):
-    _term = u"insertionTimestamp"
+class Source(_FileEventFilterStringField):
+    _term = u"source"
 
 
 class EventType(_FileEventFilterStringField):

@@ -39,11 +39,12 @@ from py42.sdk.file_event_query import (
     SharedWith,
     Source,
     TabURL,
-    Shared,
     RemovableMediaName,
     FileOwner,
     DirectoryID,
-    FileCategory)
+    FileCategory,
+    EmailSender,
+)
 
 JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
 
@@ -264,6 +265,32 @@ def test_directory_id_not_in_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
+def test_email_sender_eq_str_gives_correct_json_representation():
+    _filter = EmailSender.eq("test_category")
+    expected = IS.format("emailSender", "test_category")
+    assert str(_filter) == expected
+
+
+def test_email_sender_not_eq_str_gives_correct_json_representation():
+    _filter = EmailSender.not_eq("test_category")
+    expected = IS_NOT.format("emailSender", "test_category")
+    assert str(_filter) == expected
+
+
+def test_email_sender_is_in_str_gives_correct_json_representation():
+    items = ["email_sender1", "email_sender2", "email_sender3"]
+    _filter = EmailSender.is_in(items)
+    expected = IS_IN.format("emailSender", *items)
+    assert str(_filter) == expected
+
+
+def test_email_sender_not_in_str_gives_correct_json_representation():
+    items = ["email_sender1", "email_sender2", "email_sender3"]
+    _filter = EmailSender.not_in(items)
+    expected = NOT_IN.format("emailSender", *items)
+    assert str(_filter) == expected
+
+
 def test_event_timestamp_on_or_after_str_gives_correct_json_representation():
     test_time = time()
     formatted = format_timestamp(test_time)
@@ -393,7 +420,7 @@ def test_file_category_not_eq_str_gives_correct_json_representation():
 
 def test_file_category_is_in_str_gives_correct_json_representation():
     items = ["category1", "category2", "category3"]
-    _filter =FileCategory.is_in(items)
+    _filter = FileCategory.is_in(items)
     expected = IS_IN.format("fileCategory", *items)
     assert str(_filter) == expected
 
@@ -862,18 +889,6 @@ def test_sha256_not_in_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
-def test_shared_true_str_gives_correct_json_representation():
-    _filter = Shared.true()
-    expected = IS.format("shared", "TRUE")
-    assert str(_filter) == expected
-
-
-def test_shared_false_str_gives_correct_json_representation():
-    _filter = Shared.false()
-    expected = IS.format("shared", "FALSE")
-    assert str(_filter) == expected
-
-
 def test_shared_with_exists_str_gives_correct_json_representation():
     _filter = SharedWith.exists()
     expected = EXISTS.format("sharedWith")
@@ -909,18 +924,6 @@ def test_shared_with_not_in_str_gives_correct_json_representation():
     items = ["user1", "user2", "user3"]
     _filter = SharedWith.not_in(items)
     expected = NOT_IN.format("sharedWith", *items)
-    assert str(_filter) == expected
-
-
-def test_shared_with_contains_str_gives_correct_json_representation():
-    _filter = SharedWith.contains("test")
-    expected = CONTAINS.format("sharedWith", "test")
-    assert str(_filter) == expected
-
-
-def test_shared_with_not_contains_str_gives_correct_json_representation():
-    _filter = SharedWith.not_contains("test")
-    expected = NOT_CONTAINS.format("sharedWith", "test")
     assert str(_filter) == expected
 
 

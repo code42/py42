@@ -30,26 +30,6 @@ def create_not_eq_filter_group(term, value):
     return create_filter_group(filter_list, u"AND")
 
 
-def create_contains_filter_group(term, value):
-    filter_list = [create_query_filter(term, u"CONTAINS", value)]
-    return create_filter_group(filter_list, u"AND")
-
-
-def create_not_contains_filter_group(term, value):
-    filter_list = [create_query_filter(term, u"DOES_NOT_CONTAIN", value)]
-    return create_filter_group(filter_list, u"AND")
-
-
-def create_exists_filter_group(term):
-    filter_list = [create_query_filter(term, u"EXISTS")]
-    return create_filter_group(filter_list, u"AND")
-
-
-def create_not_exists_filter_group(term):
-    filter_list = [create_query_filter(term, u"DOES_NOT_EXIST")]
-    return create_filter_group(filter_list, u"AND")
-
-
 def create_on_or_after_filter_group(term, value):
     filter_list = [create_query_filter(term, u"ON_OR_AFTER", value)]
     return create_filter_group(filter_list, u"AND")
@@ -96,34 +76,6 @@ class _QueryFilterStringField(object):
         return create_not_in_filter_group(cls._term, value_list)
 
 
-class _QueryFilterStringFieldWithExists(_QueryFilterStringField):
-    @classmethod
-    def exists(cls):
-        return create_exists_filter_group(cls._term)
-
-    @classmethod
-    def not_exists(cls):
-        return create_not_exists_filter_group(cls._term)
-
-
-class _QueryFilterStringFieldWithContains(_QueryFilterStringField):
-    @classmethod
-    def contains(cls, value):
-        # type: (str) -> FilterGroup
-        return create_contains_filter_group(cls._term, value)
-
-    @classmethod
-    def not_contains(cls, value):
-        # type: (str) -> FilterGroup
-        return create_not_contains_filter_group(cls._term, value)
-
-
-class _QueryFilterStringFieldWithExistsAndContains(
-    _QueryFilterStringFieldWithExists, _QueryFilterStringFieldWithContains
-):
-    pass
-
-
 class _QueryFilterTimestampField(object):
     _term = u"override_timestamp_field_name"
 
@@ -155,18 +107,6 @@ class _QueryFilterTimestampField(object):
         formatted_start_time = convert_datetime_to_timestamp_str(start_time)
         formatted_end_time = convert_datetime_to_timestamp_str(end_time)
         return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
-
-
-class _QueryFilterBooleanField(object):
-    _term = u"override_boolean_field_name"
-
-    @classmethod
-    def true(cls):
-        return create_eq_filter_group(cls._term, u"TRUE")
-
-    @classmethod
-    def false(cls):
-        return create_eq_filter_group(cls._term, u"FALSE")
 
 
 class QueryFilter(object):

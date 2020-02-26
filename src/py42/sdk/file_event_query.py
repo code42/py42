@@ -2,33 +2,31 @@
 
 from py42._internal.base_classes import BaseQuery
 from py42._internal.compat import str
-from py42._internal.query_filter import (
-    FilterGroup,
-    _QueryFilterTimestampField,
-    _QueryFilterStringFieldWithExists,
-    _QueryFilterStringFieldWithExistsAndContains,
-    _QueryFilterBooleanField,
-    _QueryFilterStringField
-)
+from py42._internal.filters.query_filter import _QueryFilterStringField, _QueryFilterTimestampField, FilterGroup
+from py42._internal.filters.file_event_filter import _FileEventFilterStringField
 
 
-class Actor(_QueryFilterStringFieldWithExists):
+class Actor(_FileEventFilterStringField):
     _term = u"actor"
 
 
-class DeviceUsername(_QueryFilterStringFieldWithExists):
+class DeviceUsername(_FileEventFilterStringField):
     _term = u"deviceUserName"
 
 
-class DirectoryID(_QueryFilterStringField):
+class DirectoryID(_FileEventFilterStringField):
     _term = u"directoryId"
+
+
+class EmailSender(_FileEventFilterStringField):
+    _term = u"emailSender"
 
 
 class EventTimestamp(_QueryFilterTimestampField):
     _term = u"eventTimestamp"
 
 
-class EventType(_QueryFilterStringFieldWithExists):
+class EventType(_FileEventFilterStringField):
     _term = u"eventType"
 
     class EventTypeEnum(object):
@@ -64,7 +62,7 @@ class EventType(_QueryFilterStringFieldWithExists):
         return super(EventType, cls).not_in([str(value) for value in value_list])
 
 
-class ExposureType(_QueryFilterStringFieldWithExists):
+class ExposureType(_FileEventFilterStringField):
     _term = u"exposure"
 
     class ExposureTypeEnum(object):
@@ -106,15 +104,15 @@ class FileCategory(_QueryFilterStringField):
     _term = u"fileCategory"
 
 
-class FileName(_QueryFilterStringFieldWithExists):
+class FileName(_FileEventFilterStringField):
     _term = u"fileName"
 
 
-class FileOwner(_QueryFilterStringFieldWithExists):
+class FileOwner(_FileEventFilterStringField):
     _term = u"fileOwner"
 
 
-class FilePath(_QueryFilterStringFieldWithExists):
+class FilePath(_FileEventFilterStringField):
     _term = u"filePath"
 
 
@@ -122,51 +120,47 @@ class InsertionTimestamp(_QueryFilterTimestampField):
     _term = u"insertionTimestamp"
 
 
-class MD5(_QueryFilterStringFieldWithExists):
+class MD5(_FileEventFilterStringField):
     _term = u"md5Checksum"
 
 
-class OSHostname(_QueryFilterStringFieldWithExists):
+class OSHostname(_FileEventFilterStringField):
     _term = u"osHostName"
 
 
-class PrivateIPAddress(_QueryFilterStringFieldWithExists):
+class PrivateIPAddress(_FileEventFilterStringField):
     _term = u"privateIpAddresses"
 
 
-class ProcessName(_QueryFilterStringFieldWithExists):
+class ProcessName(_FileEventFilterStringField):
     _term = u"processName"
 
 
-class ProcessOwner(_QueryFilterStringFieldWithExists):
+class ProcessOwner(_FileEventFilterStringField):
     _term = u"processOwner"
 
 
-class PublicIPAddress(_QueryFilterStringFieldWithExists):
+class PublicIPAddress(_FileEventFilterStringField):
     _term = u"publicIpAddress"
 
 
-class RemovableMediaName(_QueryFilterStringFieldWithExists):
+class RemovableMediaName(_FileEventFilterStringField):
     _term = u"removableMediaName"
 
 
-class SHA256(_QueryFilterStringFieldWithExists):
+class SHA256(_FileEventFilterStringField):
     _term = u"sha256Checksum"
 
 
-class Shared(_QueryFilterBooleanField):
-    _term = u"shared"
-
-
-class SharedWith(_QueryFilterStringFieldWithExistsAndContains):
+class SharedWith(_FileEventFilterStringField):
     _term = u"sharedWith"
 
 
-class Source(_QueryFilterStringFieldWithExists):
+class Source(_FileEventFilterStringField):
     _term = u"source"
 
 
-class TabURL(_QueryFilterStringFieldWithExists):
+class TabURL(_FileEventFilterStringField):
     _term = u"tabUrl"
 
 

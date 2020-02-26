@@ -13,6 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Added
 
 Support for querying file events by:
+- FileCategory
 - FileOwner
 - DirectoryID
 - Source

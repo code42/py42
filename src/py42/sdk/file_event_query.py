@@ -102,6 +102,10 @@ class ExposureType(_QueryFilterStringFieldWithExists):
         return super(ExposureType, cls).not_in([str(value) for value in value_list])
 
 
+class FileCategory(_QueryFilterStringField):
+    _term = u"fileCategory"
+
+
 class FileName(_QueryFilterStringFieldWithExists):
     _term = u"fileName"
 

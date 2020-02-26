@@ -26,6 +26,11 @@ IN_RANGE = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "ter
 ON_OR_AFTER = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"{0}", "value":"{1}"}}]}}'
 ON_OR_BEFORE = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_BEFORE", "term":"{0}", "value":"{1}"}}]}}'
 
+CONTAINS = (
+    u'{{"filterClause":"AND", "filters":[{{"operator":"CONTAINS", "term":"{0}", "value":"{1}"}}]}}'
+)
+NOT_CONTAINS = u'{{"filterClause":"AND", "filters":[{{"operator":"DOES_NOT_CONTAIN", "term":"{0}", "value":"{1}"}}]}}'
+
 
 @pytest.fixture
 def event_filter_group(query_filter):

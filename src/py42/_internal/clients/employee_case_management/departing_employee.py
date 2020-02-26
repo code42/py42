@@ -14,7 +14,7 @@ class DepartingEmployeeClient(BaseClient):
         super(DepartingEmployeeClient, self).__init__(session)
         self._user_context = user_context
 
-    def create_departing_employee(
+    def create(
         self,
         username,
         tenant_id=None,
@@ -39,7 +39,7 @@ class DepartingEmployeeClient(BaseClient):
         uri = self._uri_prefix.format(u"create")
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def resolve_departing_employee(self, case_id, tenant_id=None):
+    def resolve(self, case_id, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"resolve")
         data = {u"caseId": case_id, u"tenantId": tenant_id}
@@ -71,7 +71,7 @@ class DepartingEmployeeClient(BaseClient):
         }
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def get_all_departing_employees(
+    def get_all(
         self,
         tenant_id=None,
         departing_on_or_after_epoch=None,
@@ -94,18 +94,18 @@ class DepartingEmployeeClient(BaseClient):
         data = {u"tenantId": tenant_id, u"alertsEnabled": alerts_enabled}
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def get_case_by_username(self, username, tenant_id=None):
+    def get_by_username(self, username, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         case_id = self._get_case_id_from_username(tenant_id, username)
-        return self.get_case_by_id(case_id, tenant_id)
+        return self.get_by_id(case_id, tenant_id)
 
-    def get_case_by_id(self, case_id, tenant_id=None):
+    def get_by_id(self, case_id, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"details")
         data = {u"tenantId": tenant_id, u"caseId": case_id}
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def update_case(
+    def update(
         self,
         case_id,
         tenant_id=None,
@@ -165,10 +165,10 @@ class DepartingEmployeeClient(BaseClient):
         return matches[0] if matches else None
 
     def _get_all_departing_employees(self, tenant_id):
-        for page in self.get_all_departing_employees(tenant_id):
+        for page in self.get_all(tenant_id):
             yield json.loads(page.text).get(u"cases")
 
     def _get_case_by_id(self, case_id):
-        response = self.get_case_by_id(case_id)
+        response = self.get_by_id(case_id)
         if response:
             return json.loads(str(response.text))

@@ -2,7 +2,13 @@
 
 from py42._internal.base_classes import BaseQuery
 from py42._internal.compat import str
-from py42._internal.query_filter import _QueryFilterTimestampField, _QueryFilterStringFieldWithExists, FilterGroup
+from py42._internal.query_filter import (
+    _QueryFilterTimestampField,
+    _QueryFilterStringFieldWithExists,
+    _QueryFilterStringFieldWithExistsAndContains,
+    FilterGroup,
+    _QueryFilterBooleanField,
+)
 
 
 class Actor(_QueryFilterStringFieldWithExists):
@@ -129,6 +135,14 @@ class PublicIPAddress(_QueryFilterStringFieldWithExists):
 
 class SHA256(_QueryFilterStringFieldWithExists):
     _term = u"sha256Checksum"
+
+
+class Shared(_QueryFilterBooleanField):
+    _term = u"shared"
+
+
+class SharedWith(_QueryFilterStringFieldWithExistsAndContains):
+    _term = u"sharedWith"
 
 
 class Source(_QueryFilterStringFieldWithExists):

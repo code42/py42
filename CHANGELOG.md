@@ -12,7 +12,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- Supporting for querying file events by Source, ProcessOwner, ProcessName, TabURL.
+Support for querying file events by:
+- Source
+- ProcessOwner
+- ProcessName
+- Shared
+- SharedWith
+- TabURL
 
 ## 0.4.4 - 2020-02-24
 

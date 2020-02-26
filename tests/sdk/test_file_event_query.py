@@ -15,6 +15,8 @@ from .conftest import (
     ON_OR_AFTER,
     ON_OR_BEFORE,
     IN_RANGE,
+    CONTAINS,
+    NOT_CONTAINS,
 )
 from py42._internal.compat import str
 from py42.sdk.file_event_query import (
@@ -34,9 +36,10 @@ from py42.sdk.file_event_query import (
     ProcessOwner,
     PublicIPAddress,
     SHA256,
+    SharedWith,
     Source,
     TabURL,
-)
+    Shared)
 
 JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
 
@@ -724,6 +727,68 @@ def test_sha256_not_in_str_gives_correct_json_representation():
     items = ["sha2561", "sha2562", "sha2563"]
     _filter = SHA256.not_in(items)
     expected = NOT_IN.format("sha256Checksum", *items)
+    assert str(_filter) == expected
+
+
+def test_shared_true_str_gives_correct_json_representation():
+    _filter = Shared.true()
+    expected = IS.format("shared", "TRUE")
+    assert str(_filter) == expected
+
+
+def test_shared_false_str_gives_correct_json_representation():
+    _filter = Shared.false()
+    expected = IS.format("shared", "FALSE")
+    assert str(_filter) == expected
+
+
+def test_shared_with_exists_str_gives_correct_json_representation():
+    _filter = SharedWith.exists()
+    expected = EXISTS.format("sharedWith")
+    assert str(_filter) == expected
+
+
+def test_shared_with_not_exists_str_gives_correct_json_representation():
+    _filter = SharedWith.not_exists()
+    expected = NOT_EXISTS.format("sharedWith")
+    assert str(_filter) == expected
+
+
+def test_shared_with_eq_str_gives_correct_json_representation():
+    _filter = SharedWith.eq("test_user")
+    expected = IS.format("sharedWith", "test_user")
+    assert str(_filter) == expected
+
+
+def test_shared_with_not_eq_str_gives_correct_json_representation():
+    _filter = SharedWith.not_eq("test_user")
+    expected = IS_NOT.format("sharedWith", "test_user")
+    assert str(_filter) == expected
+
+
+def test_shared_with_is_in_str_gives_correct_json_representation():
+    items = ["user1", "user2", "user3"]
+    _filter = SharedWith.is_in(items)
+    expected = IS_IN.format("sharedWith", *items)
+    assert str(_filter) == expected
+
+
+def test_shared_with_not_in_str_gives_correct_json_representation():
+    items = ["user1", "user2", "user3"]
+    _filter = SharedWith.not_in(items)
+    expected = NOT_IN.format("sharedWith", *items)
+    assert str(_filter) == expected
+
+
+def test_shared_with_contains_str_gives_correct_json_representation():
+    _filter = SharedWith.contains("test")
+    expected = CONTAINS.format("sharedWith", "test")
+    assert str(_filter) == expected
+
+
+def test_shared_with_not_contains_str_gives_correct_json_representation():
+    _filter = SharedWith.not_contains("test")
+    expected = NOT_CONTAINS.format("sharedWith", "test")
     assert str(_filter) == expected
 
 

@@ -5,7 +5,7 @@ from requests import HTTPError, Response, Session
 from requests.cookies import RequestsCookieJar
 
 from py42._internal.auth_handling import AuthHandler
-from py42._internal.query_filter import QueryFilter
+from py42._internal.filters.query_filter import QueryFilter
 from py42._internal.session import Py42Session
 
 HOST_ADDRESS = "http://example.com"

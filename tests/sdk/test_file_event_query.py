@@ -20,6 +20,7 @@ from py42.sdk.file_event_query import (
     PrivateIPAddress,
     PublicIPAddress,
     SHA256,
+    Source,
 )
 
 JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
@@ -927,5 +928,65 @@ def test_sha256_not_in_str_gives_correct_json_representation():
         '"filters":[{"operator":"IS_NOT", "term":"sha256Checksum", "value":"sha2561"},'
         '{"operator":"IS_NOT", "term":"sha256Checksum", "value":"sha2562"},'
         '{"operator":"IS_NOT", "term":"sha256Checksum", "value":"sha2563"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_source_exists_str_gives_correct_json_representation():
+    _filter = Source.exists()
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"EXISTS", "term":"source", "value":null}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_source_not_exists_str_gives_correct_json_representation():
+    _filter = Source.not_exists()
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"DOES_NOT_EXIST", "term":"source", "value":null}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_source_eq_str_gives_correct_json_representation():
+    _filter = Source.eq("test_sha256")
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS", "term":"source", "value":"test_sha256"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_source_not_eq_str_gives_correct_json_representation():
+    _filter = Source.not_eq("test_sha256")
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"source", "value":"test_sha256"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_source_is_in_str_gives_correct_json_representation():
+    items = ["source1", "source2", "source3"]
+    _filter = Source.is_in(items)
+    expected = (
+        '{"filterClause":"OR", '
+        '"filters":[{"operator":"IS", "term":"source", "value":"source1"},'
+        '{"operator":"IS", "term":"source", "value":"source2"},'
+        '{"operator":"IS", "term":"source", "value":"source3"}]}'
+    )
+    assert str(_filter) == expected
+
+
+def test_source_not_in_str_gives_correct_json_representation():
+    items = ["source1", "source2", "source3"]
+    _filter = Source.not_in(items)
+    expected = (
+        '{"filterClause":"AND", '
+        '"filters":[{"operator":"IS_NOT", "term":"source", "value":"source1"},'
+        '{"operator":"IS_NOT", "term":"source", "value":"source2"},'
+        '{"operator":"IS_NOT", "term":"source", "value":"source3"}]}'
     )
     assert str(_filter) == expected

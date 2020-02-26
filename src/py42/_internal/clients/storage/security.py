@@ -42,7 +42,7 @@ class StorageSecurityClient(BaseClient):
 
         return self._default_session.get(uri, params=params)
 
-    def get_security_detection_events_for_plan(
+    def get_plan_security_events(
         self,
         plan_uid,
         cursor=None,
@@ -60,7 +60,7 @@ class StorageSecurityClient(BaseClient):
             max_timestamp=max_timestamp,
         )
 
-    def get_security_detection_events_for_user(
+    def get_user_security_events(
         self,
         user_uid,
         cursor=None,

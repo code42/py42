@@ -158,7 +158,7 @@ class SecurityModule(object):
             # get all pages of events for this plan
             while cursor or not started:
                 started = True
-                response = client.get_security_detection_events_for_plan(
+                response = client.get_plan_security_events(
                     plan_storage_info.plan_uid,
                     cursor=cursor,
                     include_files=include_files,

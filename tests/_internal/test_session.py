@@ -10,9 +10,7 @@ class TestPy42Session(object):
         session = Py42Session(success_requests_session, HOST_ADDRESS)
         filter_out_none_mock = mocker.patch("py42.util.filter_out_none")
         filter_out_none_mock.return_value = {}
-
         session.post(URL, json=JSON_VALUE)
-
         assert filter_out_none_mock.call_count == 1
 
     def test_session_request_calls_requests_with_timeout_param(self, success_requests_session):
@@ -45,6 +43,18 @@ class TestPy42Session(object):
         session = Py42Session(success_requests_session, HOST_ADDRESS)
         session.post(URL, data=DATA_VALUE, json=JSON_VALUE)
         assert success_requests_session.request.call_args[KWARGS_INDEX].get(JSON_KEY) is None
+
+    def test_session_request_returns_utf8_response(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        response = session.request("GET", URL, data=DATA_VALUE, json=JSON_VALUE)
+        assert response.encoding == "utf-8"
+
+    def test_session_request_when_streamed_doesnt_not_set_encoding_on_response(
+        self, success_requests_session
+    ):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        response = session.request("GET", URL, data=DATA_VALUE, stream=True)
+        assert response.encoding is None
 
     def test_session_request_returns_response_when_good_status_code(self, success_requests_session):
         session = Py42Session(success_requests_session, HOST_ADDRESS)

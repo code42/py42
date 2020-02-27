@@ -13,6 +13,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 Renamed client methods to reduce redundancy:
 
+- `AlertClient`
+    - `search_alerts()` > `search()`
+    - `resolve_alert()` > `resolve()`
+    - `reopen_alert()` > `reopen()`
+
 - `OrgClient`
     - `get_orgs()`  > `get_all()`
     - `get_org_by_id()` > `get_by_id()`

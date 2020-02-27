@@ -103,7 +103,7 @@ class ArchiveAccessor(object):
         )
 
     def _get_children(self, node_id=None):
-        return self._storage_archive_client.get_archive_tree_node(
+        return self._storage_archive_client.get_tree_node(
             self._archive_session_id, self._device_guid, file_id=node_id, show_deleted=True
         )
 

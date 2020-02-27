@@ -2,7 +2,7 @@ from py42._internal.base_classes import BaseClient
 
 
 class StorageArchiveClient(BaseClient):
-    def search_archive(
+    def search(
         self,
         session_id,
         device_guid,
@@ -36,7 +36,7 @@ class StorageArchiveClient(BaseClient):
         }
         return self._default_session.get(uri, params=params)
 
-    def get_archive_tree_node(
+    def get_tree_node(
         self,
         session_id,
         device_guid,

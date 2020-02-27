@@ -461,8 +461,8 @@ def get_file_selection(file_type, file_path):
     return FileSelection([{"type": file_type, "path": file_path, "selected": True}], 1, 1, 1)
 
 
-def mock_get_archive_tree_node_responses(mocker, storage_archive_client, responses):
-    storage_archive_client.get_archive_tree_node.side_effect = get_get_archive_tree_node_mock(
+def mock_get_tree_node_responses(mocker, storage_archive_client, responses):
+    storage_archive_client.get_tree_node.side_effect = get_get_archive_tree_node_mock(
         mocker, WEB_RESTORE_SESSION_ID, DEVICE_GUID, responses
     )
 
@@ -475,7 +475,7 @@ def mock_walking_to_downloads_folder(mocker, storage_archive_client):
         GetArchiveTreeNodeResponses.USERS_QA,
         GetArchiveTreeNodeResponses.USERS_QA_DOWNLOADS,
     ]
-    mock_get_archive_tree_node_responses(mocker, storage_archive_client, responses)
+    mock_get_tree_node_responses(mocker, storage_archive_client, responses)
 
 
 def get_response_job_id(response_str):
@@ -580,7 +580,7 @@ class TestArchiveAccessor(object):
     def test_download_from_backup_with_root_folder_path_calls_restore_to_local_path(
         self, mocker, storage_archive_client, restore_job_manager
     ):
-        mock_get_archive_tree_node_responses(
+        mock_get_tree_node_responses(
             mocker, storage_archive_client, [GetArchiveTreeNodeResponses.NULL_ID]
         )
         archive_accessor = ArchiveAccessor(
@@ -596,7 +596,7 @@ class TestArchiveAccessor(object):
     def test_download_from_backup_with_root_level_folder_calls_restore_to_local_path(
         self, mocker, storage_archive_client, restore_job_manager
     ):
-        mock_get_archive_tree_node_responses(
+        mock_get_tree_node_responses(
             mocker,
             storage_archive_client,
             [GetArchiveTreeNodeResponses.NULL_ID, GetArchiveTreeNodeResponses.ROOT],
@@ -785,7 +785,7 @@ class TestArchiveAccessor(object):
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
         archive_accessor.download_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
-        storage_archive_client.get_archive_tree_node.assert_called_with(
+        storage_archive_client.get_tree_node.assert_called_with(
             WEB_RESTORE_SESSION_ID, DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
         )
 

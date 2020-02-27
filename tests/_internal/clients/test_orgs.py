@@ -9,11 +9,11 @@ import py42
 COMPUTER_URI = "/api/Org"
 
 MOCK_GET_ORG_RESPONSE = """{
-  "data": {"totalCount": 3000, "orgs":["foo"]} 
+  "data": {"totalCount": 3000, "orgs":["foo"]}
 }"""
 
 MOCK_EMPTY_GET_ORGS_RESPONSE = """{
-  "data": {"totalCount": 3000, "orgs":[]} 
+  "data": {"totalCount": 3000, "orgs":[]}
 }"""
 
 
@@ -32,13 +32,13 @@ class TestOrgClient(object):
         response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
         return response
 
-    def test_get_org_by_id_calls_get_with_uri_and_params(self, session, v3_required_session):
+    def test_get_by_id_calls_get_with_uri_and_params(self, session, v3_required_session):
         client = OrgClient(session, v3_required_session)
-        client.get_org_by_id("ORG_ID")
+        client.get_by_id("ORG_ID")
         uri = "{0}/{1}".format(COMPUTER_URI, "ORG_ID")
         session.get.assert_called_once_with(uri)
 
-    def test_get_orgs_calls_get_expected_number_of_times(
+    def test_get_all_calls_get_expected_number_of_times(
         self, session, v3_required_session, mock_get_orgs_response, mock_get_orgs_empty_response
     ):
         py42.settings.items_per_page = 1
@@ -48,7 +48,7 @@ class TestOrgClient(object):
             mock_get_orgs_response,
             mock_get_orgs_empty_response,
         ]
-        for page in client.get_orgs():
+        for page in client.get_all():
             pass
         py42.settings.items_per_page = 1000
         assert session.get.call_count == 3

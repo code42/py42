@@ -5,6 +5,7 @@ from py42.sdk.file_event_query.exposure_query import (
     RemovableMediaName,
     TabURL,
     WindowTitle,
+    SyncDestination,
 )
 from ..conftest import EXISTS, NOT_EXISTS, IS, IS_NOT, IS_IN, NOT_IN
 
@@ -158,6 +159,44 @@ def test_removable_media_name_not_in_str_gives_correct_json_representation():
     items = ["name1", "name2", "name3"]
     _filter = RemovableMediaName.not_in(items)
     expected = NOT_IN.format("removableMediaName", *items)
+    assert str(_filter) == expected
+
+
+def test_sync_destination_name_exists_str_gives_correct_json_representation():
+    _filter = SyncDestination.exists()
+    expected = EXISTS.format("syncDestination")
+    assert str(_filter) == expected
+
+
+def test_sync_destination_name_not_exists_str_gives_correct_json_representation():
+    _filter = SyncDestination.not_exists()
+    expected = NOT_EXISTS.format("syncDestination")
+    assert str(_filter) == expected
+
+
+def test_sync_destination_name_eq_str_gives_correct_json_representation():
+    _filter = SyncDestination.eq("test_name")
+    expected = IS.format("syncDestination", "test_name")
+    assert str(_filter) == expected
+
+
+def test_sync_destination_name_not_eq_str_gives_correct_json_representation():
+    _filter = SyncDestination.not_eq("test_name")
+    expected = IS_NOT.format("syncDestination", "test_name")
+    assert str(_filter) == expected
+
+
+def test_sync_destination_name_is_in_str_gives_correct_json_representation():
+    items = ["dest1", "dest2", "dest3"]
+    _filter = SyncDestination.is_in(items)
+    expected = IS_IN.format("syncDestination", *items)
+    assert str(_filter) == expected
+
+
+def test_sync_destination_name_not_in_str_gives_correct_json_representation():
+    items = ["dest1", "dest2", "dest3"]
+    _filter = SyncDestination.not_in(items)
+    expected = NOT_IN.format("syncDestination", *items)
     assert str(_filter) == expected
 
 

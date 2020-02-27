@@ -52,6 +52,10 @@ class RemovableMediaName(_FileEventFilterStringField):
     _term = u"removableMediaName"
 
 
+class SyncDestination(_FileEventFilterStringField):
+    _term = u"syncDestination"
+
+
 class TabURL(_FileEventFilterStringField):
     _term = u"tabUrl"
 

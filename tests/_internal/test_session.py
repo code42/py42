@@ -2,6 +2,24 @@ from json import dumps
 
 from .conftest import *
 
+default_kwargs = {
+    "params": None,
+    "data": None,
+    "headers": None,
+    "cookies": None,
+    "files": None,
+    "auth": None,
+    "timeout": 60,
+    "allow_redirects": True,
+    "proxies": None,
+    "hooks": None,
+    "stream": None,
+    "verify": None,
+    "cert": None,
+}
+
+TEST_URL = "https://test-url.com"
+
 
 class TestPy42Session(object):
     def test_session_post_with_json_calls_filter_out_none_util(
@@ -10,10 +28,49 @@ class TestPy42Session(object):
         session = Py42Session(success_requests_session, HOST_ADDRESS)
         filter_out_none_mock = mocker.patch("py42.util.filter_out_none")
         filter_out_none_mock.return_value = {}
-
         session.post(URL, json=JSON_VALUE)
-
         assert filter_out_none_mock.call_count == 1
+
+    def test_session_get_calls_requests_with_get(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        session.get(TEST_URL)
+        success_requests_session.request.assert_called_once_with("GET", TEST_URL, **default_kwargs)
+
+    def test_session_put_calls_requests_with_put(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        session.put(TEST_URL)
+        success_requests_session.request.assert_called_once_with("PUT", TEST_URL, **default_kwargs)
+
+    def test_session_post_calls_requests_with_post(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        session.post(TEST_URL)
+        success_requests_session.request.assert_called_once_with("POST", TEST_URL, **default_kwargs)
+
+    def test_session_patch_calls_requests_with_patch(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        session.patch(TEST_URL)
+        success_requests_session.request.assert_called_once_with(
+            "PATCH", TEST_URL, **default_kwargs
+        )
+
+    def test_session_delete_calls_requests_with_delete(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        session.delete(TEST_URL)
+        success_requests_session.request.assert_called_once_with(
+            "DELETE", TEST_URL, **default_kwargs
+        )
+
+    def test_session_options_calls_requests_with_options(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        session.options(TEST_URL)
+        success_requests_session.request.assert_called_once_with(
+            "OPTIONS", TEST_URL, **default_kwargs
+        )
+
+    def test_session_head_calls_requests_with_head(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        session.head(TEST_URL)
+        success_requests_session.request.assert_called_once_with("HEAD", TEST_URL, **default_kwargs)
 
     def test_session_request_calls_requests_with_timeout_param(self, success_requests_session):
         session = Py42Session(success_requests_session, HOST_ADDRESS)
@@ -45,6 +102,18 @@ class TestPy42Session(object):
         session = Py42Session(success_requests_session, HOST_ADDRESS)
         session.post(URL, data=DATA_VALUE, json=JSON_VALUE)
         assert success_requests_session.request.call_args[KWARGS_INDEX].get(JSON_KEY) is None
+
+    def test_session_request_returns_utf8_response(self, success_requests_session):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        response = session.request("GET", URL, data=DATA_VALUE, json=JSON_VALUE)
+        assert response.encoding == "utf-8"
+
+    def test_session_request_when_streamed_doesnt_not_set_encoding_on_response(
+        self, success_requests_session
+    ):
+        session = Py42Session(success_requests_session, HOST_ADDRESS)
+        response = session.request("GET", URL, data=DATA_VALUE, stream=True)
+        assert response.encoding is None
 
     def test_session_request_returns_response_when_good_status_code(self, success_requests_session):
         session = Py42Session(success_requests_session, HOST_ADDRESS)

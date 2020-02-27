@@ -6,6 +6,8 @@ from requests.cookies import RequestsCookieJar
 
 from py42._internal.auth_handling import AuthHandler
 from py42._internal.filters.query_filter import QueryFilter
+
+
 from py42._internal.session import Py42Session
 
 HOST_ADDRESS = "http://example.com"
@@ -37,6 +39,7 @@ def successful_response(mocker):
     response = mocker.MagicMock(spec=Response)
     response.text = TEST_RESPONSE_CONTENT
     response.status_code = 200
+    response.encoding = None
     return response
 
 

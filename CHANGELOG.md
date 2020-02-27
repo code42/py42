@@ -74,6 +74,12 @@ Renamed client methods to reduce redundancy:
     - `deauthorize_device()` > `deauthorize()`
     - `get_device_settings()` > `get_settings()`
     
+## 0.5.1 - 2020-02-27
+
+### Fixed
+
+Issue where large API responses were read very slowly.
+
 ## 0.5.0 - 2020-02-27
 
 ### Added

@@ -81,9 +81,7 @@ class Py42Session(object):
     def request(self, method, url, **kwargs):
         try:
             url = urljoin(self._host_address, url)
-
             json = kwargs.get("json")
-            stream = kwargs.get("stream")
 
             if json is not None:
                 kwargs["data"] = json_lib.dumps(util.filter_out_none(json))
@@ -105,7 +103,7 @@ class Py42Session(object):
                 if response.status_code >= 400:
                     response.raise_for_status()
 
-                if not stream:
+                if not kwargs.get("stream"):
                     response.encoding = "utf-8"  # setting this manually speeds up read times
 
                 return response

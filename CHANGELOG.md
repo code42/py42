@@ -21,6 +21,7 @@ Support for querying file events by:
 - ProcessOwner
 - ProcessName
 - RemovableMediaName
+- Shared
 - SharedWith
 - SharingTypeAdded
 - Source

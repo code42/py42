@@ -1,3 +1,4 @@
+from py42._internal.filters.query_filter import _QueryFilterBooleanField
 from py42._internal.filters.file_event_filter import _FileEventFilterStringField
 
 
@@ -7,6 +8,10 @@ class Actor(_FileEventFilterStringField):
 
 class DirectoryID(_FileEventFilterStringField):
     _term = u"directoryId"
+
+
+class Shared(_QueryFilterBooleanField):
+    _term = u"shared"
 
 
 class SharedWith(_FileEventFilterStringField):

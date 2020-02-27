@@ -1,4 +1,10 @@
-from py42.sdk.file_event_query.cloud_query import Actor, DirectoryID, SharedWith, SharingTypeAdded
+from py42.sdk.file_event_query.cloud_query import (
+    Actor,
+    DirectoryID,
+    Shared,
+    SharedWith,
+    SharingTypeAdded,
+)
 from ..conftest import EXISTS, NOT_EXISTS, IS, IS_NOT, IS_IN, NOT_IN
 
 
@@ -63,6 +69,18 @@ def test_directory_id_not_in_str_gives_correct_json_representation():
     items = ["directoryId1", "directoryId2", "directoryId3"]
     _filter = DirectoryID.not_in(items)
     expected = NOT_IN.format("directoryId", *items)
+    assert str(_filter) == expected
+
+
+def test_shared_true_str_gives_correct_json_representation():
+    _filter = Shared.true()
+    expected = IS.format("shared", "TRUE")
+    assert str(_filter) == expected
+
+
+def test_shared_false_str_gives_correct_json_representation():
+    _filter = Shared.false()
+    expected = IS.format("shared", "FALSE")
     assert str(_filter) == expected
 
 

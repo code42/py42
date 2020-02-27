@@ -24,4 +24,4 @@ def get_user_agent_string():
 
 
 def set_user_agent_suffix(suffix):
-    py42.settings._custom_user_suffix = " " + suffix
+    py42.settings._custom_user_suffix = u"{0}".format(suffix)

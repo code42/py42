@@ -95,8 +95,6 @@ class Py42Session(object):
                 tries += 1
 
                 if unauthorized and tries < max_tries:
-                    # retry one more time. if the credentials are valid but simply expired,
-                    # we won't hit this condition next time.
                     self._renew_authentication()
                     continue
 

@@ -78,7 +78,42 @@ class Py42Session(object):
     def delete(self, url, **kwargs):
         return self.request(u"DELETE", url, **kwargs)
 
-    def request(
+    def request(self, method, url, **kwargs):
+        try:
+            url = urljoin(self._host_address, url)
+
+            json = kwargs.get("json")
+            stream = kwargs.get("stream")
+
+            if json is not None:
+                kwargs["data"] = json_lib.dumps(util.filter_out_none(json))
+
+            self._renew_authentication(use_cache=True)
+
+            tries = 0
+            max_tries = 2
+            while tries < max_tries:
+                response, unauthorized = self._try_make_request(self, method, url, **kwargs)
+                tries += 1
+
+                if unauthorized and tries < max_tries:
+                    # retry one more time. if the credentials are valid but simply expired,
+                    # we won't hit this condition next time.
+                    self._renew_authentication()
+                    continue
+
+                if response.status_code >= 400:
+                    response.raise_for_status()
+
+                if not stream:
+                    response.encoding = "utf-8"  # setting this manually speeds up read times
+
+                return response
+
+        except (requests.HTTPError, requests.RequestException, Exception) as ex:
+            raise ex
+
+    def _try_make_request(
         self,
         method,
         url,
@@ -97,57 +132,32 @@ class Py42Session(object):
         cert=None,
         json=None,
     ):
-        max_tries = 2
-        tries = 0
-        try:
-            url = urljoin(self._host_address, url)
+        if debug.will_print_for(debug_level.INFO):
+            self._print_request(method, url, params=params, data=data)
 
-            if json is not None:
-                data = json_lib.dumps(util.filter_out_none(json))
+        response = self._session.request(
+            method,
+            url,
+            params=params,
+            data=data,
+            headers=headers,
+            cookies=cookies,
+            files=files,
+            auth=auth,
+            timeout=timeout,
+            allow_redirects=allow_redirects,
+            proxies=proxies,
+            hooks=hooks,
+            stream=stream,
+            verify=verify,
+            cert=cert,
+        )
 
-            self._renew_authentication(use_cache=True)
+        unauthorized = self._auth_handler and self._auth_handler.response_indicates_unauthorized(
+            response
+        )
 
-            while tries < max_tries:
-
-                if debug.will_print_for(debug_level.INFO):
-                    self._print_request(method, url, params=params, data=data)
-
-                response = self._session.request(
-                    method,
-                    url,
-                    params=params,
-                    data=data,
-                    headers=headers,
-                    cookies=cookies,
-                    files=files,
-                    auth=auth,
-                    timeout=timeout,
-                    allow_redirects=allow_redirects,
-                    proxies=proxies,
-                    hooks=hooks,
-                    stream=stream,
-                    verify=verify,
-                    cert=cert,
-                )
-
-                tries += 1
-
-                unauthorized = (
-                    self._auth_handler
-                    and self._auth_handler.response_indicates_unauthorized(response)
-                )
-                if unauthorized and tries < max_tries:
-                    # retry one more time. if the credentials are valid but simply expired,
-                    # we won't hit this condition next time.
-                    self._renew_authentication()
-                    continue
-                if response.status_code >= 400:
-                    response.raise_for_status()
-
-                return response
-
-        except (requests.HTTPError, requests.RequestException, Exception) as ex:
-            raise ex
+        return response, unauthorized
 
     def _renew_authentication(self, use_cache=False):
         if self._auth_handler:

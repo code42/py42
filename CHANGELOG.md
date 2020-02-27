@@ -13,6 +13,14 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 Renamed client methods to reduce redundancy:
 
+- `DepartingEmployeeClient`
+    - `create_departing_employee()` > `create()`
+    - `resolve_departing_employee()` > `resolve()`
+    - `get_all_departing_employees()` > `get_all()`
+    - `get_case_by_username()` > `get_by_username()`
+    - `get_case_by_id()` > `get_by_id()`
+    - `update_case()` > `update()`
+
 - `UserClient`
     - `get_user_by_id()` > `get_by_id()`
     - `get_user_by_uid()` > `get_by_uid()`

@@ -135,7 +135,7 @@ diagnostics = sdk.administration.get_diagnostics()
 devices = sdk.devices.get_devices()
 
 # get a list of all orgs available to this user.
-orgs = sdk.orgs.get_orgs()
+orgs = sdk.orgs.get_all()
 
 # save a copy of a file from an archive this user has access to into the current working directory.
 sdk.archive.download_from_backup("/full/path/to/file.txt", "1234567890")

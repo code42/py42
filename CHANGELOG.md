@@ -21,6 +21,35 @@ Renamed client methods to reduce redundancy:
     - `get_case_by_id()` > `get_by_id()`
     - `update_case()` > `update()`
 
+- `LegalHoldClient`
+    - `create_legal_hold()` > `create_matter()`
+    - `get_legal_hold_policy_by_uid()` > `get_policy_by_uid()`
+    - `get_all_legal_hold_policies()` > `get_all_policies()`
+    - `get_legal_hold_by_uid()` > `get_matter_by_uid()`
+    - `get_legal_holds()` > `get_all_matters()`
+    - `get_legal_hold_memberships()` > `get_all_matter_custodians()`
+    - `add_user_to_legal_hold()` > `add_to_matter()`
+    - `remove_user_from_legal_hold()` > `remove_from_matter()`
+    - `deactivate_legal_hold()` > `deactivate_matter()`
+    - `reactivate_legal_hold()` > `reactivate_matter()`
+    - `create_legal_hold_policy()` > `create_policy()`
+    - `create_legal_hold()` > `create_matter()`
+    
+- `AlertClient`
+    - `search_alerts()` > `search()`
+    - `resolve_alert()` > `resolve()`
+    - `reopen_alert()` > `reopen()`
+
+- `OrgClient`
+    - `get_orgs()`  > `get_all()`
+    - `get_org_by_id()` > `get_by_id()`
+    - `get_org_by_uid()` > `get_by_uid()`
+    - `block_org()` > `block()`
+    - `unblock_org()` > `unblock()`
+    - `deactivate_org()` > `deactivate()`
+    - `reactivate_org()` > `reactivate()`
+    - `get_current_user_org` > `get_current`
+
 - `UserClient`
     - `get_user_by_id()` > `get_by_id()`
     - `get_user_by_uid()` > `get_by_uid()`

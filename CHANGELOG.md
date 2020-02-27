@@ -1,4 +1,5 @@
 # Changelog
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -73,13 +74,47 @@ Renamed client methods to reduce redundancy:
     - `deauthorize_device()` > `deauthorize()`
     - `get_device_settings()` > `get_settings()`
     
+## 0.5.0 - 2020-02-27
+
+### Added
+
+Support for querying file events by:
+- DirectoryID
+- EmailRecipients
+- EmailSender
+- FileCategory
+- FileOwner
+- ProcessOwner
+- ProcessName
+- RemovableMediaName
+- Shared
+- SharedWith
+- SharingTypeAdded
+- Source
+- SyncDestination
+- TabURL
+- WindowTitle
+
+## 0.4.4 - 2020-02-24
+
+### Changed
+
+- `py42.settings.items_per_page` no long affects `DepartingEmployeeClient.get_all_departing_employees()`, which is now always set at 100 items per page.
+- `FileEventQuery` and `AlertQuery` objects will now return up to 10,000 results by default (the previous default value was 100).
+
+### Fixed
+
+- Issue where `DepartingEmployeeClient.get_all_departing_employees()` always resulted in a 400 status code.
+
 ## 0.4.3 - 2020-02-21
 
-## Added
+### Added
+
 - `py42.settings.items_per_page`. This effectively replaces `page_size` for the methods that were changed below.
 
-## Changed
-The following resources no longer accept `page_num` and `page_size` parameters and no longer return a 
+### Changed
+
+The following resources no longer accept `page_num` and `page_size` parameters and no longer return a
 `requests.Response` object:
 - `UserClient.get_users()`
 - `DeviceClient.get_devices()`
@@ -90,25 +125,28 @@ The following resources no longer accept `page_num` and `page_size` parameters a
 
 They instead return a generator object that is iterated over to retrieve all the pages, eliminating the need to
 manually compose loops to retrieve each page. For example, the below snippet will retrieve all pages of users:
+
 ```python
 for page in users.get_users():
     user_list = json.loads(page.text)["data"]["users"]
 ```
 
-
 ## 0.4.2 - 2020-02-20
 
 ### Added
+
 - Support for querying file events by Actor.
 
 ## 0.4.1 - 2020-02-20
 
 ### Fixed
+
 - Issue where setting `AlertQuery.sort_direction` did not properly apply the specified direction.
 
 ## 0.4.0 - 2020-02-19
 
 ### Added
+
 - Added `alerts` to `SecurityModule` with
     - `search_alerts()`
     - `get_query_details()`
@@ -136,22 +174,26 @@ for page in users.get_users():
 ## 0.3.1 - 2020-02-14
 
 ### Added
+
 - `SecurityModule.get_security_plan_storage_info_list()`
 - `SecurityModule.get_user_security_events()`
 - `SecurityModule.get_plan_security_events()`
 
 ### Changed
+
 - Removed `SecurityModule.get_security_event_locations()`. Use `SecurityClient.get_security_event_locations()` instead.
 - Removed `get_normalized_security_event_plan_info().` Support for pre-6.7 format security event plan info responses has
 been removed, and as a result this method is no longer necessary. Use `SecurityClient.get_security_event_locations()` instead.
 
 ### Fixed
+
 - a timeout of 60 seconds is now enforced on all http requests. Previously the timeout was infinite.
 This allowed for the possibility of requests that would hang forever under certain circumstances.
 
 ## 0.3.0 - 2020-02-03
 
 ### Removed
+
 - `py42.sdk.util.queued_logger`. Use loggers in Python's `logging` namespace instead (they are threadsafe).
 - `is_async` option from `sdk.create_from_local_account`. This was an intentionally undocumented feature.
 - `force_sync`, `then`, and `catch` options from all client requests. These were only meaningful when used with `is_async`.
@@ -162,35 +204,42 @@ This allowed for the possibility of requests that would hang forever under certa
 ## 0.2.2 - 2019-10-15
 
 ### Changed
+
 - `ExposureType.any` has been renamed to `ExposureType.exists`
 
 ### Fixed
+
 - Issue where `_FileEventFilterTimestampField` disguised localized times as UTC
 - Issue where `_FileEventFilterTimestampField` ignored milliseconds
 - Issue on Python 3 where `FileEventQuery.__repr__` did not return type `str`
 
 ### Added
+
 - `exists` and `not_exists` added to `file_event_query` string fields.
 - `InsertionTimestamp` file event filter support
 
 ## 0.2.1 - 2019-09-24
 
 ### Added
+
 - Python 3.5.0+ support.
 - `users.get_user_by_id()`
 - `orgs.get_org_by_id()`
 - `devices.get_device_by_id()`
 
-## Fixed
+### Fixed
+
 - Issue that caused `users.for_each_user()` and `devices.for_each_device()` to only apply filter criteria to the first
  1000 items returned.
 
 ## 0.2.0 - 2019-09-13
 
 ### Added
+
 - `SecurityModule.get_security_detection_event_client`
 
 ### Removed
+
 - The following methods from `SecurityModule`.
 Use `StorageSecurityClient` (via `SecurityModule.get_security_detection_event_client`) instead.
     - `get_security_detection_events_for_user()`
@@ -202,26 +251,29 @@ Use `StorageSecurityClient` (via `SecurityModule.get_security_detection_event_cl
 - `include_files` and `event_types` parameters from `StorageSecurityClient.get_security_detection_event_summary()`.
 These had no effect.
 
-
 ## 0.1.10 - 2019-09-12
 
 ### Added
+
 - Request URL to request exception message
 
 ## 0.1.9 - 2019-09-11
 
 ### Fixed
+
 - Issue with creating security plan clients when a session for one client failed to be created
 
 ## 0.1.8 - 2019-09-11
 
 ### Fixed
+
 - Regression that removed an optimization that allowed user to make requests to the same storage node without
  getting a new storage auth token for each request
 
 ## 0.1.7 - 2019-09-09
 
 ### Fixed
+
 - Bug in authentication handling logic that caused authentication tokens to not automatically renew properly when
  they expired.
 - Bug in creating security plan clients that caused some clients to not be created for users with multiple plans or
@@ -230,11 +282,13 @@ These had no effect.
 ## 0.1.6 – 2019-07-30
 
 ### Fixed
+
 - Issues with unicode support in `security.search_file_events()` and `archive.download_from_backup()`
 
 ## 0.1.5 - 2019-07-13
 
 ### Fixed
+
 - Bug in the path-matching logic of `archive.download_from_backup` that caused:
   - downloads to fail if the drive/root path didn't match, case-sensitive
   - the API to return `None` instead of raising an exception
@@ -242,6 +296,7 @@ These had no effect.
 ## 0.1.4 - 2019-05-31
 
 ### Added
+
  - requests made by py42 now use a user agent string that contains the py42 version and python version.
  This user agent string can be retrieved using `py42.settings.get_user_agent_string()`
  - A custom suffix can be added to the end of this user agent string by using `py42.settings.set_user_agent_suffix()`.
@@ -250,47 +305,53 @@ These had no effect.
   users whose username or email address contain "test").
 
 ### Changed
+
  - `SDK.archive.download_from_backup()` will now download the most recent non-deleted version of a file. Previously,
 file paths that were deleted would not be downloaded.
 
 ### Fixed
+
  -  Asynchronously searching for file events and then later attempting to download a file with the same SDK object
  no longer hangs indefinitely.
-
 
 ## 0.1.3 - 2019-05-08
 
 ### Added
+
 - `SDK.security.search_file_events()` to search for file events using the Forensic File Search (FFS) service
 - `py42.sdk.file_event_query` module with classes to easily build file event queries
 - Ability to print various levels of debug statements for troubleshooting purposes. See `settings.debug_level`
 - [pytest](https://docs.pytest.org/) test framework
 
 ### Changed
+
 - Merged `SDK.restore` with `SDK.archive`
     - `RestoreModule` was renamed to `ArchiveModule`
     - `RestoreClient` merged into `ArchiveClient`
     - `StorageRestoreClient` merged into `StorageArchiveClient`
 
 ### Removed
+
 - Tests from distribution package
 
 ## 0.1.2 - 2019-04-09
 
 ### Added
+
 - `SDK.restore.download_from_backup()`
 - `SDK.users.change_user_org_assignment()`
 
 ### Changed
+
 - Simplified APIs
     - Merged and flattened modules under `authority` and `storage`.
         - Example: `SDK.authority.admininstration.users` became `SDK.users`
     - You no longer need to know whether you're connecting to an authority or storage node.
 
-
 ## 0.1.1 - 2019-03-12
 
 ### Added
+
 - Added to `SDK.authority.administration.orgs` module:
     - `create_org()`
     - `get_org_by_uid()`
@@ -344,6 +405,6 @@ file paths that were deleted would not be downloaded.
     - `get_web_restore_job_result()`
 - Added setup.py to support package installation
 
-
 ### Changed
+
 - Renamed `SDK.device.get_computers()` to `SDK.device.get_devices()`

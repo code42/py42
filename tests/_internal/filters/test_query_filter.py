@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import pytest
 from py42._internal.compat import str
 from py42._internal.filters.query_filter import (
     QueryFilter,
@@ -110,11 +109,11 @@ def test_create_not_eq_filter_group_returns_obj_with_correct_json_representation
 
 
 def test_create_not_in_filter_group_returns_obj_with_correct_json_representation():
-    filter_group = create_is_in_filter_group("isinterm", ["isinvalue1", "isinvalue2"])
+    filter_group = create_not_in_filter_group("isinterm", ["isinvalue1", "isinvalue2"])
     assert (
-        str(filter_group) == '{"filterClause":"OR",'
-        ' "filters":[{"operator":"IS", "term":"isinterm", "value":"isinvalue1"},'
-        '{"operator":"IS", "term":"isinterm", "value":"isinvalue2"}]}'
+        str(filter_group) == '{"filterClause":"AND",'
+        ' "filters":[{"operator":"IS_NOT", "term":"isinterm", "value":"isinvalue1"},'
+        '{"operator":"IS_NOT", "term":"isinterm", "value":"isinvalue2"}]}'
     )
 
 

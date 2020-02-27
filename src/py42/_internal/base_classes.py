@@ -18,7 +18,7 @@ class BaseQuery(object):
         # type: (iter[FilterGroup], any) -> None
         self._filter_group_list = list(args)
         self._group_clause = kwargs.get(u"group_clause", u"AND")
-        self.page_size = 100
+        self.page_size = 10000
         self.sort_direction = u"asc"
 
         # Override

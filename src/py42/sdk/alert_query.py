@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from py42._internal.compat import str
 from py42._internal.base_classes import BaseQuery
 from py42._internal.filters.query_filter import (

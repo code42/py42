@@ -91,7 +91,7 @@ class Py42Session(object):
             tries = 0
             max_tries = 2
             while tries < max_tries:
-                response, unauthorized = self._try_make_request(self, method, url, **kwargs)
+                response, unauthorized = self._try_make_request(method, url, **kwargs)
                 tries += 1
 
                 if unauthorized and tries < max_tries:

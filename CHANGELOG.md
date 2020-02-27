@@ -13,6 +13,14 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 Renamed client methods to reduce redundancy:
 
+- `DepartingEmployeeClient`
+    - `create_departing_employee()` > `create()`
+    - `resolve_departing_employee()` > `resolve()`
+    - `get_all_departing_employees()` > `get_all()`
+    - `get_case_by_username()` > `get_by_username()`
+    - `get_case_by_id()` > `get_by_id()`
+    - `update_case()` > `update()`
+
 - `LegalHoldClient`
     - `create_legal_hold()` > `create_matter()`
     - `get_legal_hold_policy_by_uid()` > `get_policy_by_uid()`
@@ -26,6 +34,7 @@ Renamed client methods to reduce redundancy:
     - `reactivate_legal_hold()` > `reactivate_matter()`
     - `create_legal_hold_policy()` > `create_policy()`
     - `create_legal_hold()` > `create_matter()`
+    
 - `AlertClient`
     - `search_alerts()` > `search()`
     - `resolve_alert()` > `resolve()`

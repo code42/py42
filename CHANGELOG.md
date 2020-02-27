@@ -13,6 +13,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 Renamed client methods to reduce redundancy:
 
+- `OrgClient`
+    - `get_orgs()`  > `get_all()`
+    - `get_org_by_id()` > `get_by_id()`
+    - `get_org_by_uid()` > `get_by_uid()`
+    - `block_org()` > `block()`
+    - `unblock_org()` > `unblock()`
+    - `deactivate_org()` > `deactivate()`
+    - `reactivate_org()` > `reactivate()`
+    - `get_current_user_org` > `get_current`
+
 - `UserClient`
     - `get_user_by_id()` > `get_by_id()`
     - `get_user_by_uid()` > `get_by_uid()`

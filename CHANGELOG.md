@@ -26,6 +26,20 @@ Renamed client methods to reduce redundancy:
     - `reactivate_legal_hold()` > `reactivate_matter()`
     - `create_legal_hold_policy()` > `create_policy()`
     - `create_legal_hold()` > `create_matter()`
+- `AlertClient`
+    - `search_alerts()` > `search()`
+    - `resolve_alert()` > `resolve()`
+    - `reopen_alert()` > `reopen()`
+
+- `OrgClient`
+    - `get_orgs()`  > `get_all()`
+    - `get_org_by_id()` > `get_by_id()`
+    - `get_org_by_uid()` > `get_by_uid()`
+    - `block_org()` > `block()`
+    - `unblock_org()` > `unblock()`
+    - `deactivate_org()` > `deactivate()`
+    - `reactivate_org()` > `reactivate()`
+    - `get_current_user_org` > `get_current`
 
 - `UserClient`
     - `get_user_by_id()` > `get_by_id()`

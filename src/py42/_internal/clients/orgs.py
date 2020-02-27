@@ -19,11 +19,11 @@ class OrgClient(BaseAuthorityClient):
         }
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def get_org_by_id(self, org_id):
+    def get_by_id(self, org_id):
         uri = u"/api/Org/{0}".format(org_id)
         return self._default_session.get(uri)
 
-    def get_org_by_uid(self, org_uid):
+    def get_by_uid(self, org_uid):
         uri = u"/api/Org/{0}?idType=orgUid".format(org_uid)
         return self._default_session.get(uri)
 
@@ -33,25 +33,25 @@ class OrgClient(BaseAuthorityClient):
 
         return self._default_session.get(uri, params=params)
 
-    def get_orgs(self):
+    def get_all(self):
         return get_all_pages(self._get_orgs_page, settings.items_per_page, u"orgs")
 
-    def block_org(self, org_id):
+    def block(self, org_id):
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._default_session.put(uri)
 
-    def unblock_org(self, org_id):
+    def unblock(self, org_id):
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._default_session.delete(uri)
 
-    def deactivate_org(self, org_id):
+    def deactivate(self, org_id):
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._default_session.put(uri)
 
-    def reactivate_org(self, org_id):
+    def reactivate(self, org_id):
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._default_session.delete(uri)
 
-    def get_current_user_org(self):
+    def get_current(self):
         uri = u"/api/Org/my"
         return self._default_session.get(uri)

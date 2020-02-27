@@ -11,7 +11,7 @@ class AlertClient(BaseClient):
         super(AlertClient, self).__init__(session)
         self._user_context = user_context
 
-    def search_alerts(self, query):
+    def search(self, query):
         query = str(query)
         uri = self._uri_prefix.format(u"query-alerts")
         return self._default_session.post(uri, data=query)
@@ -24,7 +24,7 @@ class AlertClient(BaseClient):
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def resolve_alert(self, alert_ids, tenant_id=None, reason=None):
+    def resolve(self, alert_ids, tenant_id=None, reason=None):
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
@@ -33,7 +33,7 @@ class AlertClient(BaseClient):
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def reopen_alert(self, alert_ids, tenant_id=None, reason=None):
+    def reopen(self, alert_ids, tenant_id=None, reason=None):
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()

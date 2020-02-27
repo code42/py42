@@ -1,4 +1,4 @@
-from py42.sdk.file_event_query.cloud_query import Actor, DirectoryID, SharedWith
+from py42.sdk.file_event_query.cloud_query import Actor, DirectoryID, SharedWith, SharingTypeAdded
 from ..conftest import EXISTS, NOT_EXISTS, IS, IS_NOT, IS_IN, NOT_IN
 
 
@@ -101,4 +101,42 @@ def test_shared_with_not_in_str_gives_correct_json_representation():
     items = ["user1", "user2", "user3"]
     _filter = SharedWith.not_in(items)
     expected = NOT_IN.format("sharedWith", *items)
+    assert str(_filter) == expected
+
+
+def test_sharing_type_added_exists_str_gives_correct_json_representation():
+    _filter = SharingTypeAdded.exists()
+    expected = EXISTS.format("sharingTypeAdded")
+    assert str(_filter) == expected
+
+
+def test_sharing_type_added_not_exists_str_gives_correct_json_representation():
+    _filter = SharingTypeAdded.not_exists()
+    expected = NOT_EXISTS.format("sharingTypeAdded")
+    assert str(_filter) == expected
+
+
+def test_sharing_type_added_eq_str_gives_correct_json_representation():
+    _filter = SharingTypeAdded.eq("test_cloud")
+    expected = IS.format("sharingTypeAdded", "test_cloud")
+    assert str(_filter) == expected
+
+
+def test_sharing_type_added_not_eq_str_gives_correct_json_representation():
+    _filter = SharingTypeAdded.not_eq("test_cloud")
+    expected = IS_NOT.format("sharingTypeAdded", "test_cloud")
+    assert str(_filter) == expected
+
+
+def test_sharing_type_added_is_in_str_gives_correct_json_representation():
+    items = ["cloud1", "cloud2", "cloud3"]
+    _filter = SharingTypeAdded.is_in(items)
+    expected = IS_IN.format("sharingTypeAdded", *items)
+    assert str(_filter) == expected
+
+
+def test_sharing_type_added_not_in_str_gives_correct_json_representation():
+    items = ["cloud1", "cloud2", "cloud3"]
+    _filter = SharingTypeAdded.not_in(items)
+    expected = NOT_IN.format("sharingTypeAdded", *items)
     assert str(_filter) == expected

@@ -22,7 +22,9 @@ Support for querying file events by:
 - ProcessName
 - RemovableMediaName
 - SharedWith
+- SharingTypeAdded
 - Source
+- SyncDestination
 - TabURL
 - WindowTitle
 

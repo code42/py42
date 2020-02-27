@@ -175,14 +175,14 @@ def test_sync_destination_name_not_exists_str_gives_correct_json_representation(
 
 
 def test_sync_destination_name_eq_str_gives_correct_json_representation():
-    _filter = SyncDestination.eq("test_name")
-    expected = IS.format("syncDestination", "test_name")
+    _filter = SyncDestination.eq("test_dest")
+    expected = IS.format("syncDestination", "test_dest")
     assert str(_filter) == expected
 
 
 def test_sync_destination_name_not_eq_str_gives_correct_json_representation():
-    _filter = SyncDestination.not_eq("test_name")
-    expected = IS_NOT.format("syncDestination", "test_name")
+    _filter = SyncDestination.not_eq("test_dest")
+    expected = IS_NOT.format("syncDestination", "test_dest")
     assert str(_filter) == expected
 
 

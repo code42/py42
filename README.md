@@ -143,7 +143,7 @@ sdk.archive.download_from_backup("/full/path/to/file.txt", "1234567890")
 # search file events
 from py42.sdk.file_event_query import *
 query = FileEventQuery.all(MD5.eq("e804d1eb229298b04522c5504b8131f0"))
-file_events = sdk.security.search_file_events(query)
+file_events = sdk.security.search(query)
 ```
 
 ## Additional Resources

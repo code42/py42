@@ -113,11 +113,11 @@ class _QueryFilterBooleanField(object):
     _term = u"override_boolean_field_name"
 
     @classmethod
-    def true(cls):
+    def is_true(cls):
         return create_eq_filter_group(cls._term, u"TRUE")
 
     @classmethod
-    def false(cls):
+    def is_false(cls):
         return create_eq_filter_group(cls._term, u"FALSE")
 
 

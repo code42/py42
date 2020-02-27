@@ -72,14 +72,14 @@ def test_directory_id_not_in_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
-def test_shared_true_str_gives_correct_json_representation():
-    _filter = Shared.true()
+def test_shared_is_true_str_gives_correct_json_representation():
+    _filter = Shared.is_true()
     expected = IS.format("shared", "TRUE")
     assert str(_filter) == expected
 
 
-def test_shared_false_str_gives_correct_json_representation():
-    _filter = Shared.false()
+def test_shared_is_false_str_gives_correct_json_representation():
+    _filter = Shared.is_false()
     expected = IS.format("shared", "FALSE")
     assert str(_filter) == expected
 

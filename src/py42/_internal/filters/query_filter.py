@@ -109,6 +109,18 @@ class _QueryFilterTimestampField(object):
         return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
 
 
+class _QueryFilterBooleanField(object):
+    _term = u"override_boolean_field_name"
+
+    @classmethod
+    def is_true(cls):
+        return create_eq_filter_group(cls._term, u"TRUE")
+
+    @classmethod
+    def is_false(cls):
+        return create_eq_filter_group(cls._term, u"FALSE")
+
+
 class QueryFilter(object):
     _term = None
 

@@ -8,6 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 0.5.0 - 2020-02-27
+
+### Added
+
+Support for querying file events by:
+- DirectoryID
+- EmailRecipients
+- EmailSender
+- FileCategory
+- FileOwner
+- ProcessOwner
+- ProcessName
+- RemovableMediaName
+- Shared
+- SharedWith
+- SharingTypeAdded
+- Source
+- SyncDestination
+- TabURL
+- WindowTitle
+
 ## 0.4.4 - 2020-02-24
 
 ### Changed

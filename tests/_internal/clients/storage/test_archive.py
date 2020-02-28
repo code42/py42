@@ -352,7 +352,7 @@ class TestStorageArchiveClient(object):
         expected_data = {JOB_ID_KEY: WEB_RESTORE_JOB_ID}
         assert json_arg == expected_data
 
-    def test_steam_restore_result_status_calls_get_with_correct_url(self, session):
+    def test_stream_restore_result_status_calls_get_with_correct_url(self, session):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.stream_restore_result(WEB_RESTORE_JOB_ID)
         expected_url = WEB_RESTORE_JOB_RESULT_URL + "/" + WEB_RESTORE_JOB_ID

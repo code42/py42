@@ -361,7 +361,7 @@ def storage_client_factory(mocker, storage_client):
     storage_client.archive.create_web_restore_session.return_value.text = (
         '{"data": {"webRestoreSessionId": "FAKE_SESSION_ID"}}'
     )
-    factory.get_storage_client_from_device_guid.return_value = storage_client
+    factory.get_from_device_guid.return_value = storage_client
     return factory
 
 
@@ -507,7 +507,7 @@ class TestArchiveAccessManager(object):
     ):
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
-        storage_client_factory.get_storage_client_from_device_guid.assert_called_with(
+        storage_client_factory.get_from_device_guid.assert_called_with(
             DEVICE_GUID, destination_guid=None
         )
 
@@ -516,7 +516,7 @@ class TestArchiveAccessManager(object):
     ):
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID, destination_guid=DESTINATION_GUID)
-        storage_client_factory.get_storage_client_from_device_guid.assert_called_with(
+        storage_client_factory.get_from_device_guid.assert_called_with(
             DEVICE_GUID, destination_guid=DESTINATION_GUID
         )
 
@@ -529,7 +529,7 @@ class TestArchiveAccessManager(object):
         archive_client.get_data_key_token.return_value = response
 
         storage_client.archive = storage_archive_client
-        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
+        storage_client_factory.get_from_device_guid.return_value = storage_client
 
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
@@ -550,7 +550,7 @@ class TestArchiveAccessManager(object):
         storage_archive_client.create_web_restore_session.return_value = response
         storage_client.archive = storage_archive_client
 
-        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
+        storage_client_factory.get_from_device_guid.return_value = storage_client
 
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
@@ -561,7 +561,7 @@ class TestArchiveAccessManager(object):
     def test_get_archive_accessor_raises_exception_when_create_backup_client_raises(
         self, archive_client, storage_client_factory
     ):
-        storage_client_factory.get_storage_client_from_device_guid.side_effect = Exception(
+        storage_client_factory.get_from_device_guid.side_effect = Exception(
             "Exception in create_backup_client"
         )
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)

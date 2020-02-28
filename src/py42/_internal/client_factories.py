@@ -31,25 +31,25 @@ class AuthorityClientFactory(object):
         self.default_session = default_session
         self.v3_required_session = v3_required_session
 
-    def create_administration_client(self):
+    def create_administration(self):
         return administration.AdministrationClient(self.default_session, self.v3_required_session)
 
-    def create_user_client(self):
+    def create_user(self):
         return users.UserClient(self.default_session, self.v3_required_session)
 
-    def create_device_client(self):
+    def create_device(self):
         return devices.DeviceClient(self.default_session, self.v3_required_session)
 
-    def create_org_client(self):
+    def create_org(self):
         return orgs.OrgClient(self.default_session, self.v3_required_session)
 
-    def create_legal_hold_client(self):
+    def create_legal_hold(self):
         return legal_hold.LegalHoldClient(self.default_session, self.v3_required_session)
 
-    def create_archive_client(self):
+    def create_archive(self):
         return archive.ArchiveClient(self.default_session, self.v3_required_session)
 
-    def create_security_client(self):
+    def create_security(self):
         return security.SecurityClient(self.default_session, self.v3_required_session)
 
 
@@ -59,14 +59,14 @@ class StorageClientFactory(object):
         self._storage_session_manager = storage_session_manager
         self._login_provider_factory = login_provider_factory
 
-    def get_storage_client_from_device_guid(self, device_guid, destination_guid=None):
+    def get_from_device_guid(self, device_guid, destination_guid=None):
         login_provider = self._login_provider_factory.create_backup_archive_locator(
             device_guid, destination_guid
         )
         session = self._storage_session_manager.get_storage_session(login_provider)
         return StorageClient(session)
 
-    def get_storage_client_from_plan_uid(self, plan_uid, destination_guid):
+    def get_from_plan_uid(self, plan_uid, destination_guid):
         login_provider = self._login_provider_factory.create_security_archive_locator(
             plan_uid, destination_guid
         )
@@ -80,7 +80,7 @@ class FileEventClientFactory(object):
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
 
-    def get_file_event_client(self):
+    def get(self):
         login_provider = self._login_provider_factory.create_file_event_login_provider()
         session = self._session_factory.create_jwt_session_from_provider(login_provider)
         return FileEventClient(session)
@@ -92,7 +92,7 @@ class KeyValueStoreClientFactory(object):
         self._session_factory = session_factory
         self._login_provider_factory = login_provider_factory
 
-    def get_key_value_store_client(self):
+    def get(self):
         login_provider = self._login_provider_factory.create_key_value_store_locator()
         session = self._session_factory.create_key_value_store_session(login_provider)
         return KeyValueStoreClient(session)
@@ -105,7 +105,7 @@ class EmployeeCaseManagementClientFactory(object):
         self._login_provider_factory = login_provider_factory
         self._user_context = user_context
 
-    def get_departing_employee_client(self):
+    def get_departing_employee(self):
         login_provider = self._login_provider_factory.create_ecm_login_provider()
         session = self._session_factory.create_jwt_session_from_provider(login_provider)
         return DepartingEmployeeClient(session, self._user_context)
@@ -118,7 +118,7 @@ class AlertClientFactory(object):
         self._login_provider_factory = login_provider_factory
         self._user_context = user_context
 
-    def get_alert_client(self):
+    def get(self):
         login_provider = self._login_provider_factory.create_alert_login_provider()
         session = self._session_factory.create_jwt_session_from_provider(login_provider)
         return AlertClient(session, self._user_context)

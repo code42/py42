@@ -35,13 +35,13 @@ class AuthorityDependencies(object):
         # authority clients
         authority_client_factory = AuthorityClientFactory(default_session, v3_required_session)
         self.session_factory = session_factory
-        self.administration_client = authority_client_factory.create_administration_client()
-        self.user_client = authority_client_factory.create_user_client()
-        self.device_client = authority_client_factory.create_device_client()
-        self.org_client = authority_client_factory.create_org_client()
-        self.legal_hold_client = authority_client_factory.create_legal_hold_client()
-        self.archive_client = authority_client_factory.create_archive_client()
-        self.security_client = authority_client_factory.create_security_client()
+        self.administration_client = authority_client_factory.create_administration()
+        self.user_client = authority_client_factory.create_user()
+        self.device_client = authority_client_factory.create_device()
+        self.org_client = authority_client_factory.create_org()
+        self.legal_hold_client = authority_client_factory.create_legal_hold()
+        self.archive_client = authority_client_factory.create_archive()
+        self.security_client = authority_client_factory.create_security()
         self.user_context = UserContext(self.administration_client)
 
     def _set_sessions(self, session_factory, root_session):

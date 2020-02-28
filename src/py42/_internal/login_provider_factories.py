@@ -68,7 +68,7 @@ class AlertLoginProviderFactory(object):
         self._key_value_store_client_factory = key_value_store_client_factory
 
     def create_alert_login_provider(self):
-        key_value_store_client = self._key_value_store_client_factory.get_key_value_store_client()
+        key_value_store_client = self._key_value_store_client_factory.get()
         return AlertLoginProvider(self._auth_session, key_value_store_client)
 
 
@@ -78,5 +78,5 @@ class EmployeeCaseManagementLoginProviderFactory(object):
         self._key_value_store_client_factory = key_value_store_client_factory
 
     def create_ecm_login_provider(self):
-        key_value_store_client = self._key_value_store_client_factory.get_key_value_store_client()
+        key_value_store_client = self._key_value_store_client_factory.get()
         return EmployeeCaseManagementLoginProvider(self._auth_session, key_value_store_client)

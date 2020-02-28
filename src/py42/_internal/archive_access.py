@@ -21,7 +21,7 @@ class ArchiveAccessorManager(object):
         self._storage_client_factory = storage_client_factory
 
     def get_archive_accessor(self, device_guid, destination_guid=None):
-        client = self._storage_client_factory.get_storage_client_from_device_guid(
+        client = self._storage_client_factory.get_from_device_guid(
             device_guid, destination_guid=destination_guid
         )
         data_key_token = self._get_data_key_token(device_guid)

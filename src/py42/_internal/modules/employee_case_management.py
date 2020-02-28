@@ -11,6 +11,6 @@ class EmployeeCaseManagementModule(object):
     def departing_employee(self):
         if self._departing_employee_client is None:
             self._departing_employee_client = (
-                self._employee_case_management_client_factory.get_departing_employee_client()
+                self._employee_case_management_client_factory.get_departing_employee()
             )
         return self._departing_employee_client

@@ -26,7 +26,7 @@ class TestEmployeeCaseManagementModule(object):
     def test_departing_employee_calls_through_to_client(
         self, client_factory, departing_employee_client
     ):
-        client_factory.get_departing_employee_client.side_effect = self.return_departing_employee_client(
+        client_factory.get_departing_employee.side_effect = self.return_departing_employee_client(
             departing_employee_client
         )
         ecm_module = EmployeeCaseManagementModule(client_factory)
@@ -36,10 +36,10 @@ class TestEmployeeCaseManagementModule(object):
     def test_departing_employee_creates_client_only_once(
         self, client_factory, departing_employee_client
     ):
-        client_factory.get_departing_employee_client.side_effect = self.return_departing_employee_client(
+        client_factory.get_departing_employee.side_effect = self.return_departing_employee_client(
             departing_employee_client
         )
         ecm_module = EmployeeCaseManagementModule(client_factory)
         _ = ecm_module.departing_employee
         _ = ecm_module.departing_employee
-        assert client_factory.get_departing_employee_client.call_count == 1
+        assert client_factory.get_departing_employee.call_count == 1

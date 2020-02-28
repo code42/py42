@@ -31,7 +31,7 @@ class SecurityModule(object):
     @property
     def alerts(self):
         if self._alert_client is None:
-            self._alert_client = self._alert_client_factory.get_alert_client()
+            self._alert_client = self._alert_client_factory.get()
         return self._alert_client
 
     def get_security_plan_storage_info_list(self, user_uid):
@@ -97,7 +97,7 @@ class SecurityModule(object):
             list of file events as JSON
         """
         if self._file_event_client is None:
-            self._file_event_client = self._file_event_client_factory.get_file_event_client()
+            self._file_event_client = self._file_event_client_factory.get()
         return self._file_event_client.search_file_events(query)
 
     def _get_plan_storage_infos(self, plan_destination_map):
@@ -133,7 +133,7 @@ class SecurityModule(object):
 
         # otherwise, create it
         if client is None:
-            client = self._storage_client_factory.get_storage_client_from_plan_uid(
+            client = self._storage_client_factory.get_from_plan_uid(
                 plan_storage_info.plan_uid, plan_storage_info.destination_guid
             ).security
 

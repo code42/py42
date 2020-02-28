@@ -14,6 +14,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 Renamed client methods to reduce redundancy:
 
+- `FileEventClient`
+    - `search_file_events()` > `search()`
+    - `get_archive_tree_node()` > `get_archive_node()`
+
+- `StorageArchiveClient`
+    - `search_archive()` > `search()`
+
 - `DepartingEmployeeClient`
     - `create_departing_employee()` > `create()`
     - `resolve_departing_employee()` > `resolve()`

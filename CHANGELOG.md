@@ -18,6 +18,18 @@ Renamed client methods to reduce redundancy:
     - `get_security_detection_events_for_plan()` > `get_plan_security_events()`
     - `get_security_detection_events_for_user()` > `get_user_security_events()`
 
+- `FileEventClient`
+    - `search_file_events()` > `search()`
+
+- `StorageArchiveClient`
+    - `search_archive()` > `search()`
+    - `get_archive_tree_node()` > `get_file_path_metadata()`
+    - `create_web_restore_session()` > `create_restore_session()`
+    - `submit_web_restore_job()` > `start_restore()`
+    - `get_web_restore_job()` > `get_restore_status()`
+    - `cancel_web_restore_job()` > `cancel_restore()`
+    - `get_web_restore_job_result()` > `stream_restore_result()`
+
 - `DepartingEmployeeClient`
     - `create_departing_employee()` > `create()`
     - `resolve_departing_employee()` > `resolve()`

@@ -279,7 +279,7 @@ class TestSecurityModule(object):
             security_client, storage_client_factory, file_event_client_factory, alert_client_factory
         )
         security_module.search_file_events(RAW_QUERY)
-        file_event_client.search_file_events.assert_called_once_with(RAW_QUERY)
+        file_event_client.search.assert_called_once_with(RAW_QUERY)
 
     def test_get_security_plan_storage_info_one_location_returns_location_info(
         self,

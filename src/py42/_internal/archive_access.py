@@ -25,7 +25,7 @@ class ArchiveAccessorManager(object):
             device_guid, destination_guid=destination_guid
         )
         data_key_token = self._get_data_key_token(device_guid)
-        session_id = self._create_web_restore_session(client.archive, device_guid, data_key_token)
+        session_id = self._create_restore_session(client.archive, device_guid, data_key_token)
         restore_job_manager = create_restore_job_manager(client.archive, device_guid, session_id)
         return ArchiveAccessor(device_guid, session_id, client.archive, restore_job_manager)
 
@@ -34,8 +34,8 @@ class ArchiveAccessorManager(object):
         return util.get_obj_from_response(response, u"dataKeyToken")
 
     @staticmethod
-    def _create_web_restore_session(storage_archive_client, device_guid, data_key_token):
-        response = storage_archive_client.create_web_restore_session(
+    def _create_restore_session(storage_archive_client, device_guid, data_key_token):
+        response = storage_archive_client.create_restore_session(
             device_guid, data_key_token=data_key_token
         )
         return util.get_obj_from_response(response, u"webRestoreSessionId")
@@ -103,7 +103,7 @@ class ArchiveAccessor(object):
         )
 
     def _get_children(self, node_id=None):
-        return self._storage_archive_client.get_archive_tree_node(
+        return self._storage_archive_client.get_file_path_metadata(
             self._archive_session_id, self._device_guid, file_id=node_id, show_deleted=True
         )
 
@@ -132,7 +132,7 @@ class RestoreJobManager(object):
         self._job_polling_interval = job_polling_interval
 
     def restore_to_local_path(self, file_selection, save_as_path):
-        response = self._submit_web_restore_job(file_selection)
+        response = self._start_restore(file_selection)
         job_id = util.get_obj_from_response(response, u"jobId")
 
         while not self.is_job_complete(job_id):
@@ -141,11 +141,11 @@ class RestoreJobManager(object):
         return self._download_result(job_id, save_as_path)
 
     def is_job_complete(self, job_id):
-        response = self._storage_archive_client.get_web_restore_job(job_id)
+        response = self._storage_archive_client.get_restore_status(job_id)
         return self._get_completion_status(response)
 
-    def _submit_web_restore_job(self, file_selection):
-        return self._storage_archive_client.submit_web_restore_job(
+    def _start_restore(self, file_selection):
+        return self._storage_archive_client.start_restore(
             self._device_guid,
             self._archive_session_id,
             file_selection.path_set,
@@ -160,7 +160,7 @@ class RestoreJobManager(object):
         return util.get_obj_from_response(response, u"done")
 
     def _download_result(self, job_id, file_path):
-        response = self._storage_archive_client.get_web_restore_job_result(job_id)
+        response = self._storage_archive_client.stream_restore_result(job_id)
         util.save_content_to_disk(response, file_path)
 
         return file_path

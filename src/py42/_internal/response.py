@@ -9,7 +9,10 @@ class Py42Response(object):
 
     def __getitem__(self, key):
         if not self._dict:
-            pass
+            self._dict = json.loads(self._response.text)
+
+        data_root = self._dict.get("data") or self._dict
+        return data_root[key]
 
     def __str__(self):
         return self._response.text

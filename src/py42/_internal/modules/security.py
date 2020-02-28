@@ -98,7 +98,7 @@ class SecurityModule(object):
         """
         if self._file_event_client is None:
             self._file_event_client = self._file_event_client_factory.get_file_event_client()
-        return self._file_event_client.search_file_events(query)
+        return self._file_event_client.search(query)
 
     def _get_plan_storage_infos(self, plan_destination_map):
         plan_infos = []

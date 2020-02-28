@@ -14,6 +14,31 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 Renamed client methods to reduce redundancy:
 
+- `AuthorityClientFactory`
+    - `create_administration_client()` > `create_administration()`
+    - `create_user_client()` > `create_user()`
+    - `create_device_client()` > `create_device()`
+    - `create_org_client()` > `create_org()`
+    _ `create_legal_hold_client()` > `create_legal_hold()`
+    - `create_archive_client()` > `create_archive()`
+    - `create_security_client()` > `create_security()`
+
+- `StorageClientFactory`
+    - `get_storage_client_from_device_guid()` > `get_from_device_guid()`
+    - `get_storage_client_from_plan_uid()` > `get_from_plan_uid()`
+
+- `FileEventClientFactory`
+    - `get_file_event_client()` > `get()`
+
+- `KeyValueStoreClientFactory`
+    - `get_key_value_store_client()` > `get()`
+
+- `EmployeeCaseManagementClientFactory`
+    - `get_departing_employee_client()` > `get_departing_employee()`
+
+- `AlertClientFactory`
+    - `get_alert_client()` > `get()`
+
 - `DepartingEmployeeClient`
     - `create_departing_employee()` > `create()`
     - `resolve_departing_employee()` > `resolve()`

@@ -2,7 +2,7 @@ from py42._internal.base_classes import BaseClient
 
 
 class StorageArchiveClient(BaseClient):
-    def search(
+    def search_paths(
         self,
         session_id,
         device_guid,
@@ -36,7 +36,7 @@ class StorageArchiveClient(BaseClient):
         }
         return self._default_session.get(uri, params=params)
 
-    def get_tree_node(
+    def get_file_path_metdata(
         self,
         session_id,
         device_guid,
@@ -48,7 +48,7 @@ class StorageArchiveClient(BaseClient):
         backup_set_id=None,
         include_os_metadata=None,
     ):
-        # session_id is a web restore session ID (see RestoreClient.create_web_restore_session)
+        # session_id is a web restore session ID (see create_restore_session)
         uri = u"/api/WebRestoreTreeNode"
         params = {
             u"webRestoreSessionId": session_id,
@@ -63,7 +63,7 @@ class StorageArchiveClient(BaseClient):
         }
         return self._default_session.get(uri, params=params)
 
-    def create_web_restore_session(
+    def create_restore_session(
         self, device_guid, data_key_token=None, private_password=None, encryption_key=None
     ):
         """Creates a web restore session.
@@ -78,7 +78,7 @@ class StorageArchiveClient(BaseClient):
         }
         return self._default_session.post(uri, json=json_dict)
 
-    def submit_web_restore_job(
+    def start_restore(
         self,
         guid,
         web_restore_session_id,
@@ -116,15 +116,15 @@ class StorageArchiveClient(BaseClient):
 
         return self._default_session.post(uri, json=json_dict)
 
-    def get_web_restore_job(self, job_id):
+    def get_restore_status(self, job_id):
         uri = u"/api/WebRestoreJob/{}".format(job_id)
         return self._default_session.get(uri)
 
-    def cancel_web_restore_job(self, job_id):
+    def cancel_restore(self, job_id):
         uri = u"/api/WebRestoreJob"
         json_dict = {u"jobId": job_id}
         return self._default_session.delete(uri, json=json_dict)
 
-    def get_web_restore_job_result(self, job_id):
+    def stream_restore_result(self, job_id):
         uri = u"/api/WebRestoreJobResult/{}".format(job_id)
         return self._default_session.get(uri, stream=True)

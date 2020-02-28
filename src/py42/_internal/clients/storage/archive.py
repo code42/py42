@@ -11,7 +11,7 @@ class StorageArchiveClient(BaseClient):
         timestamp=None,
         show_deleted=None,
     ):
-        # session_id is a web restore session ID (see RestoreClient.create_web_restore_session)
+        # session_id is a web restore session ID (see create_restore_session)
         uri = u"/api/WebRestoreSearch"
         params = {
             u"webRestoreSessionId": session_id,
@@ -36,7 +36,7 @@ class StorageArchiveClient(BaseClient):
         }
         return self._default_session.get(uri, params=params)
 
-    def get_file_path_metdata(
+    def get_file_path_metadata(
         self,
         session_id,
         device_guid,

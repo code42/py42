@@ -50,7 +50,7 @@ USERS_DIR = "/Users"
 PATH_TO_FILE_IN_DOWNLOADS_FOLDER = "/Users/qa/Downloads/terminator-genisys.jpg"
 
 
-class GetArchiveTreeNodeResponses(object):
+class GetFilePathMetadataResponses(object):
     @staticmethod
     def get_file_id_from_request(response):
         file_id = None
@@ -342,8 +342,8 @@ def archive_client(mocker):
 @pytest.fixture
 def storage_archive_client(mocker):
     client = mocker.MagicMock(spec=StorageArchiveClient)
-    client.create_web_restore_session.return_value.status_code = 200
-    client.create_web_restore_session.return_value.text = (
+    client.create_restore_session.return_value.status_code = 200
+    client.create_restore_session.return_value.text = (
         '{"data": {"webRestoreSessionId": "FAKE_SESSION_ID"}}'
     )
     return client
@@ -357,8 +357,8 @@ def storage_client(mocker):
 @pytest.fixture
 def storage_client_factory(mocker, storage_client):
     factory = mocker.MagicMock(spec=StorageClientFactory)
-    storage_client.archive.create_web_restore_session.return_value.status_code = 200
-    storage_client.archive.create_web_restore_session.return_value.text = (
+    storage_client.archive.create_restore_session.return_value.status_code = 200
+    storage_client.archive.create_restore_session.return_value.text = (
         '{"data": {"webRestoreSessionId": "FAKE_SESSION_ID"}}'
     )
     factory.get_storage_client_from_device_guid.return_value = storage_client
@@ -386,47 +386,45 @@ def file_content_chunks():
     return list("file contents")
 
 
-def mock_submit_web_restore_job_response(mocker, storage_archive_client, response):
-    def mock_submit_web_restore_job(
-        device_guid, session_id, path_set, num_files, num_dires, size, **kwargs
-    ):
-        submit_web_restore_job_response = mocker.MagicMock(spec=Response)
-        submit_web_restore_job_response.text = response
-        submit_web_restore_job_response.status_code = 200
-        return submit_web_restore_job_response
+def mock_start_restore_response(mocker, storage_archive_client, response):
+    def mock_start_restore(device_guid, session_id, path_set, num_files, num_dires, size, **kwargs):
+        start_restore_response = mocker.MagicMock(spec=Response)
+        start_restore_response.text = response
+        start_restore_response.status_code = 200
+        return start_restore_response
 
-    storage_archive_client.submit_web_restore_job.side_effect = mock_submit_web_restore_job
+    storage_archive_client.start_restore.side_effect = mock_start_restore
 
 
-def mock_get_web_restore_job_responses(mocker, storage_archive_client, json_responses):
+def mock_get_restore_status_responses(mocker, storage_archive_client, json_responses):
     responses = []
     for json_response in json_responses:
-        get_web_restore_job_response = mocker.MagicMock(spec=Response)
-        get_web_restore_job_response.text = json_response
-        get_web_restore_job_response.status_code = 200
-        responses.append(get_web_restore_job_response)
-    storage_archive_client.get_web_restore_job.side_effect = responses
+        get_restore_status_response = mocker.MagicMock(spec=Response)
+        get_restore_status_response.text = json_response
+        get_restore_status_response.status_code = 200
+        responses.append(get_restore_status_response)
+    storage_archive_client.get_restore_status.side_effect = responses
 
 
-def get_get_web_restore_job_result_response_mock(mocker, storage_archive_client, chunks):
-    get_web_restore_job_result_response = mocker.MagicMock(spec=Response)
+def stream_restore_result_response_mock(mocker, storage_archive_client, chunks):
+    stream_restore_result_response = mocker.MagicMock(spec=Response)
 
-    def mock_get_web_restore_job_result(job_id, **kwargs):
-        get_web_restore_job_result_response.iter_content.return_value = chunks
-        return get_web_restore_job_result_response
+    def mock_stream_restore_result(job_id, **kwargs):
+        stream_restore_result_response.iter_content.return_value = chunks
+        return stream_restore_result_response
 
-    storage_archive_client.get_web_restore_job_result.side_effect = mock_get_web_restore_job_result
+    storage_archive_client.stream_restore_result.side_effect = mock_stream_restore_result
 
-    return get_web_restore_job_result_response
+    return stream_restore_result_response
 
 
-def get_get_archive_tree_node_mock(mocker, session_id, device_guid, responses):
-    """Mock responses to StorageArchiveClient.get_archive_tree_node(). Responses are returned in the same order as
+def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
+    """Mock responses to StorageArchiveClient.get_file_path_metadata(). Responses are returned in the same order as
     they are in the given `responses` list"""
 
     file_id_responses = {}
     for response in responses:
-        file_id_param = GetArchiveTreeNodeResponses.get_file_id_from_request(response)
+        file_id_param = GetFilePathMetadataResponses.get_file_id_from_request(response)
         if file_id_param:
             file_id_responses[file_id_param] = response
         else:
@@ -434,7 +432,7 @@ def get_get_archive_tree_node_mock(mocker, session_id, device_guid, responses):
                 raise Exception("Response list already has a response for a 'None' fileId")
             file_id_responses[None] = response
 
-    def mock_get_archive_tree_node(*args, **kwargs):
+    def mock_get_file_path_metadata(*args, **kwargs):
 
         if not args[0] == session_id:
             raise Exception("Unexpected archive session ID")
@@ -447,13 +445,13 @@ def get_get_archive_tree_node_mock(mocker, session_id, device_guid, responses):
         if file_id not in file_id_responses:
             raise Exception("Unexpected request with file_id: {0}".format(file_id))
 
-        get_archive_tree_node_response = mocker.MagicMock(spec=Response)
-        get_archive_tree_node_response.text = file_id_responses[file_id]
-        get_archive_tree_node_response.status_code = 200
+        get_file_path_metadata_response = mocker.MagicMock(spec=Response)
+        get_file_path_metadata_response.text = file_id_responses[file_id]
+        get_file_path_metadata_response.status_code = 200
 
-        return get_archive_tree_node_response
+        return get_file_path_metadata_response
 
-    return mock_get_archive_tree_node
+    return mock_get_file_path_metadata
 
 
 def get_file_selection(file_type, file_path):
@@ -461,21 +459,21 @@ def get_file_selection(file_type, file_path):
     return FileSelection([{"type": file_type, "path": file_path, "selected": True}], 1, 1, 1)
 
 
-def mock_get_tree_node_responses(mocker, storage_archive_client, responses):
-    storage_archive_client.get_tree_node.side_effect = get_get_archive_tree_node_mock(
+def mock_get_file_path_metadata_responses(mocker, storage_archive_client, responses):
+    storage_archive_client.get_file_path_metadata.side_effect = get_get_file_path_metadata_mock(
         mocker, WEB_RESTORE_SESSION_ID, DEVICE_GUID, responses
     )
 
 
 def mock_walking_to_downloads_folder(mocker, storage_archive_client):
     responses = [
-        GetArchiveTreeNodeResponses.NULL_ID,
-        GetArchiveTreeNodeResponses.ROOT,
-        GetArchiveTreeNodeResponses.USERS,
-        GetArchiveTreeNodeResponses.USERS_QA,
-        GetArchiveTreeNodeResponses.USERS_QA_DOWNLOADS,
+        GetFilePathMetadataResponses.NULL_ID,
+        GetFilePathMetadataResponses.ROOT,
+        GetFilePathMetadataResponses.USERS,
+        GetFilePathMetadataResponses.USERS_QA,
+        GetFilePathMetadataResponses.USERS_QA_DOWNLOADS,
     ]
-    mock_get_tree_node_responses(mocker, storage_archive_client, responses)
+    mock_get_file_path_metadata_responses(mocker, storage_archive_client, responses)
 
 
 def get_response_job_id(response_str):
@@ -534,7 +532,7 @@ class TestArchiveAccessManager(object):
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
 
-        storage_archive_client.create_web_restore_session.assert_called_once_with(
+        storage_archive_client.create_restore_session.assert_called_once_with(
             DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
         )
 
@@ -547,7 +545,7 @@ class TestArchiveAccessManager(object):
         response = mocker.MagicMock(spec=Response)
         response.text = json.dumps({"data": {"webRestoreSessionId": WEB_RESTORE_SESSION_ID}})
         response.status_code = 200
-        storage_archive_client.create_web_restore_session.return_value = response
+        storage_archive_client.create_restore_session.return_value = response
         storage_client.archive = storage_archive_client
 
         storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
@@ -580,8 +578,8 @@ class TestArchiveAccessor(object):
     def test_download_from_backup_with_root_folder_path_calls_restore_to_local_path(
         self, mocker, storage_archive_client, restore_job_manager
     ):
-        mock_get_tree_node_responses(
-            mocker, storage_archive_client, [GetArchiveTreeNodeResponses.NULL_ID]
+        mock_get_file_path_metadata_responses(
+            mocker, storage_archive_client, [GetFilePathMetadataResponses.NULL_ID]
         )
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
@@ -596,10 +594,10 @@ class TestArchiveAccessor(object):
     def test_download_from_backup_with_root_level_folder_calls_restore_to_local_path(
         self, mocker, storage_archive_client, restore_job_manager
     ):
-        mock_get_tree_node_responses(
+        mock_get_file_path_metadata_responses(
             mocker,
             storage_archive_client,
-            [GetArchiveTreeNodeResponses.NULL_ID, GetArchiveTreeNodeResponses.ROOT],
+            [GetFilePathMetadataResponses.NULL_ID, GetFilePathMetadataResponses.ROOT],
         )
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
@@ -777,7 +775,7 @@ class TestArchiveAccessor(object):
         expected_arg = posixpath.join(SAVE_AS_DIR, SAVE_AS_FILENAME)
         verify_path_writeable.assert_called_once_with(expected_arg)
 
-    def test_download_from_backup_uses_show_deleted_param_on_get_archive_tree_node(
+    def test_download_from_backup_uses_show_deleted_param_on_get_file_path_metadata(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
@@ -785,7 +783,7 @@ class TestArchiveAccessor(object):
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
         archive_accessor.download_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
-        storage_archive_client.get_tree_node.assert_called_with(
+        storage_archive_client.get_file_path_metadata.assert_called_with(
             WEB_RESTORE_SESSION_ID, DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
         )
 
@@ -798,7 +796,7 @@ class TestRestoreJobManager(object):
         self, mocker, storage_archive_client
     ):
         job_id = get_response_job_id(GetWebRestoreJobResponses.NOT_DONE)
-        mock_get_web_restore_job_responses(
+        mock_get_restore_status_responses(
             mocker, storage_archive_client, [GetWebRestoreJobResponses.NOT_DONE]
         )
         restore_job_manager = RestoreJobManager(
@@ -810,7 +808,7 @@ class TestRestoreJobManager(object):
         self, mocker, storage_archive_client
     ):
         job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
-        mock_get_web_restore_job_responses(
+        mock_get_restore_status_responses(
             mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
         )
         restore_job_manager = RestoreJobManager(
@@ -818,14 +816,14 @@ class TestRestoreJobManager(object):
         )
         assert restore_job_manager.is_job_complete(job_id) is True
 
-    def test_restore_to_local_path_calls_submit_web_restore_job_with_correct_args(
+    def test_restore_to_local_path_calls_start_restore_with_correct_args(
         self, mocker, storage_archive_client, file_selection, save_as_path
     ):
-        mock_submit_web_restore_job_response(
+        mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
         )
 
-        mock_get_web_restore_job_responses(
+        mock_get_restore_status_responses(
             mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
         )
 
@@ -835,7 +833,7 @@ class TestRestoreJobManager(object):
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.restore_to_local_path(file_selection, save_as_path)
-        storage_archive_client.submit_web_restore_job.assert_called_once_with(
+        storage_archive_client.start_restore.assert_called_once_with(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             file_selection.path_set,
@@ -848,10 +846,10 @@ class TestRestoreJobManager(object):
     def test_restore_to_local_path_polls_job_status_until_job_is_complete(
         self, mocker, storage_archive_client, file_selection, save_as_path
     ):
-        mock_submit_web_restore_job_response(
+        mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
         )
-        mock_get_web_restore_job_responses(
+        mock_get_restore_status_responses(
             mocker,
             storage_archive_client,
             [
@@ -870,21 +868,21 @@ class TestRestoreJobManager(object):
         restore_job_manager.restore_to_local_path(file_selection, save_as_path)
         job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
         expected_call = mocker.call(job_id)
-        storage_archive_client.get_web_restore_job.assert_has_calls(
+        storage_archive_client.get_restore_status.assert_has_calls(
             [expected_call, expected_call, expected_call]
         )
-        assert storage_archive_client.get_web_restore_job.call_count == 3
+        assert storage_archive_client.get_restore_status.call_count == 3
 
     def test_restore_to_local_path_calls_save_content_to_disk_util(
         self, mocker, storage_archive_client, file_selection, save_as_path, file_content_chunks
     ):
-        mock_submit_web_restore_job_response(
+        mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
         )
-        mock_get_web_restore_job_responses(
+        mock_get_restore_status_responses(
             mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
         )
-        response = get_get_web_restore_job_result_response_mock(
+        response = stream_restore_result_response_mock(
             mocker, storage_archive_client, file_content_chunks
         )
         save_content_to_disk_mock = get_save_content_to_disk_mock(mocker)
@@ -897,15 +895,13 @@ class TestRestoreJobManager(object):
     def test_restore_to_local_path_when_successful_returns_save_as_path(
         self, mocker, storage_archive_client, file_selection, save_as_path, file_content_chunks
     ):
-        mock_submit_web_restore_job_response(
+        mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
         )
-        mock_get_web_restore_job_responses(
+        mock_get_restore_status_responses(
             mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
         )
-        get_get_web_restore_job_result_response_mock(
-            mocker, storage_archive_client, file_content_chunks
-        )
+        stream_restore_result_response_mock(mocker, storage_archive_client, file_content_chunks)
         get_save_content_to_disk_mock(mocker)
         restore_job_manager = RestoreJobManager(
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
@@ -916,15 +912,13 @@ class TestRestoreJobManager(object):
     def test_restore_to_local_path_with_disk_io_error_raises_exception(
         self, mocker, storage_archive_client, file_selection, save_as_path, file_content_chunks
     ):
-        mock_submit_web_restore_job_response(
+        mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
         )
-        mock_get_web_restore_job_responses(
+        mock_get_restore_status_responses(
             mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
         )
-        get_get_web_restore_job_result_response_mock(
-            mocker, storage_archive_client, file_content_chunks
-        )
+        stream_restore_result_response_mock(mocker, storage_archive_client, file_content_chunks)
         get_save_content_to_disk_mock(mocker, IOError("Write failed!"))
         restore_job_manager = RestoreJobManager(
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID

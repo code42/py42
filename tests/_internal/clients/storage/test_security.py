@@ -49,7 +49,7 @@ def security_detection_events_params(min_time_str, max_time_str):
 
 
 @pytest.fixture
-def security_detection_events_for_plan_params(security_detection_events_params):
+def plan_security_detection_events_params(security_detection_events_params):
     params = security_detection_events_params
     params[u"planUid"] = "PlanUid"
     params[u"incFiles"] = True
@@ -58,7 +58,7 @@ def security_detection_events_for_plan_params(security_detection_events_params):
 
 
 @pytest.fixture
-def security_detection_events_for_user_params(security_detection_events_params):
+def user_security_detection_events_params(security_detection_events_params):
     params = security_detection_events_params
     params[u"userUid"] = "UserUid"
     params[u"incFiles"] = True
@@ -75,11 +75,11 @@ def security_detection_event_summary_params(security_detection_events_params):
 
 
 class TestStorageSecurityClient(object):
-    def test_get_security_detection_events_for_plan_calls_get_with_correct_params(
-        self, storage_security_client, py42session, security_detection_events_for_plan_params
+    def test_get_plan_security_events_calls_get_with_correct_params(
+        self, storage_security_client, py42session, plan_security_detection_events_params
     ):
-        params = security_detection_events_for_plan_params
-        storage_security_client.get_security_detection_events_for_plan(
+        params = plan_security_detection_events_params
+        storage_security_client.get_plan_security_events(
             plan_uid=params[u"planUid"],
             cursor=params[u"cursor"],
             include_files=params[u"incFiles"],
@@ -89,11 +89,11 @@ class TestStorageSecurityClient(object):
         )
         py42session.get.assert_called_once_with(uri, params=params)
 
-    def test_get_security_detection_events_for_user_calls_get_with_correct_params(
-        self, storage_security_client, py42session, security_detection_events_for_user_params
+    def test_get_user_security_events_calls_get_with_correct_params(
+        self, storage_security_client, py42session, user_security_detection_events_params
     ):
-        params = security_detection_events_for_user_params
-        storage_security_client.get_security_detection_events_for_user(
+        params = user_security_detection_events_params
+        storage_security_client.get_user_security_events(
             user_uid=params[u"userUid"],
             cursor=params[u"cursor"],
             include_files=params[u"incFiles"],

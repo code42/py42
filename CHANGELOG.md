@@ -14,6 +14,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 Renamed client methods to reduce redundancy:
 
+- `StorageSecurityClient`
+    - `get_security_detection_events_for_plan()` > `get_plan_security_events()`
+    - `get_security_detection_events_for_user()` > `get_user_security_events()`
+
 - `FileEventClient`
     - `search_file_events()` > `search()`
 

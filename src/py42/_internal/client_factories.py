@@ -1,3 +1,5 @@
+import json
+
 from py42._internal.clients import (
     administration,
     archive,
@@ -14,13 +16,7 @@ from py42._internal.clients.employee_case_management.departing_employee import (
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.key_value_store import KeyValueStoreClient
 from py42._internal.clients.storage.storage import StorageClient
-from py42._internal.login_provider_factories import (
-    ArchiveLocatorFactory,
-    FileEventLoginProviderFactory,
-    EmployeeCaseManagementLoginProviderFactory,
-    AlertLoginProviderFactory,
-    KeyValueStoreLocatorFactory,
-)
+from py42._internal.login_provider_factories import ArchiveLocatorFactory
 from py42._internal.clients.alerts import AlertClient
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
@@ -73,51 +69,50 @@ class StorageClientFactory(object):
         return StorageClient(session)
 
 
-class FileEventClientFactory(object):
-    def __init__(self, session_factory, login_provider_factory):
-        # type: (SessionFactory, FileEventLoginProviderFactory) -> None
+class MicroserviceClientFactory(object):
+    def __init__(self, session_factory, key_value_store_client, user_context):
         self._session_factory = session_factory
-        self._login_provider_factory = login_provider_factory
+        self._key_value_store_client = key_value_store_client
+        self._user_context = user_context
 
-    def get_file_event_client(self):
-        login_provider = self._login_provider_factory.create_file_event_login_provider()
-        session = self._session_factory.create_jwt_session_from_provider(login_provider)
+    def create_alerts_client(self):
+        url = self._key_value_store_client.get_stored_value(u"AlertService-API_URL")
+        session = self._session_factory.create_jwt_session(url)
+        return AlertClient(session, self._user_context)
+
+    def create_departing_employee_client(self):
+        url = self._key_value_store_client.get_stored_value(u"employeecasemanagement-API_URL")
+        session = self._session_factory.create_jwt_session(url)
+        return DepartingEmployeeClient(session, self._user_context)
+
+    def create_file_event_client(self, authority_url):
+        config_session = self._session_factory.create_anonymous_session(authority_url)
+        url = hacky_get_microservice_url(config_session, u"forensicsearch")
+        session = self._session_factory.create_jwt_session(url)
         return FileEventClient(session)
 
 
-class KeyValueStoreClientFactory(object):
-    def __init__(self, session_factory, login_provider_factory):
-        # type: (SessionFactory, KeyValueStoreLocatorFactory) -> None
-        self._session_factory = session_factory
-        self._login_provider_factory = login_provider_factory
-
-    def get_key_value_store_client(self):
-        login_provider = self._login_provider_factory.create_key_value_store_locator()
-        session = self._session_factory.create_key_value_store_session(login_provider)
-        return KeyValueStoreClient(session)
+def hacky_get_microservice_url(session, microservice_base_name):
+    sts_url = _get_sts_base_url(session)
+    return str(sts_url).replace(u"sts", microservice_base_name)
 
 
-class EmployeeCaseManagementClientFactory(object):
-    def __init__(self, session_factory, login_provider_factory, user_context):
-        # type: (SessionFactory, EmployeeCaseManagementLoginProviderFactory, UserContext) -> None
-        self._session_factory = session_factory
-        self._login_provider_factory = login_provider_factory
-        self._user_context = user_context
+def _get_sts_base_url(session):
+    uri = u"/api/ServerEnv"
+    try:
+        response = session.get(uri)
+    except Exception as ex:
+        message = (
+            u"An error occurred while requesting server environment information, caused by {0}"
+        )
+        message = message.format(ex)
+        raise Exception(message)
 
-    def get_departing_employee_client(self):
-        login_provider = self._login_provider_factory.create_ecm_login_provider()
-        session = self._session_factory.create_jwt_session_from_provider(login_provider)
-        return DepartingEmployeeClient(session, self._user_context)
-
-
-class AlertClientFactory(object):
-    def __init__(self, session_factory, login_provider_factory, user_context):
-        # type: (SessionFactory, AlertLoginProviderFactory, UserContext) -> None
-        self._session_factory = session_factory
-        self._login_provider_factory = login_provider_factory
-        self._user_context = user_context
-
-    def get_alert_client(self):
-        login_provider = self._login_provider_factory.create_alert_login_provider()
-        session = self._session_factory.create_jwt_session_from_provider(login_provider)
-        return AlertClient(session, self._user_context)
+    sts_base_url = None
+    if response.text:
+        response_json = json.loads(response.text)
+        if u"stsBaseUrl" in response_json:
+            sts_base_url = response_json[u"stsBaseUrl"]
+    if not sts_base_url:
+        raise Exception(u"stsBaseUrl not found.")
+    return sts_base_url

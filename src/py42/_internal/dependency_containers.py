@@ -1,19 +1,18 @@
 from py42._internal.archive_access import ArchiveAccessorManager
+from py42._internal.clients import key_value_store
 from py42._internal.client_factories import (
     AuthorityClientFactory,
-    FileEventClientFactory,
     StorageClientFactory,
-    KeyValueStoreClientFactory,
-    AlertClientFactory,
-    EmployeeCaseManagementClientFactory,
+    MicroserviceClientFactory,
+    hacky_get_microservice_url,
 )
-from py42._internal.login_provider_factories import (
-    ArchiveLocatorFactory,
-    FileEventLoginProviderFactory,
-    AlertLoginProviderFactory,
-    KeyValueStoreLocatorFactory,
-    EmployeeCaseManagementLoginProviderFactory,
+
+from py42._internal.login_providers import (
+    FileEventLoginProvider,
+    KeyValueStoreLoginProvider,
+    MicroserviceLoginProvider,
 )
+from py42._internal.login_provider_factories import ArchiveLocatorFactory
 from py42._internal.modules import (
     archive as archive_module,
     security as sec_module,
@@ -25,15 +24,32 @@ from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 
 
-class AuthorityDependencies(object):
-    def __init__(self, session_factory, root_session):
-        # type: (SessionFactory, Py42Session) -> None
-        self._set_v3_session(session_factory, root_session)
+def _get_key_value_store_client(authority_url, session_factory):
+    config_session = session_factory.create_anonymous_session(authority_url)
+    url = hacky_get_microservice_url(config_session, u"simple-key-value-store")
+    key_value_session = session_factory.create_anonymous_session(url)
+    return key_value_store.KeyValueStoreClient(key_value_session)
+
+
+def _get_storage_client_factory(session_factory, archive_locator_factory):
+    storage_session_manager = StorageSessionManager(session_factory)
+    return StorageClientFactory(storage_session_manager, archive_locator_factory)
+
+
+def _get_microservice_client_factory(authority_url, session_factory, user_context):
+    key_value_store_client = _get_key_value_store_client(authority_url, session_factory)
+    return MicroserviceClientFactory(session_factory, key_value_store_client, user_context)
+
+
+class SDKDependencies(object):
+    def __init__(self, host_address, session_factory, root_session):
+        # type: (type, SessionFactory, Py42Session) -> SDKDependencies
+        # this configuration is for using c42-hosted endpoints to get v3 or v1 authentication tokens.
+        self._set_v3_session(host_address, session_factory, root_session)
         self.storage_sessions_manager = StorageSessionManager(session_factory)
 
         # authority clients
         authority_client_factory = AuthorityClientFactory(self.session)
-        self.session_factory = session_factory
         self.administration_client = authority_client_factory.create_administration_client()
         self.user_client = authority_client_factory.create_user_client()
         self.device_client = authority_client_factory.create_device_client()
@@ -43,10 +59,36 @@ class AuthorityDependencies(object):
         self.security_client = authority_client_factory.create_security_client()
         self.user_context = UserContext(self.administration_client)
 
-    def _set_v3_session(self, session_factory, root_session):
+        # key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
+        archive_locator_factory = ArchiveLocatorFactory(
+            self.session, self.security_client, self.device_client
+        )
+        storage_client_factory = _get_storage_client_factory(
+            session_factory, archive_locator_factory
+        )
+        archive_accessor_manager = ArchiveAccessorManager(
+            self.archive_client, storage_client_factory
+        )
+
+        microservice_client_factory = _get_microservice_client_factory(
+            host_address, session_factory, user_context
+        )
+
+        # modules (feature sets that combine info from multiple clients)
+        self.archive_module = archive_module.ArchiveModule(
+            archive_accessor_manager, self.archive_client
+        )
+        self.security_module = sec_module.SecurityModule(
+            self.security_client, microservice_client_factory
+        )
+        self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
+            microservice_client_factory
+        )
+
+    def _set_v3_session(self, host_address, session_factory, root_session):
         # type: (SessionFactory, Py42Session) -> None
         self.root_session = root_session
-        self.session = session_factory.create_jwt_session(root_session)
+        self.session = session_factory.create_jwt_session(host_address, root_session)
         self._test_session(self.session, u"/api/User/my")
 
     @staticmethod
@@ -64,128 +106,3 @@ class AuthorityDependencies(object):
                 u"authority).".format(host_address)
             )
             raise Exception(message)
-
-
-class StorageDependencies(object):
-    def __init__(self, authority_dependencies, archive_locator_factory):
-        # type: (AuthorityDependencies, ArchiveLocatorFactory) -> None
-        self.storage_client_factory = StorageClientFactory(
-            authority_dependencies.storage_sessions_manager, archive_locator_factory
-        )
-
-
-class FileEventDependencies(object):
-    def __init__(self, authority_dependencies):
-        # type: (AuthorityDependencies) -> None
-        file_event_login_provider_factory = FileEventLoginProviderFactory(
-            authority_dependencies.root_session
-        )
-        self.file_event_client_factory = FileEventClientFactory(
-            authority_dependencies.session_factory, file_event_login_provider_factory
-        )
-
-
-class AlertDependencies(object):
-    def __init__(self, authority_dependencies, key_value_store_client_factory):
-        # type: (AuthorityDependencies, KeyValueStoreClientFactory) -> None
-        alert_login_provider_factory = AlertLoginProviderFactory(
-            authority_dependencies.root_session, key_value_store_client_factory
-        )
-        self.alert_client_factory = AlertClientFactory(
-            authority_dependencies.session_factory,
-            alert_login_provider_factory,
-            authority_dependencies.user_context,
-        )
-
-
-class KeyValueStoreDependencies(object):
-    def __init__(self, authority_dependencies):
-        # type: (AuthorityDependencies) -> None
-        key_value_store_login_provider_factory = KeyValueStoreLocatorFactory(
-            authority_dependencies.root_session
-        )
-        self.key_value_store_client_factory = KeyValueStoreClientFactory(
-            authority_dependencies.session_factory, key_value_store_login_provider_factory
-        )
-
-
-class EmployeeCaseManagementDependencies(object):
-    def __init__(self, authority_dependencies, key_value_store_client_factory):
-        # type: (AuthorityDependencies, KeyValueStoreClientFactory) -> None
-        ecm_login_provider_factory = EmployeeCaseManagementLoginProviderFactory(
-            authority_dependencies.root_session, key_value_store_client_factory
-        )
-        self.employee_case_management_client_factory = EmployeeCaseManagementClientFactory(
-            authority_dependencies.session_factory,
-            ecm_login_provider_factory,
-            authority_dependencies.user_context,
-        )
-
-
-class SDKDependencies(object):
-    def __init__(
-        self,
-        authority_dependencies,
-        storage_dependencies,
-        file_event_dependencies,
-        employee_case_management_dependencies,
-        alert_dependencies,
-        key_value_store_dependencies,
-    ):
-        # type: (AuthorityDependencies, StorageDependencies, FileEventDependencies, EmployeeCaseManagementDependencies, AlertDependencies, KeyValueStoreDependencies) -> None
-        archive_client = authority_dependencies.archive_client
-        security_client = authority_dependencies.security_client
-        storage_client_factory = storage_dependencies.storage_client_factory
-        file_event_client_factory = file_event_dependencies.file_event_client_factory
-
-        self.authority_dependencies = authority_dependencies
-        self.storage_dependencies = storage_dependencies
-        self.file_event_dependencies = file_event_dependencies
-        self.ecm_dependencies = employee_case_management_dependencies
-        self.alert_dependencies = alert_dependencies
-
-        archive_accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
-
-        # modules (feature sets that combine info from multiple clients)
-        self.archive_module = archive_module.ArchiveModule(archive_accessor_manager, archive_client)
-        self.security_module = sec_module.SecurityModule(
-            security_client,
-            storage_client_factory,
-            file_event_client_factory,
-            alert_dependencies.alert_client_factory,
-        )
-        self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
-            self.ecm_dependencies.employee_case_management_client_factory
-        )
-
-    @classmethod
-    def create_c42_api_dependencies(cls, session_factory, root_session):
-        # type: (type, SessionFactory, Py42Session) -> SDKDependencies
-        # this configuration is for using c42-hosted endpoints to get v3 or v1 authentication tokens.
-        authority_dependencies = AuthorityDependencies(session_factory, root_session)
-        default_session = authority_dependencies.session
-        security_client = authority_dependencies.security_client
-        device_client = authority_dependencies.device_client
-        key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
-        archive_locator_factory = ArchiveLocatorFactory(
-            default_session, security_client, device_client
-        )
-        key_value_store_client_factory = key_value_store_dependencies.key_value_store_client_factory
-        ecm_dependencies = EmployeeCaseManagementDependencies(
-            authority_dependencies, key_value_store_client_factory
-        )
-        alert_dependencies = AlertDependencies(
-            authority_dependencies, key_value_store_client_factory
-        )
-        storage_dependencies = StorageDependencies(authority_dependencies, archive_locator_factory)
-        file_event_dependencies = FileEventDependencies(authority_dependencies)
-        key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
-
-        return cls(
-            authority_dependencies,
-            storage_dependencies,
-            file_event_dependencies,
-            ecm_dependencies,
-            alert_dependencies,
-            key_value_store_dependencies,
-        )

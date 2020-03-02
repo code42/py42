@@ -21,33 +21,30 @@ class SessionFactory(object):
     def create_basic_auth_session(self, host_address, username, password):
         provider = BasicAuthProvider(host_address, username, password)
         header_modifier = self._session_modifier_factory.create_header_modifier(u"Basic {0}")
-        return self._create_session(self._session_impl, provider, header_modifier)
+        return self._create_session(self._session_impl, host_address, provider, header_modifier)
 
-    def create_v1_session(self, parent_session):
+    def create_v1_session(self, host_address, parent_session):
         provider = C42ApiV1TokenProvider(parent_session)
         header_modifier = self._session_modifier_factory.create_header_modifier(u"token {0}")
-        return self._create_session(self._session_impl, provider, header_modifier)
+        return self._create_session(self._session_impl, host_address, provider, header_modifier)
 
-    def create_jwt_session(self, parent_session):
+    def create_jwt_session(self, host_address, parent_session):
         provider = C42ApiV3TokenProvider(parent_session)
         header_modifier = self._session_modifier_factory.create_v3_session_modifier()
-        return self._create_session(self._session_impl, provider, header_modifier)
+        return self._create_session(self._session_impl, host_address, provider, header_modifier)
 
-    def create_storage_session(self, c42_api_login_provider):
+    def create_storage_session(self, host_address, c42_api_login_provider):
         header_modifier = self._session_modifier_factory.create_header_modifier(u"login_token {0}")
-        tmp = self._create_session(self._session_impl, c42_api_login_provider, header_modifier)
-        return self.create_v1_session(tmp)
+        tmp = self._create_session(
+            self._session_impl, host_address, c42_api_login_provider, header_modifier
+        )
+        return self.create_v1_session(host_address, tmp)
 
-    def create_jwt_session_from_provider(self, login_provider):
-        header_modifier = self._session_modifier_factory.create_v3_session_modifier()
-        return self._create_session(self._session_impl, login_provider, header_modifier)
+    def create_anonymous_session(self, host_address):
+        return self._create_session(self._session_impl, host_address)
 
-    def create_key_value_store_session(self, key_value_store_login_provider):
-        return self._create_session(self._session_impl, key_value_store_login_provider)
-
-    def _create_session(self, session_impl, login_provider, modifier=None):
+    def _create_session(self, session_impl, host_address, login_provider=None, modifier=None):
         handler = None
-        host_address = login_provider.get_target_host_address()
         if modifier:
             handler = self._auth_handler_factory.create_auth_handler(login_provider, modifier)
         return Py42Session(session_impl(), host_address, auth_handler=handler)

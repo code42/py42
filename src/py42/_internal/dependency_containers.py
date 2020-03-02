@@ -37,8 +37,6 @@ def _get_microservice_client_factory(authority_url, session_factory, user_contex
 
 class SDKDependencies(object):
     def __init__(self, host_address, session_factory, root_session):
-        # type: (type, SessionFactory, Py42Session) -> SDKDependencies
-        # this configuration is for using c42-hosted endpoints to get v3 or v1 authentication tokens.
         self._set_v3_session(host_address, session_factory, root_session)
         self.storage_sessions_manager = StorageSessionManager(session_factory)
 
@@ -53,7 +51,6 @@ class SDKDependencies(object):
         self.security_client = authority_client_factory.create_security_client()
         self.user_context = UserContext(self.administration_client)
 
-        # key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)
         archive_locator_factory = ArchiveLocatorFactory(
             self.session, self.security_client, self.device_client
         )
@@ -80,7 +77,6 @@ class SDKDependencies(object):
         )
 
     def _set_v3_session(self, host_address, session_factory, root_session):
-        # type: (SessionFactory, Py42Session) -> None
         self.root_session = root_session
         self.session = session_factory.create_jwt_session(host_address, root_session)
         self._test_session(self.session, u"/api/User/my")

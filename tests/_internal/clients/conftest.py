@@ -17,8 +17,3 @@ def user_context(mocker):
 @pytest.fixture
 def session(mocker):
     return mocker.MagicMock(spec=Py42Session)
-
-
-@pytest.fixture
-def v3_required_session(mocker):
-    return mocker.MagicMock(spec=Py42Session)

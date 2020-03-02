@@ -45,10 +45,8 @@ class TestDeviceClient(object):
         response.text = MOCK_EMPTY_GET_DEVICE_RESPONSE
         return response
 
-    def test_get_devices_calls_get_with_uri_and_params(
-        self, session, v3_required_session, mock_get_devices_response
-    ):
-        client = DeviceClient(session, v3_required_session)
+    def test_get_devices_calls_get_with_uri_and_params(self, session, mock_get_devices_response):
+        client = DeviceClient(session)
         session.get.return_value = mock_get_devices_response
         for page in client.get_devices(q="TEST-HOSTNAME"):
             break
@@ -59,10 +57,10 @@ class TestDeviceClient(object):
         assert first_call[1]["params"] == DEFAULT_GET_DEVICES_PARAMS
 
     def test_unicode_hostname_get_devices_calls_get_with_unicode_q_param(
-        self, session, v3_required_session, mock_get_devices_response
+        self, session, mock_get_devices_response
     ):
         unicode_hostname = u"您已经发现了秘密信息"
-        client = DeviceClient(session, v3_required_session)
+        client = DeviceClient(session)
         session.get.return_value = mock_get_devices_response
         for page in client.get_devices(q=unicode_hostname):
             break
@@ -72,22 +70,18 @@ class TestDeviceClient(object):
         params["q"] = unicode_hostname
         assert first_call[1]["params"] == params
 
-    def test_get_device_by_id_calls_get_with_uri_and_params(self, session, v3_required_session):
-        client = DeviceClient(session, v3_required_session)
+    def test_get_device_by_id_calls_get_with_uri_and_params(self, session):
+        client = DeviceClient(session)
         client.get_device_by_id("DEVICE_ID", include_backup_usage=True)
         expected_params = {"incBackupUsage": True}
         uri = "{0}/{1}".format(COMPUTER_URI, "DEVICE_ID")
         session.get.assert_called_once_with(uri, params=expected_params)
 
     def test_get_devices_calls_get_expected_number_of_times(
-        self,
-        session,
-        v3_required_session,
-        mock_get_devices_response,
-        mock_get_devices_empty_response,
+        self, session, mock_get_devices_response, mock_get_devices_empty_response
     ):
         py42.settings.items_per_page = 1
-        client = DeviceClient(session, v3_required_session)
+        client = DeviceClient(session)
         session.get.side_effect = [
             mock_get_devices_response,
             mock_get_devices_response,

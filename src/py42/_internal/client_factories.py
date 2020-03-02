@@ -27,30 +27,29 @@ from py42._internal.storage_session_manager import StorageSessionManager
 
 
 class AuthorityClientFactory(object):
-    def __init__(self, default_session, v3_required_session):
-        self.default_session = default_session
-        self.v3_required_session = v3_required_session
+    def __init__(self, session):
+        self.session = session
 
     def create_administration_client(self):
-        return administration.AdministrationClient(self.default_session, self.v3_required_session)
+        return administration.AdministrationClient(self.session)
 
     def create_user_client(self):
-        return users.UserClient(self.default_session, self.v3_required_session)
+        return users.UserClient(self.session)
 
     def create_device_client(self):
-        return devices.DeviceClient(self.default_session, self.v3_required_session)
+        return devices.DeviceClient(self.session)
 
     def create_org_client(self):
-        return orgs.OrgClient(self.default_session, self.v3_required_session)
+        return orgs.OrgClient(self.session)
 
     def create_legal_hold_client(self):
-        return legal_hold.LegalHoldClient(self.default_session, self.v3_required_session)
+        return legal_hold.LegalHoldClient(self.session)
 
     def create_archive_client(self):
-        return archive.ArchiveClient(self.default_session, self.v3_required_session)
+        return archive.ArchiveClient(self.session)
 
     def create_security_client(self):
-        return security.SecurityClient(self.default_session, self.v3_required_session)
+        return security.SecurityClient(self.session)
 
 
 class StorageClientFactory(object):

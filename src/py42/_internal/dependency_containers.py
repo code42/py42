@@ -28,12 +28,11 @@ from py42._internal.storage_session_manager import StorageSessionManager
 class AuthorityDependencies(object):
     def __init__(self, session_factory, root_session):
         # type: (SessionFactory, Py42Session) -> None
-        self._set_sessions(session_factory, root_session)
-        default_session = self.default_session
-        v3_required_session = self.v3_required_session
+        self._set_v3_session(session_factory, root_session)
+        self.storage_sessions_manager = StorageSessionManager(session_factory)
 
         # authority clients
-        authority_client_factory = AuthorityClientFactory(default_session, v3_required_session)
+        authority_client_factory = AuthorityClientFactory(self.session)
         self.session_factory = session_factory
         self.administration_client = authority_client_factory.create_administration_client()
         self.user_client = authority_client_factory.create_user_client()
@@ -44,50 +43,27 @@ class AuthorityDependencies(object):
         self.security_client = authority_client_factory.create_security_client()
         self.user_context = UserContext(self.administration_client)
 
-    def _set_sessions(self, session_factory, root_session):
+    def _set_v3_session(self, session_factory, root_session):
         # type: (SessionFactory, Py42Session) -> None
         self.root_session = root_session
-        v3_session = session_factory.create_jwt_session(root_session)
-        v1_session = session_factory.create_v1_session(root_session)
-        sessions = [v3_session, v1_session]
-        selected_session_idx = self._select_first_valid_session_idx(sessions, u"/api/User/my")
-
-        selected_session = sessions[selected_session_idx]
-
-        # some older versions of C42 Server have v3 APIs that support JWT tokens while the V1 api does not.
-        if selected_session is not v3_session:
-            v3_required_session = v3_session
-        else:
-            v3_required_session = selected_session
-
-        self.default_session = selected_session
-        self.v3_required_session = v3_required_session
-        self.storage_sessions_manager = StorageSessionManager(session_factory)
+        self.session = session_factory.create_jwt_session(root_session)
+        self._test_session(self.session, u"/api/User/my")
 
     @staticmethod
-    def verify_session_supported(session, test_uri):
+    def _test_session(session, test_uri):
+        host_address = session.host_address
         try:
             response = session.get(test_uri)
             return 200 <= response.status_code < 300
         except Exception:
-            return False
-
-    @staticmethod
-    def _select_first_valid_session_idx(session_list, test_uri):
-        host_address = None
-        for idx, session in enumerate(session_list):
-            host_address = session.host_address
-            if AuthorityDependencies.verify_session_supported(session, test_uri):
-                return idx
-
-        message = (
-            u"Invalid credentials or host address ({0}). Check that the username and password are correct, that the "
-            u"host is available and reachable, and that you have supplied the full scheme, domain, and port "
-            u"(e.g. https://myhost.code42.com:4285). If you are using a self-signed ssl certificate, try setting "
-            u"py42.settings.verify_ssl_certs to false (or using a cert from a legitimate certificate "
-            u"authority).".format(host_address)
-        )
-        raise Exception(message)
+            message = (
+                u"Invalid credentials or host address ({0}). Check that the username and password are correct, that the "
+                u"host is available and reachable, and that you have supplied the full scheme, domain, and port "
+                u"(e.g. https://myhost.code42.com:4285). If you are using a self-signed ssl certificate, try setting "
+                u"py42.settings.verify_ssl_certs to false (or using a cert from a legitimate certificate "
+                u"authority).".format(host_address)
+            )
+            raise Exception(message)
 
 
 class StorageDependencies(object):
@@ -187,7 +163,7 @@ class SDKDependencies(object):
         # type: (type, SessionFactory, Py42Session) -> SDKDependencies
         # this configuration is for using c42-hosted endpoints to get v3 or v1 authentication tokens.
         authority_dependencies = AuthorityDependencies(session_factory, root_session)
-        default_session = authority_dependencies.default_session
+        default_session = authority_dependencies.session
         security_client = authority_dependencies.security_client
         device_client = authority_dependencies.device_client
         key_value_store_dependencies = KeyValueStoreDependencies(authority_dependencies)

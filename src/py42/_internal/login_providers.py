@@ -67,10 +67,11 @@ class C42APITmpAuthProvider(LoginProvider):
 
     def get_login_info(self):
         try:
-            response = self.get_tmp_auth_token()  # pylint: disable=assignment-from-no-return
-            logon_info = json.loads(response.text)[u"data"]
-            self._cached_info = logon_info
-            return logon_info
+            if self._cached_info is None:
+                response = self.get_tmp_auth_token()  # pylint: disable=assignment-from-no-return
+                logon_info = json.loads(response.text)[u"data"]
+                self._cached_info = logon_info
+            return self._cached_info
         except Exception as ex:
             message = (
                 u"An error occurred while trying to retrieve storage logon info, caused by {0}"

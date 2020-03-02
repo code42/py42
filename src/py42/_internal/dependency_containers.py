@@ -6,12 +6,6 @@ from py42._internal.client_factories import (
     MicroserviceClientFactory,
     hacky_get_microservice_url,
 )
-
-from py42._internal.login_providers import (
-    FileEventLoginProvider,
-    KeyValueStoreLoginProvider,
-    MicroserviceLoginProvider,
-)
 from py42._internal.login_provider_factories import ArchiveLocatorFactory
 from py42._internal.modules import (
     archive as archive_module,
@@ -71,7 +65,7 @@ class SDKDependencies(object):
         )
 
         microservice_client_factory = _get_microservice_client_factory(
-            host_address, session_factory, user_context
+            host_address, session_factory, self.user_context
         )
 
         # modules (feature sets that combine info from multiple clients)
@@ -79,7 +73,7 @@ class SDKDependencies(object):
             archive_accessor_manager, self.archive_client
         )
         self.security_module = sec_module.SecurityModule(
-            self.security_client, microservice_client_factory
+            self.security_client, storage_client_factory, microservice_client_factory
         )
         self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
             microservice_client_factory

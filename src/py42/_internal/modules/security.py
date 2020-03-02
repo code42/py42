@@ -1,11 +1,6 @@
 import json
 from threading import Lock
 
-from py42._internal.client_factories import (
-    FileEventClientFactory,
-    StorageClientFactory,
-    AlertClientFactory,
-)
 from py42._internal.clients.security import SecurityClient
 import py42.util as util
 

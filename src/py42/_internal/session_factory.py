@@ -19,7 +19,7 @@ class SessionFactory(object):
         self._auth_handler_factory = auth_handler_factory
 
     def create_basic_auth_session(self, host_address, username, password):
-        provider = BasicAuthProvider(host_address, username, password)
+        provider = BasicAuthProvider(username, password)
         header_modifier = self._session_modifier_factory.create_header_modifier(u"Basic {0}")
         return self._create_session(self._session_impl, host_address, provider, header_modifier)
 

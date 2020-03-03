@@ -10,18 +10,12 @@ class SecurityModule(object):
         self._security_client = security_client
         self._storage_client_factory = storage_client_factory
         self._microservices_client_factory = microservices_client_factory
-        self._file_event_client = None
-        self._alert_client = None
-        self._file_event_client = None
-        self._alert_client = None
         self._client_cache = {}
         self._client_cache_lock = Lock()
 
     @property
     def alerts(self):
-        if not self._alert_client:
-            self._alert_client = self._microservices_client_factory.create_alert_client()
-        return self._alert_client
+        return self._microservices_client_factory.get_alerts_client()
 
     def get_security_plan_storage_info_list(self, user_uid):
         locations = None
@@ -85,8 +79,7 @@ class SecurityModule(object):
         Returns:
             list of file events as JSON
         """
-        if not self._file_event_client:
-            self._file_event_client = self._microservices_client_factory.create_file_event_client()
+        self._file_event_client = self._microservices_client_factory.get_file_event_client()
         return self._file_event_client.search_file_events(query)
 
     def _get_plan_storage_infos(self, plan_destination_map):

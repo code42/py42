@@ -4,7 +4,6 @@ from py42._internal.client_factories import (
     AuthorityClientFactory,
     StorageClientFactory,
     MicroserviceClientFactory,
-    hacky_get_microservice_url,
 )
 from py42._internal.login_provider_factories import ArchiveLocatorFactory
 from py42._internal.modules import (
@@ -18,21 +17,9 @@ from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 
 
-def _get_key_value_store_client(authority_url, session_factory):
-    config_session = session_factory.create_anonymous_session(authority_url)
-    url = hacky_get_microservice_url(config_session, u"simple-key-value-store")
-    key_value_session = session_factory.create_anonymous_session(url)
-    return key_value_store.KeyValueStoreClient(key_value_session)
-
-
 def _get_storage_client_factory(session_factory, archive_locator_factory):
     storage_session_manager = StorageSessionManager(session_factory)
     return StorageClientFactory(storage_session_manager, archive_locator_factory)
-
-
-def _get_microservice_client_factory(authority_url, session_factory, user_context):
-    key_value_store_client = _get_key_value_store_client(authority_url, session_factory)
-    return MicroserviceClientFactory(session_factory, key_value_store_client, user_context)
 
 
 class SDKDependencies(object):
@@ -61,8 +48,8 @@ class SDKDependencies(object):
             self.archive_client, storage_client_factory
         )
 
-        microservice_client_factory = _get_microservice_client_factory(
-            host_address, session_factory, self.user_context
+        microservice_client_factory = MicroserviceClientFactory(
+            host_address, root_session, session_factory, self.user_context
         )
 
         # modules (feature sets that combine info from multiple clients)

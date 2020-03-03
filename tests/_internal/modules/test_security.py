@@ -263,7 +263,7 @@ class TestSecurityModule(object):
         file_event_client,
         microservice_client_factory,
     ):
-        microservice_client_factory.create_file_event_client.side_effect = self.return_file_event_client(
+        microservice_client_factory.get_file_event_client.side_effect = self.return_file_event_client(
             file_event_client
         )
         security_module = SecurityModule(

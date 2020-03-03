@@ -50,7 +50,6 @@ class AuthorityClientFactory(object):
 
 class StorageClientFactory(object):
     def __init__(self, storage_session_manager, login_provider_factory):
-        # type: (StorageSessionManager, ArchiveLocatorFactory) -> None
         self._storage_session_manager = storage_session_manager
         self._login_provider_factory = login_provider_factory
 
@@ -70,31 +69,50 @@ class StorageClientFactory(object):
 
 
 class MicroserviceClientFactory(object):
-    def __init__(self, session_factory, key_value_store_client, user_context):
+    def __init__(self, authority_url, root_session, session_factory, user_context):
+        self._authority_url = authority_url
         self._session_factory = session_factory
-        self._key_value_store_client = key_value_store_client
         self._user_context = user_context
+        self._root_session = root_session
+        self._key_value_store_client = None
+        self._alerts_client = None
+        self._departing_employee_client = None
+        self._file_event_client = None
 
-    def create_alerts_client(self):
-        url = self._key_value_store_client.get_stored_value(u"AlertService-API_URL")
-        session = self._session_factory.create_jwt_session(url)
-        return AlertClient(session, self._user_context)
+    def get_alerts_client(self):
+        if not self._alerts_client:
+            url = self._key_value_store_client.get_stored_value(u"AlertService-API_URL")
+            session = self._session_factory.create_jwt_session(url, self._root_session)
+            self._alerts_client = AlertClient(session, self._user_context)
+        return self._alerts_client
 
-    def create_departing_employee_client(self):
-        url = self._key_value_store_client.get_stored_value(u"employeecasemanagement-API_URL")
-        session = self._session_factory.create_jwt_session(url)
-        return DepartingEmployeeClient(session, self._user_context)
+    def get_departing_employee_client(self):
+        if not self._departing_employee_client:
+            url = self._key_value_store_client.get_stored_value(u"employeecasemanagement-API_URL")
+            session = self._session_factory.create_jwt_session(url, self._root_session)
+            self._departing_employee_client = DepartingEmployeeClient(session, self._user_context)
+        return self._departing_employee_client
 
-    def create_file_event_client(self, authority_url):
-        config_session = self._session_factory.create_anonymous_session(authority_url)
-        url = hacky_get_microservice_url(config_session, u"forensicsearch")
-        session = self._session_factory.create_jwt_session(url)
-        return FileEventClient(session)
+    def get_file_event_client(self):
+        if not self._file_event_client:
+            config_session = self._session_factory.create_anonymous_session(self._authority_url)
+            url = _hacky_get_microservice_url(config_session, u"forensicsearch")
+            session = self._session_factory.create_jwt_session(url, self._root_session)
+            self._file_event_client = FileEventClient(session)
+        return self._file_event_client
+
+    def _get_stored_value(self, key):
+        if not self._key_value_store_client:
+            config_session = self._session_factory.create_anonymous_session(self._authority_url)
+            url = _hacky_get_microservice_url(config_session, u"simple-key-value-store")
+            session = self._session_factory.create_anonymous_session(url)
+            self._key_value_store_client = KeyValueStoreClient(session)
+        return self._key_value_store_client.get_stored_value(key)
 
 
-def hacky_get_microservice_url(session, microservice_base_name):
+def _hacky_get_microservice_url(session, microservice_base_name):
     sts_url = _get_sts_base_url(session)
-    return str(sts_url).replace(u"sts", microservice_base_name)
+    return sts_url.replace(u"sts", microservice_base_name)
 
 
 def _get_sts_base_url(session):

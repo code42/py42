@@ -1,12 +1,7 @@
 class EmployeeCaseManagementModule(object):
     def __init__(self, microservice_client_factory):
         self._microservice_client_factory = microservice_client_factory
-        self._departing_employee_client = None
 
     @property
     def departing_employee(self):
-        if not self._departing_employee_client:
-            self._departing_employee_client = (
-                self._microservice_client_factory.create_departing_employee_client()
-            )
-        return self._departing_employee_client
+        return self._microservice_client_factory.get_departing_employee_client()

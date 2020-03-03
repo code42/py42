@@ -40,22 +40,18 @@ class Severity(_QueryFilterStringField):
 
     @classmethod
     def eq(cls, value):
-        # type: (SeverityTypeEnum) -> FilterGroup
         return super(Severity, cls).eq(str(value))
 
     @classmethod
     def not_eq(cls, value):
-        # type: (SeverityTypeEnum) -> FilterGroup
         return super(Severity, cls).not_eq(str(value))
 
     @classmethod
     def is_in(cls, value_list):
-        # type: (iter[SeverityTypeEnum]) -> FilterGroup
         return super(Severity, cls).is_in([str(value) for value in value_list])
 
     @classmethod
     def not_in(cls, value_list):
-        # type: (iter[SeverityTypeEnum]) -> FilterGroup
         return super(Severity, cls).not_in([str(value) for value in value_list])
 
 
@@ -74,22 +70,18 @@ class AlertState(_QueryFilterStringField):
 
     @classmethod
     def eq(cls, value):
-        # type: (AlertStateTypeEnum) -> FilterGroup
         return super(AlertState, cls).eq(str(value))
 
     @classmethod
     def not_eq(cls, value):
-        # type: (AlertStateTypeEnum) -> FilterGroup
         return super(AlertState, cls).not_eq(str(value))
 
     @classmethod
     def is_in(cls, value_list):
-        # type: (iter[AlertStateTypeEnum]) -> FilterGroup
         return super(AlertState, cls).is_in([str(value) for value in value_list])
 
     @classmethod
     def not_in(cls, value_list):
-        # type: (iter[AlertStateTypeEnum]) -> FilterGroup
         return super(AlertState, cls).not_in([str(value) for value in value_list])
 
 

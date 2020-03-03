@@ -16,7 +16,6 @@ class FileType(object):
 
 class ArchiveAccessorManager(object):
     def __init__(self, archive_client, storage_client_factory):
-        # type: (ArchiveClient, StorageClientFactory) -> None
         self._archive_client = archive_client
         self._storage_client_factory = storage_client_factory
 

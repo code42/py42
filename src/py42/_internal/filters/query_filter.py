@@ -57,22 +57,18 @@ class _QueryFilterStringField(object):
 
     @classmethod
     def eq(cls, value):
-        # type: (str) -> FilterGroup
         return create_eq_filter_group(cls._term, value)
 
     @classmethod
     def not_eq(cls, value):
-        # type: (str) -> FilterGroup
         return create_not_eq_filter_group(cls._term, value)
 
     @classmethod
     def is_in(cls, value_list):
-        # type: (iter[str]) -> FilterGroup
         return create_is_in_filter_group(cls._term, value_list)
 
     @classmethod
     def not_in(cls, value_list):
-        # type: (iter[str]) -> FilterGroup
         return create_not_in_filter_group(cls._term, value_list)
 
 

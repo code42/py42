@@ -4,7 +4,6 @@ from py42._internal.clients.archive import ArchiveClient
 
 class ArchiveModule(object):
     def __init__(self, archive_accessor_manager, archive_client):
-        # type: (ArchiveAccessorManager, ArchiveClient) -> None
         self._archive_accessor_manager = archive_accessor_manager
         self._archive_client = archive_client
 

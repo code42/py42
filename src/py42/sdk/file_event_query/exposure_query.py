@@ -21,22 +21,18 @@ class ExposureType(_FileEventFilterStringField):
 
     @classmethod
     def eq(cls, value):
-        # type: (ExposureTypeEnum) -> FilterGroup
         return super(ExposureType, cls).eq(str(value))
 
     @classmethod
     def not_eq(cls, value):
-        # type: (ExposureTypeEnum) -> FilterGroup
         return super(ExposureType, cls).not_eq(str(value))
 
     @classmethod
     def is_in(cls, value_list):
-        # type: (iter[ExposureTypeEnum]) -> FilterGroup
         return super(ExposureType, cls).is_in([str(value) for value in value_list])
 
     @classmethod
     def not_in(cls, value_list):
-        # type: (iter[ExposureTypeEnum]) -> FilterGroup
         return super(ExposureType, cls).not_in([str(value) for value in value_list])
 
 

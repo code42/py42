@@ -19,10 +19,8 @@ def create_not_contains_filter_group(term, value):
 class _AlertQueryFilterStringField(_QueryFilterStringField):
     @classmethod
     def contains(cls, value):
-        # type: (str) -> FilterGroup
         return create_contains_filter_group(cls._term, value)
 
     @classmethod
     def not_contains(cls, value):
-        # type: (str) -> FilterGroup
         return create_not_contains_filter_group(cls._term, value)

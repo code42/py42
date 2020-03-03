@@ -23,22 +23,18 @@ class EventType(_FileEventFilterStringField):
 
     @classmethod
     def eq(cls, value):
-        # type: (EventTypeEnum) -> FilterGroup
         return super(EventType, cls).eq(str(value))
 
     @classmethod
     def not_eq(cls, value):
-        # type: (EventTypeEnum) -> FilterGroup
         return super(EventType, cls).not_eq(str(value))
 
     @classmethod
     def is_in(cls, value_list):
-        # type: (iter[EventTypeEnum]) -> FilterGroup
         return super(EventType, cls).is_in([str(value) for value in value_list])
 
     @classmethod
     def not_in(cls, value_list):
-        # type: (iter[EventTypeEnum]) -> FilterGroup
         return super(EventType, cls).not_in([str(value) for value in value_list])
 
 

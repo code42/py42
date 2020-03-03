@@ -10,7 +10,6 @@ from py42._internal.session_factory import (
 
 class SDK(object):
     def __init__(self, sdk_dependencies):
-        # type: (SDKDependencies) -> None
         self._sdk_dependencies = sdk_dependencies
 
     @classmethod

@@ -70,7 +70,6 @@ def build_path(filename, directory=None, default_dir=posixpath.curdir):
 
 
 def save_content_to_disk(response, file_path):
-    # type: (Response, str) -> None
     """Saves the content of a Response to disk at the given path
 
     Args:
@@ -87,7 +86,6 @@ def save_content_to_disk(response, file_path):
 
 
 def filter_out_none(_dict):
-    # type: (dict) -> dict
     return {key: _dict[key] for key in _dict if _dict[key] is not None}
 
 

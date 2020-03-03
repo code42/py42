@@ -15,7 +15,6 @@ class StorageSessionManager(object):
         return self._session_cache.get(url.lower())
 
     def get_storage_session(self, login_provider):
-        # type: (C42APITmpAuthProvider) -> Py42Session
         try:
             url = login_provider.get_login_info()[u"serverUrl"]
             session = self.get_saved_session_for_url(url)

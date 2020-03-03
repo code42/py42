@@ -8,7 +8,6 @@ class BaseClient(object):
 
 class BaseQuery(object):
     def __init__(self, *args, **kwargs):
-        # type: (iter[FilterGroup], any) -> None
         self._filter_group_list = list(args)
         self._group_clause = kwargs.get(u"group_clause", u"AND")
         self.page_size = 10000
@@ -20,10 +19,8 @@ class BaseQuery(object):
 
     @classmethod
     def any(cls, *args):
-        # type: (iter[FilterGroup]) -> BaseQuery
         return cls(*args, group_clause=u"OR")
 
     @classmethod
     def all(cls, *args):
-        # type: (iter[FilterGroup]) -> BaseQuery
         return cls(*args)

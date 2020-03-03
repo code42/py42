@@ -141,8 +141,6 @@ def test_basic_provider_constructs_successfully():
 
 
 def test_basic_provider_secret_returns_base64_credentials(basic_auth_provider):
-    # type: (BasicAuthProvider) -> None
-
     expected_credentials = "{0}:{1}".format(USERNAME, PASSWORD).encode("utf-8")
     expected_b64_credentials = base64.b64encode(expected_credentials).decode("utf-8")
 
@@ -158,7 +156,6 @@ def test_v1_auth_provider_constructs_successfully(mocker):
 
 
 def test_v1_auth_provider_secret_returns_v1_token(v1_auth_provider):
-    # type: (C42ApiV1TokenProvider) -> None
     assert v1_auth_provider.get_secret_value() == "{0}-{1}".format(V1_TOKEN_PART1, V1_TOKEN_PART2)
 
 
@@ -169,7 +166,6 @@ def test_v3_auth_provider_constructs_successfully(mocker):
 
 
 def test_v3_auth_provider_secret_returns_v3_token(v3_auth_provider):
-    # type: (C42ApiV3TokenProvider) -> None
     assert v3_auth_provider.get_secret_value() == V3_TOKEN
 
 
@@ -180,7 +176,6 @@ def test_login_token_provider_constructs_successfully(mocker):
 
 
 def test_login_token_provider_secret_returns_tmp_login_token(login_token_provider):
-    # type: (C42APILoginTokenProvider) -> None
     assert login_token_provider.get_secret_value() == TMP_LOGIN_TOKEN
 
 
@@ -191,7 +186,6 @@ def test_storage_auth_token_provider_constructs_successfully(mocker):
 
 
 def test_storage_auth_token_provider_returns_tmp_login_token(storage_auth_token_provider):
-    # type: (C42APIStorageAuthTokenProvider) -> None
     assert storage_auth_token_provider.get_secret_value() == TMP_LOGIN_TOKEN
 
 

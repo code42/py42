@@ -7,7 +7,6 @@ from py42._internal.login_providers import C42APILoginTokenProvider, C42APIStora
 
 class ArchiveLocatorFactory(object):
     def __init__(self, auth_session, security_client, device_client):
-        # type: (object, SecurityClient, DeviceClient) -> ArchiveLocatorFactory
         self._auth_session = auth_session
         self._security_client = security_client
         self._device_client = device_client

@@ -7,7 +7,7 @@ from py42.sdk.file_event_query.device_query import (
     PrivateIPAddress,
     PublicIPAddress,
 )
-from ..conftest import EXISTS, NOT_EXISTS, IS, IS_NOT, IS_IN, NOT_IN
+from ..conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
 
 
 def test_device_username_exists_str_gives_correct_json_representation():

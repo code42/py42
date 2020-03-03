@@ -9,17 +9,13 @@ from py42._internal.clients import (
     security,
     users,
 )
-from py42._internal.user_context import UserContext
+from py42._internal.clients.alerts import AlertClient
 from py42._internal.clients.employee_case_management.departing_employee import (
     DepartingEmployeeClient,
 )
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.key_value_store import KeyValueStoreClient
 from py42._internal.clients.storage.storage import StorageClient
-from py42._internal.login_provider_factories import ArchiveLocatorFactory
-from py42._internal.clients.alerts import AlertClient
-from py42._internal.session_factory import SessionFactory
-from py42._internal.storage_session_manager import StorageSessionManager
 
 
 class AuthorityClientFactory(object):

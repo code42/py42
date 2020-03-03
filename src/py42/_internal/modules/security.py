@@ -1,7 +1,6 @@
 import json
 from threading import Lock
 
-from py42._internal.clients.security import SecurityClient
 import py42.util as util
 
 

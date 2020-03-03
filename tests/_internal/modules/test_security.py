@@ -1,12 +1,12 @@
 import pytest
 from requests import Response
 
-from py42._internal.client_factories import StorageClientFactory, MicroserviceClientFactory
+from py42._internal.client_factories import MicroserviceClientFactory, StorageClientFactory
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.security import SecurityClient
-from py42._internal.clients.storage.storage import StorageClient
 from py42._internal.clients.storage.security import StorageSecurityClient
-from py42._internal.modules.security import SecurityModule, PlanStorageInfo
+from py42._internal.clients.storage.storage import StorageClient
+from py42._internal.modules.security import PlanStorageInfo, SecurityModule
 
 RAW_QUERY = "RAW JSON QUERY"
 

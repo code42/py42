@@ -1,5 +1,5 @@
-from py42._internal.filters.query_filter import _QueryFilterBooleanField
 from py42._internal.filters.file_event_filter import _FileEventFilterStringField
+from py42._internal.filters.query_filter import _QueryFilterBooleanField
 
 
 class Actor(_FileEventFilterStringField):

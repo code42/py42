@@ -1,7 +1,7 @@
 import json
 
-from py42._internal.compat import str
 from py42._internal.base_classes import BaseClient
+from py42._internal.compat import str
 
 
 class AlertClient(BaseClient):

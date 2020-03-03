@@ -1,6 +1,6 @@
 import pytest
 
-from py42._internal.client_factories import ArchiveLocatorFactory
+from py42._internal.login_provider_factories import ArchiveLocatorFactory
 
 _USER_UID = "user-uid"
 

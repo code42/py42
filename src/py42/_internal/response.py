@@ -1,16 +1,16 @@
 import json
-from py42._internal.compat import reprlib
+from py42._internal.compat import reprlib, str
 
 
 class Py42Response(object):
-    def __init__(self, requests_response, json_key):
+    def __init__(self, requests_response, json_key=None):
         self._response = requests_response
         self._json_key = json_key
         response_dict = json.loads(self._response.text)
         self._data_root = response_dict.get("data") or response_dict
 
     def __getitem__(self, key):
-        item_root = self._data_root.get(self._json_key, self._data_root)
+        item_root = self._data_root[self._json_key] if self._json_key else self._data_root
         return item_root[key]
 
     @property
@@ -25,6 +25,6 @@ class Py42Response(object):
         return str(self._data_root)
 
     def __repr__(self):
-        return "<{} [status={}, data={}]>".format(
+        return u"<{} [status={}, data={}]>".format(
             self.__class__.__name__, self._response.status_code, reprlib.repr(self._data_root)
         )

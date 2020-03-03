@@ -16,35 +16,35 @@ class UserClient(BaseAuthorityClient):
         last_name=None,
         notes=None,
     ):
-        uri = "/api/User"
+        uri = u"/api/User"
         data = {
-            "orgUid": org_uid,
-            "username": username,
-            "email": email,
-            "password": password,
-            "firstName": first_name,
-            "lastName": last_name,
-            "notes": notes,
+            u"orgUid": org_uid,
+            u"username": username,
+            u"email": email,
+            u"password": password,
+            u"firstName": first_name,
+            u"lastName": last_name,
+            u"notes": notes,
         }
         return self._default_session.post(uri, data=json.dumps(data))
 
     def get_by_id(self, user_id, **kwargs):
-        uri = "/api/User/{0}".format(user_id)
+        uri = u"/api/User/{0}".format(user_id)
         params = kwargs
         return self._default_session.get(uri, params=params)
 
     def get_by_uid(self, user_uid, **kwargs):
-        uri = "/api/User/{0}".format(user_uid)
-        params = dict(idType="uid", **kwargs)
+        uri = u"/api/User/{0}".format(user_uid)
+        params = dict(idType=u"uid", **kwargs)
         return self._default_session.get(uri, params=params)
 
     def get_by_username(self, username, **kwargs):
-        uri = "/api/User"
+        uri = u"/api/User"
         params = dict(username=username, **kwargs)
         return self._default_session.get(uri, params=params)
 
     def get_current(self, **kwargs):
-        uri = "/api/User/my"
+        uri = u"/api/User/my"
         params = kwargs
         return self._default_session.get(uri, params=params)
 
@@ -59,7 +59,7 @@ class UserClient(BaseAuthorityClient):
         q=None,
         **kwargs
     ):
-        uri = "/api/User"
+        uri = u"/api/User"
         params = dict(
             active=active,
             email=email,
@@ -77,7 +77,7 @@ class UserClient(BaseAuthorityClient):
         return get_all_pages(
             self._get_page,
             settings.items_per_page,
-            "users",
+            u"users",
             active=active,
             email=email,
             org_uid=org_uid,
@@ -87,24 +87,24 @@ class UserClient(BaseAuthorityClient):
         )
 
     def block(self, user_id):
-        uri = "/api/UserBlock/{0}".format(user_id)
+        uri = u"/api/UserBlock/{0}".format(user_id)
         return self._default_session.put(uri)
 
     def unblock(self, user_id):
-        uri = "/api/UserBlock/{0}".format(user_id)
+        uri = u"/api/UserBlock/{0}".format(user_id)
         return self._default_session.delete(uri)
 
     def deactivate(self, user_id, block_user=None):
-        uri = "/api/UserDeactivation/{0}".format(user_id)
-        data = {"blockUser": block_user}
+        uri = u"/api/UserDeactivation/{0}".format(user_id)
+        data = {u"blockUser": block_user}
         return self._default_session.put(uri, data=json.dumps(data))
 
     def reactivate(self, user_id, unblock_user=None):
-        uri = "/api/UserDeactivation/{0}".format(user_id)
-        params = {"unblockUser": unblock_user}
+        uri = u"/api/UserDeactivation/{0}".format(user_id)
+        params = {u"unblockUser": unblock_user}
         return self._default_session.delete(uri, params=params)
 
     def change_org_assignment(self, user_id, org_id):
-        uri = "/api/UserMoveProcess"
-        data = {"userId": user_id, "parentOrgId": org_id}
+        uri = u"/api/UserMoveProcess"
+        data = {u"userId": user_id, u"parentOrgId": org_id}
         return self._default_session.post(uri, data=json.dumps(data))

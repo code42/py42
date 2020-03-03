@@ -22,7 +22,7 @@ def _get_storage_client_factory(session_factory, archive_locator_factory):
 class SDKDependencies(object):
     def __init__(self, host_address, session_factory, root_session):
         self._set_v3_session(host_address, session_factory, root_session)
-        self.storage_sessions_manager = StorageSessionManager(session_factory)
+        storage_sessions_manager = StorageSessionManager(session_factory)
 
         # authority clients
         authority_client_factory = AuthorityClientFactory(self.session)
@@ -38,11 +38,11 @@ class SDKDependencies(object):
         archive_locator_factory = ArchiveLocatorFactory(
             self.session, self.security_client, self.device_client
         )
-        storage_client_factory = _get_storage_client_factory(
+        self.storage_client_factory = _get_storage_client_factory(
             session_factory, archive_locator_factory
         )
         archive_accessor_manager = ArchiveAccessorManager(
-            self.archive_client, storage_client_factory
+            self.archive_client, self.storage_client_factory
         )
 
         microservice_client_factory = MicroserviceClientFactory(
@@ -54,7 +54,7 @@ class SDKDependencies(object):
             archive_accessor_manager, self.archive_client
         )
         self.security_module = sec_module.SecurityModule(
-            self.security_client, storage_client_factory, microservice_client_factory
+            self.security_client, self.storage_client_factory, microservice_client_factory
         )
         self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
             microservice_client_factory

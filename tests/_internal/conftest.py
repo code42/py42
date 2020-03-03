@@ -65,6 +65,7 @@ def traceback(mocker):
 @pytest.fixture
 def success_requests_session(mocker, successful_response):
     session = mocker.MagicMock(spec=Session)
+    session.get.return_value = successful_response
     session.request.return_value = successful_response
     return session
 

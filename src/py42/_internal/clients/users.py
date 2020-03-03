@@ -57,7 +57,7 @@ class UserClient(BaseAuthorityClient):
         page_num=None,
         page_size=None,
         q=None,
-        **kwargs,
+        **kwargs
     ):
         uri = "/api/User"
         params = dict(
@@ -68,7 +68,7 @@ class UserClient(BaseAuthorityClient):
             pgNum=page_num,
             pgSize=page_size,
             q=q,
-            **kwargs,
+            **kwargs
         )
 
         return self._default_session.get(uri, params=params)
@@ -83,7 +83,7 @@ class UserClient(BaseAuthorityClient):
             org_uid=org_uid,
             role_id=role_id,
             q=q,
-            **kwargs,
+            **kwargs
         )
 
     def block(self, user_id):

@@ -1,5 +1,4 @@
 from py42._internal.filters.query_filter import (
-    FilterGroup,
     _QueryFilterStringField,
     create_filter_group,
     create_query_filter,

@@ -1,8 +1,6 @@
 from threading import Lock
 
 from py42._internal.compat import str
-from py42._internal.login_providers import C42APITmpAuthProvider
-from py42._internal.session import Py42Session
 
 
 class StorageSessionManager(object):

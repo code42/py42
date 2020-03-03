@@ -5,8 +5,6 @@ import os
 import posixpath
 from datetime import datetime
 
-from requests import Response
-
 
 def get_obj_from_response(response, data_key):
     if response.text and 200 <= response.status_code < 300:

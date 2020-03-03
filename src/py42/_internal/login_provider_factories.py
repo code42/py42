@@ -1,6 +1,4 @@
 import py42.util as util
-from py42._internal.clients.devices import DeviceClient
-from py42._internal.clients.security import SecurityClient
 from py42._internal.compat import str
 from py42._internal.login_providers import C42APILoginTokenProvider, C42APIStorageAuthTokenProvider
 

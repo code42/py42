@@ -1,5 +1,5 @@
 from py42._internal.filters.file_event_filter import _FileEventFilterStringField
-from py42._internal.filters.query_filter import FilterGroup, _QueryFilterTimestampField
+from py42._internal.filters.query_filter import _QueryFilterTimestampField
 
 
 class EventTimestamp(_QueryFilterTimestampField):

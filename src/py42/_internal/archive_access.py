@@ -3,8 +3,6 @@ import time
 from collections import namedtuple
 
 import py42.util as util
-from py42._internal.client_factories import StorageClientFactory
-from py42._internal.clients.archive import ArchiveClient
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
 

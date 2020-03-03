@@ -1,5 +1,4 @@
 from py42._internal.filters.file_event_filter import _FileEventFilterStringField
-from py42._internal.filters.query_filter import FilterGroup
 
 
 class ExposureType(_FileEventFilterStringField):

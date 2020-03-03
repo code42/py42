@@ -65,8 +65,11 @@ class TestLegalHoldClient(object):
         response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
         return response
 
-    def test_get_matter_by_uid_calls_get_with_uri_and_params(self, session, v3_required_session):
+    def test_get_matter_by_uid_calls_get_with_uri_and_params(
+        self, session, v3_required_session, mock_get_all_matters_empty_response
+    ):
         client = LegalHoldClient(session, v3_required_session)
+        session.get.return_value = mock_get_all_matters_empty_response
         client.get_matter_by_uid("LEGAL_HOLD_UID")
         uri = "{0}/{1}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
         session.get.assert_called_once_with(uri)

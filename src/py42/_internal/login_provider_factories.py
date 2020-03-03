@@ -25,9 +25,7 @@ class ArchiveLocatorFactory(object):
     def create_backup_archive_locator(self, device_guid, destination_guid=None):
         try:
             if destination_guid is None:
-                response = self._device_client.get_device_by_guid(
-                    device_guid, include_backup_usage=True
-                )
+                response = self._device_client.get_by_guid(device_guid, include_backup_usage=True)
                 if destination_guid is None:
                     # take the first destination guid we find
                     destination_list = util.get_obj_from_response(response, u"backupUsage")

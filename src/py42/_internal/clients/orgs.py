@@ -29,13 +29,13 @@ class OrgClient(BaseAuthorityClient):
         params = dict(idType=u"orgUid", **kwargs)
         return self._default_session.get(uri, params=params)
 
-    def _get_orgs_page(self, page_num=None, page_size=None, **kwargs):
+    def _get_page(self, page_num=None, page_size=None, **kwargs):
         uri = u"/api/Org"
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
         return self._default_session.get(uri, params=params)
 
     def get_all(self, **kwargs):
-        return get_all_pages(self._get_orgs_page, settings.items_per_page, u"orgs", **kwargs)
+        return get_all_pages(self._get_page, settings.items_per_page, u"orgs", **kwargs)
 
     def block(self, org_id):
         uri = u"/api/OrgBlock/{0}".format(org_id)

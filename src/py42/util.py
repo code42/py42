@@ -9,14 +9,9 @@ from requests import Response
 
 
 def get_obj_from_response(response, data_key):
-    if response.text and 200 <= response.status_code < 300:
-        response_json = json.loads(response.text)
-        if u"data" in response_json:
-            data = response_json[u"data"]
-            if data_key == u"data":
-                return data
-            if data_key in data:
-                return data[data_key]
+    if response.api_response.text and 200 <= response.api_response.status_code < 300:
+        response_json = json.loads(response.raw_json)
+        return response_json[data_key]
     else:
         return []
 
@@ -30,7 +25,7 @@ def print_response(response, label=None):
     if label:
         print(label, end=u" ")
     try:
-        print(format_json(response.text))
+        print(format_json(response.api_response.text))
     except ValueError:
         print(response)
 

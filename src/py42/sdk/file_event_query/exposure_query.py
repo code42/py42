@@ -4,35 +4,12 @@ from py42._internal.filters.file_event_filter import _FileEventFilterStringField
 class ExposureType(_FileEventFilterStringField):
     _term = u"exposure"
 
-    class ExposureTypeEnum(object):
-        def __init__(self, value):
-            self._value = value
-
-        def __repr__(self):
-            return self._value
-
-    SHARED_VIA_LINK = ExposureTypeEnum(u"SharedViaLink")
-    SHARED_TO_DOMAIN = ExposureTypeEnum(u"SharedToDomain")
-    APPLICATION_READ = ExposureTypeEnum(u"ApplicationRead")
-    CLOUD_STORAGE = ExposureTypeEnum(u"CloudStorage")
-    REMOVABLE_MEDIA = ExposureTypeEnum(u"RemovableMedia")
-    IS_PUBLIC = ExposureTypeEnum(u"IsPublic")
-
-    @classmethod
-    def eq(cls, value):
-        return super(ExposureType, cls).eq(str(value))
-
-    @classmethod
-    def not_eq(cls, value):
-        return super(ExposureType, cls).not_eq(str(value))
-
-    @classmethod
-    def is_in(cls, value_list):
-        return super(ExposureType, cls).is_in([str(value) for value in value_list])
-
-    @classmethod
-    def not_in(cls, value_list):
-        return super(ExposureType, cls).not_in([str(value) for value in value_list])
+    SHARED_VIA_LINK = u"SharedViaLink"
+    SHARED_TO_DOMAIN = u"SharedToDomain"
+    APPLICATION_READ = u"ApplicationRead"
+    CLOUD_STORAGE = u"CloudStorage"
+    REMOVABLE_MEDIA = u"RemovableMedia"
+    IS_PUBLIC = u"IsPublic"
 
 
 class ProcessName(_FileEventFilterStringField):

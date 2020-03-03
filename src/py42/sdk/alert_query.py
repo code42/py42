@@ -23,62 +23,16 @@ class Description(_AlertQueryFilterStringField):
 class Severity(_QueryFilterStringField):
     _term = u"severity"
 
-    class SeverityTypeEnum(object):
-        def __init__(self, value):
-            self._value = value
-
-        def __repr__(self):
-            return self._value
-
-    HIGH = SeverityTypeEnum(u"HIGH")
-    MEDIUM = SeverityTypeEnum(u"MEDIUM")
-    LOW = SeverityTypeEnum(u"LOW")
-
-    @classmethod
-    def eq(cls, value):
-        return super(Severity, cls).eq(str(value))
-
-    @classmethod
-    def not_eq(cls, value):
-        return super(Severity, cls).not_eq(str(value))
-
-    @classmethod
-    def is_in(cls, value_list):
-        return super(Severity, cls).is_in([str(value) for value in value_list])
-
-    @classmethod
-    def not_in(cls, value_list):
-        return super(Severity, cls).not_in([str(value) for value in value_list])
+    HIGH = u"HIGH"
+    MEDIUM = u"MEDIUM"
+    LOW = u"LOW"
 
 
 class AlertState(_QueryFilterStringField):
     _term = u"state"
 
-    class AlertStateTypeEnum(object):
-        def __init__(self, value):
-            self._value = value
-
-        def __repr__(self):
-            return self._value
-
-    OPEN = AlertStateTypeEnum(u"OPEN")
-    DISMISSED = AlertStateTypeEnum(u"RESOLVED")
-
-    @classmethod
-    def eq(cls, value):
-        return super(AlertState, cls).eq(str(value))
-
-    @classmethod
-    def not_eq(cls, value):
-        return super(AlertState, cls).not_eq(str(value))
-
-    @classmethod
-    def is_in(cls, value_list):
-        return super(AlertState, cls).is_in([str(value) for value in value_list])
-
-    @classmethod
-    def not_in(cls, value_list):
-        return super(AlertState, cls).not_in([str(value) for value in value_list])
+    OPEN = u"OPEN"
+    DISMISSED = u"RESOLVED"
 
 
 class AlertQuery(BaseQuery):

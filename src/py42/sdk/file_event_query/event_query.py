@@ -9,33 +9,10 @@ class EventTimestamp(_QueryFilterTimestampField):
 class EventType(_FileEventFilterStringField):
     _term = u"eventType"
 
-    class EventTypeEnum(object):
-        def __init__(self, value):
-            self._value = value
-
-        def __repr__(self):
-            return self._value
-
-    CREATED = EventTypeEnum(u"CREATED")
-    MODIFIED = EventTypeEnum(u"MODIFIED")
-    DELETED = EventTypeEnum(u"DELETED")
-    READ_BY_APP = EventTypeEnum(u"READ_BY_APP")
-
-    @classmethod
-    def eq(cls, value):
-        return super(EventType, cls).eq(str(value))
-
-    @classmethod
-    def not_eq(cls, value):
-        return super(EventType, cls).not_eq(str(value))
-
-    @classmethod
-    def is_in(cls, value_list):
-        return super(EventType, cls).is_in([str(value) for value in value_list])
-
-    @classmethod
-    def not_in(cls, value_list):
-        return super(EventType, cls).not_in([str(value) for value in value_list])
+    CREATED = u"CREATED"
+    MODIFIED = u"MODIFIED"
+    DELETED = u"DELETED"
+    READ_BY_APP = u"READ_BY_APP"
 
 
 class InsertionTimestamp(_QueryFilterTimestampField):

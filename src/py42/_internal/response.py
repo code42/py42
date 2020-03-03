@@ -1,4 +1,5 @@
 import json
+import reprlib
 
 
 class Py42Response(object):
@@ -9,7 +10,7 @@ class Py42Response(object):
         self._data_root = response_dict.get("data") or response_dict
 
     def __getitem__(self, key):
-        item_root = self._data_root[self._json_key]
+        item_root = self._data_root.get(self._json_key, self._data_root)
         return item_root[key]
 
     @property
@@ -19,3 +20,11 @@ class Py42Response(object):
     @property
     def api_response(self):
         return self._response
+
+    def __str__(self):
+        return str(self._data_root)
+
+    def __repr__(self):
+        return "<{} [status={}, data={}]>".format(
+            self.__class__.__name__, self._response.status_code, reprlib.repr(self._data_root)
+        )

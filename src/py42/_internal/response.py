@@ -1,5 +1,5 @@
 import json
-import reprlib
+from py42._internal.compat import reprlib
 
 
 class Py42Response(object):

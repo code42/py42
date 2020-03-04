@@ -77,25 +77,25 @@ class MicroserviceClientFactory(object):
 
     def get_alerts_client(self):
         if not self._alerts_client:
-            url = self._get_stored_value(u"AlertService-API_URL")
-            session = self._session_factory.create_jwt_session(url, self._root_session)
+            session = self._get_jwt_session(u"AlertService-API_URL")
             self._alerts_client = AlertClient(session, self._user_context)
         return self._alerts_client
 
     def get_departing_employee_client(self):
         if not self._departing_employee_client:
-            url = self._get_stored_value(u"employeecasemanagement-API_URL")
-            session = self._session_factory.create_jwt_session(url, self._root_session)
+            session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             self._departing_employee_client = DepartingEmployeeClient(session, self._user_context)
         return self._departing_employee_client
 
     def get_file_event_client(self):
         if not self._file_event_client:
-            config_session = self._session_factory.create_anonymous_session(self._authority_url)
-            url = _hacky_get_microservice_url(config_session, u"forensicsearch")
-            session = self._session_factory.create_jwt_session(url, self._root_session)
+            session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
             self._file_event_client = FileEventClient(session)
         return self._file_event_client
+
+    def _get_jwt_session(self, key):
+        url = self._get_stored_value(key)
+        return self._session_factory.create_jwt_session(url, self._root_session)
 
     def _get_stored_value(self, key):
         if not self._key_value_store_client:
@@ -103,7 +103,7 @@ class MicroserviceClientFactory(object):
             url = _hacky_get_microservice_url(config_session, u"simple-key-value-store")
             session = self._session_factory.create_anonymous_session(url)
             self._key_value_store_client = KeyValueStoreClient(session)
-        return self._key_value_store_client.get_stored_value(key)
+        return self._key_value_store_client.get_stored_value(key).text
 
 
 def _hacky_get_microservice_url(session, microservice_base_name):

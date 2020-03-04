@@ -36,7 +36,7 @@ class TestOrgClient(object):
         client = OrgClient(session, v3_required_session)
         client.get_by_id("ORG_ID")
         uri = "{0}/{1}".format(COMPUTER_URI, "ORG_ID")
-        session.get.assert_called_once_with(uri)
+        session.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
         self, session, v3_required_session, mock_get_orgs_response, mock_get_orgs_empty_response

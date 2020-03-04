@@ -19,22 +19,23 @@ class OrgClient(BaseAuthorityClient):
         }
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def get_by_id(self, org_id):
+    def get_by_id(self, org_id, **kwargs):
         uri = u"/api/Org/{0}".format(org_id)
-        return self._default_session.get(uri)
-
-    def get_by_uid(self, org_uid):
-        uri = u"/api/Org/{0}?idType=orgUid".format(org_uid)
-        return self._default_session.get(uri)
-
-    def _get_orgs_page(self, page_num=None, page_size=None):
-        uri = u"/api/Org"
-        params = {u"pgNum": page_num, u"pgSize": page_size}
-
+        params = kwargs
         return self._default_session.get(uri, params=params)
 
-    def get_all(self):
-        return get_all_pages(self._get_orgs_page, settings.items_per_page, u"orgs")
+    def get_by_uid(self, org_uid, **kwargs):
+        uri = u"/api/Org/{0}".format(org_uid)
+        params = dict(idType=u"orgUid", **kwargs)
+        return self._default_session.get(uri, params=params)
+
+    def _get_page(self, page_num=None, page_size=None, **kwargs):
+        uri = u"/api/Org"
+        params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
+        return self._default_session.get(uri, params=params)
+
+    def get_all(self, **kwargs):
+        return get_all_pages(self._get_page, settings.items_per_page, u"orgs", **kwargs)
 
     def block(self, org_id):
         uri = u"/api/OrgBlock/{0}".format(org_id)
@@ -52,6 +53,6 @@ class OrgClient(BaseAuthorityClient):
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._default_session.delete(uri)
 
-    def get_current(self):
+    def get_current(self, **kwargs):
         uri = u"/api/Org/my"
         return self._default_session.get(uri)

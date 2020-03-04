@@ -77,14 +77,14 @@ class MicroserviceClientFactory(object):
 
     def get_alerts_client(self):
         if not self._alerts_client:
-            url = self._key_value_store_client.get_stored_value(u"AlertService-API_URL")
+            url = self._get_stored_value(u"AlertService-API_URL")
             session = self._session_factory.create_jwt_session(url, self._root_session)
             self._alerts_client = AlertClient(session, self._user_context)
         return self._alerts_client
 
     def get_departing_employee_client(self):
         if not self._departing_employee_client:
-            url = self._key_value_store_client.get_stored_value(u"employeecasemanagement-API_URL")
+            url = self._get_stored_value(u"employeecasemanagement-API_URL")
             session = self._session_factory.create_jwt_session(url, self._root_session)
             self._departing_employee_client = DepartingEmployeeClient(session, self._user_context)
         return self._departing_employee_client

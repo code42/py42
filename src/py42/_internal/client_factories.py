@@ -128,5 +128,6 @@ def _get_sts_base_url(session):
         if u"stsBaseUrl" in response_json:
             sts_base_url = response_json[u"stsBaseUrl"]
     if not sts_base_url:
-        raise Exception(u"stsBaseUrl not found.")
+        message = u"You may be trying to use a feature that is unavailable in your environment."
+        raise Exception(u"stsBaseUrl not found. {0}".format(message))
     return sts_base_url

@@ -1,6 +1,11 @@
 import pytest
 
 from py42._internal.login_provider_factories import ArchiveLocatorFactory
+from py42._internal.client_factories import (
+    AuthorityClientFactory,
+    StorageClientFactory,
+    MicroserviceClientFactory,
+)
 
 _USER_UID = "user-uid"
 
@@ -13,3 +18,16 @@ def login_provider_factory(mocker):
 @pytest.fixture
 def login_providers(mocker):
     return [mocker.MagicMock(), mocker.MagicMock()]
+
+
+class TestAuthorityClientFactory(object):
+    def test_has_set(self, mock_session):
+        factory = AuthorityClientFactory(mock_session)
+
+
+class TestStorageClientFactory(object):
+    pass
+
+
+class TestMicroserviceClientFactory(object):
+    pass

@@ -70,7 +70,7 @@ class DeviceClient(BaseAuthorityClient):
 
     def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
         uri = u"/api/Computer/{0}".format(guid)
-        params = dict(idType="guid", incBackupUsage=include_backup_usage, **kwargs)
+        params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
         return self._default_session.get(uri, params=params)
 
     def block(self, computer_id):

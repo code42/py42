@@ -2,6 +2,7 @@ import json
 
 from py42._internal.base_classes import BaseAuthorityClient
 from py42._internal.clients.util import get_all_pages
+from py42._internal.response import Py42Response
 import py42.settings as settings
 
 
@@ -26,24 +27,24 @@ class UserClient(BaseAuthorityClient):
             u"lastName": last_name,
             u"notes": notes,
         }
-        return self._default_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))
 
     def get_by_id(self, user_id):
         uri = u"/api/User/{0}".format(user_id)
-        return self._default_session.get(uri)
+        return Py42Response(self._default_session.get(uri))
 
     def get_by_uid(self, user_uid):
         uri = u"/api/User/{0}?idType=uid".format(user_uid)
-        return self._default_session.get(uri)
+        return Py42Response(self._default_session.get(uri))
 
     def get_by_username(self, username):
         uri = u"/api/User"
         params = {u"username": username}
-        return self._default_session.get(uri, params=params)
+        return Py42Response(self._default_session.get(uri, params=params), "users")
 
     def get_current(self):
         uri = u"/api/User/my"
-        return self._default_session.get(uri)
+        return Py42Response(self._default_session.get(uri))
 
     def _get_page(
         self,
@@ -66,7 +67,7 @@ class UserClient(BaseAuthorityClient):
             u"q": q,
         }
 
-        return self._default_session.get(uri, params=params)
+        return Py42Response(self._default_session.get(uri, params=params))
 
     def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None):
         return get_all_pages(
@@ -82,23 +83,23 @@ class UserClient(BaseAuthorityClient):
 
     def block(self, user_id):
         uri = u"/api/UserBlock/{0}".format(user_id)
-        return self._default_session.put(uri)
+        return Py42Response(self._default_session.put(uri))
 
     def unblock(self, user_id):
         uri = u"/api/UserBlock/{0}".format(user_id)
-        return self._default_session.delete(uri)
+        return Py42Response(self._default_session.delete(uri))
 
     def deactivate(self, user_id, block_user=None):
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         data = {u"blockUser": block_user}
-        return self._default_session.put(uri, data=json.dumps(data))
+        return Py42Response(self._default_session.put(uri, data=json.dumps(data)))
 
     def reactivate(self, user_id, unblock_user=None):
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         params = {u"unblockUser": unblock_user}
-        return self._default_session.delete(uri, params=params)
+        return Py42Response(self._default_session.delete(uri, params=params))
 
     def change_org_assignment(self, user_id, org_id):
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}
-        return self._default_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))

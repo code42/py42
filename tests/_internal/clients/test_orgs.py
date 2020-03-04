@@ -32,8 +32,11 @@ class TestOrgClient(object):
         response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
         return response
 
-    def test_get_by_id_calls_get_with_uri_and_params(self, session, v3_required_session):
+    def test_get_by_id_calls_get_with_uri_and_params(
+        self, session, v3_required_session, mock_get_orgs_empty_response
+    ):
         client = OrgClient(session, v3_required_session)
+        session.get.return_value = mock_get_orgs_empty_response
         client.get_by_id("ORG_ID")
         uri = "{0}/{1}".format(COMPUTER_URI, "ORG_ID")
         session.get.assert_called_once_with(uri)
@@ -48,7 +51,7 @@ class TestOrgClient(object):
             mock_get_orgs_response,
             mock_get_orgs_empty_response,
         ]
-        for page in client.get_all():
+        for _ in client.get_all():
             pass
         py42.settings.items_per_page = 1000
         assert session.get.call_count == 3

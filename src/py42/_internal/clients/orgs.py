@@ -39,19 +39,19 @@ class OrgClient(BaseAuthorityClient):
 
     def block(self, org_id):
         uri = u"/api/OrgBlock/{0}".format(org_id)
-        return Py42Response(self._default_session.put(uri), "")
+        return Py42Response(self._default_session.put(uri))
 
     def unblock(self, org_id):
         uri = u"/api/OrgBlock/{0}".format(org_id)
-        return Py42Response(self._default_session.delete(uri), "")
+        return Py42Response(self._default_session.delete(uri))
 
     def deactivate(self, org_id):
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
-        return Py42Response(self._default_session.put(uri), "")
+        return Py42Response(self._default_session.put(uri))
 
     def reactivate(self, org_id):
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
-        return Py42Response(self._default_session.delete(uri), "")
+        return Py42Response(self._default_session.delete(uri))
 
     def get_current(self):
         uri = u"/api/Org/my"

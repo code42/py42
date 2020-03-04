@@ -28,22 +28,25 @@ class UserClient(BaseAuthorityClient):
         }
         return self._default_session.post(uri, data=json.dumps(data))
 
-    def get_by_id(self, user_id):
+    def get_by_id(self, user_id, **kwargs):
         uri = u"/api/User/{0}".format(user_id)
-        return self._default_session.get(uri)
-
-    def get_by_uid(self, user_uid):
-        uri = u"/api/User/{0}?idType=uid".format(user_uid)
-        return self._default_session.get(uri)
-
-    def get_by_username(self, username):
-        uri = u"/api/User"
-        params = {u"username": username}
+        params = kwargs
         return self._default_session.get(uri, params=params)
 
-    def get_current(self):
+    def get_by_uid(self, user_uid, **kwargs):
+        uri = u"/api/User/{0}".format(user_uid)
+        params = dict(idType=u"uid", **kwargs)
+        return self._default_session.get(uri, params=params)
+
+    def get_by_username(self, username, **kwargs):
+        uri = u"/api/User"
+        params = dict(username=username, **kwargs)
+        return self._default_session.get(uri, params=params)
+
+    def get_current(self, **kwargs):
         uri = u"/api/User/my"
-        return self._default_session.get(uri)
+        params = kwargs
+        return self._default_session.get(uri, params=params)
 
     def _get_page(
         self,
@@ -54,21 +57,23 @@ class UserClient(BaseAuthorityClient):
         page_num=None,
         page_size=None,
         q=None,
+        **kwargs
     ):
         uri = u"/api/User"
-        params = {
-            u"active": active,
-            u"email": email,
-            u"orgUid": org_uid,
-            u"roleId": role_id,
-            u"pgNum": page_num,
-            u"pgSize": page_size,
-            u"q": q,
-        }
+        params = dict(
+            active=active,
+            email=email,
+            orgUid=org_uid,
+            roleId=role_id,
+            pgNum=page_num,
+            pgSize=page_size,
+            q=q,
+            **kwargs
+        )
 
         return self._default_session.get(uri, params=params)
 
-    def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None):
+    def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs):
         return get_all_pages(
             self._get_page,
             settings.items_per_page,
@@ -78,6 +83,7 @@ class UserClient(BaseAuthorityClient):
             org_uid=org_uid,
             role_id=role_id,
             q=q,
+            **kwargs
         )
 
     def block(self, user_id):

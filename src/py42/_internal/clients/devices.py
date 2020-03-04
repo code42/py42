@@ -46,6 +46,7 @@ class DeviceClient(BaseAuthorityClient):
         include_backup_usage=None,
         include_counts=True,
         q=None,
+        **kwargs
     ):
 
         return get_all_pages(
@@ -60,16 +61,17 @@ class DeviceClient(BaseAuthorityClient):
             include_backup_usage=include_backup_usage,
             include_counts=include_counts,
             q=q,
+            **kwargs
         )
 
-    def get_by_id(self, device_id, include_backup_usage=None):
+    def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
         uri = u"/api/Computer/{0}".format(device_id)
         params = {u"incBackupUsage": include_backup_usage}
         return Py42Response(self._default_session.get(uri, params=params), "data")
 
-    def get_by_guid(self, guid, include_backup_usage=None):
-        uri = u"/api/Computer/{0}?idType=guid".format(guid)
-        params = {u"incBackupUsage": include_backup_usage}
+    def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
+        uri = u"/api/Computer/{0}".format(guid)
+        params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
         return Py42Response(self._default_session.get(uri, params=params), "data")
 
     def block(self, computer_id):

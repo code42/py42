@@ -83,16 +83,16 @@ class DeviceClient(BaseAuthorityClient):
     def deactivate(self, computer_id):
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": computer_id}
-        return Py42Response(self._v3_required_session.post(uri, data=json.dumps(data)), "")
+        return Py42Response(self._v3_required_session.post(uri, data=json.dumps(data)))
 
     def reactivate(self, computer_id):
         uri = u"/api/v4/computer-deactivation/remove"
         data = {u"id": computer_id}
-        return Py42Response(self._v3_required_session.post(uri, data=json.dumps(data)), "")
+        return Py42Response(self._v3_required_session.post(uri, data=json.dumps(data)))
 
     def deauthorize(self, computer_id):
         uri = u"/api/ComputerDeauthorization/{0}".format(computer_id)
-        return Py42Response(self._default_session.put(uri), "")
+        return Py42Response(self._default_session.put(uri))
 
     def get_settings(self, guid, keys=None):
         uri = u"/api/v4/device-setting/view"

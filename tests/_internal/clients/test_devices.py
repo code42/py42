@@ -72,8 +72,11 @@ class TestDeviceClient(object):
         params["q"] = unicode_hostname
         assert first_call[1]["params"] == params
 
-    def test_get_by_id_calls_get_with_uri_and_params(self, session, v3_required_session):
+    def test_get_by_id_calls_get_with_uri_and_params(
+        self, session, v3_required_session, mock_get_all_response
+    ):
         client = DeviceClient(session, v3_required_session)
+        session.get.return_value = mock_get_all_response
         client.get_by_id("DEVICE_ID", include_backup_usage=True)
         expected_params = {"incBackupUsage": True}
         uri = "{0}/{1}".format(COMPUTER_URI, "DEVICE_ID")

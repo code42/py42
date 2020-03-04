@@ -16,16 +16,18 @@ from py42._internal.archive_access import (
     FileType,
     RestoreJobManager,
 )
+from py42._internal.response import Py42Response
 from py42._internal.client_factories import StorageClientFactory
 from py42._internal.clients.archive import ArchiveClient
 from py42._internal.clients.storage.archive import StorageArchiveClient
 from py42._internal.clients.storage.storage import StorageClient
 
+
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"
 DESTINATION_GUID = "destination-guid"
-DATA_KEY_TOKEN = "data-key-token"
-WEB_RESTORE_SESSION_ID = "web-restore-session-id"
+DATA_KEY_TOKEN = "FAKE_DATA_KEY_TOKEN"
+WEB_RESTORE_SESSION_ID = "FAKE_SESSION_ID"
 FILE_ID = "file-id"
 
 UNIX_FILE_PATH = "/Users/the.terminiator/Documents/file.txt"
@@ -63,23 +65,23 @@ class GetFilePathMetadataResponses(object):
         {
             "data": [
                 {
-                    "deleted": false, 
-                    "lastModified": "2018-06-22T10:08:37.000-05:00", 
-                    "filename": "/", 
-                    "lastBackup": "2019-04-12T12:56:55.023-05:00", 
-                    "lastBackupMs": 1555091815023, 
-                    "date": "04/12/19 12:56 PM", 
-                    "path": "/", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1529680117000, 
-                    "type": "directory", 
+                    "deleted": false,
+                    "lastModified": "2018-06-22T10:08:37.000-05:00",
+                    "filename": "/",
+                    "lastBackup": "2019-04-12T12:56:55.023-05:00",
+                    "lastBackupMs": 1555091815023,
+                    "date": "04/12/19 12:56 PM",
+                    "path": "/",
+                    "hidden": false,
+                    "lastModifiedMs": 1529680117000,
+                    "type": "directory",
                     "id": "885bf69dc0168f3624435346d7bf4836"
                 }
-            ], 
+            ],
             "metadata": {
-                "timestamp": "2019-04-19T07:35:34.684-05:00", 
+                "timestamp": "2019-04-19T07:35:34.684-05:00",
                 "params": {
-                    "guid": "896480635439191430", 
+                    "guid": "896480635439191430",
                     "webRestoreSessionId": "0sds7et5oy50u13dh4tctm708m"
                 }
             }
@@ -90,24 +92,24 @@ class GetFilePathMetadataResponses(object):
         {
             "data": [
                 {
-                    "deleted": false, 
-                    "lastModified": "2018-06-22T10:02:44.000-05:00", 
-                    "filename": "Users", 
-                    "lastBackup": "2019-04-12T12:56:55.090-05:00", 
-                    "lastBackupMs": 1555091815090, 
-                    "date": "04/12/19 12:56 PM", 
-                    "path": "/Users", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1529679764000, 
-                    "type": "directory", 
+                    "deleted": false,
+                    "lastModified": "2018-06-22T10:02:44.000-05:00",
+                    "filename": "Users",
+                    "lastBackup": "2019-04-12T12:56:55.090-05:00",
+                    "lastBackupMs": 1555091815090,
+                    "date": "04/12/19 12:56 PM",
+                    "path": "/Users",
+                    "hidden": false,
+                    "lastModifiedMs": 1529679764000,
+                    "type": "directory",
                     "id": "c2dc0a9bc27be41cb84d6ae91f6a0974"
                 }
-            ], 
+            ],
             "metadata": {
-                "timestamp": "2019-04-19T08:28:29.479-05:00", 
+                "timestamp": "2019-04-19T08:28:29.479-05:00",
                 "params": {
-                    "guid": "896480635439191430", 
-                    "webRestoreSessionId": "03lozi81xkm3p01zt21vh352r8", 
+                    "guid": "896480635439191430",
+                    "webRestoreSessionId": "03lozi81xkm3p01zt21vh352r8",
                     "fileId": "885bf69dc0168f3624435346d7bf4836"
                 }
             }
@@ -118,24 +120,24 @@ class GetFilePathMetadataResponses(object):
         {
             "data": [
                 {
-                    "deleted": false, 
-                    "lastModified": "2018-06-19T14:58:36.000-05:00", 
-                    "filename": "qa", 
-                    "lastBackup": "2019-04-12T12:56:55.095-05:00", 
-                    "lastBackupMs": 1555091815095, 
-                    "date": "04/12/19 12:56 PM", 
-                    "path": "/Users/qa", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1529438316000, 
-                    "type": "directory", 
+                    "deleted": false,
+                    "lastModified": "2018-06-19T14:58:36.000-05:00",
+                    "filename": "qa",
+                    "lastBackup": "2019-04-12T12:56:55.095-05:00",
+                    "lastBackupMs": 1555091815095,
+                    "date": "04/12/19 12:56 PM",
+                    "path": "/Users/qa",
+                    "hidden": false,
+                    "lastModifiedMs": 1529438316000,
+                    "type": "directory",
                     "id": "8f939e90bae37f9ec860ced08c5ffb7f"
                 }
-            ], 
+            ],
             "metadata": {
-                "timestamp": "2019-04-22T13:10:59.779-05:00", 
+                "timestamp": "2019-04-22T13:10:59.779-05:00",
                 "params": {
-                    "guid": "896480635439191430", 
-                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8", 
+                    "guid": "896480635439191430",
+                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8",
                     "fileId": "c2dc0a9bc27be41cb84d6ae91f6a0974"
                 }
             }
@@ -146,131 +148,131 @@ class GetFilePathMetadataResponses(object):
         {
             "data": [
                 {
-                    "deleted": false, 
-                    "lastModified": "2018-06-19T14:54:46.000-05:00", 
-                    "filename": ".bash_history", 
-                    "lastBackup": "2019-04-12T13:01:00.832-05:00", 
-                    "lastBackupMs": 1555092060832, 
-                    "date": "04/12/19 01:01 PM", 
-                    "path": "/Users/qa/.bash_history", 
-                    "hidden": true, 
-                    "lastModifiedMs": 1529438086000, 
-                    "type": "file", 
+                    "deleted": false,
+                    "lastModified": "2018-06-19T14:54:46.000-05:00",
+                    "filename": ".bash_history",
+                    "lastBackup": "2019-04-12T13:01:00.832-05:00",
+                    "lastBackupMs": 1555092060832,
+                    "date": "04/12/19 01:01 PM",
+                    "path": "/Users/qa/.bash_history",
+                    "hidden": true,
+                    "lastModifiedMs": 1529438086000,
+                    "type": "file",
                     "id": "97d8328d121983727cf854dc861d1ada"
-                }, 
+                },
                 {
-                    "deleted": false, 
-                    "lastModified": "2018-06-19T14:58:36.000-05:00", 
-                    "filename": "Applications", 
-                    "lastBackup": "2019-04-12T13:00:35.478-05:00", 
-                    "lastBackupMs": 1555092035478, 
-                    "date": "04/12/19 01:00 PM", 
-                    "path": "/Users/qa/Applications", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1529438316000, 
-                    "type": "directory", 
+                    "deleted": false,
+                    "lastModified": "2018-06-19T14:58:36.000-05:00",
+                    "filename": "Applications",
+                    "lastBackup": "2019-04-12T13:00:35.478-05:00",
+                    "lastBackupMs": 1555092035478,
+                    "date": "04/12/19 01:00 PM",
+                    "path": "/Users/qa/Applications",
+                    "hidden": false,
+                    "lastModifiedMs": 1529438316000,
+                    "type": "directory",
                     "id": "13cc0e21c1f14ff102206edd44bfc6bc"
-                }, 
+                },
                 {
-                    "deleted": false, 
-                    "lastModified": "2019-04-18T12:56:34.000-05:00", 
-                    "filename": "Desktop", 
-                    "lastBackup": "2019-04-19T03:01:11.566-05:00", 
-                    "lastBackupMs": 1555660871566, 
-                    "date": "04/19/19 03:01 AM", 
-                    "path": "/Users/qa/Desktop", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1555610194000, 
-                    "type": "directory", 
+                    "deleted": false,
+                    "lastModified": "2019-04-18T12:56:34.000-05:00",
+                    "filename": "Desktop",
+                    "lastBackup": "2019-04-19T03:01:11.566-05:00",
+                    "lastBackupMs": 1555660871566,
+                    "date": "04/19/19 03:01 AM",
+                    "path": "/Users/qa/Desktop",
+                    "hidden": false,
+                    "lastModifiedMs": 1555610194000,
+                    "type": "directory",
                     "id": "97c6bd9bff714bd45665130f7f381781"
-                }, 
+                },
                 {
-                    "deleted": false, 
-                    "lastModified": "2018-02-12T12:30:03.000-06:00", 
-                    "filename": "Documents", 
-                    "lastBackup": "2019-04-12T13:04:18.169-05:00", 
-                    "lastBackupMs": 1555092258169, 
-                    "date": "04/12/19 01:04 PM", 
-                    "path": "/Users/qa/Documents", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1518460203000, 
-                    "type": "directory", 
+                    "deleted": false,
+                    "lastModified": "2018-02-12T12:30:03.000-06:00",
+                    "filename": "Documents",
+                    "lastBackup": "2019-04-12T13:04:18.169-05:00",
+                    "lastBackupMs": 1555092258169,
+                    "date": "04/12/19 01:04 PM",
+                    "path": "/Users/qa/Documents",
+                    "hidden": false,
+                    "lastModifiedMs": 1518460203000,
+                    "type": "directory",
                     "id": "9db2b57abab79c4a92c939ec82d3dd0e"
-                }, 
+                },
                 {
-                    "deleted": false, 
-                    "lastModified": "2019-04-12T12:58:34.000-05:00", 
-                    "filename": "Downloads", 
-                    "lastBackup": "2019-04-12T13:01:00.891-05:00", 
-                    "lastBackupMs": 1555092060891, 
-                    "date": "04/12/19 01:01 PM", 
-                    "path": "/Users/qa/Downloads", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1555091914000, 
-                    "type": "directory", 
+                    "deleted": false,
+                    "lastModified": "2019-04-12T12:58:34.000-05:00",
+                    "filename": "Downloads",
+                    "lastBackup": "2019-04-12T13:01:00.891-05:00",
+                    "lastBackupMs": 1555092060891,
+                    "date": "04/12/19 01:01 PM",
+                    "path": "/Users/qa/Downloads",
+                    "hidden": false,
+                    "lastModifiedMs": 1555091914000,
+                    "type": "directory",
                     "id": "f939cfc4d476ec5535ccb0f6c0377ef4"
-                }, 
+                },
                 {
-                    "deleted": false, 
-                    "lastModified": "2019-04-12T10:43:49.000-05:00", 
-                    "filename": "Library", 
-                    "lastBackup": "2019-04-12T12:59:49.676-05:00", 
-                    "lastBackupMs": 1555091989676, 
-                    "date": "04/12/19 12:59 PM", 
-                    "path": "/Users/qa/Library", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1555083829000, 
-                    "type": "directory", 
+                    "deleted": false,
+                    "lastModified": "2019-04-12T10:43:49.000-05:00",
+                    "filename": "Library",
+                    "lastBackup": "2019-04-12T12:59:49.676-05:00",
+                    "lastBackupMs": 1555091989676,
+                    "date": "04/12/19 12:59 PM",
+                    "path": "/Users/qa/Library",
+                    "hidden": false,
+                    "lastModifiedMs": 1555083829000,
+                    "type": "directory",
                     "id": "bcf31dab21a4f7d4f67b812d6c891ed9"
                 }
-            ], 
+            ],
             "metadata": {
-                "timestamp": "2019-04-22T13:10:59.814-05:00", 
+                "timestamp": "2019-04-22T13:10:59.814-05:00",
                 "params": {
-                    "guid": "896480635439191430", 
-                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8", 
+                    "guid": "896480635439191430",
+                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8",
                     "fileId": "8f939e90bae37f9ec860ced08c5ffb7f"
                 }
             }
         }
-        
+
         """
 
     USERS_QA_DOWNLOADS = """
         {
             "data": [
                 {
-                    "deleted": false, 
-                    "lastModified": "2019-04-12T12:58:13.000-05:00", 
-                    "filename": "Terminator II Screenplay.pdf", 
-                    "lastBackup": "2019-04-12T13:05:10.089-05:00", 
-                    "lastBackupMs": 1555092310089, 
-                    "date": "04/12/19 01:05 PM", 
-                    "path": "/Users/qa/Downloads/Terminator II Screenplay.pdf", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1555091893000, 
-                    "type": "file", 
+                    "deleted": false,
+                    "lastModified": "2019-04-12T12:58:13.000-05:00",
+                    "filename": "Terminator II Screenplay.pdf",
+                    "lastBackup": "2019-04-12T13:05:10.089-05:00",
+                    "lastBackupMs": 1555092310089,
+                    "date": "04/12/19 01:05 PM",
+                    "path": "/Users/qa/Downloads/Terminator II Screenplay.pdf",
+                    "hidden": false,
+                    "lastModifiedMs": 1555091893000,
+                    "type": "file",
                     "id": "f63aeee85943809ead0cb11cdc773625"
-                }, 
+                },
                 {
-                    "deleted": true, 
-                    "lastModified": "2019-04-12T12:57:43.000-05:00", 
-                    "filename": "terminator-genisys.jpg", 
-                    "lastBackup": "2019-04-12T13:05:10.087-05:00", 
-                    "lastBackupMs": 1555092310087, 
-                    "date": "04/12/19 01:05 PM", 
-                    "path": "/Users/qa/Downloads/terminator-genisys.jpg", 
-                    "hidden": false, 
-                    "lastModifiedMs": 1555091863000, 
-                    "type": "file", 
+                    "deleted": true,
+                    "lastModified": "2019-04-12T12:57:43.000-05:00",
+                    "filename": "terminator-genisys.jpg",
+                    "lastBackup": "2019-04-12T13:05:10.087-05:00",
+                    "lastBackupMs": 1555092310087,
+                    "date": "04/12/19 01:05 PM",
+                    "path": "/Users/qa/Downloads/terminator-genisys.jpg",
+                    "hidden": false,
+                    "lastModifiedMs": 1555091863000,
+                    "type": "file",
                     "id": "69e930e774cbc1ee6d0c0ff2ba5804ee"
                 }
-            ], 
+            ],
             "metadata": {
-                "timestamp": "2019-04-22T13:10:59.849-05:00", 
+                "timestamp": "2019-04-22T13:10:59.849-05:00",
                 "params": {
-                    "guid": "896480635439191430", 
-                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8", 
+                    "guid": "896480635439191430",
+                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8",
                     "fileId": "f939cfc4d476ec5535ccb0f6c0377ef4"
                 }
             }
@@ -283,21 +285,21 @@ class GetWebRestoreJobResponses(object):
     NOT_DONE = """
         {
             "data": {
-                "status": "compressing", 
-                "zipResult": true, 
-                "name": "WebRestore_13", 
-                "sourceId": "896477098509532085", 
-                "userId": 202011, 
-                "bytesZipped": 0, 
-                "jobId": "899350590659304988", 
-                "canceled": false, 
-                "done": false, 
-                "expirationDate": 1556888724979, 
-                "creationDate": 1556802324979, 
+                "status": "compressing",
+                "zipResult": true,
+                "name": "WebRestore_13",
+                "sourceId": "896477098509532085",
+                "userId": 202011,
+                "bytesZipped": 0,
+                "jobId": "899350590659304988",
+                "canceled": false,
+                "done": false,
+                "expirationDate": 1556888724979,
+                "creationDate": 1556802324979,
                 "percentComplete": 0
-            }, 
+            },
             "metadata": {
-                "timestamp": "2019-05-02T08:05:25.052-05:00", 
+                "timestamp": "2019-05-02T08:05:25.052-05:00",
                 "params": {}
             }
         }
@@ -306,21 +308,21 @@ class GetWebRestoreJobResponses(object):
     DONE = """
         {
             "data": {
-                "status": "compressing", 
-                "zipResult": true, 
-                "name": "WebRestore_13", 
-                "sourceId": "896477098509532085", 
-                "userId": 202011, 
-                "bytesZipped": 0, 
-                "jobId": "899350590659304988", 
-                "canceled": false, 
-                "done": true, 
-                "expirationDate": 1556888724979, 
-                "creationDate": 1556802324979, 
+                "status": "compressing",
+                "zipResult": true,
+                "name": "WebRestore_13",
+                "sourceId": "896477098509532085",
+                "userId": 202011,
+                "bytesZipped": 0,
+                "jobId": "899350590659304988",
+                "canceled": false,
+                "done": true,
+                "expirationDate": 1556888724979,
+                "creationDate": 1556802324979,
                 "percentComplete": 0
-            }, 
+            },
             "metadata": {
-                "timestamp": "2019-05-02T08:05:25.052-05:00", 
+                "timestamp": "2019-05-02T08:05:25.052-05:00",
                 "params": {}
             }
         }
@@ -331,21 +333,26 @@ class GetWebRestoreJobResponses(object):
 @pytest.fixture
 def archive_client(mocker):
     client = mocker.MagicMock(spec=ArchiveClient)
-    client.get_data_key_token = mocker.MagicMock(spec=Response)
-    client.get_data_key_token.return_value.status_code = 200
-    client.get_data_key_token.return_value.text = (
-        '{"data": {"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}}'
-    )
+    py42_response = mocker.MagicMock(spec=Py42Response)
+    http_response = mocker.MagicMock(spec=Response)
+    http_response.text = '{"data": {"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}}'
+    http_response.status_code = 200
+    py42_response.api_response = http_response
+    py42_response.raw_json = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
+    client.get_data_key_token.return_value = py42_response
     return client
 
 
 @pytest.fixture
 def storage_archive_client(mocker):
     client = mocker.MagicMock(spec=StorageArchiveClient)
-    client.create_restore_session.return_value.status_code = 200
-    client.create_restore_session.return_value.text = (
-        '{"data": {"webRestoreSessionId": "FAKE_SESSION_ID"}}'
-    )
+    py42_response = mocker.MagicMock(spec=Py42Response)
+    http_response = mocker.MagicMock(spec=Response)
+    http_response.text = '{"data": {"webRestoreSessionId": "FAKE_SESSION_ID"}}'
+    http_response.status_code = 200
+    py42_response.api_response = http_response
+    py42_response.raw_json = '{"webRestoreSessionId": "FAKE_SESSION_ID"}'
+    client.create_restore_session.return_value = py42_response
     return client
 
 
@@ -355,13 +362,9 @@ def storage_client(mocker):
 
 
 @pytest.fixture
-def storage_client_factory(mocker, storage_client):
+def storage_client_factory(mocker, storage_client, storage_archive_client):
     factory = mocker.MagicMock(spec=StorageClientFactory)
-    storage_client.archive.create_restore_session.return_value.status_code = 200
-    storage_client.archive.create_restore_session.return_value.text = (
-        '{"data": {"webRestoreSessionId": "FAKE_SESSION_ID"}}'
-    )
-    factory.get_storage_client_from_device_guid.return_value = storage_client
+    factory.get_storage_client_from_device_guid.return_value = storage_archive_client
     return factory
 
 
@@ -391,7 +394,10 @@ def mock_start_restore_response(mocker, storage_archive_client, response):
         start_restore_response = mocker.MagicMock(spec=Response)
         start_restore_response.text = response
         start_restore_response.status_code = 200
-        return start_restore_response
+        py42_response = mocker.MagicMock(spec=Py42Response)
+        py42_response.api_response = start_restore_response
+        py42_response.raw_json = json.dumps(json.loads(response)["data"])
+        return py42_response
 
     storage_archive_client.start_restore.side_effect = mock_start_restore
 
@@ -402,7 +408,11 @@ def mock_get_restore_status_responses(mocker, storage_archive_client, json_respo
         get_restore_status_response = mocker.MagicMock(spec=Response)
         get_restore_status_response.text = json_response
         get_restore_status_response.status_code = 200
-        responses.append(get_restore_status_response)
+        py42_response = mocker.MagicMock(spec=Py42Response)
+        py42_response.api_response = get_restore_status_response
+        py42_response.raw_json = json.dumps(json.loads(json_response)["data"])
+        responses.append(py42_response)
+
     storage_archive_client.get_restore_status.side_effect = responses
 
 
@@ -448,8 +458,11 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
         get_file_path_metadata_response = mocker.MagicMock(spec=Response)
         get_file_path_metadata_response.text = file_id_responses[file_id]
         get_file_path_metadata_response.status_code = 200
+        py_42response = mocker.MagicMock(spec=Py42Response)
+        py_42response.api_response = get_file_path_metadata_response
+        py_42response.raw_json = file_id_responses[file_id]
 
-        return get_file_path_metadata_response
+        return py_42response
 
     return mock_get_file_path_metadata
 
@@ -495,14 +508,19 @@ class TestArchiveAccessManager(object):
         assert ArchiveAccessorManager(archive_client, storage_client_factory)
 
     def test_get_archive_accessor_with_device_guid_and_destination_guid_returns(
-        self, archive_client, storage_client_factory
+        self, archive_client, storage_client_factory, storage_client, storage_archive_client
     ):
+        storage_client.archive = storage_archive_client
+        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
+
         assert accessor_manager.get_archive_accessor(DEVICE_GUID, DESTINATION_GUID)
 
     def test_get_archive_accessor_calls_storage_client_factory_with_correct_args(
-        self, archive_client, storage_client_factory
+        self, archive_client, storage_client_factory, storage_client, storage_archive_client
     ):
+        storage_client.archive = storage_archive_client
+        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
         storage_client_factory.get_storage_client_from_device_guid.assert_called_with(
@@ -510,8 +528,10 @@ class TestArchiveAccessManager(object):
         )
 
     def test_get_archive_accessor_with_opt_dest_guid_calls_storage_client_factory_with_correct_args(
-        self, archive_client, storage_client_factory
+        self, archive_client, storage_client_factory, storage_client, storage_archive_client
     ):
+        storage_client.archive = storage_archive_client
+        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID, destination_guid=DESTINATION_GUID)
         storage_client_factory.get_storage_client_from_device_guid.assert_called_with(
@@ -519,16 +539,10 @@ class TestArchiveAccessManager(object):
         )
 
     def test_get_archive_accessor_creates_web_restore_session_with_correct_args(
-        self, mocker, archive_client, storage_client, storage_client_factory, storage_archive_client
+        self, archive_client, storage_client, storage_client_factory, storage_archive_client
     ):
-        response = mocker.MagicMock(spec=Response)
-        response.text = json.dumps({"data": {"dataKeyToken": DATA_KEY_TOKEN}})
-        response.status_code = 200
-        archive_client.get_data_key_token.return_value = response
-
         storage_client.archive = storage_archive_client
         storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
-
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
 
@@ -537,15 +551,9 @@ class TestArchiveAccessManager(object):
         )
 
     def test_get_archive_accessor_calls_create_restore_job_manager_with_correct_args(
-        self, mocker, archive_client, storage_client_factory, storage_archive_client
+        self, mocker, archive_client, storage_client_factory, storage_archive_client, storage_client
     ):
         spy = mocker.spy(py42._internal.archive_access, "create_restore_job_manager")
-        storage_client = mocker.MagicMock(spec=StorageClient)
-
-        response = mocker.MagicMock(spec=Response)
-        response.text = json.dumps({"data": {"webRestoreSessionId": WEB_RESTORE_SESSION_ID}})
-        response.status_code = 200
-        storage_archive_client.create_restore_session.return_value = response
         storage_client.archive = storage_archive_client
 
         storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client

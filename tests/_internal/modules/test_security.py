@@ -1,5 +1,6 @@
 import pytest
 from requests import Response
+import json
 
 from py42._internal.client_factories import (
     FileEventClientFactory,
@@ -11,6 +12,7 @@ from py42._internal.clients.security import SecurityClient
 from py42._internal.clients.storage.storage import StorageClient
 from py42._internal.clients.storage.security import StorageSecurityClient
 from py42._internal.modules.security import SecurityModule, PlanStorageInfo
+from py42._internal.response import Py42Response
 
 RAW_QUERY = "RAW JSON QUERY"
 
@@ -201,43 +203,55 @@ class TestSecurityModule(object):
     def response(self, mocker):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 200
-        return response
+        py42_response = mocker.MagicMock(spec=Py42Response)
+        py42_response.api_response = response
+        return py42_response
 
     @pytest.fixture
     def security_client_one_location(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
+        response.api_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
+        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
     @pytest.fixture
     def security_client_two_plans_one_node(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
+        response.api_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
+        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
     @pytest.fixture
     def security_client_two_plans_two_nodes(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
+        response.api_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
+        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
     @pytest.fixture
     def security_client_one_plan_two_destinations(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
+        response.api_response.text = (
+            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
+        )
+        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
     @pytest.fixture
     def security_client_two_plans_two_destinations(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
+        response.api_response.text = (
+            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
+        )
+        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
     @pytest.fixture
     def security_client_two_plans_two_destinations_three_nodes(self, security_client, response):
-        response.text = (
+        response.api_response.text = (
             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
         )
+        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 

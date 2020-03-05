@@ -51,3 +51,10 @@ class TokenRetrievalException(Exception):
         message = u"An error occurred while trying to retrieve a {0}, caused by {0}"
         message = message.format(token_type, str(base_exception))
         super(TokenRetrievalException, self).__init__(message)
+
+
+class URLRequestException(Exception):
+    def __init__(self, base_exception):
+        message = u"An error occurred while requesting a URL from simple key value store"
+        message = u"{0}, caused by {1}".format(message, str(base_exception))
+        super(URLRequestException, self).__init__(message)

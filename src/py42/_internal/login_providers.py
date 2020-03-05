@@ -3,7 +3,8 @@ import json
 
 from py42._internal.auth_handling import LoginProvider
 from py42._internal.compat import str
-from py42.exceptions import StorageLoginRetrievalException, TokenRetrievalException
+from py42.exceptions import StorageLoginRetrievalException, TokenRetrievalException, \
+    URLRequestException
 
 V3_AUTH = u"v3_user_token"
 V3_COOKIE_NAME = u"C42_JWT_API_TOKEN"
@@ -211,8 +212,6 @@ def _get_url_from_key_value_store(key_value_store, url_key):
     try:
         response = key_value_store.get_stored_value(url_key)
     except Exception as ex:
-        message = u"An error occurred while requesting a URL from simple key value store"
-        message = u"{0}, caused by {1}".format(message, ex)
-        raise Exception(message)
+        raise URLRequestException(ex)
 
     return response.text

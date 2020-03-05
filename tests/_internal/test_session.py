@@ -116,6 +116,7 @@ class TestPy42Session(object):
         assert response.encoding is None
 
     def test_session_request_returns_response_when_good_status_code(self, success_requests_session):
+
         session = Py42Session(success_requests_session, HOST_ADDRESS)
         response = session.get(URL)
         assert response.text == TEST_RESPONSE_CONTENT

@@ -6,10 +6,11 @@ from py42.sdk.alert_query import AlertState, AlertQuery
 
 
 class TestAlertClient(object):
-    def test_search_posts_expected_data(self, mock_session, user_context):
+    def test_search_posts_expected_data(self, mock_session, user_context, successful_response):
         alert_client = AlertClient(mock_session, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(TENANT_ID_FROM_RESPONSE, _filter)
+        mock_session.post.return_value = successful_response
         alert_client.search(query)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
@@ -25,7 +26,8 @@ class TestAlertClient(object):
             and post_data["groups"][0]["filters"][0]["value"] == "OPEN"
         )
 
-    def test_search_posts_to_expected_url(self, mock_session, user_context):
+    def test_search_posts_to_expected_url(self, mock_session, user_context, successful_response):
+        mock_session.post.return_value = successful_response
         alert_client = AlertClient(mock_session, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(TENANT_ID_FROM_RESPONSE, _filter)

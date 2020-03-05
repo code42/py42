@@ -20,7 +20,7 @@ KWARGS_INDEX = 1
 DATA_KEY = "data"
 JSON_KEY = "json"
 
-TEST_RESPONSE_CONTENT = "test_response_content"
+TEST_RESPONSE_CONTENT = '{"key":"test_response_content"}'
 
 REQUEST_EXCEPTION_MESSAGE = "Internal server error"
 TRACEBACK = "Traceback..."

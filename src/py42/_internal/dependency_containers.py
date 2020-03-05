@@ -66,7 +66,6 @@ class SDKDependencies(object):
 
     @staticmethod
     def _test_session(session, test_uri):
-        host_address = session.host_address
         try:
             response = session.get(test_uri)
             return 200 <= response.status_code < 300
@@ -76,6 +75,6 @@ class SDKDependencies(object):
                 u"host is available and reachable, and that you have supplied the full scheme, domain, and port "
                 u"(e.g. https://myhost.code42.com:4285). If you are using a self-signed ssl certificate, try setting "
                 u"py42.settings.verify_ssl_certs to false (or using a cert from a legitimate certificate "
-                u"authority).".format(host_address)
+                u"authority).".format(session.host_address)
             )
             raise Exception(message)

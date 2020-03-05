@@ -3,8 +3,9 @@ import json
 from py42._internal.compat import str
 from py42._internal.base_classes import BaseClient
 from py42._internal.clients.util import get_all_pages
+from py42._internal.response import Py42Response
 import py42.settings as settings
-from py42.util import convert_timestamp_to_str
+from py42.util import convert_timestamp_to_str, get_obj_from_response
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -37,13 +38,13 @@ class DepartingEmployeeClient(BaseClient):
             u"cloudUsernames": cloud_usernames,
         }
         uri = self._uri_prefix.format(u"create")
-        return self._default_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))
 
     def resolve(self, case_id, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"resolve")
         data = {u"caseId": case_id, u"tenantId": tenant_id}
-        return self._default_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))
 
     def _get_departing_employees_page(
         self,
@@ -69,7 +70,7 @@ class DepartingEmployeeClient(BaseClient):
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,
         }
-        return self._default_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))
 
     def get_all(
         self,
@@ -92,7 +93,7 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"togglealerts")
         data = {u"tenantId": tenant_id, u"alertsEnabled": alerts_enabled}
-        return self._default_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))
 
     def get_by_username(self, username, tenant_id=None):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
@@ -103,7 +104,7 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"details")
         data = {u"tenantId": tenant_id, u"caseId": case_id}
-        return self._default_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))
 
     def update(
         self,
@@ -149,7 +150,7 @@ class DepartingEmployeeClient(BaseClient):
             u"status": status,
             u"cloudUsernames": cloud_usernames,
         }
-        return self._default_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))
 
     def _get_case_id_from_username(self, tenant_id, username):
         case = self._get_case_from_username(tenant_id, username)
@@ -166,9 +167,8 @@ class DepartingEmployeeClient(BaseClient):
 
     def _get_all_departing_employees(self, tenant_id):
         for page in self.get_all(tenant_id):
-            yield json.loads(page.text).get(u"cases")
+            yield json.loads(page.api_response.text).get(u"cases")
 
     def _get_case_by_id(self, case_id):
         response = self.get_by_id(case_id)
-        if response:
-            return json.loads(str(response.text))
+        return json.loads(response.api_response.text)

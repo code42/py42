@@ -85,6 +85,8 @@ class Py42Session(object):
 
             if json is not None:
                 kwargs[u"data"] = json_lib.dumps(util.filter_out_none(json))
+            if u"json" in kwargs:
+                del kwargs[u"json"]
 
             self._renew_authentication(use_cache=True)
 

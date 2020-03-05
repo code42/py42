@@ -31,7 +31,7 @@ class TestSessionFactory(object):
     def auth_handler_factory(self, mocker):
         return mocker.MagicMock(spec=AuthHandlerFactory)
 
-    def test_create_basic_auth_session_creates_session_with_address_from_provider(
+    def test_create_basic_auth_session_creates_session_with_expected_address(
         self, session_modifier_factory, auth_handler_factory
     ):
         factory = SessionFactory(Session, session_modifier_factory, auth_handler_factory)
@@ -50,7 +50,7 @@ class TestSessionFactory(object):
         assert type(provider) == BasicAuthProvider
         assert modifier == called_modifier
 
-    def test_create_v1_session_creates_session_with_address_from_provider(
+    def test_create_v1_session_creates_session_with_expected_address(
         self, session_modifier_factory, auth_handler_factory, mock_session
     ):
         factory = SessionFactory(Session, session_modifier_factory, auth_handler_factory)
@@ -69,7 +69,7 @@ class TestSessionFactory(object):
         assert type(provider) == C42ApiV1TokenProvider
         assert modifier == called_modifier
 
-    def test_create_jwt_session_creates_session_with_address_from_provider(
+    def test_create_jwt_session_creates_session_with_expected_address(
         self, session_modifier_factory, auth_handler_factory, mock_session
     ):
         factory = SessionFactory(Session, session_modifier_factory, auth_handler_factory)
@@ -88,7 +88,7 @@ class TestSessionFactory(object):
         assert type(provider) == C42ApiV3TokenProvider
         assert modifier == called_modifier
 
-    def test_create_storage_session_creates_session_with_address_from_provider(
+    def test_create_storage_session_creates_session_with_expected_address(
         self, session_modifier_factory, auth_handler_factory, login_token_provider
     ):
         factory = SessionFactory(Session, session_modifier_factory, auth_handler_factory)
@@ -107,7 +107,7 @@ class TestSessionFactory(object):
         assert type(provider) == C42ApiV1TokenProvider
         assert modifier == called_modifier
 
-    def test_create_anonymous_session_creates_session_with_address_from_provider(
+    def test_create_anonymous_session_creates_session_with_expected_address(
         self, session_modifier_factory, auth_handler_factory
     ):
         factory = SessionFactory(Session, session_modifier_factory, auth_handler_factory)
@@ -120,10 +120,3 @@ class TestSessionFactory(object):
         factory = SessionFactory(Session, session_modifier_factory, auth_handler_factory)
         factory.create_anonymous_session(TARGET_HOST_ADDRESS)
         assert auth_handler_factory.create_auth_handler.call_count == 0
-
-    def test_create_jwt_session_creates_session_with_address(
-        self, mocker, session_modifier_factory, auth_handler_factory
-    ):
-        factory = SessionFactory(Session, session_modifier_factory, auth_handler_factory)
-        session = factory.create_jwt_session(TARGET_HOST_ADDRESS, mocker.MagicMock(spec=Session))
-        assert session.host_address == TARGET_HOST_ADDRESS

@@ -34,7 +34,7 @@ class DeviceClient(BaseAuthorityClient):
             u"q": q,
         }
 
-        return Py42Response(self._default_session.get(uri, params=params), "data")
+        return Py42Response(self._default_session.get(uri, params=params))
 
     def get_all(
         self,
@@ -67,12 +67,12 @@ class DeviceClient(BaseAuthorityClient):
     def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
         uri = u"/api/Computer/{0}".format(device_id)
         params = {u"incBackupUsage": include_backup_usage}
-        return Py42Response(self._default_session.get(uri, params=params), "data")
+        return Py42Response(self._default_session.get(uri, params=params))
 
     def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
         uri = u"/api/Computer/{0}".format(guid)
         params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
-        return Py42Response(self._default_session.get(uri, params=params), "data")
+        return Py42Response(self._default_session.get(uri, params=params))
 
     def block(self, computer_id):
         uri = u"/api/ComputerBlock/{0}".format(computer_id)
@@ -99,4 +99,4 @@ class DeviceClient(BaseAuthorityClient):
     def get_settings(self, guid, keys=None):
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
-        return Py42Response(self._v3_required_session.get(uri, params=params), "data")
+        return Py42Response(self._v3_required_session.get(uri, params=params))

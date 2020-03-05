@@ -6,4 +6,4 @@ class SecurityClient(BaseAuthorityClient):
     def get_security_event_locations(self, user_uid):
         uri = u"/c42api/v3/SecurityEventsLocation"
         params = {u"userUid": user_uid}
-        return Py42Response(self._v3_required_session.get(uri, params=params), "data")
+        return Py42Response(self._v3_required_session.get(uri, params=params))

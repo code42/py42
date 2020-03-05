@@ -18,21 +18,21 @@ class OrgClient(BaseAuthorityClient):
             u"parentOrgUid": parent_org_uid,
             u"classification": classification,
         }
-        return Py42Response(self._default_session.post(uri, data=json.dumps(data)), "data")
+        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))
 
     def get_by_id(self, org_id, **kwargs):
         uri = u"/api/Org/{0}".format(org_id)
-        return Py42Response(self._default_session.get(uri, params=kwargs), "data")
+        return Py42Response(self._default_session.get(uri, params=kwargs))
 
     def get_by_uid(self, org_uid, **kwargs):
         uri = u"/api/Org/{0}".format(org_uid)
         params = dict(idType=u"orgUid", **kwargs)
-        return Py42Response(self._default_session.get(uri, params=params), "data")
+        return Py42Response(self._default_session.get(uri, params=params))
 
     def _get_page(self, page_num=None, page_size=None, **kwargs):
         uri = u"/api/Org"
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
-        return Py42Response(self._default_session.get(uri, params=params), "data")
+        return Py42Response(self._default_session.get(uri, params=params))
 
     def get_all(self, **kwargs):
         return get_all_pages(self._get_page, settings.items_per_page, u"orgs", **kwargs)
@@ -55,4 +55,4 @@ class OrgClient(BaseAuthorityClient):
 
     def get_current(self, **kwargs):
         uri = u"/api/Org/my"
-        return Py42Response(self._default_session.get(uri), "data")
+        return Py42Response(self._default_session.get(uri))

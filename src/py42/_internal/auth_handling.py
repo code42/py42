@@ -24,6 +24,14 @@ class AuthHandler(object):
     def response_indicates_unauthorized(response):
         return response.status_code == 401
 
+    @staticmethod
+    def response_indicates_forbidden(response):
+        return response.status_code == 403
+
+    @staticmethod
+    def response_indicates_server_error(response):
+        return 500 <= response.response.status_code < 600
+
 
 class SessionModifier(object):
     def modify_session(self, session, value):

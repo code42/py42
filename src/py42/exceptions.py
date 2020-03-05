@@ -41,3 +41,10 @@ class ArchiveFileNotFoundError(Py42Error):
         self.device_guide = device_guid
         self.file_path = file_path
         super(ArchiveFileNotFoundError, self).__init__()
+
+
+class Py42FeatureUnavailableError(Py42Error):
+    def __init__(self):
+        super(Py42FeatureUnavailableError, self).__init__(
+            u"You may be trying to use a feature that is unavailable in your environment."
+        )

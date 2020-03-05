@@ -1,11 +1,11 @@
 from py42._internal.compat import str
 
 
-class Py42Exception(Exception):
+class Py42Error(Exception):
     """A generic, Py42-specific exception."""
 
 
-class Py42InitializationError(Py42Exception):
+class Py42InitializationError(Py42Error):
     def __init__(self, host_address):
         self.host_address = host_address
         super(Py42InitializationError, self).__init__(self._message)
@@ -21,23 +21,23 @@ class Py42InitializationError(Py42Exception):
         )
 
 
-class UnauthorizedError(Py42Exception):
+class UnauthorizedError(Py42Error):
     def __init__(self, request_uri):
         self.request_uri = request_uri
         message = "You are not authorized to make this request to {0}.".format(request_uri)
         super(UnauthorizedError, self).__init__(message)
 
 
-class Py42RequestException(Py42Exception):
+class Py42RequestError(Py42Error):
     def __init__(self, message, base_exception):
         self.base_exception = base_exception
-        super(Py42RequestException, self).__init__(
+        super(Py42RequestError, self).__init__(
             u"{0}, caused by {1}".format(message, str(base_exception))
         )
 
 
-class ArchiveFileNotFoundException(Py42Exception):
+class ArchiveFileNotFoundError(Py42Error):
     def __init__(self, device_guid, file_path):
         self.device_guide = device_guid
         self.file_path = file_path
-        super(ArchiveFileNotFoundException, self).__init__()
+        super(ArchiveFileNotFoundError, self).__init__()

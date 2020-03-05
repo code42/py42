@@ -4,7 +4,7 @@ from requests.exceptions import HTTPError
 
 from py42._internal.auth_handling import LoginProvider
 from py42._internal.compat import str
-from py42.exceptions import Py42RequestException, UnauthorizedError
+from py42.exceptions import Py42RequestError, UnauthorizedError
 
 V3_AUTH = u"v3_user_token"
 V3_COOKIE_NAME = u"C42_JWT_API_TOKEN"
@@ -42,7 +42,7 @@ class C42ApiV3TokenProvider(LoginProvider):
             if err.response.status_code == 401:
                 raise UnauthorizedError(uri)
         except Exception as ex:
-            raise Py42RequestException("An error occurred while trying to retrieve a jwt token", ex)
+            raise Py42RequestError("An error occurred while trying to retrieve a jwt token", ex)
 
 
 class C42ApiV1TokenProvider(LoginProvider):
@@ -58,7 +58,7 @@ class C42ApiV1TokenProvider(LoginProvider):
             token = u"{0}-{1}".format(response_data[0], response_data[1])
             return token
         except Exception as ex:
-            raise Py42RequestException(
+            raise Py42RequestError(
                 "An error occurred while trying to retrieve a V1 auth token", ex
             )
 
@@ -76,7 +76,7 @@ class C42APITmpAuthProvider(LoginProvider):
                 self._cached_info = logon_info
             return self._cached_info
         except Exception as ex:
-            raise Py42RequestException(
+            raise Py42RequestError(
                 "An error occurred while trying to retrieve storage login info", ex
             )
 
@@ -108,7 +108,7 @@ class C42APILoginTokenProvider(C42APITmpAuthProvider):
             response = self._auth_session.post(uri, data=json.dumps(data))
             return response
         except Exception as ex:
-            raise Py42RequestException("An error occurred while requesting a LoginToken", ex)
+            raise Py42RequestError("An error occurred while requesting a LoginToken", ex)
 
 
 class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
@@ -125,4 +125,4 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
             response = self._auth_session.post(uri, data=json.dumps(data))
             return response
         except Exception as ex:
-            raise Py42RequestException("An error occurred while requesting a StorageAuthToken", ex)
+            raise Py42RequestError("An error occurred while requesting a StorageAuthToken", ex)

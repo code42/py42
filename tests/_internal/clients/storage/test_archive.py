@@ -4,7 +4,6 @@ import json
 
 from py42._internal.clients.storage.archive import StorageArchiveClient
 from py42._internal.session import Py42Session
-from py42._internal.response import Py42Response
 
 
 DATA_KEYWORD = "data"
@@ -150,7 +149,7 @@ class TestStorageArchiveClient(object):
         assert sorted(json_arg.keys()) == sorted(keys)
 
     def test_start_restore_with_opt_zip_result_as_false_calls_post_with_zip_result_in_data(
-        self, session, mocker
+        self, session
     ):
         storage_archive_client = StorageArchiveClient(session)
 
@@ -167,7 +166,7 @@ class TestStorageArchiveClient(object):
         assert json_arg.get(ZIP_RESULT_KEY) is False
 
     def test_start_restore_with_opt_zip_result_as_true_calls_post_with_zip_result_in_data(
-        self, session, mocker
+        self, session
     ):
         storage_archive_client = StorageArchiveClient(session)
 
@@ -184,7 +183,7 @@ class TestStorageArchiveClient(object):
         assert json_arg.get(ZIP_RESULT_KEY) is True
 
     def test_start_restore_with_expire_job_as_true_calls_post_with_expire_job_in_data(
-        self, session, mocker
+        self, session
     ):
         storage_archive_client = StorageArchiveClient(session)
 
@@ -201,7 +200,7 @@ class TestStorageArchiveClient(object):
         assert json_arg.get(EXPIRE_JOB_KEY) is True
 
     def test_start_restore_with_expire_job_as_false_calls_post_with_expire_job_in_data(
-        self, session, mocker
+        self, session
     ):
         storage_archive_client = StorageArchiveClient(session)
 

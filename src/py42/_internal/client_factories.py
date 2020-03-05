@@ -74,9 +74,9 @@ class MicroserviceClientFactory(object):
         key_value_store_client=None,
     ):
         self._authority_url = authority_url
+        self._root_session = root_session
         self._session_factory = session_factory
         self._user_context = user_context
-        self._root_session = root_session
         self._key_value_store_client = key_value_store_client
         self._alerts_client = None
         self._departing_employee_client = None

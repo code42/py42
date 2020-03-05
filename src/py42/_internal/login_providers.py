@@ -3,8 +3,7 @@ import json
 
 from py42._internal.auth_handling import LoginProvider
 from py42._internal.compat import str
-from py42.exceptions import StorageLoginRetrievalException, TokenRetrievalException, \
-    URLRequestException
+from py42.exceptions import StorageLoginRetrievalException, TokenRetrievalException
 
 V3_AUTH = u"v3_user_token"
 V3_COOKIE_NAME = u"C42_JWT_API_TOKEN"

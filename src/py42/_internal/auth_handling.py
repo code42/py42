@@ -1,4 +1,3 @@
-from py42._internal.compat import str
 from py42.exceptions import Py42RequestError
 
 
@@ -46,12 +45,7 @@ class HeaderModifier(SessionModifier):
         self._value_format = value_format
 
     def modify_session(self, session, value):
-        try:
-            session.headers.update({self._header_name: self._value_format.format(value)})
-        except Exception as ex:
-            message = u"An error occurred while trying to apply a {0} header to the session, caused by: {1}"
-            message = message.format(self._header_name, str(ex))
-            raise Exception(message)
+        session.headers.update({self._header_name: self._value_format.format(value)})
 
 
 class CookieModifier(SessionModifier):
@@ -60,11 +54,4 @@ class CookieModifier(SessionModifier):
         self._value_format = value_format
 
     def modify_session(self, session, value):
-        try:
-            session.cookies.set(self._cookie_name, self._value_format.format(value))
-        except Exception as ex:
-            message = (
-                u"An error occurred while trying to apply cookies to the session, caused by: {0}"
-            )
-            message = message.format(str(ex))
-            raise Exception(message)
+        session.cookies.set(self._cookie_name, self._value_format.format(value))

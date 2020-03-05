@@ -99,7 +99,4 @@ class DeviceClient(BaseAuthorityClient):
     def get_settings(self, guid, keys=None):
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
-        return Py42Response(
-            self._v3_required_session.get(uri, params=params),
-            json_key=u"device_fileForensics_dataIngestService_reportSize",
-        )
+        return Py42Response(self._v3_required_session.get(uri, params=params))

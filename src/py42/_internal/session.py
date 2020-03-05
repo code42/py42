@@ -8,6 +8,7 @@ import py42.debug_level as debug_level
 import py42.settings as settings
 import py42.util as util
 from py42._internal.compat import str, urljoin, urlparse
+from py42.exceptions import Py42RequestException
 
 
 class Py42Session(object):
@@ -107,7 +108,7 @@ class Py42Session(object):
                 return response
 
         except (requests.HTTPError, requests.RequestException, Exception) as ex:
-            raise ex
+            raise Py42RequestException
 
     def _try_make_request(
         self,

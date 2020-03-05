@@ -3,6 +3,7 @@ import json
 
 from py42._internal.auth_handling import LoginProvider
 from py42._internal.compat import str
+from py42.exceptions import StorageLoginRetrievalException, TokenRetrievalException
 
 V3_AUTH = u"v3_user_token"
 V3_COOKIE_NAME = u"C42_JWT_API_TOKEN"
@@ -65,9 +66,7 @@ class C42ApiV1TokenProvider(LoginProvider):
             token = u"{0}-{1}".format(response_data[0], response_data[1])
             return token
         except Exception as ex:
-            message = u"An error occurred while trying to retrieve a V1 auth token, caused by {0}"
-            message = message.format(str(ex))
-            raise Exception(message)
+            raise TokenRetrievalException(u"V1 auth token", ex)
 
 
 class C42APITmpAuthProvider(LoginProvider):
@@ -88,11 +87,7 @@ class C42APITmpAuthProvider(LoginProvider):
             self._cached_info = logon_info
             return logon_info
         except Exception as ex:
-            message = (
-                u"An error occurred while trying to retrieve storage logon info, caused by {0}"
-            )
-            message = message.format(str(ex))
-            raise Exception(message)
+            raise StorageLoginRetrievalException(ex)
 
     def get_tmp_auth_token(self):
         pass
@@ -122,9 +117,7 @@ class C42APILoginTokenProvider(C42APITmpAuthProvider):
             response = self._auth_session.post(uri, data=json.dumps(data))
             return response
         except Exception as ex:
-            message = u"An error occurred while requesting a LoginToken, caused by {0}"
-            message = message.format(str(ex))
-            raise Exception(message)
+            raise TokenRetrievalException(u"LoginToken", ex)
 
 
 class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
@@ -141,9 +134,7 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
             response = self._auth_session.post(uri, data=json.dumps(data))
             return response
         except Exception as ex:
-            message = u"An error occurred while requesting a StorageAuthToken, caused by {0}"
-            message = message.format(str(ex))
-            raise Exception(message)
+            raise TokenRetrievalException(u"StorageAuthToken", ex)
 
 
 class FileEventLoginProvider(C42ApiV3TokenProvider):

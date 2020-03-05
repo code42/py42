@@ -83,6 +83,7 @@ class AuthorityDependencies(object):
 
         raise Py42InitializationException(host_address)
 
+
 class StorageDependencies(object):
     def __init__(self, authority_dependencies, archive_locator_factory):
         # type: (AuthorityDependencies, ArchiveLocatorFactory) -> None

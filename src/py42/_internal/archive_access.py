@@ -5,6 +5,7 @@ from collections import namedtuple
 import py42.util as util
 from py42._internal.client_factories import StorageClientFactory
 from py42._internal.clients.archive import ArchiveClient
+from py42.exceptions import ArchiveFileNotFoundException
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
 
@@ -66,21 +67,17 @@ class ArchiveAccessor(object):
         return self._restore_job_manager.restore_to_local_path(file_selection, save_as_path)
 
     def _get_file_via_walking_tree(self, file_path):
-        path_parts = file_path.split("/")
-        path_root = path_parts[0] + "/"
+        path_parts = file_path.split(u"/")
+        path_root = path_parts[0] + u"/"
 
         response = self._get_children(node_id=None)
 
         roots = util.get_obj_from_response(response, u"data")
         for root in roots:
-            if root["path"].lower() == path_root.lower():
+            if root[u"path"].lower() == path_root.lower():
                 return self._walk_tree(root, path_parts[1:])
 
-        raise Exception(
-            u"File not found in archive for device {0} at path {1}".format(
-                self._device_guid, file_path
-            )
-        )
+        raise ArchiveFileNotFoundException(self._device_guid, file_path)
 
     def _walk_tree(self, current_node, remaining_path_components):
         if not remaining_path_components or not remaining_path_components[0]:
@@ -96,11 +93,7 @@ class ArchiveAccessor(object):
             if child[u"path"].lower() == target_child_path.lower():
                 return self._walk_tree(child, remaining_path_components[1:])
 
-        raise Exception(
-            u"File not found in archive for device {0} at path {1}".format(
-                self._device_guid, target_child_path
-            )
-        )
+        raise ArchiveFileNotFoundException(self._device_guid, target_child_path)
 
     def _get_children(self, node_id=None):
         return self._storage_archive_client.get_archive_tree_node(

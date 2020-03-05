@@ -1,4 +1,5 @@
 from py42._internal.compat import str
+from py42.exceptions import ReauthorizationException
 
 
 class LoginProvider(object):
@@ -19,11 +20,7 @@ class AuthHandler(object):
             secret = self._login_provider.get_secret_value(force_refresh=not use_cache)
             self._session_modifier.modify_session(session, secret)
         except Exception as ex:
-            message = (
-                u"An error occurred while trying to handle an unauthorized request, caused by: {0}"
-            )
-            message = message.format(str(ex))
-            raise Exception(message)
+            raise ReauthorizationException(ex)
 
     @staticmethod
     def response_indicates_unauthorized(response):

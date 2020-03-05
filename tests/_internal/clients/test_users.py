@@ -113,7 +113,7 @@ class TestUserClient(object):
         session.get.return_value = mock_get_all_empty_response
         client.get_by_id("USER_ID")
         uri = "{0}/{1}".format(USER_URI, "USER_ID")
-        session.get.assert_called_once_with(uri)
+        session.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
         self, session, v3_required_session, mock_get_all_response, mock_get_all_empty_response

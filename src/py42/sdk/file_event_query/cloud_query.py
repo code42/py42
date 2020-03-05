@@ -1,5 +1,5 @@
-from py42._internal.filters.query_filter import _QueryFilterBooleanField
 from py42._internal.filters.file_event_filter import _FileEventFilterStringField
+from py42._internal.filters.query_filter import _QueryFilterBooleanField
 
 
 class Actor(_FileEventFilterStringField):
@@ -21,12 +21,5 @@ class SharedWith(_FileEventFilterStringField):
 class SharingTypeAdded(_FileEventFilterStringField):
     _term = u"sharingTypeAdded"
 
-    class SharingTypeAddedEnum(object):
-        def __init__(self, value):
-            self._value = value
-
-        def __repr__(self):
-            return self._value
-
-    SHARED_VIA_LINK = SharingTypeAddedEnum(u"SharedViaLink")
-    IS_PUBLIC = SharingTypeAddedEnum(u"IsPublic")
+    SHARED_VIA_LINK = u"SharedViaLink"
+    IS_PUBLIC = u"IsPublic"

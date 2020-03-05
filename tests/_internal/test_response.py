@@ -1,6 +1,4 @@
-import json
 import pytest
-
 from requests import Response
 
 from py42._internal.response import Py42Response

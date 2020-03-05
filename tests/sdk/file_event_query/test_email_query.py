@@ -1,5 +1,5 @@
-from py42.sdk.file_event_query.email_query import EmailSender, EmailRecipients
-from ..conftest import EXISTS, NOT_EXISTS, IS, IS_NOT, IS_IN, NOT_IN
+from py42.sdk.file_event_query.email_query import EmailRecipients, EmailSender
+from ..conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
 
 
 def test_email_recipients_exists_str_gives_correct_json_representation():

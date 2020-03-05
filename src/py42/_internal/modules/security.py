@@ -78,8 +78,8 @@ class SecurityModule(object):
         Returns:
             list of file events as JSON
         """
-        self._file_event_client = self._microservices_client_factory.get_file_event_client()
-        return self._file_event_client.search_file_events(query)
+        file_event_client = self._microservices_client_factory.get_file_event_client()
+        return file_event_client.search_file_events(query)
 
     def _get_plan_storage_infos(self, plan_destination_map):
         plan_infos = []

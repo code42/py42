@@ -65,12 +65,19 @@ class StorageClientFactory(object):
 
 
 class MicroserviceClientFactory(object):
-    def __init__(self, authority_url, root_session, session_factory, user_context):
+    def __init__(
+        self,
+        authority_url,
+        root_session,
+        session_factory,
+        user_context,
+        key_value_store_client=None,
+    ):
         self._authority_url = authority_url
         self._session_factory = session_factory
         self._user_context = user_context
         self._root_session = root_session
-        self._key_value_store_client = None
+        self._key_value_store_client = key_value_store_client
         self._alerts_client = None
         self._departing_employee_client = None
         self._file_event_client = None
@@ -99,8 +106,7 @@ class MicroserviceClientFactory(object):
 
     def _get_stored_value(self, key):
         if not self._key_value_store_client:
-            config_session = self._session_factory.create_anonymous_session(self._authority_url)
-            url = _hacky_get_microservice_url(config_session, u"simple-key-value-store")
+            url = _hacky_get_microservice_url(self._root_session, u"simple-key-value-store")
             session = self._session_factory.create_anonymous_session(url)
             self._key_value_store_client = KeyValueStoreClient(session)
         return self._key_value_store_client.get_stored_value(key).text

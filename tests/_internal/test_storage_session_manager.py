@@ -62,13 +62,13 @@ class TestStorageSessionManager(object):
         storage_session_manager = StorageSessionManager(session_factory)
         assert storage_session_manager.get_saved_session_for_url("TEST-URI") is None
 
-    # def test_get_saved_session_returns_session_after_successful_call_to_get_session(
-    #     self, session_factory, login_provider
-    # ):
-    #     storage_session_manager = StorageSessionManager(session_factory)
-    #     login_provider.get_target_host_address.return_value = "TEST-URI"
-    #     storage_session_manager.get_storage_session(login_provider)
-    #     assert storage_session_manager.get_saved_session_for_url("TEST-URI") is not None
+    def test_get_saved_session_returns_session_after_successful_call_to_get_session(
+        self, session_factory, login_provider
+    ):
+        storage_session_manager = StorageSessionManager(session_factory)
+        login_provider.get_login_info.return_value = {"serverUrl": "TEST-URI"}
+        storage_session_manager.get_storage_session(login_provider)
+        assert storage_session_manager.get_saved_session_for_url("TEST-URI") is not None
 
     def test_get_storage_session_calls_create_session_only_once_for_given_login_provider(
         self, session_factory, login_provider, mocker

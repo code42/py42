@@ -5,10 +5,10 @@ class Py42Exception(Exception):
     """A generic, Py42-specific exception."""
 
 
-class Py42InitializationException(Py42Exception):
+class Py42InitializationError(Py42Exception):
     def __init__(self, host_address):
         self.host_address = host_address
-        super(Py42InitializationException, self).__init__(self._message)
+        super(Py42InitializationError, self).__init__(self._message)
 
     @property
     def _message(self):
@@ -21,11 +21,11 @@ class Py42InitializationException(Py42Exception):
         )
 
 
-class UnauthorizedException(Py42Exception):
+class UnauthorizedError(Py42Exception):
     def __init__(self, request_uri):
         self.request_uri = request_uri
         message = "You are not authorized to make this request to {0}.".format(request_uri)
-        super(UnauthorizedException, self).__init__(message)
+        super(UnauthorizedError, self).__init__(message)
 
 
 class Py42RequestException(Py42Exception):

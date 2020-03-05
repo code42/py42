@@ -4,7 +4,7 @@ from requests.exceptions import HTTPError
 
 from py42._internal.auth_handling import LoginProvider
 from py42._internal.compat import str
-from py42.exceptions import Py42RequestException, UnauthorizedException
+from py42.exceptions import Py42RequestException, UnauthorizedError
 
 V3_AUTH = u"v3_user_token"
 V3_COOKIE_NAME = u"C42_JWT_API_TOKEN"
@@ -40,7 +40,7 @@ class C42ApiV3TokenProvider(LoginProvider):
             return token
         except HTTPError as err:
             if err.response.status_code == 401:
-                raise UnauthorizedException(uri)
+                raise UnauthorizedError(uri)
         except Exception as ex:
             raise Py42RequestException("An error occurred while trying to retrieve a jwt token", ex)
 

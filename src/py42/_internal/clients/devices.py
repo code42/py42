@@ -34,7 +34,7 @@ class DeviceClient(BaseAuthorityClient):
             u"q": q,
         }
 
-        return Py42Response(self._default_session.get(uri, params=params))
+        return Py42Response(self._default_session.get(uri, params=params), json_key=u"computers")
 
     def get_all(
         self,
@@ -66,7 +66,7 @@ class DeviceClient(BaseAuthorityClient):
 
     def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
         uri = u"/api/Computer/{0}".format(device_id)
-        params = {u"incBackupUsage": include_backup_usage}
+        params = dict(incBackupUsage=include_backup_usage, **kwargs)
         return Py42Response(self._default_session.get(uri, params=params))
 
     def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
@@ -76,11 +76,11 @@ class DeviceClient(BaseAuthorityClient):
 
     def block(self, computer_id):
         uri = u"/api/ComputerBlock/{0}".format(computer_id)
-        return Py42Response(self._default_session.put(uri), "")
+        return Py42Response(self._default_session.put(uri))
 
     def unblock(self, computer_id):
         uri = u"/api/ComputerBlock/{0}".format(computer_id)
-        return Py42Response(self._default_session.delete(uri), "")
+        return Py42Response(self._default_session.delete(uri))
 
     def deactivate(self, computer_id):
         uri = u"/api/v4/computer-deactivation/update"
@@ -99,4 +99,7 @@ class DeviceClient(BaseAuthorityClient):
     def get_settings(self, guid, keys=None):
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
-        return Py42Response(self._v3_required_session.get(uri, params=params))
+        return Py42Response(
+            self._v3_required_session.get(uri, params=params),
+            json_key=u"device_fileForensics_dataIngestService_reportSize",
+        )

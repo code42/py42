@@ -83,7 +83,7 @@ class TestDeviceClient(object):
         session.get.assert_called_once_with(uri, params=expected_params)
 
     def test_get_all_calls_get_expected_number_of_times(
-        self, session, v3_required_session, mock_get_all_response, mock_get_all_empty_response,
+        self, session, v3_required_session, mock_get_all_response, mock_get_all_empty_response
     ):
         py42.settings.items_per_page = 1
         client = DeviceClient(session, v3_required_session)

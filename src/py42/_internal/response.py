@@ -7,7 +7,7 @@ class Py42Response(object):
         self._response = requests_response
         self._json_key = json_key
         response_dict = json.loads(self.api_response.text)
-        self._data_root = response_dict.get("data") or response_dict
+        self._data_root = response_dict.get(u"data") or response_dict
 
     def __getitem__(self, key):
         item_root = self._data_root[self._json_key] if self._json_key else self._data_root

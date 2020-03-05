@@ -456,10 +456,7 @@ class TestSecurityModule(object):
         response1.text = '{"data": {"cursor": "1:1"}}'
         response2 = mocker.MagicMock(spec=Response)
         response2.text = '{"data": {}}'
-        mock_storage_security_client.get_plan_security_events.side_effect = [
-            response1,
-            response2,
-        ]
+        mock_storage_security_client.get_plan_security_events.side_effect = [response1, response2]
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client_one_location,
@@ -574,10 +571,7 @@ class TestSecurityModule(object):
         response1.text = '{"data": {"cursor": "1:1"}}'
         response2 = mocker.MagicMock(spec=Response)
         response2.text = '{"data": {}}'
-        mock_storage_security_client.get_plan_security_events.side_effect = [
-            response1,
-            response2,
-        ]
+        mock_storage_security_client.get_plan_security_events.side_effect = [response1, response2]
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client, storage_client_factory, file_event_client_factory, alert_client_factory

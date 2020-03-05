@@ -1,13 +1,13 @@
 import json as json_lib
 from threading import Lock
 
-import requests.adapters
-
 import py42.debug as debug
 import py42.debug_level as debug_level
 import py42.settings as settings
 import py42.util as util
+import requests.adapters
 from py42._internal.compat import str, urljoin, urlparse
+from py42.exceptions import Py42RequestError
 
 
 class Py42Session(object):
@@ -109,7 +109,7 @@ class Py42Session(object):
                 return response
 
         except (requests.HTTPError, requests.RequestException, Exception) as ex:
-            raise ex
+            raise Py42RequestError
 
     def _try_make_request(
         self,

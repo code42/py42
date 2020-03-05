@@ -16,6 +16,7 @@ from py42._internal.clients.employee_case_management.departing_employee import (
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.key_value_store import KeyValueStoreClient
 from py42._internal.clients.storage.storage import StorageClient
+from py42.exceptions import Py42FeatureUnavailableError
 
 
 class AuthorityClientFactory(object):
@@ -135,5 +136,6 @@ def _get_sts_base_url(session):
             sts_base_url = response_json[u"stsBaseUrl"]
     if not sts_base_url:
         message = u"You may be trying to use a feature that is unavailable in your environment."
-        raise Exception(u"stsBaseUrl not found. {0}".format(message))
+        # raise Exception(u"stsBaseUrl not found. {0}".format(message))
+        raise Py42FeatureUnavailableError()
     return sts_base_url

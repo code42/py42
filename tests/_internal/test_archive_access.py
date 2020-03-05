@@ -457,7 +457,6 @@ def get_get_archive_tree_node_mock(mocker, session_id, device_guid, responses):
 
 
 def get_file_selection(file_type, file_path):
-    # type: (FileType, str) -> FileSelection
     return FileSelection([{"type": file_type, "path": file_path, "selected": True}], 1, 1, 1)
 
 

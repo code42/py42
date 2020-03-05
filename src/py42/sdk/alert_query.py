@@ -1,11 +1,7 @@
-from py42._internal.compat import str
 from py42._internal.base_classes import BaseQuery
-from py42._internal.filters.query_filter import (
-    _QueryFilterTimestampField,
-    _QueryFilterStringField,
-    FilterGroup,
-)
+from py42._internal.compat import str
 from py42._internal.filters.alert_filter import _AlertQueryFilterStringField
+from py42._internal.filters.query_filter import _QueryFilterStringField, _QueryFilterTimestampField
 
 
 class DateObserved(_QueryFilterTimestampField):
@@ -27,70 +23,16 @@ class Description(_AlertQueryFilterStringField):
 class Severity(_QueryFilterStringField):
     _term = u"severity"
 
-    class SeverityTypeEnum(object):
-        def __init__(self, value):
-            self._value = value
-
-        def __repr__(self):
-            return self._value
-
-    HIGH = SeverityTypeEnum(u"HIGH")
-    MEDIUM = SeverityTypeEnum(u"MEDIUM")
-    LOW = SeverityTypeEnum(u"LOW")
-
-    @classmethod
-    def eq(cls, value):
-        # type: (SeverityTypeEnum) -> FilterGroup
-        return super(Severity, cls).eq(str(value))
-
-    @classmethod
-    def not_eq(cls, value):
-        # type: (SeverityTypeEnum) -> FilterGroup
-        return super(Severity, cls).not_eq(str(value))
-
-    @classmethod
-    def is_in(cls, value_list):
-        # type: (iter[SeverityTypeEnum]) -> FilterGroup
-        return super(Severity, cls).is_in([str(value) for value in value_list])
-
-    @classmethod
-    def not_in(cls, value_list):
-        # type: (iter[SeverityTypeEnum]) -> FilterGroup
-        return super(Severity, cls).not_in([str(value) for value in value_list])
+    HIGH = u"HIGH"
+    MEDIUM = u"MEDIUM"
+    LOW = u"LOW"
 
 
 class AlertState(_QueryFilterStringField):
     _term = u"state"
 
-    class AlertStateTypeEnum(object):
-        def __init__(self, value):
-            self._value = value
-
-        def __repr__(self):
-            return self._value
-
-    OPEN = AlertStateTypeEnum(u"OPEN")
-    DISMISSED = AlertStateTypeEnum(u"RESOLVED")
-
-    @classmethod
-    def eq(cls, value):
-        # type: (AlertStateTypeEnum) -> FilterGroup
-        return super(AlertState, cls).eq(str(value))
-
-    @classmethod
-    def not_eq(cls, value):
-        # type: (AlertStateTypeEnum) -> FilterGroup
-        return super(AlertState, cls).not_eq(str(value))
-
-    @classmethod
-    def is_in(cls, value_list):
-        # type: (iter[AlertStateTypeEnum]) -> FilterGroup
-        return super(AlertState, cls).is_in([str(value) for value in value_list])
-
-    @classmethod
-    def not_in(cls, value_list):
-        # type: (iter[AlertStateTypeEnum]) -> FilterGroup
-        return super(AlertState, cls).not_in([str(value) for value in value_list])
+    OPEN = u"OPEN"
+    DISMISSED = u"RESOLVED"
 
 
 class AlertQuery(BaseQuery):

@@ -65,23 +65,17 @@ class TestLegalHoldClient(object):
         response.text = MOCK_EMPTY_GET_LEGAL_HOLD_MEMBERSHIP_RESPONSE
         return response
 
-    def test_get_legal_hold_by_uid_calls_get_with_uri_and_params(
-        self, session, v3_required_session
-    ):
-        client = LegalHoldClient(session, v3_required_session)
+    def test_get_legal_hold_by_uid_calls_get_with_uri_and_params(self, session):
+        client = LegalHoldClient(session)
         client.get_legal_hold_by_uid("LEGAL_HOLD_UID")
         uri = "{0}/{1}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
         session.get.assert_called_once_with(uri)
 
     def test_get_legal_holds_calls_get_expected_number_of_times(
-        self,
-        session,
-        v3_required_session,
-        mock_get_legal_holds_response,
-        mock_get_legal_holds_empty_response,
+        self, session, mock_get_legal_holds_response, mock_get_legal_holds_empty_response
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldClient(session, v3_required_session)
+        client = LegalHoldClient(session)
         session.get.side_effect = [
             mock_get_legal_holds_response,
             mock_get_legal_holds_response,
@@ -95,12 +89,11 @@ class TestLegalHoldClient(object):
     def test_get_legal_hold_memberships_calls_get_expected_number_of_times(
         self,
         session,
-        v3_required_session,
         mock_get_legal_hold_memberships_response,
         mock_get_legal_hold_memberships_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldClient(session, v3_required_session)
+        client = LegalHoldClient(session)
         session.get.side_effect = [
             mock_get_legal_hold_memberships_response,
             mock_get_legal_hold_memberships_response,

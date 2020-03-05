@@ -3,8 +3,6 @@ import time
 from collections import namedtuple
 
 import py42.util as util
-from py42._internal.client_factories import StorageClientFactory
-from py42._internal.clients.archive import ArchiveClient
 from py42.exceptions import ArchiveFileNotFoundException
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
@@ -17,7 +15,6 @@ class FileType(object):
 
 class ArchiveAccessorManager(object):
     def __init__(self, archive_client, storage_client_factory):
-        # type: (ArchiveClient, StorageClientFactory) -> None
         self._archive_client = archive_client
         self._storage_client_factory = storage_client_factory
 

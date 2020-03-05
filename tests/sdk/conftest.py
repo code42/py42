@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import pytest
 from datetime import datetime
 
-from py42._internal.filters.query_filter import QueryFilter, FilterGroup
+import pytest
 
+from py42._internal.filters.query_filter import FilterGroup, QueryFilter
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"

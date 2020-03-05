@@ -3,9 +3,6 @@ from py42.exceptions import ReauthorizationException
 
 
 class LoginProvider(object):
-    def get_target_host_address(self):
-        pass
-
     def get_secret_value(self, force_refresh=False):
         pass
 

@@ -1,38 +1,20 @@
 import json
 from threading import Lock
 
-from py42._internal.client_factories import (
-    FileEventClientFactory,
-    StorageClientFactory,
-    AlertClientFactory,
-)
-from py42._internal.clients.security import SecurityClient
 import py42.util as util
 
 
 class SecurityModule(object):
-    def __init__(
-        self,
-        security_client,
-        storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
-    ):
-        # type: (SecurityClient, StorageClientFactory, FileEventClientFactory, AlertClientFactory) -> None
+    def __init__(self, security_client, storage_client_factory, microservices_client_factory):
         self._security_client = security_client
         self._storage_client_factory = storage_client_factory
-        self._file_event_client_factory = file_event_client_factory
-        self._alert_client_factory = alert_client_factory
-        self._file_event_client = None
-        self._alert_client = None
+        self._microservices_client_factory = microservices_client_factory
         self._client_cache = {}
         self._client_cache_lock = Lock()
 
     @property
     def alerts(self):
-        if self._alert_client is None:
-            self._alert_client = self._alert_client_factory.get_alert_client()
-        return self._alert_client
+        return self._microservices_client_factory.get_alerts_client()
 
     def get_security_plan_storage_info_list(self, user_uid):
         locations = None
@@ -96,9 +78,8 @@ class SecurityModule(object):
         Returns:
             list of file events as JSON
         """
-        if self._file_event_client is None:
-            self._file_event_client = self._file_event_client_factory.get_file_event_client()
-        return self._file_event_client.search_file_events(query)
+        file_event_client = self._microservices_client_factory.get_file_event_client()
+        return file_event_client.search_file_events(query)
 
     def _get_plan_storage_infos(self, plan_destination_map):
         plan_infos = []

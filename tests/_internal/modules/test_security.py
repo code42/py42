@@ -1,16 +1,12 @@
 import pytest
 from requests import Response
 
-from py42._internal.client_factories import (
-    FileEventClientFactory,
-    StorageClientFactory,
-    AlertClientFactory,
-)
+from py42._internal.client_factories import MicroserviceClientFactory, StorageClientFactory
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.security import SecurityClient
-from py42._internal.clients.storage.storage import StorageClient
 from py42._internal.clients.storage.security import StorageSecurityClient
-from py42._internal.modules.security import SecurityModule, PlanStorageInfo
+from py42._internal.clients.storage.storage import StorageClient
+from py42._internal.modules.security import PlanStorageInfo, SecurityModule
 
 RAW_QUERY = "RAW JSON QUERY"
 
@@ -246,12 +242,8 @@ class TestSecurityModule(object):
         return mocker.MagicMock(spec=StorageClientFactory)
 
     @pytest.fixture
-    def file_event_client_factory(self, mocker):
-        return mocker.MagicMock(spec=FileEventClientFactory)
-
-    @pytest.fixture
-    def alert_client_factory(self, mocker):
-        return mocker.MagicMock(spec=AlertClientFactory)
+    def microservice_client_factory(self, mocker):
+        return mocker.MagicMock(spec=MicroserviceClientFactory)
 
     @pytest.fixture
     def file_event_client(self, mocker):
@@ -268,31 +260,23 @@ class TestSecurityModule(object):
         self,
         security_client,
         storage_client_factory,
-        file_event_client_factory,
         file_event_client,
-        alert_client_factory,
+        microservice_client_factory,
     ):
-        file_event_client_factory.get_file_event_client.side_effect = self.return_file_event_client(
+        microservice_client_factory.get_file_event_client.side_effect = self.return_file_event_client(
             file_event_client
         )
         security_module = SecurityModule(
-            security_client, storage_client_factory, file_event_client_factory, alert_client_factory
+            security_client, storage_client_factory, microservice_client_factory
         )
         security_module.search_file_events(RAW_QUERY)
         file_event_client.search_file_events.assert_called_once_with(RAW_QUERY)
 
     def test_get_security_plan_storage_info_one_location_returns_location_info(
-        self,
-        security_client_one_location,
-        storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        self, security_client_one_location, storage_client_factory, microservice_client_factory
     ):
         security_module = SecurityModule(
-            security_client_one_location,
-            storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            security_client_one_location, storage_client_factory, microservice_client_factory
         )
         storage_infos = security_module.get_security_plan_storage_info_list("foo")
         assert len(storage_infos) == 1
@@ -302,14 +286,10 @@ class TestSecurityModule(object):
         self,
         security_client_two_plans_one_node,
         storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        microservice_client_factory,
     ):
         security_module = SecurityModule(
-            security_client_two_plans_one_node,
-            storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            security_client_two_plans_one_node, storage_client_factory, microservice_client_factory
         )
         storage_infos = security_module.get_security_plan_storage_info_list("foo")
         assert len(storage_infos) == 2
@@ -320,14 +300,10 @@ class TestSecurityModule(object):
         self,
         security_client_two_plans_two_nodes,
         storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        microservice_client_factory,
     ):
         security_module = SecurityModule(
-            security_client_two_plans_two_nodes,
-            storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            security_client_two_plans_two_nodes, storage_client_factory, microservice_client_factory
         )
         storage_infos = security_module.get_security_plan_storage_info_list("foo")
         assert self._storage_info_contains(storage_infos, "111111111111111111", "4", "41")
@@ -337,14 +313,12 @@ class TestSecurityModule(object):
         self,
         security_client_one_plan_two_destinations,
         storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        microservice_client_factory,
     ):
         security_module = SecurityModule(
             security_client_one_plan_two_destinations,
             storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            microservice_client_factory,
         )
         storage_infos = security_module.get_security_plan_storage_info_list("foo")
         assert len(storage_infos) == 1
@@ -356,14 +330,12 @@ class TestSecurityModule(object):
         self,
         security_client_two_plans_two_destinations,
         storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        microservice_client_factory,
     ):
         security_module = SecurityModule(
             security_client_two_plans_two_destinations,
             storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            microservice_client_factory,
         )
         storage_infos = security_module.get_security_plan_storage_info_list("foo")
         assert len(storage_infos) == 2
@@ -378,14 +350,12 @@ class TestSecurityModule(object):
         self,
         security_client_two_plans_two_destinations_three_nodes,
         storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        microservice_client_factory,
     ):
         security_module = SecurityModule(
             security_client_two_plans_two_destinations_three_nodes,
             storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            microservice_client_factory,
         )
         storage_infos = security_module.get_security_plan_storage_info_list("foo")
         assert self._storage_info_contains(
@@ -400,8 +370,7 @@ class TestSecurityModule(object):
         mocker,
         security_client_one_location,
         storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
@@ -411,10 +380,7 @@ class TestSecurityModule(object):
         mock_storage_security_client.get_security_detection_events_for_plan.return_value = response
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
-            security_client_one_location,
-            storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            security_client_one_location, storage_client_factory, microservice_client_factory
         )
         for page, cursor in security_module.get_user_security_events("foo"):
             pass
@@ -432,8 +398,7 @@ class TestSecurityModule(object):
         mocker,
         security_client_one_location,
         storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
@@ -448,10 +413,7 @@ class TestSecurityModule(object):
         ]
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
-            security_client_one_location,
-            storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            security_client_one_location, storage_client_factory, microservice_client_factory
         )
         for page, cursor in security_module.get_user_security_events("foo"):
             pass
@@ -462,8 +424,7 @@ class TestSecurityModule(object):
         mocker,
         security_client_two_plans_one_node,
         storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
@@ -473,10 +434,7 @@ class TestSecurityModule(object):
         mock_storage_security_client.get_security_detection_events_for_plan.return_value = response
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
-            security_client_two_plans_one_node,
-            storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            security_client_two_plans_one_node, storage_client_factory, microservice_client_factory
         )
         for page, cursor in security_module.get_user_security_events("foo"):
             pass
@@ -487,8 +445,7 @@ class TestSecurityModule(object):
         mocker,
         security_client_two_plans_one_node,
         storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
@@ -505,22 +462,14 @@ class TestSecurityModule(object):
         ]
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
-            security_client_two_plans_one_node,
-            storage_client_factory,
-            file_event_client_factory,
-            alert_client_factory,
+            security_client_two_plans_one_node, storage_client_factory, microservice_client_factory
         )
         for page, cursor in security_module.get_user_security_events("foo"):
             pass
         assert mock_storage_security_client.get_security_detection_events_for_plan.call_count == 4
 
     def test_get_plan_security_events_calls_security_client_with_expected_params(
-        self,
-        mocker,
-        security_client,
-        storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
@@ -530,7 +479,7 @@ class TestSecurityModule(object):
         mock_storage_security_client.get_security_detection_events_for_plan.return_value = response
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
-            security_client, storage_client_factory, file_event_client_factory, alert_client_factory
+            security_client, storage_client_factory, microservice_client_factory
         )
         for page, cursor in security_module.get_plan_security_events(
             PlanStorageInfo("111111111111111111", "41", "4")
@@ -546,12 +495,7 @@ class TestSecurityModule(object):
         )
 
     def test_get_plan_security_events_when_cursors_returned_calls_security_client_expected_number_of_times(
-        self,
-        mocker,
-        security_client,
-        storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
@@ -566,7 +510,7 @@ class TestSecurityModule(object):
         ]
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
-            security_client, storage_client_factory, file_event_client_factory, alert_client_factory
+            security_client, storage_client_factory, microservice_client_factory
         )
         for page, cursor in security_module.get_plan_security_events(
             PlanStorageInfo("111111111111111111", "41", "4")
@@ -575,12 +519,7 @@ class TestSecurityModule(object):
         assert mock_storage_security_client.get_security_detection_events_for_plan.call_count == 2
 
     def test_get_plan_security_events_when_mutliple_plans_returned_calls_security_client_expected_number_of_times(
-        self,
-        mocker,
-        security_client,
-        storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
@@ -590,7 +529,7 @@ class TestSecurityModule(object):
         mock_storage_security_client.get_security_detection_events_for_plan.return_value = response
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
-            security_client, storage_client_factory, file_event_client_factory, alert_client_factory
+            security_client, storage_client_factory, microservice_client_factory
         )
         plans = [
             PlanStorageInfo("111111111111111111", "41", "4"),
@@ -601,12 +540,7 @@ class TestSecurityModule(object):
         assert mock_storage_security_client.get_security_detection_events_for_plan.call_count == 2
 
     def test_get_plan_security_events_when_mutliple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
-        self,
-        mocker,
-        security_client,
-        storage_client_factory,
-        file_event_client_factory,
-        alert_client_factory,
+        self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
@@ -623,7 +557,7 @@ class TestSecurityModule(object):
         ]
         storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
         security_module = SecurityModule(
-            security_client, storage_client_factory, file_event_client_factory, alert_client_factory
+            security_client, storage_client_factory, microservice_client_factory
         )
         plans = [
             PlanStorageInfo("111111111111111111", "41", "4"),

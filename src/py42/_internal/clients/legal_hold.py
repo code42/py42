@@ -54,7 +54,7 @@ class LegalHoldClient(BaseAuthorityClient):
             u"pgNum": page_num,
             u"pgSize": page_size,
         }
-        return Py42Response(self._default_session.get(uri, params=params))
+        return Py42Response(self._default_session.get(uri, params=params), json_key=u"legalHolds")
 
     def get_all_matters(
         self, creator_user_uid=None, active_state=u"ACTIVE", name=None, hold_ext_ref=None

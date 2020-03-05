@@ -23,6 +23,7 @@ from py42._internal.user_context import UserContext
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
+from py42.exceptions import Py42InitializationException
 
 
 class AuthorityDependencies(object):
@@ -80,15 +81,7 @@ class AuthorityDependencies(object):
             if AuthorityDependencies.verify_session_supported(session, test_uri):
                 return idx
 
-        message = (
-            u"Invalid credentials or host address ({0}). Check that the username and password are correct, that the "
-            u"host is available and reachable, and that you have supplied the full scheme, domain, and port "
-            u"(e.g. https://myhost.code42.com:4285). If you are using a self-signed ssl certificate, try setting "
-            u"py42.settings.verify_ssl_certs to false (or using a cert from a legitimate certificate "
-            u"authority).".format(host_address)
-        )
-        raise Exception(message)
-
+        raise Py42InitializationException(host_address)
 
 class StorageDependencies(object):
     def __init__(self, authority_dependencies, archive_locator_factory):

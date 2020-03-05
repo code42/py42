@@ -202,7 +202,6 @@ def test_tmp_token_provider_uses_cache_after_get_login_info_called(
     tmp_token_provider.get_login_info()
     assert tmp_token_provider.get_tmp_auth_token.call_count == 1, "get_tmp_auth_token never called"
     tmp_token_provider.get_login_info()
-    tmp_token_provider.get_secret_value()
 
     call_count = tmp_token_provider.get_tmp_auth_token.call_count
     message = "get_tmp_auth_token was called {0} times, expected once".format(call_count)
@@ -222,7 +221,6 @@ def test_tmp_token_provider_uses_cache_after_get_secret_value_called(
     tmp_token_provider.get_secret_value()
     assert tmp_token_provider.get_tmp_auth_token.call_count == 1, "get_tmp_auth_token never called"
     tmp_token_provider.get_secret_value()
-    tmp_token_provider.get_login_info()
 
     call_count = tmp_token_provider.get_tmp_auth_token.call_count
     message = "get_tmp_auth_token was called {0} times, expected once".format(call_count)

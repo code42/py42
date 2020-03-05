@@ -1,6 +1,6 @@
 import pytest
 
-from py42._internal.login_providers import LoginProvider
+from py42._internal.login_providers import C42APITmpAuthProvider
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 
@@ -16,7 +16,7 @@ def session_factory(mocker):
 
 @pytest.fixture
 def login_provider(mocker):
-    return mocker.MagicMock(spec=LoginProvider)
+    return mocker.MagicMock(spec=C42APITmpAuthProvider)
 
 
 class TestStorageSessionManager(object):
@@ -46,7 +46,7 @@ class TestStorageSessionManager(object):
     def test_get_storage_session_raises_exception_when_factory_raises_exception(
         self, session_factory, login_provider
     ):
-        def mock_get_session(provider, **kwargs):
+        def mock_get_session(host_address, provider, **kwargs):
             raise Exception("Mock error!")
 
         storage_session_manager = StorageSessionManager(session_factory)
@@ -66,7 +66,7 @@ class TestStorageSessionManager(object):
         self, session_factory, login_provider
     ):
         storage_session_manager = StorageSessionManager(session_factory)
-        login_provider.get_target_host_address.return_value = "TEST-URI"
+        login_provider.get_login_info.return_value = {"serverUrl": "TEST-URI"}
         storage_session_manager.get_storage_session(login_provider)
         assert storage_session_manager.get_saved_session_for_url("TEST-URI") is not None
 

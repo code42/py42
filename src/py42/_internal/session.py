@@ -81,10 +81,12 @@ class Py42Session(object):
     def request(self, method, url, **kwargs):
         try:
             url = urljoin(self._host_address, url)
-            json = kwargs.get("json")
+            json = kwargs.get(u"json")
 
             if json is not None:
-                kwargs["data"] = json_lib.dumps(util.filter_out_none(json))
+                kwargs[u"data"] = json_lib.dumps(util.filter_out_none(json))
+            if u"json" in kwargs:
+                del kwargs[u"json"]
 
             self._renew_authentication(use_cache=True)
 
@@ -101,8 +103,8 @@ class Py42Session(object):
                 if response.status_code >= 400:
                     response.raise_for_status()
 
-                if not kwargs.get("stream"):
-                    response.encoding = "utf-8"  # setting this manually speeds up read times
+                if not kwargs.get(u"stream"):
+                    response.encoding = u"utf-8"  # setting this manually speeds up read times
 
                 return response
 
@@ -126,7 +128,6 @@ class Py42Session(object):
         stream=None,
         verify=None,
         cert=None,
-        json=None,
     ):
         if debug.will_print_for(debug_level.INFO):
             self._print_request(method, url, params=params, data=data)

@@ -3,8 +3,6 @@ import time
 from collections import namedtuple
 
 import py42.util as util
-from py42._internal.client_factories import StorageClientFactory
-from py42._internal.clients.archive import ArchiveClient
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
 
@@ -16,7 +14,6 @@ class FileType(object):
 
 class ArchiveAccessorManager(object):
     def __init__(self, archive_client, storage_client_factory):
-        # type: (ArchiveClient, StorageClientFactory) -> None
         self._archive_client = archive_client
         self._storage_client_factory = storage_client_factory
 
@@ -66,14 +63,14 @@ class ArchiveAccessor(object):
         return self._restore_job_manager.restore_to_local_path(file_selection, save_as_path)
 
     def _get_file_via_walking_tree(self, file_path):
-        path_parts = file_path.split("/")
-        path_root = path_parts[0] + "/"
+        path_parts = file_path.split(u"/")
+        path_root = path_parts[0] + u"/"
 
         response = self._get_children(node_id=None)
 
         roots = util.get_obj_from_response(response, u"data")
         for root in roots:
-            if root["path"].lower() == path_root.lower():
+            if root[u"path"].lower() == path_root.lower():
                 return self._walk_tree(root, path_parts[1:])
 
         raise Exception(

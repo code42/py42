@@ -1,20 +1,10 @@
 import py42.util as util
-from py42._internal.clients.devices import DeviceClient
-from py42._internal.clients.security import SecurityClient
 from py42._internal.compat import str
-from py42._internal.login_providers import (
-    C42APILoginTokenProvider,
-    C42APIStorageAuthTokenProvider,
-    FileEventLoginProvider,
-    KeyValueStoreLoginProvider,
-    AlertLoginProvider,
-    EmployeeCaseManagementLoginProvider,
-)
+from py42._internal.login_providers import C42APILoginTokenProvider, C42APIStorageAuthTokenProvider
 
 
 class ArchiveLocatorFactory(object):
     def __init__(self, auth_session, security_client, device_client):
-        # type: (object, SecurityClient, DeviceClient) -> ArchiveLocatorFactory
         self._auth_session = auth_session
         self._security_client = security_client
         self._device_client = device_client
@@ -44,39 +34,3 @@ class ArchiveLocatorFactory(object):
             raise Exception(message)
 
         return C42APILoginTokenProvider(self._auth_session, u"my", device_guid, destination_guid)
-
-
-class FileEventLoginProviderFactory(object):
-    def __init__(self, auth_session):
-        self._auth_session = auth_session
-
-    def create_file_event_login_provider(self):
-        return FileEventLoginProvider(self._auth_session)
-
-
-class KeyValueStoreLocatorFactory(object):
-    def __init__(self, auth_session):
-        self._auth_session = auth_session
-
-    def create_key_value_store_locator(self):
-        return KeyValueStoreLoginProvider(self._auth_session)
-
-
-class AlertLoginProviderFactory(object):
-    def __init__(self, auth_session, key_value_store_client_factory):
-        self._auth_session = auth_session
-        self._key_value_store_client_factory = key_value_store_client_factory
-
-    def create_alert_login_provider(self):
-        key_value_store_client = self._key_value_store_client_factory.get_key_value_store_client()
-        return AlertLoginProvider(self._auth_session, key_value_store_client)
-
-
-class EmployeeCaseManagementLoginProviderFactory(object):
-    def __init__(self, auth_session, key_value_store_client_factory):
-        self._auth_session = auth_session
-        self._key_value_store_client_factory = key_value_store_client_factory
-
-    def create_ecm_login_provider(self):
-        key_value_store_client = self._key_value_store_client_factory.get_key_value_store_client()
-        return EmployeeCaseManagementLoginProvider(self._auth_session, key_value_store_client)

@@ -5,8 +5,6 @@ import os
 import posixpath
 from datetime import datetime
 
-from requests import Response
-
 
 def get_obj_from_response(response, data_key):
     if response.text and 200 <= response.status_code < 300:
@@ -70,7 +68,6 @@ def build_path(filename, directory=None, default_dir=posixpath.curdir):
 
 
 def save_content_to_disk(response, file_path):
-    # type: (Response, str) -> None
     """Saves the content of a Response to disk at the given path
 
     Args:
@@ -87,7 +84,6 @@ def save_content_to_disk(response, file_path):
 
 
 def filter_out_none(_dict):
-    # type: (dict) -> dict
     return {key: _dict[key] for key in _dict if _dict[key] is not None}
 
 

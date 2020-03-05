@@ -2,9 +2,6 @@ from py42._internal.compat import str
 
 
 class LoginProvider(object):
-    def get_target_host_address(self):
-        pass
-
     def get_secret_value(self, force_refresh=False):
         pass
 

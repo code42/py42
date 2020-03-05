@@ -143,6 +143,17 @@ class TestMicroserviceClientFactory(object):
         factory.get_file_event_client()
         session_factory.create_jwt_session.called_once_with(ALERTS_URL, mock_session)
 
+    def test_get_alerts_client_returns_same_intance_on_multiple_calls(
+        self, mock_session, session_factory, user_context
+    ):
+        factory = MicroserviceClientFactory(
+            TEST_ROOT_URL, mock_session, session_factory, user_context
+        )
+        client1 = factory.get_alerts_client()
+        client2 = factory.get_alerts_client()
+
+        assert client1 is client2
+
     def test_get_departing_employee_client(self, mock_session, session_factory, user_context):
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL, mock_session, session_factory, user_context
@@ -170,6 +181,17 @@ class TestMicroserviceClientFactory(object):
         factory.get_departing_employee_client()
         session_factory.create_jwt_session.called_once_with(DEPARTING_EMPLOYEE_URL, mock_session)
 
+    def test_get_departing_employee_client_returns_same_intance_on_multiple_calls(
+        self, mock_session, session_factory, user_context
+    ):
+        factory = MicroserviceClientFactory(
+            TEST_ROOT_URL, mock_session, session_factory, user_context
+        )
+        client1 = factory.get_departing_employee_client()
+        client2 = factory.get_departing_employee_client()
+
+        assert client1 is client2
+
     def test_get_file_event_client(self, mock_session, session_factory, user_context):
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL, mock_session, session_factory, user_context
@@ -194,3 +216,14 @@ class TestMicroserviceClientFactory(object):
         )
         factory.get_file_event_client()
         session_factory.create_jwt_session.called_once_with(FILE_EVENTS_URL, mock_session)
+
+    def test_get_file_event_client_returns_same_intance_on_multiple_calls(
+        self, mock_session, session_factory, user_context
+    ):
+        factory = MicroserviceClientFactory(
+            TEST_ROOT_URL, mock_session, session_factory, user_context
+        )
+        client1 = factory.get_file_event_client()
+        client2 = factory.get_file_event_client()
+
+        assert client1 is client2

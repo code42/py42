@@ -22,7 +22,6 @@ def _get_storage_client_factory(session_factory, archive_locator_factory):
 class SDKDependencies(object):
     def __init__(self, host_address, session_factory, root_session):
         self._set_v3_session(host_address, session_factory, root_session)
-        storage_sessions_manager = StorageSessionManager(session_factory)
 
         # authority clients
         authority_client_factory = AuthorityClientFactory(self.session)

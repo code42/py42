@@ -32,7 +32,7 @@ class OrgClient(BaseAuthorityClient):
     def _get_page(self, page_num=None, page_size=None, **kwargs):
         uri = u"/api/Org"
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
-        return Py42Response(self._default_session.get(uri, params=params))
+        return Py42Response(self._default_session.get(uri, params=params), u"orgs")
 
     def get_all(self, **kwargs):
         return get_all_pages(self._get_page, settings.items_per_page, u"orgs", **kwargs)

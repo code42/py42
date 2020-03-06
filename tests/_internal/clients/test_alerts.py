@@ -35,8 +35,9 @@ class TestAlertClient(object):
         assert mock_session.post.call_args[0][0] == u"/svc/api/v1/query-alerts"
 
     def test_get_query_details_when_not_given_tenant_id_posts_expected_data(
-        self, mock_session, user_context
+        self, mock_session, user_context, successful_response
     ):
+        mock_session.post.return_value = successful_response
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_query_details(alert_ids)
@@ -48,8 +49,9 @@ class TestAlertClient(object):
         )
 
     def test_get_query_details_when_given_single_alert_id_posts_expected_data(
-        self, mock_session, user_context
+        self, mock_session, user_context, successful_response
     ):
+        mock_session.post.return_value = successful_response
         alert_client = AlertClient(mock_session, user_context)
         alert_client.get_query_details("ALERT_ID_1")
         post_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -59,8 +61,9 @@ class TestAlertClient(object):
         )
 
     def test_get_query_details_when_given_tenant_id_posts_expected_data(
-        self, mock_session, user_context
+        self, mock_session, user_context, successful_response
     ):
+        mock_session.post.return_value = successful_response
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_query_details(alert_ids, "some-tenant-id")
@@ -71,7 +74,10 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    def test_get_query_details_posts_to_expected_url(self, mock_session, user_context):
+    def test_get_query_details_posts_to_expected_url(
+        self, mock_session, user_context, successful_response
+    ):
+        mock_session.post.return_value = successful_response
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_query_details(alert_ids)

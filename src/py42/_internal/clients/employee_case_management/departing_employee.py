@@ -70,7 +70,9 @@ class DepartingEmployeeClient(BaseClient):
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,
         }
-        return Py42Response(self._default_session.post(uri, data=json.dumps(data)))
+        return Py42Response(
+            self._default_session.post(uri, data=json.dumps(data)), json_key=u"cases"
+        )
 
     def get_all(
         self,

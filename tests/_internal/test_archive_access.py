@@ -338,7 +338,7 @@ def archive_client(mocker):
     http_response.text = '{"data": {"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}}'
     http_response.status_code = 200
     py42_response.api_response = http_response
-    py42_response.raw_json = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
+    py42_response.raw_response_text = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
     client.get_data_key_token.return_value = py42_response
     return client
 
@@ -351,7 +351,7 @@ def storage_archive_client(mocker):
     http_response.text = '{"data": {"webRestoreSessionId": "FAKE_SESSION_ID"}}'
     http_response.status_code = 200
     py42_response.api_response = http_response
-    py42_response.raw_json = '{"webRestoreSessionId": "FAKE_SESSION_ID"}'
+    py42_response.raw_response_text = '{"webRestoreSessionId": "FAKE_SESSION_ID"}'
     client.create_restore_session.return_value = py42_response
     return client
 
@@ -396,7 +396,7 @@ def mock_start_restore_response(mocker, storage_archive_client, response):
         start_restore_response.status_code = 200
         py42_response = mocker.MagicMock(spec=Py42Response)
         py42_response.api_response = start_restore_response
-        py42_response.raw_json = json.dumps(json.loads(response)["data"])
+        py42_response.raw_response_text = json.dumps(json.loads(response)["data"])
         return py42_response
 
     storage_archive_client.start_restore.side_effect = mock_start_restore
@@ -410,7 +410,7 @@ def mock_get_restore_status_responses(mocker, storage_archive_client, json_respo
         get_restore_status_response.status_code = 200
         py42_response = mocker.MagicMock(spec=Py42Response)
         py42_response.api_response = get_restore_status_response
-        py42_response.raw_json = json.dumps(json.loads(json_response)["data"])
+        py42_response.raw_response_text = json.dumps(json.loads(json_response)["data"])
         responses.append(py42_response)
 
     storage_archive_client.get_restore_status.side_effect = responses
@@ -460,7 +460,7 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
         get_file_path_metadata_response.status_code = 200
         py_42response = mocker.MagicMock(spec=Py42Response)
         py_42response.api_response = get_file_path_metadata_response
-        py_42response.raw_json = file_id_responses[file_id]
+        py_42response.raw_response_text = file_id_responses[file_id]
 
         return py_42response
 

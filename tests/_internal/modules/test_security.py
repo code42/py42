@@ -210,21 +210,21 @@ class TestSecurityModule(object):
     @pytest.fixture
     def security_client_one_location(self, security_client, response):
         response.api_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
-        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
+        response.raw_response_text = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
     @pytest.fixture
     def security_client_two_plans_one_node(self, security_client, response):
         response.api_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
-        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
+        response.raw_response_text = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
     @pytest.fixture
     def security_client_two_plans_two_nodes(self, security_client, response):
         response.api_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
-        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
+        response.raw_response_text = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
@@ -233,7 +233,7 @@ class TestSecurityModule(object):
         response.api_response.text = (
             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
         )
-        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
+        response.raw_response_text = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
@@ -242,7 +242,7 @@ class TestSecurityModule(object):
         response.api_response.text = (
             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
         )
-        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
+        response.raw_response_text = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 
@@ -251,7 +251,7 @@ class TestSecurityModule(object):
         response.api_response.text = (
             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
         )
-        response.raw_json = json.dumps(json.loads(response.api_response.text)["data"])
+        response.raw_response_text = json.dumps(json.loads(response.api_response.text)["data"])
         security_client.get_security_event_locations.return_value = response
         return security_client
 

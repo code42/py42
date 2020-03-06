@@ -109,7 +109,7 @@ class TestDepartingEmployeeClient(object):
     def mock_py42_response(self, mocker, mock_get_case_details_function):
         py42_response = mocker.MagicMock(spec=Py42Response)
         py42_response.api_response = mock_get_case_details_function
-        py42_response.raw_json = mock_get_case_details_function.text
+        py42_response.raw_response_text = mock_get_case_details_function.text
         return py42_response
 
     def test_create_uses_given_tenant_id_over_current_id(

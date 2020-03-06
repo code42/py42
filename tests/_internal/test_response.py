@@ -58,10 +58,10 @@ class TestPy42Response(object):
 
     def test_raw_json_no_data_node_returns_raw_json(self, mock_response_list_no_data_node):
         response = Py42Response(mock_response_list_no_data_node, "item_list_key")
-        assert response.raw_json == JSON_LIST_NO_DATA_NODE
+        assert response.raw_response_text == JSON_LIST_NO_DATA_NODE
 
     def test_raw_json_with_data_node_returns_raw_json_without_data(
         self, mock_response_list_data_node
     ):
         response = Py42Response(mock_response_list_data_node, "item_list_key")
-        assert response.raw_json == JSON_LIST_NO_DATA_NODE
+        assert response.raw_response_text == JSON_LIST_NO_DATA_NODE

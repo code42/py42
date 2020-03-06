@@ -10,7 +10,7 @@ from requests import Response
 
 def get_obj_from_response(response, data_key):
     if response.api_response.text and 200 <= response.api_response.status_code < 300:
-        response_json = json.loads(response.raw_json)
+        response_json = json.loads(response.raw_response_text)
         return response_json[data_key]
     else:
         return []

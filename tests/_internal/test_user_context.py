@@ -36,7 +36,7 @@ class TestUserContext(object):
         mock_response.text = _GET_CURRENT_USER
         py42_response = mocker.MagicMock(spec=Py42Response)
         py42_response.api_response = mock_response
-        py42_response.raw_json = json.dumps(json.loads(_GET_CURRENT_USER)["data"])
+        py42_response.raw_response_text = json.dumps(json.loads(_GET_CURRENT_USER)["data"])
         mock_administration_client.get_current_tenant.return_value = py42_response
         return mock_administration_client
 

@@ -1,8 +1,6 @@
 import json
 from threading import Lock
 
-import py42.util as util
-
 
 class SecurityModule(object):
     def __init__(self, security_client, storage_client_factory, microservices_client_factory):
@@ -19,8 +17,7 @@ class SecurityModule(object):
     def get_security_plan_storage_info_list(self, user_uid):
         locations = None
         try:
-            response = self._security_client.get_security_event_locations(user_uid)
-            locations = util.get_obj_from_response(response, u"securityPlanLocationsByDestination")
+            locations = self._security_client.get_security_event_locations(user_uid)
         except Exception:
             # TODO: only pass if the exception is caused by a 404
             pass

@@ -224,4 +224,4 @@ def _get_url_from_key_value_store(key_value_store, url_key):
         message = u"{0}, caused by {1}".format(message, ex)
         raise Exception(message)
 
-    return response.text
+    return str(response)

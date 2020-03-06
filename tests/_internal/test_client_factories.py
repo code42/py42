@@ -1,28 +1,15 @@
 import pytest
-from requests import Response
 
 from py42._internal.login_provider_factories import ArchiveLocatorFactory
-from py42._internal.clients import (
-    administration,
-    archive,
-    alerts,
-    devices,
-    employee_case_management,
-    fileevent,
-    key_value_store,
-    legal_hold,
-    orgs,
-    security,
-    users,
-    storage,
-)
+from py42.clients import administration, archive, devices, legal_hold, orgs, security, storage
+from py42.clients import fileevent, alerts, employee_case_management, users
+from py42._internal import key_value_store
 from py42._internal.client_factories import (
     AuthorityClientFactory,
     StorageClientFactory,
     MicroserviceClientFactory,
 )
 
-from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.user_context import UserContext

@@ -6,9 +6,7 @@ from requests import Response
 import json
 
 import py42
-from py42._internal.clients.users import UserClient
-from py42._internal.session import Py42Session
-
+from py42.clients.users import UserClient
 
 USER_URI = "/api/User"
 

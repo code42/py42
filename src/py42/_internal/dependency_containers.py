@@ -5,11 +5,8 @@ from py42._internal.client_factories import (
     StorageClientFactory,
 )
 from py42._internal.login_provider_factories import ArchiveLocatorFactory
-from py42._internal.modules import (
-    archive as archive_module,
-    employee_case_management as ecm_module,
-    security as sec_module,
-)
+from py42.modules import archive as archive_module, security as sec_module
+from py42.modules import employee_case_management as ecm_module
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.user_context import UserContext
 

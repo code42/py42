@@ -4,7 +4,7 @@ from datetime import datetime
 from time import time
 
 from py42._internal.compat import str
-from py42.sdk.alert_query import (
+from py42.sdk.queries.alerts.alert_query import (
     Actor,
     AlertQuery,
     AlertState,

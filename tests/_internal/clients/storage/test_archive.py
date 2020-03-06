@@ -2,7 +2,7 @@ import pytest
 from requests import Response
 import json
 
-from py42._internal.clients.storage.archive import StorageArchiveClient
+from py42.clients.storage.archive import StorageArchiveClient
 from py42._internal.session import Py42Session
 
 

@@ -2,8 +2,8 @@ import pytest
 from requests import Response
 import json
 
-from py42._internal.clients.administration import AdministrationClient
-from py42._internal.response import Py42Response
+from py42.clients import AdministrationClient
+from py42.response import Py42Response
 from py42._internal.user_context import UserContext
 
 _GET_CURRENT_USER = """

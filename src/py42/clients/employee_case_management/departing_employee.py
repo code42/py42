@@ -1,8 +1,8 @@
 import json
 
-from py42._internal.base_classes import BaseClient
-from py42._internal.clients.util import get_all_pages
-from py42._internal.response import Py42Response
+from py42.base_classes import BaseClient
+from py42.clients.util import get_all_pages
+from py42.response import Py42Response
 from py42.util import convert_timestamp_to_str
 
 

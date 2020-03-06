@@ -1,10 +1,8 @@
 import pytest
 
 from py42._internal.client_factories import MicroserviceClientFactory
-from py42._internal.clients.employee_case_management.departing_employee import (
-    DepartingEmployeeClient,
-)
-from py42._internal.modules.employee_case_management import EmployeeCaseManagementModule
+from py42.clients.employee_case_management import DepartingEmployeeClient
+from py42.modules.employee_case_management import EmployeeCaseManagementModule
 
 
 class TestEmployeeCaseManagementModule(object):

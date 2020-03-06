@@ -1,5 +1,5 @@
 from py42._internal.compat import str
-from py42.sdk.file_event_query.file_event_query import FileEventQuery
+from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 
 
 JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'

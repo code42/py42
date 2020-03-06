@@ -1,6 +1,6 @@
-from py42._internal.base_classes import BaseClient
+from py42.base_classes import BaseClient
 from py42._internal.compat import str
-from py42._internal.response import Py42Response
+from py42.response import Py42Response
 
 
 class FileEventClient(BaseClient):

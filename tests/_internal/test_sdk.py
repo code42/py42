@@ -2,20 +2,10 @@ import pytest
 
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
-from py42._internal.clients import (
-    administration,
-    archive,
-    devices,
-    legal_hold,
-    orgs,
-    security,
-    users,
-)
-from py42._internal.modules import (
-    archive as arch_mod,
-    employee_case_management as ecm_mod,
-    security as sec_mod,
-)
+from py42.clients import administration, devices, legal_hold, orgs
+from py42.clients import users
+from py42.modules import archive as arch_mod, security as sec_mod
+from py42.modules import employee_case_management as ecm_mod
 from py42._internal.dependency_containers import SDKDependencies
 from py42._internal.client_factories import StorageClientFactory
 from py42._internal.user_context import UserContext

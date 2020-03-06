@@ -5,10 +5,8 @@ import json
 import pytest
 from requests import Response
 
-from py42._internal.clients.employee_case_management.departing_employee import (
-    DepartingEmployeeClient,
-)
-from py42._internal.response import Py42Response
+from py42.clients.employee_case_management import DepartingEmployeeClient
+from py42.response import Py42Response
 
 from ..conftest import TENANT_ID_FROM_RESPONSE
 

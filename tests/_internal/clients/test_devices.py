@@ -4,7 +4,7 @@ import pytest
 from requests import Response
 
 import py42
-from py42._internal.clients.devices import DeviceClient
+from py42.clients import DeviceClient
 
 COMPUTER_URI = "/api/Computer"
 

@@ -1,8 +1,8 @@
 import pytest
 import json
 
-from py42._internal.clients.alerts import AlertClient
-from py42.sdk.alert_query import AlertQuery, AlertState
+from py42.clients.alerts import AlertClient
+from py42.sdk.queries.alerts.alert_query import AlertQuery, AlertState
 from .conftest import TENANT_ID_FROM_RESPONSE
 
 

@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from py42._internal.base_classes import BaseClient
+from py42.base_classes import BaseClient
 
 
 class StorageSecurityClient(BaseClient):

@@ -3,12 +3,12 @@ from requests import Response
 import json
 
 from py42._internal.client_factories import MicroserviceClientFactory, StorageClientFactory
-from py42._internal.clients.fileevent.file_event import FileEventClient
-from py42._internal.clients.security import SecurityClient
-from py42._internal.clients.storage.security import StorageSecurityClient
-from py42._internal.clients.storage.storage import StorageClient
-from py42._internal.modules.security import PlanStorageInfo, SecurityModule
-from py42._internal.response import Py42Response
+from py42.clients.fileevent import FileEventClient
+from py42.clients import SecurityClient
+from py42.clients import StorageSecurityClient
+from py42.clients.storage.storage import StorageClient
+from py42.modules import PlanStorageInfo, SecurityModule
+from py42.response import Py42Response
 
 RAW_QUERY = "RAW JSON QUERY"
 

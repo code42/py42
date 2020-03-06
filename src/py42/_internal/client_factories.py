@@ -1,21 +1,12 @@
 import json
 
-from py42._internal.clients import (
-    administration,
-    archive,
-    devices,
-    legal_hold,
-    orgs,
-    security,
-    users,
-)
-from py42._internal.clients.alerts import AlertClient
-from py42._internal.clients.employee_case_management.departing_employee import (
-    DepartingEmployeeClient,
-)
-from py42._internal.clients.fileevent.file_event import FileEventClient
-from py42._internal.clients.key_value_store import KeyValueStoreClient
-from py42._internal.clients.storage.storage import StorageClient
+from py42.clients import administration, archive, devices, legal_hold, orgs, security
+from py42.clients import users
+from py42.clients.alerts import AlertClient
+from py42.clients.employee_case_management.departing_employee import DepartingEmployeeClient
+from py42.clients.fileevent.file_event import FileEventClient
+from py42._internal.key_value_store import KeyValueStoreClient
+from py42.clients.storage.storage import StorageClient
 
 
 class AuthorityClientFactory(object):

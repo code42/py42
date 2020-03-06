@@ -1,11 +1,10 @@
-from requests import Session
-
 from py42._internal.dependency_containers import SDKDependencies
 from py42._internal.session_factory import (
     AuthHandlerFactory,
     SessionFactory,
     SessionModifierFactory,
 )
+from requests import Session
 
 
 class SDK(object):

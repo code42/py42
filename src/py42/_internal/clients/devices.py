@@ -1,9 +1,9 @@
 import json
 
+import py42.settings as settings
 from py42._internal.base_classes import BaseClient
 from py42._internal.clients.util import get_all_pages
 from py42._internal.response import Py42Response
-import py42.settings as settings
 
 
 class DeviceClient(BaseClient):

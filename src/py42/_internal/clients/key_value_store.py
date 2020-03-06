@@ -1,5 +1,4 @@
 from py42._internal.base_classes import BaseClient
-from py42._internal.response import Py42Response
 
 
 class KeyValueStoreClient(BaseClient):

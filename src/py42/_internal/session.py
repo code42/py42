@@ -1,12 +1,11 @@
 import json as json_lib
 from threading import Lock
 
-import requests.adapters
-
 import py42.debug as debug
 import py42.debug_level as debug_level
 import py42.settings as settings
 import py42.util as util
+import requests.adapters
 from py42._internal.compat import str, urljoin, urlparse
 
 

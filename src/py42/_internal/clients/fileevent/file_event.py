@@ -7,4 +7,4 @@ class FileEventClient(BaseClient):
     def search(self, query):
         query = str(query)
         uri = u"/forensic-search/queryservice/api/v1/fileevent"
-        return Py42Response(self._default_session.post(uri, data=query))
+        return Py42Response(self._session.post(uri, data=query))

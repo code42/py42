@@ -8,4 +8,4 @@ class KeyValueStoreClient(BaseClient):
 
     def get_stored_value(self, key):
         uri = u"/v1/{0}".format(key)
-        return Py42Response(self._default_session.get(uri))
+        return self._session.get(uri)

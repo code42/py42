@@ -1,17 +1,16 @@
 # -*- coding: utf-8 -*-
 
-import pytest
 import json
+
+import pytest
 from requests import Response
 
-from ..conftest import TENANT_ID_FROM_RESPONSE
-
-import py42
 from py42._internal.clients.employee_case_management.departing_employee import (
     DepartingEmployeeClient,
 )
 from py42._internal.response import Py42Response
 
+from ..conftest import TENANT_ID_FROM_RESPONSE
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
 

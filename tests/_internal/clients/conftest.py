@@ -12,13 +12,3 @@ def user_context(mocker):
     client = mocker.MagicMock(spec=UserContext)
     client.get_current_tenant_id.return_value = TENANT_ID_FROM_RESPONSE
     return client
-
-
-@pytest.fixture
-def session(mocker):
-    return mocker.MagicMock(spec=Py42Session)
-
-
-@pytest.fixture
-def py42_response(mocker):
-    return mocker.MagicMock(spec=Py42Response)

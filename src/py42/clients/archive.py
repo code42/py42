@@ -8,7 +8,9 @@ class ArchiveClient(BaseClient):
     def get_data_key_token(self, computer_guid):
         uri = u"/api/DataKeyToken"
         data = {u"computerGuid": computer_guid}
-        return Py42Response(self._session.post(uri, data=json.dumps(data)))
+        return Py42Response(
+            self._session.post(uri, data=json.dumps(data)), json_key=u"dataKeyToken"
+        )
 
     def get_backup_sets(self, device_guid, destination_guid):
         uri = u"/c42api/v3/BackupSets/{}/{}".format(device_guid, destination_guid)

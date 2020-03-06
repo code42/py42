@@ -12,7 +12,7 @@ class ArchiveClient(BaseClient):
 
     def get_backup_sets(self, device_guid, destination_guid):
         uri = u"/c42api/v3/BackupSets/{}/{}".format(device_guid, destination_guid)
-        return Py42Response(self._session.get(uri))
+        return Py42Response(self._session.get(uri), json_key="backupSets")
 
     def get_restore_history(self, days, org_id=None, page_num=None, page_size=None):
         uri = u"/api/RestoreHistory"

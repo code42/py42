@@ -70,7 +70,7 @@ class UserClient(BaseClient):
             **kwargs
         )
 
-        return Py42Response(self._session.get(uri, params=params), u"users")
+        return Py42Response(self._session.get(uri, params=params), json_key=u"users")
 
     def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs):
         return get_all_pages(

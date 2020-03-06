@@ -18,7 +18,7 @@ class AlertClient(BaseClient):
     def search(self, query):
         query = str(query)
         uri = self._uri_prefix.format(u"query-alerts")
-        return Py42Response(self._default_session.post(uri, data=query), u"alerts")
+        return Py42Response(self._default_session.post(uri, data=query), json_key=u"alerts")
 
     def get_query_details(self, alert_ids, tenant_id=None):
         if type(alert_ids) is not list:
@@ -26,7 +26,9 @@ class AlertClient(BaseClient):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"query-details")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
-        return Py42Response(self._default_session.post(uri, data=json.dumps(data)), u"alerts")
+        return Py42Response(
+            self._default_session.post(uri, data=json.dumps(data)), json_key=u"alerts"
+        )
 
     def resolve(self, alert_ids, tenant_id=None, reason=None):
         if type(alert_ids) is not list:

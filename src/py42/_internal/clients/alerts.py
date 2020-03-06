@@ -2,6 +2,7 @@ import json
 
 from py42._internal.base_classes import BaseClient
 from py42._internal.compat import str
+from py42._internal.response import Py42Response
 
 
 class AlertClient(BaseClient):
@@ -14,7 +15,7 @@ class AlertClient(BaseClient):
     def search(self, query):
         query = str(query)
         uri = self._uri_prefix.format(u"query-alerts")
-        return self._session.post(uri, data=query)
+        return Py42Response(self._session.post(uri, data=query), u"alerts")
 
     def get_query_details(self, alert_ids, tenant_id=None):
         if type(alert_ids) is not list:

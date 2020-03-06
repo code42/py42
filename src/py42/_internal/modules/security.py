@@ -162,7 +162,7 @@ def _get_plan_destination_map(locations_list):
 
 def _get_destinations_in_locations_list(locations_list):
     for destination in locations_list:
-        for node in destination[u"securityPlanLocationsByNode"]:
+        for node in destination["securityPlanLocationsByNode"]:
             yield _get_plans_in_node(destination, node)
 
 

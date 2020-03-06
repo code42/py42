@@ -335,10 +335,10 @@ def archive_client(mocker):
     client = mocker.MagicMock(spec=ArchiveClient)
     py42_response = mocker.MagicMock(spec=Py42Response)
     http_response = mocker.MagicMock(spec=Response)
-    http_response.text = '{"data": {"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}}'
+    http_response.text = '{{"data": {{"dataKeyToken": "{0}"}}}}'.format(DATA_KEY_TOKEN)
     http_response.status_code = 200
     py42_response.api_response = http_response
-    py42_response.raw_response_text = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
+    py42_response.raw_response_text = DATA_KEY_TOKEN
     client.get_data_key_token.return_value = py42_response
     return client
 
@@ -348,10 +348,12 @@ def storage_archive_client(mocker):
     client = mocker.MagicMock(spec=StorageArchiveClient)
     py42_response = mocker.MagicMock(spec=Py42Response)
     http_response = mocker.MagicMock(spec=Response)
-    http_response.text = '{"data": {"webRestoreSessionId": "FAKE_SESSION_ID"}}'
+    http_response.text = '{{"data": {{"webRestoreSessionId": "{0}"}}}}'.format(
+        WEB_RESTORE_SESSION_ID
+    )
     http_response.status_code = 200
     py42_response.api_response = http_response
-    py42_response.raw_response_text = '{"webRestoreSessionId": "FAKE_SESSION_ID"}'
+    py42_response.raw_response_text = WEB_RESTORE_SESSION_ID
     client.create_restore_session.return_value = py42_response
     return client
 

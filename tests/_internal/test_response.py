@@ -7,6 +7,8 @@ JSON_LIST_WITH_DATA_NODE = '{"data": {"item_list_key": [{"foo": "foo_val"}, {"ba
 JSON_DICT_WITH_DATA_NODE = '{"data": {"item_list_key": {"foo": "foo_val"}}}'
 JSON_LIST_NO_DATA_NODE = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
 JSON_DICT_NO_DATA_NODE = '{"item_list_key": {"foo": "foo_val"}}'
+JSON_LIST_ROOT = '[{"foo": "foo_val"}, {"bar": "bar_val"}]'
+JSON_DICT_ROOT = '{"foo": "foo_val"}'
 
 
 class TestPy42Response(object):
@@ -56,10 +58,10 @@ class TestPy42Response(object):
 
     def test_raw_json_no_data_node_returns_raw_json(self, mock_response_list_no_data_node):
         response = Py42Response(mock_response_list_no_data_node, "item_list_key")
-        assert response.raw_response_text == JSON_LIST_NO_DATA_NODE
+        assert response.raw_response_text == JSON_LIST_ROOT
 
     def test_raw_json_with_data_node_returns_raw_json_without_data(
         self, mock_response_list_data_node
     ):
         response = Py42Response(mock_response_list_data_node, "item_list_key")
-        assert response.raw_response_text == JSON_LIST_NO_DATA_NODE
+        assert response.raw_response_text == JSON_LIST_ROOT

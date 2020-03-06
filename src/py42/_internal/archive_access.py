@@ -27,15 +27,14 @@ class ArchiveAccessorManager(object):
         return ArchiveAccessor(device_guid, session_id, client.archive, restore_job_manager)
 
     def _get_data_key_token(self, device_guid):
-        response = self._archive_client.get_data_key_token(device_guid)
-        return util.get_obj_from_response(response, u"dataKeyToken")
+        return self._archive_client.get_data_key_token(device_guid).raw_response_text
 
     @staticmethod
     def _create_restore_session(storage_archive_client, device_guid, data_key_token):
         response = storage_archive_client.create_restore_session(
             device_guid, data_key_token=data_key_token
         )
-        return util.get_obj_from_response(response, u"webRestoreSessionId")
+        return response.raw_response_text
 
 
 class ArchiveAccessor(object):

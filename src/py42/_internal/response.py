@@ -10,14 +10,16 @@ class Py42Response(object):
         self._data_root = None
         if self._response.text:
             try:
-                response_dict = json.loads(self.api_response.text)
+                response_dict = json.loads(self._response.text)
+                print(response_dict)
                 self._data_root = response_dict.get(u"data") or response_dict
+                if type(self._data_root) is dict:
+                    self._data_root = self._data_root.get(json_key) or self._data_root
             except ValueError:
                 pass
 
     def __getitem__(self, key):
-        item_root = self._data_root[self._json_key] if self._json_key else self._data_root
-        return item_root[key]
+        return self._data_root[key]
 
     @property
     def raw_response_text(self):

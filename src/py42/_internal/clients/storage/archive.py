@@ -77,7 +77,9 @@ class StorageArchiveClient(BaseClient):
             u"privatePassword": private_password,
             u"encryptionKey": encryption_key,
         }
-        return Py42Response(self._session.post(uri, json=json_dict))
+        return Py42Response(
+            self._session.post(uri, json=json_dict), json_key=u"webRestoreSessionId"
+        )
 
     def start_restore(
         self,

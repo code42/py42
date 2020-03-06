@@ -1,8 +1,7 @@
 import json as json_lib
 from threading import Lock
 
-import py42.debug as debug
-import py42.debug_level as debug_level
+import py42.settings.debug as debug
 import py42.settings as settings
 import py42.util as util
 import requests.adapters
@@ -128,7 +127,7 @@ class Py42Session(object):
         verify=None,
         cert=None,
     ):
-        if debug.will_print_for(debug_level.INFO):
+        if debug.will_print_for(debug.INFO):
             self._print_request(method, url, params=params, data=data)
 
         response = self._session.request(
@@ -174,10 +173,10 @@ class Py42Session(object):
 
     def _print_request(self, method, url, params=None, data=None):
         print(u"{0}{1}".format(str(method).ljust(8), url))
-        if debug.will_print_for(debug_level.TRACE):
+        if debug.will_print_for(debug.TRACE):
             if self.headers:
                 util.print_dict(self.headers, u"  headers")
-        if debug.will_print_for(debug_level.DEBUG):
+        if debug.will_print_for(debug.DEBUG):
             if params:
                 util.print_dict(params, u"  params")
             if data:

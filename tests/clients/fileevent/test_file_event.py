@@ -2,7 +2,7 @@
 
 import pytest
 
-from py42.clients.fileevent import FileEventClient
+from py42.clients.file_event import FileEventClient
 from py42._internal.session import Py42Session
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"

@@ -2,7 +2,7 @@ import pytest
 
 from py42._internal.login_provider_factories import ArchiveLocatorFactory
 from py42.clients import administration, archive, devices, legal_hold, orgs, security, storage
-from py42.clients import fileevent, alerts, employee_case_management, users
+from py42.clients import file_event, alerts, employee_case_management, users
 from py42._internal import key_value_store
 from py42._internal.client_factories import (
     AuthorityClientFactory,
@@ -93,14 +93,14 @@ class TestStorageClientFactory(object):
     ):
         factory = StorageClientFactory(storage_session_manager, login_provider_factory)
         client = factory.get_storage_client_from_device_guid("test-device-guid")
-        assert type(client) == storage.storage.StorageClient
+        assert type(client) == storage.StorageClient
 
     def test_get_storage_client_from_plan_uid(
         self, login_provider_factory, storage_session_manager
     ):
         factory = StorageClientFactory(storage_session_manager, login_provider_factory)
         client = factory.get_storage_client_from_plan_uid("test-plan-uid", "test-dest-guid")
-        assert type(client) == storage.storage.StorageClient
+        assert type(client) == storage.StorageClient
 
 
 class TestMicroserviceClientFactory(object):
@@ -184,7 +184,7 @@ class TestMicroserviceClientFactory(object):
             TEST_ROOT_URL, mock_session, session_factory, user_context
         )
         client = factory.get_file_event_client()
-        assert type(client) == fileevent.file_event.FileEventClient
+        assert type(client) == client.file_event.FileEventClient
 
     def test_get_file_event_client_calls_get_stored_value_with_expected_key(
         self, mock_session, session_factory, user_context, key_value_store_client

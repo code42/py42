@@ -3,11 +3,11 @@ from requests import Response
 import json
 
 from py42._internal.client_factories import MicroserviceClientFactory, StorageClientFactory
-from py42.clients.fileevent import FileEventClient
-from py42.clients import SecurityClient
-from py42.clients import StorageSecurityClient
-from py42.clients.storage.storage import StorageClient
-from py42.modules import PlanStorageInfo, SecurityModule
+from py42.clients.file_event import FileEventClient
+from py42.clients.security import SecurityClient
+from py42.clients.storage.security import StorageSecurityClient
+from py42.clients.storage import StorageClient
+from py42.modules.security import PlanStorageInfo, SecurityModule
 from py42.response import Py42Response
 
 RAW_QUERY = "RAW JSON QUERY"
@@ -34,7 +34,6 @@ GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION = """{
     },
     "error": null
 }"""
-
 
 
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE = """{
@@ -206,35 +205,41 @@ class TestSecurityModule(object):
     @pytest.fixture
     def security_client_one_location(self, security_client, response):
         response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
-        security_client.get_security_event_locations.return_value = Py42Response(response, json_key=u"securityPlanLocationsByDestination")
+        security_client.get_security_event_locations.return_value = Py42Response(
+            response, json_key=u"securityPlanLocationsByDestination"
+        )
         return security_client
 
     @pytest.fixture
     def security_client_two_plans_one_node(self, security_client, response):
         response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
-        security_client.get_security_event_locations.return_value = Py42Response(response, json_key=u"securityPlanLocationsByDestination")
+        security_client.get_security_event_locations.return_value = Py42Response(
+            response, json_key=u"securityPlanLocationsByDestination"
+        )
         return security_client
 
     @pytest.fixture
     def security_client_two_plans_two_nodes(self, security_client, response):
         response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
-        security_client.get_security_event_locations.return_value = Py42Response(response, json_key=u"securityPlanLocationsByDestination")
+        security_client.get_security_event_locations.return_value = Py42Response(
+            response, json_key=u"securityPlanLocationsByDestination"
+        )
         return security_client
 
     @pytest.fixture
     def security_client_one_plan_two_destinations(self, security_client, response):
-        response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
+        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
+        security_client.get_security_event_locations.return_value = Py42Response(
+            response, json_key=u"securityPlanLocationsByDestination"
         )
-        security_client.get_security_event_locations.return_value = Py42Response(response, json_key=u"securityPlanLocationsByDestination")
         return security_client
 
     @pytest.fixture
     def security_client_two_plans_two_destinations(self, security_client, response):
-        response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
+        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
+        security_client.get_security_event_locations.return_value = Py42Response(
+            response, json_key=u"securityPlanLocationsByDestination"
         )
-        security_client.get_security_event_locations.return_value = Py42Response(response, json_key=u"securityPlanLocationsByDestination")
         return security_client
 
     @pytest.fixture
@@ -242,7 +247,9 @@ class TestSecurityModule(object):
         response.text = (
             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
         )
-        security_client.get_security_event_locations.return_value = Py42Response(response, json_key=u"securityPlanLocationsByDestination")
+        security_client.get_security_event_locations.return_value = Py42Response(
+            response, json_key=u"securityPlanLocationsByDestination"
+        )
         return security_client
 
     @pytest.fixture

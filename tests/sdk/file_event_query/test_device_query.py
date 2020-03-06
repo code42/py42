@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from py42._internal.compat import str
-from py42.sdk.file_event_query.device_query import (
+from py42.sdk.queries.fileevents.filters.device_query import (
     DeviceUsername,
     OSHostname,
     PrivateIPAddress,

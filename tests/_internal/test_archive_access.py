@@ -18,9 +18,9 @@ from py42._internal.archive_access import (
 )
 from py42.response import Py42Response
 from py42._internal.client_factories import StorageClientFactory
-from py42.clients import ArchiveClient
+from py42.clients.archive import ArchiveClient
 from py42.clients.storage.archive import StorageArchiveClient
-from py42.clients.storage.storage import StorageClient
+from py42.clients.storage import StorageClient
 
 
 DEVICE_GUID = "device-guid"

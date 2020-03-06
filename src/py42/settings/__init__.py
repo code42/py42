@@ -1,6 +1,7 @@
 import sys
 
-import py42.debug_level
+import py42.settings
+import py42.settings.debug as debug
 from py42.__version__ import __version__
 
 proxies = None
@@ -10,8 +11,6 @@ proxies = None
 verify_ssl_certs = True
 
 items_per_page = 1000
-
-debug_level = py42.debug_level.NONE
 
 _custom_user_suffix = u""
 _python_version = u"{0}.{1}.{2}".format(

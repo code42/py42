@@ -1,4 +1,4 @@
-from py42.sdk.file_event_query.email_query import EmailRecipients, EmailSender
+from py42.sdk.queries.fileevents.filters.email_query import EmailRecipients, EmailSender
 from ..conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
 
 

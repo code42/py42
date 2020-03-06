@@ -4,7 +4,7 @@ import pytest
 from requests import Response
 
 import py42
-from py42.clients import OrgClient
+from py42.clients.orgs import OrgClient
 
 COMPUTER_URI = "/api/Org"
 

@@ -1,13 +1,7 @@
 import pytest
 from requests import Response
 
-from py42._internal.auth_handling import (
-    AuthHandler,
-    CookieModifier,
-    HeaderModifier,
-    LoginProvider,
-    SessionModifier,
-)
+from py42._internal.auth_handling import AuthHandler, HeaderModifier, TokenProvider, SessionModifier
 
 ORIGINAL_VALUE = "test-original-value"
 UPDATED_VALUE = "test-updated-value"
@@ -18,8 +12,8 @@ TEST_SECRET = "TEST-SECRET"
 
 
 @pytest.fixture
-def mock_login_provider(mocker):
-    provider = mocker.MagicMock(spec=LoginProvider)
+def mock_token_provider(mocker):
+    provider = mocker.MagicMock(spec=TokenProvider)
     provider.get_secret_value.return_value = TEST_SECRET
     return provider
 
@@ -30,37 +24,37 @@ def mock_session_modifier(mocker):
 
 
 def test_auth_handler_constructs_successfully():
-    assert AuthHandler(LoginProvider(), SessionModifier())
+    assert AuthHandler(TokenProvider(), SessionModifier())
 
 
-def test_auth_handler_renew_authentication_using_cache_calls_get_secret_value_on_login_provider_with_correct_params(
-    mock_login_provider, mock_session_modifier, mock_session
+def test_auth_handler_renew_authentication_using_cache_calls_get_secret_value_on_token_provider_with_correct_params(
+    mock_token_provider, mock_session_modifier, mock_session
 ):
-    auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
+    auth_handler = AuthHandler(mock_token_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session, use_cache=True)
-    mock_login_provider.get_secret_value.assert_called_once_with(force_refresh=False)
+    mock_token_provider.get_secret_value.assert_called_once_with(force_refresh=False)
 
 
-def test_auth_handler_renew_authentication_no_cache_calls_get_secret_value_on_login_provider_with_correct_params(
-    mock_login_provider, mock_session_modifier, mock_session
+def test_auth_handler_renew_authentication_no_cache_calls_get_secret_value_on_token_provider_with_correct_params(
+    mock_token_provider, mock_session_modifier, mock_session
 ):
-    auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
+    auth_handler = AuthHandler(mock_token_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session)
-    mock_login_provider.get_secret_value.assert_called_once_with(force_refresh=True)
+    mock_token_provider.get_secret_value.assert_called_once_with(force_refresh=True)
 
 
 def test_auth_handler_renew_authentication_using_cache_calls_modify_session_on_session_modifier_with_correct_params(
-    mock_login_provider, mock_session_modifier, mock_session
+    mock_token_provider, mock_session_modifier, mock_session
 ):
-    auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
+    auth_handler = AuthHandler(mock_token_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session, use_cache=True)
     mock_session_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
 
 
 def test_auth_handler_renew_authentication_no_cache_calls_modify_session_on_session_modifier_with_correct_params(
-    mock_login_provider, mock_session_modifier, mock_session
+    mock_token_provider, mock_session_modifier, mock_session
 ):
-    auth_handler = AuthHandler(mock_login_provider, mock_session_modifier)
+    auth_handler = AuthHandler(mock_token_provider, mock_session_modifier)
     auth_handler.renew_authentication(mock_session)
     mock_session_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
 
@@ -117,16 +111,3 @@ def test_header_modifier_updates_specified_header_if_present(mock_session):
     header_modifier.modify_session(mock_session, ORIGINAL_VALUE)
     header_modifier.modify_session(mock_session, UPDATED_VALUE)
     assert mock_session.headers.get(CUSTOM_NAME) == UPDATED_VALUE
-
-
-def test_cookie_modifier_constructs_successfully():
-    assert CookieModifier(CUSTOM_NAME)
-
-
-def test_cookie_modifier_adds_specified_cookie(mock_session):
-    from .conftest import cookie_dict
-
-    cookie_modifier = CookieModifier(CUSTOM_NAME)
-    cookie_modifier.modify_session(mock_session, ORIGINAL_VALUE)
-    assert mock_session.cookies.get(CUSTOM_NAME) is not None
-    cookie_dict.clear()

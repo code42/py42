@@ -2,7 +2,7 @@ import pytest
 from requests import Session
 
 from py42._internal.auth_handling import CompositeModifier, HeaderModifier
-from py42._internal.login_providers import (
+from py42._internal.token_providers import (
     BasicAuthProvider,
     C42APILoginTokenProvider,
     C42ApiV1TokenProvider,
@@ -79,8 +79,8 @@ class TestSessionFactory(object):
     def test_create_jwt_session_uses_auth_handler_with_expected_provider_and_modifier(
         self, mocker, session_modifier_factory, auth_handler_factory, mock_session
     ):
-        modifier = mocker.MagicMock(spec=CompositeModifier)
-        session_modifier_factory.create_v3_session_modifier.return_value = modifier
+        modifier = mocker.MagicMock(spec=HeaderModifier)
+        session_modifier_factory.create_header_modifier.return_value = modifier
         factory = SessionFactory(Session, session_modifier_factory, auth_handler_factory)
         factory.create_jwt_session(TARGET_HOST_ADDRESS, mock_session)
         provider = auth_handler_factory.create_auth_handler.call_args[0][0]

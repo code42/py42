@@ -81,7 +81,7 @@ class TestDepartingEmployeeClient(object):
         # Useful for testing get_by_username, which first gets all cases.
         # Also useful in update, which checks current values of case
         mock = mocker.patch(
-            "py42._internal.clients.employee_case_management.departing_employee.DepartingEmployeeClient.get_by_id"
+            "py42.clients.employee_case_management.departing_employee.DepartingEmployeeClient.get_by_id"
         )
         response = mocker.MagicMock(spec=Response)
         response.text = _GET_CASE_DETAILS_RESPONSE

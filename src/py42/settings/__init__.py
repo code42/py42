@@ -1,6 +1,6 @@
 import sys
 
-import py42.settings
+import py42
 import py42.settings.debug as debug
 from py42.__version__ import __version__
 

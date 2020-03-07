@@ -4,11 +4,11 @@ from py42._internal.client_factories import (
     MicroserviceClientFactory,
     StorageClientFactory,
 )
-from py42._internal.login_provider_factories import ArchiveLocatorFactory
+from py42._internal.token_providers import StorageTokenProviderFactory
 from py42.modules import archive as archive_module, security as sec_module
 from py42.modules import employee_case_management as ecm_module
 from py42._internal.storage_session_manager import StorageSessionManager
-from py42._internal.user_context import UserContext
+from py42.user_context import UserContext
 
 
 def _get_storage_client_factory(session_factory, archive_locator_factory):
@@ -31,7 +31,7 @@ class SDKDependencies(object):
         self.security_client = authority_client_factory.create_security_client()
         self.user_context = UserContext(self.administration_client)
 
-        archive_locator_factory = ArchiveLocatorFactory(
+        archive_locator_factory = StorageTokenProviderFactory(
             self.session, self.security_client, self.device_client
         )
         self.storage_client_factory = _get_storage_client_factory(

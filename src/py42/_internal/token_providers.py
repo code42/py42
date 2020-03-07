@@ -1,14 +1,14 @@
 import base64
 import json
 
-from py42._internal.auth_handling import LoginProvider
+from py42._internal.auth_handling import TokenProvider
 from py42._internal.compat import str
+import py42.util as util
 
 V3_AUTH = u"v3_user_token"
-V3_COOKIE_NAME = u"C42_JWT_API_TOKEN"
 
 
-class BasicAuthProvider(LoginProvider):
+class BasicAuthProvider(TokenProvider):
     def __init__(self, username, password):
         super(BasicAuthProvider, self).__init__()
         cred_bytes = base64.b64encode(u"{0}:{1}".format(username, password).encode(u"utf-8"))
@@ -18,7 +18,7 @@ class BasicAuthProvider(LoginProvider):
         return self._base64_credentials
 
 
-class C42ApiV3TokenProvider(LoginProvider):
+class C42ApiV3TokenProvider(TokenProvider):
     def __init__(self, auth_session):
         super(C42ApiV3TokenProvider, self).__init__()
         self._auth_session = auth_session
@@ -28,13 +28,8 @@ class C42ApiV3TokenProvider(LoginProvider):
         params = {u"useBody": True}
         try:
             response = self._auth_session.get(uri, params=params)
-            if response.text:
-                response_data = json.loads(response.text)[u"data"]
-                token = str(response_data[V3_AUTH])
-            else:
-                # some older versions only return the v3 token in a cookie.
-                token = self._auth_session.cookies.get_dict().get(V3_COOKIE_NAME)
-
+            response_data = json.loads(response.text)[u"data"]
+            token = str(response_data[V3_AUTH])
             return token
         except Exception as ex:
             message = u"An error occurred while trying to retrieve a jwt token, caused by {0}"
@@ -42,7 +37,7 @@ class C42ApiV3TokenProvider(LoginProvider):
             raise Exception(message)
 
 
-class C42ApiV1TokenProvider(LoginProvider):
+class C42ApiV1TokenProvider(TokenProvider):
     def __init__(self, auth_session):
         super(C42ApiV1TokenProvider, self).__init__()
         self._auth_session = auth_session
@@ -60,7 +55,7 @@ class C42ApiV1TokenProvider(LoginProvider):
             raise Exception(message)
 
 
-class C42APITmpAuthProvider(LoginProvider):
+class C42APITmpAuthProvider(TokenProvider):
     def __init__(self):
         super(C42APITmpAuthProvider, self).__init__()
         self._cached_info = None
@@ -129,3 +124,34 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
             message = u"An error occurred while requesting a StorageAuthToken, caused by {0}"
             message = message.format(str(ex))
             raise Exception(message)
+
+
+class StorageTokenProviderFactory(object):
+    def __init__(self, auth_session, security_client, device_client):
+        self._auth_session = auth_session
+        self._security_client = security_client
+        self._device_client = device_client
+
+    def create_security_archive_locator(self, plan_uid, destination_guid):
+        return C42APIStorageAuthTokenProvider(self._auth_session, plan_uid, destination_guid)
+
+    def create_backup_archive_locator(self, device_guid, destination_guid=None):
+        try:
+            if destination_guid is None:
+                response = self._device_client.get_by_guid(device_guid, include_backup_usage=True)
+                if destination_guid is None:
+                    # take the first destination guid we find
+                    destination_list = util.get_obj_from_response(response, u"backupUsage")
+                    if not destination_list:
+                        raise Exception(
+                            u"No destinations found for device guid: {0}".format(device_guid)
+                        )
+                    destination_guid = destination_list[0][u"targetComputerGuid"]
+        except Exception as ex:
+            message = (
+                u"An error occurred while trying to determine a destination for device guid: {0},"
+                u" caused by: {1}".format(device_guid, str(ex))
+            )
+            raise Exception(message)
+
+        return C42APILoginTokenProvider(self._auth_session, u"my", device_guid, destination_guid)

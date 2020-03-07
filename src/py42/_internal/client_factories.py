@@ -36,22 +36,22 @@ class AuthorityClientFactory(object):
 
 
 class StorageClientFactory(object):
-    def __init__(self, storage_session_manager, login_provider_factory):
+    def __init__(self, storage_session_manager, token_provider_factory):
         self._storage_session_manager = storage_session_manager
-        self._login_provider_factory = login_provider_factory
+        self._token_provider_factory = token_provider_factory
 
     def get_storage_client_from_device_guid(self, device_guid, destination_guid=None):
-        login_provider = self._login_provider_factory.create_backup_archive_locator(
+        token_provider = self._token_provider_factory.create_backup_archive_locator(
             device_guid, destination_guid
         )
-        session = self._storage_session_manager.get_storage_session(login_provider)
+        session = self._storage_session_manager.get_storage_session(token_provider)
         return StorageClient(session)
 
     def get_storage_client_from_plan_uid(self, plan_uid, destination_guid):
-        login_provider = self._login_provider_factory.create_security_archive_locator(
+        token_provider = self._token_provider_factory.create_security_archive_locator(
             plan_uid, destination_guid
         )
-        session = self._storage_session_manager.get_storage_session(login_provider)
+        session = self._storage_session_manager.get_storage_session(token_provider)
         return StorageClient(session)
 
 

@@ -1,6 +1,6 @@
 import pytest
 
-from py42._internal.user_context import UserContext
+from py42.user_context import UserContext
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"
 
@@ -16,7 +16,6 @@ def user_context(mocker):
 
 import pytest
 from requests import HTTPError, Response, Session
-from requests.cookies import RequestsCookieJar
 
 from py42._internal.auth_handling import AuthHandler
 from py42._internal.filters.query_filter import QueryFilter
@@ -42,8 +41,6 @@ EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
 VALUE_UNICODE = u"您已经发现了秘密信息"
-
-cookie_dict = {}
 
 
 @pytest.fixture
@@ -130,15 +127,5 @@ def unicode_query_filter():
 def mock_session(mocker):
     session = mocker.MagicMock(spec=Py42Session)
     session.headers = {}
-    session.cookies = mocker.MagicMock(spec=RequestsCookieJar)
-
-    def get_cookie(name):
-        return cookie_dict.get(name, None)
-
-    def set_cookie(name, value):
-        cookie_dict.update({name: value})
-
-    session.cookies.get = get_cookie
-    session.cookies.set = set_cookie
 
     return session

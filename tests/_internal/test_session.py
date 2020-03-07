@@ -1,6 +1,10 @@
 from json import dumps
 
-from .conftest import *
+import pytest
+
+from requests import HTTPError
+
+from py42._internal.session import Py42Session
 
 default_kwargs = {
     "params": None,
@@ -19,6 +23,15 @@ default_kwargs = {
 }
 
 TEST_URL = "https://test-url.com"
+HOST_ADDRESS = "http://example.com"
+
+URL = "/api/resource"
+DATA_VALUE = "value"
+JSON_VALUE = {"key": "value"}
+KWARGS_INDEX = 1
+DATA_KEY = "data"
+JSON_KEY = "json"
+TEST_RESPONSE_CONTENT = '{"key":"test_response_content"}'
 
 
 class TestPy42Session(object):

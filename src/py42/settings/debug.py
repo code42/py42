@@ -9,4 +9,4 @@ level = NONE
 
 
 def will_print_for(statement_level):
-    return (NONE <= level <= TRACE) and level >= statement_level
+    return (NONE <= statement_level <= TRACE) and level >= statement_level

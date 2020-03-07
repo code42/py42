@@ -8,7 +8,7 @@ from py42.modules import archive as arch_mod, security as sec_mod
 from py42.modules import employee_case_management as ecm_mod
 from py42._internal.dependency_containers import SDKDependencies
 from py42._internal.client_factories import StorageClientFactory
-from py42._internal.user_context import UserContext
+from py42.user_context import UserContext
 
 from py42.sdk import SDK
 

@@ -4,7 +4,7 @@ import json
 
 from py42.clients.administration import AdministrationClient
 from py42.response import Py42Response
-from py42._internal.user_context import UserContext
+from py42.user_context import UserContext
 
 _GET_CURRENT_USER = """
 {

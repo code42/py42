@@ -6,8 +6,6 @@ from requests.cookies import RequestsCookieJar
 
 from py42._internal.auth_handling import AuthHandler
 from py42._internal.filters.query_filter import QueryFilter
-
-
 from py42._internal.session import Py42Session
 
 HOST_ADDRESS = "http://example.com"
@@ -20,7 +18,7 @@ KWARGS_INDEX = 1
 DATA_KEY = "data"
 JSON_KEY = "json"
 
-TEST_RESPONSE_CONTENT = "test_response_content"
+TEST_RESPONSE_CONTENT = '{"key":"test_response_content"}'
 
 REQUEST_EXCEPTION_MESSAGE = "Internal server error"
 TRACEBACK = "Traceback..."
@@ -67,6 +65,7 @@ def traceback(mocker):
 @pytest.fixture
 def success_requests_session(mocker, successful_response):
     session = mocker.MagicMock(spec=Session)
+    session.get.return_value = successful_response
     session.request.return_value = successful_response
     return session
 

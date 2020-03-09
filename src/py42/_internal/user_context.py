@@ -1,4 +1,4 @@
-from py42.util import get_obj_from_response
+import json
 
 
 class UserContext(object):
@@ -14,7 +14,7 @@ class UserContext(object):
     def _get_tenant_id(self):
         try:
             response = self._administration_client.get_current_tenant()
-            tenant = get_obj_from_response(response, u"data")
+            tenant = json.loads(response.raw_response_text)
             return tenant.get(u"tenantUid")
         except Exception as ex:
             message = (

@@ -1,11 +1,12 @@
 import json
 
-from py42._internal.base_classes import BaseAuthorityClient
-from py42._internal.clients.util import get_all_pages
 import py42.settings as settings
+from py42._internal.base_classes import BaseClient
+from py42._internal.clients.util import get_all_pages
+from py42._internal.response import Py42Response
 
 
-class DeviceClient(BaseAuthorityClient):
+class DeviceClient(BaseClient):
     def _get_page(
         self,
         active=None,
@@ -33,7 +34,7 @@ class DeviceClient(BaseAuthorityClient):
             u"q": q,
         }
 
-        return self._default_session.get(uri, params=params)
+        return Py42Response(self._session.get(uri, params=params), json_key=u"computers")
 
     def get_all(
         self,
@@ -66,36 +67,36 @@ class DeviceClient(BaseAuthorityClient):
     def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
         uri = u"/api/Computer/{0}".format(device_id)
         params = dict(incBackupUsage=include_backup_usage, **kwargs)
-        return self._default_session.get(uri, params=params)
+        return Py42Response(self._session.get(uri, params=params))
 
     def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
         uri = u"/api/Computer/{0}".format(guid)
         params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
-        return self._default_session.get(uri, params=params)
+        return Py42Response(self._session.get(uri, params=params))
 
     def block(self, computer_id):
         uri = u"/api/ComputerBlock/{0}".format(computer_id)
-        return self._default_session.put(uri)
+        return Py42Response(self._session.put(uri))
 
     def unblock(self, computer_id):
         uri = u"/api/ComputerBlock/{0}".format(computer_id)
-        return self._default_session.delete(uri)
+        return Py42Response(self._session.delete(uri))
 
     def deactivate(self, computer_id):
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": computer_id}
-        return self._v3_required_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._session.post(uri, data=json.dumps(data)))
 
     def reactivate(self, computer_id):
         uri = u"/api/v4/computer-deactivation/remove"
         data = {u"id": computer_id}
-        return self._v3_required_session.post(uri, data=json.dumps(data))
+        return Py42Response(self._session.post(uri, data=json.dumps(data)))
 
     def deauthorize(self, computer_id):
         uri = u"/api/ComputerDeauthorization/{0}".format(computer_id)
-        return self._default_session.put(uri)
+        return Py42Response(self._session.put(uri))
 
     def get_settings(self, guid, keys=None):
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
-        return self._v3_required_session.get(uri, params=params)
+        return Py42Response(self._session.get(uri, params=params))

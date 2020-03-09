@@ -1,8 +1,10 @@
 import pytest
 from requests import Response
+import json
 
-from py42._internal.user_context import UserContext
 from py42._internal.clients.administration import AdministrationClient
+from py42._internal.response import Py42Response
+from py42._internal.user_context import UserContext
 
 _GET_CURRENT_USER = """
 {
@@ -32,7 +34,10 @@ class TestUserContext(object):
         mock_response = mocker.MagicMock(spec=Response)
         mock_response.status_code = 200
         mock_response.text = _GET_CURRENT_USER
-        mock_administration_client.get_current_tenant.return_value = mock_response
+        py42_response = mocker.MagicMock(spec=Py42Response)
+        py42_response.api_response = mock_response
+        py42_response.raw_response_text = json.dumps(json.loads(_GET_CURRENT_USER)["data"])
+        mock_administration_client.get_current_tenant.return_value = py42_response
         return mock_administration_client
 
     def test_get_current_tenant_id_returns_tenant_id_from_administration_client_get_current_tenant(

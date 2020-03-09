@@ -65,46 +65,44 @@ class TestLegalHoldClient(object):
         response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
         return response
 
-    def test_get_matter_by_uid_calls_get_with_uri_and_params(self, session, v3_required_session):
-        client = LegalHoldClient(session, v3_required_session)
+    def test_get_legal_hold_by_uid_calls_get_with_uri_and_params(
+        self, mock_session, successful_response
+    ):
+        mock_session.get.return_value = successful_response
+        client = LegalHoldClient(mock_session)
         client.get_matter_by_uid("LEGAL_HOLD_UID")
         uri = "{0}/{1}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
-        session.get.assert_called_once_with(uri)
+        mock_session.get.assert_called_once_with(uri)
 
-    def test_get_all_matters_calls_get_expected_number_of_times(
-        self,
-        session,
-        v3_required_session,
-        mock_get_all_matters_response,
-        mock_get_all_matters_empty_response,
+    def test_get_legal_holds_calls_get_expected_number_of_times(
+        self, mock_session, mock_get_all_matters_response, mock_get_all_matters_empty_response
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldClient(session, v3_required_session)
-        session.get.side_effect = [
+        client = LegalHoldClient(mock_session)
+        mock_session.get.side_effect = [
             mock_get_all_matters_response,
             mock_get_all_matters_response,
             mock_get_all_matters_empty_response,
         ]
-        for page in client.get_all_matters():
+        for _ in client.get_all_matters():
             pass
         py42.settings.items_per_page = 1000
-        assert session.get.call_count == 3
+        assert mock_session.get.call_count == 3
 
     def test_get_all_matter_custodians_calls_get_expected_number_of_times(
         self,
-        session,
-        v3_required_session,
+        mock_session,
         mock_get_all_matter_custodians_response,
         mock_get_all_matter_custodians_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldClient(session, v3_required_session)
-        session.get.side_effect = [
+        client = LegalHoldClient(mock_session)
+        mock_session.get.side_effect = [
             mock_get_all_matter_custodians_response,
             mock_get_all_matter_custodians_response,
             mock_get_all_matter_custodians_empty_response,
         ]
-        for page in client.get_all_matter_custodians():
+        for _ in client.get_all_matter_custodians():
             pass
         py42.settings.items_per_page = 1000
-        assert session.get.call_count == 3
+        assert mock_session.get.call_count == 3

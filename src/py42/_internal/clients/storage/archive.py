@@ -1,4 +1,5 @@
 from py42._internal.base_classes import BaseClient
+from py42._internal.response import Py42Response
 
 
 class StorageArchiveClient(BaseClient):
@@ -21,7 +22,7 @@ class StorageArchiveClient(BaseClient):
             u"timestamp": timestamp,
             u"showDeleted": show_deleted,
         }
-        return self._default_session.get(uri, params=params)
+        return Py42Response(self._session.get(uri, params=params))
 
     def get_file_size(
         self, device_guid, file_id, timestamp=None, show_deleted=None, backup_set_id=None
@@ -34,7 +35,7 @@ class StorageArchiveClient(BaseClient):
             u"showDeleted": show_deleted,
             u"backupSetId": backup_set_id,
         }
-        return self._default_session.get(uri, params=params)
+        return Py42Response(self._session.get(uri, params=params))
 
     def get_file_path_metadata(
         self,
@@ -61,7 +62,7 @@ class StorageArchiveClient(BaseClient):
             u"backupSetId": backup_set_id,
             u"includeOsMetadata": include_os_metadata,
         }
-        return self._default_session.get(uri, params=params)
+        return Py42Response(self._session.get(uri, params=params))
 
     def create_restore_session(
         self, device_guid, data_key_token=None, private_password=None, encryption_key=None
@@ -76,7 +77,9 @@ class StorageArchiveClient(BaseClient):
             u"privatePassword": private_password,
             u"encryptionKey": encryption_key,
         }
-        return self._default_session.post(uri, json=json_dict)
+        return Py42Response(
+            self._session.post(uri, json=json_dict), json_key=u"webRestoreSessionId"
+        )
 
     def start_restore(
         self,
@@ -114,17 +117,17 @@ class StorageArchiveClient(BaseClient):
             u"backupSetId": backup_set_id,
         }
 
-        return self._default_session.post(uri, json=json_dict)
+        return Py42Response(self._session.post(uri, json=json_dict))
 
     def get_restore_status(self, job_id):
         uri = u"/api/WebRestoreJob/{}".format(job_id)
-        return self._default_session.get(uri)
+        return Py42Response(self._session.get(uri))
 
     def cancel_restore(self, job_id):
         uri = u"/api/WebRestoreJob"
         json_dict = {u"jobId": job_id}
-        return self._default_session.delete(uri, json=json_dict)
+        return Py42Response(self._session.delete(uri, json=json_dict))
 
     def stream_restore_result(self, job_id):
         uri = u"/api/WebRestoreJobResult/{}".format(job_id)
-        return self._default_session.get(uri, stream=True)
+        return Py42Response(self._session.get(uri, stream=True))

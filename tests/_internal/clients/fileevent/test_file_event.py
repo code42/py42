@@ -15,12 +15,14 @@ class TestFileEventClient(object):
     def session(self, mocker):
         return mocker.MagicMock(spec=Py42Session)
 
-    def test_search_calls_post_with_uri_and_query(self, session):
+    def test_search_calls_post_with_uri_and_query(self, session, successful_response):
         client = FileEventClient(session)
+        session.post.return_value = successful_response
         client.search(RAW_QUERY)
         session.post.assert_called_once_with(FILE_EVENT_URI, data=RAW_QUERY)
 
-    def test_unicode_query_search_calls_post_with_query(self, session):
+    def test_unicode_query_search_calls_post_with_query(self, session, successful_response):
         client = FileEventClient(session)
+        session.post.return_value = successful_response
         client.search(RAW_UNICODE_QUERY)
         session.post.assert_called_once_with(FILE_EVENT_URI, data=RAW_UNICODE_QUERY)

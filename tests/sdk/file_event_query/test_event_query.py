@@ -8,17 +8,17 @@ from py42.sdk.file_event_query.event_query import (
     Source,
 )
 from tests.sdk.conftest import (
-    format_timestamp,
-    format_datetime,
     EXISTS,
-    NOT_EXISTS,
+    IN_RANGE,
     IS,
-    IS_NOT,
     IS_IN,
+    IS_NOT,
+    NOT_EXISTS,
     NOT_IN,
     ON_OR_AFTER,
     ON_OR_BEFORE,
-    IN_RANGE,
+    format_datetime,
+    format_timestamp,
 )
 
 

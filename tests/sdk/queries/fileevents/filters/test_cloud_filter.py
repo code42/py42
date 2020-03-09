@@ -5,7 +5,7 @@ from py42.sdk.queries.fileevents.filters.cloud_filter import (
     SharedWith,
     SharingTypeAdded,
 )
-from ..conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
+from tests.sdk.queries.conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
 
 
 def test_actor_exists_str_gives_correct_json_representation():

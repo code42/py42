@@ -6,7 +6,7 @@ from py42.sdk.queries.fileevents.filters.file_filter import (
     MD5,
     SHA256,
 )
-from ..conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
+from tests.sdk.queries.conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
 
 
 def test_file_category_eq_str_gives_correct_json_representation():

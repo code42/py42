@@ -7,7 +7,7 @@ from py42.sdk.queries.fileevents.filters.event_filter import (
     InsertionTimestamp,
     Source,
 )
-from tests.sdk.conftest import (
+from tests.sdk.queries.conftest import (
     EXISTS,
     IN_RANGE,
     IS,

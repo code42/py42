@@ -13,7 +13,7 @@ from py42.sdk.queries.alerts.alert_query import (
     RuleName,
     Severity,
 )
-from .conftest import (
+from tests.sdk.queries.conftest import (
     CONTAINS,
     IN_RANGE,
     IS,

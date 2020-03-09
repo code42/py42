@@ -1,5 +1,5 @@
 from py42.sdk.queries.fileevents.filters.email_filter import EmailRecipients, EmailSender
-from ..conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
+from tests.sdk.queries.conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
 
 
 def test_email_recipients_exists_str_gives_correct_json_representation():

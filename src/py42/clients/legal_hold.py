@@ -1,6 +1,5 @@
 import json
 
-import py42.sdk.settings as settings
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 from py42.sdk.response import Py42Response
@@ -61,7 +60,6 @@ class LegalHoldClient(BaseClient):
     ):
         return get_all_pages(
             self._get_legal_holds_page,
-            settings.items_per_page,
             u"legalHolds",
             creator_user_uid=creator_user_uid,
             active_state=active_state,
@@ -101,7 +99,6 @@ class LegalHoldClient(BaseClient):
     ):
         return get_all_pages(
             self._get_legal_hold_memberships_page,
-            settings.items_per_page,
             u"legalHoldMemberships",
             legal_hold_membership_uid=legal_hold_membership_uid,
             legal_hold_uid=legal_hold_uid,

@@ -3,14 +3,12 @@ class ArchiveModule(object):
         self._archive_accessor_manager = archive_accessor_manager
         self._archive_client = archive_client
 
-    def download_from_backup(
-        self, file_path, device_guid, destination_guid=None, save_as_dir=None, save_as_filename=None
-    ):
+    def stream_from_backup(self, file_path, device_guid, destination_guid=None):
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
             device_guid, destination_guid=destination_guid
         )
 
-        return archive_accessor.download_from_backup(file_path, save_as_dir, save_as_filename)
+        return archive_accessor.stream_from_backup(file_path)
 
     def get_backup_sets(self, device_guid, destination_guid):
         return self._archive_client.get_backup_sets(device_guid, destination_guid)

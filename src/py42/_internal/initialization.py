@@ -1,10 +1,13 @@
 from py42._internal.archive_access import ArchiveAccessorManager
 from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory
-from py42.clients.storage import StorageClientFactory
-from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.modules import archive as archive_module, security as sec_module
-from py42.modules import employee_case_management as ecm_module
 from py42._internal.storage_session_manager import StorageSessionManager
+from py42._internal.token_providers import StorageTokenProviderFactory
+from py42.clients.storage import StorageClientFactory
+from py42.modules import (
+    archive as archive_module,
+    employee_case_management as ecm_module,
+    security as sec_module,
+)
 from py42.sdk.user_context import UserContext
 
 

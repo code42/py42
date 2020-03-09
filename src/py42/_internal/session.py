@@ -1,20 +1,22 @@
+from __future__ import print_function
+
 import json as json_lib
 from threading import Lock
 
-import py42.sdk.settings.debug as debug
-import py42.sdk.settings as settings
-import py42.sdk.util as util
 import requests.adapters
+
 from py42._internal.compat import str, urljoin, urlparse
 
 
 class Py42Session(object):
     def __init__(self, session, host_address, auth_handler=None):
+        import py42.sdk.settings as settings
+
         self._initialized = False
         self._needs_auth_renewal_check = False
         self._auth_lock = Lock()
         self._session = session
-        adapter = requests.adapters.HTTPAdapter(pool_connections=500, pool_maxsize=500)
+        adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
         if not host_address.startswith(u"http://") and not host_address.startswith(u"https://"):
             host_address = u"https://{0}".format(host_address)
 
@@ -82,7 +84,7 @@ class Py42Session(object):
             json = kwargs.get(u"json")
 
             if json is not None:
-                kwargs[u"data"] = json_lib.dumps(util.filter_out_none(json))
+                kwargs[u"data"] = json_lib.dumps(_filter_out_none(json))
             if u"json" in kwargs:
                 del kwargs[u"json"]
 
@@ -127,8 +129,8 @@ class Py42Session(object):
         verify=None,
         cert=None,
     ):
-        if debug.will_print_for(debug.INFO):
-            self._print_request(method, url, params=params, data=data)
+
+        self._print_request(method, url, params=params, data=data)
 
         response = self._session.request(
             method,
@@ -172,12 +174,25 @@ class Py42Session(object):
         self._initialized = True
 
     def _print_request(self, method, url, params=None, data=None):
-        print(u"{0}{1}".format(str(method).ljust(8), url))
+        import py42.sdk.settings.debug as debug
+
+        if debug.will_print_for(debug.INFO):
+            print(u"{0}{1}".format(str(method).ljust(8), url))
         if debug.will_print_for(debug.TRACE):
             if self.headers:
-                util.print_dict(self.headers, u"  headers")
+                _print_dict(self.headers, u"  headers")
         if debug.will_print_for(debug.DEBUG):
             if params:
-                util.print_dict(params, u"  params")
+                _print_dict(params, u"  params")
             if data:
-                util.print_dict(data, u"  data")
+                _print_dict(data, u"  data")
+
+
+def _filter_out_none(_dict):
+    return {key: _dict[key] for key in _dict if _dict[key] is not None}
+
+
+def _print_dict(dict_, label=None):
+    if label:
+        print(label, end=" ")
+    print(json_lib.dumps(dict_, indent=4))

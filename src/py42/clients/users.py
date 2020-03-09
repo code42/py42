@@ -1,6 +1,5 @@
 import json
 
-import py42.sdk.settings as settings
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 from py42.sdk.response import Py42Response
@@ -75,7 +74,6 @@ class UserClient(BaseClient):
     def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs):
         return get_all_pages(
             self._get_page,
-            settings.items_per_page,
             u"users",
             active=active,
             email=email,

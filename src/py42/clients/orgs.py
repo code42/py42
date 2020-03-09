@@ -1,6 +1,5 @@
 import json
 
-import py42.sdk.settings as settings
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 from py42.sdk.response import Py42Response
@@ -35,7 +34,7 @@ class OrgClient(BaseClient):
         return Py42Response(self._session.get(uri, params=params), json_key=u"orgs")
 
     def get_all(self, **kwargs):
-        return get_all_pages(self._get_page, settings.items_per_page, u"orgs", **kwargs)
+        return get_all_pages(self._get_page, u"orgs", **kwargs)
 
     def block(self, org_id):
         uri = u"/api/OrgBlock/{0}".format(org_id)

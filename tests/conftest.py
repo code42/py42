@@ -1,5 +1,11 @@
-import pytest
+# -*- coding: utf-8 -*-
 
+import pytest
+from requests import HTTPError, Response, Session
+
+from py42._internal.auth_handling import AuthHandler
+from py42.sdk.queries.query_filter import QueryFilter
+from py42._internal.session import Py42Session
 from py42.sdk.user_context import UserContext
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"
@@ -11,15 +17,6 @@ def user_context(mocker):
     client.get_current_tenant_id.return_value = TENANT_ID_FROM_RESPONSE
     return client
 
-
-# -*- coding: utf-8 -*-
-
-import pytest
-from requests import HTTPError, Response, Session
-
-from py42._internal.auth_handling import AuthHandler
-from py42.sdk.queries.query_filter import QueryFilter
-from py42._internal.session import Py42Session
 
 HOST_ADDRESS = "http://example.com"
 

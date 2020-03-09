@@ -1,7 +1,6 @@
 import sys
 
 import py42
-import py42.sdk.settings.debug as debug
 from py42.__version__ import __version__
 
 proxies = None

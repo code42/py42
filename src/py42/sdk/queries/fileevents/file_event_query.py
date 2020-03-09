@@ -1,9 +1,9 @@
-from py42.sdk.queries import BaseQuery
 from py42._internal.compat import str
+from py42.sdk.queries import BaseQuery
 from py42.sdk.queries.query_filter import (
-    create_query_filter,
-    create_filter_group,
     QueryFilterStringField,
+    create_filter_group,
+    create_query_filter,
 )
 
 

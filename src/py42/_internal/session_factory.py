@@ -1,10 +1,10 @@
 from py42._internal.auth_handling import AuthHandler, HeaderModifier
+from py42._internal.session import Py42Session
 from py42._internal.token_providers import (
     BasicAuthProvider,
     C42ApiV1TokenProvider,
     C42ApiV3TokenProvider,
 )
-from py42._internal.session import Py42Session
 
 
 class SessionFactory(object):

@@ -3,7 +3,6 @@ import json
 
 from py42._internal.auth_handling import TokenProvider
 from py42._internal.compat import str
-import py42.sdk.util as util
 
 V3_AUTH = u"v3_user_token"
 
@@ -141,7 +140,7 @@ class StorageTokenProviderFactory(object):
                 response = self._device_client.get_by_guid(device_guid, include_backup_usage=True)
                 if destination_guid is None:
                     # take the first destination guid we find
-                    destination_list = util.get_obj_from_response(response, u"backupUsage")
+                    destination_list = response["backupUsage"]
                     if not destination_list:
                         raise Exception(
                             u"No destinations found for device guid: {0}".format(device_guid)

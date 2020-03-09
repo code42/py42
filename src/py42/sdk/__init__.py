@@ -29,11 +29,11 @@ class SDKClient(object):
         return cls(sdk_dependencies)
 
     @property
-    def storage(self):
+    def storageaccess(self):
         return self._sdk_dependencies.storage_client_factory
 
     @property
-    def administration(self):
+    def serveradmin(self):
         return self._sdk_dependencies.administration_client
 
     @property
@@ -53,15 +53,15 @@ class SDKClient(object):
         return self._sdk_dependencies.org_client
 
     @property
-    def legal_hold(self):
+    def legalhold(self):
         return self._sdk_dependencies.legal_hold_client
 
     @property
-    def user_context(self):
+    def usercontext(self):
         return self._sdk_dependencies.user_context
 
     @property
-    def security(self):
+    def securitydata(self):
         return self._sdk_dependencies.security_module
 
     @property

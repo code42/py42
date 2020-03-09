@@ -33,7 +33,7 @@ class TestSDK(object):
     def test_has_administation_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
         sdk = SDKClient(deps)
-        assert type(sdk.administration) == administration.AdministrationClient
+        assert type(sdk.serveradmin) == administration.AdministrationClient
 
     def test_has_archive_module_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
@@ -55,7 +55,7 @@ class TestSDK(object):
     def test_has_legal_hold_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
         sdk = SDKClient(deps)
-        assert type(sdk.legal_hold) == legal_hold.LegalHoldClient
+        assert type(sdk.legalhold) == legal_hold.LegalHoldClient
 
     def test_has_org_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
@@ -65,7 +65,7 @@ class TestSDK(object):
     def test_has_security_module_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
         sdk = SDKClient(deps)
-        assert type(sdk.security) == sec_mod.SecurityModule
+        assert type(sdk.securitydata) == sec_mod.SecurityModule
 
     def test_has_user_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
@@ -75,9 +75,9 @@ class TestSDK(object):
     def test_has_storage_client_factory_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
         sdk = SDKClient(deps)
-        assert type(sdk.storage) == StorageClientFactory
+        assert type(sdk.storageaccess) == StorageClientFactory
 
     def test_has_user_context_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
         sdk = SDKClient(deps)
-        assert type(sdk.user_context) == UserContext
+        assert type(sdk.usercontext) == UserContext

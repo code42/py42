@@ -23,8 +23,18 @@ class ArchiveModule(object):
     def get_data_key_token(self, computer_guid):
         return self._archive_client.get_data_key_token(computer_guid)
 
-    def get_restore_history(self, days, org_id=None, page_num=None, page_size=None):
-        return self._archive_client.get_restore_history(days, org_id, page_num, page_size)
+    def get_restore_history_by_org_id(self, days, org_id, page_num=None, page_size=None):
+        return self._archive_client.get_restore_history(days, u"orgId", org_id, page_num, page_size)
+
+    def get_restore_history_by_user_id(self, days, user_id, page_num=None, page_size=None):
+        return self._archive_client.get_restore_history(
+            days, u"userId", user_id, page_num, page_size
+        )
+
+    def get_restore_history_by_computer_id(self, days, computer_id, page_num=None, page_size=None):
+        return self._archive_client.get_restore_history(
+            days, u"computerId", computer_id, page_num, page_size
+        )
 
     def get_web_restore_info(self, src_guid, dest_guid):
         return self._archive_client.get_web_restore_info(src_guid, dest_guid)

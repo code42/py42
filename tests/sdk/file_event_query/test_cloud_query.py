@@ -1,4 +1,4 @@
-from py42.sdk.queries.fileevents.filters.cloud_query import (
+from py42.sdk.queries.fileevents.filters.cloud_filter import (
     Actor,
     DirectoryID,
     Shared,

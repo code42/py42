@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pytest
 
-from py42._internal.filters.query_filter import FilterGroup, QueryFilter
+from py42.sdk.queries.query_filter import FilterGroup, QueryFilter
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"

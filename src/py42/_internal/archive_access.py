@@ -2,7 +2,7 @@ import posixpath
 import time
 from collections import namedtuple
 
-import py42.util as util
+import py42.sdk.util as util
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
 

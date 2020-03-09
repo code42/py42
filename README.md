@@ -37,14 +37,14 @@ $ python
 Import a couple essentials
 
 ```python
->>> from py42.sdk import SDK
->>> import py42.util as util
+>>> from py42.sdk import SDKClient
+>>> import py42.sdk.util as util
 ```
 
 Initialize the client.
 
 ```python
->>> sdk = SDK.create_using_local_account("https://console.us.code42.com", "john.doe", "password")
+>>> sdk = SDK.from_local_account("https://console.us.code42.com", "john.doe", "password")
 ```
 
 Get and print your user information.
@@ -107,11 +107,11 @@ To override these settings, import `py42.settings` and override values as necess
  For example, to disable certificate validation in a dev environment: 
 
 ```python
-import py42.settings as settings
-from py42.sdk import SDK
+import py42.sdk.settings as settings
+from py42.sdk import SDKClient
 
 settings.verify_ssl_certs = False
-sdk = SDK.create_using_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = SDKClient.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 ```
 
 ## Usage
@@ -119,9 +119,9 @@ sdk = SDK.create_using_local_account("https://console.us.code42.com", "my_userna
 The SDK object opens availability to APIs across the Code42 environment, including storage nodes.
 
 ```python
-from py42.sdk import SDK
+from py42.sdk import SDKClient
 
-sdk = SDK.create_using_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = SDKClient.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
 # clients are organized by feature groups and accessible under the sdk object
 

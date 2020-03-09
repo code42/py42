@@ -3,7 +3,7 @@ import json
 
 from py42._internal.auth_handling import TokenProvider
 from py42._internal.compat import str
-import py42.util as util
+import py42.sdk.util as util
 
 V3_AUTH = u"v3_user_token"
 

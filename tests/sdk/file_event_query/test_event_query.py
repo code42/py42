@@ -1,7 +1,7 @@
 from datetime import datetime
 from time import time
 
-from py42.sdk.queries.fileevents.filters.event_query import (
+from py42.sdk.queries.fileevents.filters.event_filter import (
     EventTimestamp,
     EventType,
     InsertionTimestamp,

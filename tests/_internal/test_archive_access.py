@@ -8,7 +8,7 @@ from requests import Response
 
 import py42
 import py42._internal.archive_access as archive_access
-import py42.util
+import py42.sdk.util
 from py42._internal.archive_access import (
     ArchiveAccessor,
     ArchiveAccessorManager,
@@ -16,12 +16,10 @@ from py42._internal.archive_access import (
     FileType,
     RestoreJobManager,
 )
-from py42.response import Py42Response
-from py42._internal.client_factories import StorageClientFactory
+from py42.sdk.response import Py42Response
 from py42.clients.archive import ArchiveClient
 from py42.clients.storage.archive import StorageArchiveClient
-from py42.clients.storage import StorageClient
-
+from py42.clients.storage import StorageClient, StorageClientFactory
 
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"
@@ -498,7 +496,7 @@ def get_save_content_to_disk_mock(mocker, custom_side_effect=None):
     save_content_to_disk_mock = mocker.MagicMock()
     if custom_side_effect:
         save_content_to_disk_mock.side_effect = custom_side_effect
-    mocker.patch("py42.util.save_content_to_disk", save_content_to_disk_mock)
+    mocker.patch("py42.sdk.util.save_content_to_disk", save_content_to_disk_mock)
     return save_content_to_disk_mock
 
 
@@ -638,7 +636,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_client, restore_job_manager
     ):
         expected_file_name = "./{0}".format(SAVE_AS_FILENAME)
-        mocker.patch("py42.util.verify_path_writeable", lambda x: expected_file_name)
+        mocker.patch("py42.sdk.util.verify_path_writeable", lambda x: expected_file_name)
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
@@ -657,7 +655,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_client, restore_job_manager
     ):
         expected_file_name = posixpath.join(SAVE_AS_DIR, SAVE_AS_FILENAME)
-        mocker.patch("py42.util.verify_path_writeable", lambda x: expected_file_name)
+        mocker.patch("py42.sdk.util.verify_path_writeable", lambda x: expected_file_name)
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
@@ -742,7 +740,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
-        verify_path_writeable = mocker.patch("py42.util.verify_path_writeable")
+        verify_path_writeable = mocker.patch("py42.sdk.util.verify_path_writeable")
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
@@ -758,7 +756,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
-        verify_path_writeable = mocker.patch("py42.util.verify_path_writeable")
+        verify_path_writeable = mocker.patch("py42.sdk.util.verify_path_writeable")
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
@@ -772,7 +770,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
-        verify_path_writeable = mocker.patch("py42.util.verify_path_writeable")
+        verify_path_writeable = mocker.patch("py42.sdk.util.verify_path_writeable")
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )

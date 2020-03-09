@@ -6,7 +6,7 @@ import pytest
 from requests import Response
 
 from py42.clients.employee_case_management.departing_employee import DepartingEmployeeClient
-from py42.response import Py42Response
+from py42.sdk.response import Py42Response
 
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 

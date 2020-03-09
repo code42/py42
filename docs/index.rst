@@ -7,7 +7,7 @@ Welcome to py42's documentation!
 .. autoclass:: py42._internal.modules.security.SecurityModule
   :members:
 
-.. automodule:: py42.util
+.. automodule:: py42.sdk.util
   :members:
 
 

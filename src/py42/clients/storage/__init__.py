@@ -1,4 +1,4 @@
-from py42.base_classes import BaseClient
+from py42.clients import BaseClient
 from py42.clients.storage.archive import StorageArchiveClient
 from py42.clients.storage.security import StorageSecurityClient
 
@@ -16,3 +16,23 @@ class StorageClient(BaseClient):
     @property
     def security(self):
         return self._security_client
+
+
+class StorageClientFactory(object):
+    def __init__(self, storage_session_manager, token_provider_factory):
+        self._storage_session_manager = storage_session_manager
+        self._token_provider_factory = token_provider_factory
+
+    def get_storage_client_from_device_guid(self, device_guid, destination_guid=None):
+        token_provider = self._token_provider_factory.create_backup_archive_locator(
+            device_guid, destination_guid
+        )
+        session = self._storage_session_manager.get_storage_session(token_provider)
+        return StorageClient(session)
+
+    def get_storage_client_from_plan_uid(self, plan_uid, destination_guid):
+        token_provider = self._token_provider_factory.create_security_archive_locator(
+            plan_uid, destination_guid
+        )
+        session = self._storage_session_manager.get_storage_session(token_provider)
+        return StorageClient(session)

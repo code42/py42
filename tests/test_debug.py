@@ -1,33 +1,33 @@
 import pytest
 
-import py42.settings.debug as debug
-import py42.settings as settings
+import py42
+import py42.sdk.settings.debug as debug
 
 
 @pytest.fixture
 def none_enabled():
-    settings.debug.level = debug.NONE
+    py42.sdk.settings.debug.level = debug.NONE
 
 
 @pytest.fixture
 def info_enabled():
-    settings.debug.level = debug.INFO
+    py42.sdk.settings.debug.level = debug.INFO
     yield info_enabled
-    settings.debug.level = debug.NONE
+    py42.sdk.settings.debug.level = debug.NONE
 
 
 @pytest.fixture
 def debug_enabled():
-    settings.debug.level = debug.DEBUG
+    py42.sdk.settings.debug.level = debug.DEBUG
     yield debug_enabled
-    settings.debug.level = debug.NONE
+    py42.sdk.settings.debug.level = debug.NONE
 
 
 @pytest.fixture
 def trace_enabled():
-    settings.debug.level = debug.TRACE
+    py42.sdk.settings.debug.level = debug.TRACE
     yield trace_enabled
-    settings.debug.level = debug.NONE
+    py42.sdk.settings.debug.level = debug.NONE
 
 
 @pytest.mark.parametrize("level", [debug.NONE], ids=["NONE"])

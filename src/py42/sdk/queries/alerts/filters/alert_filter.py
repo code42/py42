@@ -1,5 +1,5 @@
-from py42._internal.filters.query_filter import (
-    _QueryFilterStringField,
+from py42.sdk.queries.query_filter import (
+    QueryFilterStringField,
     create_filter_group,
     create_query_filter,
 )
@@ -15,7 +15,7 @@ def create_not_contains_filter_group(term, value):
     return create_filter_group(filter_list, u"AND")
 
 
-class _AlertQueryFilterStringField(_QueryFilterStringField):
+class AlertQueryFilterStringField(QueryFilterStringField):
     @classmethod
     def contains(cls, value):
         return create_contains_filter_group(cls._term, value)

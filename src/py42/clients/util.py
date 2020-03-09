@@ -9,6 +9,7 @@ def get_all_pages(func, page_size, key, *args, **kwargs):
         response = func(*args, page_num=page_num, page_size=page_size, **kwargs)
         yield response
         response_dict = json.loads(response.api_response.text)
-        response_dict = response_dict.get(u"data") if response_dict.get(u"data") else response_dict
+        data_node = response_dict.get(u"data")
+        response_dict = data_node or response_dict
         page_items = response_dict[key]
         item_count = len(page_items)

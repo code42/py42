@@ -1,5 +1,10 @@
-from py42.base_classes import BaseQuery
+from py42.sdk.queries import BaseQuery
 from py42._internal.compat import str
+from py42.sdk.queries.query_filter import (
+    create_query_filter,
+    create_filter_group,
+    QueryFilterStringField,
+)
 
 
 class FileEventQuery(BaseQuery):
@@ -19,3 +24,23 @@ class FileEventQuery(BaseQuery):
             self.sort_key,
         )
         return json
+
+
+def create_exists_filter_group(term):
+    filter_list = [create_query_filter(term, u"EXISTS")]
+    return create_filter_group(filter_list, u"AND")
+
+
+def create_not_exists_filter_group(term):
+    filter_list = [create_query_filter(term, u"DOES_NOT_EXIST")]
+    return create_filter_group(filter_list, u"AND")
+
+
+class FileEventFilterStringField(QueryFilterStringField):
+    @classmethod
+    def exists(cls):
+        return create_exists_filter_group(cls._term)
+
+    @classmethod
+    def not_exists(cls):
+        return create_not_exists_filter_group(cls._term)

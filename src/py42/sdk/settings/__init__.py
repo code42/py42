@@ -1,7 +1,7 @@
 import sys
 
 import py42
-import py42.settings.debug as debug
+import py42.sdk.settings.debug as debug
 from py42.__version__ import __version__
 
 proxies = None
@@ -23,4 +23,4 @@ def get_user_agent_string():
 
 
 def set_user_agent_suffix(suffix):
-    py42.settings._custom_user_suffix = u" {0}".format(suffix)
+    py42.sdk.settings._custom_user_suffix = u" {0}".format(suffix)

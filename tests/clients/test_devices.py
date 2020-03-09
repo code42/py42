@@ -81,7 +81,7 @@ class TestDeviceClient(object):
     def test_get_devices_calls_get_expected_number_of_times(
         self, mock_session, mock_get_all_response, mock_get_all_empty_response
     ):
-        py42.settings.items_per_page = 1
+        py42.sdk.settings.items_per_page = 1
         client = DeviceClient(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_response,
@@ -90,5 +90,5 @@ class TestDeviceClient(object):
         ]
         for _ in client.get_all():
             pass
-        py42.settings.items_per_page = 1000
+        py42.sdk.settings.items_per_page = 1000
         assert mock_session.get.call_count == 3

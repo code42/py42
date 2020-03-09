@@ -1,9 +1,9 @@
 import json
 
-import py42.settings as settings
-from py42.base_classes import BaseClient
+import py42.sdk.settings as settings
+from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42.response import Py42Response
+from py42.sdk.response import Py42Response
 
 
 class UserClient(BaseClient):

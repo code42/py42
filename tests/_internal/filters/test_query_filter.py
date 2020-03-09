@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from py42._internal.compat import str
-from py42._internal.filters.query_filter import (
+from py42.sdk.queries.query_filter import (
     QueryFilter,
     create_eq_filter_group,
     create_filter_group,

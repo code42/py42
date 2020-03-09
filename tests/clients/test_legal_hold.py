@@ -77,7 +77,7 @@ class TestLegalHoldClient(object):
     def test_get_legal_holds_calls_get_expected_number_of_times(
         self, mock_session, mock_get_all_matters_response, mock_get_all_matters_empty_response
     ):
-        py42.settings.items_per_page = 1
+        py42.sdk.settings.items_per_page = 1
         client = LegalHoldClient(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_matters_response,
@@ -86,7 +86,7 @@ class TestLegalHoldClient(object):
         ]
         for _ in client.get_all_matters():
             pass
-        py42.settings.items_per_page = 1000
+        py42.sdk.settings.items_per_page = 1000
         assert mock_session.get.call_count == 3
 
     def test_get_all_matter_custodians_calls_get_expected_number_of_times(
@@ -95,7 +95,7 @@ class TestLegalHoldClient(object):
         mock_get_all_matter_custodians_response,
         mock_get_all_matter_custodians_empty_response,
     ):
-        py42.settings.items_per_page = 1
+        py42.sdk.settings.items_per_page = 1
         client = LegalHoldClient(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_matter_custodians_response,
@@ -104,5 +104,5 @@ class TestLegalHoldClient(object):
         ]
         for _ in client.get_all_matter_custodians():
             pass
-        py42.settings.items_per_page = 1000
+        py42.sdk.settings.items_per_page = 1000
         assert mock_session.get.call_count == 3

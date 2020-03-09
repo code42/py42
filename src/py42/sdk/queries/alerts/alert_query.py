@@ -1,26 +1,26 @@
-from py42.base_classes import BaseQuery
+from py42.sdk.queries import BaseQuery
 from py42._internal.compat import str
-from py42._internal.filters.alert_filter import _AlertQueryFilterStringField
-from py42._internal.filters.query_filter import _QueryFilterStringField, _QueryFilterTimestampField
+from py42.sdk.queries.alerts.filters.alert_filter import AlertQueryFilterStringField
+from py42.sdk.queries.query_filter import QueryFilterStringField, QueryFilterTimestampField
 
 
-class DateObserved(_QueryFilterTimestampField):
+class DateObserved(QueryFilterTimestampField):
     _term = u"CreatedAt"
 
 
-class Actor(_AlertQueryFilterStringField):
+class Actor(AlertQueryFilterStringField):
     _term = u"actor"
 
 
-class RuleName(_AlertQueryFilterStringField):
+class RuleName(AlertQueryFilterStringField):
     _term = u"name"
 
 
-class Description(_AlertQueryFilterStringField):
+class Description(AlertQueryFilterStringField):
     _term = u"description"
 
 
-class Severity(_QueryFilterStringField):
+class Severity(QueryFilterStringField):
     _term = u"severity"
 
     HIGH = u"HIGH"
@@ -28,7 +28,7 @@ class Severity(_QueryFilterStringField):
     LOW = u"LOW"
 
 
-class AlertState(_QueryFilterStringField):
+class AlertState(QueryFilterStringField):
     _term = u"state"
 
     OPEN = u"OPEN"

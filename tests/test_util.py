@@ -7,7 +7,7 @@ import pytest
 from requests import Response
 
 import py42._internal.compat as compat
-import py42.util as util
+import py42.sdk.util as util
 
 TEST_FILENAME = "file.txt"
 TEST_DIR = "/Users/john.doe"

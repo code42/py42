@@ -42,7 +42,7 @@ class TestOrgClient(object):
     def test_get_orgs_calls_get_expected_number_of_times(
         self, mock_session, mock_get_orgs_response, mock_get_orgs_empty_response
     ):
-        py42.settings.items_per_page = 1
+        py42.sdk.settings.items_per_page = 1
         client = OrgClient(mock_session)
         mock_session.get.side_effect = [
             mock_get_orgs_response,
@@ -51,5 +51,5 @@ class TestOrgClient(object):
         ]
         for _ in client.get_all():
             pass
-        py42.settings.items_per_page = 1000
+        py42.sdk.settings.items_per_page = 1000
         assert mock_session.get.call_count == 3

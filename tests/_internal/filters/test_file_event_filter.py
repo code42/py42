@@ -1,5 +1,5 @@
 from py42._internal.compat import str
-from py42._internal.filters.file_event_filter import (
+from py42.sdk.queries.fileevents.file_event_query import (
     create_exists_filter_group,
     create_not_exists_filter_group,
 )

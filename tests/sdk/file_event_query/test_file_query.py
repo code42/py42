@@ -1,4 +1,4 @@
-from py42.sdk.queries.fileevents.filters.file_query import (
+from py42.sdk.queries.fileevents.filters.file_filter import (
     FileCategory,
     FileName,
     FileOwner,

@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from py42._internal.compat import str
-from py42.util import convert_datetime_to_timestamp_str, convert_timestamp_to_str
+from py42.sdk.util import convert_datetime_to_timestamp_str, convert_timestamp_to_str
 
 
 def create_query_filter(term, operator, value=None):
@@ -52,7 +52,7 @@ def create_filter_group(query_filter_list, filter_clause):
     return FilterGroup(query_filter_list, filter_clause)
 
 
-class _QueryFilterStringField(object):
+class QueryFilterStringField(object):
     _term = u"override_string_field_name"
 
     @classmethod
@@ -72,7 +72,7 @@ class _QueryFilterStringField(object):
         return create_not_in_filter_group(cls._term, value_list)
 
 
-class _QueryFilterTimestampField(object):
+class QueryFilterTimestampField(object):
     _term = u"override_timestamp_field_name"
 
     @classmethod
@@ -105,7 +105,7 @@ class _QueryFilterTimestampField(object):
         return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
 
 
-class _QueryFilterBooleanField(object):
+class QueryFilterBooleanField(object):
     _term = u"override_boolean_field_name"
 
     @classmethod

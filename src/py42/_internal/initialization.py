@@ -1,14 +1,11 @@
 from py42._internal.archive_access import ArchiveAccessorManager
-from py42._internal.client_factories import (
-    AuthorityClientFactory,
-    MicroserviceClientFactory,
-    StorageClientFactory,
-)
+from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory
+from py42.clients.storage import StorageClientFactory
 from py42._internal.token_providers import StorageTokenProviderFactory
 from py42.modules import archive as archive_module, security as sec_module
 from py42.modules import employee_case_management as ecm_module
 from py42._internal.storage_session_manager import StorageSessionManager
-from py42.user_context import UserContext
+from py42.sdk.user_context import UserContext
 
 
 def _get_storage_client_factory(session_factory, archive_locator_factory):
@@ -71,7 +68,7 @@ class SDKDependencies(object):
                 u"Invalid credentials or host address ({0}). Check that the username and password are correct, that the "
                 u"host is available and reachable, and that you have supplied the full scheme, domain, and port "
                 u"(e.g. https://myhost.code42.com:4285). If you are using a self-signed ssl certificate, try setting "
-                u"py42.settings.verify_ssl_certs to false (or using a cert from a legitimate certificate "
+                u"py42.sdk.settings.verify_ssl_certs to false (or using a cert from a legitimate certificate "
                 u"authority).".format(session.host_address)
             )
             raise Exception(message)

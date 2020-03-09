@@ -13,15 +13,12 @@ from py42.clients import (
 )
 from py42.clients import alerts, employee_case_management, users
 from py42._internal import key_value_store
-from py42._internal.client_factories import (
-    AuthorityClientFactory,
-    StorageClientFactory,
-    MicroserviceClientFactory,
-)
+from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory
+from py42.clients.storage import StorageClientFactory
 
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
-from py42.user_context import UserContext
+from py42.sdk.user_context import UserContext
 
 _USER_UID = "user-uid"
 TEST_ROOT_URL = "https://example.com"
@@ -171,6 +168,7 @@ class TestMicroserviceClientFactory(object):
     def test_get_departing_employee_client_creates_client_with_expected_url(
         self, mock_session, session_factory, user_context, key_value_store_client
     ):
+        key_value_store_client.get_stored_value.return_value.text = DEPARTING_EMPLOYEE_URL
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL, mock_session, session_factory, user_context, key_value_store_client
         )
@@ -209,6 +207,7 @@ class TestMicroserviceClientFactory(object):
     def test_get_file_event_client_calls_creates_client_with_expected_url(
         self, mock_session, session_factory, user_context, key_value_store_client
     ):
+        key_value_store_client.get_stored_value.return_value.text = FILE_EVENTS_URL
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL, mock_session, session_factory, user_context, key_value_store_client
         )

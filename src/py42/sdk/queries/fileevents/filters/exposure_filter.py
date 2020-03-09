@@ -1,7 +1,7 @@
-from py42._internal.filters.file_event_filter import _FileEventFilterStringField
+from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
 
 
-class ExposureType(_FileEventFilterStringField):
+class ExposureType(FileEventFilterStringField):
     _term = u"exposure"
 
     SHARED_VIA_LINK = u"SharedViaLink"
@@ -12,25 +12,25 @@ class ExposureType(_FileEventFilterStringField):
     IS_PUBLIC = u"IsPublic"
 
 
-class ProcessName(_FileEventFilterStringField):
+class ProcessName(FileEventFilterStringField):
     _term = u"processName"
 
 
-class ProcessOwner(_FileEventFilterStringField):
+class ProcessOwner(FileEventFilterStringField):
     _term = u"processOwner"
 
 
-class RemovableMediaName(_FileEventFilterStringField):
+class RemovableMediaName(FileEventFilterStringField):
     _term = u"removableMediaName"
 
 
-class SyncDestination(_FileEventFilterStringField):
+class SyncDestination(FileEventFilterStringField):
     _term = u"syncDestination"
 
 
-class TabURL(_FileEventFilterStringField):
+class TabURL(FileEventFilterStringField):
     _term = u"tabUrl"
 
 
-class WindowTitle(_FileEventFilterStringField):
+class WindowTitle(FileEventFilterStringField):
     _term = u"windowTitle"

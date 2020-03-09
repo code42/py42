@@ -1,4 +1,4 @@
-from py42.sdk.queries.fileevents.filters.exposure_query import (
+from py42.sdk.queries.fileevents.filters.exposure_filter import (
     ExposureType,
     ProcessName,
     ProcessOwner,

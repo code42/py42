@@ -1,7 +1,7 @@
 import pytest
 from requests import Session
 
-from py42._internal.auth_handling import CompositeModifier, HeaderModifier
+from py42._internal.auth_handling import HeaderModifier
 from py42._internal.token_providers import (
     BasicAuthProvider,
     C42APILoginTokenProvider,

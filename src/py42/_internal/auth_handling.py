@@ -32,15 +32,6 @@ class SessionModifier(object):
         pass
 
 
-class CompositeModifier(SessionModifier):
-    def __init__(self, session_modifier_list):
-        self._session_modifier_list = session_modifier_list
-
-    def modify_session(self, session, value):
-        for handler in self._session_modifier_list:
-            handler.modify_session(session, value)
-
-
 class HeaderModifier(SessionModifier):
     def __init__(self, header_name=u"Authorization", value_format=u"{0}"):
         self._header_name = header_name

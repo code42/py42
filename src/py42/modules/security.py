@@ -111,7 +111,7 @@ class SecurityModule(object):
 
         # otherwise, create it
         if client is None:
-            client = self._storage_client_factory.get_storage_client_from_plan_uid(
+            client = self._storage_client_factory.from_plan_info(
                 plan_storage_info.plan_uid, plan_storage_info.destination_guid
             ).security
 

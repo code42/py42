@@ -94,18 +94,14 @@ class TestAuthorityClientFactory(object):
 
 
 class TestStorageClientFactory(object):
-    def test_get_storage_client_from_device_guid(
-        self, token_provider_factory, storage_session_manager
-    ):
+    def test_from_device_guid(self, token_provider_factory, storage_session_manager):
         factory = StorageClientFactory(storage_session_manager, token_provider_factory)
-        client = factory.get_storage_client_from_device_guid("test-device-guid")
+        client = factory.from_device_guid("test-device-guid")
         assert type(client) == storage.StorageClient
 
-    def test_get_storage_client_from_plan_uid(
-        self, token_provider_factory, storage_session_manager
-    ):
+    def test_from_plan_info(self, token_provider_factory, storage_session_manager):
         factory = StorageClientFactory(storage_session_manager, token_provider_factory)
-        client = factory.get_storage_client_from_plan_uid("test-plan-uid", "test-dest-guid")
+        client = factory.from_plan_info("test-plan-uid", "test-dest-guid")
         assert type(client) == storage.StorageClient
 
 

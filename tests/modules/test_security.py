@@ -392,7 +392,7 @@ class TestSecurityModule(object):
         response = mocker.MagicMock(spec=Response)
         response.text = '{"data": {}}'
         mock_storage_security_client.get_plan_security_events.return_value = response
-        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client_one_location, storage_client_factory, microservice_client_factory
         )
@@ -422,7 +422,7 @@ class TestSecurityModule(object):
         response2 = mocker.MagicMock(spec=Response)
         response2.text = '{"data": {}}'
         mock_storage_security_client.get_plan_security_events.side_effect = [response1, response2]
-        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client_one_location, storage_client_factory, microservice_client_factory
         )
@@ -443,7 +443,7 @@ class TestSecurityModule(object):
         response = mocker.MagicMock(spec=Response)
         response.text = '{"data": {}}'
         mock_storage_security_client.get_plan_security_events.return_value = response
-        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client_two_plans_one_node, storage_client_factory, microservice_client_factory
         )
@@ -471,7 +471,7 @@ class TestSecurityModule(object):
             response1,
             response2,
         ]
-        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client_two_plans_one_node, storage_client_factory, microservice_client_factory
         )
@@ -488,7 +488,7 @@ class TestSecurityModule(object):
         response = mocker.MagicMock(spec=Response)
         response.text = '{"data": {}}'
         mock_storage_security_client.get_plan_security_events.return_value = response
-        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
@@ -516,7 +516,7 @@ class TestSecurityModule(object):
         response2 = mocker.MagicMock(spec=Response)
         response2.text = '{"data": {}}'
         mock_storage_security_client.get_plan_security_events.side_effect = [response1, response2]
-        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
@@ -535,7 +535,7 @@ class TestSecurityModule(object):
         response = mocker.MagicMock(spec=Response)
         response.text = '{"data": {}}'
         mock_storage_security_client.get_plan_security_events.return_value = response
-        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
@@ -563,7 +563,7 @@ class TestSecurityModule(object):
             response1,
             response2,
         ]
-        storage_client_factory.get_storage_client_from_plan_uid.return_value = mock_storage_client
+        storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )

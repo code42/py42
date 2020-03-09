@@ -1,7 +1,7 @@
 import pytest
 from requests import Response
 
-from py42._internal.auth_handling import AuthHandler, HeaderModifier, TokenProvider, SessionModifier
+from py42._internal.auth_handling import AuthHandler, HeaderModifier, TokenProvider
 
 ORIGINAL_VALUE = "test-original-value"
 UPDATED_VALUE = "test-updated-value"
@@ -19,44 +19,44 @@ def mock_token_provider(mocker):
 
 
 @pytest.fixture
-def mock_session_modifier(mocker):
-    return mocker.MagicMock(spec=SessionModifier)
+def mock_header_modifier(mocker):
+    return mocker.MagicMock(spec=HeaderModifier)
 
 
 def test_auth_handler_constructs_successfully():
-    assert AuthHandler(TokenProvider(), SessionModifier())
+    assert AuthHandler(TokenProvider(), HeaderModifier())
 
 
 def test_auth_handler_renew_authentication_using_cache_calls_get_secret_value_on_token_provider_with_correct_params(
-    mock_token_provider, mock_session_modifier, mock_session
+    mock_token_provider, mock_header_modifier, mock_session
 ):
-    auth_handler = AuthHandler(mock_token_provider, mock_session_modifier)
+    auth_handler = AuthHandler(mock_token_provider, mock_header_modifier)
     auth_handler.renew_authentication(mock_session, use_cache=True)
     mock_token_provider.get_secret_value.assert_called_once_with(force_refresh=False)
 
 
 def test_auth_handler_renew_authentication_no_cache_calls_get_secret_value_on_token_provider_with_correct_params(
-    mock_token_provider, mock_session_modifier, mock_session
+    mock_token_provider, mock_header_modifier, mock_session
 ):
-    auth_handler = AuthHandler(mock_token_provider, mock_session_modifier)
+    auth_handler = AuthHandler(mock_token_provider, mock_header_modifier)
     auth_handler.renew_authentication(mock_session)
     mock_token_provider.get_secret_value.assert_called_once_with(force_refresh=True)
 
 
 def test_auth_handler_renew_authentication_using_cache_calls_modify_session_on_session_modifier_with_correct_params(
-    mock_token_provider, mock_session_modifier, mock_session
+    mock_token_provider, mock_header_modifier, mock_session
 ):
-    auth_handler = AuthHandler(mock_token_provider, mock_session_modifier)
+    auth_handler = AuthHandler(mock_token_provider, mock_header_modifier)
     auth_handler.renew_authentication(mock_session, use_cache=True)
-    mock_session_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
+    mock_header_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
 
 
 def test_auth_handler_renew_authentication_no_cache_calls_modify_session_on_session_modifier_with_correct_params(
-    mock_token_provider, mock_session_modifier, mock_session
+    mock_token_provider, mock_header_modifier, mock_session
 ):
-    auth_handler = AuthHandler(mock_token_provider, mock_session_modifier)
+    auth_handler = AuthHandler(mock_token_provider, mock_header_modifier)
     auth_handler.renew_authentication(mock_session)
-    mock_session_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
+    mock_header_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
 
 
 def test_auth_handler_response_indicates_unauthorized_returns_true_for_401(mocker):

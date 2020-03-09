@@ -27,12 +27,7 @@ class AuthHandler(object):
         return response.status_code == 401
 
 
-class SessionModifier(object):
-    def modify_session(self, session, value):
-        pass
-
-
-class HeaderModifier(SessionModifier):
+class HeaderModifier(object):
     def __init__(self, header_name=u"Authorization", value_format=u"{0}"):
         self._header_name = header_name
         self._value_format = value_format

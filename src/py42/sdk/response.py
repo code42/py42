@@ -11,7 +11,6 @@ class Py42Response(object):
         if self._response.text:
             try:
                 response_dict = json.loads(self._response.text)
-                print(response_dict)
                 self._data_root = response_dict.get(u"data") or response_dict
                 if type(self._data_root) is dict:
                     self._data_root = self._data_root.get(json_key) or self._data_root

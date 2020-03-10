@@ -100,7 +100,7 @@ There are a few default settings that affect the behavior of the client.
 | ---- | ----------- | ------- |
 | verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.| `True`
 | proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.| `None`
-| debug_level | Controls print statements for debugging | `py42.debug.NONE`
+| debug.level | Controls print statements for debugging | `py42.settings.debug.NONE`
 | items_per_page | Controls how many items are retrieved per request for methods that loops over several "pages" of items in order to collect them all. | 1000
 
 To override these settings, import `py42.settings` and override values as necessary before creating the client.
@@ -131,11 +131,13 @@ current_user = sdk.users.get_current()
 # get server diagnostic info.
 diagnostics = sdk.serveradmin.get_diagnostics()
 
-# get a list of all devices available to this user.
-devices = sdk.devices.get_all()
+# page through all devices available to this user.
+for device_list in sdk.devices.get_all():
+    device = device_list[0]
 
-# get a list of all orgs available to this user.
-orgs = sdk.orgs.get_all()
+# page through all orgs available to this user.
+for org_list in sdk.orgs.get_all():
+    orgs = org_list[0]
 
 # save a copy of a file from an archive this user has access to into the current working directory.
 sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")

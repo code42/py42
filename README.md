@@ -37,20 +37,20 @@ $ python
 Import a couple essentials
 
 ```python
->>> from py42.sdk import SDKClient
+>>> import py42.sdk
 >>> import py42.sdk.util as util
 ```
 
 Initialize the client.
 
 ```python
->>> sdk = SDK.from_local_account("https://console.us.code42.com", "john.doe", "password")
+>>> sdk = sdk.from_local_account("https://console.us.code42.com", "john.doe", "password")
 ```
 
 Get and print your user information.
 
 ```python
->>> response = sdk.users.get_current_user()
+>>> response = sdk.users.get_current()
 >>> util.print_response(response)
 ```
 
@@ -107,11 +107,11 @@ To override these settings, import `py42.settings` and override values as necess
  For example, to disable certificate validation in a dev environment: 
 
 ```python
+import py42.sdk
 import py42.sdk.settings as settings
-from py42.sdk import SDKClient
 
 settings.verify_ssl_certs = False
-sdk = SDKClient.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 ```
 
 ## Usage
@@ -119,29 +119,31 @@ sdk = SDKClient.from_local_account("https://console.us.code42.com", "my_username
 The SDK object opens availability to APIs across the Code42 environment, including storage nodes.
 
 ```python
-from py42.sdk import SDKClient
+import py42.sdk
 
-sdk = SDKClient.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
 # clients are organized by feature groups and accessible under the sdk object
 
 # get information about the current user.
-current_user = sdk.users.get_current_user() 
+current_user = sdk.users.get_current() 
 
 # get server diagnostic info.
-diagnostics = sdk.administration.get_diagnostics()
+diagnostics = sdk.serveradmin.get_diagnostics()
 
 # get a list of all devices available to this user.
-devices = sdk.devices.get_devices()
+devices = sdk.devices.get_all()
 
 # get a list of all orgs available to this user.
 orgs = sdk.orgs.get_all()
 
 # save a copy of a file from an archive this user has access to into the current working directory.
-sdk.archive.download_from_backup("/full/path/to/file.txt", "1234567890")
+sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
 
 # search file events
-from py42.sdk.file_event_query import *
+from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
+from py42.sdk.queries.fileevents.filters.file_filter import *
+
 query = FileEventQuery.all(MD5.eq("e804d1eb229298b04522c5504b8131f0"))
 file_events = sdk.security.search(query)
 ```

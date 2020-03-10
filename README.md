@@ -145,7 +145,7 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters.file_filter import *
 
 query = FileEventQuery.all(MD5.eq("e804d1eb229298b04522c5504b8131f0"))
-file_events = sdk.security.search(query)
+file_events = sdk.securitydata.search(query)
 ```
 
 ## Additional Resources

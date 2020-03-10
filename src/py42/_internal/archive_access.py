@@ -1,10 +1,8 @@
-import json
-import os
 import time
 from collections import namedtuple
 
+import json
 import posixpath
-
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
 

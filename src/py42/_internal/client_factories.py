@@ -1,8 +1,7 @@
 import json
 
 from py42._internal.key_value_store import KeyValueStoreClient
-from py42.clients import administration, archive, devices, legal_hold, orgs, security, users
-from py42.clients.alerts import AlertClient
+from py42.clients import administration, archive, alerts, devices, legal_hold, orgs, security, users
 from py42.clients.employee_case_management.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient
 
@@ -54,7 +53,7 @@ class MicroserviceClientFactory(object):
     def get_alerts_client(self):
         if not self._alerts_client:
             session = self._get_jwt_session(u"AlertService-API_URL")
-            self._alerts_client = AlertClient(session, self._user_context)
+            self._alerts_client = alerts.AlertClient(session, self._user_context)
         return self._alerts_client
 
     def get_departing_employee_client(self):
@@ -100,8 +99,7 @@ def _get_sts_base_url(session):
     sts_base_url = None
     if response.text:
         response_json = json.loads(response.text)
-        if u"stsBaseUrl" in response_json:
-            sts_base_url = response_json[u"stsBaseUrl"]
+        sts_base_url = response_json.get(u"stsBaseUrl")
     if not sts_base_url:
         message = u"You may be trying to use a feature that is unavailable in your environment."
         raise Exception(u"stsBaseUrl not found. {0}".format(message))

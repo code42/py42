@@ -128,9 +128,6 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 # get information about the current user.
 current_user = sdk.users.get_current() 
 
-# get server diagnostic info.
-diagnostics = sdk.serveradmin.get_diagnostics()
-
 # page through all devices available to this user.
 for device_list in sdk.devices.get_all():
     device = device_list[0]

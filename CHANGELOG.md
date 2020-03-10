@@ -10,9 +10,35 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+## Removed
+
+- The following methods from `py42.util`:
+    - `get_obj_from_response()`
+    - `filter_out_none()`
+    - `print_dict()`
+    
+- `py42.debug` module. Use `py42.settings.debug` instead.
+- `py42.util` module. Use `py42.sdk.util` instead.
+- `ArchiveModule.download_from_backup()`. Use `ArchiveModule.stream_from_backup()` instead.
+
 ## Changed
 
-Renamed client methods to reduce redundancy:
+All client methods now return a `Py42Response` object that simplifies accessing the most meaningful parts
+of the returned JSON object.
+
+Renamed methods to reduce redundancy:
+
+- `SDK` > `SDKClient`
+    - `create_from_local_account()` > `from_local_account()`
+    - `administration` > `serveradmin`
+    - `legal_hold` > `legalhold`
+    - `storage` > `storageacess`
+    - `security` > `securitydata`
+    - `user_context` > `usercontext`
+    
+- `StorageClientFactory`
+    - `get_storage_client_from_device_guid()` > `from_device_guid()`
+    - `get_storage_client_from_plan_uid()` > `from_plan_info()`
 
 - `StorageSecurityClient`
     - `get_security_detection_events_for_plan()` > `get_plan_security_events()`

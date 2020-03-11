@@ -23,7 +23,9 @@ class SecurityModule(object):
             pass
 
         if locations:
-            plan_destination_map = _get_plan_destination_map(locations)
+            plan_destination_map = _get_plan_destination_map(
+                locations[u"securityPlanLocationsByDestination"]
+            )
             selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
             if not selected_plan_infos:
                 raise Exception(
@@ -146,7 +148,7 @@ class SecurityModule(object):
                 )
 
                 if response.text:
-                    cursor = json.loads(response.text)[u"data"].get(u"cursor")
+                    cursor = json.loads(response.text).get(u"cursor")
                     # if there are no results, we don't get a cursor and have reached the end
                     if cursor:
                         yield response, cursor
@@ -162,7 +164,7 @@ def _get_plan_destination_map(locations_list):
 
 def _get_destinations_in_locations_list(locations_list):
     for destination in locations_list:
-        for node in destination["securityPlanLocationsByNode"]:
+        for node in destination[u"securityPlanLocationsByNode"]:
             yield _get_plans_in_node(destination, node)
 
 

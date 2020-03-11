@@ -31,7 +31,7 @@ JSON_VALUE = {"key": "value"}
 KWARGS_INDEX = 1
 DATA_KEY = "data"
 JSON_KEY = "json"
-TEST_RESPONSE_CONTENT = '{"key":"test_response_content"}'
+TEST_RESPONSE_CONTENT = '{"key": "test_response_content"}'
 
 
 class TestPy42Session(object):

@@ -1,8 +1,8 @@
 import pytest
-from requests import Response
 import json
 
 from py42.clients.storage.archive import StorageArchiveClient
+from py42.sdk.response import Py42Response
 from py42._internal.session import Py42Session
 
 
@@ -56,12 +56,11 @@ WEB_RESTORE_JOB_ID = "46289723"
 
 
 @pytest.fixture
-def session(mocker):
+def session(mocker, py42_response):
     py_session = mocker.MagicMock(spec=Py42Session)
-    http_response = mocker.MagicMock(spec=Response)
-    http_response.text = '{"data": {"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}}'
-    http_response.status_code = 200
-    py_session.post.return_value = http_response
+    py42_response.text = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
+
+    py_session.post.return_value = py42_response
     return py_session
 
 
@@ -359,8 +358,7 @@ class TestStorageArchiveClient(object):
 
     def test_get_restore_status_calls_get_with_correct_url(self, mocker, session):
         storage_archive_client = StorageArchiveClient(session)
-        api_response = mocker.MagicMock(spec=Response)
-        api_response.text = '{"data": "TEST DATA"}'
+        api_response = mocker.MagicMock(spec=Py42Response)
         session.get.return_value = api_response
         storage_archive_client.get_restore_status(WEB_RESTORE_JOB_ID)
         expected_url = WEB_RESTORE_JOB_URL + "/" + WEB_RESTORE_JOB_ID
@@ -368,16 +366,15 @@ class TestStorageArchiveClient(object):
 
     def test_cancel_restore_calls_delete_with_correct_url(self, mocker, session):
         storage_archive_client = StorageArchiveClient(session)
-        api_response = mocker.MagicMock(spec=Response)
-        api_response.text = '{"data": "TEST DATA"}'
+        api_response = mocker.MagicMock(spec=Py42Response)
         session.delete.return_value = api_response
         storage_archive_client.cancel_restore(WEB_RESTORE_JOB_ID)
         session.delete.assert_called_once_with(WEB_RESTORE_JOB_URL, json=mocker.ANY)
 
     def test_cancel_restore_calls_delete_with_job_id_in_data(self, mocker, session):
         storage_archive_client = StorageArchiveClient(session)
-        api_response = mocker.MagicMock(spec=Response)
-        api_response.text = json.dumps({JOB_ID_KEY: WEB_RESTORE_JOB_ID})
+        api_response = mocker.MagicMock(spec=Py42Response)
+        text = json.dumps({JOB_ID_KEY: WEB_RESTORE_JOB_ID})
         session.delete.return_value = api_response
         storage_archive_client.cancel_restore(WEB_RESTORE_JOB_ID)
         json_arg = session.delete.call_args[KWARGS_INDEX][JSON_KEYWORD]
@@ -386,8 +383,7 @@ class TestStorageArchiveClient(object):
 
     def test_stream_restore_result_status_calls_get_with_correct_url(self, mocker, session):
         storage_archive_client = StorageArchiveClient(session)
-        api_response = mocker.MagicMock(spec=Response)
-        api_response.text = '{"data": "TEST DATA"}'
+        api_response = mocker.MagicMock(spec=Py42Response)
         session.get.return_value = api_response
         storage_archive_client.stream_restore_result(WEB_RESTORE_JOB_ID)
         expected_url = WEB_RESTORE_JOB_RESULT_URL + "/" + WEB_RESTORE_JOB_ID

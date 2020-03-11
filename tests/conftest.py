@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 import pytest
 from requests import HTTPError, Response, Session
 
 from py42._internal.auth_handling import AuthHandler
 from py42.sdk.queries.query_filter import QueryFilter
 from py42._internal.session import Py42Session
+from py42.sdk.response import Py42Response
 from py42.sdk.user_context import UserContext
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"
@@ -46,6 +49,15 @@ def successful_response(mocker):
     response.text = TEST_RESPONSE_CONTENT
     response.status_code = 200
     response.encoding = None
+    return response
+
+
+@pytest.fixture
+def py42_response(mocker):
+    response = mocker.MagicMock(spec=Py42Response)
+    response.status_code = 200
+    response.encoding = None
+    response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
     return response
 
 

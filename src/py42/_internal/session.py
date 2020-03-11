@@ -5,6 +5,7 @@ import requests.adapters
 from threading import Lock
 
 from py42._internal.compat import str, urljoin, urlparse
+from py42.sdk.response import Py42Response
 
 
 class Py42Session(object):
@@ -105,7 +106,7 @@ class Py42Session(object):
                 if not kwargs.get(u"stream"):
                     response.encoding = u"utf-8"  # setting this manually speeds up read times
 
-                return response
+                return Py42Response(response)
 
         except (requests.HTTPError, requests.RequestException, Exception) as ex:
             raise ex

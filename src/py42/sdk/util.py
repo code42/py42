@@ -13,7 +13,7 @@ def print_response(response, label=None):
     if label:
         print(label, end=u" ")
     try:
-        print(format_json(response.api_response.text))
+        print(format_json(response.text))
     except ValueError:
         print(response)
 

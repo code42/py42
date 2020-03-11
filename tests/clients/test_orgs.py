@@ -1,36 +1,31 @@
 # -*- coding: utf-8 -*-
+import json
 
 import pytest
-from requests import Response
 
 import py42
 from py42.clients.orgs import OrgClient
+from py42.sdk.response import Py42Response
 
 COMPUTER_URI = "/api/Org"
 
-MOCK_GET_ORG_RESPONSE = """{
-  "data": {"totalCount": 3000, "orgs":["foo"]}
-}"""
+MOCK_GET_ORG_RESPONSE = """{"totalCount": 3000, "orgs": ["foo"]}"""
 
-MOCK_EMPTY_GET_ORGS_RESPONSE = """{
-  "data": {"totalCount": 3000, "orgs":[]}
-}"""
+MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "orgs": []}"""
 
 
 class TestOrgClient(object):
     @pytest.fixture
-    def mock_get_orgs_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.text = MOCK_GET_ORG_RESPONSE
-        return response
+    def mock_get_orgs_response(self, mocker, py42_response):
+        py42_response.text = MOCK_GET_ORG_RESPONSE
+
+        return py42_response
 
     @pytest.fixture
-    def mock_get_orgs_empty_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
-        return response
+    def mock_get_orgs_empty_response(self, mocker, py42_response):
+        py42_response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
+
+        return py42_response
 
     def test_get_org_by_id_calls_get_with_uri_and_params(self, mock_session, successful_response):
         mock_session.get.return_value = successful_response

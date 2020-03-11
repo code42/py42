@@ -8,19 +8,16 @@ from py42.sdk.user_context import UserContext
 
 _GET_CURRENT_USER = """
 {
-    "data":
-        {
-            "name":"Test SaaS Cloud",
-            "registrationKey":"1777444555888000",
-            "deploymentModel":"PUBLIC",
-            "maintenanceMode":false,
-            "tenantUid":"00999888-7776-6655-5444-333222111000",
-            "masterServicesAgreement":
-            {
-                "accepted":true,
-                "acceptanceRequired":false
-            }
-        },
+    "name":"Test SaaS Cloud",
+    "registrationKey":"1777444555888000",
+    "deploymentModel":"PUBLIC",
+    "maintenanceMode":false,
+    "tenantUid":"00999888-7776-6655-5444-333222111000",
+    "masterServicesAgreement":
+    {
+        "accepted":true,
+        "acceptanceRequired":false
+    },
     "error":null,
     "warnings":null
 }
@@ -31,13 +28,10 @@ class TestUserContext(object):
     @pytest.fixture
     def successful_administration_client(self, mocker):
         mock_administration_client = mocker.MagicMock(spec=AdministrationClient)
-        mock_response = mocker.MagicMock(spec=Response)
+        mock_response = mocker.MagicMock(spec=Py42Response)
         mock_response.status_code = 200
         mock_response.text = _GET_CURRENT_USER
-        py42_response = mocker.MagicMock(spec=Py42Response)
-        py42_response.api_response = mock_response
-        py42_response.raw_response_text = json.dumps(json.loads(_GET_CURRENT_USER)["data"])
-        mock_administration_client.get_current_tenant.return_value = py42_response
+        mock_administration_client.get_current_tenant.return_value = mock_response
         return mock_administration_client
 
     def test_get_current_tenant_id_returns_tenant_id_from_administration_client_get_current_tenant(

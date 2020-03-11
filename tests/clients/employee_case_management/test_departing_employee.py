@@ -3,7 +3,6 @@
 import json
 
 import pytest
-from requests import Response
 
 from py42.clients.employee_case_management.departing_employee import DepartingEmployeeClient
 from py42.sdk.response import Py42Response
@@ -77,36 +76,31 @@ _GET_ALL_CASES_EMPTY_RESPONSE = """
 
 class TestDepartingEmployeeClient(object):
     @pytest.fixture
-    def mock_get_case_details_function(self, mocker):
+    def mock_get_case_details_function(self, mocker, py42_response):
         # Useful for testing get_by_username, which first gets all cases.
         # Also useful in update, which checks current values of case
         mock = mocker.patch(
             "py42.clients.employee_case_management.departing_employee.DepartingEmployeeClient.get_by_id"
         )
-        response = mocker.MagicMock(spec=Response)
-        response.text = _GET_CASE_DETAILS_RESPONSE
-        response.status_code = 200
-        return response
+        py42_response.text = _GET_CASE_DETAILS_RESPONSE
+        return py42_response
 
     @pytest.fixture
-    def mock_get_all_cases_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.text = _GET_ALL_CASES_RESPONSE
-        response.status_code = 200
-        return response
+    def mock_get_all_cases_response(self, mocker, py42_response):
+        py42_response.text = _GET_ALL_CASES_RESPONSE
+
+        return py42_response
 
     @pytest.fixture
-    def mock_get_all_cases_response_empty(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.text = _GET_ALL_CASES_EMPTY_RESPONSE
-        response.status_code = 200
-        return response
+    def mock_get_all_cases_response_empty(self, mocker, py42_response):
+        py42_response.text = _GET_ALL_CASES_EMPTY_RESPONSE
+
+        return py42_response
 
     @pytest.fixture
-    def mock_py42_response(self, mocker, mock_get_case_details_function):
-        py42_response = mocker.MagicMock(spec=Py42Response)
-        py42_response.api_response = mock_get_case_details_function
-        py42_response.raw_response_text = mock_get_case_details_function.text
+    def mock_py42_response(self, mocker, mock_get_case_details_function, py42_response):
+        py42_response.test = mock_get_case_details_function.text
+
         return py42_response
 
     def test_create_uses_given_tenant_id_over_current_id(

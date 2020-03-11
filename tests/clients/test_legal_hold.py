@@ -1,8 +1,10 @@
+import json
+
 import pytest
-from requests import Response
 
 import py42
 from py42.clients.legal_hold import LegalHoldClient
+from py42.sdk.response import Py42Response
 
 LEGAL_HOLD_URI = "/api/LegalHold"
 
@@ -19,51 +21,39 @@ DEFAULT_GET_LEGAL_HOLDS_PARAMS = {
     "q": None,
 }
 
-MOCK_GET_ALL_MATTERS_RESPONSE = """{
-  "data": {"legalHolds":["foo"]}
-}"""
+MOCK_GET_ALL_MATTERS_RESPONSE = """{"legalHolds":["foo"]}"""
 
-MOCK_EMPTY_GET_ALL_MATTERS_RESPONSE = """{
-  "data": {"legalHolds":[]}
-}"""
+MOCK_EMPTY_GET_ALL_MATTERS_RESPONSE = """{"legalHolds": []}"""
 
-MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{
-  "data": {"legalHoldMemberships":["foo"]}
-}"""
+MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{"legalHoldMemberships": ["foo"]}"""
 
-MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{
-  "data": {"legalHoldMemberships":[]}
-}"""
+MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{"legalHoldMemberships": []}"""
 
 
 class TestLegalHoldClient(object):
     @pytest.fixture
-    def mock_get_all_matters_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.text = MOCK_GET_ALL_MATTERS_RESPONSE
-        return response
+    def mock_get_all_matters_response(self, mocker, py42_response):
+        py42_response.text = MOCK_GET_ALL_MATTERS_RESPONSE
+
+        return py42_response
 
     @pytest.fixture
-    def mock_get_all_matters_empty_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.text = MOCK_EMPTY_GET_ALL_MATTERS_RESPONSE
-        return response
+    def mock_get_all_matters_empty_response(self, mocker, py42_response):
+        py42_response.text = MOCK_EMPTY_GET_ALL_MATTERS_RESPONSE
+
+        return py42_response
 
     @pytest.fixture
-    def mock_get_all_matter_custodians_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.text = MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE
-        return response
+    def mock_get_all_matter_custodians_response(self, mocker, py42_response):
+        py42_response.text = MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE
+
+        return py42_response
 
     @pytest.fixture
-    def mock_get_all_matter_custodians_empty_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
-        return response
+    def mock_get_all_matter_custodians_empty_response(self, mocker, py42_response):
+        py42_response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
+
+        return py42_response
 
     def test_get_legal_hold_by_uid_calls_get_with_uri_and_params(
         self, mock_session, successful_response

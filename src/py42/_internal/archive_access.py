@@ -27,14 +27,16 @@ class ArchiveAccessorManager(object):
         return ArchiveAccessor(device_guid, session_id, client.archive, restore_job_manager)
 
     def _get_data_key_token(self, device_guid):
-        return self._archive_client.get_data_key_token(device_guid).raw_response_text
+        test = self._archive_client.get_data_key_token(device_guid)
+        test2 = test[u"dataKeyToken"]
+        return self._archive_client.get_data_key_token(device_guid)[u"dataKeyToken"]
 
     @staticmethod
     def _create_restore_session(storage_archive_client, device_guid, data_key_token):
         response = storage_archive_client.create_restore_session(
             device_guid, data_key_token=data_key_token
         )
-        return response.raw_response_text
+        return response[u"webRestoreSessionId"]
 
 
 class ArchiveAccessor(object):
@@ -60,9 +62,7 @@ class ArchiveAccessor(object):
         path_root = path_parts[0] + u"/"
 
         response = self._get_children(node_id=None)
-
-        roots = json.loads(response.raw_response_text)[u"data"]
-        for root in roots:
+        for root in response:
             if root[u"path"].lower() == path_root.lower():
                 return self._walk_tree(root, path_parts[1:])
 
@@ -76,9 +76,7 @@ class ArchiveAccessor(object):
         if not remaining_path_components or not remaining_path_components[0]:
             return current_node
 
-        response = self._get_children(node_id=current_node[u"id"])
-
-        children = json.loads(response.raw_response_text)[u"data"]
+        children = self._get_children(node_id=current_node[u"id"])
         current_node_path = current_node[u"path"]
         target_child_path = posixpath.join(current_node_path, remaining_path_components[0])
 
@@ -123,7 +121,7 @@ class RestoreJobManager(object):
 
     def get_stream(self, file_selection):
         response = self._start_restore(file_selection)
-        job_id = json.loads(response.raw_response_text)[u"data"][u"jobId"]
+        job_id = response["jobId"]
 
         while not self.is_job_complete(job_id):
             time.sleep(self._job_polling_interval)
@@ -147,7 +145,7 @@ class RestoreJobManager(object):
 
     @staticmethod
     def _get_completion_status(response):
-        return json.loads(response.raw_response_text)[u"data"][u"done"]
+        return response[u"done"]
 
     def _get_stream(self, job_id):
         response = self._storage_archive_client.stream_restore_result(job_id)

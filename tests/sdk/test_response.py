@@ -37,31 +37,31 @@ class TestPy42Response(object):
         return mock_response
 
     def test_api_response_returns_requests_response(self, mock_response_list_data_node):
-        response = Py42Response(mock_response_list_data_node, "item_list_key")
+        response = Py42Response(mock_response_list_data_node)
         assert response.api_response == mock_response_list_data_node
 
     def test_getitem_returns_list_items_with_data_node(self, mock_response_list_data_node):
-        response = Py42Response(mock_response_list_data_node, "item_list_key")
+        response = Py42Response(mock_response_list_data_node)
         assert type(response[0]) == dict
 
     def test_getitem_returns_dict_keys_with_data_node(self, mock_response_dict_data_node):
-        response = Py42Response(mock_response_dict_data_node, "item_list_key")
+        response = Py42Response(mock_response_dict_data_node)
         assert response["foo"] == "foo_val"
 
     def test_getitem_returns_list_items_no_data_node(self, mock_response_list_no_data_node):
-        response = Py42Response(mock_response_list_no_data_node, "item_list_key")
+        response = Py42Response(mock_response_list_no_data_node)
         assert type(response[0]) == dict
 
     def test_getitem_returns_dict_keys_no_data_node(self, mock_response_dict_no_data_node):
-        response = Py42Response(mock_response_dict_no_data_node, "item_list_key")
+        response = Py42Response(mock_response_dict_no_data_node)
         assert response["foo"] == "foo_val"
 
     def test_raw_json_no_data_node_returns_raw_json(self, mock_response_list_no_data_node):
-        response = Py42Response(mock_response_list_no_data_node, "item_list_key")
+        response = Py42Response(mock_response_list_no_data_node)
         assert response.raw_response_text == JSON_LIST_ROOT
 
-    def test_raw_json_with_data_node_returns_raw_json_without_data(
+    def test_body_content_with_data_node_returns_raw_json_without_data(
         self, mock_response_list_data_node
     ):
-        response = Py42Response(mock_response_list_data_node, "item_list_key")
-        assert response.raw_response_text == JSON_LIST_ROOT
+        response = Py42Response(mock_response_list_data_node)
+        assert response.body_content == JSON_LIST_ROOT

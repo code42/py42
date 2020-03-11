@@ -2,14 +2,13 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42.sdk.response import Py42Response
 
 
 class LegalHoldClient(BaseClient):
     def create_policy(self, name, policy=None):
         uri = u"/api/v4/legal-hold-policy/create"
         data = {u"name": name, u"policy": policy}
-        return Py42Response(self._session.post(uri, data=json.dumps(data)))
+        return self._session.post(uri, data=json.dumps(data))
 
     def create_matter(self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None):
         uri = u"/api/LegalHold"
@@ -20,20 +19,20 @@ class LegalHoldClient(BaseClient):
             u"notes": notes,
             u"holdExtRef": hold_ext_ref,
         }
-        return Py42Response(self._session.post(uri, data=json.dumps(data)))
+        return self._session.post(uri, data=json.dumps(data))
 
     def get_policy_by_uid(self, legal_hold_policy_uid):
         uri = u"/api/v4/legal-hold-policy/view"
         params = {u"legalHoldPolicyUid": legal_hold_policy_uid}
-        return Py42Response(self._session.get(uri, params=params))
+        return self._session.get(uri, params=params)
 
     def get_all_policies(self):
         uri = u"/api/v4/legal-hold-policy/list"
-        return Py42Response(self._session.get(uri))
+        return self._session.get(uri)
 
     def get_matter_by_uid(self, legal_hold_uid):
         uri = u"/api/LegalHold/{0}".format(legal_hold_uid)
-        return Py42Response(self._session.get(uri))
+        return self._session.get(uri)
 
     def _get_legal_holds_page(
         self,
@@ -53,7 +52,7 @@ class LegalHoldClient(BaseClient):
             u"pgNum": page_num,
             u"pgSize": page_size,
         }
-        return Py42Response(self._session.get(uri, params=params), json_key=u"legalHolds")
+        return self._session.get(uri, params=params)
 
     def get_all_matters(
         self, creator_user_uid=None, active_state=u"ACTIVE", name=None, hold_ext_ref=None
@@ -87,7 +86,7 @@ class LegalHoldClient(BaseClient):
             u"pgSize": page_size,
         }
         uri = u"/api/LegalHoldMembership"
-        return Py42Response(self._session.get(uri, params=params))
+        return self._session.get(uri, params=params)
 
     def get_all_matter_custodians(
         self,
@@ -110,18 +109,18 @@ class LegalHoldClient(BaseClient):
     def add_to_matter(self, user_uid, legal_hold_uid):
         uri = u"/api/LegalHoldMembership"
         data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
-        return Py42Response(self._session.post(uri, data=json.dumps(data)))
+        return self._session.post(uri, data=json.dumps(data))
 
     def remove_from_matter(self, legal_hold_membership_uid):
         uri = u"/api/LegalHoldMembershipDeactivation"
         data = {u"legalHoldMembershipUid": legal_hold_membership_uid}
-        return Py42Response(self._session.post(uri, data=json.dumps(data)))
+        return self._session.post(uri, data=json.dumps(data))
 
     def deactivate_matter(self, legal_hold_uid):
         uri = u"/api/v4/legal-hold-deactivation/update"
         data = {u"legalHoldUid": legal_hold_uid}
-        return Py42Response(self._session.post(uri, data=json.dumps(data)))
+        return self._session.post(uri, data=json.dumps(data))
 
     def reactivate_matter(self, legal_hold_uid):
         uri = u"/api/LegalHoldReactivation/{0}".format(legal_hold_uid)
-        return Py42Response(self._session.put(uri))
+        return self._session.put(uri)

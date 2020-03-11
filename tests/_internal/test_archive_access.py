@@ -4,7 +4,6 @@ import json
 import posixpath
 
 import pytest
-from requests import Response
 
 import py42
 import py42._internal.archive_access as archive_access
@@ -53,15 +52,10 @@ PATH_TO_FILE_IN_DOWNLOADS_FOLDER = "/Users/qa/Downloads/terminator-genisys.jpg"
 class GetFilePathMetadataResponses(object):
     @staticmethod
     def get_file_id_from_request(response):
-        file_id = None
-        request_params = json.loads(response)["metadata"]["params"]
-        if "fileId" in request_params:
-            file_id = request_params["fileId"]
-        return file_id
+        return response[1]
 
-    NULL_ID = """
-        {
-            "data": [
+    NULL_ID = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2018-06-22T10:08:37.000-05:00",
@@ -75,20 +69,13 @@ class GetFilePathMetadataResponses(object):
                     "type": "directory",
                     "id": "885bf69dc0168f3624435346d7bf4836"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-19T07:35:34.684-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "0sds7et5oy50u13dh4tctm708m"
-                }
-            }
-        }
-        """
+            ]
+        """,
+        None,
+    )
 
-    ROOT = """
-        {
-            "data": [
+    ROOT = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2018-06-22T10:02:44.000-05:00",
@@ -102,21 +89,13 @@ class GetFilePathMetadataResponses(object):
                     "type": "directory",
                     "id": "c2dc0a9bc27be41cb84d6ae91f6a0974"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-19T08:28:29.479-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "03lozi81xkm3p01zt21vh352r8",
-                    "fileId": "885bf69dc0168f3624435346d7bf4836"
-                }
-            }
-        }
-        """
+            ]
+        """,
+        "885bf69dc0168f3624435346d7bf4836",
+    )
 
-    USERS = """
-        {
-            "data": [
+    USERS = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2018-06-19T14:58:36.000-05:00",
@@ -130,21 +109,13 @@ class GetFilePathMetadataResponses(object):
                     "type": "directory",
                     "id": "8f939e90bae37f9ec860ced08c5ffb7f"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-22T13:10:59.779-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8",
-                    "fileId": "c2dc0a9bc27be41cb84d6ae91f6a0974"
-                }
-            }
-        }
-        """
+            ]
+        """,
+        "c2dc0a9bc27be41cb84d6ae91f6a0974",
+    )
 
-    USERS_QA = """
-        {
-            "data": [
+    USERS_QA = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2018-06-19T14:54:46.000-05:00",
@@ -223,22 +194,13 @@ class GetFilePathMetadataResponses(object):
                     "type": "directory",
                     "id": "bcf31dab21a4f7d4f67b812d6c891ed9"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-22T13:10:59.814-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8",
-                    "fileId": "8f939e90bae37f9ec860ced08c5ffb7f"
-                }
-            }
-        }
+            ]
+        """,
+        "8f939e90bae37f9ec860ced08c5ffb7f",
+    )
 
-        """
-
-    USERS_QA_DOWNLOADS = """
-        {
-            "data": [
+    USERS_QA_DOWNLOADS = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2019-04-12T12:58:13.000-05:00",
@@ -265,17 +227,10 @@ class GetFilePathMetadataResponses(object):
                     "type": "file",
                     "id": "69e930e774cbc1ee6d0c0ff2ba5804ee"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-22T13:10:59.849-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8",
-                    "fileId": "f939cfc4d476ec5535ccb0f6c0377ef4"
-                }
-            }
-        }
-        """
+            ]
+        """,
+        "f939cfc4d476ec5535ccb0f6c0377ef4",
+    )
 
 
 class GetWebRestoreJobResponses(object):
@@ -332,11 +287,10 @@ class GetWebRestoreJobResponses(object):
 def archive_client(mocker):
     client = mocker.MagicMock(spec=ArchiveClient)
     py42_response = mocker.MagicMock(spec=Py42Response)
-    http_response = mocker.MagicMock(spec=Response)
-    http_response.text = '{{"data": {{"dataKeyToken": "{0}"}}}}'.format(DATA_KEY_TOKEN)
-    http_response.status_code = 200
-    py42_response.api_response = http_response
-    py42_response.raw_response_text = DATA_KEY_TOKEN
+    py42_response.text = '{{"dataKeyToken": "{0}"}}'.format(DATA_KEY_TOKEN)
+    py42_response.status_code = 200
+    py42_response.encoding = None
+    py42_response.__getitem__ = lambda _, key: json.loads(py42_response.text).get(key)
     client.get_data_key_token.return_value = py42_response
     return client
 
@@ -345,13 +299,11 @@ def archive_client(mocker):
 def storage_archive_client(mocker):
     client = mocker.MagicMock(spec=StorageArchiveClient)
     py42_response = mocker.MagicMock(spec=Py42Response)
-    http_response = mocker.MagicMock(spec=Response)
-    http_response.text = '{{"data": {{"webRestoreSessionId": "{0}"}}}}'.format(
-        WEB_RESTORE_SESSION_ID
-    )
-    http_response.status_code = 200
-    py42_response.api_response = http_response
-    py42_response.raw_response_text = WEB_RESTORE_SESSION_ID
+    py42_response.text = '{{"webRestoreSessionId": "{0}"}}'.format(WEB_RESTORE_SESSION_ID)
+    py42_response.status_code = 200
+    py42_response.encoding = None
+    py42_response.__getitem__ = lambda _, key: json.loads(py42_response.text).get(key)
+
     client.create_restore_session.return_value = py42_response
     return client
 
@@ -391,13 +343,10 @@ def file_content_chunks():
 
 def mock_start_restore_response(mocker, storage_archive_client, response):
     def mock_start_restore(device_guid, session_id, path_set, num_files, num_dires, size, **kwargs):
-        start_restore_response = mocker.MagicMock(spec=Response)
+        start_restore_response = mocker.MagicMock(spec=Py42Response)
         start_restore_response.text = response
         start_restore_response.status_code = 200
-        py42_response = mocker.MagicMock(spec=Py42Response)
-        py42_response.api_response = start_restore_response
-        py42_response.raw_response_text = response
-        return py42_response
+        return start_restore_response
 
     storage_archive_client.start_restore.side_effect = mock_start_restore
 
@@ -405,19 +354,16 @@ def mock_start_restore_response(mocker, storage_archive_client, response):
 def mock_get_restore_status_responses(mocker, storage_archive_client, json_responses):
     responses = []
     for json_response in json_responses:
-        get_restore_status_response = mocker.MagicMock(spec=Response)
+        get_restore_status_response = mocker.MagicMock(spec=Py42Response)
         get_restore_status_response.text = json_response
         get_restore_status_response.status_code = 200
-        py42_response = mocker.MagicMock(spec=Py42Response)
-        py42_response.api_response = get_restore_status_response
-        py42_response.raw_response_text = json_response
-        responses.append(py42_response)
+        responses.append(get_restore_status_response)
 
     storage_archive_client.get_restore_status.side_effect = responses
 
 
 def stream_restore_result_response_mock(mocker, storage_archive_client, chunks):
-    stream_restore_result_response = mocker.MagicMock(spec=Response)
+    stream_restore_result_response = mocker.MagicMock(spec=Py42Response)
 
     def mock_stream_restore_result(job_id, **kwargs):
         stream_restore_result_response.iter_content.return_value = chunks
@@ -440,7 +386,7 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
         else:
             if None in file_id_responses:
                 raise Exception("Response list already has a response for a 'None' fileId")
-            file_id_responses[None] = response
+            file_id_responses[None] = response[0]
 
     def mock_get_file_path_metadata(*args, **kwargs):
 
@@ -455,14 +401,15 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
         if file_id not in file_id_responses:
             raise Exception("Unexpected request with file_id: {0}".format(file_id))
 
-        get_file_path_metadata_response = mocker.MagicMock(spec=Response)
+        get_file_path_metadata_response = mocker.MagicMock(spec=Py42Response)
         get_file_path_metadata_response.text = file_id_responses[file_id]
+        get_file_path_metadata_response.__getitem__ = lambda _, key: json.loads(
+            get_file_path_metadata_response.text
+        )[key]
+        # get_file_path_metadata_response.__iter__ = lambda _: next()]
         get_file_path_metadata_response.status_code = 200
-        py_42response = mocker.MagicMock(spec=Py42Response)
-        py_42response.api_response = get_file_path_metadata_response
-        py_42response.raw_response_text = file_id_responses[file_id]
 
-        return py_42response
+        return get_file_path_metadata_response
 
     return mock_get_file_path_metadata
 

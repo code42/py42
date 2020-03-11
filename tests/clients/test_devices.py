@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
+import json
 
 import pytest
-from requests import Response
 
 import py42
 from py42.clients.devices import DeviceClient
+from py42.sdk.response import Py42Response
 
 COMPUTER_URI = "/api/Computer"
 
@@ -21,29 +22,23 @@ DEFAULT_GET_DEVICES_PARAMS = {
     "q": None,
 }
 
-MOCK_GET_DEVICE_RESPONSE = """{
-  "data": {"totalCount": 3000, "computers":["foo"]} 
-}"""
+MOCK_GET_DEVICE_RESPONSE = """{"totalCount": 3000, "computers":["foo"]}"""
 
-MOCK_EMPTY_GET_DEVICE_RESPONSE = """{
-  "data": {"totalCount": 3000, "computers":[]} 
-}"""
+MOCK_EMPTY_GET_DEVICE_RESPONSE = """{"totalCount": 3000, "computers":[]}"""
 
 
 class TestDeviceClient(object):
     @pytest.fixture
-    def mock_get_all_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.text = MOCK_GET_DEVICE_RESPONSE
-        return response
+    def mock_get_all_response(self, mocker, py42_response):
+        py42_response.text = MOCK_GET_DEVICE_RESPONSE
+
+        return py42_response
 
     @pytest.fixture
-    def mock_get_all_empty_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.text = MOCK_EMPTY_GET_DEVICE_RESPONSE
-        return response
+    def mock_get_all_empty_response(self, mocker, py42_response):
+        py42_response.text = MOCK_EMPTY_GET_DEVICE_RESPONSE
+
+        return py42_response
 
     def test_get_devices_calls_get_with_uri_and_params(self, mock_session, mock_get_all_response):
         client = DeviceClient(mock_session)

@@ -1,5 +1,5 @@
+import json
 import pytest
-from requests import Response
 
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42.clients.file_event import FileEventClient
@@ -14,8 +14,6 @@ RAW_QUERY = "RAW JSON QUERY"
 USER_UID = "user-uid"
 
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION = """{
-    "warnings": null,
-    "data": {
         "securityPlanLocationsByDestination": [
             {
                 "destinationGuid": "4",
@@ -30,14 +28,10 @@ GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION = """{
             }
         ],
         "userUid": "917354657784339860"
-    },
-    "error": null
-}"""
+    }"""
 
 
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE = """{
-    "warnings": null,
-    "data": {
         "securityPlanLocationsByDestination": [
             {
                 "destinationGuid": "4",
@@ -53,13 +47,9 @@ GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE = """{
             }
         ],
         "userUid": "917354657784339860"
-    },
-    "error": null
 }"""
 
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES = """{
-    "warnings": null,
-    "data": {
         "securityPlanLocationsByDestination": [
             {
                 "destinationGuid": "4",
@@ -80,13 +70,9 @@ GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES = """{
             }
         ],
         "userUid": "917354657784339860"
-    },
-    "error": null
 }"""
 
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS = """{
-    "warnings": null,
-    "data": {
         "securityPlanLocationsByDestination": [
             {
                 "destinationGuid": "4",
@@ -112,13 +98,9 @@ GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS = """{
             }
         ],
         "userUid": "917354657784339860"
-    },
-    "error": null
 }"""
 
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS = """{
-    "warnings": null,
-    "data": {
         "securityPlanLocationsByDestination": [
             {
                 "destinationGuid": "4",
@@ -146,13 +128,9 @@ GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS = """{
             }
         ],
         "userUid": "917354657784339860"
-    },
-    "error": null
 }"""
 
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES = """{
-    "warnings": null,
-    "data": {
         "securityPlanLocationsByDestination": [
             {
                 "destinationGuid": "4",
@@ -185,8 +163,6 @@ GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODE
             }
         ],
         "userUid": "917354657784339860"
-    },
-    "error": null
 }"""
 
 
@@ -196,59 +172,49 @@ class TestSecurityModule(object):
         return mocker.MagicMock(spec=SecurityClient)
 
     @pytest.fixture
-    def response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        return response
+    def security_client_one_location(self, security_client, py42_response):
+        py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
 
-    @pytest.fixture
-    def security_client_one_location(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
-        security_client.get_security_event_locations.return_value = Py42Response(
-            response, json_key=u"securityPlanLocationsByDestination"
-        )
+        security_client.get_security_event_locations.return_value = py42_response
         return security_client
 
     @pytest.fixture
-    def security_client_two_plans_one_node(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
-        security_client.get_security_event_locations.return_value = Py42Response(
-            response, json_key=u"securityPlanLocationsByDestination"
-        )
+    def security_client_two_plans_one_node(self, security_client, py42_response):
+        py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
+
+        security_client.get_security_event_locations.return_value = py42_response
         return security_client
 
     @pytest.fixture
-    def security_client_two_plans_two_nodes(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
-        security_client.get_security_event_locations.return_value = Py42Response(
-            response, json_key=u"securityPlanLocationsByDestination"
-        )
+    def security_client_two_plans_two_nodes(self, security_client, py42_response):
+        py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
+
+        security_client.get_security_event_locations.return_value = py42_response
         return security_client
 
     @pytest.fixture
-    def security_client_one_plan_two_destinations(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
-        security_client.get_security_event_locations.return_value = Py42Response(
-            response, json_key=u"securityPlanLocationsByDestination"
-        )
+    def security_client_one_plan_two_destinations(self, security_client, py42_response):
+        py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
+
+        security_client.get_security_event_locations.return_value = py42_response
         return security_client
 
     @pytest.fixture
-    def security_client_two_plans_two_destinations(self, security_client, response):
-        response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
-        security_client.get_security_event_locations.return_value = Py42Response(
-            response, json_key=u"securityPlanLocationsByDestination"
-        )
+    def security_client_two_plans_two_destinations(self, security_client, py42_response):
+        py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
+
+        security_client.get_security_event_locations.return_value = py42_response
         return security_client
 
     @pytest.fixture
-    def security_client_two_plans_two_destinations_three_nodes(self, security_client, response):
-        response.text = (
+    def security_client_two_plans_two_destinations_three_nodes(
+        self, security_client, py42_response
+    ):
+        py42_response.text = (
             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
         )
-        security_client.get_security_event_locations.return_value = Py42Response(
-            response, json_key=u"securityPlanLocationsByDestination"
-        )
+
+        security_client.get_security_event_locations.return_value = py42_response
         return security_client
 
     @pytest.fixture
@@ -389,8 +355,8 @@ class TestSecurityModule(object):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
         mock_storage_client.security = mock_storage_security_client
-        response = mocker.MagicMock(spec=Response)
-        response.text = '{"data": {}}'
+        response = mocker.MagicMock(spec=Py42Response)
+        response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
         storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
@@ -417,10 +383,10 @@ class TestSecurityModule(object):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
         mock_storage_client.security = mock_storage_security_client
-        response1 = mocker.MagicMock(spec=Response)
-        response1.text = '{"data": {"cursor": "1:1"}}'
-        response2 = mocker.MagicMock(spec=Response)
-        response2.text = '{"data": {}}'
+        response1 = mocker.MagicMock(spec=Py42Response)
+        response1.text = '{"cursor": "1:1"}'
+        response2 = mocker.MagicMock(spec=Py42Response)
+        response2.text = "{}"
         mock_storage_security_client.get_plan_security_events.side_effect = [response1, response2]
         storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
@@ -440,8 +406,8 @@ class TestSecurityModule(object):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
         mock_storage_client.security = mock_storage_security_client
-        response = mocker.MagicMock(spec=Response)
-        response.text = '{"data": {}}'
+        response = mocker.MagicMock(spec=Py42Response)
+        response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
         storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
@@ -461,10 +427,10 @@ class TestSecurityModule(object):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
         mock_storage_client.security = mock_storage_security_client
-        response1 = mocker.MagicMock(spec=Response)
-        response1.text = '{"data": {"cursor": "1:1"}}'
-        response2 = mocker.MagicMock(spec=Response)
-        response2.text = '{"data": {}}'
+        response1 = mocker.MagicMock(spec=Py42Response)
+        response1.text = '{"cursor": "1:1"}'
+        response2 = mocker.MagicMock(spec=Py42Response)
+        response2.text = "{}"
         mock_storage_security_client.get_plan_security_events.side_effect = [
             response1,
             response2,
@@ -485,8 +451,8 @@ class TestSecurityModule(object):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
         mock_storage_client.security = mock_storage_security_client
-        response = mocker.MagicMock(spec=Response)
-        response.text = '{"data": {}}'
+        response = mocker.MagicMock(spec=Py42Response)
+        response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
         storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
@@ -511,10 +477,10 @@ class TestSecurityModule(object):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
         mock_storage_client.security = mock_storage_security_client
-        response1 = mocker.MagicMock(spec=Response)
-        response1.text = '{"data": {"cursor": "1:1"}}'
-        response2 = mocker.MagicMock(spec=Response)
-        response2.text = '{"data": {}}'
+        response1 = mocker.MagicMock(spec=Py42Response)
+        response1.text = '{"cursor": "1:1"}'
+        response2 = mocker.MagicMock(spec=Py42Response)
+        response2.text = "{}"
         mock_storage_security_client.get_plan_security_events.side_effect = [response1, response2]
         storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
@@ -532,8 +498,8 @@ class TestSecurityModule(object):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
         mock_storage_client.security = mock_storage_security_client
-        response = mocker.MagicMock(spec=Response)
-        response.text = '{"data": {}}'
+        response = mocker.MagicMock(spec=Py42Response)
+        response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
         storage_client_factory.from_plan_info.return_value = mock_storage_client
         security_module = SecurityModule(
@@ -553,10 +519,10 @@ class TestSecurityModule(object):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
         mock_storage_client.security = mock_storage_security_client
-        response1 = mocker.MagicMock(spec=Response)
-        response1.text = '{"data": {"cursor": "1:1"}}'
-        response2 = mocker.MagicMock(spec=Response)
-        response2.text = '{"data": {}}'
+        response1 = mocker.MagicMock(spec=Py42Response)
+        response1.text = '{"cursor": "1:1"}'
+        response2 = mocker.MagicMock(spec=Py42Response)
+        response2.text = "{}"
         mock_storage_security_client.get_plan_security_events.side_effect = [
             response1,
             response2,

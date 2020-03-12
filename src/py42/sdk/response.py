@@ -42,7 +42,7 @@ class Py42Response(object):
 
     @property
     def text(self):
-        return json.dumps(self._data_root)
+        return json.dumps(self._data_root) if type(self._data_root) != str else self._data_root
 
     @property
     def url(self):

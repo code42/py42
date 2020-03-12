@@ -132,8 +132,10 @@ for org_list in sdk.orgs.get_all():
 
 # save a copy of a file from an archive this user has access to into the current working directory.
 stream_response = sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
-for chunk in stream_response.iter_content(128):
-    pass
+with open("/path/to/my/file", 'wb') as f:
+    for chunk in stream_response.iter_content(chunk_size=128):
+        if chunk:
+            f.write(chunk)
 
 # search file events
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery

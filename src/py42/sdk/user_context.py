@@ -14,8 +14,7 @@ class UserContext(object):
     def _get_tenant_id(self):
         try:
             response = self._administration_client.get_current_tenant()
-            tenant = json.loads(response.raw_response_text)
-            return tenant.get(u"tenantUid")
+            return response[u"tenantUid"]
         except Exception as ex:
             message = (
                 u"An error occurred while trying to retrieve the current tenant ID, caused by: {0}"

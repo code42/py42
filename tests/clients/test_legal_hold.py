@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from requests import Response
 
 import py42
 from py42.clients.legal_hold import LegalHoldClient
@@ -32,28 +33,36 @@ MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{"legalHoldMemberships": []}"
 
 class TestLegalHoldClient(object):
     @pytest.fixture
-    def mock_get_all_matters_response(self, mocker, py42_response):
-        py42_response.text = MOCK_GET_ALL_MATTERS_RESPONSE
-
-        return py42_response
-
-    @pytest.fixture
-    def mock_get_all_matters_empty_response(self, mocker, py42_response):
-        py42_response.text = MOCK_EMPTY_GET_ALL_MATTERS_RESPONSE
-
-        return py42_response
+    def mock_get_all_matters_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_GET_ALL_MATTERS_RESPONSE
+        return Py42Response(response)
 
     @pytest.fixture
-    def mock_get_all_matter_custodians_response(self, mocker, py42_response):
-        py42_response.text = MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE
-
-        return py42_response
+    def mock_get_all_matters_empty_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_EMPTY_GET_ALL_MATTERS_RESPONSE
+        return Py42Response(response)
 
     @pytest.fixture
-    def mock_get_all_matter_custodians_empty_response(self, mocker, py42_response):
-        py42_response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
+    def mock_get_all_matter_custodians_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE
+        return Py42Response(response)
 
-        return py42_response
+    @pytest.fixture
+    def mock_get_all_matter_custodians_empty_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
+        return Py42Response(response)
 
     def test_get_legal_hold_by_uid_calls_get_with_uri_and_params(
         self, mock_session, successful_response

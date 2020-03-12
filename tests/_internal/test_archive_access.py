@@ -4,6 +4,7 @@ import json
 import posixpath
 
 import pytest
+from requests import Response
 
 import py42
 import py42._internal.archive_access as archive_access
@@ -235,9 +236,7 @@ class GetFilePathMetadataResponses(object):
 
 class GetWebRestoreJobResponses(object):
 
-    NOT_DONE = """
-        {
-            "data": {
+    NOT_DONE = """{
                 "status": "compressing",
                 "zipResult": true,
                 "name": "WebRestore_13",
@@ -250,17 +249,10 @@ class GetWebRestoreJobResponses(object):
                 "expirationDate": 1556888724979,
                 "creationDate": 1556802324979,
                 "percentComplete": 0
-            },
-            "metadata": {
-                "timestamp": "2019-05-02T08:05:25.052-05:00",
-                "params": {}
             }
-        }
         """
 
-    DONE = """
-        {
-            "data": {
+    DONE = """{
                 "status": "compressing",
                 "zipResult": true,
                 "name": "WebRestore_13",
@@ -273,13 +265,7 @@ class GetWebRestoreJobResponses(object):
                 "expirationDate": 1556888724979,
                 "creationDate": 1556802324979,
                 "percentComplete": 0
-            },
-            "metadata": {
-                "timestamp": "2019-05-02T08:05:25.052-05:00",
-                "params": {}
             }
-        }
-
         """
 
 
@@ -343,10 +329,10 @@ def file_content_chunks():
 
 def mock_start_restore_response(mocker, storage_archive_client, response):
     def mock_start_restore(device_guid, session_id, path_set, num_files, num_dires, size, **kwargs):
-        start_restore_response = mocker.MagicMock(spec=Py42Response)
+        start_restore_response = mocker.MagicMock(spec=Response)
         start_restore_response.text = response
         start_restore_response.status_code = 200
-        return start_restore_response
+        return Py42Response(start_restore_response)
 
     storage_archive_client.start_restore.side_effect = mock_start_restore
 
@@ -354,10 +340,10 @@ def mock_start_restore_response(mocker, storage_archive_client, response):
 def mock_get_restore_status_responses(mocker, storage_archive_client, json_responses):
     responses = []
     for json_response in json_responses:
-        get_restore_status_response = mocker.MagicMock(spec=Py42Response)
+        get_restore_status_response = mocker.MagicMock(spec=Response)
         get_restore_status_response.text = json_response
         get_restore_status_response.status_code = 200
-        responses.append(get_restore_status_response)
+        responses.append(Py42Response(get_restore_status_response))
 
     storage_archive_client.get_restore_status.side_effect = responses
 
@@ -380,9 +366,9 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
 
     file_id_responses = {}
     for response in responses:
-        file_id_param = GetFilePathMetadataResponses.get_file_id_from_request(response)
-        if file_id_param:
-            file_id_responses[file_id_param] = response
+        file_id = GetFilePathMetadataResponses.get_file_id_from_request(response)
+        if file_id:
+            file_id_responses[file_id] = response[0]
         else:
             if None in file_id_responses:
                 raise Exception("Response list already has a response for a 'None' fileId")
@@ -401,13 +387,10 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
         if file_id not in file_id_responses:
             raise Exception("Unexpected request with file_id: {0}".format(file_id))
 
-        get_file_path_metadata_response = mocker.MagicMock(spec=Py42Response)
-        get_file_path_metadata_response.text = file_id_responses[file_id]
-        get_file_path_metadata_response.__getitem__ = lambda _, key: json.loads(
-            get_file_path_metadata_response.text
-        )[key]
-        # get_file_path_metadata_response.__iter__ = lambda _: next()]
-        get_file_path_metadata_response.status_code = 200
+        mock_response = mocker.MagicMock(spec=Response)
+        mock_response.status_code = 200
+        mock_response.text = file_id_responses[file_id]
+        get_file_path_metadata_response = Py42Response(mock_response)
 
         return get_file_path_metadata_response
 
@@ -419,6 +402,7 @@ def get_file_selection(file_type, file_path):
 
 
 def mock_get_file_path_metadata_responses(mocker, storage_archive_client, responses):
+    # responses = [item[0] for item in responses]
     storage_archive_client.get_file_path_metadata.side_effect = get_get_file_path_metadata_mock(
         mocker, WEB_RESTORE_SESSION_ID, DEVICE_GUID, responses
     )
@@ -436,7 +420,7 @@ def mock_walking_to_downloads_folder(mocker, storage_archive_client):
 
 
 def get_response_job_id(response_str):
-    return json.loads(response_str)["data"]["jobId"]
+    return json.loads(response_str)["jobId"]
 
 
 class TestArchiveAccessManager(object):

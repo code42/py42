@@ -10,7 +10,10 @@ class Py42Response(object):
         if self._response.text:
             try:
                 response_dict = json.loads(self._response.text)
-                self._data_root = response_dict.get(u"data") or response_dict
+                if type(response_dict) == dict:
+                    self._data_root = response_dict.get(u"data") or response_dict
+                else:
+                    self._data_root = response_dict
                 self._iter = iter(self._data_root)
             except ValueError:
                 pass
@@ -20,7 +23,7 @@ class Py42Response(object):
 
     def __iter__(self):
         if self._iter:
-            return next(self._iter)
+            return self._iter
 
     @property
     def encoding(self):

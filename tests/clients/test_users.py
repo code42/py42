@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pytest
+from requests import Response
 
 import json
 
@@ -29,22 +30,28 @@ MOCK_text = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
 
 class TestUserClient(object):
     @pytest.fixture
-    def mock_get_all_response(self, mocker, py42_response):
-        py42_response.text = MOCK_GET_USER_RESPONSE
-
-        return py42_response
-
-    @pytest.fixture
-    def mock_get_all_empty_response(self, mocker, py42_response):
-        py42_response.text = MOCK_EMPTY_GET_USER_RESPONSE
-
-        return py42_response
+    def mock_get_all_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_GET_USER_RESPONSE
+        return Py42Response(response)
 
     @pytest.fixture
-    def post_api_mock_response(self, mocker, py42_response):
-        py42_response.text = MOCK_text
+    def mock_get_all_empty_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_EMPTY_GET_USER_RESPONSE
+        return Py42Response(response)
 
-        return py42_response
+    @pytest.fixture
+    def post_api_mock_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_text
+        return Py42Response(response)
 
     def test_post_create_user_is_successful(self, mock_session, post_api_mock_response):
         user_client = UserClient(mock_session)

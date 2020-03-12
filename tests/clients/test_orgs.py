@@ -2,6 +2,7 @@
 import json
 
 import pytest
+from requests import Response
 
 import py42
 from py42.clients.orgs import OrgClient
@@ -16,16 +17,20 @@ MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "orgs": []}"""
 
 class TestOrgClient(object):
     @pytest.fixture
-    def mock_get_orgs_response(self, mocker, py42_response):
-        py42_response.text = MOCK_GET_ORG_RESPONSE
-
-        return py42_response
+    def mock_get_orgs_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_GET_ORG_RESPONSE
+        return Py42Response(response)
 
     @pytest.fixture
-    def mock_get_orgs_empty_response(self, mocker, py42_response):
-        py42_response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
-
-        return py42_response
+    def mock_get_orgs_empty_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
+        return Py42Response(response)
 
     def test_get_org_by_id_calls_get_with_uri_and_params(self, mock_session, successful_response):
         mock_session.get.return_value = successful_response

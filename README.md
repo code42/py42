@@ -13,7 +13,7 @@ of session / authentication management.
 ## Requirements
 
 - Python 2.7.x or 3.5.0+
-- Code42 Server 6.8.x+
+- Code42 Server 6.8.x+ or cloud environment (e.g. console.us.code42.com or crashplan.com)
 
 ## Installation
 
@@ -58,36 +58,30 @@ You should see something like the following:
 
 ```json
 {
-    "data": {
-        "username": "john.doe",
-        "orgName": "ACME Organization",
-        "userId": 123456,
-        "emailPromo": true,
-        "licenses": [],
-        "modificationDate": "2018-08-29T15:32:56.995-05:00",
-        "blocked": false,
-        "usernameIsAnEmail": true,
-        "userUid": "1234567890abcdef",
-        "userExtRef": null,
-        "email": "john.doe@acme.com",
-        "status": "Active",
-        "localAuthenticationOnly": false,
-        "orgUid": "123456789123456789",
-        "passwordReset": true,
-        "active": true,
-        "creationDate": "2012-01-16T11:25:43.545-06:00",
-        "orgType": "BUSINESS",
-        "firstName": "John",
-        "lastName": "Doe",
-        "notes": null,
-        "orgId": 123456,
-        "quotaInBytes": -1,
-        "invited": false
-    },
-    "metadata": {
-        "timestamp": "2019-03-05T06:06:31.438-06:00",
-        "params": {}
-    }
+    "username": "john.doe",
+    "orgName": "ACME Organization",
+    "userId": 123456,
+    "emailPromo": true,
+    "licenses": [],
+    "modificationDate": "2018-08-29T15:32:56.995-05:00",
+    "blocked": false,
+    "usernameIsAnEmail": true,
+    "userUid": "1234567890abcdef",
+    "userExtRef": null,
+    "email": "john.doe@acme.com",
+    "status": "Active",
+    "localAuthenticationOnly": false,
+    "orgUid": "123456789123456789",
+    "passwordReset": true,
+    "active": true,
+    "creationDate": "2012-01-16T11:25:43.545-06:00",
+    "orgType": "BUSINESS",
+    "firstName": "John",
+    "lastName": "Doe",
+    "notes": null,
+    "orgId": 123456,
+    "quotaInBytes": -1,
+    "invited": false
 }
 ```
 
@@ -137,7 +131,9 @@ for org_list in sdk.orgs.get_all():
     orgs = org_list[0]
 
 # save a copy of a file from an archive this user has access to into the current working directory.
-sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
+stream_response = sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
+for chunk in stream_response.iter_content(128):
+    pass
 
 # search file events
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery

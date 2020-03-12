@@ -5,7 +5,7 @@ from py42._internal.session_factory import SessionFactory
 from py42.clients import administration, devices, legal_hold, orgs
 from py42.clients import users
 from py42.modules import archive as arch_mod, security as sec_mod
-from py42.modules import employee_case_management as ecm_mod
+from py42.modules import detection_lists as ecm_mod
 from py42._internal.initialization import SDKDependencies
 from py42.clients.storage import StorageClientFactory
 from py42.sdk.user_context import UserContext
@@ -45,12 +45,10 @@ class TestSDK(object):
         sdk = SDKClient(deps)
         assert type(sdk.devices) == devices.DeviceClient
 
-    def test_has_employee_case_management_module_set(
-        self, mock_session_factory, success_requests_session
-    ):
+    def test_has_detection_lists_module_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
         sdk = SDKClient(deps)
-        assert type(sdk.employee_case_management) == ecm_mod.EmployeeCaseManagementModule
+        assert type(sdk.detection_lists) == ecm_mod.EmployeeCaseManagementModule
 
     def test_has_legal_hold_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)

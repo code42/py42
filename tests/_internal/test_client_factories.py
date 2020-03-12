@@ -11,7 +11,7 @@ from py42.clients import (
     security,
     storage,
 )
-from py42.clients import alerts, employee_case_management, users
+from py42.clients import alerts, detection_lists, users
 from py42._internal import key_value_store
 from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory
 from py42.clients.storage import StorageClientFactory
@@ -148,7 +148,7 @@ class TestMicroserviceClientFactory(object):
             TEST_ROOT_URL, mock_session, session_factory, user_context
         )
         client = factory.get_departing_employee_client()
-        assert type(client) == employee_case_management.departing_employee.DepartingEmployeeClient
+        assert type(client) == detection_lists.departing_employee.DepartingEmployeeClient
 
     def test_get_departing_employee_client_calls_get_stored_value_with_expected_key(
         self, mock_session, session_factory, user_context, key_value_store_client

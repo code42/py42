@@ -65,5 +65,5 @@ class SDKClient(object):
         return self._sdk_dependencies.security_module
 
     @property
-    def employee_case_management(self):
-        return self._sdk_dependencies.employee_case_management_module
+    def detection_lists(self):
+        return self._sdk_dependencies.detection_lists_module

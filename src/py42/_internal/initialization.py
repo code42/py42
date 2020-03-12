@@ -5,7 +5,7 @@ from py42._internal.token_providers import StorageTokenProviderFactory
 from py42.clients.storage import StorageClientFactory
 from py42.modules import (
     archive as archive_module,
-    employee_case_management as ecm_module,
+    detection_lists as ecm_module,
     security as sec_module,
 )
 from py42.sdk.user_context import UserContext
@@ -52,7 +52,7 @@ class SDKDependencies(object):
         self.security_module = sec_module.SecurityModule(
             self.security_client, self.storage_client_factory, microservice_client_factory
         )
-        self.employee_case_management_module = ecm_module.EmployeeCaseManagementModule(
+        self.detection_lists_module = ecm_module.EmployeeCaseManagementModule(
             microservice_client_factory
         )
 

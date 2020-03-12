@@ -2,7 +2,7 @@ import json
 
 from py42._internal.key_value_store import KeyValueStoreClient
 from py42.clients import administration, archive, alerts, devices, legal_hold, orgs, security, users
-from py42.clients.employee_case_management.departing_employee import DepartingEmployeeClient
+from py42.clients.detection_lists.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient
 
 

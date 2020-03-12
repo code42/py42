@@ -1,6 +1,3 @@
-import json
-
-
 def get_all_pages(func, key, *args, **kwargs):
     import py42.sdk.settings as settings
 

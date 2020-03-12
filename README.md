@@ -141,7 +141,7 @@ sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
 
 # search file events
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
-from py42.sdk.queries.fileevents.filters.file_filter import *
+from py42.sdk.queries.fileevents.filters import *
 
 query = FileEventQuery.all(MD5.eq("e804d1eb229298b04522c5504b8131f0"))
 file_events = sdk.securitydata.search(query)

@@ -1,8 +1,9 @@
 from __future__ import print_function
 
 import json as json_lib
-import requests.adapters
 from threading import Lock
+
+import requests.adapters
 
 from py42._internal.compat import str, urljoin, urlparse
 from py42.sdk.response import Py42Response

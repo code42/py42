@@ -1,6 +1,3 @@
-import json
-
-
 class UserContext(object):
     def __init__(self, administration_client):
         self._administration_client = administration_client

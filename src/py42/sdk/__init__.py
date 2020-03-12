@@ -65,5 +65,5 @@ class SDKClient(object):
         return self._sdk_dependencies.security_module
 
     @property
-    def detection_lists(self):
+    def detectionlists(self):
         return self._sdk_dependencies.detection_lists_module

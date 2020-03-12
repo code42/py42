@@ -52,9 +52,7 @@ class SDKDependencies(object):
         self.security_module = sec_module.SecurityModule(
             self.security_client, self.storage_client_factory, microservice_client_factory
         )
-        self.detection_lists_module = ecm_module.EmployeeCaseManagementModule(
-            microservice_client_factory
-        )
+        self.detection_lists_module = ecm_module.DetectionListsModule(microservice_client_factory)
 
     def _set_v3_session(self, host_address, session_factory, root_session):
         self.root_session = root_session

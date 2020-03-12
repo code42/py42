@@ -48,7 +48,7 @@ class TestSDK(object):
     def test_has_detection_lists_module_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
         sdk = SDKClient(deps)
-        assert type(sdk.detection_lists) == ecm_mod.EmployeeCaseManagementModule
+        assert type(sdk.detectionlists) == ecm_mod.DetectionListsModule
 
     def test_has_legal_hold_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)

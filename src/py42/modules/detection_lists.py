@@ -1,4 +1,4 @@
-class EmployeeCaseManagementModule(object):
+class DetectionListsModule(object):
     def __init__(self, microservice_client_factory):
         self._microservice_client_factory = microservice_client_factory
 

@@ -2,10 +2,10 @@ import pytest
 
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42.clients.detection_lists.departing_employee import DepartingEmployeeClient
-from py42.modules.detection_lists import EmployeeCaseManagementModule
+from py42.modules.detection_lists import DetectionListsModule
 
 
-class TestEmployeeCaseManagementModule(object):
+class TestDetectionListsModule(object):
     @pytest.fixture
     def client_factory(self, mocker):
         return mocker.MagicMock(spec=MicroserviceClientFactory)
@@ -27,7 +27,7 @@ class TestEmployeeCaseManagementModule(object):
         client_factory.get_departing_employee_client.side_effect = self.return_departing_employee_client(
             departing_employee_client
         )
-        ecm_module = EmployeeCaseManagementModule(client_factory)
+        ecm_module = DetectionListsModule(client_factory)
         ecm_module.departing_employee.get_by_username("Test")
         departing_employee_client.get_by_username.assert_called_once_with("Test")
 
@@ -37,7 +37,7 @@ class TestEmployeeCaseManagementModule(object):
         client_factory.get_departing_employee_client.side_effect = self.return_departing_employee_client(
             departing_employee_client
         )
-        ecm_module = EmployeeCaseManagementModule(client_factory)
+        ecm_module = DetectionListsModule(client_factory)
         first = ecm_module.departing_employee
         second = ecm_module.departing_employee
         assert first is second

@@ -29,12 +29,13 @@ of the returned JSON object.
 Renamed methods to reduce redundancy:
 
 - `SDK` > `SDKClient`
-    - `create_from_local_account()` > `from_local_account()`
+    - `create_using_local_account()` > `from_local_account()`
     - `administration` > `serveradmin`
     - `legal_hold` > `legalhold`
     - `storage` > `storageacess`
     - `security` > `securitydata`
     - `user_context` > `usercontext`
+    - `employee_case_management` > `detectionlists`
     
 - `StorageClientFactory`
     - `get_storage_client_from_device_guid()` > `from_device_guid()`

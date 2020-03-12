@@ -44,7 +44,7 @@ Import a couple essentials
 Initialize the client.
 
 ```python
->>> sdk = sdk.from_local_account("https://console.us.code42.com", "john.doe", "password")
+>>> sdk = py42.sdk.from_local_account("https://console.us.code42.com", "john.doe", "password")
 ```
 
 Get and print your user information.

@@ -27,8 +27,7 @@ class C42ApiV3TokenProvider(TokenProvider):
         params = {u"useBody": True}
         try:
             response = self._auth_session.get(uri, params=params)
-            response_data = json.loads(response.text)[u"data"]
-            token = str(response_data[V3_AUTH])
+            token = response[V3_AUTH]
             return token
         except Exception as ex:
             message = u"An error occurred while trying to retrieve a jwt token, caused by {0}"
@@ -45,8 +44,7 @@ class C42ApiV1TokenProvider(TokenProvider):
         uri = u"/api/AuthToken"
         try:
             response = self._auth_session.post(uri, data=None)
-            response_data = json.loads(response.text)[u"data"]
-            token = u"{0}-{1}".format(response_data[0], response_data[1])
+            token = u"{0}-{1}".format(response[0], response[1])
             return token
         except Exception as ex:
             message = u"An error occurred while trying to retrieve a V1 auth token, caused by {0}"
@@ -63,8 +61,7 @@ class C42APITmpAuthProvider(TokenProvider):
         try:
             if self._cached_info is None:
                 response = self.get_tmp_auth_token()  # pylint: disable=assignment-from-no-return
-                logon_info = json.loads(response.text)[u"data"]
-                self._cached_info = logon_info
+                self._cached_info = response
             return self._cached_info
         except Exception as ex:
             message = (

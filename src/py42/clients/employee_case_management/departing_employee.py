@@ -119,21 +119,19 @@ class DepartingEmployeeClient(BaseClient):
         # Therefore, we get current values first as to prevent clearing them when not provided.
         case = self._get_case_by_id(case_id)
 
-        changed_status = status is not None and status != case.get(u"status")
-        changed_alerts_enabled = alerts_enabled is not None and alerts_enabled != case.get(
-            u"alertsEnabled"
+        changed_status = status is not None and status != case[u"status"]
+        changed_alerts_enabled = (
+            alerts_enabled is not None and alerts_enabled != case[u"alertsEnabled"]
         )
 
-        display_name = display_name if display_name else case.get(u"displayName")
-        notes = notes if notes else case.get(u"notes")
+        display_name = display_name if display_name else case[u"displayName"]
+        notes = notes if notes else case[u"notes"]
         departure_date = (
-            convert_timestamp_to_str(departure_epoch)
-            if departure_epoch
-            else case.get(u"departureDate")
+            convert_timestamp_to_str(departure_epoch) if departure_epoch else case[u"departureDate"]
         )
-        alerts_enabled = alerts_enabled if changed_alerts_enabled else case.get(u"alertsEnabled")
-        status = status if changed_status else case.get(u"status")
-        cloud_usernames = cloud_usernames if cloud_usernames else case.get(u"cloudUsernames")
+        alerts_enabled = alerts_enabled if changed_alerts_enabled else case[u"alertsEnabled"]
+        status = status if changed_status else case[u"status"]
+        cloud_usernames = cloud_usernames if cloud_usernames else case[u"cloudUsernames"]
 
         uri = self._uri_prefix.format(u"update")
         data = {
@@ -156,15 +154,14 @@ class DepartingEmployeeClient(BaseClient):
     def _get_case_from_username(self, tenant_id, username):
         matches = None
         for page in self._get_all_departing_employees(tenant_id):
-            matches = [c for c in page if c.get(u"userName") == username]
+            matches = [c for c in page if c[u"userName"] == username]
             if matches:
                 break
         return matches[0] if matches else None
 
     def _get_all_departing_employees(self, tenant_id):
         for page in self.get_all(tenant_id):
-            yield json.loads(page.text).get(u"cases")
+            yield page[u"cases"]
 
     def _get_case_by_id(self, case_id):
-        response = self.get_by_id(case_id)
-        return json.loads(response.text)
+        return self.get_by_id(case_id)

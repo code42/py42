@@ -12,6 +12,7 @@ from py42._internal.token_providers import (
     C42ApiV3TokenProvider,
 )
 from py42._internal.session import Py42Session
+from py42.sdk.response import Py42Response
 
 USERNAME = "username"
 PASSWORD = "password"
@@ -39,7 +40,7 @@ def v1_auth_provider(mocker):
         response = mocker.MagicMock(spec=Response)
         response.text = json.dumps({"data": [V1_TOKEN_PART1, V1_TOKEN_PART2]})
         response.status_code = 200
-        return response
+        return Py42Response(response)
 
     auth_session.post.side_effect = mock_post
     provider = C42ApiV1TokenProvider(auth_session)
@@ -55,7 +56,7 @@ def v3_auth_provider(mocker):
         response = mocker.MagicMock(spec=Response)
         response.text = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
         response.status_code = 200
-        return response
+        return Py42Response(response)
 
     auth_session.get.side_effect = mock_get
     provider = C42ApiV3TokenProvider(auth_session)
@@ -73,7 +74,7 @@ def login_token_provider(mocker):
             {"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}}
         )
         response.status_code = 200
-        return response
+        return Py42Response(response)
 
     auth_session.post.side_effect = mock_post
     return C42APILoginTokenProvider(auth_session, "my", "device-guid", "destination-guid")
@@ -90,7 +91,7 @@ def storage_auth_token_provider(mocker):
             {"data": {"loginToken": TMP_LOGIN_TOKEN, "serverUrl": STORAGE_HOST_ADDRESS}}
         )
         response.status_code = 200
-        return response
+        return Py42Response(response)
 
     auth_session.post.side_effect = mock_post
     return C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid")
@@ -107,7 +108,7 @@ def mock_successful_server_env_get(mocker):
             response = mocker.MagicMock(spec=Response)
             response.text = json.dumps({"data": {"v3_user_token": V3_TOKEN}})
             response.status_code = 200
-        return response
+        return Py42Response(response)
 
     return mock_get
 
@@ -118,7 +119,7 @@ def mock_unsuccessful_server_env_get(mocker):
         response = mocker.MagicMock(spec=Response)
         response.text = json.dumps({})
         response.status_code = 200
-        return response
+        return Py42Response(response)
 
     return mock_get
 

@@ -37,7 +37,7 @@ class Py42Response(object):
         return self._response.iter_content(chunk_size=chunk_size, decode_unicode=decode_unicode)
 
     @property
-    def body_content(self):
+    def raw_text(self):
         return self._response.text
 
     @property

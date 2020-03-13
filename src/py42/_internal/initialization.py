@@ -6,7 +6,7 @@ from py42.clients.storage import StorageClientFactory
 from py42.modules import (
     archive as archive_module,
     detection_lists as ecm_module,
-    security as sec_module,
+    security_data as sec_module,
 )
 from py42.sdk.user_context import UserContext
 

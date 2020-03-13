@@ -4,7 +4,7 @@ from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42.clients import administration, devices, legal_hold, orgs
 from py42.clients import users
-from py42.modules import archive as arch_mod, security as sec_mod
+from py42.modules import archive as arch_mod, security_data as sec_mod
 from py42.modules import detection_lists as ecm_mod
 from py42._internal.initialization import SDKDependencies
 from py42.clients.storage import StorageClientFactory

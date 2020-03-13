@@ -3,10 +3,10 @@ import pytest
 
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42.clients.file_event import FileEventClient
-from py42.clients.security import SecurityClient
+from py42.clients.security_data import SecurityClient
 from py42.clients.storage.security import StorageSecurityClient
 from py42.clients.storage import StorageClient, StorageClientFactory
-from py42.modules.security import PlanStorageInfo, SecurityModule
+from py42.modules.security_data import PlanStorageInfo, SecurityModule
 from py42.sdk.response import Py42Response
 
 RAW_QUERY = "RAW JSON QUERY"

@@ -14,7 +14,7 @@ class Py42Response(object):
             else:
                 self._data_root = response_dict
         except ValueError:
-            self._data_root = self._response.text or ""
+            self._data_root = self._response.text or u""
 
         # looping over a Py42Response will loop through list items, dict keys, or str characters
         self._iter = iter(self._data_root)

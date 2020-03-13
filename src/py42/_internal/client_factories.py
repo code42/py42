@@ -1,7 +1,16 @@
 import json
 
 from py42._internal.key_value_store import KeyValueStoreClient
-from py42.clients import administration, alerts, archive, devices, legal_hold, orgs, security, users
+from py42.clients import (
+    administration,
+    alerts,
+    archive,
+    devices,
+    legal_hold,
+    orgs,
+    security_data,
+    users,
+)
 from py42.clients.detection_lists.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient
 
@@ -29,7 +38,7 @@ class AuthorityClientFactory(object):
         return archive.ArchiveClient(self.session)
 
     def create_security_client(self):
-        return security.SecurityClient(self.session)
+        return security_data.SecurityClient(self.session)
 
 
 class MicroserviceClientFactory(object):

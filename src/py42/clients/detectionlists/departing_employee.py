@@ -117,21 +117,23 @@ class DepartingEmployeeClient(BaseClient):
 
         # The behavior of the `update` API is to clear values that are not provided.
         # Therefore, we get current values first as to prevent clearing them when not provided.
-        case = self._get_case_by_id(case_id)
+        case = json.loads(self._get_case_by_id(case_id).text)
 
-        changed_status = status is not None and status != case[u"status"]
-        changed_alerts_enabled = (
-            alerts_enabled is not None and alerts_enabled != case[u"alertsEnabled"]
+        changed_status = status is not None and status != case.get(u"status")
+        changed_alerts_enabled = alerts_enabled is not None and alerts_enabled != case.get(
+            u"alertsEnabled"
         )
 
-        display_name = display_name if display_name else case[u"displayName"]
-        notes = notes if notes else case[u"notes"]
+        display_name = display_name if display_name else case.get(u"displayName")
+        notes = notes if notes else case.get(u"notes")
         departure_date = (
-            convert_timestamp_to_str(departure_epoch) if departure_epoch else case[u"departureDate"]
+            convert_timestamp_to_str(departure_epoch)
+            if departure_epoch
+            else case.get(u"departureDate")
         )
-        alerts_enabled = alerts_enabled if changed_alerts_enabled else case[u"alertsEnabled"]
-        status = status if changed_status else case[u"status"]
-        cloud_usernames = cloud_usernames if cloud_usernames else case[u"cloudUsernames"]
+        alerts_enabled = alerts_enabled if changed_alerts_enabled else case.get(u"alertsEnabled")
+        status = status if changed_status else case.get(u"status")
+        cloud_usernames = cloud_usernames if cloud_usernames else case.get(u"cloudUsernames")
 
         uri = self._uri_prefix.format(u"update")
         data = {

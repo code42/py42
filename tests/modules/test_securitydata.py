@@ -4,7 +4,7 @@ import pytest
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42.clients.file_event import FileEventClient
 from py42.clients.securitydata import SecurityClient
-from py42.clients.storage.security import StorageSecurityClient
+from py42.clients.storage.securitydata import StorageSecurityClient
 from py42.clients.storage import StorageClient, StorageClientFactory
 from py42.modules.securitydata import PlanStorageInfo, SecurityModule
 from py42.sdk.response import Py42Response
@@ -354,7 +354,7 @@ class TestSecurityModule(object):
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
-        mock_storage_client.security = mock_storage_security_client
+        mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
@@ -382,7 +382,7 @@ class TestSecurityModule(object):
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
-        mock_storage_client.security = mock_storage_security_client
+        mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
         response2 = mocker.MagicMock(spec=Py42Response)
@@ -405,7 +405,7 @@ class TestSecurityModule(object):
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
-        mock_storage_client.security = mock_storage_security_client
+        mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
@@ -426,7 +426,7 @@ class TestSecurityModule(object):
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
-        mock_storage_client.security = mock_storage_security_client
+        mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
         response2 = mocker.MagicMock(spec=Py42Response)
@@ -450,7 +450,7 @@ class TestSecurityModule(object):
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
-        mock_storage_client.security = mock_storage_security_client
+        mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
@@ -476,7 +476,7 @@ class TestSecurityModule(object):
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
-        mock_storage_client.security = mock_storage_security_client
+        mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
         response2 = mocker.MagicMock(spec=Py42Response)
@@ -497,7 +497,7 @@ class TestSecurityModule(object):
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
-        mock_storage_client.security = mock_storage_security_client
+        mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
@@ -518,7 +518,7 @@ class TestSecurityModule(object):
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
-        mock_storage_client.security = mock_storage_security_client
+        mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
         response2 = mocker.MagicMock(spec=Py42Response)

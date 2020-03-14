@@ -8,7 +8,7 @@ from py42.modules import archive as arch_mod, securitydata as sec_mod
 from py42.modules import detectionlists as ecm_mod
 from py42._internal.initialization import SDKDependencies
 from py42.clients.storage import StorageClientFactory
-from py42.sdk.user_context import UserContext
+from py42.sdk.usercontext import UserContext
 
 from py42.sdk import SDKClient
 

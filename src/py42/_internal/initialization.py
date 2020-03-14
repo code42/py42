@@ -8,7 +8,7 @@ from py42.modules import (
     detectionlists as ecm_module,
     securitydata as sec_module,
 )
-from py42.sdk.user_context import UserContext
+from py42.sdk.usercontext import UserContext
 
 
 def _get_storage_client_factory(session_factory, archive_locator_factory):

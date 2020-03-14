@@ -1,6 +1,6 @@
 from py42.clients import BaseClient
 from py42.clients.storage.archive import StorageArchiveClient
-from py42.clients.storage.security import StorageSecurityClient
+from py42.clients.storage.securitydata import StorageSecurityClient
 
 
 class StorageClient(BaseClient):
@@ -14,7 +14,7 @@ class StorageClient(BaseClient):
         return self._archive_client
 
     @property
-    def security(self):
+    def securitydata(self):
         return self._security_client
 
 

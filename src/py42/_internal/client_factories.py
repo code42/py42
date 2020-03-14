@@ -11,7 +11,7 @@ from py42.clients import (
     securitydata,
     users,
 )
-from py42.clients.detection_lists.departing_employee import DepartingEmployeeClient
+from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient
 
 

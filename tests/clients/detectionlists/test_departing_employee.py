@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from py42.clients.detection_lists.departing_employee import DepartingEmployeeClient
+from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.sdk.response import Py42Response
 
 from tests.conftest import TENANT_ID_FROM_RESPONSE
@@ -80,7 +80,7 @@ class TestDepartingEmployeeClient(object):
         # Useful for testing get_by_username, which first gets all cases.
         # Also useful in update, which checks current values of case
         mock = mocker.patch(
-            "py42.clients.detection_lists.departing_employee.DepartingEmployeeClient.get_by_id"
+            "py42.clients.detectionlists.departing_employee.DepartingEmployeeClient.get_by_id"
         )
         py42_response.text = _GET_CASE_DETAILS_RESPONSE
         return py42_response

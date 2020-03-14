@@ -115,7 +115,7 @@ class SecurityModule(object):
         if client is None:
             client = self._storage_client_factory.from_plan_info(
                 plan_storage_info.plan_uid, plan_storage_info.destination_guid
-            ).security
+            ).securitydata
 
             # store this client via its guid so that we don't have to call StorageAuthToken
             # just to determine what storage client to use

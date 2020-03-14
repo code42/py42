@@ -5,8 +5,8 @@ from py42._internal.token_providers import StorageTokenProviderFactory
 from py42.clients.storage import StorageClientFactory
 from py42.modules import (
     archive as archive_module,
-    detection_lists as ecm_module,
-    security_data as sec_module,
+    detectionlists as ecm_module,
+    securitydata as sec_module,
 )
 from py42.sdk.user_context import UserContext
 

@@ -6,9 +6,9 @@ from py42.clients import (
     archive,
     devices,
     file_event,
-    legal_hold,
+    legalhold,
     orgs,
-    security_data,
+    securitydata,
     storage,
 )
 from py42.clients import alerts, detection_lists, users
@@ -75,7 +75,7 @@ class TestAuthorityClientFactory(object):
     def test_create_legal_hold_client(self, mock_session):
         factory = AuthorityClientFactory(mock_session)
         client = factory.create_legal_hold_client()
-        assert type(client) == legal_hold.LegalHoldClient
+        assert type(client) == legalhold.LegalHoldClient
 
     def test_create_org_client(self, mock_session):
         factory = AuthorityClientFactory(mock_session)
@@ -85,7 +85,7 @@ class TestAuthorityClientFactory(object):
     def test_create_security_client(self, mock_session):
         factory = AuthorityClientFactory(mock_session)
         client = factory.create_security_client()
-        assert type(client) == security_data.SecurityClient
+        assert type(client) == securitydata.SecurityClient
 
     def test_create_user_client(self, mock_session):
         factory = AuthorityClientFactory(mock_session)

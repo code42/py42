@@ -6,9 +6,9 @@ from py42.clients import (
     alerts,
     archive,
     devices,
-    legal_hold,
+    legalhold,
     orgs,
-    security_data,
+    securitydata,
     users,
 )
 from py42.clients.detection_lists.departing_employee import DepartingEmployeeClient
@@ -32,13 +32,13 @@ class AuthorityClientFactory(object):
         return orgs.OrgClient(self.session)
 
     def create_legal_hold_client(self):
-        return legal_hold.LegalHoldClient(self.session)
+        return legalhold.LegalHoldClient(self.session)
 
     def create_archive_client(self):
         return archive.ArchiveClient(self.session)
 
     def create_security_client(self):
-        return security_data.SecurityClient(self.session)
+        return securitydata.SecurityClient(self.session)
 
 
 class MicroserviceClientFactory(object):

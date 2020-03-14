@@ -2,10 +2,10 @@ import pytest
 
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
-from py42.clients import administration, devices, legal_hold, orgs
+from py42.clients import administration, devices, legalhold, orgs
 from py42.clients import users
-from py42.modules import archive as arch_mod, security_data as sec_mod
-from py42.modules import detection_lists as ecm_mod
+from py42.modules import archive as arch_mod, securitydata as sec_mod
+from py42.modules import detectionlists as ecm_mod
 from py42._internal.initialization import SDKDependencies
 from py42.clients.storage import StorageClientFactory
 from py42.sdk.user_context import UserContext
@@ -53,7 +53,7 @@ class TestSDK(object):
     def test_has_legal_hold_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
         sdk = SDKClient(deps)
-        assert type(sdk.legalhold) == legal_hold.LegalHoldClient
+        assert type(sdk.legalhold) == legalhold.LegalHoldClient
 
     def test_has_org_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)

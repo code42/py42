@@ -216,7 +216,7 @@ for page in users.get_users():
     - `get_case_by_username()`
     - `get_case_by_id()`
     - `update_case()`
-    Access via `py42.SDK.detection_lists.departing_employee`
+    Access via `py42.SDK.employee_case_management.departing_employee`
 - Added `get_current_tenant` to `py42.SDK.administration`.
 - Added `py42.SDK.user_context.get_current_tenant_id`.
 

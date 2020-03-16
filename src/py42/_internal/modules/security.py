@@ -1,7 +1,9 @@
 import json
 from threading import Lock
+from requests.exceptions import HTTPError
 
 import py42.util as util
+from py42.exceptions import Py42SecurityPlanConnectionError, Py42DestinationNotFoundError
 
 
 class SecurityModule(object):
@@ -21,15 +23,17 @@ class SecurityModule(object):
         try:
             response = self._security_client.get_security_event_locations(user_uid)
             locations = util.get_obj_from_response(response, u"securityPlanLocationsByDestination")
-        except Exception:
-            # TODO: only pass if the exception is caused by a 404
-            pass
+        except HTTPError as err:
+            if err.response.status_code == 404:
+                Py42DestinationNotFoundError("Could not find requested resource")
+            else:
+                raise
 
         if locations:
             plan_destination_map = _get_plan_destination_map(locations)
             selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
             if not selected_plan_infos:
-                raise Exception(
+                raise Py42SecurityPlanConnectionError(
                     u"Could not establish a connection to retrieve security events for user {0}".format(
                         user_uid
                     )

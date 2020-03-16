@@ -1,5 +1,7 @@
 from threading import Lock
+from requests import HTTPError
 
+from py42.exceptions import Py42StorageSessionInitializationError
 from py42._internal.compat import str
 
 
@@ -22,9 +24,9 @@ class StorageSessionManager(object):
                     if session is None:
                         session = self.create_storage_session(url, login_provider)
                         self._session_cache.update({url.lower(): session})
-        except Exception as ex:
+        except HTTPError as ex:
             message = u"Failed to create or retrieve session, caused by: {0}".format(str(ex))
-            raise Exception(message)
+            raise Py42StorageSessionInitializationError(message)
         return session
 
     def create_storage_session(self, url, login_provider):

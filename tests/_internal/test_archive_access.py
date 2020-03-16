@@ -20,6 +20,7 @@ from py42._internal.client_factories import StorageClientFactory
 from py42._internal.clients.archive import ArchiveClient
 from py42._internal.clients.storage.archive import StorageArchiveClient
 from py42._internal.clients.storage.storage import StorageClient
+from py42.exceptions import Py42ArchiveFileNotFoundError
 
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"
@@ -690,7 +691,7 @@ class TestArchiveAccessor(object):
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
         invalid_path_in_downloads_folder = u"/Users/qa/Downloads/吞"
-        with pytest.raises(Exception) as e:
+        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
             archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
         expected_message = u"File not found in archive for device device-guid at path {0}".format(
             invalid_path_in_downloads_folder
@@ -706,7 +707,7 @@ class TestArchiveAccessor(object):
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
         invalid_path_in_downloads_folder = "C:/Users/qa/Downloads/file-not-in-archive.txt"
-        with pytest.raises(Exception) as e:
+        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
             archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
         expected_message = u"File not found in archive for device device-guid at path {0}".format(
             invalid_path_in_downloads_folder
@@ -722,7 +723,7 @@ class TestArchiveAccessor(object):
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
         invalid_path_in_downloads_folder = "c:/Users/qa/Downloads/file-not-in-archive.txt"
-        with pytest.raises(Exception) as e:
+        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
             archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
         expected_message = u"File not found in archive for device device-guid at path {0}".format(
             invalid_path_in_downloads_folder

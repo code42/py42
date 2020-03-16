@@ -3,7 +3,7 @@ import time
 from collections import namedtuple
 
 import py42.util as util
-from py42.exceptions import ArchiveFileNotFoundError
+from py42.exceptions import Py42ArchiveFileNotFoundError
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
 
@@ -74,7 +74,7 @@ class ArchiveAccessor(object):
             if root[u"path"].lower() == path_root.lower():
                 return self._walk_tree(root, path_parts[1:])
 
-        raise ArchiveFileNotFoundError(self._device_guid, file_path)
+        raise Py42ArchiveFileNotFoundError(self._device_guid, file_path)
 
     def _walk_tree(self, current_node, remaining_path_components):
         if not remaining_path_components or not remaining_path_components[0]:
@@ -90,7 +90,7 @@ class ArchiveAccessor(object):
             if child[u"path"].lower() == target_child_path.lower():
                 return self._walk_tree(child, remaining_path_components[1:])
 
-        raise ArchiveFileNotFoundError(self._device_guid, target_child_path)
+        raise Py42ArchiveFileNotFoundError(self._device_guid, target_child_path)
 
     def _get_children(self, node_id=None):
         return self._storage_archive_client.get_archive_tree_node(

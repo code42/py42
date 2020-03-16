@@ -41,19 +41,3 @@ class TestUserContext(object):
         expected = "00999888-7776-6655-5444-333222111000"
         actual = UserContext(successful_administration_client).get_current_tenant_id()
         assert actual == expected
-
-    def test_get_current_tenant_id_when_administration_client_throws_also_throws(self, mocker):
-        administration_client = mocker.MagicMock(spec=AdministrationClient)
-
-        def mock_get_current_tenant():
-            raise Exception("Mock error!")
-
-        administration_client.get_current_tenant.side_effect = mock_get_current_tenant
-
-        with pytest.raises(Exception) as e:
-            _ = UserContext(administration_client).get_current_tenant_id()
-
-        assert (
-            e.value.args[0]
-            == "An error occurred while trying to retrieve the current tenant ID, caused by: Mock error!"
-        )

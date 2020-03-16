@@ -1,6 +1,3 @@
-from py42._internal.compat import str
-
-
 class Py42Error(Exception):
     """A generic, Py42-specific exception."""
 
@@ -21,26 +18,17 @@ class Py42InitializationError(Py42Error):
         )
 
 
-class UnauthorizedError(Py42Error):
-    def __init__(self, request_uri):
-        self.request_uri = request_uri
-        message = "You are not authorized to make this request to {0}.".format(request_uri)
-        super(UnauthorizedError, self).__init__(message)
+class Py42AuthenticationError(Py42Error):
+    def __init__(self, error_message):
+        super(Py42AuthenticationError, self).__init__(error_message)
 
 
-class Py42RequestError(Py42Error):
-    def __init__(self, message, base_exception):
-        self.base_exception = base_exception
-        super(Py42RequestError, self).__init__(
-            u"{0}, caused by {1}".format(message, str(base_exception))
-        )
-
-
-class ArchiveFileNotFoundError(Py42Error):
+class Py42ArchiveFileNotFoundError(Py42Error):
     def __init__(self, device_guid, file_path):
-        self.device_guide = device_guid
-        self.file_path = file_path
-        super(ArchiveFileNotFoundError, self).__init__()
+        message = u"File not found in archive " u"for device {0} at path {1}".format(
+            device_guid, file_path
+        )
+        super(Py42ArchiveFileNotFoundError, self).__init__(message)
 
 
 class Py42FeatureUnavailableError(Py42Error):
@@ -48,3 +36,18 @@ class Py42FeatureUnavailableError(Py42Error):
         super(Py42FeatureUnavailableError, self).__init__(
             u"You may be trying to use a feature that is unavailable in your environment."
         )
+
+
+class Py42SecurityPlanConnectionError(Py42Error):
+    def __init__(self, error_message):
+        super(Py42SecurityPlanConnectionError, self).__init__(error_message)
+
+
+class Py42StorageSessionInitializationError(Py42Error):
+    def __init__(self, error_message):
+        super(Py42StorageSessionInitializationError, self).__init__(error_message)
+
+
+class Py42DestinationNotFoundError(Py42Error):
+    def __init__(self, error_message):
+        super(Py42DestinationNotFoundError, self).__init__(error_message)

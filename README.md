@@ -120,15 +120,19 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 # clients are organized by feature groups and accessible under the sdk object
 
 # get information about the current user.
-current_user = sdk.users.get_current() 
+current_user = sdk.users.get_current()
 
 # page through all devices available to this user.
 for device_list in sdk.devices.get_all():
-    device = device_list[0]
+    devices = device_list["computers"]
+    for device in devices:
+        print(device)
 
 # page through all orgs available to this user.
 for org_list in sdk.orgs.get_all():
-    orgs = org_list[0]
+    orgs = org_list["orgs"]
+    for org in orgs:
+        print(org)
 
 # save a copy of a file from an archive this user has access to into the current working directory.
 stream_response = sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")

@@ -8,11 +8,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 0.6.0 - 2020-03-16
+
+## Removed
+
+- The following methods from `py42.util`:
+    - `get_obj_from_response()`
+    - `filter_out_none()`
+    - `print_dict()`
+
+- `py42.debug` module. Use `py42.settings.debug` instead.
+- `py42.util` module. Use `py42.sdk.util` instead.
+- `ArchiveModule.download_from_backup()`. Use `ArchiveModule.stream_from_backup()` instead.
 
 ## Changed
 
-Renamed client methods to reduce redundancy:
+All client methods now return a `Py42Response` object that simplifies accessing the most meaningful parts
+of the returned JSON object.
+
+Renamed methods to reduce redundancy:
+
+- `SDK` > `SDKClient`
+    - `create_using_local_account()` > `from_local_account()`
+    - `administration` > `serveradmin`
+    - `legal_hold` > `legalhold`
+    - `storage` > `storageacess`
+    - `security` > `securitydata`
+    - `user_context` > `usercontext`
+    - `employee_case_management` > `detectionlists`
+    
+- `StorageClientFactory`
+    - `get_storage_client_from_device_guid()` > `from_device_guid()`
+    - `get_storage_client_from_plan_uid()` > `from_plan_info()`
+    
+- `StorageClient`
+    - `security` > `securitydata`
 
 - `StorageSecurityClient`
     - `get_security_detection_events_for_plan()` > `get_plan_security_events()`
@@ -204,7 +234,7 @@ for page in users.get_users():
 ### Changed
 
 - Removed `SecurityModule.get_security_event_locations()`. Use `SecurityClient.get_security_event_locations()` instead.
-- Removed `get_normalized_security_event_plan_info().` Support for pre-6.7 format security event plan info responses has
+- Removed `get_normalized_security_event_plan_info().` Support for pre-6.7 format securitydata event plan info responses has
 been removed, and as a result this method is no longer necessary. Use `SecurityClient.get_security_event_locations()` instead.
 
 ### Fixed
@@ -283,7 +313,7 @@ These had no effect.
 
 ### Fixed
 
-- Issue with creating security plan clients when a session for one client failed to be created
+- Issue with creating securitydata plan clients when a session for one client failed to be created
 
 ## 0.1.8 - 2019-09-11
 
@@ -298,14 +328,14 @@ These had no effect.
 
 - Bug in authentication handling logic that caused authentication tokens to not automatically renew properly when
  they expired.
-- Bug in creating security plan clients that caused some clients to not be created for users with multiple plans or
+- Bug in creating securitydata plan clients that caused some clients to not be created for users with multiple plans or
  archives
 
 ## 0.1.6 – 2019-07-30
 
 ### Fixed
 
-- Issues with unicode support in `security.search_file_events()` and `archive.download_from_backup()`
+- Issues with unicode support in `securitydata.search_file_events()` and `archive.download_from_backup()`
 
 ## 0.1.5 - 2019-07-13
 
@@ -340,7 +370,7 @@ file paths that were deleted would not be downloaded.
 
 ### Added
 
-- `SDK.security.search_file_events()` to search for file events using the Forensic File Search (FFS) service
+- `SDK.securitydata.search_file_events()` to search for file events using the Forensic File Search (FFS) service
 - `py42.sdk.file_event_query` module with classes to easily build file event queries
 - Ability to print various levels of debug statements for troubleshooting purposes. See `settings.debug_level`
 - [pytest](https://docs.pytest.org/) test framework

@@ -8,7 +8,7 @@ from requests import Response
 
 import py42
 import py42._internal.archive_access as archive_access
-import py42.util
+import py42.sdk.util
 from py42._internal.archive_access import (
     ArchiveAccessor,
     ArchiveAccessorManager,
@@ -16,12 +16,10 @@ from py42._internal.archive_access import (
     FileType,
     RestoreJobManager,
 )
-from py42._internal.response import Py42Response
-from py42._internal.client_factories import StorageClientFactory
-from py42._internal.clients.archive import ArchiveClient
-from py42._internal.clients.storage.archive import StorageArchiveClient
-from py42._internal.clients.storage.storage import StorageClient
-
+from py42.sdk.response import Py42Response
+from py42.clients.archive import ArchiveClient
+from py42.clients.storage.archive import StorageArchiveClient
+from py42.clients.storage import StorageClient, StorageClientFactory
 
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"
@@ -55,15 +53,10 @@ PATH_TO_FILE_IN_DOWNLOADS_FOLDER = "/Users/qa/Downloads/terminator-genisys.jpg"
 class GetFilePathMetadataResponses(object):
     @staticmethod
     def get_file_id_from_request(response):
-        file_id = None
-        request_params = json.loads(response)["metadata"]["params"]
-        if "fileId" in request_params:
-            file_id = request_params["fileId"]
-        return file_id
+        return response[1]
 
-    NULL_ID = """
-        {
-            "data": [
+    NULL_ID = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2018-06-22T10:08:37.000-05:00",
@@ -77,20 +70,13 @@ class GetFilePathMetadataResponses(object):
                     "type": "directory",
                     "id": "885bf69dc0168f3624435346d7bf4836"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-19T07:35:34.684-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "0sds7et5oy50u13dh4tctm708m"
-                }
-            }
-        }
-        """
+            ]
+        """,
+        None,
+    )
 
-    ROOT = """
-        {
-            "data": [
+    ROOT = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2018-06-22T10:02:44.000-05:00",
@@ -104,21 +90,13 @@ class GetFilePathMetadataResponses(object):
                     "type": "directory",
                     "id": "c2dc0a9bc27be41cb84d6ae91f6a0974"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-19T08:28:29.479-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "03lozi81xkm3p01zt21vh352r8",
-                    "fileId": "885bf69dc0168f3624435346d7bf4836"
-                }
-            }
-        }
-        """
+            ]
+        """,
+        "885bf69dc0168f3624435346d7bf4836",
+    )
 
-    USERS = """
-        {
-            "data": [
+    USERS = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2018-06-19T14:58:36.000-05:00",
@@ -132,21 +110,13 @@ class GetFilePathMetadataResponses(object):
                     "type": "directory",
                     "id": "8f939e90bae37f9ec860ced08c5ffb7f"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-22T13:10:59.779-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8",
-                    "fileId": "c2dc0a9bc27be41cb84d6ae91f6a0974"
-                }
-            }
-        }
-        """
+            ]
+        """,
+        "c2dc0a9bc27be41cb84d6ae91f6a0974",
+    )
 
-    USERS_QA = """
-        {
-            "data": [
+    USERS_QA = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2018-06-19T14:54:46.000-05:00",
@@ -225,22 +195,13 @@ class GetFilePathMetadataResponses(object):
                     "type": "directory",
                     "id": "bcf31dab21a4f7d4f67b812d6c891ed9"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-22T13:10:59.814-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8",
-                    "fileId": "8f939e90bae37f9ec860ced08c5ffb7f"
-                }
-            }
-        }
+            ]
+        """,
+        "8f939e90bae37f9ec860ced08c5ffb7f",
+    )
 
-        """
-
-    USERS_QA_DOWNLOADS = """
-        {
-            "data": [
+    USERS_QA_DOWNLOADS = (
+        """[
                 {
                     "deleted": false,
                     "lastModified": "2019-04-12T12:58:13.000-05:00",
@@ -267,24 +228,15 @@ class GetFilePathMetadataResponses(object):
                     "type": "file",
                     "id": "69e930e774cbc1ee6d0c0ff2ba5804ee"
                 }
-            ],
-            "metadata": {
-                "timestamp": "2019-04-22T13:10:59.849-05:00",
-                "params": {
-                    "guid": "896480635439191430",
-                    "webRestoreSessionId": "1mf6v4k528b1p1jlmox2nrmm8",
-                    "fileId": "f939cfc4d476ec5535ccb0f6c0377ef4"
-                }
-            }
-        }
-        """
+            ]
+        """,
+        "f939cfc4d476ec5535ccb0f6c0377ef4",
+    )
 
 
 class GetWebRestoreJobResponses(object):
 
-    NOT_DONE = """
-        {
-            "data": {
+    NOT_DONE = """{
                 "status": "compressing",
                 "zipResult": true,
                 "name": "WebRestore_13",
@@ -297,17 +249,10 @@ class GetWebRestoreJobResponses(object):
                 "expirationDate": 1556888724979,
                 "creationDate": 1556802324979,
                 "percentComplete": 0
-            },
-            "metadata": {
-                "timestamp": "2019-05-02T08:05:25.052-05:00",
-                "params": {}
             }
-        }
         """
 
-    DONE = """
-        {
-            "data": {
+    DONE = """{
                 "status": "compressing",
                 "zipResult": true,
                 "name": "WebRestore_13",
@@ -320,13 +265,7 @@ class GetWebRestoreJobResponses(object):
                 "expirationDate": 1556888724979,
                 "creationDate": 1556802324979,
                 "percentComplete": 0
-            },
-            "metadata": {
-                "timestamp": "2019-05-02T08:05:25.052-05:00",
-                "params": {}
             }
-        }
-
         """
 
 
@@ -334,11 +273,10 @@ class GetWebRestoreJobResponses(object):
 def archive_client(mocker):
     client = mocker.MagicMock(spec=ArchiveClient)
     py42_response = mocker.MagicMock(spec=Py42Response)
-    http_response = mocker.MagicMock(spec=Response)
-    http_response.text = '{{"data": {{"dataKeyToken": "{0}"}}}}'.format(DATA_KEY_TOKEN)
-    http_response.status_code = 200
-    py42_response.api_response = http_response
-    py42_response.raw_response_text = DATA_KEY_TOKEN
+    py42_response.text = '{{"dataKeyToken": "{0}"}}'.format(DATA_KEY_TOKEN)
+    py42_response.status_code = 200
+    py42_response.encoding = None
+    py42_response.__getitem__ = lambda _, key: json.loads(py42_response.text).get(key)
     client.get_data_key_token.return_value = py42_response
     return client
 
@@ -347,13 +285,11 @@ def archive_client(mocker):
 def storage_archive_client(mocker):
     client = mocker.MagicMock(spec=StorageArchiveClient)
     py42_response = mocker.MagicMock(spec=Py42Response)
-    http_response = mocker.MagicMock(spec=Response)
-    http_response.text = '{{"data": {{"webRestoreSessionId": "{0}"}}}}'.format(
-        WEB_RESTORE_SESSION_ID
-    )
-    http_response.status_code = 200
-    py42_response.api_response = http_response
-    py42_response.raw_response_text = WEB_RESTORE_SESSION_ID
+    py42_response.text = '{{"webRestoreSessionId": "{0}"}}'.format(WEB_RESTORE_SESSION_ID)
+    py42_response.status_code = 200
+    py42_response.encoding = None
+    py42_response.__getitem__ = lambda _, key: json.loads(py42_response.text).get(key)
+
     client.create_restore_session.return_value = py42_response
     return client
 
@@ -366,7 +302,7 @@ def storage_client(mocker):
 @pytest.fixture
 def storage_client_factory(mocker, storage_client, storage_archive_client):
     factory = mocker.MagicMock(spec=StorageClientFactory)
-    factory.get_storage_client_from_device_guid.return_value = storage_archive_client
+    factory.from_device_guid.return_value = storage_archive_client
     return factory
 
 
@@ -396,10 +332,7 @@ def mock_start_restore_response(mocker, storage_archive_client, response):
         start_restore_response = mocker.MagicMock(spec=Response)
         start_restore_response.text = response
         start_restore_response.status_code = 200
-        py42_response = mocker.MagicMock(spec=Py42Response)
-        py42_response.api_response = start_restore_response
-        py42_response.raw_response_text = json.dumps(json.loads(response)["data"])
-        return py42_response
+        return Py42Response(start_restore_response)
 
     storage_archive_client.start_restore.side_effect = mock_start_restore
 
@@ -410,16 +343,13 @@ def mock_get_restore_status_responses(mocker, storage_archive_client, json_respo
         get_restore_status_response = mocker.MagicMock(spec=Response)
         get_restore_status_response.text = json_response
         get_restore_status_response.status_code = 200
-        py42_response = mocker.MagicMock(spec=Py42Response)
-        py42_response.api_response = get_restore_status_response
-        py42_response.raw_response_text = json.dumps(json.loads(json_response)["data"])
-        responses.append(py42_response)
+        responses.append(Py42Response(get_restore_status_response))
 
     storage_archive_client.get_restore_status.side_effect = responses
 
 
 def stream_restore_result_response_mock(mocker, storage_archive_client, chunks):
-    stream_restore_result_response = mocker.MagicMock(spec=Response)
+    stream_restore_result_response = mocker.MagicMock(spec=Py42Response)
 
     def mock_stream_restore_result(job_id, **kwargs):
         stream_restore_result_response.iter_content.return_value = chunks
@@ -436,13 +366,13 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
 
     file_id_responses = {}
     for response in responses:
-        file_id_param = GetFilePathMetadataResponses.get_file_id_from_request(response)
-        if file_id_param:
-            file_id_responses[file_id_param] = response
+        file_id = GetFilePathMetadataResponses.get_file_id_from_request(response)
+        if file_id:
+            file_id_responses[file_id] = response[0]
         else:
             if None in file_id_responses:
                 raise Exception("Response list already has a response for a 'None' fileId")
-            file_id_responses[None] = response
+            file_id_responses[None] = response[0]
 
     def mock_get_file_path_metadata(*args, **kwargs):
 
@@ -457,14 +387,12 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
         if file_id not in file_id_responses:
             raise Exception("Unexpected request with file_id: {0}".format(file_id))
 
-        get_file_path_metadata_response = mocker.MagicMock(spec=Response)
-        get_file_path_metadata_response.text = file_id_responses[file_id]
-        get_file_path_metadata_response.status_code = 200
-        py_42response = mocker.MagicMock(spec=Py42Response)
-        py_42response.api_response = get_file_path_metadata_response
-        py_42response.raw_response_text = file_id_responses[file_id]
+        mock_response = mocker.MagicMock(spec=Response)
+        mock_response.status_code = 200
+        mock_response.text = file_id_responses[file_id]
+        get_file_path_metadata_response = Py42Response(mock_response)
 
-        return py_42response
+        return get_file_path_metadata_response
 
     return mock_get_file_path_metadata
 
@@ -474,6 +402,7 @@ def get_file_selection(file_type, file_path):
 
 
 def mock_get_file_path_metadata_responses(mocker, storage_archive_client, responses):
+    # responses = [item[0] for item in responses]
     storage_archive_client.get_file_path_metadata.side_effect = get_get_file_path_metadata_mock(
         mocker, WEB_RESTORE_SESSION_ID, DEVICE_GUID, responses
     )
@@ -491,15 +420,7 @@ def mock_walking_to_downloads_folder(mocker, storage_archive_client):
 
 
 def get_response_job_id(response_str):
-    return json.loads(response_str)["data"]["jobId"]
-
-
-def get_save_content_to_disk_mock(mocker, custom_side_effect=None):
-    save_content_to_disk_mock = mocker.MagicMock()
-    if custom_side_effect:
-        save_content_to_disk_mock.side_effect = custom_side_effect
-    mocker.patch("py42.util.save_content_to_disk", save_content_to_disk_mock)
-    return save_content_to_disk_mock
+    return json.loads(response_str)["jobId"]
 
 
 class TestArchiveAccessManager(object):
@@ -512,7 +433,7 @@ class TestArchiveAccessManager(object):
         self, archive_client, storage_client_factory, storage_client, storage_archive_client
     ):
         storage_client.archive = storage_archive_client
-        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
+        storage_client_factory.from_device_guid.return_value = storage_client
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
 
         assert accessor_manager.get_archive_accessor(DEVICE_GUID, DESTINATION_GUID)
@@ -521,10 +442,10 @@ class TestArchiveAccessManager(object):
         self, archive_client, storage_client_factory, storage_client, storage_archive_client
     ):
         storage_client.archive = storage_archive_client
-        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
+        storage_client_factory.from_device_guid.return_value = storage_client
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
-        storage_client_factory.get_storage_client_from_device_guid.assert_called_with(
+        storage_client_factory.from_device_guid.assert_called_with(
             DEVICE_GUID, destination_guid=None
         )
 
@@ -532,10 +453,10 @@ class TestArchiveAccessManager(object):
         self, archive_client, storage_client_factory, storage_client, storage_archive_client
     ):
         storage_client.archive = storage_archive_client
-        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
+        storage_client_factory.from_device_guid.return_value = storage_client
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID, destination_guid=DESTINATION_GUID)
-        storage_client_factory.get_storage_client_from_device_guid.assert_called_with(
+        storage_client_factory.from_device_guid.assert_called_with(
             DEVICE_GUID, destination_guid=DESTINATION_GUID
         )
 
@@ -543,7 +464,7 @@ class TestArchiveAccessManager(object):
         self, archive_client, storage_client, storage_client_factory, storage_archive_client
     ):
         storage_client.archive = storage_archive_client
-        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
+        storage_client_factory.from_device_guid.return_value = storage_client
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
 
@@ -557,7 +478,7 @@ class TestArchiveAccessManager(object):
         spy = mocker.spy(py42._internal.archive_access, "create_restore_job_manager")
         storage_client.archive = storage_archive_client
 
-        storage_client_factory.get_storage_client_from_device_guid.return_value = storage_client
+        storage_client_factory.from_device_guid.return_value = storage_client
 
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
@@ -568,7 +489,7 @@ class TestArchiveAccessManager(object):
     def test_get_archive_accessor_raises_exception_when_create_backup_client_raises(
         self, archive_client, storage_client_factory
     ):
-        storage_client_factory.get_storage_client_from_device_guid.side_effect = Exception(
+        storage_client_factory.from_device_guid.side_effect = Exception(
             "Exception in create_backup_client"
         )
         accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
@@ -584,7 +505,7 @@ class TestArchiveAccessor(object):
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
 
-    def test_download_from_backup_with_root_folder_path_calls_restore_to_local_path(
+    def test_stream_from_backup_with_root_folder_path_calls_get_stream(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_get_file_path_metadata_responses(
@@ -593,14 +514,11 @@ class TestArchiveAccessor(object):
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
-        archive_accessor.download_from_backup("/")
+        archive_accessor.stream_from_backup("/")
         expected_file_selection = get_file_selection(FileType.DIRECTORY, "/")
-        expected_file_name = "./download.zip"
-        restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name
-        )
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
-    def test_download_from_backup_with_root_level_folder_calls_restore_to_local_path(
+    def test_stream_from_backup_with_root_level_folder_calls_get_stream(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_get_file_path_metadata_responses(
@@ -611,70 +529,24 @@ class TestArchiveAccessor(object):
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
-        archive_accessor.download_from_backup(USERS_DIR)
+        archive_accessor.stream_from_backup(USERS_DIR)
         expected_file_selection = get_file_selection(FileType.DIRECTORY, USERS_DIR)
-        expected_file_name = "." + USERS_DIR + ".zip"
-        restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name
-        )
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
-    def test_download_from_backup_with_file_path_calls_restore_to_local_path(
+    def test_stream_from_backup_with_file_path_calls_get_stream(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
-        archive_accessor.download_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
         expected_file_selection = get_file_selection(
             FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER
         )
-        expected_file_name = "./{0}".format(posixpath.basename(PATH_TO_FILE_IN_DOWNLOADS_FOLDER))
-        restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name
-        )
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
-    def test_download_from_backup_with_save_as_filename_calls_restore_to_local_path(
-        self, mocker, storage_archive_client, restore_job_manager
-    ):
-        expected_file_name = "./{0}".format(SAVE_AS_FILENAME)
-        mocker.patch("py42.util.verify_path_writeable", lambda x: expected_file_name)
-        mock_walking_to_downloads_folder(mocker, storage_archive_client)
-        archive_accessor = ArchiveAccessor(
-            DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
-        )
-        archive_accessor.download_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, save_as_filename=SAVE_AS_FILENAME
-        )
-        expected_file_selection = get_file_selection(
-            FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER
-        )
-        restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name
-        )
-
-    def test_download_from_backup_with_save_as_dir_and_filename_calls_restore_to_local_path(
-        self, mocker, storage_archive_client, restore_job_manager
-    ):
-        expected_file_name = posixpath.join(SAVE_AS_DIR, SAVE_AS_FILENAME)
-        mocker.patch("py42.util.verify_path_writeable", lambda x: expected_file_name)
-        mock_walking_to_downloads_folder(mocker, storage_archive_client)
-        archive_accessor = ArchiveAccessor(
-            DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
-        )
-        archive_accessor.download_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER,
-            save_as_dir=SAVE_AS_DIR,
-            save_as_filename=SAVE_AS_FILENAME,
-        )
-        expected_file_selection = get_file_selection(
-            FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER
-        )
-        restore_job_manager.restore_to_local_path.assert_called_once_with(
-            expected_file_selection, expected_file_name
-        )
-
-    def test_download_from_backup_with_file_not_in_archive_raises_exception(
+    def test_stream_from_backup_with_file_not_in_archive_raises_exception(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
@@ -683,14 +555,14 @@ class TestArchiveAccessor(object):
         )
         invalid_path_in_downloads_folder = "/Users/qa/Downloads/file-not-in-archive.txt"
         with pytest.raises(Exception) as e:
-            archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
         expected_message = u"File not found in archive for device device-guid at path {0}".format(
             invalid_path_in_downloads_folder
         )
         assert e.value.args[0] == expected_message
-        restore_job_manager.restore_to_local_path.assert_not_called()
+        restore_job_manager.get_stream.assert_not_called()
 
-    def test_download_from_backup_with_unicode_file_path_not_in_archive_raises_exception(
+    def test_stream_from_backup_with_unicode_file_path_not_in_archive_raises_exception(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
@@ -699,14 +571,14 @@ class TestArchiveAccessor(object):
         )
         invalid_path_in_downloads_folder = u"/Users/qa/Downloads/吞"
         with pytest.raises(Exception) as e:
-            archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
         expected_message = u"File not found in archive for device device-guid at path {0}".format(
             invalid_path_in_downloads_folder
         )
         assert e.value.args[0] == expected_message
-        restore_job_manager.restore_to_local_path.assert_not_called()
+        restore_job_manager.get_stream.assert_not_called()
 
-    def test_download_from_backup_with_drive_not_in_archive_raises_exception(
+    def test_stream_from_backup_with_drive_not_in_archive_raises_exception(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
@@ -715,14 +587,14 @@ class TestArchiveAccessor(object):
         )
         invalid_path_in_downloads_folder = "C:/Users/qa/Downloads/file-not-in-archive.txt"
         with pytest.raises(Exception) as e:
-            archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
         expected_message = u"File not found in archive for device device-guid at path {0}".format(
             invalid_path_in_downloads_folder
         )
         assert e.value.args[0] == expected_message
-        restore_job_manager.restore_to_local_path.assert_not_called()
+        restore_job_manager.get_stream.assert_not_called()
 
-    def test_download_from_backup_with_case_sensitive_drive_not_in_archive_raises_exception(
+    def test_stream_from_backup_with_case_sensitive_drive_not_in_archive_raises_exception(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
@@ -731,67 +603,21 @@ class TestArchiveAccessor(object):
         )
         invalid_path_in_downloads_folder = "c:/Users/qa/Downloads/file-not-in-archive.txt"
         with pytest.raises(Exception) as e:
-            archive_accessor.download_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
         expected_message = u"File not found in archive for device device-guid at path {0}".format(
             invalid_path_in_downloads_folder
         )
         assert e.value.args[0] == expected_message
-        restore_job_manager.restore_to_local_path.assert_not_called()
+        restore_job_manager.get_stream.assert_not_called()
 
-    def test_download_from_backup_with_save_as_dir_calls_verify_path_writeable(
-        self, mocker, storage_archive_client, restore_job_manager
-    ):
-        mock_walking_to_downloads_folder(mocker, storage_archive_client)
-        verify_path_writeable = mocker.patch("py42.util.verify_path_writeable")
-        archive_accessor = ArchiveAccessor(
-            DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
-        )
-        archive_accessor.download_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, save_as_dir=SAVE_AS_DIR
-        )
-        expected_arg = posixpath.join(
-            SAVE_AS_DIR, posixpath.basename(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
-        )
-        verify_path_writeable.assert_called_once_with(expected_arg)
-
-    def test_download_from_backup_with_save_as_filename_calls_verify_path_writeable(
-        self, mocker, storage_archive_client, restore_job_manager
-    ):
-        mock_walking_to_downloads_folder(mocker, storage_archive_client)
-        verify_path_writeable = mocker.patch("py42.util.verify_path_writeable")
-        archive_accessor = ArchiveAccessor(
-            DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
-        )
-        archive_accessor.download_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, save_as_filename=SAVE_AS_FILENAME
-        )
-        expected_arg = posixpath.join(posixpath.curdir, SAVE_AS_FILENAME)
-        verify_path_writeable.assert_called_once_with(expected_arg)
-
-    def test_download_from_backup_with_save_as_dir_and_filename_calls_verify_path_writeable(
-        self, mocker, storage_archive_client, restore_job_manager
-    ):
-        mock_walking_to_downloads_folder(mocker, storage_archive_client)
-        verify_path_writeable = mocker.patch("py42.util.verify_path_writeable")
-        archive_accessor = ArchiveAccessor(
-            DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
-        )
-        archive_accessor.download_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER,
-            save_as_dir=SAVE_AS_DIR,
-            save_as_filename=SAVE_AS_FILENAME,
-        )
-        expected_arg = posixpath.join(SAVE_AS_DIR, SAVE_AS_FILENAME)
-        verify_path_writeable.assert_called_once_with(expected_arg)
-
-    def test_download_from_backup_uses_show_deleted_param_on_get_file_path_metadata(
+    def test_stream_from_backup_uses_show_deleted_param_on_get_file_path_metadata(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, storage_archive_client, restore_job_manager
         )
-        archive_accessor.download_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
         storage_archive_client.get_file_path_metadata.assert_called_with(
             WEB_RESTORE_SESSION_ID, DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
         )
@@ -825,8 +651,8 @@ class TestRestoreJobManager(object):
         )
         assert restore_job_manager.is_job_complete(job_id) is True
 
-    def test_restore_to_local_path_calls_start_restore_with_correct_args(
-        self, mocker, storage_archive_client, file_selection, save_as_path
+    def test_get_stream_calls_start_restore_with_correct_args(
+        self, mocker, storage_archive_client, file_selection
     ):
         mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
@@ -836,12 +662,10 @@ class TestRestoreJobManager(object):
             mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
         )
 
-        get_save_content_to_disk_mock(mocker)
-
         restore_job_manager = RestoreJobManager(
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
-        restore_job_manager.restore_to_local_path(file_selection, save_as_path)
+        restore_job_manager.get_stream(file_selection)
         storage_archive_client.start_restore.assert_called_once_with(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -852,8 +676,8 @@ class TestRestoreJobManager(object):
             show_deleted=True,
         )
 
-    def test_restore_to_local_path_polls_job_status_until_job_is_complete(
-        self, mocker, storage_archive_client, file_selection, save_as_path
+    def test_get_stream_polls_job_status_until_job_is_complete(
+        self, mocker, storage_archive_client, file_selection
     ):
         mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
@@ -867,14 +691,14 @@ class TestRestoreJobManager(object):
                 GetWebRestoreJobResponses.DONE,
             ],
         )
-        get_save_content_to_disk_mock(mocker)
+
         restore_job_manager = RestoreJobManager(
             storage_archive_client,
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             job_polling_interval=0.000001,
         )
-        restore_job_manager.restore_to_local_path(file_selection, save_as_path)
+        restore_job_manager.get_stream(file_selection)
         job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
         expected_call = mocker.call(job_id)
         storage_archive_client.get_restore_status.assert_has_calls(
@@ -882,27 +706,8 @@ class TestRestoreJobManager(object):
         )
         assert storage_archive_client.get_restore_status.call_count == 3
 
-    def test_restore_to_local_path_calls_save_content_to_disk_util(
-        self, mocker, storage_archive_client, file_selection, save_as_path, file_content_chunks
-    ):
-        mock_start_restore_response(
-            mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
-        )
-        mock_get_restore_status_responses(
-            mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
-        )
-        response = stream_restore_result_response_mock(
-            mocker, storage_archive_client, file_content_chunks
-        )
-        save_content_to_disk_mock = get_save_content_to_disk_mock(mocker)
-        restore_job_manager = RestoreJobManager(
-            storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
-        )
-        restore_job_manager.restore_to_local_path(file_selection, save_as_path)
-        save_content_to_disk_mock.assert_called_once_with(response, save_as_path)
-
-    def test_restore_to_local_path_when_successful_returns_save_as_path(
-        self, mocker, storage_archive_client, file_selection, save_as_path, file_content_chunks
+    def test_get_stream_when_successful_returns_response(
+        self, mocker, storage_archive_client, file_selection, file_content_chunks
     ):
         mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
@@ -911,85 +716,7 @@ class TestRestoreJobManager(object):
             mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
         )
         stream_restore_result_response_mock(mocker, storage_archive_client, file_content_chunks)
-        get_save_content_to_disk_mock(mocker)
         restore_job_manager = RestoreJobManager(
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
-        saved_as_path = restore_job_manager.restore_to_local_path(file_selection, save_as_path)
-        assert saved_as_path == save_as_path
-
-    def test_restore_to_local_path_with_disk_io_error_raises_exception(
-        self, mocker, storage_archive_client, file_selection, save_as_path, file_content_chunks
-    ):
-        mock_start_restore_response(
-            mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
-        )
-        mock_get_restore_status_responses(
-            mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
-        )
-        stream_restore_result_response_mock(mocker, storage_archive_client, file_content_chunks)
-        get_save_content_to_disk_mock(mocker, IOError("Write failed!"))
-        restore_job_manager = RestoreJobManager(
-            storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
-        )
-        with pytest.raises(IOError) as e:
-            restore_job_manager.restore_to_local_path(file_selection, save_as_path)
-        assert e.value.args[0] == "Write failed!"
-
-
-def test_get_download_filename_with_unix_file_path_and_file_type_returns_name():
-    filename = archive_access.get_download_filename(UNIX_FILE_PATH, FILE_FILE_TYPE)
-    assert filename == posixpath.basename(UNIX_FILE_PATH)
-
-
-def test_get_download_filename_with_unix_dir_path_and_directory_type_returns_name_with_zip_extension():
-    filename = archive_access.get_download_filename(UNIX_DIR_PATH, DIRECTORY_FILE_TYPE)
-    assert filename == posixpath.basename(UNIX_DIR_PATH) + ZIP_EXTENSION
-
-
-def test_get_download_filename_with_unix_dir_path_with_trailing_slash_returns_default_name_with_zip_extension():
-    filename = archive_access.get_download_filename(
-        UNIX_DIR_PATH_WITH_TRAILING_SLASH, DIRECTORY_FILE_TYPE
-    )
-    assert filename == DEFAULT_DIRECTORY_FILENAME
-
-
-def test_get_download_filename_with_unix_root_path_and_directory_type_returns_replacement_name_with_zip_extension():
-    filename = archive_access.get_download_filename("/", DIRECTORY_FILE_TYPE)
-    assert filename == DEFAULT_DIRECTORY_FILENAME
-
-
-def test_get_download_filename_with_unix_file_path_without_extension_and_file_type_returns_filename():
-    filename = archive_access.get_download_filename(
-        UNIX_FILE_PATH_WITHOUT_EXTENSION, FILE_FILE_TYPE
-    )
-    assert filename == posixpath.basename(UNIX_FILE_PATH_WITHOUT_EXTENSION)
-
-
-def test_get_download_filename_with_windows_file_path_and_file_type_returns_name():
-    filename = archive_access.get_download_filename(WINDOWS_FILE_PATH, FILE_FILE_TYPE)
-    assert filename == posixpath.basename(WINDOWS_FILE_PATH)
-
-
-def test_get_download_filename_with_non_normalized_windows_file_path_and_file_type_returns_name():
-    filename = archive_access.get_download_filename(
-        NON_NORMALIZED_WINDOWS_FILE_PATH, FILE_FILE_TYPE
-    )
-    assert filename == posixpath.basename(NON_NORMALIZED_WINDOWS_FILE_PATH)
-
-
-def test_get_download_filename_with_windows_dir_path_and_directory_type_returns_name_with_zip_extension():
-    filename = archive_access.get_download_filename(WINDOWS_DIR_PATH, DIRECTORY_FILE_TYPE)
-    assert filename == posixpath.basename(WINDOWS_DIR_PATH) + ZIP_EXTENSION
-
-
-def test_get_download_filename_with_windows_root_path_and_directory_type_returns_replacement_name_with_zip_extension():
-    filename = archive_access.get_download_filename("C:/", DIRECTORY_FILE_TYPE)
-    assert filename == DEFAULT_DIRECTORY_FILENAME
-
-
-def test_get_download_filename_with_windows_file_path_without_extension_and_file_type_returns_filename():
-    filename = archive_access.get_download_filename(
-        WINDOWS_FILE_PATH_WITHOUT_EXTENSION, FILE_FILE_TYPE
-    )
-    assert filename == posixpath.basename(WINDOWS_FILE_PATH_WITHOUT_EXTENSION)
+        assert restore_job_manager.get_stream(file_selection)

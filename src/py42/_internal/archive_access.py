@@ -2,8 +2,6 @@ import posixpath
 import time
 from collections import namedtuple
 
-import py42.util as util
-
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
 
 
@@ -18,24 +16,25 @@ class ArchiveAccessorManager(object):
         self._storage_client_factory = storage_client_factory
 
     def get_archive_accessor(self, device_guid, destination_guid=None):
-        client = self._storage_client_factory.get_storage_client_from_device_guid(
+        client = self._storage_client_factory.from_device_guid(
             device_guid, destination_guid=destination_guid
         )
         data_key_token = self._get_data_key_token(device_guid)
-        session_id = self._create_web_restore_session(client.archive, device_guid, data_key_token)
+        session_id = self._create_restore_session(client.archive, device_guid, data_key_token)
         restore_job_manager = create_restore_job_manager(client.archive, device_guid, session_id)
         return ArchiveAccessor(device_guid, session_id, client.archive, restore_job_manager)
 
     def _get_data_key_token(self, device_guid):
-        response = self._archive_client.get_data_key_token(device_guid)
-        return util.get_obj_from_response(response, u"dataKeyToken")
+        test = self._archive_client.get_data_key_token(device_guid)
+        test2 = test[u"dataKeyToken"]
+        return self._archive_client.get_data_key_token(device_guid)[u"dataKeyToken"]
 
     @staticmethod
-    def _create_web_restore_session(storage_archive_client, device_guid, data_key_token):
-        response = storage_archive_client.create_web_restore_session(
+    def _create_restore_session(storage_archive_client, device_guid, data_key_token):
+        response = storage_archive_client.create_restore_session(
             device_guid, data_key_token=data_key_token
         )
-        return util.get_obj_from_response(response, u"webRestoreSessionId")
+        return response[u"webRestoreSessionId"]
 
 
 class ArchiveAccessor(object):
@@ -51,25 +50,17 @@ class ArchiveAccessor(object):
         self._storage_archive_client = storage_archive_client
         self._restore_job_manager = restore_job_manager
 
-    def download_from_backup(self, file_path, save_as_dir=None, save_as_filename=None):
+    def stream_from_backup(self, file_path):
         metadata = self._get_file_via_walking_tree(file_path)
         file_selection = self._build_file_selection(metadata[u"path"], metadata[u"type"])
-
-        # get and verify we can write to the save-as path before attempting to download the file
-        filename = save_as_filename or get_download_filename(metadata[u"path"], metadata[u"type"])
-        save_as_path = util.build_path(filename, directory=save_as_dir)
-        save_as_path = util.verify_path_writeable(save_as_path)
-
-        return self._restore_job_manager.restore_to_local_path(file_selection, save_as_path)
+        return self._restore_job_manager.get_stream(file_selection)
 
     def _get_file_via_walking_tree(self, file_path):
         path_parts = file_path.split(u"/")
         path_root = path_parts[0] + u"/"
 
         response = self._get_children(node_id=None)
-
-        roots = util.get_obj_from_response(response, u"data")
-        for root in roots:
+        for root in response:
             if root[u"path"].lower() == path_root.lower():
                 return self._walk_tree(root, path_parts[1:])
 
@@ -83,9 +74,7 @@ class ArchiveAccessor(object):
         if not remaining_path_components or not remaining_path_components[0]:
             return current_node
 
-        response = self._get_children(node_id=current_node[u"id"])
-
-        children = util.get_obj_from_response(response, u"data")
+        children = self._get_children(node_id=current_node[u"id"])
         current_node_path = current_node[u"path"]
         target_child_path = posixpath.join(current_node_path, remaining_path_components[0])
 
@@ -100,7 +89,7 @@ class ArchiveAccessor(object):
         )
 
     def _get_children(self, node_id=None):
-        return self._storage_archive_client.get_archive_tree_node(
+        return self._storage_archive_client.get_file_path_metadata(
             self._archive_session_id, self._device_guid, file_id=node_id, show_deleted=True
         )
 
@@ -128,21 +117,21 @@ class RestoreJobManager(object):
         self._archive_session_id = archive_session_id
         self._job_polling_interval = job_polling_interval
 
-    def restore_to_local_path(self, file_selection, save_as_path):
-        response = self._submit_web_restore_job(file_selection)
-        job_id = util.get_obj_from_response(response, u"jobId")
+    def get_stream(self, file_selection):
+        response = self._start_restore(file_selection)
+        job_id = response["jobId"]
 
         while not self.is_job_complete(job_id):
             time.sleep(self._job_polling_interval)
 
-        return self._download_result(job_id, save_as_path)
+        return self._get_stream(job_id)
 
     def is_job_complete(self, job_id):
-        response = self._storage_archive_client.get_web_restore_job(job_id)
+        response = self._storage_archive_client.get_restore_status(job_id)
         return self._get_completion_status(response)
 
-    def _submit_web_restore_job(self, file_selection):
-        return self._storage_archive_client.submit_web_restore_job(
+    def _start_restore(self, file_selection):
+        return self._storage_archive_client.start_restore(
             self._device_guid,
             self._archive_session_id,
             file_selection.path_set,
@@ -154,25 +143,12 @@ class RestoreJobManager(object):
 
     @staticmethod
     def _get_completion_status(response):
-        return util.get_obj_from_response(response, u"done")
+        return response[u"done"]
 
-    def _download_result(self, job_id, file_path):
-        response = self._storage_archive_client.get_web_restore_job_result(job_id)
-        util.save_content_to_disk(response, file_path)
+    def _get_stream(self, job_id):
+        response = self._storage_archive_client.stream_restore_result(job_id)
 
-        return file_path
-
-
-def get_download_filename(file_path, file_type, default_dir_name=u"download"):
-    # directory file paths should not end with a '/'. If they do, the name will be interpreted as an empty string,
-    # and "download.zip" will be used. Paths from the archive, which are currently the only paths passed to this
-    # method, do not have trailing slashes.
-    name = posixpath.basename(file_path)
-    if file_type == FileType.DIRECTORY:
-        if not name:
-            name = default_dir_name
-        name += u".zip"
-    return name
+        return response
 
 
 def create_restore_job_manager(storage_archive_client, device_guid, archive_session_id):

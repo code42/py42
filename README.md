@@ -13,7 +13,7 @@ of session / authentication management.
 ## Requirements
 
 - Python 2.7.x or 3.5.0+
-- Code42 Server 6.8.x+
+- Code42 Server 6.8.x+ or cloud environment (e.g. console.us.code42.com or crashplan.com)
 
 ## Installation
 
@@ -37,20 +37,20 @@ $ python
 Import a couple essentials
 
 ```python
->>> from py42.sdk import SDK
->>> import py42.util as util
+>>> import py42.sdk
+>>> import py42.sdk.util as util
 ```
 
 Initialize the client.
 
 ```python
->>> sdk = SDK.create_using_local_account("https://console.us.code42.com", "john.doe", "password")
+>>> sdk = py42.sdk.from_local_account("https://console.us.code42.com", "john.doe", "password")
 ```
 
 Get and print your user information.
 
 ```python
->>> response = sdk.users.get_current_user()
+>>> response = sdk.users.get_current()
 >>> util.print_response(response)
 ```
 
@@ -58,36 +58,30 @@ You should see something like the following:
 
 ```json
 {
-    "data": {
-        "username": "john.doe",
-        "orgName": "ACME Organization",
-        "userId": 123456,
-        "emailPromo": true,
-        "licenses": [],
-        "modificationDate": "2018-08-29T15:32:56.995-05:00",
-        "blocked": false,
-        "usernameIsAnEmail": true,
-        "userUid": "1234567890abcdef",
-        "userExtRef": null,
-        "email": "john.doe@acme.com",
-        "status": "Active",
-        "localAuthenticationOnly": false,
-        "orgUid": "123456789123456789",
-        "passwordReset": true,
-        "active": true,
-        "creationDate": "2012-01-16T11:25:43.545-06:00",
-        "orgType": "BUSINESS",
-        "firstName": "John",
-        "lastName": "Doe",
-        "notes": null,
-        "orgId": 123456,
-        "quotaInBytes": -1,
-        "invited": false
-    },
-    "metadata": {
-        "timestamp": "2019-03-05T06:06:31.438-06:00",
-        "params": {}
-    }
+    "username": "john.doe",
+    "orgName": "ACME Organization",
+    "userId": 123456,
+    "emailPromo": true,
+    "licenses": [],
+    "modificationDate": "2018-08-29T15:32:56.995-05:00",
+    "blocked": false,
+    "usernameIsAnEmail": true,
+    "userUid": "1234567890abcdef",
+    "userExtRef": null,
+    "email": "john.doe@acme.com",
+    "status": "Active",
+    "localAuthenticationOnly": false,
+    "orgUid": "123456789123456789",
+    "passwordReset": true,
+    "active": true,
+    "creationDate": "2012-01-16T11:25:43.545-06:00",
+    "orgType": "BUSINESS",
+    "firstName": "John",
+    "lastName": "Doe",
+    "notes": null,
+    "orgId": 123456,
+    "quotaInBytes": -1,
+    "invited": false
 }
 ```
 
@@ -100,18 +94,18 @@ There are a few default settings that affect the behavior of the client.
 | ---- | ----------- | ------- |
 | verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.| `True`
 | proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.| `None`
-| debug_level | Controls print statements for debugging | `py42.debug_level.NONE`
+| debug.level | Controls print statements for debugging | `py42.settings.debug.NONE`
 | items_per_page | Controls how many items are retrieved per request for methods that loops over several "pages" of items in order to collect them all. | 1000
 
 To override these settings, import `py42.settings` and override values as necessary before creating the client.
  For example, to disable certificate validation in a dev environment: 
 
 ```python
-import py42.settings as settings
-from py42.sdk import SDK
+import py42.sdk
+import py42.sdk.settings as settings
 
 settings.verify_ssl_certs = False
-sdk = SDK.create_using_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 ```
 
 ## Usage
@@ -119,31 +113,38 @@ sdk = SDK.create_using_local_account("https://console.us.code42.com", "my_userna
 The SDK object opens availability to APIs across the Code42 environment, including storage nodes.
 
 ```python
-from py42.sdk import SDK
+import py42.sdk
 
-sdk = SDK.create_using_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
 # clients are organized by feature groups and accessible under the sdk object
 
 # get information about the current user.
-current_user = sdk.users.get_current_user() 
+current_user = sdk.users.get_current()
 
-# get server diagnostic info.
-diagnostics = sdk.administration.get_diagnostics()
+# page through all devices available to this user.
+for device_page in sdk.devices.get_all():
+    for device in device_page["computers"]
+        print(device)
 
-# get a list of all devices available to this user.
-devices = sdk.devices.get_devices()
-
-# get a list of all orgs available to this user.
-orgs = sdk.orgs.get_orgs()
+# page through all orgs available to this user.
+for org_page in sdk.orgs.get_all():
+    for org in org_page["orgs"]:
+        print(org)
 
 # save a copy of a file from an archive this user has access to into the current working directory.
-sdk.archive.download_from_backup("/full/path/to/file.txt", "1234567890")
+stream_response = sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
+with open("/path/to/my/file", 'wb') as f:
+    for chunk in stream_response.iter_content(chunk_size=128):
+        if chunk:
+            f.write(chunk)
 
 # search file events
-from py42.sdk.file_event_query import *
+from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
+from py42.sdk.queries.fileevents.filters import *
+
 query = FileEventQuery.all(MD5.eq("e804d1eb229298b04522c5504b8131f0"))
-file_events = sdk.security.search_file_events(query)
+file_events = sdk.securitydata.search_file_events(query)
 ```
 
 ## Additional Resources

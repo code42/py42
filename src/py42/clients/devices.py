@@ -71,26 +71,26 @@ class DeviceClient(BaseClient):
         params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
         return self._session.get(uri, params=params)
 
-    def block(self, computer_id):
-        uri = u"/api/ComputerBlock/{0}".format(computer_id)
+    def block(self, device_id):
+        uri = u"/api/ComputerBlock/{0}".format(device_id)
         return self._session.put(uri)
 
-    def unblock(self, computer_id):
-        uri = u"/api/ComputerBlock/{0}".format(computer_id)
+    def unblock(self, device_id):
+        uri = u"/api/ComputerBlock/{0}".format(device_id)
         return self._session.delete(uri)
 
-    def deactivate(self, computer_id):
+    def deactivate(self, device_id):
         uri = u"/api/v4/computer-deactivation/update"
-        data = {u"id": computer_id}
+        data = {u"id": device_id}
         return self._session.post(uri, data=json.dumps(data))
 
-    def reactivate(self, computer_id):
+    def reactivate(self, device_id):
         uri = u"/api/v4/computer-deactivation/remove"
-        data = {u"id": computer_id}
+        data = {u"id": device_id}
         return self._session.post(uri, data=json.dumps(data))
 
-    def deauthorize(self, computer_id):
-        uri = u"/api/ComputerDeauthorization/{0}".format(computer_id)
+    def deauthorize(self, device_id):
+        uri = u"/api/ComputerDeauthorization/{0}".format(device_id)
         return self._session.put(uri)
 
     def get_settings(self, guid, keys=None):

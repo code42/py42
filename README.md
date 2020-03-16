@@ -123,13 +123,13 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 current_user = sdk.users.get_current()
 
 # page through all devices available to this user.
-for device_list in sdk.devices.get_all():
-    for device in device_list["computers"]
+for device_page in sdk.devices.get_all():
+    for device in device_page["computers"]
         print(device)
 
 # page through all orgs available to this user.
-for org_list in sdk.orgs.get_all():
-    for org in org_list["orgs"]:
+for org_page in sdk.orgs.get_all():
+    for org in org_page["orgs"]:
         print(org)
 
 # save a copy of a file from an archive this user has access to into the current working directory.

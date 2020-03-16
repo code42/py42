@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 0.6.0 - 2020-03-16
 
 ## Removed
 
@@ -16,7 +16,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `get_obj_from_response()`
     - `filter_out_none()`
     - `print_dict()`
-    
+
 - `py42.debug` module. Use `py42.settings.debug` instead.
 - `py42.util` module. Use `py42.sdk.util` instead.
 - `ArchiveModule.download_from_backup()`. Use `ArchiveModule.stream_from_backup()` instead.

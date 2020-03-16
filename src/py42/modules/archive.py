@@ -13,8 +13,8 @@ class ArchiveModule(object):
     def get_backup_sets(self, device_guid, destination_guid):
         return self._archive_client.get_backup_sets(device_guid, destination_guid)
 
-    def get_data_key_token(self, computer_guid):
-        return self._archive_client.get_data_key_token(computer_guid)
+    def get_data_key_token(self, device_guid):
+        return self._archive_client.get_data_key_token(device_guid)
 
     def get_restore_history_by_org_id(self, days, org_id, page_num=None, page_size=None):
         return self._archive_client.get_restore_history(days, u"orgId", org_id, page_num, page_size)

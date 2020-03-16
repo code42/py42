@@ -6,11 +6,32 @@ from py42.clients.util import get_all_pages
 
 class LegalHoldClient(BaseClient):
     def create_policy(self, name, policy=None):
+        """[summary]
+        
+        Args:
+            name ([type]): [description]
+            policy ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/v4/legal-hold-policy/create"
         data = {u"name": name, u"policy": policy}
         return self._session.post(uri, data=json.dumps(data))
 
     def create_matter(self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None):
+        """[summary]
+        
+        Args:
+            name ([type]): [description]
+            hold_policy_uid ([type]): [description]
+            description ([type], optional): [description]. Defaults to None.
+            notes ([type], optional): [description]. Defaults to None.
+            hold_ext_ref ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/LegalHold"
         data = {
             u"name": name,
@@ -22,15 +43,36 @@ class LegalHoldClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_policy_by_uid(self, legal_hold_policy_uid):
+        """[summary]
+        
+        Args:
+            legal_hold_policy_uid ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/v4/legal-hold-policy/view"
         params = {u"legalHoldPolicyUid": legal_hold_policy_uid}
         return self._session.get(uri, params=params)
 
-    def get_all_policies(self):
+    def get_policy_list(self):
+        """[summary]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/v4/legal-hold-policy/list"
         return self._session.get(uri)
 
     def get_matter_by_uid(self, legal_hold_uid):
+        """[summary]
+        
+        Args:
+            legal_hold_uid ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/LegalHold/{0}".format(legal_hold_uid)
         return self._session.get(uri)
 
@@ -57,6 +99,17 @@ class LegalHoldClient(BaseClient):
     def get_all_matters(
         self, creator_user_uid=None, active_state=u"ACTIVE", name=None, hold_ext_ref=None
     ):
+        """[summary]
+        
+        Args:
+            creator_user_uid ([type], optional): [description]. Defaults to None.
+            active_state (unicode, optional): [description]. Defaults to u"ACTIVE".
+            name ([type], optional): [description]. Defaults to None.
+            hold_ext_ref ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         return get_all_pages(
             self._get_legal_holds_page,
             u"legalHolds",
@@ -96,6 +149,18 @@ class LegalHoldClient(BaseClient):
         user=None,
         active_state=None,
     ):
+        """[summary]
+        
+        Args:
+            legal_hold_membership_uid ([type], optional): [description]. Defaults to None.
+            legal_hold_uid ([type], optional): [description]. Defaults to None.
+            user_uid ([type], optional): [description]. Defaults to None.
+            user ([type], optional): [description]. Defaults to None.
+            active_state ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         return get_all_pages(
             self._get_legal_hold_memberships_page,
             u"legalHoldMemberships",
@@ -107,20 +172,53 @@ class LegalHoldClient(BaseClient):
         )
 
     def add_to_matter(self, user_uid, legal_hold_uid):
+        """[summary]
+        
+        Args:
+            user_uid ([type]): [description]
+            legal_hold_uid ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/LegalHoldMembership"
         data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
         return self._session.post(uri, data=json.dumps(data))
 
     def remove_from_matter(self, legal_hold_membership_uid):
+        """[summary]
+        
+        Args:
+            legal_hold_membership_uid ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/LegalHoldMembershipDeactivation"
         data = {u"legalHoldMembershipUid": legal_hold_membership_uid}
         return self._session.post(uri, data=json.dumps(data))
 
     def deactivate_matter(self, legal_hold_uid):
+        """[summary]
+        
+        Args:
+            legal_hold_uid ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/v4/legal-hold-deactivation/update"
         data = {u"legalHoldUid": legal_hold_uid}
         return self._session.post(uri, data=json.dumps(data))
 
     def reactivate_matter(self, legal_hold_uid):
+        """[summary]
+        
+        Args:
+            legal_hold_uid ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/LegalHoldReactivation/{0}".format(legal_hold_uid)
         return self._session.put(uri)

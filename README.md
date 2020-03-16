@@ -63,7 +63,7 @@ You should see something like the following:
     "userId": 123456,
     "emailPromo": true,
     "licenses": [],
-    "modificationDate": "2018-08-29T15:32:56.995-05:00",
+    "modificationDate":"2018-08-29T15:32:56.995-05:00",
     "blocked": false,
     "usernameIsAnEmail": true,
     "userUid": "1234567890abcdef",
@@ -84,7 +84,6 @@ You should see something like the following:
     "invited": false
 }
 ```
-
 
 ## Configuration
 

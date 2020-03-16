@@ -24,9 +24,9 @@ class ArchiveModule(object):
             days, u"userId", user_id, page_num, page_size
         )
 
-    def get_restore_history_by_computer_id(self, days, computer_id, page_num=None, page_size=None):
+    def get_restore_history_by_device_id(self, days, device_id, page_num=None, page_size=None):
         return self._archive_client.get_restore_history(
-            days, u"computerId", computer_id, page_num, page_size
+            days, u"computerId", device_id, page_num, page_size
         )
 
     def get_web_restore_info(self, src_guid, dest_guid):

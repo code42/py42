@@ -4,9 +4,9 @@ from py42.clients import BaseClient
 
 
 class ArchiveClient(BaseClient):
-    def get_data_key_token(self, computer_guid):
+    def get_data_key_token(self, device_guid):
         uri = u"/api/DataKeyToken"
-        data = {u"computerGuid": computer_guid}
+        data = {u"computerGuid": device_guid}
         return self._session.post(uri, data=json.dumps(data))
 
     def get_backup_sets(self, device_guid, destination_guid):

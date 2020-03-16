@@ -124,14 +124,12 @@ current_user = sdk.users.get_current()
 
 # page through all devices available to this user.
 for device_list in sdk.devices.get_all():
-    devices = device_list["computers"]
-    for device in devices:
+    for device in device_list["computers"]
         print(device)
 
 # page through all orgs available to this user.
 for org_list in sdk.orgs.get_all():
-    orgs = org_list["orgs"]
-    for org in orgs:
+    for org in org_list["orgs"]:
         print(org)
 
 # save a copy of a file from an archive this user has access to into the current working directory.

@@ -1,5 +1,5 @@
 import py42.util as util
-from py42._internal.compat import str
+from py42.exceptions import Py42DestinationNotFoundError
 from py42._internal.login_providers import C42APILoginTokenProvider, C42APIStorageAuthTokenProvider
 
 
@@ -13,24 +13,18 @@ class ArchiveLocatorFactory(object):
         return C42APIStorageAuthTokenProvider(self._auth_session, plan_uid, destination_guid)
 
     def create_backup_archive_locator(self, device_guid, destination_guid=None):
-        try:
-            if destination_guid is None:
-                response = self._device_client.get_device_by_guid(
-                    device_guid, include_backup_usage=True
-                )
-                if destination_guid is None:
-                    # take the first destination guid we find
-                    destination_list = util.get_obj_from_response(response, u"backupUsage")
-                    if not destination_list:
-                        raise Exception(
-                            u"No destinations found for device guid: {0}".format(device_guid)
-                        )
-                    destination_guid = destination_list[0][u"targetComputerGuid"]
-        except Exception as ex:
-            message = (
-                u"An error occurred while trying to determine a destination for device guid: {0},"
-                u" caused by: {1}".format(device_guid, str(ex))
+
+        if destination_guid is None:
+            response = self._device_client.get_device_by_guid(
+                device_guid, include_backup_usage=True
             )
-            raise Exception(message)
+            if destination_guid is None:
+                # take the first destination guid we find
+                destination_list = util.get_obj_from_response(response, u"backupUsage")
+                if not destination_list:
+                    raise Py42DestinationNotFoundError(
+                        u"No destinations found for device guid: {0}".format(device_guid)
+                    )
+                destination_guid = destination_list[0][u"targetComputerGuid"]
 
         return C42APILoginTokenProvider(self._auth_session, u"my", device_guid, destination_guid)

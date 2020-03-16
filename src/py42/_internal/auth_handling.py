@@ -1,4 +1,6 @@
-from py42.exceptions import Py42RequestError
+from requests import HTTPError
+
+from py42.exceptions import Py42AuthenticationError
 
 
 class LoginProvider(object):
@@ -15,10 +17,9 @@ class AuthHandler(object):
         try:
             secret = self._login_provider.get_secret_value(force_refresh=not use_cache)
             self._session_modifier.modify_session(session, secret)
-        except Exception as ex:
-            raise Py42RequestError(
-                "An error occurred while trying to apply cookies to the session", ex
-            )
+        except HTTPError as ex:
+            # Here even internal server errors too will be raised as authentication error!!!
+            raise Py42AuthenticationError("Error in authentication {0}".format(str(ex)))
 
     @staticmethod
     def response_indicates_unauthorized(response):

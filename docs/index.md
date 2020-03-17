@@ -13,4 +13,5 @@ It's just generally pretty awesome
 
 ## Content
 
-* [Method Documentation](sdk.md)
+* [Method Documentation](methods.md)
+* [User Guides](guides.md)

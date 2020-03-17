@@ -122,17 +122,19 @@ class UserClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs):
-        """[summary]
+        """Gets all users.
 
         Args:
-            active ([type], optional): [description]. Defaults to None.
-            email ([type], optional): [description]. Defaults to None.
-            org_uid ([type], optional): [description]. Defaults to None.
-            role_id ([type], optional): [description]. Defaults to None.
-            q ([type], optional): [description]. Defaults to None.
+            active (bool, optional): True means active only, false means deactivated only.
+                Defaults to None.
+            email (str, optional): Limits users to those with this email. Defaults to None.
+            org_uid (str, optional): Limits users to an organization. Defaults to None.
+            role_id (int, optional): Limits users to those with a given role ID. Defaults to None.
+            q (str, optional): A generic query filter that searches across name, username, and email.
+                Defaults to None.
 
         Returns:
-            [type]: [description]
+            Py42Response: A response containing the users.
         """
         return get_all_pages(
             self._get_page,
@@ -146,66 +148,70 @@ class UserClient(BaseClient):
         )
 
     def block(self, user_id):
-        """[summary]
+        """Blocks a specific user. User is not allowed to login or restore.
+            Backups continue if user is still active.
 
         Args:
-            user_id ([type]): [description]
+            user_id (int): An ID for a user.
 
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.put(uri)
 
     def unblock(self, user_id):
-        """[summary]
+        """Removes block on a specific user. User will be allowed to login and restore.
 
         Args:
-            user_id ([type]): [description]
+            user_id (int): An ID for a user.
 
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.delete(uri)
 
     def deactivate(self, user_id, block_user=None):
-        """[summary]
+        """Deactivates a user.
+            Backups are stopped and archives placed in cold storage.
 
         Args:
-            user_id ([type]): [description]
-            block_user ([type], optional): [description]. Defaults to None.
+            user_id (int): An ID for a user.
+            block_user (bool, optional): Blocks the user upon deactivation. Defaults to None.
 
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         data = {u"blockUser": block_user}
         return self._session.put(uri, data=json.dumps(data))
 
     def reactivate(self, user_id, unblock_user=None):
-        """[summary]
+        """Removes a deactivation for the user with the given ID.
 
         Args:
-            user_id ([type]): [description]
-            unblock_user ([type], optional): [description]. Defaults to None.
+            user_id (int): An ID for a user.
+            unblock_user (bool, optional):
+                Whether or not to unblock the user if they are blocked upon reactivation.
+                Defaults to None.
 
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         params = {u"unblockUser": unblock_user}
         return self._session.delete(uri, params=params)
 
     def change_org_assignment(self, user_id, org_id):
-        """[summary]
+        """Moves a user to a different organization.
 
         Args:
-            user_id ([type]): [description]
-            org_id ([type]): [description]
+            user_id (int): An ID for a user.
+            org_id (int): The ID for the org to move the user to.
 
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}

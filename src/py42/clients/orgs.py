@@ -134,7 +134,7 @@ class OrgClient(BaseClient):
         """Gets the organization for the signed-in user.
 
         Returns:
-            Py42Response: The response containing the organization for the signed-in user.
+            Py42Response: A response containing the organization for the signed-in user.
         """
         uri = u"/api/Org/my"
         return self._session.get(uri, params=kwargs)

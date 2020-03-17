@@ -15,20 +15,27 @@ class UserClient(BaseClient):
         last_name=None,
         notes=None,
     ):
-        """[summary]
-        
+        """Creates a new user.
+        An anomaly with this resource is that an existing username in the database will be reused
+        instead of having an error thrown.
+
         Args:
-            BaseClient ([type]): [description]
-            org_uid ([type]): [description]
-            username ([type]): [description]
-            email ([type], optional): [description]. Defaults to None.
-            password ([type], optional): [description]. Defaults to None.
-            first_name ([type], optional): [description]. Defaults to None.
-            last_name ([type], optional): [description]. Defaults to None.
-            notes ([type], optional): [description]. Defaults to None.
-        
+            org_uid (str): Organization UID.
+            username (str): New username.
+            email (str, optional): New email.
+                Required for orgs with local or RADIUS authorization if no password is provided
+                (this case will create users in invite mode).
+                Defaults to None.
+            password (str, optional): New password.
+                For orgs with local or RADIUS authorization -
+                If no password is provided an email is required to create users in invite mode.
+                Defaults to None.
+            first_name (str, optional): New first name. Defaults to None.
+            last_name (str, optional): New last name. Defaults to None.
+            notes (str, optional): Descriptive information. Defaults to None.
+
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/User"
         data = {
@@ -43,45 +50,48 @@ class UserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_by_id(self, user_id, **kwargs):
-        """[summary]
-        
+        """Gets the user with the given ID.
+
         Args:
-            user_id ([type]): [description]
-        
+            user_id (int): ID for a user.
+
         Returns:
-            [type]: [description]
+            Py42Response: A response containing the user.
         """
         uri = u"/api/User/{0}".format(user_id)
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, user_uid, **kwargs):
-        """[summary]
-        
+        """Gets the user with the given UID.
+
+        Args:
+            user_uid (str): UID for a user.
+
         Returns:
-            [type]: [description]
+            Py42Response: A response containing the user.
         """
         uri = u"/api/User/{0}".format(user_uid)
         params = dict(idType=u"uid", **kwargs)
         return self._session.get(uri, params=params)
 
     def get_by_username(self, username, **kwargs):
-        """[summary]
-        
+        """Gets the user with the given username.
+
         Args:
-            username ([type]): [description]
-        
+            username (str): username for a user.
+
         Returns:
-            [type]: [description]
+            Py42Response: A response containing the user.
         """
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
         return self._session.get(uri, params=params)
 
     def get_current(self, **kwargs):
-        """[summary]
-        
+        """Gets the currently signed in user.
+
         Returns:
-            [type]: [description]
+            Py42Response: A response containing the user.
         """
         uri = u"/api/User/my"
         return self._session.get(uri, params=kwargs)
@@ -113,14 +123,14 @@ class UserClient(BaseClient):
 
     def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs):
         """[summary]
-        
+
         Args:
             active ([type], optional): [description]. Defaults to None.
             email ([type], optional): [description]. Defaults to None.
             org_uid ([type], optional): [description]. Defaults to None.
             role_id ([type], optional): [description]. Defaults to None.
             q ([type], optional): [description]. Defaults to None.
-        
+
         Returns:
             [type]: [description]
         """
@@ -137,10 +147,10 @@ class UserClient(BaseClient):
 
     def block(self, user_id):
         """[summary]
-        
+
         Args:
             user_id ([type]): [description]
-        
+
         Returns:
             [type]: [description]
         """
@@ -149,10 +159,10 @@ class UserClient(BaseClient):
 
     def unblock(self, user_id):
         """[summary]
-        
+
         Args:
             user_id ([type]): [description]
-        
+
         Returns:
             [type]: [description]
         """
@@ -161,11 +171,11 @@ class UserClient(BaseClient):
 
     def deactivate(self, user_id, block_user=None):
         """[summary]
-        
+
         Args:
             user_id ([type]): [description]
             block_user ([type], optional): [description]. Defaults to None.
-        
+
         Returns:
             [type]: [description]
         """
@@ -175,11 +185,11 @@ class UserClient(BaseClient):
 
     def reactivate(self, user_id, unblock_user=None):
         """[summary]
-        
+
         Args:
             user_id ([type]): [description]
             unblock_user ([type], optional): [description]. Defaults to None.
-        
+
         Returns:
             [type]: [description]
         """
@@ -189,11 +199,11 @@ class UserClient(BaseClient):
 
     def change_org_assignment(self, user_id, org_id):
         """[summary]
-        
+
         Args:
             user_id ([type]): [description]
             org_id ([type]): [description]
-        
+
         Returns:
             [type]: [description]
         """

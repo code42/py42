@@ -10,7 +10,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## 0.6.0 - 2020-03-16
 
-## Removed
+### Removed
 
 - The following methods from `py42.util`:
     - `get_obj_from_response()`
@@ -21,7 +21,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `py42.util` module. Use `py42.sdk.util` instead.
 - `ArchiveModule.download_from_backup()`. Use `ArchiveModule.stream_from_backup()` instead.
 
-## Changed
+### Changed
 
 All client methods now return a `Py42Response` object that simplifies accessing the most meaningful parts
 of the returned JSON object.

@@ -4,15 +4,8 @@ from datetime import datetime
 from time import time
 
 from py42._internal.compat import str
-from py42.sdk.queries.alerts.alert_query import (
-    Actor,
-    AlertQuery,
-    AlertState,
-    DateObserved,
-    Description,
-    RuleName,
-    Severity,
-)
+from py42.sdk.queries.alerts.filters import *
+from py42.sdk.queries.alerts.alert_query import AlertQuery
 from tests.sdk.queries.conftest import (
     CONTAINS,
     IN_RANGE,

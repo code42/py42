@@ -5,21 +5,29 @@ from py42.clients.util import get_all_pages
 
 
 class OrgClient(BaseClient):
+    """A client for interacting with Code42 organization APIs.
+
+    The OrgClient has the ability to create and retrieve orgs.
+    Also, it manages blocking and deactivation of orgs.
+    """
+
     def create_org(
         self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None, classification=None
     ):
-        """[summary]
-        
+        """Creates a new organization.
+
         Args:
-            BaseClient ([type]): [description]
-            org_name ([type]): [description]
-            org_ext_ref ([type], optional): [description]. Defaults to None.
-            notes ([type], optional): [description]. Defaults to None.
-            parent_org_uid ([type], optional): [description]. Defaults to None.
-            classification ([type], optional): [description]. Defaults to None.
-        
+            org_name (str): Name of the organization.
+            org_ext_ref (str, optional): External reference information,
+                such as a serial number, asset tag, employee ID, or help desk issue ID.
+                Defaults to None.
+            notes (str, optional): Descriptive information. Defaults to None.
+            parent_org_uid (int, optional): OrgUid for the parent organization.. Defaults to None.
+            classification (str, optional): Classification column to denote msp and reseller orgs.
+                Values: BASIC, MSP, RESELLER. Defaults to None.
+
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/Org/"
         data = {
@@ -32,22 +40,24 @@ class OrgClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_by_id(self, org_id, **kwargs):
-        """[summary]
-        
+        """Gets the organization with the given ID.
+        Args:
+            org_id (int): ID for an organization.
+
         Returns:
-            [type]: [description]
+            Py42Response: A response containing the organization.
         """
         uri = u"/api/Org/{0}".format(org_id)
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, org_uid, **kwargs):
-        """[summary]
-        
+        """Gets the organization with the given UID.
+
         Args:
-            org_uid ([type]): [description]
-        
+            org_uid (str): UID for an organization.
+
         Returns:
-            [type]: [description]
+            Py42Response: A response containing the organization.
         """
         uri = u"/api/Org/{0}".format(org_uid)
         params = dict(idType=u"orgUid", **kwargs)
@@ -59,66 +69,72 @@ class OrgClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_all(self, **kwargs):
-        """[summary]
-        
+        """Gets all organizations.
+
         Returns:
-            [type]: [description]
+            Py42Response: A response containing all the organizations.
         """
         return get_all_pages(self._get_page, u"orgs", **kwargs)
 
     def block(self, org_id):
-        """[summary]
-        
+        """Blocks a specific org and child orgs.
+        A blocked org will not allow any of its users or computers to log in,
+        new registrations will be rejected and all currently logged in clients will be logged out.
+        Backups continue for active devices.
+
         Args:
-            org_id ([type]): [description]
-        
+            org_id (int): ID for an organization.
+
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._session.put(uri)
 
     def unblock(self, org_id):
-        """[summary]
-        
+        """Removes block on an org and descendants. Users need to be individually unblocked.
+
         Args:
-            org_id ([type]): [description]
-        
+            org_id (int): ID for an organization.
+
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._session.delete(uri)
 
     def deactivate(self, org_id):
-        """[summary]
-        
+        """Deactivates the organization specified in the URL.
+        All users, plans, and computers are deactivated,
+        which means backups are stopped and archives placed in cold storage.
+
         Args:
-            org_id ([type]): [description]
-        
+            org_id (int): ID for an organization.
+
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._session.put(uri)
 
     def reactivate(self, org_id):
-        """[summary]
-        
+        """Removes a deactivation from the org specified in the URL.
+        Backups are *not* restarted automatically.
+
         Args:
-            org_id ([type]): [description]
-        
+            org_id (int): ID for an organization.
+
         Returns:
-            [type]: [description]
+            Py42Response: The response of the API call.
         """
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._session.delete(uri)
 
     def get_current(self, **kwargs):
-        """[summary]
-        
+        """Gets the organization for the signed-in user.
+
         Returns:
-            [type]: [description]
+            Py42Response: The response containing the organization for the signed-in user.
         """
         uri = u"/api/Org/my"
         return self._session.get(uri, params=kwargs)

@@ -15,6 +15,21 @@ class UserClient(BaseClient):
         last_name=None,
         notes=None,
     ):
+        """[summary]
+        
+        Args:
+            BaseClient ([type]): [description]
+            org_uid ([type]): [description]
+            username ([type]): [description]
+            email ([type], optional): [description]. Defaults to None.
+            password ([type], optional): [description]. Defaults to None.
+            first_name ([type], optional): [description]. Defaults to None.
+            last_name ([type], optional): [description]. Defaults to None.
+            notes ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/User"
         data = {
             u"orgUid": org_uid,
@@ -28,20 +43,46 @@ class UserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_by_id(self, user_id, **kwargs):
+        """[summary]
+        
+        Args:
+            user_id ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/User/{0}".format(user_id)
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, user_uid, **kwargs):
+        """[summary]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/User/{0}".format(user_uid)
         params = dict(idType=u"uid", **kwargs)
         return self._session.get(uri, params=params)
 
     def get_by_username(self, username, **kwargs):
+        """[summary]
+        
+        Args:
+            username ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
         return self._session.get(uri, params=params)
 
     def get_current(self, **kwargs):
+        """[summary]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/User/my"
         return self._session.get(uri, params=kwargs)
 
@@ -71,6 +112,18 @@ class UserClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs):
+        """[summary]
+        
+        Args:
+            active ([type], optional): [description]. Defaults to None.
+            email ([type], optional): [description]. Defaults to None.
+            org_uid ([type], optional): [description]. Defaults to None.
+            role_id ([type], optional): [description]. Defaults to None.
+            q ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         return get_all_pages(
             self._get_page,
             u"users",
@@ -83,24 +136,67 @@ class UserClient(BaseClient):
         )
 
     def block(self, user_id):
+        """[summary]
+        
+        Args:
+            user_id ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.put(uri)
 
     def unblock(self, user_id):
+        """[summary]
+        
+        Args:
+            user_id ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.delete(uri)
 
     def deactivate(self, user_id, block_user=None):
+        """[summary]
+        
+        Args:
+            user_id ([type]): [description]
+            block_user ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         data = {u"blockUser": block_user}
         return self._session.put(uri, data=json.dumps(data))
 
     def reactivate(self, user_id, unblock_user=None):
+        """[summary]
+        
+        Args:
+            user_id ([type]): [description]
+            unblock_user ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         params = {u"unblockUser": unblock_user}
         return self._session.delete(uri, params=params)
 
     def change_org_assignment(self, user_id, org_id):
+        """[summary]
+        
+        Args:
+            user_id ([type]): [description]
+            org_id ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}
         return self._session.post(uri, data=json.dumps(data))

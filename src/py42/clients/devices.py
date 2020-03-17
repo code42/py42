@@ -46,6 +46,21 @@ class DeviceClient(BaseClient):
         q=None,
         **kwargs
     ):
+        """[summary]
+        
+        Args:
+            active ([type], optional): [description]. Defaults to None.
+            blocked ([type], optional): [description]. Defaults to None.
+            org_uid ([type], optional): [description]. Defaults to None.
+            user_uid ([type], optional): [description]. Defaults to None.
+            destination_guid ([type], optional): [description]. Defaults to None.
+            include_backup_usage ([type], optional): [description]. Defaults to None.
+            include_counts (bool, optional): [description]. Defaults to True.
+            q ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
 
         return get_all_pages(
             self._get_page,
@@ -62,38 +77,105 @@ class DeviceClient(BaseClient):
         )
 
     def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
+        """[summary]
+        
+        Args:
+            device_id ([type]): [description]
+            include_backup_usage ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/Computer/{0}".format(device_id)
         params = dict(incBackupUsage=include_backup_usage, **kwargs)
         return self._session.get(uri, params=params)
 
     def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
+        """[summary]
+        
+        Args:
+            guid ([type]): [description]
+            include_backup_usage ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/Computer/{0}".format(guid)
         params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
         return self._session.get(uri, params=params)
 
     def block(self, device_id):
+        """[summary]
+        
+        Args:
+            device_id ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/ComputerBlock/{0}".format(device_id)
         return self._session.put(uri)
 
     def unblock(self, device_id):
+        """[summary]
+        
+        Args:
+            device_id ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/ComputerBlock/{0}".format(device_id)
         return self._session.delete(uri)
 
     def deactivate(self, device_id):
+        """[summary]
+        
+        Args:
+            device_id ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": device_id}
         return self._session.post(uri, data=json.dumps(data))
 
     def reactivate(self, device_id):
+        """[summary]
+        
+        Args:
+            device_id ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/v4/computer-deactivation/remove"
         data = {u"id": device_id}
         return self._session.post(uri, data=json.dumps(data))
 
     def deauthorize(self, device_id):
+        """[summary]
+        
+        Args:
+            device_id ([type]): [description]
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/ComputerDeauthorization/{0}".format(device_id)
         return self._session.put(uri)
 
     def get_settings(self, guid, keys=None):
+        """[summary]
+        
+        Args:
+            guid ([type]): [description]
+            keys ([type], optional): [description]. Defaults to None.
+        
+        Returns:
+            [type]: [description]
+        """
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
         return self._session.get(uri, params=params)

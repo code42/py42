@@ -3,7 +3,10 @@ from threading import Lock
 from requests.exceptions import HTTPError
 
 import py42.util as util
-from py42.exceptions import Py42SecurityPlanConnectionError, Py42DestinationNotFoundError
+from py42.exceptions import (
+    Py42SecurityPlanConnectionError,
+    exception_checker,
+)
 
 
 class SecurityModule(object):
@@ -25,9 +28,9 @@ class SecurityModule(object):
             locations = util.get_obj_from_response(response, u"securityPlanLocationsByDestination")
         except HTTPError as err:
             if err.response.status_code == 404:
-                Py42DestinationNotFoundError("Could not find requested resource")
+                pass
             else:
-                raise
+                exception_checker(err)
 
         if locations:
             plan_destination_map = _get_plan_destination_map(locations)
@@ -109,7 +112,8 @@ class SecurityModule(object):
             plan_storage_info = PlanStorageInfo(plan_uid, destination_guid, node_guid)
             self._try_get_security_detection_event_client(plan_storage_info)
             return plan_storage_info
-        except Exception:
+        except HTTPError:
+            # Do we intend to pass here in all cases?
             pass
 
     def _try_get_security_detection_event_client(self, plan_storage_info):

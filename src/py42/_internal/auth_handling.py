@@ -1,7 +1,5 @@
 from requests import HTTPError
 
-from py42.exceptions import Py42AuthenticationError
-
 
 class LoginProvider(object):
     def get_secret_value(self, force_refresh=False):
@@ -17,9 +15,8 @@ class AuthHandler(object):
         try:
             secret = self._login_provider.get_secret_value(force_refresh=not use_cache)
             self._session_modifier.modify_session(session, secret)
-        except HTTPError as ex:
-            # Here even internal server errors too will be raised as authentication error!!!
-            raise Py42AuthenticationError("Error in authentication {0}".format(str(ex)))
+        except HTTPError:
+            raise
 
     @staticmethod
     def response_indicates_unauthorized(response):

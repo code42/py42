@@ -43,11 +43,12 @@ def successful_response(mocker):
 
 @pytest.fixture
 def error_response(mocker, http_error):
-    response = mocker.MagicMock(spec=Response)
-    response.text = ""
-    response.status_code = 500
-    response.raise_for_status.side_effect = http_error
-    return response
+    error = http_error
+    error.response = mocker.MagicMock(spec=Response)
+    error.response.text = ""
+    error.response.status_code = 500
+    error.response.raise_for_status.side_effect = http_error
+    return error.response
 
 
 @pytest.fixture

@@ -1,4 +1,5 @@
 import json
+from requests import HTTPError
 
 from py42._internal.clients import (
     administration,
@@ -16,7 +17,10 @@ from py42._internal.clients.employee_case_management.departing_employee import (
 from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.key_value_store import KeyValueStoreClient
 from py42._internal.clients.storage.storage import StorageClient
-from py42.exceptions import Py42FeatureUnavailableError
+from py42.exceptions import (
+    Py42FeatureUnavailableError,
+    Py42SessionInitializationError,
+)
 
 
 class AuthorityClientFactory(object):
@@ -122,12 +126,8 @@ def _get_sts_base_url(session):
     uri = u"/api/ServerEnv"
     try:
         response = session.get(uri)
-    except Exception as ex:
-        message = (
-            u"An error occurred while requesting server environment information, caused by {0}"
-        )
-        message = message.format(ex)
-        raise Exception(message)
+    except HTTPError as ex:
+        raise Py42SessionInitializationError(ex)
 
     sts_base_url = None
     if response.text:
@@ -135,7 +135,5 @@ def _get_sts_base_url(session):
         if u"stsBaseUrl" in response_json:
             sts_base_url = response_json[u"stsBaseUrl"]
     if not sts_base_url:
-        message = u"You may be trying to use a feature that is unavailable in your environment."
-        # raise Exception(u"stsBaseUrl not found. {0}".format(message))
         raise Py42FeatureUnavailableError()
     return sts_base_url

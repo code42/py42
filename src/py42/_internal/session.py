@@ -7,6 +7,7 @@ import py42.settings as settings
 import py42.util as util
 import requests.adapters
 from py42._internal.compat import str, urljoin, urlparse
+from py42.exceptions import exception_checker
 
 
 class Py42Session(object):
@@ -78,33 +79,36 @@ class Py42Session(object):
         return self.request(u"DELETE", url, **kwargs)
 
     def request(self, method, url, **kwargs):
-        url = urljoin(self._host_address, url)
-        json = kwargs.get(u"json")
+        try:
+            url = urljoin(self._host_address, url)
+            json = kwargs.get(u"json")
 
-        if json is not None:
-            kwargs[u"data"] = json_lib.dumps(util.filter_out_none(json))
-        if u"json" in kwargs:
-            del kwargs[u"json"]
+            if json is not None:
+                kwargs[u"data"] = json_lib.dumps(util.filter_out_none(json))
+            if u"json" in kwargs:
+                del kwargs[u"json"]
 
-        self._renew_authentication(use_cache=True)
+            self._renew_authentication(use_cache=True)
 
-        tries = 0
-        max_tries = 2
-        while tries < max_tries:
-            response, unauthorized = self._try_make_request(method, url, **kwargs)
-            tries += 1
+            tries = 0
+            max_tries = 2
+            while tries < max_tries:
+                response, unauthorized = self._try_make_request(method, url, **kwargs)
+                tries += 1
 
-            if unauthorized and tries < max_tries:
-                self._renew_authentication()
-                continue
+                if unauthorized and tries < max_tries:
+                    self._renew_authentication()
+                    continue
 
-            if response.status_code >= 400:
-                response.raise_for_status()
+                if response.status_code >= 400:
+                    response.raise_for_status()
 
-            if not kwargs.get(u"stream"):
-                response.encoding = u"utf-8"  # setting this manually speeds up read times
+                if not kwargs.get(u"stream"):
+                    response.encoding = u"utf-8"  # setting this manually speeds up read times
 
-            return response
+                return response
+        except requests.HTTPError as err:
+            exception_checker(err)
 
     def _try_make_request(
         self,

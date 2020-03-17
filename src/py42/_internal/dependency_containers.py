@@ -1,3 +1,5 @@
+from requests import HTTPError
+
 from py42._internal.archive_access import ArchiveAccessorManager
 from py42._internal.client_factories import (
     AuthorityClientFactory,
@@ -71,5 +73,5 @@ class SDKDependencies(object):
         try:
             response = session.get(test_uri)
             return 200 <= response.status_code < 300
-        except Exception:
-            raise Py42InitializationError(session.host_address)
+        except HTTPError as err:
+            raise Py42InitializationError(session.host_address, err)

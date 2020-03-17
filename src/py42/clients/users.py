@@ -128,7 +128,8 @@ class UserClient(BaseClient):
             active (bool, optional): True means active only, false means deactivated only.
                 Defaults to None.
             email (str, optional): Limits users to those with this email. Defaults to None.
-            org_uid (str, optional): Limits users to an organization. Defaults to None.
+            org_uid (str, optional): Limits users to an organization with this UID.
+                Defaults to None.
             role_id (int, optional): Limits users to those with a given role ID. Defaults to None.
             q (str, optional): A generic query filter that searches across name, username, and email.
                 Defaults to None.

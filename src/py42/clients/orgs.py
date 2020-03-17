@@ -8,7 +8,7 @@ class OrgClient(BaseClient):
     """A client for interacting with Code42 organization APIs.
 
     The OrgClient has the ability to create and retrieve orgs.
-    Also, it manages blocking and deactivation of orgs.
+    Also, it manages blocking and deactivation.
     """
 
     def create_org(
@@ -104,7 +104,7 @@ class OrgClient(BaseClient):
         return self._session.delete(uri)
 
     def deactivate(self, org_id):
-        """Deactivates the organization specified in the URL.
+        """Deactivates the organization with the given ID.
         All users, plans, and computers are deactivated,
         which means backups are stopped and archives placed in cold storage.
 

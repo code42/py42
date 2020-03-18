@@ -22,7 +22,7 @@ class UserClient(BaseClient):
         notes=None,
     ):
         """Creates a new user.
-        WARNING: If the provided username for a user already exists, it will be updated in the
+        WARNING: If the provided username already exists for a user, it will be updated in the
         database instead.
         REST Documentation: https://console.us.code42.com/apidocviewer/#User-post
 
@@ -142,7 +142,8 @@ class UserClient(BaseClient):
                 Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects that
+            generator:
+                An object that iterates over :class:`py42.sdk.response.Py42Response` objects that
                 each contain a page of users.
         """
         return get_all_pages(
@@ -158,7 +159,7 @@ class UserClient(BaseClient):
 
     def block(self, user_id):
         """Blocks the user with the given user ID. A blocked user is not allowed to log in or
-        restore files from backup. Backups continue if the user is still active.
+        restore files. Backups will continue if the user is still active.
         REST Documentation: https://console.us.code42.com/apidocviewer/#UserBlock-put
 
         Args:
@@ -217,7 +218,7 @@ class UserClient(BaseClient):
         return self._session.delete(uri, params=params)
 
     def change_org_assignment(self, user_id, org_id):
-        """Moves a user to a different organization.
+        """Assigns a user to a different organization.
         REST Documentation: https://console.us.code42.com/apidocviewer/#UserMoveProcess-post
 
         Args:

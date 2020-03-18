@@ -17,7 +17,7 @@ class UserClient(BaseClient):
     ):
         """Creates a new user.
         An anomaly with the resource behind this function is that if you give a username for a user
-        that already exists, it will be re-used in the database instead of throwing an error.
+        that already exists, it will re-use it in the database instead of throwing an error.
 
         Args:
             org_uid (str): The org UID for the organization the new user belongs to.
@@ -180,7 +180,7 @@ class UserClient(BaseClient):
 
     def deactivate(self, user_id, block_user=None):
         """Deactivates the user with the given user ID.
-        Backups discontinue for a a deactivated user, and their archives go to cold storage.
+        Backups discontinue for a deactivated user, and their archives go to cold storage.
 
         Args:
             user_id (int): A user ID for a user.

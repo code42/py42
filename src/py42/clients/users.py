@@ -16,19 +16,19 @@ class UserClient(BaseClient):
         notes=None,
     ):
         """Creates a new user.
-        An anomaly with this resource is that an existing username in the database will be reused
-        instead of having an error thrown.
+        An anomaly with the resource behind this function is that if you give a username for a user
+        that already exists, it will be re-used in the database instead of throwing an error.
 
         Args:
             org_uid (str): The org UID for the organization the new user belongs to.
             username (str): The username for the new user.
             email (str, optional): The email for the new user.
                 For organizations with local or RADIUS authorization,
-                either email or password is required and the user is created in invite mode.
+                either an email or a password is required and the user is created in invite mode.
                 Defaults to None.
             password (str, optional): The password for the new user.
                 For organizations with local or RADIUS authorization,
-                either email or password is required and the user is created in invite mode.
+                either an email or a password is required and the user is created in invite mode.
                 Defaults to None.
             first_name (str, optional): The first name for the new user. Defaults to None.
             last_name (str, optional): The last name for the new user. Defaults to None.
@@ -126,7 +126,7 @@ class UserClient(BaseClient):
         """Gets all users.
 
         Args:
-            active (bool, optional): True gets activate users only,
+            active (bool, optional): True gets active users only,
                 and false gets deactivated users only. Defaults to None.
             email (str, optional): Limits users to only those with this email. Defaults to None.
             org_uid (str, optional): Limits users to only those in the organization with this org UID.

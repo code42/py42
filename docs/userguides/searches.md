@@ -10,9 +10,21 @@ First, import the required modules and classes and create the SDK:
     >>>
     >>> sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
-You will need to use `~file_event_query.FileEventQuery` with`~query_filter.FilterGroup` objects
-as positional arguments to build up a query. There are Filters can be put into an iterable
-and unpacked into `FileEvetQuery.any()` using the `*` operator:
+You will need to create `~query_filter.FilterGroup` objects to conduct searches. Filter Groups have a type,
+such as `EmailSender`, and an operator, such as `is_in`. Some example filter groups looks like this:
+
+    >>> email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
+    >>> exposure_filter = ExposureType.exists()
+    >>> ip_filter = PrivateIPAddress.eq("127.0.0.1")
+
+There are two operators when building `~file_event_query.FileEventQuery` objects: `any`, and `all`.
+`any` gets results where just one of the filters is true and `all` gets results where all filters are true.
+
+    >>> any_query = FileEventQuery.any(email_filter, exposure_filter)
+    >>> all_query = FileEventQuery.all(exposure_filter, ip_filter)
+
+Filters can be put into an iterable and unpacked into `FileEvetQuery.any()` using the `*` operator. This is a common
+use case for programs that need to conditionally build up filters:
 
     >>> filters = [Source.eq("GMAIL"), Actor.is_in(["foo@example,com", "baz@example.com"])]
     >>> query = FileEventQuery.any(*filters)
@@ -24,6 +36,8 @@ To execute the search, use `~securitydata.SecurityModule.search_file_events()`:
 
 Alert Searches
 --------------
+
+Importing alert filters is a lot like importing file event filters:
 
     >>> from py42.sdk.queries.alerts.filters import *
     >>> from py42.sdk.queries.alerts.alert_query import AlertQuery
@@ -38,3 +52,7 @@ that alert queries require a tenant ID:
 To execute the search, use `~alerts.AlertClient.search()`:
 
     >>> sdk.securitydata.alerts.search(query)
+
+The example for file event queries involving the unpacking of a list into positional arguments works for alerts as well:
+
+    >>> alerts = sdk.securitydata.alerts.search(*filters)

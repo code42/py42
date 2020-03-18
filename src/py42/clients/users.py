@@ -20,23 +20,24 @@ class UserClient(BaseClient):
         instead of having an error thrown.
 
         Args:
-            org_uid (str): Organization UID.
-            username (str): New username.
-            email (str, optional): New email.
-                Required for orgs with local or RADIUS authorization if no password is provided
-                (this case will create users in invite mode).
+            org_uid (str): The org UID for the organization the new user belongs to.
+            username (str): The username for the new user.
+            email (str, optional): The email for the new user.
+                For organizations with local or RADIUS authorization,
+                either email or password is required and this creates users in invite mode.
                 Defaults to None.
-            password (str, optional): New password.
-                For orgs with local or RADIUS authorization -
-                If no password is provided an email is required to create users in invite mode.
+            password (str, optional): The password for the new user.
+                For organizations with local or RADIUS authorization,
+                either email or password is required and this creates users in invite mode.
                 Defaults to None.
-            first_name (str, optional): New first name. Defaults to None.
-            last_name (str, optional): New last name. Defaults to None.
-            notes (str, optional): Descriptive information. Defaults to None.
+            first_name (str, optional): The first name for the new user. Defaults to None.
+            last_name (str, optional): The last name for the new user. Defaults to None.
+            notes (str, optional): Descriptive information about the user. Defaults to None.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response: The response of the API call.
         """
+
         uri = u"/api/User"
         data = {
             u"orgUid": org_uid,
@@ -50,25 +51,25 @@ class UserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_by_id(self, user_id, **kwargs):
-        """Gets the user with the given ID.
+        """Gets the user with the given user ID.
 
         Args:
-            user_id (int): ID for a user.
+            user_id (int): A user ID for a user.
 
         Returns:
-            Py42Response: A response containing the user.
+            :class:~py42.response.Py42Response: A response containing the user.
         """
         uri = u"/api/User/{0}".format(user_id)
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, user_uid, **kwargs):
-        """Gets the user with the given UID.
+        """Gets the user with the given user UID.
 
         Args:
-            user_uid (str): UID for a user.
+            user_uid (str): A user UID for a user.
 
         Returns:
-            Py42Response: A response containing the user.
+            :class:~py42.response.Py42Response: A response containing the user.
         """
         uri = u"/api/User/{0}".format(user_uid)
         params = dict(idType=u"uid", **kwargs)
@@ -81,7 +82,7 @@ class UserClient(BaseClient):
             username (str): username for a user.
 
         Returns:
-            Py42Response: A response containing the user.
+            :class:~py42.response.Py42Response: A response containing the user.
         """
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
@@ -91,7 +92,7 @@ class UserClient(BaseClient):
         """Gets the currently signed in user.
 
         Returns:
-            Py42Response: A response containing the user.
+            :class:~py42.response.Py42Response: A response containing the user.
         """
         uri = u"/api/User/my"
         return self._session.get(uri, params=kwargs)
@@ -125,17 +126,18 @@ class UserClient(BaseClient):
         """Gets all users.
 
         Args:
-            active (bool, optional): True means active only, false means deactivated only.
+            active (bool, optional): True means get active users only,
+                false means get deactivated users only.
                 Defaults to None.
             email (str, optional): Limits users to those with this email. Defaults to None.
-            org_uid (str, optional): Limits users to an organization with this UID.
+            org_uid (str, optional): Limits users to an organization with this org UID.
                 Defaults to None.
             role_id (int, optional): Limits users to those with a given role ID. Defaults to None.
             q (str, optional): A generic query filter that searches across name, username, and email.
                 Defaults to None.
 
         Returns:
-            Py42Response: A response containing the users.
+            generator: An object that iterates over :class:~py42.response.Py42Response objects.
         """
         return get_all_pages(
             self._get_page,
@@ -149,56 +151,58 @@ class UserClient(BaseClient):
         )
 
     def block(self, user_id):
-        """Blocks a specific user. User is not allowed to login or restore.
-            Backups continue if user is still active.
+        """Blocks the user with the give user ID.
+        A blocked user is not allowed to log in or restore.
+        Backups continue if the user is still active.
 
         Args:
-            user_id (int): An ID for a user.
+            user_id (int): A user ID for a user.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response.
         """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.put(uri)
 
     def unblock(self, user_id):
-        """Removes block on a specific user. User will be allowed to login and restore.
+        """Removes a block, if one exists, on the user with the given user ID.
+         Unblocked users are allowed to log in and restore.
 
         Args:
-            user_id (int): An ID for a user.
+            user_id (int): A user ID for a user.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response.
         """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.delete(uri)
 
     def deactivate(self, user_id, block_user=None):
-        """Deactivates a user.
-            Backups are stopped and archives placed in cold storage.
+        """Deactivates the user with the given user ID.
+        Backups discontinue for a a deactivated user, and their archives go to cold storage.
 
         Args:
-            user_id (int): An ID for a user.
+            user_id (int): A user ID for a user.
             block_user (bool, optional): Blocks the user upon deactivation. Defaults to None.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response.
         """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         data = {u"blockUser": block_user}
         return self._session.put(uri, data=json.dumps(data))
 
     def reactivate(self, user_id, unblock_user=None):
-        """Removes a deactivation for the user with the given ID.
+        """Removes a deactivation for the user with the given user ID.
 
         Args:
-            user_id (int): An ID for a user.
+            user_id (int): A user ID for a user.
             unblock_user (bool, optional):
                 Whether or not to unblock the user if they are blocked upon reactivation.
                 Defaults to None.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response.
         """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         params = {u"unblockUser": unblock_user}
@@ -208,11 +212,11 @@ class UserClient(BaseClient):
         """Moves a user to a different organization.
 
         Args:
-            user_id (int): An ID for a user.
-            org_id (int): The ID for the org to move the user to.
+            user_id (int): A user ID for a user.
+            org_id (int): An org ID for the organization to move the user to.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response.
         """
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}

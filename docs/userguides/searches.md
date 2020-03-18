@@ -18,7 +18,7 @@ such as `EmailSender`, and an operator, such as `is_in`. Some example filter gro
     >>> ip_filter = PrivateIPAddress.eq("127.0.0.1")
 
 There are two operators when building `file_event_query.FileEventQuery` objects: `any`, and `all`.
-`any` gets results where just one of the filters is true and `all` gets results where all filters are true.
+`any` gets results where at least one of the filters is true and `all` gets results where all filters are true.
 
     >>> any_query = FileEventQuery.any(email_filter, exposure_filter)
     >>> all_query = FileEventQuery.all(exposure_filter, ip_filter)
@@ -34,8 +34,7 @@ To execute the search, use `securitydata.SecurityModule.search_file_events()`:
     >>> response = sdk.securitydata.search_file_events(query)
     >>> file_events = response["fileEvents"]
 
-Alert Searches
---------------
+## Alert Searches
 
 Importing alert filters is a lot like importing file event filters:
 

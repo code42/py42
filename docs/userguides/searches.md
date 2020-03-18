@@ -36,12 +36,12 @@ To execute the search, use `securitydata.SecurityModule.search_file_events()`:
 
 ## Alert Searches
 
-Importing alert filters is a lot like importing file event filters:
+First, import alert filters:
 
     >>> from py42.sdk.queries.alerts.filters import *
     >>> from py42.sdk.queries.alerts.alert_query import AlertQuery
 
-The syntax for alert searches is the same as file event searches. The caveat is
+The syntax for building an alert query is the same as building a file event query. The caveat is
 that alert queries require a tenant ID:
 
     >>> filters = [AlertState.eq("OPEN"), Severity.is_in(["HIGH", "LOW"])]
@@ -51,7 +51,4 @@ that alert queries require a tenant ID:
 To execute the search, use `alerts.AlertClient.search()`:
 
     >>> sdk.securitydata.alerts.search(query)
-
-The example for file event queries involving the unpacking of a list into positional arguments works for alerts as well:
-
     >>> alerts = sdk.securitydata.alerts.search(*filters)

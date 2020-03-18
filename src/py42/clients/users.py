@@ -157,9 +157,8 @@ class UserClient(BaseClient):
         )
 
     def block(self, user_id):
-        """Blocks the user with the given user ID.
-        A blocked user is not allowed to log in or restore.
-        Backups continue if the user is still active.
+        """Blocks the user with the given user ID. A blocked user is not allowed to log in or
+        restore files from backup. Backups continue if the user is still active.
         REST Documentation: https://console.us.code42.com/apidocviewer/#UserBlock-put
 
         Args:
@@ -172,9 +171,9 @@ class UserClient(BaseClient):
         return self._session.put(uri)
 
     def unblock(self, user_id):
-        """Removes a block, if one exists, on the user with the given user ID.
-         Unblocked users are allowed to log in and restore.
-         REST Documentation: https://console.us.code42.com/apidocviewer/#UserBlock-delete
+        """Removes a block, if one exists, on the user with the given user ID. Unblocked users are
+        allowed to log in and restore.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#UserBlock-delete
 
         Args:
             user_id (int): A user ID for a user.

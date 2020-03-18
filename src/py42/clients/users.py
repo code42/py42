@@ -30,14 +30,8 @@ class UserClient(BaseClient):
         Args:
             org_uid (str): The org UID for the organization the new user belongs to.
             username (str): The username for the new user.
-            email (str, optional): The email for the new user.
-                For organizations with local or RADIUS authorization,
-                either an email or a password is required and the user is created in invite mode.
-                Defaults to None.
-            password (str, optional): The password for the new user.
-                For organizations with local or RADIUS authorization,
-                either an email or a password is required and the user is created in invite mode.
-                Defaults to None.
+            email (str, optional): The email for the new user. Defaults to None.
+            password (str, optional): The password for the new user. Defaults to None.
             first_name (str, optional): The first name for the new user. Defaults to None.
             last_name (str, optional): The last name for the new user. Defaults to None.
             notes (str, optional): Descriptive information about the user. Defaults to None.

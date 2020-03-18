@@ -17,17 +17,20 @@ class OrgClient(BaseClient):
         """Creates a new organization.
 
         Args:
-            org_name (str): Name of the organization.
+            org_name (str): The name to give to the organization.
             org_ext_ref (str, optional): External reference information,
                 such as a serial number, asset tag, employee ID, or help desk issue ID.
                 Defaults to None.
-            notes (str, optional): Descriptive information. Defaults to None.
-            parent_org_uid (int, optional): OrgUid for the parent organization.. Defaults to None.
-            classification (str, optional): Classification column to denote msp and reseller orgs.
+            notes (str, optional): Descriptive information about the organization.
+                Defaults to None.
+            parent_org_uid (int, optional): The org UID for the parent organization.
+                Defaults to None.
+            classification (str, optional):
+                Classification column to denote msp and reseller organizations.
                 Values: BASIC, MSP, RESELLER. Defaults to None.
 
         Returns:
-            :class:~py42.response.Py42Response.
+            :class:~py42.response.Py42Response
         """
         uri = u"/api/Org/"
         data = {
@@ -40,12 +43,12 @@ class OrgClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_by_id(self, org_id, **kwargs):
-        """Gets the organization with the given ID.
+        """Gets the organization with the given org ID.
         Args:
-            org_id (int): ID for an organization.
+            org_id (int): An org ID for an organization.
 
         Returns:
-            Py42Response: A response containing the organization.
+            :class:~py42.response.Py42Response: A response containing the organization.
         """
         uri = u"/api/Org/{0}".format(org_id)
         return self._session.get(uri, params=kwargs)
@@ -54,10 +57,10 @@ class OrgClient(BaseClient):
         """Gets the organization with the given UID.
 
         Args:
-            org_uid (str): UID for an organization.
+            org_uid (str): An org UID for an organization.
 
         Returns:
-            Py42Response: A response containing the organization.
+            :class:~py42.response.Py42Response: A response containing the organization.
         """
         uri = u"/api/Org/{0}".format(org_uid)
         params = dict(idType=u"orgUid", **kwargs)
@@ -72,12 +75,13 @@ class OrgClient(BaseClient):
         """Gets all organizations.
 
         Returns:
-            Py42Response: A response containing all the organizations.
+            generator: An object that iterates over :class:~py42.response.Py42Response objects
+                containing organizations.
         """
         return get_all_pages(self._get_page, u"orgs", **kwargs)
 
     def block(self, org_id):
-        """Blocks a specific org and child orgs.
+        """Blocks the organization and child organizations with the given org ID.
         A blocked org will not allow any of its users or computers to log in,
         new registrations will be rejected and all currently logged in clients will be logged out.
         Backups continue for active devices.

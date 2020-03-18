@@ -20,15 +20,14 @@ class OrgClient(BaseClient):
         Args:
             org_name (str): The name to give to the organization.
             org_ext_ref (str, optional): External reference information,
-                such as a serial number, asset tag, employee ID, or help desk issue ID.
-                Defaults to None.
-            notes (str, optional): Descriptive information about the organization.
-                Defaults to None.
-            parent_org_uid (int, optional): The org UID for the parent organization.
-                Defaults to None.
+                such as a serial number, asset tag, employee ID, or help desk issue ID. Defaults to
+                None.
+            notes (str, optional): Descriptive information about the organization. Defaults to None.
+            parent_org_uid (int, optional): The org UID for the parent organization. Defaults to
+                None.
             classification (str, optional):
-                Classification column to denote msp and reseller organizations.
-                Acceptable values are BASIC, MSP, RESELLER. Defaults to None.
+                Classification column to denote msp and reseller organizations. Acceptable values
+                are BASIC, MSP, RESELLER. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -102,8 +101,8 @@ class OrgClient(BaseClient):
         return self._session.put(uri)
 
     def unblock(self, org_id):
-        """Removes a block, if one exists, on an organization and its descendants with the given org ID.
-        All users in the organization remain blocked until they are unblocked individually.
+        """Removes a block, if one exists, on an organization and its descendants with the given
+        org ID. All users in the organization remain blocked until they are unblocked individually.
         REST Documentation: https://console.us.code42.com/apidocviewer/#OrgBlock-delete
 
         Args:
@@ -130,8 +129,8 @@ class OrgClient(BaseClient):
         return self._session.put(uri)
 
     def reactivate(self, org_id):
-        """Reactivates the organization with the given org ID.
-        Backups are *not* restarted automatically.
+        """Reactivates the organization with the given org ID. Backups are *not* restarted
+        automatically.
         REST Documentation: https://console.us.code42.com/apidocviewer/#OrgDeactivation-delete
 
         Args:

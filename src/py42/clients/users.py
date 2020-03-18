@@ -134,17 +134,16 @@ class UserClient(BaseClient):
             active (bool, optional): True gets active users only,
                 and false gets deactivated users only. Defaults to None.
             email (str, optional): Limits users to only those with this email. Defaults to None.
-            org_uid (str, optional): Limits users to only those in the organization with this org UID.
-                Defaults to None.
-            role_id (int, optional): Limits users to only those with a given role ID.
-                Defaults to None.
-            q (str, optional): A generic query filter that searches across name, username, and email.
-                Defaults to None.
+            org_uid (str, optional): Limits users to only those in the organization with this org
+                UID. Defaults to None.
+            role_id (int, optional): Limits users to only those with a given role ID. Defaults to
+                None.
+            q (str, optional): A generic query filter that searches across name, username, and
+                email. Defaults to None.
 
         Returns:
-            generator:
-                An object that iterates over :class:`py42.sdk.response.Py42Response` objects that
-                each contain a page of users.
+            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            that each contain a page of users.
         """
         return get_all_pages(
             self._get_page,

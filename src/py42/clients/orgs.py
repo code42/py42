@@ -7,7 +7,7 @@ from py42.clients.util import get_all_pages
 class OrgClient(BaseClient):
     """A client for interacting with Code42 organization APIs.
 
-    The OrgClient has the ability to create and retrieve orgs.
+    The OrgClient has the ability to create and retrieve organizations.
     Also, it manages blocking and deactivation.
     """
 
@@ -30,7 +30,7 @@ class OrgClient(BaseClient):
                 Values: BASIC, MSP, RESELLER. Defaults to None.
 
         Returns:
-            :class:~py42.response.Py42Response
+            Py42Response
         """
         uri = u"/api/Org/"
         data = {
@@ -48,7 +48,7 @@ class OrgClient(BaseClient):
             org_id (int): An org ID for an organization.
 
         Returns:
-            :class:~py42.response.Py42Response: A response containing the organization.
+            Py42Response: A response containing the organization.
         """
         uri = u"/api/Org/{0}".format(org_id)
         return self._session.get(uri, params=kwargs)
@@ -60,7 +60,7 @@ class OrgClient(BaseClient):
             org_uid (str): An org UID for an organization.
 
         Returns:
-            :class:~py42.response.Py42Response: A response containing the organization.
+            Py42Response: A response containing the organization.
         """
         uri = u"/api/Org/{0}".format(org_uid)
         params = dict(idType=u"orgUid", **kwargs)
@@ -75,8 +75,8 @@ class OrgClient(BaseClient):
         """Gets all organizations.
 
         Returns:
-            generator: An object that iterates over :class:~py42.response.Py42Response objects
-                that each contain a page of organizations.
+            A generator object that iterates over Py42Response objects
+            that each contain a page of organizations.
         """
         return get_all_pages(self._get_page, u"orgs", **kwargs)
 
@@ -90,7 +90,7 @@ class OrgClient(BaseClient):
             org_id (int): An org ID for an organization.
 
         Returns:
-            :class:~py42.response.Py42Response
+            Py42Response
         """
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._session.put(uri)
@@ -103,7 +103,7 @@ class OrgClient(BaseClient):
             org_id (int): An org ID for an organization.
 
         Returns:
-            :class:~py42.response.Py42Response
+            Py42Response
         """
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._session.delete(uri)
@@ -117,7 +117,7 @@ class OrgClient(BaseClient):
             org_id (int): an org ID for an organization.
 
         Returns:
-            :class:~py42.response.Py42Response
+            Py42Response
         """
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._session.put(uri)
@@ -130,7 +130,7 @@ class OrgClient(BaseClient):
             org_id (int): An org ID for an organization.
 
         Returns:
-            :class:~py42.response.Py42Response
+            Py42Response
         """
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._session.delete(uri)
@@ -139,7 +139,7 @@ class OrgClient(BaseClient):
         """Gets the organization for the currently signed-in user.
 
         Returns:
-            :class:~py42.response.Py42Response:
+            Py42Response:
             A response containing the organization for the currently signed-in user.
         """
         uri = u"/api/Org/my"

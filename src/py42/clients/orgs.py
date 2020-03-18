@@ -9,14 +9,13 @@ class OrgClient(BaseClient):
 
     The OrgClient has the ability to create and retrieve organizations.
     Also, it manages blocking and deactivation.
-
-    REST Documentation: https://console.us.code42.com/apidocviewer/#Org
     """
 
     def create_org(
         self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None, classification=None
     ):
         """Creates a new organization.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#Org-post
 
         Args:
             org_name (str): The name to give to the organization.
@@ -46,6 +45,8 @@ class OrgClient(BaseClient):
 
     def get_by_id(self, org_id, **kwargs):
         """Gets the organization with the given org ID.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#Org-get
+
         Args:
             org_id (int): An org ID for an organization.
 
@@ -57,6 +58,7 @@ class OrgClient(BaseClient):
 
     def get_by_uid(self, org_uid, **kwargs):
         """Gets the organization with the given org UID.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#Org-get
 
         Args:
             org_uid (str): An org UID for an organization.
@@ -75,6 +77,7 @@ class OrgClient(BaseClient):
 
     def get_all(self, **kwargs):
         """Gets all organizations.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#Org-get
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -87,6 +90,7 @@ class OrgClient(BaseClient):
         A blocked organization will not allow any of its users or devices to log in.
         New registrations will be rejected and all currently logged in clients will be logged out.
         Backups continue for any devices that are still active.
+        Rest Documentation: https://console.us.code42.com/apidocviewer/#OrgBlock-put
 
         Args:
             org_id (int): An org ID for an organization.
@@ -100,6 +104,7 @@ class OrgClient(BaseClient):
     def unblock(self, org_id):
         """Removes a block, if one exists, on an organization and its descendants with the given org ID.
         All users in the organization remain blocked until they are unblocked individually.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#OrgBlock-delete
 
         Args:
             org_id (int): An org ID for an organization.
@@ -113,6 +118,7 @@ class OrgClient(BaseClient):
     def deactivate(self, org_id):
         """Deactivates the organization with the given org ID,
         including all users, plans, and devices. Backups stop and archives move to cold storage.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#OrgDeactivation-put
 
         Args:
             org_id (int): an org ID for an organization.
@@ -126,6 +132,7 @@ class OrgClient(BaseClient):
     def reactivate(self, org_id):
         """Removes deactivation for the organization with the given org ID.
         Backups are *not* restarted automatically.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#OrgDeactivation-delete
 
         Args:
             org_id (int): An org ID for an organization.
@@ -138,6 +145,7 @@ class OrgClient(BaseClient):
 
     def get_current(self, **kwargs):
         """Gets the organization for the currently signed-in user.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#Org-get
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization for the

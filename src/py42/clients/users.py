@@ -126,13 +126,13 @@ class UserClient(BaseClient):
         """Gets all users.
 
         Args:
-            active (bool, optional): True means get active users only,
-                false means get deactivated users only.
+            active (bool, optional): True gets activate users only,
+                and false gets deactivated users only. Defaults to None.
+            email (str, optional): Limits users to only those with this email. Defaults to None.
+            org_uid (str, optional): Limits users to only those in the organization with this org UID.
                 Defaults to None.
-            email (str, optional): Limits users to those with this email. Defaults to None.
-            org_uid (str, optional): Limits users to an organization with this org UID.
+            role_id (int, optional): Limits users to only those with a given role ID.
                 Defaults to None.
-            role_id (int, optional): Limits users to those with a given role ID. Defaults to None.
             q (str, optional): A generic query filter that searches across name, username, and email.
                 Defaults to None.
 
@@ -198,8 +198,7 @@ class UserClient(BaseClient):
 
         Args:
             user_id (int): A user ID for a user.
-            unblock_user (bool, optional):
-                Whether or not to unblock the user if they are blocked upon reactivation.
+            unblock_user (bool, optional): Whether or not to unblock the user if they are blocked.
                 Defaults to None.
 
         Returns:

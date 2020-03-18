@@ -160,7 +160,7 @@ class UserClient(BaseClient):
             user_id (int): A user ID for a user.
 
         Returns:
-            Py42Response.
+            Py42Response
         """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.put(uri)
@@ -173,7 +173,7 @@ class UserClient(BaseClient):
             user_id (int): A user ID for a user.
 
         Returns:
-            Py42Response.
+            Py42Response
         """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.delete(uri)
@@ -187,7 +187,7 @@ class UserClient(BaseClient):
             block_user (bool, optional): Blocks the user upon deactivation. Defaults to None.
 
         Returns:
-            Py42Response.
+            Py42Response
         """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         data = {u"blockUser": block_user}
@@ -203,7 +203,7 @@ class UserClient(BaseClient):
                 Defaults to None.
 
         Returns:
-            Py42Response.
+            Py42Response
         """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         params = {u"unblockUser": unblock_user}
@@ -217,7 +217,7 @@ class UserClient(BaseClient):
             org_id (int): An org ID for the organization to move the user to.
 
         Returns:
-            Py42Response.
+            Py42Response
         """
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}

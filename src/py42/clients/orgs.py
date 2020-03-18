@@ -9,6 +9,8 @@ class OrgClient(BaseClient):
 
     The OrgClient has the ability to create and retrieve organizations.
     Also, it manages blocking and deactivation.
+
+    REST Documentation: https://console.us.code42.com/apidocviewer/#Org
     """
 
     def create_org(

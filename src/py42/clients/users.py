@@ -24,7 +24,8 @@ class UserClient(BaseClient):
         """Creates a new user.
         WARNING: If the provided username for a user already exists,
         it will be updated in the database instead.
-        REST Documentation: https://console.us.code42.com/apidocviewer/#User-post
+        `REST Documentation`__.
+        __ https://console.us.code42.com/apidocviewer/#User-post
 
         Args:
             org_uid (str): The org UID for the organization the new user belongs to.

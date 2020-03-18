@@ -9,8 +9,6 @@ class UserClient(BaseClient):
 
     The UserClient has the ability to create and retrieve users.
     Also, it manages blocking and deactivation.
-
-    REST Documentation: https://console.us.code42.com/apidocviewer/#User
     """
 
     def create_user(
@@ -26,6 +24,7 @@ class UserClient(BaseClient):
         """Creates a new user.
         WARNING: If the provided username for a user already exists,
         it will be updated in the database instead.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#User-post
 
         Args:
             org_uid (str): The org UID for the organization the new user belongs to.
@@ -60,6 +59,7 @@ class UserClient(BaseClient):
 
     def get_by_id(self, user_id, **kwargs):
         """Gets the user with the given user ID.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#User-get
 
         Args:
             user_id (int): A user ID for a user.
@@ -72,6 +72,7 @@ class UserClient(BaseClient):
 
     def get_by_uid(self, user_uid, **kwargs):
         """Gets the user with the given user UID.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#User-get
 
         Args:
             user_uid (str): A user UID for a user.
@@ -85,6 +86,7 @@ class UserClient(BaseClient):
 
     def get_by_username(self, username, **kwargs):
         """Gets the user with the given username.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#User-get
 
         Args:
             username (str): username for a user.
@@ -98,6 +100,7 @@ class UserClient(BaseClient):
 
     def get_current(self, **kwargs):
         """Gets the currently signed in user.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#User-get
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
@@ -163,6 +166,7 @@ class UserClient(BaseClient):
         """Blocks the user with the given user ID.
         A blocked user is not allowed to log in or restore.
         Backups continue if the user is still active.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#UserBlock-put
 
         Args:
             user_id (int): A user ID for a user.
@@ -176,6 +180,7 @@ class UserClient(BaseClient):
     def unblock(self, user_id):
         """Removes a block, if one exists, on the user with the given user ID.
          Unblocked users are allowed to log in and restore.
+         REST Documentation: https://console.us.code42.com/apidocviewer/#UserBlock-delete
 
         Args:
             user_id (int): A user ID for a user.
@@ -189,6 +194,7 @@ class UserClient(BaseClient):
     def deactivate(self, user_id, block_user=None):
         """Deactivates the user with the given user ID.
         Backups discontinue for a deactivated user, and their archives go to cold storage.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#UserDeactivation-put
 
         Args:
             user_id (int): A user ID for a user.
@@ -202,7 +208,8 @@ class UserClient(BaseClient):
         return self._session.put(uri, data=json.dumps(data))
 
     def reactivate(self, user_id, unblock_user=None):
-        """Removes a deactivation for the user with the given user ID.
+        """Reactivates the user with the given user ID.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#UserDeactivation-delete
 
         Args:
             user_id (int): A user ID for a user.
@@ -218,6 +225,7 @@ class UserClient(BaseClient):
 
     def change_org_assignment(self, user_id, org_id):
         """Moves a user to a different organization.
+        REST Documentation: https://console.us.code42.com/apidocviewer/#UserMoveProcess-post
 
         Args:
             user_id (int): A user ID for a user.

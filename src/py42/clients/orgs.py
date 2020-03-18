@@ -18,7 +18,7 @@ class OrgClient(BaseClient):
         REST Documentation: https://console.us.code42.com/apidocviewer/#Org-post
 
         Args:
-            org_name (str): The name to give to the organization.
+            org_name (str): The name of the new organization.
             org_ext_ref (str, optional): External reference information,
                 such as a serial number, asset tag, employee ID, or help desk issue ID. Defaults to
                 None.
@@ -85,9 +85,9 @@ class OrgClient(BaseClient):
         return get_all_pages(self._get_page, u"orgs", **kwargs)
 
     def block(self, org_id):
-        """Blocks the organization and child organizations with the given org ID.
-        A blocked organization will not allow any of its users or devices to log in.
-        New registrations will be rejected and all currently logged in clients will be logged out.
+        """Blocks the organization with the given org ID as well as its child organizations. A
+        blocked organization will not allow any of its users or devices to log in. New
+        registrations will be rejected and all currently logged in clients will be logged out.
         Backups continue for any devices that are still active.
         Rest Documentation: https://console.us.code42.com/apidocviewer/#OrgBlock-put
 
@@ -115,8 +115,8 @@ class OrgClient(BaseClient):
         return self._session.delete(uri)
 
     def deactivate(self, org_id):
-        """Deactivates the organization with the given org ID,
-        including all users, plans, and devices. Backups stop and archives move to cold storage.
+        """Deactivates the organization with the given org ID, including all users, plans, and
+        devices. Backups stop and archives move to cold storage.
         REST Documentation: https://console.us.code42.com/apidocviewer/#OrgDeactivation-put
 
         Args:

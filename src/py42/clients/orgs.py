@@ -27,7 +27,7 @@ class OrgClient(BaseClient):
                 Defaults to None.
             classification (str, optional):
                 Classification column to denote msp and reseller organizations.
-                Values: BASIC, MSP, RESELLER. Defaults to None.
+                Acceptable values are BASIC, MSP, RESELLER. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`

@@ -38,7 +38,7 @@ To execute the search, use `securitydata.SecurityModule.search_file_events()`:
 
 ## Alert Searches
 
-First, import alert filters:
+First, import alert filters and query object:
 
     >>> from py42.sdk.queries.alerts.filters import *
     >>> from py42.sdk.queries.alerts.alert_query import AlertQuery

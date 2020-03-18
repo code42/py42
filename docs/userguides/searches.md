@@ -11,7 +11,7 @@ First, import the required modules and classes and create the SDK:
     >>> sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
 You will need to use `~file_event_query.FileEventQuery` with`~query_filter.FilterGroup` objects
-as positional arguments to build up a query. Filters can be put into an iterable
+as positional arguments to build up a query. There are Filters can be put into an iterable
 and unpacked into `FileEvetQuery.any()` using the `*` operator:
 
     >>> filters = [Source.eq("GMAIL"), Actor.is_in(["foo@example,com", "baz@example.com"])]

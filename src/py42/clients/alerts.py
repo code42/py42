@@ -42,7 +42,6 @@ class AlertClient(BaseClient):
 
         Returns:
             :class:`py42.sdk.response`:  A response containing file event query details.
-
         """
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]

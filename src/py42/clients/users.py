@@ -137,7 +137,8 @@ class UserClient(BaseClient):
                 Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:~py42.response.Py42Response objects.
+            generator: An object that iterates over :class:~py42.response.Py42Response objects that
+                each contain a user.
         """
         return get_all_pages(
             self._get_page,
@@ -151,7 +152,7 @@ class UserClient(BaseClient):
         )
 
     def block(self, user_id):
-        """Blocks the user with the give user ID.
+        """Blocks the user with the given user ID.
         A blocked user is not allowed to log in or restore.
         Backups continue if the user is still active.
 

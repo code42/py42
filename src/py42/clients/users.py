@@ -35,7 +35,7 @@ class UserClient(BaseClient):
             notes (str, optional): Descriptive information about the user. Defaults to None.
 
         Returns:
-            :class:~py42.response.Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response
         """
 
         uri = u"/api/User"

@@ -10,10 +10,10 @@ First, import the required modules and classes and create the SDK:
     >>>
     >>> sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
-You will need to create `query_filter.FilterGroup` objects to conduct searches. Filter Groups have a type,
+You will need to create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type,
 such as `EmailSender`, and an operator, such as `is_in`. Some example filter groups looks like this:
 
-    >>> email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
+    >>> email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example d.com"])
     >>> exposure_filter = ExposureType.exists()
     >>> ip_filter = PrivateIPAddress.eq("127.0.0.1")
 

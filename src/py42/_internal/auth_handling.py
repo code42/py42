@@ -1,6 +1,3 @@
-from requests import HTTPError
-
-
 class LoginProvider(object):
     def get_secret_value(self, force_refresh=False):
         pass
@@ -12,11 +9,8 @@ class AuthHandler(object):
         self._session_modifier = session_modifier
 
     def renew_authentication(self, session, use_cache=False):
-        try:
-            secret = self._login_provider.get_secret_value(force_refresh=not use_cache)
-            self._session_modifier.modify_session(session, secret)
-        except HTTPError:
-            raise
+        secret = self._login_provider.get_secret_value(force_refresh=not use_cache)
+        self._session_modifier.modify_session(session, secret)
 
     @staticmethod
     def response_indicates_unauthorized(response):

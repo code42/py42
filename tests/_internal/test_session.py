@@ -124,8 +124,7 @@ class TestPy42Session(object):
     def test_session_request_with_error_status_code_raises_http_error(self, error_requests_session):
         session = Py42Session(error_requests_session, HOST_ADDRESS)
         with pytest.raises(Py42InternalServerError):
-            with pytest.raises(HTTPError):
-                session.get(URL)
+            session.get(URL)
 
     def test_session_request_calls_auth_handler_renew_authentication_with_correct_params_when_making_first_request(
         self, success_requests_session, valid_auth_handler
@@ -164,7 +163,6 @@ class TestPy42Session(object):
         self, error_requests_session, renewing_auth_handler
     ):
         session = Py42Session(error_requests_session, HOST_ADDRESS, renewing_auth_handler)
-        with pytest.raises(Py42InternalServerError):
-            with pytest.raises(HTTPError) as e:
-                session.get(URL)
-                assert e.request.url == URL
+        with pytest.raises(Py42InternalServerError) as e:
+            session.get(URL)
+            assert e.request.url == URL

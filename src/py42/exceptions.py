@@ -88,7 +88,7 @@ class Py42InternalServerError(Py42Error):
         super(Py42InternalServerError, self).__init__(str(exception))
 
 
-def exception_checker(raised_error):
+def raise_py42_error(raised_error):
 
     if raised_error.response.status_code == 400:
         raise Py42BadRequestError(raised_error)

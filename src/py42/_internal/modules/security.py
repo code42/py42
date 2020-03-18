@@ -5,7 +5,7 @@ from requests.exceptions import HTTPError
 import py42.util as util
 from py42.exceptions import (
     Py42SecurityPlanConnectionError,
-    exception_checker,
+    raise_py42_error,
 )
 
 
@@ -30,7 +30,7 @@ class SecurityModule(object):
             if err.response.status_code == 404:
                 pass
             else:
-                exception_checker(err)
+                raise_py42_error(err)
 
         if locations:
             plan_destination_map = _get_plan_destination_map(locations)
@@ -113,7 +113,8 @@ class SecurityModule(object):
             self._try_get_security_detection_event_client(plan_storage_info)
             return plan_storage_info
         except HTTPError:
-            # Do we intend to pass here in all cases?
+            #  This function is called in a loop until we get a result that is not None.
+            #  If all return None, then the calling function raises Py42SecurityPlanConnectionError.
             pass
 
     def _try_get_security_detection_event_client(self, plan_storage_info):

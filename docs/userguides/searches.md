@@ -13,20 +13,20 @@ First, import the required modules and classes and create the SDK:
 You will need to create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type,
 such as `EmailSender`, and an operator, such as `is_in`. Some example filter groups looks like this:
 
-    >>> email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example d.com"])
+    >>> email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
     >>> exposure_filter = ExposureType.exists()
     >>> ip_filter = PrivateIPAddress.eq("127.0.0.1")
 
 There are two operators when building `file_event_query.FileEventQuery` objects: `any`, and `all`.
-`any` gets results where at least one of the filters is true and `all` gets results where all filters are true.
+`any` gets results where at least one of the filters is true and `all` gets results where all the filters are true.
 
     >>> any_query = FileEventQuery.any(email_filter, exposure_filter)
     >>> all_query = FileEventQuery.all(exposure_filter, ip_filter)
 
-Filters can be put into an iterable and unpacked into `FileEvetQuery.any()` using the `*` operator. This is a common
+Filters can be put in an iterable and unpacked in `FileEvetQuery.any()` using the `*` operator. This is a common
 use case for programs that need to conditionally build up filters:
 
-    >>> filters = [Source.eq("GMAIL"), Actor.is_in(["foo@example,com", "baz@example.com"])]
+    >>> filters = [Source.eq("GMAIL"), Actor.is_in(["foo@example.com", "baz@example.com"])]
     >>> query = FileEventQuery.any(*filters)
 
 To execute the search, use `securitydata.SecurityModule.search_file_events()`:

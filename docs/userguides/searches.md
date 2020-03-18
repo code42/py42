@@ -10,14 +10,15 @@ First, import the required modules and classes and create the SDK:
     >>>
     >>> sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
-You will need to create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type,
-such as `EmailSender`, and an operator, such as `is_in`. Some example filter groups looks like this:
+You will need to create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type
+(in the form of a class), such as `EmailSender`, and an operator (in the form of a function), such as `is_in()`.
+Some example filter groups looks like this:
 
     >>> email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
     >>> exposure_filter = ExposureType.exists()
     >>> ip_filter = PrivateIPAddress.eq("127.0.0.1")
 
-There are two operators in the form of class functions when building `file_event_query.FileEventQuery` objects:
+There are two operators (in the form of class functions) when building `file_event_query.FileEventQuery` objects:
 `any()`, and `all()`.
 `any()` gets results where at least one of the filters is true and `all()` gets results where all the filters are true.
 

@@ -27,7 +27,7 @@ class OrgClient(BaseClient):
                 Values: BASIC, MSP, RESELLER. Defaults to None.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response.
         """
         uri = u"/api/Org/"
         data = {

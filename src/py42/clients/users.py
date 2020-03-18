@@ -138,7 +138,7 @@ class UserClient(BaseClient):
 
         Returns:
             generator: An object that iterates over :class:~py42.response.Py42Response objects that
-                each contain a user.
+                each contain a page of users.
         """
         return get_all_pages(
             self._get_page,

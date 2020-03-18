@@ -17,8 +17,9 @@ such as `EmailSender`, and an operator, such as `is_in`. Some example filter gro
     >>> exposure_filter = ExposureType.exists()
     >>> ip_filter = PrivateIPAddress.eq("127.0.0.1")
 
-There are two operators when building `file_event_query.FileEventQuery` objects: `any`, and `all`.
-`any` gets results where at least one of the filters is true and `all` gets results where all the filters are true.
+There are two operators in the form of class functions when building `file_event_query.FileEventQuery` objects:
+`any()`, and `all()`.
+`any()` gets results where at least one of the filters is true and `all()` gets results where all the filters are true.
 
     >>> any_query = FileEventQuery.any(email_filter, exposure_filter)
     >>> all_query = FileEventQuery.all(exposure_filter, ip_filter)

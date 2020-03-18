@@ -97,7 +97,7 @@ class OrgClient(BaseClient):
 
     def unblock(self, org_id):
         """Removes a block, if one exists, on an organization and its descendants with the given org ID.
-        All users in the organization remain blocked until are unblocked individually.
+        All users in the organization remain blocked until they are unblocked individually.
 
         Args:
             org_id (int): An org ID for an organization.
@@ -110,8 +110,7 @@ class OrgClient(BaseClient):
 
     def deactivate(self, org_id):
         """Deactivates the organization with the given org ID,
-        including all users, plans, and devices,
-        which means backups are stopped and archives placed in cold storage.
+        including all users, plans, and devices. Backups stop and archives move to cold storage.
 
         Args:
             org_id (int): an org ID for an organization.
@@ -123,7 +122,7 @@ class OrgClient(BaseClient):
         return self._session.put(uri)
 
     def reactivate(self, org_id):
-        """Removes a deactivation for the organization with the given org ID.
+        """Removes deactivation for the organization with the given org ID.
         Backups are *not* restarted automatically.
 
         Args:
@@ -139,7 +138,8 @@ class OrgClient(BaseClient):
         """Gets the organization for the currently signed-in user.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the organization for the currently signed-in user.
+            :class:`py42.response.Py42Response`: A response containing the organization for the
+            currently signed-in user.
         """
         uri = u"/api/Org/my"
         return self._session.get(uri, params=kwargs)

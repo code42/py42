@@ -5,6 +5,14 @@ from py42.clients.util import get_all_pages
 
 
 class UserClient(BaseClient):
+    """A client for interacting with Code42 user APIs.
+
+    The UserClient has the ability to create and retrieve users.
+    Also, it manages blocking and deactivation.
+
+    REST Documentation: REST API Doc: https://console.us.code42.com/apidocviewer/#User
+    """
+
     def create_user(
         self,
         org_uid,
@@ -16,8 +24,8 @@ class UserClient(BaseClient):
         notes=None,
     ):
         """Creates a new user.
-        An anomaly with the resource behind this function is that if you give a username for a user
-        that already exists, it will re-use it in the database instead of throwing an error.
+        WARNING: If the provided username for a user already exists,
+        it will be updated in the database instead.
 
         Args:
             org_uid (str): The org UID for the organization the new user belongs to.

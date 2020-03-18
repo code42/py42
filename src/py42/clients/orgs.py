@@ -54,7 +54,7 @@ class OrgClient(BaseClient):
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, org_uid, **kwargs):
-        """Gets the organization with the given UID.
+        """Gets the organization with the given org UID.
 
         Args:
             org_uid (str): An org UID for an organization.
@@ -82,63 +82,65 @@ class OrgClient(BaseClient):
 
     def block(self, org_id):
         """Blocks the organization and child organizations with the given org ID.
-        A blocked org will not allow any of its users or computers to log in,
-        new registrations will be rejected and all currently logged in clients will be logged out.
-        Backups continue for active devices.
+        A blocked organization will not allow any of its users or devices to log in.
+        New registrations will be rejected and all currently logged in clients will be logged out.
+        Backups continue for any devices that are still active.
 
         Args:
-            org_id (int): ID for an organization.
+            org_id (int): An org ID for an organization.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response
         """
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._session.put(uri)
 
     def unblock(self, org_id):
-        """Removes block on an org and descendants. Users need to be individually unblocked.
+        """Removes a block, if one exists, on an organization and its descendants with the given org ID.
+        All users in the organization remain blocked until are unblocked individually.
 
         Args:
-            org_id (int): ID for an organization.
+            org_id (int): An org ID for an organization.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response
         """
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._session.delete(uri)
 
     def deactivate(self, org_id):
-        """Deactivates the organization with the given ID.
-        All users, plans, and computers are deactivated,
+        """Deactivates the organization with the given org ID,
+        including all users, plans, and devices,
         which means backups are stopped and archives placed in cold storage.
 
         Args:
-            org_id (int): ID for an organization.
+            org_id (int): an org ID for an organization.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response
         """
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._session.put(uri)
 
     def reactivate(self, org_id):
-        """Removes a deactivation from the org specified in the URL.
+        """Removes a deactivation for the organization with the given org ID.
         Backups are *not* restarted automatically.
 
         Args:
-            org_id (int): ID for an organization.
+            org_id (int): An org ID for an organization.
 
         Returns:
-            Py42Response: The response of the API call.
+            :class:~py42.response.Py42Response
         """
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._session.delete(uri)
 
     def get_current(self, **kwargs):
-        """Gets the organization for the signed-in user.
+        """Gets the organization for the currently signed-in user.
 
         Returns:
-            Py42Response: A response containing the organization for the signed-in user.
+            :class:~py42.response.Py42Response:
+            A response containing the organization for the currently signed-in user.
         """
         uri = u"/api/Org/my"
         return self._session.get(uri, params=kwargs)

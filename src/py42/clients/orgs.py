@@ -75,7 +75,7 @@ class OrgClient(BaseClient):
         """Gets all organizations.
 
         Returns:
-            A generator object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of organizations.
         """
         return get_all_pages(self._get_page, u"orgs", **kwargs)

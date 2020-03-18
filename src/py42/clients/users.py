@@ -10,7 +10,7 @@ class UserClient(BaseClient):
     The UserClient has the ability to create and retrieve users.
     Also, it manages blocking and deactivation.
 
-    REST Documentation: REST API Doc: https://console.us.code42.com/apidocviewer/#User
+    REST Documentation: https://console.us.code42.com/apidocviewer/#User
     """
 
     def create_user(

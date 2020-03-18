@@ -130,7 +130,7 @@ class OrgClient(BaseClient):
         return self._session.put(uri)
 
     def reactivate(self, org_id):
-        """Removes deactivation for the organization with the given org ID.
+        """Reactivates the organization with the given org ID.
         Backups are *not* restarted automatically.
         REST Documentation: https://console.us.code42.com/apidocviewer/#OrgDeactivation-delete
 

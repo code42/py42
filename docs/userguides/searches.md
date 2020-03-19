@@ -1,8 +1,7 @@
 # Executing Searches
 
 py42 includes a powerful, flexible query system that allows you to quickly and easily search file events and alerts.
-This guide helps you understand the syntax for building up queries and executing searches and is starting point for
-automating searches.
+This guide helps you understand the syntax for building up queries and executing searches.
 
 ## File Event Searches
 
@@ -86,6 +85,8 @@ query = AlertQuery(tenant_id, *filters)  # Notice the constructor takes the tena
 
 To execute the search, use the `alerts.AlertClient.search()` method:
 ```python
+# Prints the actor property from each search result
+
 response = sdk.securitydata.alerts.search(query)
 alerts = response["alerts"]
 for alert in alerts:

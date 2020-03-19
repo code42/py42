@@ -79,7 +79,7 @@ ID. You can get the tenant ID from the `sdk.usercontext` object:
 ```python
 # Create a query for getting all open alerts with severity either 'High' or 'Medium'.
 
-filters = [AlertState.eq("OPEN"), Severity.is_in(["HIGH", "MEDIUM"])]
+filters = [AlertState.eq(AlertState.OPEN), Severity.is_in([Severity.HIGH, Severity.MEDIUM])]
 tenant_id = sdk.usercontext.get_current_tenant_id()
 query = AlertQuery(tenant_id, *filters)  # Notice the constructor takes the tenant ID first.
 ```

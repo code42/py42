@@ -1,5 +1,3 @@
-from requests import HTTPError
-
 from py42._internal.archive_access import ArchiveAccessorManager
 from py42._internal.client_factories import (
     AuthorityClientFactory,
@@ -14,7 +12,6 @@ from py42._internal.modules import (
 )
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.user_context import UserContext
-from py42.exceptions import Py42InitializationError
 
 
 def _get_storage_client_factory(session_factory, archive_locator_factory):
@@ -70,8 +67,5 @@ class SDKDependencies(object):
 
     @staticmethod
     def _test_session(session, test_uri):
-        try:
-            response = session.get(test_uri)
-            return 200 <= response.status_code < 300
-        except HTTPError as err:
-            raise Py42InitializationError(session.host_address, err)
+        response = session.get(test_uri)
+        return 200 <= response.status_code < 300

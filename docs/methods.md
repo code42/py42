@@ -22,7 +22,7 @@ Explore the complete public documentation for `py42` below.
 * [Users](methoddocs/users.md)
 * [Devices](methoddocs/devices.md)
 * [Legal Hold](methoddocs/legalhold.md)
-* [Alert Queries](methoddocs/alertqueries.md)
+* [Alerts](methoddocs/alerts.md)
 * [File Event Queries](methoddocs/filleeventqueries.md)
 
 ```eval_rst

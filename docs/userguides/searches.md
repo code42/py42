@@ -56,7 +56,7 @@ To execute the search, use `securitydata.SecurityModule.search_file_events()`:
 ```python
 # Prints all the email senders from Gmail related file events.
 
-response = sdk.securitydata.search_file_events(Source.eq("GMAIL"))
+response = sdk.securitydata.search_file_events(Source.eq("Gmail"))
 file_events = response["fileEvents"]
 for event in file_events:
     print(event["emailSender"])

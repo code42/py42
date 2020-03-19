@@ -37,7 +37,7 @@ class AlertClient(BaseClient):
 
         Args:
             alert_ids (iter[str]): The alert IDs for the alerts to get file event query details for.
-            tenant_id (str): The tenant ID for the tenant that the alerts belong to. When given None,
+            tenant_id (str, optional): The tenant ID for the tenant that the alerts belong to. When given None,
                 it uses the currently logged in user's tenant ID. Defaults to None.
 
         Returns:
@@ -57,7 +57,7 @@ class AlertClient(BaseClient):
             alert_ids (iter[str]): The alert IDs for the alerts to resolve.
             tenant_id (str, optional): The tenant ID for the tenant that the alerts belong to.
                 When given None, it uses the currently logged in user's tenant ID. Defaults to None.
-            reason (str, optional): The reason the alerts are now resolved.
+            reason (str, optional): The reason the alerts are now resolved. Defaults to None.
 
         Returns:
             :class:`py42.sdk.response`
@@ -75,9 +75,9 @@ class AlertClient(BaseClient):
 
         Args:
             alert_ids (iter[str]): The alert IDs for the alerts to reopen.
-            tenant_id (str): The tenant ID for the tenant that the alerts belong to. When given None,
+            tenant_id (str, optional): The tenant ID for the tenant that the alerts belong to. When given None,
                 it uses the currently logged in user's tenant ID. Defaults to None.
-            reason (str): The reason the alerts are reopened.
+            reason (str, optional): The reason the alerts are reopened. Defaults to None.
 
         Returns:
             :class:`py42.sdk.response`

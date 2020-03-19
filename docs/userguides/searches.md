@@ -1,35 +1,49 @@
 # Executing Searches
 
+py42 includes a powerful, flexible query system that allows you to quickly and easily conduct complex searches of file
+events or alerts.
+
+
 ## File Event Searches
 
 First, import the required modules and classes and create the SDK:
+```python
+import py42.sdk
+from py42.sdk.queries.fileevents.filters import *
+from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 
-    >>> import py42.sdk
-    >>> from py42.sdk.queries.fileevents.filters import *
-    >>> from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
-    >>>
-    >>> sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+```
 
 You will need to create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type
 (in the form of a class), such as `EmailSender`, and an operator (in the form of a function), such as `is_in()`.
 Some example filter groups looks like this:
-
-    >>> email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
-    >>> exposure_filter = ExposureType.exists()
-    >>> ip_filter = PrivateIPAddress.eq("127.0.0.1")
+```python
+email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
+exposure_filter = ExposureType.exists()
+ip_filter = PrivateIPAddress.eq("127.0.0.1")
+```
 
 There are two operators when building `file_event_query.FileEventQuery` objects:
 `any()`, and `all()`.
 `any()` gets results where at least one of the filters is true and `all()` gets results where all the filters are true.
+```python
+any_query = FileEventQuery.any(email_filter, exposure_filter)
+all_query = FileEventQuery.all(exposure_filter, ip_filter)
+```
 
-    >>> any_query = FileEventQuery.any(email_filter, exposure_filter)
-    >>> all_query = FileEventQuery.all(exposure_filter, ip_filter)
+For convenience, the `FileEventQuery` constructor does the same thing as `all()`:
+
+```python
+all_query = FileEventQuery(exposure_filter, ip_filter)
+```
 
 Filters can be put in an iterable and unpacked in `FileEvetQuery.any()` using the `*` operator. This is a common
 use case for programs that need to conditionally build up filters:
-
-    >>> filters = [Source.eq("GMAIL"), Actor.is_in(["foo@example.com", "baz@example.com"])]
-    >>> query = FileEventQuery.any(*filters)
+```python
+filters = [Source.eq("GMAIL"), Actor.is_in(["foo@example.com", "baz@example.com"])]
+query = FileEventQuery.any(*filters)
+```
 
 To execute the search, use `securitydata.SecurityModule.search_file_events()`:
 ```python

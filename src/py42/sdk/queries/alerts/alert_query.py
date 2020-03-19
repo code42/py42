@@ -1,38 +1,5 @@
 from py42._internal.compat import str
 from py42.sdk.queries import BaseQuery
-from py42.sdk.queries.alerts.filters.alert_filter import AlertQueryFilterStringField
-from py42.sdk.queries.query_filter import QueryFilterStringField, QueryFilterTimestampField
-
-
-class DateObserved(QueryFilterTimestampField):
-    _term = u"CreatedAt"
-
-
-class Actor(AlertQueryFilterStringField):
-    _term = u"actor"
-
-
-class RuleName(AlertQueryFilterStringField):
-    _term = u"name"
-
-
-class Description(AlertQueryFilterStringField):
-    _term = u"description"
-
-
-class Severity(QueryFilterStringField):
-    _term = u"severity"
-
-    HIGH = u"HIGH"
-    MEDIUM = u"MEDIUM"
-    LOW = u"LOW"
-
-
-class AlertState(QueryFilterStringField):
-    _term = u"state"
-
-    OPEN = u"OPEN"
-    DISMISSED = u"RESOLVED"
 
 
 class AlertQuery(BaseQuery):

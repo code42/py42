@@ -76,7 +76,7 @@ from py42.sdk.queries.alerts.alert_query import AlertQuery
 The one difference between constructing alert queries and file event queries is that alert queries require a tenant
 ID. You can get the tenant ID from the `sdk.usercontext` object:
 ```python
-# Create an query for getting all open alerts with severity either 'High' or 'Medium'.
+# Create a query for getting all open alerts with severity either 'High' or 'Medium'.
 
 filters = [AlertState.eq("OPEN"), Severity.is_in(["HIGH", "MEDIUM"])]
 tenant_id = sdk.usercontext.get_current_tenant_id()

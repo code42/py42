@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Removed
+
+- Parameter `classification` removed from `OrgClient.create_org()`
+
 ## 0.6.0 - 2020-03-16
 
 ### Removed
@@ -36,11 +42,11 @@ Renamed methods to reduce redundancy:
     - `security` > `securitydata`
     - `user_context` > `usercontext`
     - `employee_case_management` > `detectionlists`
-    
+
 - `StorageClientFactory`
     - `get_storage_client_from_device_guid()` > `from_device_guid()`
     - `get_storage_client_from_plan_uid()` > `from_plan_info()`
-    
+
 - `StorageClient`
     - `security` > `securitydata`
 
@@ -81,7 +87,7 @@ Renamed methods to reduce redundancy:
     - `reactivate_legal_hold()` > `reactivate_matter()`
     - `create_legal_hold_policy()` > `create_policy()`
     - `create_legal_hold()` > `create_matter()`
-    
+
 - `AlertClient`
     - `search_alerts()` > `search()`
     - `resolve_alert()` > `resolve()`
@@ -109,7 +115,7 @@ Renamed methods to reduce redundancy:
     - `reactivate_user()` > `reactivate()`
     - `change_user_org_assignment()` > `change_org_assignment()`
 
-- `DeviceClient` 
+- `DeviceClient`
     - `get_device_by_id()` > `get_by_id()`
     - `get_device_by_guid()` > `get_by_guid()`
     - `get_devices()` > `get_all()`
@@ -119,7 +125,7 @@ Renamed methods to reduce redundancy:
     - `reactivate_device()` > `reactivate()`
     - `deauthorize_device()` > `deauthorize()`
     - `get_device_settings()` > `get_settings()`
-    
+
 ## 0.5.1 - 2020-02-27
 
 ### Fixed

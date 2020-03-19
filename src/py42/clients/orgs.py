@@ -11,9 +11,7 @@ class OrgClient(BaseClient):
     Also, it manages blocking and deactivation.
     """
 
-    def create_org(
-        self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None, classification=None
-    ):
+    def create_org(self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None):
         """Creates a new organization.
         REST Documentation: https://console.us.code42.com/apidocviewer/#Org-post
 
@@ -25,9 +23,6 @@ class OrgClient(BaseClient):
             notes (str, optional): Descriptive information about the organization. Defaults to None.
             parent_org_uid (int, optional): The org UID for the parent organization. Defaults to
                 None.
-            classification (str, optional):
-                Classification column to denote msp and reseller organizations. Acceptable values
-                are BASIC, MSP, RESELLER. Defaults to None.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -38,7 +33,6 @@ class OrgClient(BaseClient):
             u"orgExtRef": org_ext_ref,
             u"notes": notes,
             u"parentOrgUid": parent_org_uid,
-            u"classification": classification,
         }
         return self._session.post(uri, data=json.dumps(data))
 

@@ -14,20 +14,20 @@ class StorageSessionManager(object):
     def get_saved_session_for_url(self, url):
         return self._session_cache.get(url.lower())
 
-    def get_storage_session(self, login_provider):
+    def get_storage_session(self, token_provider):
         try:
-            url = login_provider.get_login_info()[u"serverUrl"]
+            url = token_provider.get_login_info()[u"serverUrl"]
             session = self.get_saved_session_for_url(url)
             if session is None:
                 with self._list_update_lock:
                     session = self.get_saved_session_for_url(url)
                     if session is None:
-                        session = self.create_storage_session(url, login_provider)
+                        session = self.create_storage_session(url, token_provider)
                         self._session_cache.update({url.lower(): session})
         except HTTPError as ex:
             message = u"Failed to create or retrieve session, caused by: {0}".format(str(ex))
             raise Py42StorageSessionInitializationError(message)
         return session
 
-    def create_storage_session(self, url, login_provider):
-        return self._session_factory.create_storage_session(url, login_provider)
+    def create_storage_session(self, url, token_provider):
+        return self._session_factory.create_storage_session(url, token_provider)

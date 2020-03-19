@@ -1,22 +1,20 @@
 import json
 from requests import HTTPError
 
-from py42._internal.clients import (
+from py42._internal.key_value_store import KeyValueStoreClient
+from py42.clients import (
     administration,
+    alerts,
     archive,
     devices,
-    legal_hold,
+    legalhold,
     orgs,
-    security,
+    securitydata,
     users,
 )
-from py42._internal.clients.alerts import AlertClient
-from py42._internal.clients.employee_case_management.departing_employee import (
-    DepartingEmployeeClient,
-)
-from py42._internal.clients.fileevent.file_event import FileEventClient
 from py42._internal.clients.key_value_store import KeyValueStoreClient
-from py42._internal.clients.storage.storage import StorageClient
+from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
+from py42.clients.file_event import FileEventClient
 from py42.exceptions import (
     Py42FeatureUnavailableError,
     Py42SessionInitializationError,
@@ -40,33 +38,13 @@ class AuthorityClientFactory(object):
         return orgs.OrgClient(self.session)
 
     def create_legal_hold_client(self):
-        return legal_hold.LegalHoldClient(self.session)
+        return legalhold.LegalHoldClient(self.session)
 
     def create_archive_client(self):
         return archive.ArchiveClient(self.session)
 
     def create_security_client(self):
-        return security.SecurityClient(self.session)
-
-
-class StorageClientFactory(object):
-    def __init__(self, storage_session_manager, login_provider_factory):
-        self._storage_session_manager = storage_session_manager
-        self._login_provider_factory = login_provider_factory
-
-    def get_storage_client_from_device_guid(self, device_guid, destination_guid=None):
-        login_provider = self._login_provider_factory.create_backup_archive_locator(
-            device_guid, destination_guid
-        )
-        session = self._storage_session_manager.get_storage_session(login_provider)
-        return StorageClient(session)
-
-    def get_storage_client_from_plan_uid(self, plan_uid, destination_guid):
-        login_provider = self._login_provider_factory.create_security_archive_locator(
-            plan_uid, destination_guid
-        )
-        session = self._storage_session_manager.get_storage_session(login_provider)
-        return StorageClient(session)
+        return securitydata.SecurityClient(self.session)
 
 
 class MicroserviceClientFactory(object):
@@ -90,7 +68,7 @@ class MicroserviceClientFactory(object):
     def get_alerts_client(self):
         if not self._alerts_client:
             session = self._get_jwt_session(u"AlertService-API_URL")
-            self._alerts_client = AlertClient(session, self._user_context)
+            self._alerts_client = alerts.AlertClient(session, self._user_context)
         return self._alerts_client
 
     def get_departing_employee_client(self):
@@ -132,8 +110,7 @@ def _get_sts_base_url(session):
     sts_base_url = None
     if response.text:
         response_json = json.loads(response.text)
-        if u"stsBaseUrl" in response_json:
-            sts_base_url = response_json[u"stsBaseUrl"]
+        sts_base_url = response_json.get(u"stsBaseUrl")
     if not sts_base_url:
         raise Py42FeatureUnavailableError()
     return sts_base_url

@@ -8,6 +8,125 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 0.6.1 - 2020-03-17
+
+### Changed
+
+- To import alert filters, do: `from py42.sdk.queries.alerts.filters import *`
+    instead of importing them individually.
+
+## 0.6.0 - 2020-03-16
+
+### Removed
+
+- The following methods from `py42.util`:
+    - `get_obj_from_response()`
+    - `filter_out_none()`
+    - `print_dict()`
+
+- `py42.debug` module. Use `py42.settings.debug` instead.
+- `py42.util` module. Use `py42.sdk.util` instead.
+- `ArchiveModule.download_from_backup()`. Use `ArchiveModule.stream_from_backup()` instead.
+
+### Changed
+
+All client methods now return a `Py42Response` object that simplifies accessing the most meaningful parts
+of the returned JSON object.
+
+Renamed methods to reduce redundancy:
+
+- `SDK` > `SDKClient`
+    - `create_using_local_account()` > `from_local_account()`
+    - `administration` > `serveradmin`
+    - `legal_hold` > `legalhold`
+    - `storage` > `storageacess`
+    - `security` > `securitydata`
+    - `user_context` > `usercontext`
+    - `employee_case_management` > `detectionlists`
+
+- `StorageClientFactory`
+    - `get_storage_client_from_device_guid()` > `from_device_guid()`
+    - `get_storage_client_from_plan_uid()` > `from_plan_info()`
+
+- `StorageClient`
+    - `security` > `securitydata`
+
+- `StorageSecurityClient`
+    - `get_security_detection_events_for_plan()` > `get_plan_security_events()`
+    - `get_security_detection_events_for_user()` > `get_user_security_events()`
+
+- `FileEventClient`
+    - `search_file_events()` > `search()`
+
+- `StorageArchiveClient`
+    - `search_archive()` > `search()`
+    - `get_archive_tree_node()` > `get_file_path_metadata()`
+    - `create_web_restore_session()` > `create_restore_session()`
+    - `submit_web_restore_job()` > `start_restore()`
+    - `get_web_restore_job()` > `get_restore_status()`
+    - `cancel_web_restore_job()` > `cancel_restore()`
+    - `get_web_restore_job_result()` > `stream_restore_result()`
+
+- `DepartingEmployeeClient`
+    - `create_departing_employee()` > `create()`
+    - `resolve_departing_employee()` > `resolve()`
+    - `get_all_departing_employees()` > `get_all()`
+    - `get_case_by_username()` > `get_by_username()`
+    - `get_case_by_id()` > `get_by_id()`
+    - `update_case()` > `update()`
+
+- `LegalHoldClient`
+    - `create_legal_hold()` > `create_matter()`
+    - `get_legal_hold_policy_by_uid()` > `get_policy_by_uid()`
+    - `get_all_legal_hold_policies()` > `get_all_policies()`
+    - `get_legal_hold_by_uid()` > `get_matter_by_uid()`
+    - `get_legal_holds()` > `get_all_matters()`
+    - `get_legal_hold_memberships()` > `get_all_matter_custodians()`
+    - `add_user_to_legal_hold()` > `add_to_matter()`
+    - `remove_user_from_legal_hold()` > `remove_from_matter()`
+    - `deactivate_legal_hold()` > `deactivate_matter()`
+    - `reactivate_legal_hold()` > `reactivate_matter()`
+    - `create_legal_hold_policy()` > `create_policy()`
+    - `create_legal_hold()` > `create_matter()`
+
+- `AlertClient`
+    - `search_alerts()` > `search()`
+    - `resolve_alert()` > `resolve()`
+    - `reopen_alert()` > `reopen()`
+
+- `OrgClient`
+    - `get_orgs()`  > `get_all()`
+    - `get_org_by_id()` > `get_by_id()`
+    - `get_org_by_uid()` > `get_by_uid()`
+    - `block_org()` > `block()`
+    - `unblock_org()` > `unblock()`
+    - `deactivate_org()` > `deactivate()`
+    - `reactivate_org()` > `reactivate()`
+    - `get_current_user_org` > `get_current`
+
+- `UserClient`
+    - `get_user_by_id()` > `get_by_id()`
+    - `get_user_by_uid()` > `get_by_uid()`
+    - `get_user_by_username()` > `get_by_username()`
+    - `get_current_user()` > `get_current()`
+    - `get_users()` > `get_all()`
+    - `block_user()` > `block()`
+    - `unblock_user()` > `unblock()`
+    - `deactivate_user()` > `deactivate()`
+    - `reactivate_user()` > `reactivate()`
+    - `change_user_org_assignment()` > `change_org_assignment()`
+
+- `DeviceClient`
+    - `get_device_by_id()` > `get_by_id()`
+    - `get_device_by_guid()` > `get_by_guid()`
+    - `get_devices()` > `get_all()`
+    - `block_device()` > `block()`
+    - `unblock_device()` > `unblock()`
+    - `deactivate_device()` > `deactivate()`
+    - `reactivate_device()` > `reactivate()`
+    - `deauthorize_device()` > `deauthorize()`
+    - `get_device_settings()` > `get_settings()`
+
 ## 0.5.1 - 2020-02-27
 
 ### Fixed
@@ -122,7 +241,7 @@ for page in users.get_users():
 ### Changed
 
 - Removed `SecurityModule.get_security_event_locations()`. Use `SecurityClient.get_security_event_locations()` instead.
-- Removed `get_normalized_security_event_plan_info().` Support for pre-6.7 format security event plan info responses has
+- Removed `get_normalized_security_event_plan_info().` Support for pre-6.7 format securitydata event plan info responses has
 been removed, and as a result this method is no longer necessary. Use `SecurityClient.get_security_event_locations()` instead.
 
 ### Fixed
@@ -201,7 +320,7 @@ These had no effect.
 
 ### Fixed
 
-- Issue with creating security plan clients when a session for one client failed to be created
+- Issue with creating securitydata plan clients when a session for one client failed to be created
 
 ## 0.1.8 - 2019-09-11
 
@@ -216,14 +335,14 @@ These had no effect.
 
 - Bug in authentication handling logic that caused authentication tokens to not automatically renew properly when
  they expired.
-- Bug in creating security plan clients that caused some clients to not be created for users with multiple plans or
+- Bug in creating securitydata plan clients that caused some clients to not be created for users with multiple plans or
  archives
 
 ## 0.1.6 – 2019-07-30
 
 ### Fixed
 
-- Issues with unicode support in `security.search_file_events()` and `archive.download_from_backup()`
+- Issues with unicode support in `securitydata.search_file_events()` and `archive.download_from_backup()`
 
 ## 0.1.5 - 2019-07-13
 
@@ -258,7 +377,7 @@ file paths that were deleted would not be downloaded.
 
 ### Added
 
-- `SDK.security.search_file_events()` to search for file events using the Forensic File Search (FFS) service
+- `SDK.securitydata.search_file_events()` to search for file events using the Forensic File Search (FFS) service
 - `py42.sdk.file_event_query` module with classes to easily build file event queries
 - Ability to print various levels of debug statements for troubleshooting purposes. See `settings.debug_level`
 - [pytest](https://docs.pytest.org/) test framework

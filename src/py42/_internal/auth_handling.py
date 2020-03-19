@@ -4,8 +4,8 @@ class LoginProvider(object):
 
 
 class AuthHandler(object):
-    def __init__(self, login_provider, session_modifier):
-        self._login_provider = login_provider
+    def __init__(self, token_provider, session_modifier):
+        self._token_provider = token_provider
         self._session_modifier = session_modifier
 
     def renew_authentication(self, session, use_cache=False):
@@ -25,21 +25,7 @@ class AuthHandler(object):
         return 500 <= response.response.status_code < 600
 
 
-class SessionModifier(object):
-    def modify_session(self, session, value):
-        pass
-
-
-class CompositeModifier(SessionModifier):
-    def __init__(self, session_modifier_list):
-        self._session_modifier_list = session_modifier_list
-
-    def modify_session(self, session, value):
-        for handler in self._session_modifier_list:
-            handler.modify_session(session, value)
-
-
-class HeaderModifier(SessionModifier):
+class HeaderModifier(object):
     def __init__(self, header_name=u"Authorization", value_format=u"{0}"):
         self._header_name = header_name
         self._value_format = value_format

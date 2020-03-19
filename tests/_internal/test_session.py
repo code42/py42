@@ -1,7 +1,11 @@
 from json import dumps
+import pytest
 
-from py42.exceptions import Py42InternalServerError
 from .conftest import *
+from py42.exceptions import Py42InternalServerError
+
+from py42._internal.session import Py42Session
+
 
 default_kwargs = {
     "params": None,
@@ -20,18 +24,18 @@ default_kwargs = {
 }
 
 TEST_URL = "https://test-url.com"
+HOST_ADDRESS = "http://example.com"
+
+URL = "/api/resource"
+DATA_VALUE = "value"
+JSON_VALUE = {"key": "value"}
+KWARGS_INDEX = 1
+DATA_KEY = "data"
+JSON_KEY = "json"
+TEST_RESPONSE_CONTENT = '{"key": "test_response_content"}'
 
 
 class TestPy42Session(object):
-    def test_session_post_with_json_calls_filter_out_none_util(
-        self, mocker, success_requests_session
-    ):
-        session = Py42Session(success_requests_session, HOST_ADDRESS)
-        filter_out_none_mock = mocker.patch("py42.util.filter_out_none")
-        filter_out_none_mock.return_value = {}
-        session.post(URL, json=JSON_VALUE)
-        assert filter_out_none_mock.call_count == 1
-
     def test_session_get_calls_requests_with_get(self, success_requests_session):
         session = Py42Session(success_requests_session, HOST_ADDRESS)
         session.get(TEST_URL)
@@ -117,6 +121,7 @@ class TestPy42Session(object):
         assert response.encoding is None
 
     def test_session_request_returns_response_when_good_status_code(self, success_requests_session):
+
         session = Py42Session(success_requests_session, HOST_ADDRESS)
         response = session.get(URL)
         assert response.text == TEST_RESPONSE_CONTENT

@@ -32,25 +32,33 @@ use case for programs that need to conditionally build up filters:
     >>> query = FileEventQuery.any(*filters)
 
 To execute the search, use `securitydata.SecurityModule.search_file_events()`:
-
-    >>> response = sdk.securitydata.search_file_events(query)
-    >>> file_events = response["fileEvents"]
+```python
+response = sdk.securitydata.search_file_events(query)
+file_events = response["fileEvents"]
+for event in file_events:
+    print(event["emailSender"])
+```
 
 ## Alert Searches
 
 First, import alert filters and query object:
-
-    >>> from py42.sdk.queries.alerts.filters import *
-    >>> from py42.sdk.queries.alerts.alert_query import AlertQuery
+```python
+from py42.sdk.queries.alerts.filters import *
+from py42.sdk.queries.alerts.alert_query import AlertQuery
+```
 
 The syntax for building an alert query is the same as building a file event query. The caveat is
 that alert queries require a tenant ID:
-
-    >>> filters = [AlertState.eq("OPEN"), Severity.is_in(["HIGH", "LOW"])]
-    >>> tenant_id = sdk.usercontext.get_current_tenant_id()
-    >>> query = AlertQuery(tenant_id, *filters)
+```python
+filters = [AlertState.eq("OPEN"), Severity.is_in(["HIGH", "LOW"])]
+tenant_id = sdk.usercontext.get_current_tenant_id()
+query = AlertQuery(tenant_id, *filters)
+```
 
 To execute the search, use `alerts.AlertClient.search()`:
-
-    >>> sdk.securitydata.alerts.search(query)
-    >>> alerts = sdk.securitydata.alerts.search(*filters)
+```python
+response = sdk.securitydata.alerts.search(query)
+alerts = response["alerts"]
+for alert in alerts:
+    print(alert["actor"])
+```

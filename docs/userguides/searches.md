@@ -1,8 +1,8 @@
 # Executing Searches
 
-py42 includes a powerful, flexible query system that allows you to quickly and easily conduct complex searches of file
-events or alerts.
-
+py42 includes a powerful, flexible query system that allows you to quickly and easily search file events and alerts.
+This guide helps you understand the syntax for building up queries and executing searches and is starting point for
+automating searches.
 
 ## File Event Searches
 
@@ -17,37 +17,47 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 
 You will need to create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type
 (in the form of a class), such as `EmailSender`, and an operator (in the form of a function), such as `is_in()`.
-Some example filter groups looks like this:
+Some example filter groups look like this:
 ```python
 email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
 exposure_filter = ExposureType.exists()
 ip_filter = PrivateIPAddress.eq("127.0.0.1")
 ```
 
-There are two operators when building `file_event_query.FileEventQuery` objects:
-`any()`, and `all()`.
-`any()` gets results where at least one of the filters is true and `all()` gets results where all the filters are true.
+There are two operators when building `file_event_query.FileEventQuery` objects: `any()` and `all()`.
+
+`any()` gets results where at least one of the filters is true and `all()` gets results where all of the filters are
+true.
 ```python
 any_query = FileEventQuery.any(email_filter, exposure_filter)
 all_query = FileEventQuery.all(exposure_filter, ip_filter)
 ```
 
-For convenience, the `FileEventQuery` constructor does the same thing as `all()`:
+For convenience, the `FileEventQuery` constructor is the same as `all()`:
 
 ```python
 all_query = FileEventQuery(exposure_filter, ip_filter)
 ```
 
-Filters can be put in an iterable and unpacked in `FileEvetQuery.any()` using the `*` operator. This is a common
+Filters can be put in an iterable and unpacked in a `FileEventQuery` using the `*` operator. This is a common
 use case for programs that need to conditionally build up filters:
 ```python
-filters = [Source.eq("GMAIL"), Actor.is_in(["foo@example.com", "baz@example.com"])]
-query = FileEventQuery.any(*filters)
+# Conditionally appends filters for crafting a query
+
+filter_list = []
+if need_gmail_source:
+    filter_list.append(Source.eq("GMAIL"))
+elif need_actors:
+    actor_filter = Actor.is_in(["foo@example.com", "baz@example.com"])
+    filter_list.append(actor_filter)
+query = FileEventQuery(*filter_list)  # Notice the use of the '*' operator to unpack filter_list
 ```
 
 To execute the search, use `securitydata.SecurityModule.search_file_events()`:
 ```python
-response = sdk.securitydata.search_file_events(query)
+# Prints all the email senders from Gmail related file events.
+
+response = sdk.securitydata.search_file_events(Source.eq("GMAIL"))
 file_events = response["fileEvents"]
 for event in file_events:
     print(event["emailSender"])
@@ -55,21 +65,26 @@ for event in file_events:
 
 ## Alert Searches
 
-First, import alert filters and query object:
+Conducting alert searches is very similar to file event searches. Much of the content for file event searches applies
+to alert searches.
+
+To start, import the filters and query object:
 ```python
 from py42.sdk.queries.alerts.filters import *
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 ```
 
-The syntax for building an alert query is the same as building a file event query. The caveat is
-that alert queries require a tenant ID:
+The one difference between constructing alert queries and file event queries is that alert queries require a tenant
+ID. You can get the tenant ID from the `sdk.usercontext` object:
 ```python
-filters = [AlertState.eq("OPEN"), Severity.is_in(["HIGH", "LOW"])]
+# Create an query for getting all open alerts with severity either 'High' or 'Medium'.
+
+filters = [AlertState.eq("OPEN"), Severity.is_in(["HIGH", "MEDIUM"])]
 tenant_id = sdk.usercontext.get_current_tenant_id()
-query = AlertQuery(tenant_id, *filters)
+query = AlertQuery(tenant_id, *filters)  # Notice the constructor takes the tenant ID first,
 ```
 
-To execute the search, use `alerts.AlertClient.search()`:
+To execute the search, use the `alerts.AlertClient.search()` method:
 ```python
 response = sdk.securitydata.alerts.search(query)
 alerts = response["alerts"]

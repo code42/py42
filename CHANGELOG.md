@@ -14,6 +14,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Parameter `classification` removed from `OrgClient.create_org()`
 
+## 0.6.1 - 2020-03-17
+
+### Changed
+
+- To import alert filters, do: `from py42.sdk.queries.alerts.filters import *`
+    instead of importing them individually.
+
 ## 0.6.0 - 2020-03-16
 
 ### Removed

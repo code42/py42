@@ -32,9 +32,7 @@ class SecurityModule(object):
                 raise_py42_error(err)
 
         if locations:
-            plan_destination_map = _get_plan_destination_map(
-                locations[u"securityPlanLocationsByDestination"]
-            )
+            plan_destination_map = _get_plan_destination_map(locations)
             selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
             if not selected_plan_infos:
                 raise Py42SecurityPlanConnectionError(

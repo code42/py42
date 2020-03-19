@@ -44,8 +44,8 @@ use case for programs that need to conditionally build up filters:
 # Conditionally appends filters to a list for crafting a query
 
 filter_list = []
-if need_gmail_source:
-    filter_list.append(Source.eq("GMAIL"))
+if need_shared:
+    filter_list.append(Shared.is_true())
 elif need_actors:
     actor_filter = Actor.is_in(["foo@example.com", "baz@example.com"])
     filter_list.append(actor_filter)
@@ -54,12 +54,13 @@ query = FileEventQuery(*filter_list)  # Notice the use of the '*' operator to un
 
 To execute the search, use `securitydata.SecurityModule.search_file_events()`:
 ```python
-# Prints all the email senders from Gmail related file events.
+# Prints the MD5 hashes of all the files that caused exposure events where files were moved to an external drive.
 
-response = sdk.securitydata.search_file_events(Source.eq("Gmail"))
+query = FileEventQuery(ExposureType.eq(ExposureType.REMOVABLE_MEDIA))
+response = sdk.securitydata.search_file_events(query)
 file_events = response["fileEvents"]
 for event in file_events:
-    print(event["emailSender"])
+    print(event["md5Checksum"])
 ```
 
 ## Alert Searches

@@ -54,6 +54,7 @@ pip install py42-[VERSION].tar.gz
 
 ## Authentication
 
+WARNING: Currently, py42 uses token-based authentication only.
 To initialize the SDK, you provide your credentials (basic auth). Subsequent requests use JWT authentication.
 py42 currently does not support SSO login providers.
 

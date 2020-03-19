@@ -1,4 +1,4 @@
-class LoginProvider(object):
+class TokenProvider(object):
     def get_secret_value(self, force_refresh=False):
         pass
 
@@ -9,7 +9,7 @@ class AuthHandler(object):
         self._session_modifier = session_modifier
 
     def renew_authentication(self, session, use_cache=False):
-        secret = self._login_provider.get_secret_value(force_refresh=not use_cache)
+        secret = self._token_provider.get_secret_value(force_refresh=not use_cache)
         self._session_modifier.modify_session(session, secret)
 
     @staticmethod
@@ -32,12 +32,3 @@ class HeaderModifier(object):
 
     def modify_session(self, session, value):
         session.headers.update({self._header_name: self._value_format.format(value)})
-
-
-class CookieModifier(SessionModifier):
-    def __init__(self, cookie_name, value_format=u"{0}"):
-        self._cookie_name = cookie_name
-        self._value_format = value_format
-
-    def modify_session(self, session, value):
-        session.cookies.set(self._cookie_name, self._value_format.format(value))

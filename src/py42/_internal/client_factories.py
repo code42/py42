@@ -12,7 +12,7 @@ from py42.clients import (
     securitydata,
     users,
 )
-from py42._internal.clients.key_value_store import KeyValueStoreClient
+
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient
 from py42.exceptions import (

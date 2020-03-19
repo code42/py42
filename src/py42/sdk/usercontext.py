@@ -1,6 +1,3 @@
-from py42.util import get_obj_from_response
-
-
 class UserContext(object):
     def __init__(self, administration_client):
         self._administration_client = administration_client
@@ -13,5 +10,4 @@ class UserContext(object):
 
     def _get_tenant_id(self):
         response = self._administration_client.get_current_tenant()
-        tenant = get_obj_from_response(response, u"data")
-        return tenant.get(u"tenantUid")
+        return response[u"tenantUid"]

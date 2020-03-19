@@ -2,7 +2,6 @@ import json
 from threading import Lock
 from requests.exceptions import HTTPError
 
-import py42.util as util
 from py42.exceptions import (
     Py42SecurityPlanConnectionError,
     raise_py42_error,
@@ -25,7 +24,7 @@ class SecurityModule(object):
         locations = None
         try:
             response = self._security_client.get_security_event_locations(user_uid)
-            locations = util.get_obj_from_response(response, u"securityPlanLocationsByDestination")
+            locations = response[u"securityPlanLocationsByDestination"]
         except HTTPError as err:
             if err.response.status_code == 404:
                 pass

@@ -1,9 +1,7 @@
 from json import dumps
 import pytest
 
-from .conftest import *
 from py42.exceptions import Py42InternalServerError
-
 from py42._internal.session import Py42Session
 
 

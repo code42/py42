@@ -21,6 +21,8 @@ from py42.sdk.response import Py42Response
 from py42.clients.archive import ArchiveClient
 from py42.clients.storage.archive import StorageArchiveClient
 from py42.clients.storage import StorageClient, StorageClientFactory
+from py42.exceptions import Py42ArchiveFileNotFoundError
+
 
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"

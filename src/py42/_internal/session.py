@@ -6,6 +6,7 @@ from threading import Lock
 import requests.adapters
 from py42._internal.compat import str, urljoin, urlparse
 from py42.sdk.response import Py42Response
+from py42.exceptions import raise_py42_error
 
 
 class Py42Session(object):

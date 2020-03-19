@@ -1,7 +1,7 @@
 # Executing Searches
 
 py42 includes a powerful, flexible query system that allows you to quickly and easily search file events and alerts.
-This guide helps you understand the syntax for building up queries and executing searches.
+This guide helps you understand the syntax for building queries and executing searches.
 
 ## File Event Searches
 
@@ -32,16 +32,16 @@ any_query = FileEventQuery.any(email_filter, exposure_filter)
 all_query = FileEventQuery.all(exposure_filter, ip_filter)
 ```
 
-For convenience, the `FileEventQuery` constructor is the same as `all()`:
+For convenience, the `FileEventQuery` constructor does the same as `all()`:
 
 ```python
 all_query = FileEventQuery(exposure_filter, ip_filter)
 ```
 
-Filters can be put in an iterable and unpacked in a `FileEventQuery` using the `*` operator. This is a common
+You can put filters in an iterable and unpack them (using the `*` operator) in a `FileEventQuery` . This is a common
 use case for programs that need to conditionally build up filters:
 ```python
-# Conditionally appends filters for crafting a query
+# Conditionally appends filters to a list for crafting a query
 
 filter_list = []
 if need_gmail_source:
@@ -80,7 +80,7 @@ ID. You can get the tenant ID from the `sdk.usercontext` object:
 
 filters = [AlertState.eq("OPEN"), Severity.is_in(["HIGH", "MEDIUM"])]
 tenant_id = sdk.usercontext.get_current_tenant_id()
-query = AlertQuery(tenant_id, *filters)  # Notice the constructor takes the tenant ID first,
+query = AlertQuery(tenant_id, *filters)  # Notice the constructor takes the tenant ID first.
 ```
 
 To execute the search, use the `alerts.AlertClient.search()` method:

@@ -1,3 +1,6 @@
+from py42._internal.compat import str
+
+
 class Py42Error(Exception):
     """A generic, Py42-specific exception."""
 
@@ -36,27 +39,34 @@ class Py42StorageSessionInitializationError(Py42Error):
         super(Py42StorageSessionInitializationError, self).__init__(error_message)
 
 
-class Py42BadRequestError(Py42Error):
+class Py42HTTPError(Py42Error):
+    def __init__(self, http_response):
+        message = u"Failure in HTTP call {0}".format(str(http_response))
+        super(Py42HTTPError, self).__init__(message)
+        self.response = http_response
+
+
+class Py42BadRequestError(Py42HTTPError):
     def __init__(self, exception):
         super(Py42BadRequestError, self).__init__(str(exception))
 
 
-class Py42UnauthorizedError(Py42Error):
+class Py42UnauthorizedError(Py42HTTPError):
     def __init__(self, exception):
         super(Py42UnauthorizedError, self).__init__(str(exception))
 
 
-class Py42ForbiddenError(Py42Error):
+class Py42ForbiddenError(Py42HTTPError):
     def __init__(self, exception):
         super(Py42ForbiddenError, self).__init__(str(exception))
 
 
-class Py42NotFoundError(Py42Error):
+class Py42NotFoundError(Py42HTTPError):
     def __init__(self, exception):
         super(Py42NotFoundError, self).__init__(str(exception))
 
 
-class Py42InternalServerError(Py42Error):
+class Py42InternalServerError(Py42HTTPError):
     def __init__(self, exception):
         super(Py42InternalServerError, self).__init__(str(exception))
 
@@ -73,4 +83,4 @@ def raise_py42_error(raised_error):
     elif 500 <= raised_error.response.status_code < 600:
         raise Py42InternalServerError(raised_error)
     else:
-        raise raised_error
+        raise Py42HTTPError(raised_error.response)

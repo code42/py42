@@ -68,7 +68,7 @@ def error_response(mocker, http_error):
     error.response.text = ""
     error.response.status_code = 500
     error.response.raise_for_status.side_effect = http_error
-    return error.response
+    return error
 
 
 @pytest.fixture
@@ -94,7 +94,7 @@ def success_requests_session(mocker, successful_response):
 @pytest.fixture
 def error_requests_session(mocker, error_response):
     session = mocker.MagicMock(spec=Session)
-    session.request.return_value = error_response
+    session.request.return_value = error_response.response
     return session
 
 

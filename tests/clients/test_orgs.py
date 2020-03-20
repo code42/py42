@@ -10,7 +10,7 @@ from py42.sdk.response import Py42Response
 
 COMPUTER_URI = "/api/Org"
 
-MOCK_GET_ORG_RESPONSE = """{"totalCount": 3000, "orgs": ["foo"]}"""
+MOCK_GET_ORG_RESPONSE = """{"totalCount": 3000, "orgs": ["orgName": "foo"]}"""
 
 MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "orgs": []}"""
 
@@ -53,3 +53,15 @@ class TestOrgClient(object):
             pass
         py42.sdk.settings.items_per_page = 1000
         assert mock_session.get.call_count == 3
+
+    def test_get_org_by_name_returns_expected_org(
+        self, mock_session, mock_get_orgs_response, mock_get_orgs_empty_response
+    ):
+        py42.sdk.settings.items_per_page = 1
+        client = OrgClient(mock_session)
+        mock_session.get.side_effect = [
+            mock_get_orgs_response,
+            mock_get_orgs_response,
+            mock_get_orgs_empty_response,
+        ]
+        actual = client.get_by_name("foo")

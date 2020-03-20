@@ -5,6 +5,7 @@ import pytest
 from requests import Response
 
 import py42
+import py42.sdk.settings
 from py42.clients.orgs import OrgClient
 from py42.sdk.response import Py42Response
 

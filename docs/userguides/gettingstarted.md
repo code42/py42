@@ -13,9 +13,15 @@ This project uses [MIT License](https://github.com/code42/py42/blob/master/LICEN
 
 ## Installation
 
-There are different ways to install py42. The most common way is to use `pip`:
+There are different ways to install py42. The easiest and most common way is to use `pip`:
 ```bash
 pip install py42
+```
+
+If you need to install a previous version of py42, you can specify the version with `pip`. For example, if you want to
+install version 0.4.1, you would do this:
+```bash
+pip install py42==0.4.1
 ```
 
 You can also install from source with these steps:

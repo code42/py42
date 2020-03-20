@@ -43,7 +43,11 @@ class Py42HTTPError(Py42Error):
     def __init__(self, http_response):
         message = u"Failure in HTTP call {0}".format(str(http_response))
         super(Py42HTTPError, self).__init__(message)
-        self.response = http_response
+        self._response = http_response
+
+    @property
+    def response(self):
+        return self._response
 
 
 class Py42BadRequestError(Py42HTTPError):

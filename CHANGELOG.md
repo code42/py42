@@ -8,6 +8,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- Support for custom exceptions
+
+### Changed
+
+- `py42.sdk.archive.stream_from_backup()` now raises `Py42ArchiveFileNotFoundError` when it does not find a file.
+- `py42.sdk.alerts` and `py42.sdk.detectionlists` raise `Py42SessionInitializationError` if they are not able to
+    connect to the necessary microservice and `Py42FeatureUnavailableError` if their environment does not support
+    the microservice.
+- `py42.sdk.securitydata.get_security_plan_storage_info_list()` raises `Py42SecurityPlanConnectionError` if it can't
+    get plan info.
+- Storage node connection issues may raise `Py42StorageSessionInitializationError`.
+- All requests may raise a subclass of `Py42HTTPError` denoting which type of HTTP error it is:
+    - `Py42BadRequestError`
+    - `Py42UnauthorizedError`
+    - `Py42ForbiddenError`
+    - `Py42NotFoundError`
+    - `Py42InternalServerError`
+
 ## 0.6.1 - 2020-03-17
 
 ### Changed

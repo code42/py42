@@ -25,14 +25,8 @@ class C42ApiV3TokenProvider(TokenProvider):
     def get_secret_value(self, force_refresh=False):
         uri = u"/c42api/v3/auth/jwt"
         params = {u"useBody": True}
-        try:
-            response = self._auth_session.get(uri, params=params)
-            token = response[V3_AUTH]
-            return token
-        except Exception as ex:
-            message = u"An error occurred while trying to retrieve a jwt token, caused by {0}"
-            message = message.format(str(ex))
-            raise Exception(message)
+        response = self._auth_session.get(uri, params=params)
+        return response[V3_AUTH]
 
 
 class C42ApiV1TokenProvider(TokenProvider):
@@ -42,14 +36,8 @@ class C42ApiV1TokenProvider(TokenProvider):
 
     def get_secret_value(self, force_refresh=False):
         uri = u"/api/AuthToken"
-        try:
-            response = self._auth_session.post(uri, data=None)
-            token = u"{0}-{1}".format(response[0], response[1])
-            return token
-        except Exception as ex:
-            message = u"An error occurred while trying to retrieve a V1 auth token, caused by {0}"
-            message = message.format(str(ex))
-            raise Exception(message)
+        response = self._auth_session.post(uri, data=None)
+        return u"{0}-{1}".format(response[0], response[1])
 
 
 class C42APITmpAuthProvider(TokenProvider):
@@ -58,17 +46,10 @@ class C42APITmpAuthProvider(TokenProvider):
         self._cached_info = None
 
     def get_login_info(self):
-        try:
-            if self._cached_info is None:
-                response = self.get_tmp_auth_token()  # pylint: disable=assignment-from-no-return
-                self._cached_info = response
-            return self._cached_info
-        except Exception as ex:
-            message = (
-                u"An error occurred while trying to retrieve storage logon info, caused by {0}"
-            )
-            message = message.format(str(ex))
-            raise Exception(message)
+        if self._cached_info is None:
+            response = self.get_tmp_auth_token()  # pylint: disable=assignment-from-no-return
+            self._cached_info = response
+        return self._cached_info
 
     def get_tmp_auth_token(self):
         pass
@@ -88,20 +69,14 @@ class C42APILoginTokenProvider(C42APITmpAuthProvider):
         self._destination_guid = destination_guid
 
     def get_tmp_auth_token(self):
-        try:
-            uri = u"/api/LoginToken"
-            data = {
-                u"userId": self._user_id,
-                u"sourceGuid": self._device_guid,
-                u"destinationGuid": self._destination_guid,
-            }
-            response = self._auth_session.post(uri, data=json.dumps(data))
-            return response
-        except Exception as ex:
-            message = u"An error occurred while requesting a LoginToken, caused by {0}"
-            message = message.format(str(ex))
-            raise Exception(message)
-
+        uri = u"/api/LoginToken"
+        data = {
+            u"userId": self._user_id,
+            u"sourceGuid": self._device_guid,
+            u"destinationGuid": self._destination_guid,
+        }
+        response = self._auth_session.post(uri, data=json.dumps(data))
+        return response
 
 class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
     def __init__(self, auth_session, plan_uid, destination_guid):
@@ -111,15 +86,10 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
         self._destination_guid = destination_guid
 
     def get_tmp_auth_token(self):
-        try:
-            uri = u"/api/StorageAuthToken"
-            data = {u"planUid": self._plan_uid, u"destinationGuid": self._destination_guid}
-            response = self._auth_session.post(uri, data=json.dumps(data))
-            return response
-        except Exception as ex:
-            message = u"An error occurred while requesting a StorageAuthToken, caused by {0}"
-            message = message.format(str(ex))
-            raise Exception(message)
+        uri = u"/api/StorageAuthToken"
+        data = {u"planUid": self._plan_uid, u"destinationGuid": self._destination_guid}
+        response = self._auth_session.post(uri, data=json.dumps(data))
+        return response
 
 
 class StorageTokenProviderFactory(object):
@@ -132,22 +102,15 @@ class StorageTokenProviderFactory(object):
         return C42APIStorageAuthTokenProvider(self._auth_session, plan_uid, destination_guid)
 
     def create_backup_archive_locator(self, device_guid, destination_guid=None):
-        try:
+        if destination_guid is None:
+            response = self._device_client.get_by_guid(device_guid, include_backup_usage=True)
             if destination_guid is None:
-                response = self._device_client.get_by_guid(device_guid, include_backup_usage=True)
-                if destination_guid is None:
-                    # take the first destination guid we find
-                    destination_list = response["backupUsage"]
-                    if not destination_list:
-                        raise Exception(
-                            u"No destinations found for device guid: {0}".format(device_guid)
-                        )
-                    destination_guid = destination_list[0][u"targetComputerGuid"]
-        except Exception as ex:
-            message = (
-                u"An error occurred while trying to determine a destination for device guid: {0},"
-                u" caused by: {1}".format(device_guid, str(ex))
-            )
-            raise Exception(message)
+                # take the first destination guid we find
+                destination_list = response["backupUsage"]
+                if not destination_list:
+                    raise Exception(
+                        u"No destinations found for device guid: {0}".format(device_guid)
+                    )
+                destination_guid = destination_list[0][u"targetComputerGuid"]
 
         return C42APILoginTokenProvider(self._auth_session, u"my", device_guid, destination_guid)

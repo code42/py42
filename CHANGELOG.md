@@ -28,11 +28,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Changed
 
 - `py42.sdk.archive.stream_from_backup()` now raises `Py42ArchiveFileNotFoundError` when it does not find a file.
-- `py42.sdk.alerts` and `py42.sdk.detectionlists` raise `Py42SessionInitializationError` if they are not able to
+- `py42.sdk.alerts` and `py42.sdk.detectionlists` raise `Py42SessionInitializationError` if they are unable to
     connect to the necessary microservice and `Py42FeatureUnavailableError` if their environment does not support
     the microservice.
 - `py42.sdk.securitydata.get_security_plan_storage_info_list()` raises `Py42SecurityPlanConnectionError` if it can't
-    get plan info.
+    connect to get plan info.
 - Storage node connection issues may raise `Py42StorageSessionInitializationError`.
 - All requests may raise a subclass of `Py42HTTPError` denoting which type of HTTP error it is:
     - `Py42BadRequestError`

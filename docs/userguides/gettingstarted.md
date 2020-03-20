@@ -43,7 +43,7 @@ To initialize the `py42.sdk.SDK` object, you must use basic auth and provide you
 using a secure password storage library, such as `keyring`, for retrieving passwords. However, subsequent requests use
 JWT authentication.
 
-py42 currently does not support SSO login providers.
+py42 currently does **not** support SSO login providers.
 
 ## Troubleshooting and Support
 
@@ -60,3 +60,6 @@ py42.sdk.settings.debug.level = debug.DEBUG
 **File an issue on GitHub.** If you have found an issue with py42, you can create a *New Issue* at the
 [project repository](https://github.com/code42/py42/issues). See this
 [guide](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue) for more information.
+
+**Reach out to Code42 Support.** If you don't have a GitHub account and are experiencing an issue, reach out to the
+[Code42 support](https://support.code42.com/).

@@ -38,7 +38,7 @@ For convenience, the `FileEventQuery` constructor does the same as `all()`:
 all_query = FileEventQuery(exposure_filter, ip_filter)
 ```
 
-You can put filters in an iterable and unpack them (using the `*` operator) in a `FileEventQuery` . This is a common
+You can put filters in an iterable and unpack them (using the `*` operator) in a `FileEventQuery`. This is a common
 use case for programs that need to conditionally build up filters:
 ```python
 # Conditionally appends filters to a list for crafting a query

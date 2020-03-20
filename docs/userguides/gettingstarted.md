@@ -43,15 +43,11 @@ py42 currently does not support SSO login providers.
 
 ## Troubleshooting and Support
 
-### Upgrading
+**Try turning on debug mode.** When debug mode is on, py42 logs HTTP request URLs and parameters to the console. Use
+the following as a guide for how to turn debug mode on in py42:
+```python
+import py42.sdk
+import py42.sdk.settings.debug as debug
 
-To upgrade, do:
-```bash
-pip install py42 --upgrade
-```
-
-If you are getting errors after upgrading, try uninstalling and reinstalling:
-```bash
-pip uninstall py42
-pip install py42
+py42.sdk.settings.debug.level = debug.DEBUG
 ```

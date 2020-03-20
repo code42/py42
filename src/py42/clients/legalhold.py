@@ -158,12 +158,7 @@ class LegalHoldClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_all_matter_custodians(
-        self,
-        legal_hold_membership_uid=None,
-        legal_hold_uid=None,
-        user_uid=None,
-        user=None,
-        active_state=None,
+        self, legal_hold_uid=None, user_uid=None, user=None, active_state=None,
     ):
         """Gets all LegalHoldMemberships objects. A LegalHoldMembership object represents 
         a specific user (Custodian) who has been added to a Legal Hold Matter. If the active state 
@@ -184,7 +179,6 @@ class LegalHoldClient(BaseClient):
         return get_all_pages(
             self._get_legal_hold_memberships_page,
             u"legalHoldMemberships",
-            legal_hold_membership_uid=legal_hold_membership_uid,
             legal_hold_uid=legal_hold_uid,
             user_uid=user_uid,
             user=user,

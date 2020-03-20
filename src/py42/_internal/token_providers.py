@@ -2,7 +2,6 @@ import base64
 import json
 
 from py42._internal.auth_handling import TokenProvider
-from py42._internal.compat import str
 
 V3_AUTH = u"v3_user_token"
 

@@ -2,7 +2,7 @@ import json
 from threading import Lock
 from requests.exceptions import HTTPError
 
-from py42.exceptions import (
+from py42.sdk.exceptions import (
     Py42SecurityPlanConnectionError,
     raise_py42_error,
 )

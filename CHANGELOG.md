@@ -12,7 +12,18 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- Support for custom exceptions
+- py42 specific exceptions at new module `py42.sdk.exceptions`:
+    - `Py42Error`
+    - `Py42ArchiveFileNotFoundError`
+    - `Py42SessionInitializationError`
+    - `Py42FeatureUnavailableError`
+    - `Py42SecurityPlanConnectionError`
+    - `Py42HTTPError`
+    - `Py42BadRequestError`
+    - `Py42UnauthorizedError`
+    - `Py42ForbiddenError`
+    - `Py42NotFoundError`
+    - `Py42InternalServerError`
 
 ### Changed
 

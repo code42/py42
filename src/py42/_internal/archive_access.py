@@ -2,7 +2,7 @@ import posixpath
 import time
 from collections import namedtuple
 
-from py42.exceptions import Py42ArchiveFileNotFoundError
+from py42.sdk.exceptions import Py42ArchiveFileNotFoundError
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
 

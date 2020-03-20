@@ -1,6 +1,6 @@
 import pytest
 
-from py42.exceptions import Py42StorageSessionInitializationError
+from py42.sdk.exceptions import Py42StorageSessionInitializationError
 from py42._internal.token_providers import C42APITmpAuthProvider
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager

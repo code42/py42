@@ -2,8 +2,8 @@
 
 Sometimes you might want to do something useful that requires information about active devices in your organization.
 For example, you might want to create a simple report that illustrates how many devices are running each operating
-system in your Code42 environment. The following guide shows the different possible workings for the tools involved in
-getting all the active devices in your organization.
+system in your Code42 environment. The tools involved in getting all active devices in your organization support
+various use-cases outline below.
 
 To begin, we need to initialize the SDK:
 ```python
@@ -19,11 +19,10 @@ organization. We can achieve this using the `active` parameter on the `get_all()
 The `active` parameter has three different states:
 * If `active` is set to True, you will only get active devices.
 * If `active` is set to False, you will only get deactivated devices.
-* If you don't use
-`active`, you will get all devices.
+* If you don't use `active`, you will get all devices.
 
 The `get_all()` function returns a generator of pages of devices. Depending on your account's role in the
-organization, you will get a different list of devices:
+organization, you will get different lists of devices:
 * If you are logged in as an ordinary end user, `get_all()` returns all *your* devices.
 * If you are logged in as an organization administrator, `get_all()` returns all the devices in your organization.
 * If you are a cross-organization administrator, `get_all()` returns all devices across all your organizations.
@@ -44,7 +43,7 @@ for page in response:
 
 Another example might be that you are a cross-organization administrator and you wish to get all the active devices for
 just one of your organizations. To do this, we can make use of the `py42.sdk.clients.devices.OrgClient.get_by_name()`
-method. The `get_by_name()` method returns a list of organizations matching the parameter you give it.
+method. The `get_by_name()` method returns a list of organizations matching the name you give it.
 ```python
 # For each active device in the engineering organization, print its GUID and operating system.
 

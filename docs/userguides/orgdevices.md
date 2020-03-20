@@ -2,8 +2,10 @@
 
 Sometimes you might want to do something useful that requires information about active devices in your organization.
 For example, you might want to create a simple report that illustrates how many devices are running each operating
-system in your Code42 environment. The tools involved in getting all active devices in your organization support
-various use-cases outline below.
+system in your Code42 environment.
+
+The tools involved in getting all active devices in your organization support
+various use-cases outlined below.
 
 To begin, we need to initialize the SDK:
 ```python

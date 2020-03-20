@@ -9,24 +9,28 @@ This guide contains information on:
 
 ## Licensing
 
-This project uses MIT License. [Here is more information](https://github.com/code42/py42/blob/master/LICENSE.md).
-
+This project uses [MIT License](https://github.com/code42/py42/blob/master/LICENSE.md).
 
 ## Installation
 
-There are different ways to install py42. The most common way would be to use `pip`:
+There are different ways to install py42. The most common way is to use `pip`:
 ```bash
 pip install py42
 ```
 
-You can also download from source by following these steps:
+You can also install from source by following these steps:
 
-First, from the root project directory, do:
+1. Download the source code from GitHub:
+```bash
+git clone https://github.com/code42/py42.git
+```
+
+2. From the root project directory, run:
 ```bash
 python setup.py sdist
 ```
 
-Then, from the `dist` directory, do:
+3. From the `dist` directory, install using `pip`:
 ```bash
 pip install py42-[VERSION].tar.gz
 ```

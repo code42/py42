@@ -26,16 +26,31 @@ The `get_all()` function returns a generator of pages of devices. Depending on y
 organization, you will get a different list of devices:
 * If you are logged in as an ordinary end user, `get_all()` returns all *your* devices.
 * If you are logged in as an organization administrator, `get_all()` returns all the devices in your organization.
-* If you are a cross-organization administrator, `get_all()` will return all devices across all your organizations.
+* If you are a cross-organization administrator, `get_all()` returns all devices across all your organizations.
 * Finally, if you are a customer cloud administrator, `get_all()` returns all devices in all organizations.
 
 ### Examples
 
 Here is an example using `get_all()` to get all active devices in your organization(s):
 ```python
-# For each device in your organization, print its GUID and operating system
+# For each active device in your organization, print its GUID and operating system
 
 response = sdk.devices.get_all(active=True)
+for page in response:
+    devices = page["computers"]
+    for device in devices:
+        print("{0} - {1}".format(device["guid"], device["osName"]))
+```
+
+Another example might be that you are a cross-organization administrator and you wish to get all the active devices for
+just one of your organizations. To do this, we can make use of the `py42.sdk.clients.devices.OrgClient.get_by_name()`
+method. The `get_by_name()` method returns a list of organizations matching the parameter you give it.
+```python
+# For each active device in the engineering organization, print its GUID and operating system.
+
+engineering_org = sdk.orgs.get_by_name("Engineering")[0]  # Assume there is only one org named "Engineering"
+engineering_org_uid = engineering_org["orgUid"]
+response = sdk.devices.get_all(active=True, org_uid=engineering_org_uid)
 for page in response:
     devices = page["computers"]
     for device in devices:

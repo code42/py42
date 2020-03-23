@@ -51,7 +51,7 @@ To initialize the `py42.sdk.SDK` object, you must provide your credentials (basi
 we recommend using a secure password storage library, such as `keyring`, for retrieving passwords. However, subsequent
 requests use JWT authentication.
 
-py42 currently does **not** support SSO login providers.
+py42 currently does **not** support SSO login providers or any other Identity providers such Active Directory or Okta.
 
 ## Troubleshooting and Support
 

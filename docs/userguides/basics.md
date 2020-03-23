@@ -40,7 +40,7 @@ Each page from generator is a typical py42 response. The next section covers the
 ## Py42Response
 
 py42 clients return `Py42Response` objects which are intentionally similar to `requests.Response` objects.
-`Py42Response` abstracts away metadata found on the raw `requests.Response.text` (which is available as
+`Py42Response` hides unneeded metadata found on the raw `requests.Response.text` (which is available as
 `Py42Response.raw_text`) so that you only use get useful text. Also, the object is subscriptable, meaning you can
 access it with keys or indices:
 ```python
@@ -48,11 +48,13 @@ user = response["users"][0]]
 item = list_response[0]["itemProperty"]
 ```
 
-To figure out all the key on a response, you can observe its `.text` attribute.
+To figure out all the keys on a response, you can observe its `.text` attribute. By printing the response, you print
+its text property:
 
 Here is an example:
 ```python
 # prints details about the response from getting a departing employee
+
 response = sdk.detectionlists.departing_employee.get_by_username("test.user@example.com")
 print(response)  # JSON as Dictionary - same as print(response.text)
 print(response.raw_text)  # Raw API response
@@ -65,7 +67,22 @@ print(cloud_usernames)
 
 ## Dates
 
-Use unix epoch time when specifying dates in py42. An example the `departing_on_or_after_epoch` parameter in
-`py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method from the earlier example.
+Use unix epoch time when specifying dates in py42. As an, see the `departing_on_or_after_epoch` parameter in
+`py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
 
-[TODO: ADD TUTORIAL ON DATE EPOCHS - GTG]
+```python
+import py42.sdk
+import py42.sdk.util
+from datetime import datetime, timedelta
+sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+
+
+# Print all the departing employee cases on or after two weeks
+
+departing_date = datetime.utcnow() + timedelta(days=14)
+epoch = py42.sdk.util.convert_datetime_to_epoch(departing_date)
+response = sdk.detectionlists.departing_employee.get_all(departing_on_or_after_epoch=epoch)
+for page in response:
+    for case in page["cases"]:
+        print(case)
+```

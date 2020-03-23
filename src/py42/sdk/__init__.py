@@ -10,8 +10,9 @@ from py42._internal.session_factory import (
 
 def from_local_account(host_address, username, password):
     """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using the
-    supplied credentials. Currently, only accounts created within the Code42 console are supported.
-    Username/passwords that are based on Active Directory, Okta, or other Identity providers cannot
+    supplied credentials. Currently, only accounts created within the Code42 console or using the
+    APIs (including py42) are supported. Username/passwords that are based on Active Directory,
+    Okta, or other Identity providers cannot
     be used with this method.
 
     Args:
@@ -33,9 +34,9 @@ class SDKClient(object):
     @classmethod
     def from_local_account(cls, host_address, username, password):
         """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
-        the supplied credentials. Currently, only accounts created within the Code42 console are
-        supported. Username/passwords that are based on Active Directory, Okta, or other Identity
-        providers cannot be used with this method.
+        the supplied credentials. Currently, only accounts created within the Code42 console or
+        using the APIs (including py42) are supported. Username/passwords that are based on Active
+        Directory, Okta, or other Identity providers cannot be used with this method.
 
         Args:
             host_address (str): The domain name of the Code42 instance being authenticated to, e.g.

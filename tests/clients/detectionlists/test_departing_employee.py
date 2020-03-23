@@ -124,7 +124,7 @@ class TestDepartingEmployeeClient(object):
             None,
             "These are notes",
             2352463246,
-            True,
+            # True,
             ["test.employee@microsoft.com"],
         )
 
@@ -136,7 +136,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["notes"] == "These are notes"
             and posted_data["departureDate"] == "2044-07-18T14:00:46.000Z"
-            and posted_data["alertsEnabled"] == True
+            # and posted_data["alertsEnabled"] == True
             and posted_data["cloudUsernames"] == ["test.employee@microsoft.com"]
         )
 
@@ -350,8 +350,8 @@ class TestDepartingEmployeeClient(object):
             "Display Name",
             "These are notes",
             24642747257,
-            False,
-            "EXFILTRATION_24_HOURS",
+            # False,
+            # "EXFILTRATION_24_HOURS",
             ["test@test.com"],
         )
 
@@ -364,8 +364,8 @@ class TestDepartingEmployeeClient(object):
             and posted_data["displayName"] == "Display Name"
             and posted_data["notes"] == "These are notes"
             and posted_data["departureDate"] == "2750-11-24T23:34:17.000Z"
-            and posted_data["alertsEnabled"] == False
-            and posted_data["status"] == "EXFILTRATION_24_HOURS"
+            # and posted_data["alertsEnabled"] == False
+            # and posted_data["status"] == "EXFILTRATION_24_HOURS"
             and posted_data["cloudUsernames"] == ["test@test.com"]
         )
 
@@ -386,8 +386,8 @@ class TestDepartingEmployeeClient(object):
             and posted_data["displayName"] == "Test Testerson"
             and posted_data["notes"] == "notes notes notes"
             and posted_data["departureDate"] == "2020-02-13"
-            and posted_data["alertsEnabled"] == True
-            and posted_data["status"] == "OPEN"
+            # and posted_data["alertsEnabled"] == True
+            # and posted_data["status"] == "OPEN"
             and posted_data["cloudUsernames"]
             == ["test.testerson+partners@code42.com", "test.s@c42fc.com"]
         )

@@ -25,6 +25,7 @@ class DepartingEmployeeClient(BaseClient):
             username (str): The username of the departing employee.
             tenant_id (str, optional): The identifier of the Customer Tenant the user is in.
                 Defaults to None (the tenant_id of SDK authorization user will be used).
+            notes (str, optional): Optional descriptive information. Defaults to None.
             departure_epoch (int, optional): Employee departure date as POSIX timestamp. Defaults
                 to None.
             cloud_usernames (list, optional): List of alternate usernames for this user from

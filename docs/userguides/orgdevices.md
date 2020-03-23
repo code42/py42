@@ -2,9 +2,7 @@
 
 Sometimes you might want to do something useful that requires information about active devices in your organization.
 For example, you might want to create a simple report that illustrates how many devices are running each operating
-system in your Code42 environment.
-
-The tools involved in getting all active devices in your organization support various use-cases outlined below.
+system in your Code42 environment. Your role in the organization determines which devices you have access to.
 
 To begin, we need to initialize the SDK:
 ```python
@@ -56,3 +54,6 @@ for page in response:
     for device in devices:
         print("{0} - {1}".format(device["guid"], device["osName"]))
 ```
+
+We got the org UID from the engineering organization and then passed it as a parameter to the method to get all the
+devices, thus getting all the active devices in the engineering organization.

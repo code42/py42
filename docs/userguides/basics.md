@@ -97,11 +97,12 @@ fails. This is how you would do that:
 ```python
 import keyring
 import py42.sdk
+from py42.sdk.exceptions import Py42
 
 
 def authenticate(username):
     try:
         password = keyring.get_password("my_program", username)
         return py42.sdk.from_local_account("www.authority.example.com", username, password)
-    except
+    except Py42
 ```

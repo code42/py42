@@ -75,4 +75,4 @@ py42.sdk.settings.debug.level = debug.DEBUG
 
 ### What's Next?
 
-Learn the basics by following the py42 [basics guide](userguides/basics.md).
+Learn the basics by following the py42 [basics guide](basics.html).

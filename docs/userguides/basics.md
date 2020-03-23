@@ -1,7 +1,8 @@
 # py42 Basics
 
 Learning the basics of py42 will help you page through lists, access response items, and handle exceptions among other
-things when crafting your own Code42-related scripts.
+things when crafting your own Code42-related scripts. The following examples use
+`py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors, such as paging.
 
 ## Initialization
 
@@ -21,11 +22,8 @@ items. Here are some examples:
 * `py42.sdk.legalhold.get_all_matters()`
 * `py42.sdk.orgs.get_all()`
 
-By looping over the pages returned by the generator object, we can access the list of items we seek. The following
-examples use `py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors, such
-as paging.
-
-Use this code snippet as an example for working with generators and paging in py42:
+By looping over the pages returned by the generator object, we can access the list of items we seek. Use this code
+snippet as an example for working with generators and paging in py42:
 ```python
 # Print the username and notes for all departing employees
 
@@ -63,7 +61,7 @@ print(response)  # JSON as Dictionary - same as print(response.text)
 print(response.raw_text)  # Raw API response
 print(response.status_code)  # 200
 
-# prints the cloud usernames from response
+# prints the cloud usernames from the response
 cloud_usernames = response["cloudUsernames"]
 print(cloud_usernames)
 ```
@@ -72,7 +70,6 @@ print(cloud_usernames)
 
 py42 supports POSIX timestamps when specifying dates in py42. As an example, see the `departing_on_or_after_epoch`
 parameter in `py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
-
 ```python
 import py42.sdk
 import py42.sdk.util

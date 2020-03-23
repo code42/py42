@@ -69,7 +69,7 @@ py42.sdk.settings.debug.level = debug.DEBUG
 [project repository](https://github.com/code42/py42/issues). See this
 [guide](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue) for more information.
 
-**Reach out to Code42 Support.** If you don't have a GitHub account and are experiencing an issue, reach out to the
+**Reach out to Code42 Support.** If you don't have a GitHub account and are experiencing an issue, reach out to
 [Code42 support](https://support.code42.com/).
 
 

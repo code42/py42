@@ -166,10 +166,11 @@ class LegalHoldClient(BaseClient):
     def get_all_matter_custodians(
         self, legal_hold_uid=None, user_uid=None, user=None, active_state=None,
     ):
-        """Gets all LegalHoldMemberships objects. A LegalHoldMembership object represents
-        a specific user (Custodian) who has been added to a Legal Hold Matter. If the active state
-        is INACTIVE, they have been removed from the matter. Users can be Custodians of multiple
-        Legal Holds at once.
+        """Gets all Legal Hold memberships. Each user (Custodian) who has been added to a Legal Hold
+        Matter is returned by the server as a LegalHoldMembership object in the response body.  If
+        the object's active state is "INACTIVE", they have been removed from the matter and are no
+        longer subject to the Legal Hold retention rules. Users can be Custodians of multiple Legal
+        Holds at once (and thus would be part of multiple LegalHoldMembership objects).
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-get>`__
 
         Args:

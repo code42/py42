@@ -92,17 +92,20 @@ for page in response:
 py42 throws some of its own exceptions when things go wrong. The available exceptions are found in the
 `py42.sdk.exceptions` module.
 
-Let's say you are making a script for others to use and you want to print a nicer message when initializing the SDK
-fails. This is how you would do that:
+Let's say you are making a `create_sdk()` function and want to print a nicer message when the provided username or
+password are incorrect. This is how you would do that:
 ```python
 import keyring
 import py42.sdk
 from py42.sdk.exceptions import Py42
 
 
-def authenticate(username):
+def create_sdk(username):
+    """Tries to initialize SDK. If unauthorized, prints message and exits."""
     try:
         password = keyring.get_password("my_program", username)
         return py42.sdk.from_local_account("www.authority.example.com", username, password)
-    except Py42
+    except Py42UnauthorizedError:
+        print("Invalid username or password.")
+        exit(1)
 ```

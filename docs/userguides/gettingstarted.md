@@ -73,6 +73,6 @@ py42.sdk.settings.debug.level = debug.DEBUG
 [Code42 support](https://support.code42.com/).
 
 
-# What's Next?
+### What's Next?
 
 Learn the basics by following the py42 [basics guide](userguides/basics.md).

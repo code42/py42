@@ -22,8 +22,8 @@ items. Here are some examples:
 * `py42.sdk.orgs.get_all()`
 
 By looping over the pages returned by the generator object, we can access the list of items we seek. The following
-examples use `py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors, such as
-paging.
+examples use `py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors, such
+as paging.
 
 Use this code snippet as an example for working with generators and paging in py42:
 ```python
@@ -45,7 +45,7 @@ Each page from generator is a typical py42 response. The next section covers the
 py42 clients return `Py42Response` objects which are intentionally similar to `requests.Response` objects.
 `Py42Response` hides unneeded metadata found on the raw `requests.Response.text` (which is available as
 `Py42Response.raw_text`) so that you only use get useful text. Also, the object is subscriptable, meaning you can
-access it with keys or indices:
+access it with keys or indices (depending on the JSON type underneath `data` on Code42 API responses):
 ```python
 user = response["users"][0]]
 item = list_response[0]["itemProperty"]
@@ -70,7 +70,7 @@ print(cloud_usernames)
 
 ## Dates
 
-py42 support unix epoch time when specifying dates in py42. As an example, see the `departing_on_or_after_epoch`
+py42 supports POSIX timestamps when specifying dates in py42. As an example, see the `departing_on_or_after_epoch`
 parameter in `py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
 
 ```python

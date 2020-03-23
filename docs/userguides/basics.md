@@ -1,5 +1,8 @@
 # py42 Basics
 
+Learning the basic of py42 will help you page through lists, access response items, and handle exceptions among other
+things when crafting Code42-related scripts.
+
 ## Initialization
 
 To do anything with py42, you need to initialize the SDK object:

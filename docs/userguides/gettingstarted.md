@@ -24,7 +24,7 @@ install version 0.4.1, you would do this:
 pip install py42==0.4.1
 ```
 
-Visit the [project history](https://pypi.org/project/py42/#history) on PyPI too see all the published versions.
+Visit the [project history](https://pypi.org/project/py42/#history) on PyPI too see all published versions.
 
 You can also install from source with these steps:
 
@@ -38,7 +38,7 @@ git clone https://github.com/code42/py42.git
 python setup.py sdist
 ```
 
-3. From the `dist` directory, install using `pip`:
+3. From the newly created `dist` directory, install using `pip`:
 ```bash
 pip install py42-[VERSION].tar.gz
 ```
@@ -47,9 +47,9 @@ pip install py42-[VERSION].tar.gz
 
 WARNING: Currently, py42 uses token-based authentication only.
 
-To initialize the `py42.sdk.SDK` object, you must use basic auth and provide your credentials. We recommend scripts
-using a secure password storage library, such as `keyring`, for retrieving passwords. However, subsequent requests use
-JWT authentication.
+To initialize the `py42.sdk.SDK` object, you must provide your credentials (basic auth). If you are writing a script,
+we recommend using a secure password storage library, such as `keyring`, for retrieving passwords. However, subsequent
+requests use JWT authentication.
 
 py42 currently does **not** support SSO login providers.
 

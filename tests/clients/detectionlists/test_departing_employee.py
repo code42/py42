@@ -176,6 +176,7 @@ class TestDepartingEmployeeClient(object):
         mock_session.post.return_value = mock_get_all_cases_response_empty
         client.resolve("test.employee@example.com")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/resolve"
+        assert mock_session.post.call_args[0][0] == "/svc/api/v1/departingemployee/resolve"
 
     def test_get_all_uses_given_tenant_id_over_current_id(
         self, mock_session, user_context, mock_get_all_cases_response

@@ -60,9 +60,9 @@ class SDKClient(object):
     def storageaccess(self):
         """A collection of methods for creating StorageClients, which are useful for interacting
         with storage nodes directly. For most cases, you can be successful using `py42.sdk.archive`
-        or `py42.sdk.securitydata` which abstract away much of the necessary work you have to
-        otherwise do when creating and using your own StorageClients. However, `storageaccess` is
-        useful for when you need to be more granular when working with storage nodes.
+        or `py42.sdk.securitydata` which abstract away much of the necessary work you have to do
+        when creating and using your own StorageClients. However, `storageaccess` is useful for
+        when you need to be more granular when working with storage nodes.
 
         Returns:
             :class:`py42.clients.storage.StorageClientFactory

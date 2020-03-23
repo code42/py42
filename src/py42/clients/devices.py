@@ -5,8 +5,7 @@ from py42.clients.util import get_all_pages
 
 
 class DeviceClient(BaseClient):
-    """
-        Class to interact with Code42 device/computer API
+    """Class to interact with Code42 device/computer API.
 
     """
 
@@ -51,19 +50,22 @@ class DeviceClient(BaseClient):
         q=None,
         **kwargs
     ):
-        """
-        Get all device information
+        """Get all device information.
+
+        When no arguments are passed all records are returned, to filter results specify
+        respective arguments.
+        For example, to retrieve all active and blocked devices pass active=true and blocked=true.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
         Args:
-            active (bool, optional): filter results by device state, True or False.
+            active (bool, optional): Filter results by device state, True or False.
               Defaults to None.
-            blocked (bool, optional): filter results by blocked status, True or False.
+            blocked (bool, optional): Filter results by blocked status, True or False.
               Defaults to None.
             org_uid (int, optional): Id of Organization. Defaults to None.
             user_uid (int, optional): Id of User. Defaults to None.
-            destination_guid (str of int, optional): guid of server that the desktop clients
+            destination_guid (str of int, optional): 'guid' of server that the desktop clients
               back up their files to. Defaults to None.
             include_backup_usage (type, bool): Flag to denote whether to include destination and
               its backup summary. Defaults to None.
@@ -73,7 +75,7 @@ class DeviceClient(BaseClient):
               computer name, etc Defaults to None.
 
         Returns:
-            A generator containing collection of :class:`Py42.sdk.response.Py42Response` objects
+            A generator containing collection of :class:`Py42.sdk.response.Py42Response` objects.
         """
 
         return get_all_pages(
@@ -91,31 +93,29 @@ class DeviceClient(BaseClient):
         )
 
     def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
-        """
-        Get device information by device_id
+        """Get device information by device_id.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
         Args:
-            device_id (int): device_id/'computerId' of the node
+            device_id (int): 'device_id'/'computerId' of the node.
             include_backup_usage (bool, optional): Flag to denote whether to include
               backup summary. Defaults to None.
 
         Returns:
-            :class:`Py42.sdk.response.Py42Response`: Py42Response containing device information
+            :class:`Py42.sdk.response.Py42Response`: Py42Response containing device information.
         """
         uri = u"/api/Computer/{0}".format(device_id)
         params = dict(incBackupUsage=include_backup_usage, **kwargs)
         return self._session.get(uri, params=params)
 
     def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
-        """
-        Get device information by guid
+        """Get device information by guid.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
         Args:
-            guid (str): guid of the device
+            guid (str): 'guid' of the device.
             include_backup_usage (bool, optional): Flag to denote whether to include
               backup summary. Defaults to None.
 
@@ -127,94 +127,88 @@ class DeviceClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def block(self, device_id):
-        """
-        Block a device, set blocked_status of the device true
+        """Block a device, set blocked_status of the device true.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
         Args:
-            device_id (int): device_id/'computerId' of the node
+            device_id (int): 'device_id'/'computerId' of the node.
 
         Returns:
-            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call
+            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call.
         """
         uri = u"/api/ComputerBlock/{0}".format(device_id)
         return self._session.put(uri)
 
     def unblock(self, device_id):
-        """
-        Unblock a device, set blocked_status of the device false
+        """Unblock a device, set blocked_status of the device false.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
         Args:
-            device_id (int): device_id/'computerId' of the node
+            device_id (int): 'device_id'/'computerId' of the node.
 
         Returns:
-            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call
+            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call.
         """
         uri = u"/api/ComputerBlock/{0}".format(device_id)
         return self._session.delete(uri)
 
     def deactivate(self, device_id):
-        """
-        Deactivate a device, set 'active' status to false
+        """Deactivate a device, set 'active' status to false.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
 
         Args:
-            device_id (int): device_id/'computerId' of the node
+            device_id (int): 'device_id'/'computerId' of the node.
 
         Returns:
-            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call
+            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call.
         """
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": device_id}
         return self._session.post(uri, data=json.dumps(data))
 
     def reactivate(self, device_id):
-        """
-        Activate a device, set 'active' status to true
+        """Activate a device, set 'active' status to true.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
 
         Args:
-            device_id (int): device_id/'computerId' of the node
+            device_id (int): 'device_id'/'computerId' of the node.
 
         Returns:
-            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call
+            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call.
         """
         uri = u"/api/v4/computer-deactivation/remove"
         data = {u"id": device_id}
         return self._session.post(uri, data=json.dumps(data))
 
     def deauthorize(self, device_id):
-        """
-        Deauthorize the device
+        """Deauthorize the device.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeauthorization>`__
 
         Args:
-            device_id (int): device_id/'computerId' of the node
+            device_id (int): 'device_id'/'computerId' of the node.
 
         Returns:
-            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call
+            :class:`Py42.sdk.response.Py42Response`: Py42Response containing state of the API call.
         """
         uri = u"/api/ComputerDeauthorization/{0}".format(device_id)
         return self._session.put(uri)
 
     def get_settings(self, guid, keys=None):
-        """
-        Get settings of the device
+        """Get settings of the device.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#DeviceSetting>`__
 
         Args:
-            guid (str): guid of the device
+            guid (str): 'guid' of the device.
             keys (type, optional): Comma separated list of device keys. Defaults to None.
 
         Returns:
-            :class:`Py42.sdk.response.Py42Response`: Py42Response containing settings information
+            :class:`Py42.sdk.response.Py42Response`: Py42Response containing settings information.
         """
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}

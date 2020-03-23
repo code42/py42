@@ -119,8 +119,8 @@ class LegalHoldClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#LegalHold-get>`__
 
         Args:
-            creator_user_uid (str, optional): Find atters by user identifier who created them.
-                Defaults to None.
+            creator_user_uid (str, optional): Find Matters by the identifier of the user who created
+                them. Defaults to None.
             active_state (str, optional): Find results by state (options: ACTIVE, INACTIVE, ALL).
                 Defaults to "ACTIVE".
             name (str, optional): Find Matters whose 'name' either equals or partially contains this

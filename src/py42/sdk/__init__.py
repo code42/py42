@@ -65,8 +65,7 @@ class SDKClient(object):
         useful for when you need to be more granular with how you work with storage nodes.
 
         Returns:
-            :class:`py42.clients.storage.StorageClientFactory: An object that creates
-            StorageClients.
+            :class:`py42.clients.storage.StorageClientFactory
         """
         return self._sdk_dependencies.storage_client_factory
 
@@ -76,8 +75,7 @@ class SDKClient(object):
         and tenant information for cloud environments.
 
         Returns:
-            :class:`py42.clients.administration.AdministrationClient`: A client for getting
-            on-premise or cloud server administrator information.
+            :class:`py42.clients.administration.AdministrationClient`
         """
         return self._sdk_dependencies.administration_client
 
@@ -87,8 +85,7 @@ class SDKClient(object):
         web-restores or finding a file on an archive.
 
         Returns:
-            :class:`py42.modules.archive.ArchiveModule`: A module for interacting with
-            archives, such as doing web-restores.
+            :class:`py42.modules.archive.ArchiveModule`
         """
         return self._sdk_dependencies.archive_module
 

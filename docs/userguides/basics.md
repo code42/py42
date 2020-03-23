@@ -1,7 +1,7 @@
 # py42 Basics
 
-Learning the basic of py42 will help you page through lists, access response items, and handle exceptions among other
-things when crafting Code42-related scripts.
+Learning the basics of py42 will help you page through lists, access response items, and handle exceptions among other
+things when crafting your own Code42-related scripts.
 
 ## Initialization
 
@@ -70,8 +70,8 @@ print(cloud_usernames)
 
 ## Dates
 
-Use unix epoch time when specifying dates in py42. As an, see the `departing_on_or_after_epoch` parameter in
-`py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
+py42 support unix epoch time when specifying dates in py42. As an example, see the `departing_on_or_after_epoch`
+parameter in `py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
 
 ```python
 import py42.sdk
@@ -82,8 +82,8 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 
 # Print all the departing employee cases on or after two weeks
 
-departing_date = datetime.utcnow() + timedelta(days=14)
-epoch = py42.sdk.util.convert_datetime_to_epoch(departing_date)
+departing_date = datetime.utcnow() + timedelta(days=14)  # How to get a date in the future
+epoch = py42.sdk.util.convert_datetime_to_epoch(departing_date)  # How to an epoch time (float)
 response = sdk.detectionlists.departing_employee.get_all(departing_on_or_after_epoch=epoch)
 for page in response:
     for case in page["cases"]:

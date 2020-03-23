@@ -14,12 +14,12 @@ def from_local_account(host_address, username, password):
     Currently, only accounts created within the Code42 console are supported.
     Username/passwords that are based on Active Directory, Okta, or other
     Identity providers cannot be used with this method.
-    
+
     Args:
         host_address (str): The domain name of the Code42 instance being authenticated to, e.g. console.us.code42.com
         username (str): The username of the authenticating account.
         password (str): The password of the authenticating account.
-    
+
     Returns:
         :class:`py42.sdk.SDKClient`
     """
@@ -37,12 +37,12 @@ class SDKClient(object):
         Currently, only accounts created within the Code42 console are supported.
         Username/passwords that are based on Active Directory, Okta, or other
         Identity providers cannot be used with this method.
-        
+
         Args:
             host_address (str): The domain name of the Code42 instance being authenticated to, e.g. console.us.code42.com
             username (str): The username of the authenticating account.
             password (str): The password of the authenticating account.
-        
+
         Returns:
             :class:`py42.sdk.SDKClient`
         """
@@ -58,28 +58,37 @@ class SDKClient(object):
 
     @property
     def storageaccess(self):
-        """[summary]
-        
+        """A collection of methods for creating StorageClients, which are useful for interacting
+        with storage nodes directly. For most cases, you can get by using `py42.sdk.archive` or
+        `py42.sdk.securitydata`, which abstract away much of the necessary work when creating and
+        using your own StorageClients. However, `storageaccess` is useful for when you need to be
+        more granular with how you work with storage nodes.
+
         Returns:
-            [type]: [description]
+            :class:`py42.clients.storage.StorageClientFactory: An object that creates
+            StorageClients.
         """
         return self._sdk_dependencies.storage_client_factory
 
     @property
     def serveradmin(self):
-        """[summary]
-        
+        """A collection of methods for getting server information for on-premise environments
+        and tenant information for cloud environments.
+
         Returns:
-            [type]: [description]
+            :class:`py42.clients.administration.AdministrationClient`: A client for getting
+            on-premise or cloud server admin information.
         """
         return self._sdk_dependencies.administration_client
 
     @property
     def archive(self):
-        """[summary]
-        
+        """Access to backed-up files on an archive. Useful for doing web-restores or finding a
+        file on an archive.
+
         Returns:
-            [type]: [description]
+            :class:`py42.modules.archive.ArchiveModule`: A module for interacting with
+            archives, such as doing web-restores.
         """
         return self._sdk_dependencies.archive_module
 
@@ -87,7 +96,7 @@ class SDKClient(object):
     def users(self):
         """A collection of methods for retrieving or updating data about users
         in the Code42 environment.
-        
+
         Returns:
             :class:`py42.clients.users.UserClient`
         """
@@ -97,7 +106,7 @@ class SDKClient(object):
     def devices(self):
         """A collection of methods for retrieving or updating data about devices
         in the Code42 environment.
-        
+
         Returns:
             :class:`py42.clients.devices.DeviceClient`
         """
@@ -105,9 +114,9 @@ class SDKClient(object):
 
     @property
     def orgs(self):
-        """A collection of methods for retrieving or updating data about orgs
+        """A collection of methods for retrieving or updating data about organizations
         in the Code42 environment.
-        
+
         Returns:
             :class:`py42.clients.orgs.OrgClient`
         """
@@ -115,36 +124,42 @@ class SDKClient(object):
 
     @property
     def legalhold(self):
-        """[summary]
-        
+        """A collection of methods for retrieving and updating legal-hold matters, policies, and
+        custodians.
+
         Returns:
-            [type]: [description]
+            :class:`py42.clients.legalhold.LegalHoldClient`
         """
         return self._sdk_dependencies.legal_hold_client
 
     @property
     def usercontext(self):
-        """[summary]
-        
+        """A collection of methods related to getting information about the currently logged in
+        user, such as the tenant ID.
+
         Returns:
-            [type]: [description]
+            :class:`py42.sdk.usercontext.UserContext`
         """
         return self._sdk_dependencies.user_context
 
     @property
     def securitydata(self):
-        """[summary]
-        
+        """A collection of methods and properties for getting security data such as:
+            * File events
+            * Alerts
+            * Security plan information
+
         Returns:
-            [type]: [description]
+            :class:`py42.modules.securitydata.SecurityModule`
         """
         return self._sdk_dependencies.security_module
 
     @property
     def detectionlists(self):
-        """[summary]
-        
+        """A collection of properties each containing methods for managing specific detection
+        lists, such as departing employees.
+
         Returns:
-            [type]: [description]
+            :class:`py42.modules.detectionlists.DetectionListsModule`
         """
         return self._sdk_dependencies.detection_lists_module

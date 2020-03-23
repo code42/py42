@@ -9,14 +9,14 @@ from py42._internal.session_factory import (
 
 
 def from_local_account(host_address, username, password):
-    """Creates a :class:`~py42.sdk.SDKClient` object that can be used to
-    access the Code42 REST APIs using the supplied credentials.
-    Currently, only accounts created within the Code42 console are supported.
-    Username/passwords that are based on Active Directory, Okta, or other
-    Identity providers cannot be used with this method.
+    """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using the
+    supplied credentials. Currently, only accounts created within the Code42 console are supported.
+    Username/passwords that are based on Active Directory, Okta, or other Identity providers cannot
+    be used with this method.
 
     Args:
-        host_address (str): The domain name of the Code42 instance being authenticated to, e.g. console.us.code42.com
+        host_address (str): The domain name of the Code42 instance being authenticated to, e.g.
+            console.us.code42.com
         username (str): The username of the authenticating account.
         password (str): The password of the authenticating account.
 
@@ -32,14 +32,14 @@ class SDKClient(object):
 
     @classmethod
     def from_local_account(cls, host_address, username, password):
-        """Creates a :class:`~py42.sdk.SDKClient` object that can be used to
-        access the Code42 REST APIs using the supplied credentials.
-        Currently, only accounts created within the Code42 console are supported.
-        Username/passwords that are based on Active Directory, Okta, or other
-        Identity providers cannot be used with this method.
+        """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
+        the supplied credentials. Currently, only accounts created within the Code42 console are
+        supported. Username/passwords that are based on Active Directory, Okta, or other Identity
+        providers cannot be used with this method.
 
         Args:
-            host_address (str): The domain name of the Code42 instance being authenticated to, e.g. console.us.code42.com
+            host_address (str): The domain name of the Code42 instance being authenticated to, e.g.
+                console.us.code42.com
             username (str): The username of the authenticating account.
             password (str): The password of the authenticating account.
 
@@ -60,9 +60,9 @@ class SDKClient(object):
     def storageaccess(self):
         """A collection of methods for creating StorageClients, which are useful for interacting
         with storage nodes directly. For most cases, you can get by using `py42.sdk.archive` or
-        `py42.sdk.securitydata`, which abstract away much of the necessary work when creating and
-        using your own StorageClients. However, `storageaccess` is useful for when you need to be
-        more granular with how you work with storage nodes.
+        `py42.sdk.securitydata` which abstract away much of the necessary work you have to
+        otherwise do when creating and using your own StorageClients. However, `storageaccess` is
+        useful for when you need to be more granular with how you work with storage nodes.
 
         Returns:
             :class:`py42.clients.storage.StorageClientFactory: An object that creates
@@ -77,14 +77,14 @@ class SDKClient(object):
 
         Returns:
             :class:`py42.clients.administration.AdministrationClient`: A client for getting
-            on-premise or cloud server admin information.
+            on-premise or cloud server administrator information.
         """
         return self._sdk_dependencies.administration_client
 
     @property
     def archive(self):
-        """Access to backed-up files on an archive. Useful for doing web-restores or finding a
-        file on an archive.
+        """A collection of methods for accessing Code42 storage archives. Useful for doing
+        web-restores or finding a file on an archive.
 
         Returns:
             :class:`py42.modules.archive.ArchiveModule`: A module for interacting with
@@ -94,8 +94,8 @@ class SDKClient(object):
 
     @property
     def users(self):
-        """A collection of methods for retrieving or updating data about users
-        in the Code42 environment.
+        """A collection of methods for retrieving or updating data about users in the Code42
+        environment.
 
         Returns:
             :class:`py42.clients.users.UserClient`
@@ -104,8 +104,8 @@ class SDKClient(object):
 
     @property
     def devices(self):
-        """A collection of methods for retrieving or updating data about devices
-        in the Code42 environment.
+        """A collection of methods for retrieving or updating data about devices in the Code42
+        environment.
 
         Returns:
             :class:`py42.clients.devices.DeviceClient`
@@ -114,8 +114,8 @@ class SDKClient(object):
 
     @property
     def orgs(self):
-        """A collection of methods for retrieving or updating data about organizations
-        in the Code42 environment.
+        """A collection of methods for retrieving or updating data about organizations in the
+        Code42 environment.
 
         Returns:
             :class:`py42.clients.orgs.OrgClient`

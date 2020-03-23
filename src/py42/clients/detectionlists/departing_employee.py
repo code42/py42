@@ -75,7 +75,7 @@ class DepartingEmployeeClient(BaseClient):
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
         page_num=None,
-        page_size=100,
+        page_size=None,
     ):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         departing_on_or_after_date = (
@@ -86,7 +86,7 @@ class DepartingEmployeeClient(BaseClient):
         uri = self._uri_prefix.format(u"search")
         data = {
             u"tenantId": tenant_id,
-            u"pgSize": page_size,
+            u"pgSize": 100,
             u"pgNum": page_num,
             u"departingOnOrAfter": departing_on_or_after_date,
             u"srtKey": sort_key,

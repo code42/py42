@@ -12,8 +12,7 @@ def from_local_account(host_address, username, password):
     """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using the
     supplied credentials. Currently, only accounts created within the Code42 console or using the
     APIs (including py42) are supported. Username/passwords that are based on Active Directory,
-    Okta, or other Identity providers cannot
-    be used with this method.
+    Okta, or other Identity providers cannot be used with this method.
 
     Args:
         host_address (str): The domain name of the Code42 instance being authenticated to, e.g.
@@ -60,10 +59,10 @@ class SDKClient(object):
     @property
     def storageaccess(self):
         """A collection of methods for creating StorageClients, which are useful for interacting
-        with storage nodes directly. For most cases, you can get by using `py42.sdk.archive` or
-        `py42.sdk.securitydata` which abstract away much of the necessary work you have to
+        with storage nodes directly. For most cases, you can be successful using `py42.sdk.archive`
+         or `py42.sdk.securitydata` which abstract away much of the necessary work you have to
         otherwise do when creating and using your own StorageClients. However, `storageaccess` is
-        useful for when you need to be more granular with how you work with storage nodes.
+        useful for when you need to be more granular when working with storage nodes.
 
         Returns:
             :class:`py42.clients.storage.StorageClientFactory

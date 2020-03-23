@@ -24,6 +24,8 @@ install version 0.4.1, you would do this:
 pip install py42==0.4.1
 ```
 
+Visit the [project history](https://pypi.org/project/py42/#history) on PyPI too see all the published versions.
+
 You can also install from source with these steps:
 
 1. Download the source code from GitHub:

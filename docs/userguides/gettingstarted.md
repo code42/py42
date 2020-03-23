@@ -71,3 +71,8 @@ py42.sdk.settings.debug.level = debug.DEBUG
 
 **Reach out to Code42 Support.** If you don't have a GitHub account and are experiencing an issue, reach out to the
 [Code42 support](https://support.code42.com/).
+
+
+# What's Next?
+
+Learn the basics by following the py42 [basics guide](userguides/basics.md).

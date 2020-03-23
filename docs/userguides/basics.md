@@ -86,3 +86,22 @@ for page in response:
     for case in page["cases"]:
         print(case)
 ```
+
+## Exceptions
+
+py42 throws some of its own exceptions when things go wrong. The available exceptions are found in the
+`py42.sdk.exceptions` module.
+
+Let's say you are making a script for others to use and you want to print a nicer message when initializing the SDK
+fails. This is how you would do that:
+```python
+import keyring
+import py42.sdk
+
+
+def authenticate(username):
+    try:
+        password = keyring.get_password("my_program", username)
+        return py42.sdk.from_local_account("www.authority.example.com", username, password)
+    except
+```

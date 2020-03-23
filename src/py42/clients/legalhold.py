@@ -8,7 +8,7 @@ class LegalHoldClient(BaseClient):
     """A client for interacting with Code42 Legal Hold APIs.
 
     The LegalHoldClient provides the ability to manage Code42 Legal Hold Policies and Matters.
-    It can: 
+    It can:
         - create, view, and list all existing Policies
         - create, view, deactivate, reactivate, and list all existing Matters
         - add/remove Custodians from a Matter
@@ -17,11 +17,12 @@ class LegalHoldClient(BaseClient):
     def create_policy(self, name, policy=None):
         """Creates a new Legal Hold Preservation Policy.
         V4 REST Documentation: https://console.us.code42.com/swagger/#/legal-hold-policy/LegalHoldPolicy_Create
-        
+
         Args:
             name (str): The name of the new Policy.
-            policy (dict, optional): The desired Preservation Policy settings as a dict. Defaults to None (which resolves to the server-default backup set).
-        
+            policy (dict, optional): The desired Preservation Policy settings as a dict. Defaults to
+                None (where the server-default backup set is used).
+
         Returns:
             :class: `py42.sdk.response.Py42Response`
         """
@@ -35,11 +36,12 @@ class LegalHoldClient(BaseClient):
 
         Args:
             name (str): The name of the new Legal Hold Matter.
-            hold_policy_uid (str): The identifier of the Preservation Policy that will apply to this Matter.
+            hold_policy_uid (str): The identifier of the Preservation Policy that will apply to this
+                Matter.
             description (str, optional): An optional description of the LegalHold. Defaults to None.
             notes (str, optional): Optional descriptive information. Defaults to None.
             hold_ext_ref (str, optional): Optional external reference information. Defaults to None.
-        
+
         Returns:
             :class: `py42.sdk.response.Py42Response`
         """
@@ -56,19 +58,19 @@ class LegalHoldClient(BaseClient):
     def get_policy_by_uid(self, legal_hold_policy_uid):
         """Gets a single Preservation Policy.
         V4 REST Documentation: https://console.us.code42.com/swagger/#/legal-hold-policy/LegalHoldPolicy_View
-        
+
         Args:
             legal_hold_policy_uid (str): The identifier of the Preservation Policy.
-        
+
         Returns:
-            :class: `py42.sdk.response.Py42Response`: A response containing the Policy. 
+            :class: `py42.sdk.response.Py42Response`: A response containing the Policy.
         """
         uri = u"/api/v4/legal-hold-policy/view"
         params = {u"legalHoldPolicyUid": legal_hold_policy_uid}
         return self._session.get(uri, params=params)
 
     def get_policy_list(self):
-        """Gets a list of existing Preservation Policies. 
+        """Gets a list of existing Preservation Policies.
         V4 REST Documentation: https://console.us.code42.com/swagger/#/legal-hold-policy/LegalHoldPolicy_List
 
         Returns:
@@ -80,10 +82,10 @@ class LegalHoldClient(BaseClient):
     def get_matter_by_uid(self, legal_hold_uid):
         """Gets a single Legal Hold Matter.
         REST Documentation: https://console.us.code42.com/apidocviewer/#LegalHold-get
-        
+
         Args:
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
-        
+
         Returns:
             :class: `py42.sdk.response.Py42Response`: A response containing the Matter.
         """
@@ -115,13 +117,17 @@ class LegalHoldClient(BaseClient):
     ):
         """Gets all existing Legal Hold Matters.
         REST Documentation: https://console.us.code42.com/apidocviewer/#LegalHold-get
-        
+
         Args:
-            creator_user_uid (str, optional): Find atters by user identifier who created them. Defaults to None.
-            active_state (str, optional): Find results by state (options: ACTIVE, INACTIVE, ALL). Defaults to "ACTIVE".
-            name (str, optional): Find Matters whose 'name' either equals or partially contains this value. Defaults to None.
-            hold_ext_ref (str, optional): Find Matters having a matching external reference field. Defaults to None.
-        
+            creator_user_uid (str, optional): Find atters by user identifier who created them.
+                Defaults to None.
+            active_state (str, optional): Find results by state (options: ACTIVE, INACTIVE, ALL).
+                Defaults to "ACTIVE".
+            name (str, optional): Find Matters whose 'name' either equals or partially contains this
+                value. Defaults to None.
+            hold_ext_ref (str, optional): Find Matters having a matching external reference field.
+                Defaults to None.
+
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
             that each contain a page of Legal Hold Matters.
@@ -160,18 +166,22 @@ class LegalHoldClient(BaseClient):
     def get_all_matter_custodians(
         self, legal_hold_uid=None, user_uid=None, user=None, active_state=None,
     ):
-        """Gets all LegalHoldMemberships objects. A LegalHoldMembership object represents 
-        a specific user (Custodian) who has been added to a Legal Hold Matter. If the active state 
+        """Gets all LegalHoldMemberships objects. A LegalHoldMembership object represents
+        a specific user (Custodian) who has been added to a Legal Hold Matter. If the active state
         is INACTIVE, they have been removed from the matter. Users can be Custodians of multiple
         Legal Holds at once.
         REST Documentation: https://console.us.code42.com/apidocviewer/#LegalHoldMembership-get
-        
+
         Args:
-            legal_hold_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter having this unique identifier. Defaults to None.
-            user_uid (str, optional): Find LegalHoldMemberships for the user with this identifier. Defaults to None.
-            user (str, optional): Find LegalHoldMemberships by flexibly searching on username, email, extUserRef, or last name. Will find partial matches. Defaults to None.
-            active_state (str, optional): Filter LegalHoldMemberships by their 'active' state. (options: ACTIVE, INACTIVE, ALL). Defaults to None.
-        
+            legal_hold_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter
+                having this unique identifier. Defaults to None.
+            user_uid (str, optional): Find LegalHoldMemberships for the user with this identifier.
+                Defaults to None.
+            user (str, optional): Find LegalHoldMemberships by flexibly searching on username,
+                email, extUserRef, or last name. Will find partial matches. Defaults to None.
+            active_state (str, optional): Filter LegalHoldMemberships by their 'active' state
+                (options: ACTIVE, INACTIVE, ALL). Defaults to None.
+
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
             that each contain a page of LegalHoldMembership objects.
@@ -191,7 +201,7 @@ class LegalHoldClient(BaseClient):
         Args:
             user_uid (str): The identifier of the user.
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
-        
+
         Returns:
             :class: `py42.sdk.response.Py42Response`
         """
@@ -202,10 +212,11 @@ class LegalHoldClient(BaseClient):
     def remove_from_matter(self, legal_hold_membership_uid):
         """Remove a user (Custodian) from a Legal Hold Matter.
         REST Documentation: https://console.us.code42.com/apidocviewer/#LegalHoldMembershipDeactivation-post
-        
+
         Args:
-            legal_hold_membership_uid (str): The identifier of the LegalHoldMembership representing the Custodian -> Matter relationship.
-        
+            legal_hold_membership_uid (str): The identifier of the LegalHoldMembership representing
+                the Custodian -> Matter relationship.
+
         Returns:
             :class: `py42.sdk.response.Py42Response`
         """
@@ -216,10 +227,10 @@ class LegalHoldClient(BaseClient):
     def deactivate_matter(self, legal_hold_uid):
         """Deactivates and closes a Legal Hold Matter.
         V4 REST Documentation: https://console.us.code42.com/swagger/#/legal-hold-deactivation/LegalHoldDeactivation_Update
-        
+
         Args:
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
-        
+
         Returns:
             :class: `py42.sdk.response.Py42Response`
         """
@@ -233,7 +244,7 @@ class LegalHoldClient(BaseClient):
 
         Args:
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
-        
+
         Returns:
             :class: `py42.sdk.response.Py42Response`
         """

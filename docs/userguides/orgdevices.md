@@ -16,8 +16,8 @@ Next, we will want to make use of `py42.sdk.clients.devices.DeviceClient` to sea
 organization. We can achieve this using the `active` parameter on the `get_all()` method.
 
 The `active` parameter has three different states:
-* If `active` is set to True, you will only get active devices.
-* If `active` is set to False, you will only get deactivated devices.
+* If `active` is set to `True`, you will only get active devices.
+* If `active` is set to `False`, you will only get deactivated devices.
 * If you don't use `active`, you will get all devices.
 
 The `get_all()` function returns a generator of pages of devices. Depending on your account's role in the

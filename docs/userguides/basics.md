@@ -1,8 +1,7 @@
 # py42 Basics
 
-Learning the basics of py42 will help you page through lists, access response items, and handle exceptions among other
-things when crafting your own Code42-related scripts. The following examples use
-`py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors.
+Gain confidence in writing your own scripts by learning the basics of py42. The following examples use
+`py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors:
 * [Initialization](#initialization)
 * [Paging](#paging)
 * [Py42Response](#py42response)
@@ -42,7 +41,7 @@ for page in pages:  # page has 'Py42Response' type
         print("{0}: {1}".format(employee, notes))
 ```
 
-Each page is typical py42 response. The next section covers what you can do with the `Py42Response` object.
+Each page is typical py42 response. The next section covers what you can do with `Py42Response` objects.
 
 ## Py42Response
 
@@ -96,10 +95,10 @@ for page in response:
 
 py42 throws some of its own exceptions when things go wrong. py42 exceptions are found in the `py42.sdk.exceptions`
 module. Here are some of the available exceptions:
-* `Py42ForbiddenError`: (403) meaning you don't have the necessary permissions with your signed-in
-account to perform the action you were trying to do.
+* `Py42ForbiddenError`: (403) meaning you don't have the necessary permissions with your signed-in account to perform
+the action you were trying to do.
 * `Py42UnauthorizedError`: (401) Meaning you probably supplied the wrong username or password.
-* `Py42InternalServerError`: (500) meaning it's an unhandled issue on our end.
+* `Py42InternalServerError`: (500) meaning it's an unhandled issue on our servers.
 
 Let's say you are making a `create_sdk()` function and want to print a nicer message when the provided username or
 password are incorrect. This is how you would do that:

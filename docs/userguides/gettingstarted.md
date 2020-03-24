@@ -57,7 +57,7 @@ pip install py42-[VERSION].tar.gz
 .. important:: py42 currently only supports token-based authentication.
 ```
 
-To initialize the `py42.sdk.SDK` object, you must provide your credentials (basic auth). If you are writing a script,
+To initialize the `py42.sdk.SDKClient`, you must provide your credentials (basic auth). If you are writing a script,
 we recommend using a secure password storage library, such as `keyring`, for retrieving passwords. However, subsequent
 requests use JWT authentication.
 
@@ -87,7 +87,7 @@ GitHub issues.
 
 ### Reach out to Code42 Support
 
-If you don't have a GitHub account and are experiencing an issue, reach out to
+If you don't have a GitHub account and are experiencing issues, reach out to
 [Code42 support](https://support.code42.com/).
 
 ## What's Next?

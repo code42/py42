@@ -26,7 +26,7 @@ Here are some examples:
 * `py42.sdk.legalhold.get_all_matters()`
 * `py42.sdk.orgs.get_all()`
 
-These methods each return a [python generators](https://wiki.python.org/moin/Generators). By looping over the pages
+These methods each return a [python generator](https://wiki.python.org/moin/Generators). By looping over the pages
 returned returns by the generator, we can access the list of items we seek. Use this code snippet as an example for
 working with generators and paging in py42:
 ```python
@@ -54,8 +54,8 @@ user = response["users"][0]]
 item = list_response[0]["itemProperty"]
 ```
 
-To figure out all the keys on a response, you can observe its `.text` attribute. By printing the response, you print
-its text property:
+To figure out all the keys on a response, you can observe its `.text` attribute. By printing the response, you
+essentially print its text property:
 
 ```python
 # prints details about the response from getting a departing employee
@@ -84,7 +84,7 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 # Prints all the departing employee cases on or after two weeks
 
 departing_date = datetime.utcnow() + timedelta(days=14)  # How to get a date in the future
-epoch = py42.sdk.util.convert_datetime_to_epoch(departing_date)  # How to an epoch time (float)
+epoch = (departing_date - datetime.utcfromtimestamp(0)).total_seconds()  # How to an epoch time (float)
 response = sdk.detectionlists.departing_employee.get_all(departing_on_or_after_epoch=epoch)
 for page in response:
     for case in page["cases"]:
@@ -95,10 +95,10 @@ for page in response:
 
 py42 throws some of its own exceptions when things go wrong. py42 exceptions are found in the `py42.sdk.exceptions`
 module. Here are some of the available exceptions:
-* `Py42ForbiddenError`: (403) meaning you don't have the necessary permissions with your signed-in account to perform
+* `Py42ForbiddenError`: (403) Meaning you don't have the necessary permissions with your signed-in account to perform
 the action you were trying to do.
 * `Py42UnauthorizedError`: (401) Meaning you probably supplied the wrong username or password.
-* `Py42InternalServerError`: (500) meaning it's an unhandled issue on our servers.
+* `Py42InternalServerError`: (500) Meaning it's an unhandled issue on our servers.
 
 Let's say you are making a `create_sdk()` function and want to print a nicer message when the provided username or
 password are incorrect. This is how you would do that:
@@ -117,3 +117,6 @@ def create_sdk(username):
         print("Invalid username or password.")
         exit(1)
 ```
+
+The examples from this guide illustrate basics that can applied across different areas in py42. You can apply what you
+have learned here to scripts that do not have anything to do with departing employees.

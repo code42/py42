@@ -45,7 +45,7 @@ class Py42Response(object):
                 read data as it arrives in whatever size the chunks are received. If stream=False,
                 data is returned as a single chunk. This is not necessarily the length of each
                 item. Defaults to 1.
-            decode_unicode (bool, optional ): If True, content will be decoded using the best
+            decode_unicode (bool, optional): If True, content will be decoded using the best
                 available encoding based on the response. Defaults to False.
         """
         return self._response.iter_content(chunk_size=chunk_size, decode_unicode=decode_unicode)
@@ -53,7 +53,7 @@ class Py42Response(object):
     @property
     def raw_text(self):
         """The response.Response.text property. It contains raw metadata that is not included in
-        the most useful parts of the response."""
+        the Py42Response.text property."""
         return self._response.text
 
     @property
@@ -63,12 +63,12 @@ class Py42Response(object):
 
     @property
     def url(self):
-        """Final URL location of response."""
+        """The final URL location of response."""
         return self._response.url
 
     @property
     def status_code(self):
-        """Integer code of responded HTTP Status, e.g. 404 or 200."""
+        """An integer code of the response HTTP Status, e.g. 404 or 200."""
         return self._response.status_code
 
     def __str__(self):

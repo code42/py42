@@ -65,7 +65,7 @@ class SDKClient(object):
         when you need to be more granular when working with storage nodes.
 
         Returns:
-            :class:`py42.clients.storage.StorageClientFactory
+            :class:`py42.clients.storage.StorageClientFactory`
         """
         return self._sdk_dependencies.storage_client_factory
 

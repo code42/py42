@@ -223,6 +223,7 @@ class DepartingEmployeeClient(BaseClient):
             else case.get(u"departureDate")
         )
         alerts_enabled = case.get(u"alertsEnabled")
+        status = case.get(u"status")
         cloud_usernames = cloud_usernames if cloud_usernames else case.get(u"cloudUsernames")
 
         uri = self._uri_prefix.format(u"update")
@@ -233,7 +234,7 @@ class DepartingEmployeeClient(BaseClient):
             u"notes": notes,
             u"departureDate": departure_date,
             u"alertsEnabled": alerts_enabled,
-            u"status": "OPEN",
+            u"status": status,
             u"cloudUsernames": cloud_usernames,
         }
         return self._session.post(uri, data=json.dumps(data))

@@ -1,10 +1,9 @@
 from json import dumps
-
 import pytest
 
-from requests import HTTPError
-
+from py42.sdk.exceptions import Py42InternalServerError
 from py42._internal.session import Py42Session
+
 
 default_kwargs = {
     "params": None,
@@ -127,7 +126,7 @@ class TestPy42Session(object):
 
     def test_session_request_with_error_status_code_raises_http_error(self, error_requests_session):
         session = Py42Session(error_requests_session, HOST_ADDRESS)
-        with pytest.raises(HTTPError):
+        with pytest.raises(Py42InternalServerError):
             session.get(URL)
 
     def test_session_request_calls_auth_handler_renew_authentication_with_correct_params_when_making_first_request(
@@ -167,6 +166,6 @@ class TestPy42Session(object):
         self, error_requests_session, renewing_auth_handler
     ):
         session = Py42Session(error_requests_session, HOST_ADDRESS, renewing_auth_handler)
-        with pytest.raises(HTTPError) as e:
+        with pytest.raises(Py42InternalServerError) as e:
             session.get(URL)
             assert e.request.url == URL

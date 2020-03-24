@@ -4,9 +4,9 @@ import json as json_lib
 from threading import Lock
 
 import requests.adapters
-
 from py42._internal.compat import str, urljoin, urlparse
 from py42.sdk.response import Py42Response
+from py42.sdk.exceptions import raise_py42_error
 
 
 class Py42Session(object):
@@ -108,9 +108,8 @@ class Py42Session(object):
                     response.encoding = u"utf-8"  # setting this manually speeds up read times
 
                 return Py42Response(response)
-
-        except (requests.HTTPError, requests.RequestException, Exception) as ex:
-            raise ex
+        except requests.HTTPError as err:
+            raise_py42_error(err)
 
     def _try_make_request(
         self,

@@ -27,7 +27,7 @@ class Py42Response(object):
 
     @property
     def encoding(self):
-        """The encoding that was used to decode the response text."""
+        """The encoding used to decode the response text."""
         return self._response.encoding
 
     @property
@@ -42,7 +42,7 @@ class Py42Response(object):
         Args:
             chunk_size (int, optional): The number of bytes it should read into memory. A value of
                 None will function differently depending on the value of `stream`. stream=True will
-                read data as it arrives in whatever size the chunks are received.  If stream=False,
+                read data as it arrives in whatever size the chunks are received. If stream=False,
                 data is returned as a single chunk. This is not necessarily the length of each
                 item. Defaults to 1.
             decode_unicode (bool, optional ): If True, content will be decoded using the best
@@ -68,7 +68,7 @@ class Py42Response(object):
 
     @property
     def status_code(self):
-        """Integer Code of responded HTTP Status, e.g. 404 or 200."""
+        """Integer code of responded HTTP Status, e.g. 404 or 200."""
         return self._response.status_code
 
     def __str__(self):

@@ -1,5 +1,6 @@
 import pytest
 
+from py42.sdk.exceptions import Py42StorageSessionInitializationError
 from py42._internal.token_providers import C42APITmpAuthProvider
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
@@ -47,7 +48,7 @@ class TestStorageSessionManager(object):
         self, session_factory, token_provider
     ):
         def mock_get_session(host_address, provider, **kwargs):
-            raise Exception("Mock error!")
+            raise Py42StorageSessionInitializationError("Mock error!")
 
         storage_session_manager = StorageSessionManager(session_factory)
         session_factory.create_storage_session.side_effect = mock_get_session
@@ -55,7 +56,7 @@ class TestStorageSessionManager(object):
         with pytest.raises(Exception) as e:
             storage_session_manager.get_storage_session(token_provider)
 
-        expected_message = "Failed to create or retrieve session, caused by: Mock error!"
+        expected_message = "Mock error!"
         assert e.value.args[0] == expected_message
 
     def test_get_storage_session_get_saved_session_initially_returns_none(self, session_factory):

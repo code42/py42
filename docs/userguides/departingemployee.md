@@ -32,7 +32,7 @@ sdk.detectionlists.departing_employee.resolve(case_id)
 Let's say you do not have the case ID, now what do you do? We can get a case by username using the
 `py42.sdk.detectionlists.departing_employee.get_by_username()` method and extract the case ID from the response:
 ```python
-# Resolve departing employee 'test.user@example.com'
+# Resolves departing employee 'test.user@example.com'
 
 employee_item = sdk.detectionlists.departing_employee.get_by_username("test.user@example.com")
 case_id = employee_item["caseId"]

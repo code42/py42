@@ -5,10 +5,6 @@ from py42._internal.compat import reprlib, str
 
 class Py42Response(object):
     def __init__(self, requests_response):
-        """
-        Args:
-            requests_response (:class:`~response.Response`)
-        """
         self._response = requests_response
         self._data_root = None
         try:
@@ -36,7 +32,7 @@ class Py42Response(object):
 
     @property
     def headers(self):
-        """A case-insensitive dictionary of Response Headers."""
+        """A case-insensitive dictionary of response headers."""
         return self._response.headers
 
     def iter_content(self, chunk_size=1, decode_unicode=False):
@@ -67,7 +63,7 @@ class Py42Response(object):
 
     @property
     def url(self):
-        """Final URL location of response.Response."""
+        """Final URL location of response."""
         return self._response.url
 
     @property

@@ -20,8 +20,8 @@ The easiest and most common way is to use `pip`:
 pip install py42
 ```
 
-If you need to install a previous version of py42, you can specify the version with `pip`. For example, if you want to
-install version 0.4.1, you would do this:
+If you need to install a previous version of py42, `pip` lets you do that. For example, if you want to install version
+0.4.1, you would do this:
 ```bash
 pip install py42==0.4.1
 ```
@@ -30,23 +30,23 @@ Visit the [project history](https://pypi.org/project/py42/#history) on PyPI too 
 
 ### From Source
 
-You can also install py42 directly from source code. Download the source code from GitHub:
+Alternatively, you can install py42 directly from its [source code](https://github.com/code42/py42/pull/51/files):
 ```bash
 git clone https://github.com/code42/py42.git
 ```
-From the root project directory, run:
+When it finishes downloading, from the root project directory, run:
 ```bash
 python setup.py install
 ```
 
 ### From Distribution
 
-If you want create a tarbar for installing elsewhere, run this command from the project's root directory:
+If you want create a `.tar` ball for installing elsewhere, run this command from the project's root directory:
 ```bash
 python setup.py sdist
 ```
 
-The tarbar is in the newly created `dist` directory. To install it, do:
+After it finishes building, the`.tar` ball will be located in the newly created `dist` directory. To install it, do:
 ```bash
 pip install py42-[VERSION].tar.gz
 ```

@@ -38,7 +38,7 @@ class LegalHoldClient(BaseClient):
             name (str): The name of the new Legal Hold Matter.
             hold_policy_uid (str): The identifier of the Preservation Policy that will apply to this
                 Matter.
-            description (str, optional): An optional description of the LegalHold. Defaults to None.
+            description (str, optional): An optional description of the matter. Defaults to None.
             notes (str, optional): Optional descriptive information. Defaults to None.
             hold_ext_ref (str, optional): Optional external reference information. Defaults to None.
 

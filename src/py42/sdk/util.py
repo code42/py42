@@ -15,8 +15,8 @@ def format_json(json_string):
 
 
 def print_response(response, label=None):
-    """Prints a :class:`py42.sdk.response.Py42Response` as prettified JSON. If unable to
-    load, it prints the given response.
+    """Prints a :class:`py42.sdk.response.Py42Response` as prettified JSON. If unable to load, it
+    prints the given response.
 
     Args:
         response (:class:`py42.sdk.response.Py42Response`)

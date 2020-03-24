@@ -47,10 +47,11 @@ Each page is typical py42 response. The next section covers what you can do with
 
 py42 clients return `Py42Response` objects which are intentionally similar to `requests.Response` objects.
 The `Py42Response` class hides unneeded metadata found on the raw `requests.Response.text` (which is available as
-`Py42Response.raw_text`) so that you only use get useful text. Also, the object is subscriptable, meaning you can
-access it with keys or indices (depending on the JSON type underneath `data` on Code42 API responses):
+`Py42Response.raw_text`) so that it's easier to get the most useful parts of the response. Also, the object is
+subscriptable, meaning you can access it with keys or indices (depending on the JSON type underneath `data` on Code42
+API responses):
 ```python
-user = response["users"][0]]
+user = response["users"][0]
 item = list_response[0]["itemProperty"]
 ```
 

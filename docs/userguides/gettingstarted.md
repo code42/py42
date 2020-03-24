@@ -9,7 +9,7 @@ This guide contains information on:
 
 ## Licensing
 
-This project uses [MIT License](https://github.com/code42/py42/blob/master/LICENSE.md).
+This project uses the [MIT License](https://github.com/code42/py42/blob/master/LICENSE.md).
 
 ## Installation
 
@@ -33,19 +33,28 @@ You can also install from source with these steps:
 git clone https://github.com/code42/py42.git
 ```
 
-2. From the root project directory, run:
+2. Fro the root project directory, run:
+```bash
+python setup.py install
+```
+
+If you want create a tarbar for installing elsewhere, follow these steps:
+
+1. From the root project directory, run:
 ```bash
 python setup.py sdist
 ```
 
-3. From the newly created `dist` directory, install using `pip`:
+The tarbar is in the newly created `dist` directory. To install it, do:
 ```bash
 pip install py42-[VERSION].tar.gz
 ```
 
 ## Authentication
 
-WARNING: Currently, py42 uses token-based authentication only.
+```eval_rst
+.. important:: Currently, py42 uses token-based authentication only.
+```
 
 To initialize the `py42.sdk.SDK` object, you must provide your credentials (basic auth). If you are writing a script,
 we recommend using a secure password storage library, such as `keyring`, for retrieving passwords. However, subsequent

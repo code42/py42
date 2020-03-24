@@ -15,7 +15,7 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 
 ## Paging
 
-py42 clients often have a `get_all()` method (or something similar) which handles iterating over pages of response
+py42 clients often have a method starting with the words `get_all`  which handles iterating over pages of response
 items. Here are some examples:
 * `py42.sdk.devices.get_all()`
 * `py42.sdk.users.get_all()`
@@ -91,6 +91,9 @@ for page in response:
 
 py42 throws some of its own exceptions when things go wrong. The available exceptions are found in the
 `py42.sdk.exceptions` module.
+```python
+from py42.sdk.exceptions import Py42
+```
 
 Let's say you are making a `create_sdk()` function and want to print a nicer message when the provided username or
 password are incorrect. This is how you would do that:

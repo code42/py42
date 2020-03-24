@@ -5,9 +5,7 @@ from py42.clients.util import get_all_pages
 
 
 class DeviceClient(BaseClient):
-    """Class to interact with Code42 device/computer API.
-
-    """
+    """Class to interact with Code42 device/computer API."""
 
     def _get_page(
         self,
@@ -50,7 +48,7 @@ class DeviceClient(BaseClient):
         q=None,
         **kwargs
     ):
-        """Get all device information.
+        """Gets all device information.
 
         When no arguments are passed all records are returned, to filter results specify
         respective arguments.
@@ -59,8 +57,9 @@ class DeviceClient(BaseClient):
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
         Args:
-            active (bool, optional): Filter results by device state, True or False.
-              Defaults to None.
+            active (bool, optional): Filters results by device state. When set to True, gets all
+              active devices. When set to False, gets all deactivated devices. When set to None
+              or excluded, gets all devices regardless of state. Defaults to None.
             blocked (bool, optional): Filter results by blocked status, True or False.
               Defaults to None.
             org_uid (int, optional): Id of Organization. Defaults to None.
@@ -76,6 +75,17 @@ class DeviceClient(BaseClient):
 
         Returns:
             A generator containing collection of :class:`Py42.sdk.response.Py42Response` objects.
+
+            It returns a generator of pages of devices, depending on logged in user account's role
+            in the organization.
+
+            * For a logged in ordinary end user, returns all devices of the user.
+
+            * For an organization administrator, returns all the devices in respective organization.
+
+            * For a cross-organization administrator, returns all devices across all organizations.
+
+            * Finally, for are a customer cloud administrator, returns all devices in all organizations.
         """
 
         return get_all_pages(
@@ -93,7 +103,7 @@ class DeviceClient(BaseClient):
         )
 
     def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
-        """Get device information by device_id.
+        """Gets device information by device_id.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
@@ -110,7 +120,7 @@ class DeviceClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
-        """Get device information by guid.
+        """Gets device information by guid.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
@@ -127,7 +137,7 @@ class DeviceClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def block(self, device_id):
-        """Block a device, set blocked_status of the device true.
+        """Blocks a device, set blocked_status of the device true.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
@@ -141,7 +151,7 @@ class DeviceClient(BaseClient):
         return self._session.put(uri)
 
     def unblock(self, device_id):
-        """Unblock a device, set blocked_status of the device false.
+        """Unblocks a device, set blocked_status of the device false.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
@@ -155,7 +165,7 @@ class DeviceClient(BaseClient):
         return self._session.delete(uri)
 
     def deactivate(self, device_id):
-        """Deactivate a device, set 'active' status to false.
+        """Deactivates a device, set 'active' status to false.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
 
@@ -170,7 +180,7 @@ class DeviceClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def reactivate(self, device_id):
-        """Activate a device, set 'active' status to true.
+        """Activates a device, set 'active' status to true.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
 
@@ -185,7 +195,7 @@ class DeviceClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def deauthorize(self, device_id):
-        """Deauthorize the device.
+        """Deauthorizes the device.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeauthorization>`__
 
@@ -199,7 +209,7 @@ class DeviceClient(BaseClient):
         return self._session.put(uri)
 
     def get_settings(self, guid, keys=None):
-        """Get settings of the device.
+        """Gets settings of the device.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#DeviceSetting>`__
 

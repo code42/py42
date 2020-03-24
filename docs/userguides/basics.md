@@ -70,8 +70,9 @@ print(cloud_usernames)
 
 ## Dates
 
-py42 supports POSIX timestamps when specifying dates in py42. As an example, see the `departing_on_or_after_epoch`
-parameter in `py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
+py42 supports [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) when specifying dates in py42.
+As an example, see the `departing_on_or_after_epoch` parameter in the
+`py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
 ```python
 import py42.sdk
 import py42.sdk.util

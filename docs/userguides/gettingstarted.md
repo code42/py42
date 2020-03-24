@@ -69,7 +69,7 @@ Okta.
 ### Debug mode
 
 Debug mode may be useful if you are trying to determine if you are experiencing permission issues. When debug mode is
-on, py42 logs HTTP request URLs and parameters to the console. Use the following as a guide for how to turn debug mode
+on, py42 logs HTTP request data to the console. Use the following as a guide for how to turn debug mode
 on in py42:
 ```python
 import py42.sdk
@@ -92,4 +92,4 @@ If you don't have a GitHub account and are experiencing issues, reach out to
 
 ## What's Next?
 
-Learn the basics by following the py42 [basics guide](basics.html).
+Learn the basics by following the py42 [Basics guide](basics.html).

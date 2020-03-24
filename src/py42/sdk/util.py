@@ -15,7 +15,8 @@ def format_json(json_string):
 
 
 def print_response(response, label=None):
-    """Prints a :class:`py42.sdk.response.Py42Response` as a prettified JSON str. If unable to
+    """Prints a :class:`py42.sdk.response.Py42Response` as apclear
+    asdfprettified JSON. If unable to
     load, it prints the given response.
 
     Args:

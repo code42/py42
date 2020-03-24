@@ -66,7 +66,7 @@ Okta.
 
 ## Troubleshooting and Support
 
-### Try turning on debug mode
+### Debug mode
 
 Debug mode may be useful if you are trying to determine if you are experiencing permission issues. When debug mode is
 on, py42 logs HTTP request URLs and parameters to the console. Use the following as a guide for how to turn debug mode

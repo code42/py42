@@ -10,7 +10,7 @@ Gain confidence in writing your own scripts by learning the basics of py42. The 
 
 ## Initialization
 
-To do anything with py42, you need to initialize the SDK object:
+To do anything with py42, you need to initialize the SDK:
 ```python
 import py42.sdk
 
@@ -27,10 +27,10 @@ Here are some examples:
 * `py42.sdk.orgs.get_all()`
 
 These methods each return a [python generator](https://wiki.python.org/moin/Generators). By looping over the pages
-returned returns by the generator, we can access the list of items we seek. Use this code snippet as an example for
+returned by the generator, we can access the list of items we seek. Use this code snippet as an example for
 working with generators and paging in py42:
 ```python
-# Print the username and notes for all departing employees
+# Prints the username and notes for all departing employees
 
 pages = sdk.detectionlists.departing_employee.get_all()  # pages has 'generator' type
 for page in pages:  # page has 'Py42Response' type
@@ -58,14 +58,12 @@ To figure out all the keys on a response, you can observe its `.text` attribute.
 essentially print its text property:
 
 ```python
-# prints details about the response from getting a departing employee
+# Prints details about the response from getting a departing employee
 
 response = sdk.detectionlists.departing_employee.get_by_username("test.user@example.com")
 print(response)  # JSON as Dictionary - same as print(response.text)
 print(response.raw_text)  # Raw API response
 print(response.status_code)  # 200
-
-# prints the cloud usernames from the response
 cloud_usernames = response["cloudUsernames"]
 print(cloud_usernames)
 ```
@@ -118,5 +116,4 @@ def create_sdk(username):
         exit(1)
 ```
 
-The examples from this guide illustrate basics that can applied across different areas in py42. You can apply what you
-have learned here to scripts that do not have anything to do with departing employees.
+The examples from this guide demonstrate concepts that apply to different areas in py42.

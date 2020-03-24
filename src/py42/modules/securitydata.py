@@ -1,5 +1,11 @@
 import json
 from threading import Lock
+from requests.exceptions import HTTPError
+
+from py42.sdk.exceptions import (
+    Py42SecurityPlanConnectionError,
+    raise_py42_error,
+)
 
 
 class SecurityModule(object):
@@ -17,18 +23,19 @@ class SecurityModule(object):
     def get_security_plan_storage_info_list(self, user_uid):
         locations = None
         try:
-            locations = self._security_client.get_security_event_locations(user_uid)
-        except Exception:
-            # TODO: only pass if the exception is caused by a 404
-            pass
+            response = self._security_client.get_security_event_locations(user_uid)
+            locations = response[u"securityPlanLocationsByDestination"]
+        except HTTPError as err:
+            if err.response.status_code == 404:
+                pass
+            else:
+                raise_py42_error(err)
 
         if locations:
-            plan_destination_map = _get_plan_destination_map(
-                locations[u"securityPlanLocationsByDestination"]
-            )
+            plan_destination_map = _get_plan_destination_map(locations)
             selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
             if not selected_plan_infos:
-                raise Exception(
+                raise Py42SecurityPlanConnectionError(
                     u"Could not establish a connection to retrieve security events for user {0}".format(
                         user_uid
                     )
@@ -104,7 +111,9 @@ class SecurityModule(object):
             plan_storage_info = PlanStorageInfo(plan_uid, destination_guid, node_guid)
             self._try_get_security_detection_event_client(plan_storage_info)
             return plan_storage_info
-        except Exception:
+        except HTTPError:
+            #  This function is called in a loop until we get a result that is not None.
+            #  If all return None, then the calling function raises Py42SecurityPlanConnectionError.
             pass
 
     def _try_get_security_detection_event_client(self, plan_storage_info):

@@ -23,7 +23,7 @@ class DepartingEmployeeClient(BaseClient):
         `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Create>`__
         Args:
             username (str): The username of the departing employee.
-            tenant_id (str, optional): The identifier of the Customer Tenant the user is in.
+            tenant_id (str, optional): The identifier of the Customer tenant the user is in.
                 Defaults to None (the tenant_id of SDK authorization user will be used).
             notes (str, optional): Optional descriptive information. Defaults to None.
             departure_epoch (int, optional): Employee departure date as POSIX timestamp. Defaults
@@ -58,8 +58,8 @@ class DepartingEmployeeClient(BaseClient):
 
         Args:
             case_id (str): The identifier of the Departing Employee.
-            tenant_id (str, optional): The identifier of the Customer case is in. Defaults to None
-                (the tenant_id of SDK authorization user will be used).
+            tenant_id (str, optional): The identifier of the Customer tenant the case is in.
+                Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
             :class:`py42.sdk.response.Py42Response`:
@@ -105,8 +105,8 @@ class DepartingEmployeeClient(BaseClient):
         """Gets all Departing Employees.
 
         Args:
-            tenant_id (str, optional): The identifier of the Customer case is in. Defaults to None
-                (the tenant_id of SDK authorization user will be used).
+            tenant_id (str, optional): The identifier of the Customer tenant. Defaults to None (the
+                tenant_id of SDK authorization user will be used).
             departing_on_or_after_epoch (int, optional): Filter results by the departure date of
                 employee, requires a POSIX timestamp. Defaults to None.
             sort_key (str, optional): Key to sort results on, one of: {"CREATED_AT",
@@ -133,8 +133,8 @@ class DepartingEmployeeClient(BaseClient):
         `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_ToggleAlerts>`__
 
         Args:
-            tenant_id (str, optional): The identifier of the Customer case is in. Defaults to None
-                (the tenant_id of SDK authorization user will be used).
+            tenant_id (str, optional): The identifier of the Customer tenant. Defaults to None (the
+                tenant_id of SDK authorization user will be used).
             alerts_enabled (bool): Set alerting to on (True) or off (False). Defaults to True.
 
         Returns:
@@ -150,8 +150,8 @@ class DepartingEmployeeClient(BaseClient):
 
         Arguments:
             username (str): Username of the Departing Employee to retrieve case info on.
-            tenant_id (str, optional): The identifier of the Customer case is in. Defaults to None
-                (the tenant_id of SDK authorization user will be used).
+            tenant_id (str, optional): The identifier of the Customer tenant the case is in.
+                Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
             :class:`py42.sdk.response.Py42Response`:
@@ -166,8 +166,8 @@ class DepartingEmployeeClient(BaseClient):
 
         Arguments:
             case_id (str): Identifier of the Departing Employee case.
-            tenant_id (str, optional): The identifier of the Customer case is in. Defaults to None
-                (the tenant_id of SDK authorization user will be used).
+            tenant_id (str, optional): The identifier of the Customer tenant the case is in.
+                Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
             :class:`py42.sdk.response.Py42Response`:
@@ -191,8 +191,8 @@ class DepartingEmployeeClient(BaseClient):
 
         Arguments:
             case_id (str): Identifier of the Departing Employee case.
-            tenant_id (str, optional): The identifier of the Customer case is in. Defaults to None
-                (the tenant_id of SDK authorization user will be used).
+            tenant_id (str, optional): The identifier of the Customer tenant the case is in.
+                Defaults to None (the tenant_id of SDK authorization user will be used).
             display_name (str, optional): The display name for the Departing Employee case. This
                 defaults to username when adding a new Departing Employee, so it can be used to make
                 the UI more user-friendly if your Organization has usernames that don't correspond

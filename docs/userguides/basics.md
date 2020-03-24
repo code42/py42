@@ -2,7 +2,12 @@
 
 Learning the basics of py42 will help you page through lists, access response items, and handle exceptions among other
 things when crafting your own Code42-related scripts. The following examples use
-`py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors, such as paging.
+`py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors.
+* [Initialization](#initialization)
+* [Paging](#paging)
+* [Py42Response]($py42response)
+* [Dates](#dates)
+* [Exceptions](#exceptions)
 
 ## Initialization
 
@@ -15,15 +20,16 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 
 ## Paging
 
-py42 clients often have a method starting with the words `get_all`  which handles iterating over pages of response
-items. Here are some examples:
+py42 clients often have a method named or prefixed by `get_all`  which handles iterating over pages of response items.
+Here are some examples:
 * `py42.sdk.devices.get_all()`
 * `py42.sdk.users.get_all()`
 * `py42.sdk.legalhold.get_all_matters()`
 * `py42.sdk.orgs.get_all()`
 
-By looping over the pages returned by the generator object, we can access the list of items we seek. Use this code
-snippet as an example for working with generators and paging in py42:
+These methods each return a [python generators](https://wiki.python.org/moin/Generators). By looping over the pages
+returned returns by the generator, we can access the list of items we seek. Use this code snippet as an example for
+working with generators and paging in py42:
 ```python
 # Print the username and notes for all departing employees
 
@@ -36,12 +42,12 @@ for page in pages:  # page has 'Py42Response' type
         print("{0}: {1}".format(employee, notes))
 ```
 
-Each page from generator is a typical py42 response. The next section covers the `Py42Response` object.
+Each page is typical py42 response. The next section covers what you can do with the `Py42Response` object.
 
 ## Py42Response
 
 py42 clients return `Py42Response` objects which are intentionally similar to `requests.Response` objects.
-`Py42Response` hides unneeded metadata found on the raw `requests.Response.text` (which is available as
+The `Py42Response` class hides unneeded metadata found on the raw `requests.Response.text` (which is available as
 `Py42Response.raw_text`) so that you only use get useful text. Also, the object is subscriptable, meaning you can
 access it with keys or indices (depending on the JSON type underneath `data` on Code42 API responses):
 ```python
@@ -52,7 +58,6 @@ item = list_response[0]["itemProperty"]
 To figure out all the keys on a response, you can observe its `.text` attribute. By printing the response, you print
 its text property:
 
-Here is an example:
 ```python
 # prints details about the response from getting a departing employee
 
@@ -77,7 +82,7 @@ from datetime import datetime, timedelta
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
 
-# Print all the departing employee cases on or after two weeks
+# Prints all the departing employee cases on or after two weeks
 
 departing_date = datetime.utcnow() + timedelta(days=14)  # How to get a date in the future
 epoch = py42.sdk.util.convert_datetime_to_epoch(departing_date)  # How to an epoch time (float)
@@ -89,18 +94,19 @@ for page in response:
 
 ## Exceptions
 
-py42 throws some of its own exceptions when things go wrong. The available exceptions are found in the
-`py42.sdk.exceptions` module.
-```python
-from py42.sdk.exceptions import Py42
-```
+py42 throws some of its own exceptions when things go wrong. py42 exceptions are found in the `py42.sdk.exceptions`
+module. Here are some of the available exceptions:
+* `Py42ForbiddenError`: (403) meaning you don't have the necessary permissions with your signed-in
+account to perform the action you were trying to do.
+* `Py42UnauthorizedError`: (401) Meaning you probably supplied the wrong username or password.
+* `Py42InternalServerError`: (500) meaning it's an unhandled issue on our end.
 
 Let's say you are making a `create_sdk()` function and want to print a nicer message when the provided username or
 password are incorrect. This is how you would do that:
 ```python
 import keyring
 import py42.sdk
-from py42.sdk.exceptions import Py42
+from py42.sdk.exceptions import Py42UnauthorizedError
 
 
 def create_sdk(username):

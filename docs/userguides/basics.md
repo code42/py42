@@ -27,8 +27,8 @@ response items. Here are some examples:
 * `py42.sdk.orgs.get_all()`
 
 These methods each return a [python generator](https://wiki.python.org/moin/Generators). By looping over the pages
-returned by the generator, we can access the actual list of items we seek. Use the code snippet below as an example for
-working with generators and paging in py42:
+returned by the generator, we can access the actual list of items we seek. Use the code snippet below as an example
+for working with generators and paging in py42:
 ```python
 # Prints the username and notes for all departing employees
 

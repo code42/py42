@@ -118,5 +118,5 @@ def create_sdk(username):
         exit(1)
 ```
 
-In summary, keep in mind that the examples from this guide are blanket concepts that apply to other areas in py42.
-You will page over users and devices the same way you page over departing-employees and alerts.
+In summary, keep in mind that the examples from this guide are intended to be blanket concepts that apply to other
+areas in py42. You will page over users and devices the same way you page over departing-employees and alerts.

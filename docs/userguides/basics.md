@@ -5,7 +5,7 @@ things when crafting your own Code42-related scripts. The following examples use
 `py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors.
 * [Initialization](#initialization)
 * [Paging](#paging)
-* [Py42Response]($py42response)
+* [Py42Response](#py42response)
 * [Dates](#dates)
 * [Exceptions](#exceptions)
 

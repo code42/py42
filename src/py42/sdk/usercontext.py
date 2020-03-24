@@ -1,22 +1,12 @@
 class UserContext(object):
-
-    """Class to represent user context.
-
-    """
+    """An object representing the currently logged in user."""
 
     def __init__(self, administration_client):
-        """
-
-        Args:
-            administration_client: Instance of :class:`AdministrationClient`.
-        """
         self._administration_client = administration_client
         self._tenant_id = None
 
     def get_current_tenant_id(self):
-        """Get user's tenant ID.
-
-        """
+        """Gets the currently signed in user's tenant ID."""
         if self._tenant_id is None:
             self._tenant_id = self._get_tenant_id()
         return self._tenant_id

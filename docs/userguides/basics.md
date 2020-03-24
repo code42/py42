@@ -1,7 +1,7 @@
 # py42 Basics
 
 Gain confidence in writing your own scripts by learning the basics of py42. The following examples use
-`py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate basic py42 behaviors:
+`py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate how to use py42:
 * [Initialization](#initialization)
 * [Paging](#paging)
 * [Py42Response](#py42response)
@@ -19,15 +19,15 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 
 ## Paging
 
-py42 clients often have a method named or prefixed by `get_all`  which handles iterating over pages of response items.
-Here are some examples:
+py42 clients often have a method with the name (or name prefix) `get_all`  which handles iterating over pages of
+response items. Here are some examples:
 * `py42.sdk.devices.get_all()`
 * `py42.sdk.users.get_all()`
 * `py42.sdk.legalhold.get_all_matters()`
 * `py42.sdk.orgs.get_all()`
 
 These methods each return a [python generator](https://wiki.python.org/moin/Generators). By looping over the pages
-returned by the generator, we can access the list of items we seek. Use this code snippet as an example for
+returned by the generator, we can access the actual list of items we seek. Use the code snippet below as an example for
 working with generators and paging in py42:
 ```python
 # Prints the username and notes for all departing employees
@@ -41,7 +41,7 @@ for page in pages:  # page has 'Py42Response' type
         print("{0}: {1}".format(employee, notes))
 ```
 
-Each page is typical py42 response. The next section covers what you can do with `Py42Response` objects.
+Each page is a typical py42 response. The next section covers what you can do with `Py42Response` objects.
 
 ## Py42Response
 
@@ -71,8 +71,8 @@ print(cloud_usernames)
 
 ## Dates
 
-py42 supports [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) when specifying dates in py42.
-As an example, see the `departing_on_or_after_epoch` parameter in the
+py42 supports [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) for date parameters. As an example, see
+the `departing_on_or_after_epoch` parameter in the
 `py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
 ```python
 import py42.sdk
@@ -93,15 +93,15 @@ for page in response:
 
 ## Exceptions
 
-py42 throws some of its own exceptions when things go wrong. py42 exceptions are found in the `py42.sdk.exceptions`
+py42 throws some of its own exceptions when failures occur. py42 exceptions are found in the `py42.sdk.exceptions`
 module. Here are some of the available exceptions:
-* `Py42ForbiddenError`: (403) Meaning you don't have the necessary permissions with your signed-in account to perform
-the action you were trying to do.
+* `Py42ForbiddenError`: (403) Meaning you don't have the necessary permissions with your currently signed-in account
+to perform the action you were trying to do.
 * `Py42UnauthorizedError`: (401) Meaning you probably supplied the wrong username or password.
-* `Py42InternalServerError`: (500) Meaning it's an unhandled issue on our servers.
+* `Py42InternalServerError`: (500) Meaning it's likely an unhandled issue on our servers.
 
-Let's say you are making a `create_sdk()` function and want to print a nicer message when the provided username or
-password are incorrect. This is how you would do that:
+Let's say you are making a `create_sdk()` function and want to print a more user-friendly message when the provided
+username or password are incorrect. This is how you would do that:
 ```python
 import keyring
 import py42.sdk
@@ -118,4 +118,5 @@ def create_sdk(username):
         exit(1)
 ```
 
-The examples from this guide demonstrate concepts that apply to different areas in py42.
+In summary, keep in mind that the examples from this guide are blanket concepts that apply to other areas in py42.
+You will page over users and devices the same way you page over departing-employees and alerts.

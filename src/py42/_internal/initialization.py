@@ -30,6 +30,7 @@ class SDKDependencies(object):
         archive_locator_factory = StorageTokenProviderFactory(
             self.session, self.security_client, self.device_client
         )
+
         self.storage_client_factory = _get_storage_client_factory(
             session_factory, archive_locator_factory
         )
@@ -59,15 +60,5 @@ class SDKDependencies(object):
 
     @staticmethod
     def _test_session(session, test_uri):
-        try:
-            response = session.get(test_uri)
-            return 200 <= response.status_code < 300
-        except Exception:
-            message = (
-                u"Invalid credentials or host address ({0}). Check that the username and password are correct, that the "
-                u"host is available and reachable, and that you have supplied the full scheme, domain, and port "
-                u"(e.g. https://myhost.code42.com:4285). If you are using a self-signed ssl certificate, try setting "
-                u"py42.sdk.settings.verify_ssl_certs to false (or using a cert from a legitimate certificate "
-                u"authority).".format(session.host_address)
-            )
-            raise Exception(message)
+        response = session.get(test_uri)
+        return 200 <= response.status_code < 300

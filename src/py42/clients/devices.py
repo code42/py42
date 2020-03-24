@@ -137,7 +137,7 @@ class DeviceClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def block(self, device_id):
-        """Blocks a device, set blocked_status of the device true.
+        """Blocks a device causing the user not to be able to login or restore.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
@@ -151,7 +151,7 @@ class DeviceClient(BaseClient):
         return self._session.put(uri)
 
     def unblock(self, device_id):
-        """Unblocks a device, set blocked_status of the device false.
+        """Unblocks a device, permitting a user to be able to login and restore again.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
@@ -165,7 +165,7 @@ class DeviceClient(BaseClient):
         return self._session.delete(uri)
 
     def deactivate(self, device_id):
-        """Deactivates a device, set 'active' status to false.
+        """Unblocks a device, permitting a user to be able to login and restore again.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
 
@@ -180,7 +180,7 @@ class DeviceClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def reactivate(self, device_id):
-        """Activates a device, set 'active' status to true.
+        """Activates a previously deactivated device.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
 
@@ -195,7 +195,9 @@ class DeviceClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def deauthorize(self, device_id):
-        """Deauthorizes the device.
+        """
+        Deauthorizes the device with the given device ID. If used on a cloud connector device,
+        it will remove the authorization token for that account.
 
         `REST API Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeauthorization>`__
 

@@ -6,9 +6,7 @@ from py42.sdk.util import convert_timestamp_to_str
 
 
 class DepartingEmployeeClient(BaseClient):
-    """A client for interacting with Code42 Departing Employee APIs
-
-    """
+    """A client for interacting with Code42 Departing Employee APIs."""
 
     _uri_prefix = u"/svc/api/v1/departingemployee/{0}"
 
@@ -21,6 +19,7 @@ class DepartingEmployeeClient(BaseClient):
     ):
         """Adds a user to Departing Employees.
         `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Create>`__
+
         Args:
             username (str): The username of the departing employee.
             tenant_id (str, optional): The identifier of the Customer tenant the user is in.
@@ -33,8 +32,7 @@ class DepartingEmployeeClient(BaseClient):
                 OneDrive, Gmail, Office 365). Defaults to None.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`:
-
+            :class: `py42.sdk.response.Py42Response`
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         cloud_usernames = cloud_usernames if cloud_usernames else []
@@ -62,7 +60,7 @@ class DepartingEmployeeClient(BaseClient):
                 Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`:
+            :class:`py42.sdk.response.Py42Response`
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"resolve")
@@ -138,7 +136,7 @@ class DepartingEmployeeClient(BaseClient):
             alerts_enabled (bool): Set alerting to on (True) or off (False). Defaults to True.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`:
+            :class:`py42.sdk.response.Py42Response`
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"togglealerts")
@@ -154,7 +152,8 @@ class DepartingEmployeeClient(BaseClient):
                 Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`:
+            :class:`py42.sdk.response.Py42Response`: A response containing the Departing Employee
+                case.
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         case_id = self._get_case_id_from_username(tenant_id, username)
@@ -170,7 +169,8 @@ class DepartingEmployeeClient(BaseClient):
                 Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`:
+            :class:`py42.sdk.response.Py42Response`: A response containing the Departing Employee
+                case.
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"details")
@@ -204,10 +204,8 @@ class DepartingEmployeeClient(BaseClient):
                 external data sources being searched by Forensic File Search (Google Drive, Box,
                 OneDrive, Gmail, Office 365). Defaults to None.
 
-
-
         Returns:
-                :class:`py42.sdk.response.Py42Response`:
+                :class:`py42.sdk.response.Py42Response`
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
 

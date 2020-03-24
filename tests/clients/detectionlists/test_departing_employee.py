@@ -349,7 +349,6 @@ class TestDepartingEmployeeClient(object):
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
-        print(posted_data)
         assert (
             posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["caseId"] == "697"

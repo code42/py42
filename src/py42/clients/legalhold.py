@@ -38,7 +38,7 @@ class LegalHoldClient(BaseClient):
             name (str): The name of the new Legal Hold Matter.
             hold_policy_uid (str): The identifier of the Preservation Policy that will apply to this
                 Matter.
-            description (str, optional): An optional description of the matter. Defaults to None.
+            description (str, optional): An optional description of the Matter. Defaults to None.
             notes (str, optional): Optional descriptive information. Defaults to None.
             hold_ext_ref (str, optional): Optional external reference information. Defaults to None.
 
@@ -95,12 +95,18 @@ class LegalHoldClient(BaseClient):
     def _get_legal_holds_page(
         self,
         creator_user_uid=None,
-        active_state=u"ACTIVE",
+        active=True,
         name=None,
         hold_ext_ref=None,
         page_num=None,
         page_size=None,
     ):
+        if active is None:
+            active_state = u"ALL"
+        elif active:
+            active_state = u"ACTIVE"
+        else:
+            active_state = u"INACTIVE"
         uri = u"/api/LegalHold"
         params = {
             u"creatorUserUid": creator_user_uid,
@@ -112,17 +118,16 @@ class LegalHoldClient(BaseClient):
         }
         return self._session.get(uri, params=params)
 
-    def get_all_matters(
-        self, creator_user_uid=None, active_state=u"ACTIVE", name=None, hold_ext_ref=None
-    ):
+    def get_all_matters(self, creator_user_uid=None, active=True, name=None, hold_ext_ref=None):
         """Gets all existing Legal Hold Matters.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#LegalHold-get>`__
 
         Args:
             creator_user_uid (str, optional): Find Matters by the identifier of the user who created
                 them. Defaults to None.
-            active_state (str, optional): Find results by state (options: ACTIVE, INACTIVE, ALL).
-                Defaults to "ACTIVE".
+            active (bool or None, optional): Find Matters by their active state. True returns
+                active Matters, False returns inactive Matters, None returns all Matters regardless
+                of state. Defaults to True.
             name (str, optional): Find Matters whose 'name' either equals or partially contains this
                 value. Defaults to None.
             hold_ext_ref (str, optional): Find Matters having a matching external reference field.
@@ -136,7 +141,7 @@ class LegalHoldClient(BaseClient):
             self._get_legal_holds_page,
             u"legalHolds",
             creator_user_uid=creator_user_uid,
-            active_state=active_state,
+            active=active,
             name=name,
             hold_ext_ref=hold_ext_ref,
         )
@@ -147,10 +152,16 @@ class LegalHoldClient(BaseClient):
         legal_hold_uid=None,
         user_uid=None,
         user=None,
-        active_state=None,
+        active=True,
         page_num=None,
         page_size=None,
     ):
+        if active is None:
+            active_state = u"ALL"
+        elif active:
+            active_state = u"ACTIVE"
+        else:
+            active_state = u"INACTIVE"
         params = {
             u"legalHoldMembershipUid": legal_hold_membership_uid,
             u"legalHoldUid": legal_hold_uid,
@@ -164,11 +175,11 @@ class LegalHoldClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_all_matter_custodians(
-        self, legal_hold_uid=None, user_uid=None, user=None, active_state=None,
+        self, legal_hold_uid=None, user_uid=None, user=None, active=True,
     ):
         """Gets all Legal Hold memberships. Each user (Custodian) who has been added to a Legal Hold
         Matter is returned by the server as a LegalHoldMembership object in the response body.  If
-        the object's active state is "INACTIVE", they have been removed from the matter and are no
+        the object's active state is "INACTIVE", they have been removed from the Matter and are no
         longer subject to the Legal Hold retention rules. Users can be Custodians of multiple Legal
         Holds at once (and thus would be part of multiple LegalHoldMembership objects).
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-get>`__
@@ -180,8 +191,9 @@ class LegalHoldClient(BaseClient):
                 Defaults to None.
             user (str, optional): Find LegalHoldMemberships by flexibly searching on username,
                 email, extUserRef, or last name. Will find partial matches. Defaults to None.
-            active_state (str, optional): Filter LegalHoldMemberships by their 'active' state
-                (options: ACTIVE, INACTIVE, ALL). Defaults to None.
+            active (bool or None, optional): Find LegalHoldMemberships by their active state. True
+                returns active LegalHoldMemberships, False returns inactive LegalHoldMemberships,
+                None returns all LegalHoldMemberships regardless of state. Defaults to True.
 
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
@@ -193,7 +205,7 @@ class LegalHoldClient(BaseClient):
             legal_hold_uid=legal_hold_uid,
             user_uid=user_uid,
             user=user,
-            active_state=active_state,
+            active=active,
         )
 
     def add_to_matter(self, user_uid, legal_hold_uid):

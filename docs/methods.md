@@ -18,7 +18,6 @@ sdk = py42.sdk.from_local_account("console.us.code42.com", "john.doe@example.com
 
 Explore the complete public documentation for `py42` below.
 
-* [SDK](methoddocs/sdk.md)
 * [Orgs](methoddocs/orgs.md)
 * [Users](methoddocs/users.md)
 * [Devices](methoddocs/devices.md)

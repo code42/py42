@@ -106,9 +106,9 @@ class ArchiveModule(object):
 
         Args:
             src_guid (str): The device GUID for the device responsible for the archive you
-                eventually wish restore from.
+                eventually wish to restore from.
             dest_guid (str): The device GUID for the server containing the archive you eventually
-                wish to perform from.
+                wish to restore from.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing information needed

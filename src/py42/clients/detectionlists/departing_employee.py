@@ -112,11 +112,11 @@ class DepartingEmployeeClient(BaseClient):
                 tenant_id of SDK authorization user will be used).
             departing_on_or_after_epoch (int, optional): Filter results by the departure date of
                 employee, requires a POSIX timestamp. Defaults to None.
-            sort_key (str, optional): Key to sort results on, one of: {"CREATED_AT",
-                "DEPARTURE_DATE", "DISPLAY_NAME", "NUM_EVENTS", "TOTAL_BYTES"}. Defaults to
-                "CREATED_AT".
-            sort_direction (str, optional): Sort direction, one of: {"ASC","DESC"}. Defaults to
-                "DESC".
+            sort_key (str, optional): Key to sort results on. Options: (``CREATED_AT``,
+                ``DEPARTURE_DATE``, ``DISPLAY_NAME``, ``NUM_EVENTS``, ``TOTAL_BYTES``). Defaults to
+                ``CREATED_AT``.
+            sort_direction (str, optional): Sort direction. Options: (``ASC``, ``DESC``). Defaults
+                to ``DESC``.
 
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects

@@ -4,6 +4,11 @@ from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 
 
+def _active_state_map(active):
+    _map = {True: u"ACTIVE", False: u"INACTIVE", None: u"ALL"}
+    return _map[active]
+
+
 class LegalHoldClient(BaseClient):
     """A client for interacting with Code42 Legal Hold APIs.
 
@@ -101,12 +106,7 @@ class LegalHoldClient(BaseClient):
         page_num=None,
         page_size=None,
     ):
-        if active is None:
-            active_state = u"ALL"
-        elif active:
-            active_state = u"ACTIVE"
-        else:
-            active_state = u"INACTIVE"
+        active_state = _active_state_map(active)
         uri = u"/api/LegalHold"
         params = {
             u"creatorUserUid": creator_user_uid,
@@ -156,12 +156,7 @@ class LegalHoldClient(BaseClient):
         page_num=None,
         page_size=None,
     ):
-        if active is None:
-            active_state = u"ALL"
-        elif active:
-            active_state = u"ACTIVE"
-        else:
-            active_state = u"INACTIVE"
+        active_state = _active_state_map(active)
         params = {
             u"legalHoldMembershipUid": legal_hold_membership_uid,
             u"legalHoldUid": legal_hold_uid,

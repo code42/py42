@@ -63,6 +63,8 @@ class DepartingEmployeeClient(BaseClient):
         Returns:
             :class:`py42.sdk.response.Py42Response`
         """
+        from py42.sdk.util import convert_timestamp_to_str
+
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"resolve")
         data = {u"caseId": case_id, u"tenantId": tenant_id}
@@ -208,6 +210,8 @@ class DepartingEmployeeClient(BaseClient):
         Returns:
                 :class:`py42.sdk.response.Py42Response`
         """
+        from py42.sdk.util import convert_timestamp_to_str
+
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
 
         # The behavior of the `update` API is to clear values that are not provided.

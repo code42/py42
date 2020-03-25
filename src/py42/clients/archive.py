@@ -6,8 +6,8 @@ from py42.clients.util import get_all_pages
 
 class ArchiveClient(BaseClient):
     def get_data_key_token(self, device_guid):
-        """Gets a data key token from the server for a storage node in order to request an
-        encryption key.
+        """Gets a data key token for a storage node in order for it to request an encryption key,
+        which is necessary for performing a web store.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#DataKeyToken-post>`__
 
         Args:

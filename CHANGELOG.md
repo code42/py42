@@ -44,9 +44,14 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42ForbiddenError`
     - `Py42NotFoundError`
     - `Py42InternalServerError`
-- `py42.clients.ArchiveClient.get_restore_history()` renamed to `py42.clients.ArchiveClient.get_restore_history()` now returns a generator that pages through restore history.
+- `py42.clients.ArchiveClient.get_restore_history()` was renamed to `py42.clients.ArchiveClient.get_restore_history()`
+    and now returns a generator that pages through restore history.
 - `py42.modules.ArchiveModule` methods:
     - `get_restore_history_by_device_id()`
+    - `get_restore_history_by_user_id()`
+    - `get_restore_history_by_org_id()`
+    now all return generator objects that handle paging through restore history.
+
 
 ## 0.6.1 - 2020-03-17
 

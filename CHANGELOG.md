@@ -15,9 +15,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
     instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
     - `get_all_matters()`
-    - `_get_legal_holds_page()`
     - `get_all_matter_custodians()`
-    - `_get_legal_hold_memberships_page()`
 
 ### Removed
 

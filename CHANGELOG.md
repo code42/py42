@@ -22,6 +22,37 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Parameter `classification` removed from `OrgClient.create_org()`
 - Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`
 
+### Added
+
+- py42 specific exceptions at new module `py42.sdk.exceptions`:
+    - `Py42Error`
+    - `Py42ArchiveFileNotFoundError`
+    - `Py42SessionInitializationError`
+    - `Py42FeatureUnavailableError`
+    - `Py42SecurityPlanConnectionError`
+    - `Py42HTTPError`
+    - `Py42BadRequestError`
+    - `Py42UnauthorizedError`
+    - `Py42ForbiddenError`
+    - `Py42NotFoundError`
+    - `Py42InternalServerError`
+
+### Changed
+
+- `py42.sdk.archive.stream_from_backup()` now raises `Py42ArchiveFileNotFoundError` when it does not find a file.
+- `py42.sdk.alerts` and `py42.sdk.detectionlists` raise `Py42SessionInitializationError` if they are unable to
+    connect to the necessary microservice and `Py42FeatureUnavailableError` if their environment does not support
+    the microservice.
+- `py42.sdk.securitydata.get_security_plan_storage_info_list()` raises `Py42SecurityPlanConnectionError` if it can't
+    connect to get plan info.
+- Storage node connection issues may raise `Py42StorageSessionInitializationError`.
+- All requests may raise a subclass of `Py42HTTPError` denoting which type of HTTP error it is:
+    - `Py42BadRequestError`
+    - `Py42UnauthorizedError`
+    - `Py42ForbiddenError`
+    - `Py42NotFoundError`
+    - `Py42InternalServerError`
+
 ## 0.6.1 - 2020-03-17
 
 ### Changed

@@ -79,6 +79,8 @@ class DepartingEmployeeClient(BaseClient):
         page_num=None,
         page_size=None,
     ):
+        from py42.sdk.util import convert_timestamp_to_str
+
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         departing_on_or_after_date = (
             convert_timestamp_to_str(departing_on_or_after_epoch)

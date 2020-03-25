@@ -3,7 +3,7 @@ from py42.clients import BaseClient
 
 
 class FileEventClient(BaseClient):
-    """A client for searching Code42 Forensic File Search events."""
+    """A client for querying Code42 Forensic Search events."""
 
     def search(self, query):
         """Searches for file events matching query criteria.

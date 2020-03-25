@@ -67,7 +67,8 @@ class ArchiveClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_web_restore_info(self, src_guid, dest_guid):
-        """Gets necessary information for performing a web restore.
+        """Gets necessary information for performing a web restore, such as the server URL where
+        archives are stored.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#WebRestoreInfo-get>`__
 
         Args:

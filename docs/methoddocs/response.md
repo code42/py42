@@ -5,3 +5,12 @@
     :members:
     :show-inheritance:
 ```
+
+# Exceptions
+
+```eval_rst
+.. automodule:: py42.sdk.exceptions
+    :members:
+    :show-inheritance:
+
+```

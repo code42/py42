@@ -61,3 +61,7 @@ def convert_datetime_to_timestamp_str(date):
     """
     prefix = date.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
     return u"{0}Z".format(prefix)
+
+
+def convert_datetime_to_epoch(date):
+    return (date - datetime.utcfromtimestamp(0)).total_seconds()

@@ -21,7 +21,7 @@ Explore the complete public documentation for `py42` below.
 * [Orgs](methoddocs/orgs.md)
 * [Users](methoddocs/users.md)
 * [Devices](methoddocs/devices.md)
-* [Security Data](methoddocs/)
+* [Security Data](methoddocs/securitydata.md)
 * [Legal Hold](methoddocs/legalhold.md)
 * [Departing Employee](methoddocs/departingemployee.md)
 * [Alerts](methoddocs/alerts.md)

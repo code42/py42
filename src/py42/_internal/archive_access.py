@@ -141,7 +141,6 @@ class RestoreJobManager(object):
 
     def _get_stream(self, job_id):
         response = self._storage_archive_client.stream_restore_result(job_id)
-
         return response
 
 

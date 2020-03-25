@@ -2,7 +2,6 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42.sdk.util import convert_timestamp_to_str
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -34,6 +33,8 @@ class DepartingEmployeeClient(BaseClient):
         Returns:
             :class: `py42.sdk.response.Py42Response`
         """
+        from py42.sdk.util import convert_timestamp_to_str
+
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         cloud_usernames = cloud_usernames if cloud_usernames else []
         departure_date = (

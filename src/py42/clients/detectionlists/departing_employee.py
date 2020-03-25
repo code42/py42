@@ -164,7 +164,7 @@ class DepartingEmployeeClient(BaseClient):
         """Gets details about a Departing Employee case.
         `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Details>`__
 
-        Arguments:
+        Args:
             case_id (str): Identifier of the Departing Employee case.
             tenant_id (str, optional): The identifier of the Customer tenant the case is in.
                 Defaults to None (the tenant_id of SDK authorization user will be used).
@@ -190,7 +190,7 @@ class DepartingEmployeeClient(BaseClient):
         """Add or modify details of an existing Departing Employee case.
         `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Update>`__
 
-        Arguments:
+        Args:
             case_id (str): Identifier of the Departing Employee case.
             tenant_id (str, optional): The identifier of the Customer tenant the case is in.
                 Defaults to None (the tenant_id of SDK authorization user will be used).

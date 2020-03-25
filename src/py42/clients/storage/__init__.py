@@ -33,9 +33,11 @@ class StorageClientFactory(object):
         Args:
             device_guid (str): The device GUID for the device to create a storage client for.
             destination_guid (str, optional): The GUID for the destination containing the storage
-                node that the device stores its archives on. If None, uses the first one it finds.
-                Defaults to None.
+                node that the device stores its archives on. If None, it will use the first one
+                found. Defaults to None.
 
+        Returns:
+            :class:`py42.clients.storage.securitydata.StorageSecurityClient`
         """
         token_provider = self._token_provider_factory.create_backup_archive_locator(
             device_guid, destination_guid
@@ -46,7 +48,17 @@ class StorageClientFactory(object):
     def from_plan_info(self, plan_uid, destination_guid):
         """Creates a factory that produces
             :class:`py42.clients.storage.securitydata.StorageSecurityClient` objects for the
-            plan with the given plan UID."""
+            plan with the given plan UID.
+
+        Args:
+            plan_uid (str): The plan UID for the plan to create a
+                :class:`py42.clients.storage.securitydata.StorageSecurityClient` factory for.
+            destination_guid (str): The GUID for the destination containing the storage
+                node that the device stores its archives on.
+
+        Returns:
+            :class:`py42.clients.storage.securitydata.StorageSecurityClient`
+        """
         token_provider = self._token_provider_factory.create_security_archive_locator(
             plan_uid, destination_guid
         )

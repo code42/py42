@@ -66,8 +66,8 @@ class SecurityModule(object):
         """Gets legacy security events.
 
         Args:
-            plan_storage_info: Information about storage nodes for a plan to get security
-                events for.
+            plan_storage_info (:class:`py42.sdk.modules.securitydata.PlanStorageInfo`):
+                Information about storage nodes for a plan to get security events for.
             cursor (str, optional): A cursor position for only getting events you did not
                 previously get. Defaults to None.
             include_files (bool, optional): Whether to include the files related to the security
@@ -77,7 +77,7 @@ class SecurityModule(object):
                 'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
                 'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
                 None.
-            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not at
+            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not
                 occur on or after this date.
             max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
                 occur on or before this date.
@@ -109,7 +109,7 @@ class SecurityModule(object):
                 'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
                 'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
                 None.
-            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not at
+            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not
                 occur on or after this date.
             max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
                 occur on or before this date.
@@ -246,12 +246,15 @@ class PlanStorageInfo(object):
 
     @property
     def plan_uid(self):
+        """A plan UID for a storage plan."""
         return self._plan_uid
 
     @property
     def destination_guid(self):
+        """A destination GUID for the device containing the storage archive."""
         return self._destination_uid
 
     @property
     def node_guid(self):
+        """The storage node GUID for the storage node containing the archive."""
         return self._node_guid

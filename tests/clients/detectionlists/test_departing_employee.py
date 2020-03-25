@@ -124,7 +124,6 @@ class TestDepartingEmployeeClient(object):
             None,
             "These are notes",
             2352463246,
-            True,
             ["test.employee@microsoft.com"],
         )
 
@@ -136,7 +135,6 @@ class TestDepartingEmployeeClient(object):
             and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["notes"] == "These are notes"
             and posted_data["departureDate"] == "2044-07-18T14:00:46.000Z"
-            and posted_data["alertsEnabled"] == True
             and posted_data["cloudUsernames"] == ["test.employee@microsoft.com"]
         )
 
@@ -345,14 +343,7 @@ class TestDepartingEmployeeClient(object):
         client.get_by_id.return_value = mock_py42_response
         mock_session.post.return_value = mock_get_case_details_function
         client.update(
-            "697",
-            None,
-            "Display Name",
-            "These are notes",
-            24642747257,
-            False,
-            "EXFILTRATION_24_HOURS",
-            ["test@test.com"],
+            "697", None, "Display Name", "These are notes", 24642747257, ["test@test.com"],
         )
 
         # Have to convert the request data to a dict because
@@ -364,8 +355,8 @@ class TestDepartingEmployeeClient(object):
             and posted_data["displayName"] == "Display Name"
             and posted_data["notes"] == "These are notes"
             and posted_data["departureDate"] == "2750-11-24T23:34:17.000Z"
-            and posted_data["alertsEnabled"] == False
-            and posted_data["status"] == "EXFILTRATION_24_HOURS"
+            and posted_data["alertsEnabled"] == True
+            and posted_data["status"] == "OPEN"
             and posted_data["cloudUsernames"] == ["test@test.com"]
         )
 

@@ -1,5 +1,5 @@
 class ArchiveModule(object):
-    """A module that combines the class :class:`py42.clients.ArchiveClient` with a mechanism for
+    """A module that combines the class :class:`py42.clients.ArchiveClient` with functionality for
     streaming a file from backup. It also simplifies getting restore history by providing methods
     to get by org ID, device ID, and user ID.
     """

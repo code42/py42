@@ -22,6 +22,7 @@ Explore the complete public documentation for `py42` below.
 * [Users](methoddocs/users.md)
 * [Devices](methoddocs/devices.md)
 * [Legal Hold](methoddocs/legalhold.md)
+* [Departing Employee](methoddocs/departingemployee.md)
 * [Alerts](methoddocs/alerts.md)
 * [File Event Queries](methoddocs/filleeventqueries.md)
 * [Archive](methoddocs/archive.md)

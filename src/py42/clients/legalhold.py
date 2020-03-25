@@ -35,7 +35,7 @@ class LegalHoldClient(BaseClient):
                 None (where the server-default backup set is used).
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`
+            :class:`py42.sdk.response.Py42Response`
         """
         uri = u"/api/v4/legal-hold-policy/create"
         data = {u"name": name, u"policy": policy}
@@ -54,7 +54,7 @@ class LegalHoldClient(BaseClient):
             hold_ext_ref (str, optional): Optional external reference information. Defaults to None.
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`
+            :class:`py42.sdk.response.Py42Response`
         """
         uri = u"/api/LegalHold"
         data = {
@@ -74,7 +74,7 @@ class LegalHoldClient(BaseClient):
             legal_hold_policy_uid (str): The identifier of the Preservation Policy.
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`: A response containing the Policy.
+            :class:`py42.sdk.response.Py42Response`: A response containing the Policy.
         """
         uri = u"/api/v4/legal-hold-policy/view"
         params = {u"legalHoldPolicyUid": legal_hold_policy_uid}
@@ -85,7 +85,7 @@ class LegalHoldClient(BaseClient):
         `V4 REST Documentation: <https://console.us.code42.com/swagger/#/legal-hold-policy/LegalHoldPolicy_List>`__
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`: A response containing the list of Policies.
+            :class:`py42.sdk.response.Py42Response`: A response containing the list of Policies.
         """
         uri = u"/api/v4/legal-hold-policy/list"
         return self._session.get(uri)
@@ -98,7 +98,7 @@ class LegalHoldClient(BaseClient):
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`: A response containing the Matter.
+            :class:`py42.sdk.response.Py42Response`: A response containing the Matter.
         """
         uri = u"/api/LegalHold/{0}".format(legal_hold_uid)
         return self._session.get(uri)
@@ -178,11 +178,13 @@ class LegalHoldClient(BaseClient):
     def get_all_matter_custodians(
         self, legal_hold_uid=None, user_uid=None, user=None, active=True,
     ):
-        """Gets all Legal Hold memberships. Each user (Custodian) who has been added to a Legal Hold
-        Matter is returned by the server as a LegalHoldMembership object in the response body.  If
-        the object's active state is "INACTIVE", they have been removed from the Matter and are no
-        longer subject to the Legal Hold retention rules. Users can be Custodians of multiple Legal
-        Holds at once (and thus would be part of multiple LegalHoldMembership objects).
+        """Gets all Legal Hold memberships.
+
+        Each user (Custodian) who has been added to a Legal Hold Matter is returned by the server as
+        a LegalHoldMembership object in the response body.  If the object's active state is
+        "INACTIVE", they have been removed from the Matter and are no longer subject to the Legal
+        Hold retention rules. Users can be Custodians of multiple Legal Holds at once (and thus
+        would be part of multiple LegalHoldMembership objects).
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-get>`__
 
         Args:
@@ -212,12 +214,13 @@ class LegalHoldClient(BaseClient):
     def add_to_matter(self, user_uid, legal_hold_uid):
         """Add add a user (Custodian) to a Legal Hold Matter.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-post>`__
+
         Args:
             user_uid (str): The identifier of the user.
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`
+            :class:`py42.sdk.response.Py42Response`
         """
         uri = u"/api/LegalHoldMembership"
         data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
@@ -232,7 +235,7 @@ class LegalHoldClient(BaseClient):
                 the Custodian -> Matter relationship.
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`
+            :class:`py42.sdk.response.Py42Response`
         """
         uri = u"/api/LegalHoldMembershipDeactivation"
         data = {u"legalHoldMembershipUid": legal_hold_membership_uid}
@@ -246,7 +249,7 @@ class LegalHoldClient(BaseClient):
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`
+            :class:`py42.sdk.response.Py42Response`
         """
         uri = u"/api/v4/legal-hold-deactivation/update"
         data = {u"legalHoldUid": legal_hold_uid}
@@ -260,7 +263,7 @@ class LegalHoldClient(BaseClient):
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`
+            :class:`py42.sdk.response.Py42Response`
         """
         uri = u"/api/LegalHoldReactivation/{0}".format(legal_hold_uid)
         return self._session.put(uri)

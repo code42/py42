@@ -60,7 +60,7 @@ class ArchiveModule(object):
     def get_all_restore_history_by_org_id(self, days, org_id):
         """Gets all restore jobs from the past given days for the organization with the given
         org ID.
-        `REST Documentation`: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
+        `REST Documentation: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
             days (int): The number of days back to get all restore history from.
@@ -74,7 +74,7 @@ class ArchiveModule(object):
 
     def get_all_restore_history_by_user_id(self, days, user_id):
         """Gets all restore jobs from the past given days for the user with the given user ID.
-        `REST Documentation`: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
+        `REST Documentation: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
             days (int): The number of days back to get all restore history from.
@@ -88,7 +88,7 @@ class ArchiveModule(object):
 
     def get_all_restore_history_by_device_id(self, days, device_id):
         """Gets all restore jobs from the past given days for the device with the given device ID.
-        `REST Documentation`: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
+        `REST Documentation: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
             days (int): The number of days back to get all restore history from.

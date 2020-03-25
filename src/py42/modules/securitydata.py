@@ -72,8 +72,8 @@ class SecurityModule(object):
                 previously get. Defaults to None.
             include_files (bool, optional): Whether to include the files related to the security
                 events. Defaults to None.
-            event_types: (str, optional): A comma-separated list of event types to get. Options
-                include 'DEVICE_APPEARED', 'DEVICE_DISAPPEARED', 'DEVICE_FILE_ACTIVITY',
+            event_types: (str, optional): A comma-separated list of event types to filter by.
+                Options include 'DEVICE_APPEARED', 'DEVICE_DISAPPEARED', 'DEVICE_FILE_ACTIVITY',
                 'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
                 'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
                 None.
@@ -104,8 +104,8 @@ class SecurityModule(object):
                 previously get. Defaults to None.
             include_files (bool, optional): Whether to include the files related to the security
                 events. Defaults to None.
-            event_types: (str, optional): A comma-separated list of event types to get. Options
-                include 'DEVICE_APPEARED', 'DEVICE_DISAPPEARED', 'DEVICE_FILE_ACTIVITY',
+            event_types: (str, optional): A comma-separated list of event types to filter by.
+                Options include 'DEVICE_APPEARED', 'DEVICE_DISAPPEARED', 'DEVICE_FILE_ACTIVITY',
                 'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
                 'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
                 None.

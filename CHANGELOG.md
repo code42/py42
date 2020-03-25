@@ -10,9 +10,17 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+## Changed
+
+- Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
+    instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
+    - `get_all_matters()`
+    - `get_all_matter_custodians()`
+
 ### Removed
 
 - Parameter `classification` removed from `OrgClient.create_org()`
+- Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`
 
 ### Added
 

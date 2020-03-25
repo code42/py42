@@ -1,7 +1,7 @@
 class ArchiveModule(object):
     """A module that combines the class :class:`py42.clients.ArchiveClient` with a mechanism for
-    actually streaming a file from backup. It also simplifies getting restore history by
-    providing methods to get history by org ID, device ID, and user ID.
+    streaming a file from backup. It also simplifies getting restore history by providing methods
+    to get by org ID, device ID, and user ID.
     """
 
     def __init__(self, archive_accessor_manager, archive_client):
@@ -10,6 +10,7 @@ class ArchiveModule(object):
 
     def stream_from_backup(self, file_path, device_guid, destination_guid=None):
         """Streams a file in your archive to your local machine.
+        `REST Documentation: <https://rain-green.qa.code42.com:4285/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
             file_path (str): The path to the file on your archive.

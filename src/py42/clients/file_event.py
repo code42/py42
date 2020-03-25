@@ -10,7 +10,8 @@ class FileEventClient(BaseClient):
         `REST Documentation: <https://forensicsearch-east.us.code42.com/forensic-search/queryservice/swagger-ui.html#/file-event-controller/searchEventsUsingPOST>`__
 
         Args:
-            query (str): Forensic File Search query in JSON format.
+            query (:class:`FileEventQuery`): A composed FileEventQuery object representing the
+                query.
         """
         query = str(query)
         uri = u"/forensic-search/queryservice/api/v1/fileevent"

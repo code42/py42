@@ -95,7 +95,7 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy security events for the plan with the given plan UID. Plans are either for
+        """Gets legacy security events for the user with the given user UID. Plans are either for
         a single user, multiple users, or a backup.
 
         Args:
@@ -129,7 +129,8 @@ class SecurityModule(object):
         `REST Documentation: <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
-            query: A raw JSON query or FileEventQuery object.
+            query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`: Also
+                accepts raw JSON text.
 
         Returns:
             A list of file events as JSON.
@@ -251,7 +252,7 @@ class PlanStorageInfo(object):
 
     @property
     def destination_guid(self):
-        """A destination GUID for the device containing the storage archive."""
+        """A destination GUID for the server containing the storage archive."""
         return self._destination_uid
 
     @property

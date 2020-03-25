@@ -157,8 +157,7 @@ class DepartingEmployeeClient(BaseClient):
                 Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the Departing Employee
-                case.
+            :class:`py42.sdk.response.Py42Response`: A response containing the Departing Employee case.
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         case_id = self._get_case_id_from_username(tenant_id, username)
@@ -174,8 +173,7 @@ class DepartingEmployeeClient(BaseClient):
                 Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the Departing Employee
-                case.
+            :class:`py42.sdk.response.Py42Response`: A response containing the Departing Employee case.
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"details")

@@ -2,11 +2,17 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.sdk.exceptions import Py42Error
 
 
 def _active_state_map(active):
     _map = {True: u"ACTIVE", False: u"INACTIVE", None: u"ALL"}
-    return _map[active]
+    try:
+        return _map[active]
+    except KeyError:
+        raise Py42Error(
+            "Invalid argument: '{0}'. active must be True, False, or None".format(active)
+        )
 
 
 class LegalHoldClient(BaseClient):

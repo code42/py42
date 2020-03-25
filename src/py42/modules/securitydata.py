@@ -18,9 +18,20 @@ class SecurityModule(object):
 
     @property
     def alerts(self):
+        """A collection of methods for retrieving and updating data about security alerts."""
         return self._microservices_client_factory.get_alerts_client()
 
     def get_security_plan_storage_info_list(self, user_uid):
+        """Gets storage node IDs for the storage nodes containing the legacy security event data
+        for the user with the given user UID.
+        `REST Documentation <https://console.us.code42.com/swagger/#/Feature/getStorageNode>`__
+
+        Args:
+            user_uid (str): A user UID for the user to get storage node locations for.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`: A response containing storage node IDs.
+        """
         locations = None
         try:
             response = self._security_client.get_security_event_locations(user_uid)
@@ -52,6 +63,25 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
+        """Gets legacy security events.
+
+        Args:
+            plan_storage_info: Information about storage nodes for a plan to get security
+                events for.
+            cursor (str, optional): A cursor position for only getting events you did not
+                previously get. Defaults to None.
+            include_files (bool, optional): Whether to include the files related to the security
+                events. Defaults to None.
+            event_types: (str, optional): A comma-separated list of event types to get. Options
+                include 'DEVICE_APPEARED', 'DEVICE_DISAPPEARED', 'DEVICE_FILE_ACTIVITY',
+                'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
+                'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
+                None.
+            min_timestamp (float, None): A POSIX timestamp to filter out events that did not at
+                occur on or after this date.
+            max_timestamp (float, None): A POSIX timestamp to filter out events that did not
+                occur on or before this date.
+        """
         return self._get_security_detection_events(
             plan_storage_info, cursor, include_files, event_types, min_timestamp, max_timestamp
         )
@@ -65,6 +95,25 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
+        """Gets legacy security events for the plan with the given plan UID. Plans are either
+        a single user, multiple users, or a backup.
+
+        Args:
+            user_uid (str): The user UID for the user to get security event for.
+            cursor (str, optional): A cursor position for only getting events you did not
+                previously get. Defaults to None.
+            include_files (bool, optional): Whether to include the files related to the security
+                events. Defaults to None.
+            event_types: (str, optional): A comma-separated list of event types to get. Options
+                include 'DEVICE_APPEARED', 'DEVICE_DISAPPEARED', 'DEVICE_FILE_ACTIVITY',
+                'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
+                'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
+                None.
+            min_timestamp (float, None): A POSIX timestamp to filter out events that did not at
+                occur on or after this date.
+            max_timestamp (float, None): A POSIX timestamp to filter out events that did not
+                occur on or before this date.
+        """
         security_plan_storage_infos = self.get_security_plan_storage_info_list(user_uid)
         return self._get_security_detection_events(
             security_plan_storage_infos,
@@ -76,13 +125,14 @@ class SecurityModule(object):
         )
 
     def search_file_events(self, query):
-        """Searches for file events
+        """Searches for file events.
+        `REST Documentation: <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
-            query: raw JSON query or FileEventQuery object. See https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API
+            query: A raw JSON query or FileEventQuery object.
 
         Returns:
-            list of file events as JSON
+            A list of file events as JSON.
         """
         file_event_client = self._microservices_client_factory.get_file_event_client()
         return file_event_client.search(query)

@@ -51,6 +51,28 @@ class StorageSecurityClient(BaseClient):
         min_timestamp=None,
         max_timestamp=None,
     ):
+        """Gets legacy security events for the plan with the given plan UID. Plans are either
+        a single user, multiple users, or a backup.
+
+        Args:
+            plan_uid (str): A plan UID for the plan to get security events for.
+            cursor (str, optional): A cursor position for only getting events you did not
+                previously get. Defaults to None.
+            include_files (bool, optional): Whether to include the files related to the security
+                events. Defaults to None.
+            event_types: (str, optional): A comma-separated list of event types to get. Options
+                include 'DEVICE_APPEARED', 'DEVICE_DISAPPEARED', 'DEVICE_FILE_ACTIVITY',
+                'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
+                'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
+                None.
+            min_timestamp (float, None): A POSIX timestamp to filter out events that did not at
+                occur on or after this date.
+            max_timestamp (float, None): A POSIX timestamp to filter out events that did not
+                occur on or before this date.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         return self._get_security_detection_events(
             plan_uid=plan_uid,
             cursor=cursor,
@@ -69,6 +91,27 @@ class StorageSecurityClient(BaseClient):
         min_timestamp=None,
         max_timestamp=None,
     ):
+        """Gets legacy security events for the user with the given user UID.
+
+        Args:
+            user_uid (str): A user UID for the user to get security events for.
+            cursor (str, optional): A cursor position for only getting events you did not
+                previously get. Defaults to None.
+            include_files (bool, optional): Whether to include the files related to the security
+                events. Defaults to None.
+            event_types: (str, optional): A comma-separated list of event types to get. Options
+                include 'DEVICE_APPEARED', 'DEVICE_DISAPPEARED', 'DEVICE_FILE_ACTIVITY',
+                'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
+                'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
+                None.
+            min_timestamp (float, None): A POSIX timestamp to filter out events that did not at
+                occur on or after this date.
+            max_timestamp (float, None): A POSIX timestamp to filter out events that did not
+                occur on or before this date.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         return self._get_security_detection_events(
             user_uid=user_uid,
             cursor=cursor,
@@ -81,6 +124,21 @@ class StorageSecurityClient(BaseClient):
     def get_security_detection_event_summary(
         self, user_uid, cursor=None, min_timestamp=None, max_timestamp=None
     ):
+        """Gets a summary of security events excluding data about individual events for the user
+        with the given user UID.
+
+        Args:
+            user_uid (str): The user UID for the user to get a security event summary for.
+            cursor (str, optional): A cursor position for only getting events you did not
+                previously get. Defaults to None.
+            min_timestamp (float, None): A POSIX timestamp to filter out events from the summary
+                that did not at occur on or after this date.
+            max_timestamp (float, None): A POSIX timestamp to filter out events from the summary
+                that did not occur on or before this date.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         return self._get_security_detection_events(
             user_uid=user_uid,
             cursor=cursor,

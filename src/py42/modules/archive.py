@@ -9,7 +9,7 @@ class ArchiveModule(object):
         self._archive_client = archive_client
 
     def stream_from_backup(self, file_path, device_guid, destination_guid=None):
-        """Streams a file in your archive to your local machine.
+        """Streams a file from your archive to your local machine.
         `REST Documentation: <https://rain-green.qa.code42.com:4285/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:

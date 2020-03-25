@@ -8,6 +8,8 @@ from py42.sdk.queries.query_filter import (
 
 
 class FileEventQuery(BaseQuery):
+    """Helper class for building Code42 Forensic Search queries."""
+
     def __init__(self, *args, **kwargs):
         super(FileEventQuery, self).__init__(*args, **kwargs)
         self.sort_key = u"eventId"

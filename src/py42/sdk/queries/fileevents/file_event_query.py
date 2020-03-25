@@ -8,7 +8,23 @@ from py42.sdk.queries.query_filter import (
 
 
 class FileEventQuery(BaseQuery):
-    """Helper class for building Code42 Forensic Search queries."""
+    """Helper class for building Code42 Forensic Search queries.
+
+    A FileEventQuery instance's ``all()`` and ``any()`` take one or more :class:`FilterGroup`
+    objects to construct a query that can be passed to the :class:`FileEventClient.search()` method.
+    ``all()`` returns results that match all of the provided filter criteria, ``any()`` will return
+    results that match any of the filters.
+
+    For convenience, the :class:`FileEventQuery` constructor does the same as ``all()``.
+
+    Usage example:::
+
+        email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
+        exposure_filter = ExposureType.exists()
+
+        query = FileEventQuery.all(email_filter, exposure_filter)
+
+    """
 
     def __init__(self, *args, **kwargs):
         super(FileEventQuery, self).__init__(*args, **kwargs)

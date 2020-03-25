@@ -51,7 +51,7 @@ class StorageSecurityClient(BaseClient):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy security events for the plan with the given plan UID. Plans are either
+        """Gets legacy security events for the plan with the given plan UID. Plans are for either
         a single user, multiple users, or a backup.
 
         Args:
@@ -65,9 +65,9 @@ class StorageSecurityClient(BaseClient):
                 'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
                 'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
                 None.
-            min_timestamp (float, None): A POSIX timestamp to filter out events that did not at
+            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not at
                 occur on or after this date.
-            max_timestamp (float, None): A POSIX timestamp to filter out events that did not
+            max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
                 occur on or before this date.
 
         Returns:
@@ -104,9 +104,9 @@ class StorageSecurityClient(BaseClient):
                 'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
                 'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
                 None.
-            min_timestamp (float, None): A POSIX timestamp to filter out events that did not at
+            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not at
                 occur on or after this date.
-            max_timestamp (float, None): A POSIX timestamp to filter out events that did not
+            max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
                 occur on or before this date.
 
         Returns:
@@ -131,9 +131,9 @@ class StorageSecurityClient(BaseClient):
             user_uid (str): The user UID for the user to get a security event summary for.
             cursor (str, optional): A cursor position for only getting events you did not
                 previously get. Defaults to None.
-            min_timestamp (float, None): A POSIX timestamp to filter out events from the summary
+            min_timestamp (float, optional): A POSIX timestamp to filter out events from the summary
                 that did not at occur on or after this date.
-            max_timestamp (float, None): A POSIX timestamp to filter out events from the summary
+            max_timestamp (float, optional): A POSIX timestamp to filter out events from the summary
                 that did not occur on or before this date.
 
         Returns:

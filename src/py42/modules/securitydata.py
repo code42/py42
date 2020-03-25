@@ -77,9 +77,9 @@ class SecurityModule(object):
                 'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
                 'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
                 None.
-            min_timestamp (float, None): A POSIX timestamp to filter out events that did not at
+            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not at
                 occur on or after this date.
-            max_timestamp (float, None): A POSIX timestamp to filter out events that did not
+            max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
                 occur on or before this date.
         """
         return self._get_security_detection_events(
@@ -95,7 +95,7 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy security events for the plan with the given plan UID. Plans are either
+        """Gets legacy security events for the plan with the given plan UID. Plans are either for
         a single user, multiple users, or a backup.
 
         Args:
@@ -109,9 +109,9 @@ class SecurityModule(object):
                 'PERSONAL_CLOUD_FILE_ACTIVITY', 'RESTORE_JOB', 'RESTORE_FILE', 'FILE_OPENED',
                 'RULE_MATCH', 'DEVICE_SCAN_RESULT', and 'PERSONAL_CLOUD_SCAN_RESULT'. Defaults to
                 None.
-            min_timestamp (float, None): A POSIX timestamp to filter out events that did not at
+            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not at
                 occur on or after this date.
-            max_timestamp (float, None): A POSIX timestamp to filter out events that did not
+            max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
                 occur on or before this date.
         """
         security_plan_storage_infos = self.get_security_plan_storage_info_list(user_uid)

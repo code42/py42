@@ -31,7 +31,7 @@ class DepartingEmployeeClient(BaseClient):
                 OneDrive, Gmail, Office 365). Defaults to None.
 
         Returns:
-            :class: `py42.sdk.response.Py42Response`
+            :class:`py42.sdk.response.Py42Response`
         """
         from py42.sdk.util import convert_timestamp_to_str
 

@@ -26,7 +26,7 @@ If you need to install a previous version of py42, `pip` lets you do that. For e
 pip install py42==0.4.1
 ```
 
-Visit the [project history](https://pypi.org/project/py42/#history) on PyPI too see all published versions.
+Visit the [project history](https://pypi.org/project/py42/#history) on PyPI to see all published versions.
 
 ### From Source
 

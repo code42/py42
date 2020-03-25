@@ -84,7 +84,7 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 # Prints all the departing employee cases on or after two weeks
 
 departing_date = datetime.utcnow() + timedelta(days=14)  # How to get a date in the future
-epoch = (departing_date - datetime.utcfromtimestamp(0)).total_seconds()  # How to an epoch time (float)
+epoch = (departing_date - datetime.utcfromtimestamp(0)).total_seconds()  # How to get an epoch time (float)
 response = sdk.detectionlists.departing_employee.get_all(departing_on_or_after_epoch=epoch)
 for page in response:
     for case in page["cases"]:

@@ -49,15 +49,18 @@ class StorageArchiveClient(BaseClient):
 
         Args:
             device_guid (str): A GUID for a device.
-            file_id (int) :
-            timestamp:
+            file_id (str): An ID for the file to get the size for.
+            timestamp (float, optional): The POSIX timestamp (seconds) of the archive against which
+                to search. 0 indicates the most recent version. It will return all versions older
+                than the timestamp you provide. Defaults to None.
             show_deleted:
             backup_set_id:
 
         Returns:
-
+            :class:`py42.sdk.response.Py42Response`: A response containing the file size.
         """
         uri = u"/api/WebRestoreFileSize"
+        timestamp = timestamp * 1000 if timestamp else timestamp
         params = {
             u"guid": device_guid,
             u"fileId": file_id,
@@ -79,8 +82,36 @@ class StorageArchiveClient(BaseClient):
         backup_set_id=None,
         include_os_metadata=None,
     ):
-        # session_id is a web restore session ID (see create_restore_session)
+        """Gets the children of a file or directory in a restore tree. If not given `file_id`, it
+        gets metadata for the archive's root directory.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreTreeNode-get>`__
+
+        Args:
+            session_id (int): The ID for the web restore session.
+            device_guid (str): The GUID for the device.
+            file_id (str, optional): The ID of the file or directory to get metadata for. When
+                None, it uses the root directory. Defaults to None.
+            timestamp (float, optional): The POSIX timestamp (seconds) of the archive against which
+                to search. 0 indicates the most recent version. It will return all versions older
+                than the timestamp you provide. Defaults to None.
+            show_deleted (bool, optional): Set to True to include deleted files in the search.
+                Defaults to None.
+            batch_size (int, optional): The number of files to fetch in each batch. Defaults to
+                None.
+            last_batch_file_id (str, optional: Used for finding the next batch of files. Defaults
+                to None.
+            backup_set_id (str, optional): The ID for the backup set the filepath is a part of.
+                Defaults to None.
+            include_os_metadata (bool, optional): For Macs, it will add properties
+                'sourceBackupDate', 'sourceAccessDate', 'sourceCreationDate',
+                'sourceModificationDate', 'sourceChecksum', and 'sourceLength' to the response.
+                Defaults to None.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         uri = u"/api/WebRestoreTreeNode"
+        timestamp = timestamp * 1000 if timestamp else timestamp
         params = {
             u"webRestoreSessionId": session_id,
             u"guid": device_guid,

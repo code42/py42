@@ -16,7 +16,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
     - `get_all_matters()`
     - `get_all_matter_custodians()`
-- Parameter `timestamp` for `StorageArchiveClient.search_paths()` now uses seconds instead of milliseconds.
+- Parameter `timestamp` for `StorageArchiveClient` methods:
+    - `search_paths()`
+    - `get_file_size()`
+    - `get_file_path_metadata()`
+    now use seconds instead of milliseconds.
 
 ### Removed
 

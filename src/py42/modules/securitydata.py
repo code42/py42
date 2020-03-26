@@ -126,7 +126,7 @@ class SecurityModule(object):
 
     def search_file_events(self, query):
         """Searches for file events.
-        `REST Documentation: <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
+        `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
             query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`: Also

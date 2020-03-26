@@ -63,7 +63,7 @@ class ArchiveModule(object):
 
         Args:
             days (int): Number of days of restore history to retrieve.
-            org_id (int): The org ID for the organization to get restore history for.
+            org_id (int): The ID for the organization to get restore history for.
 
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
@@ -77,7 +77,7 @@ class ArchiveModule(object):
 
         Args:
             days (int): Number of days of restore history to retrieve.
-            user_id (int): The user ID for the user to get restore history for.
+            user_id (int): The ID for the user to get restore history for.
 
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
@@ -91,7 +91,7 @@ class ArchiveModule(object):
 
         Args:
             days (int): Number of days of restore history to retrieve.
-            device_id (int): The device ID for the device to get restore history for.
+            device_id (int): The ID for the device to get restore history for.
 
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects

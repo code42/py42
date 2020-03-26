@@ -50,7 +50,7 @@ class OrgClient(BaseClient):
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, org_uid, **kwargs):
-        """Gets the organization with the given org UID.
+        """Gets the organization with the given UID.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
@@ -64,7 +64,7 @@ class OrgClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_by_name(self, org_name, **kwargs):
-        """Gets the organization with the given org name.
+        """Gets the organization with the given name.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
@@ -116,7 +116,7 @@ class OrgClient(BaseClient):
 
     def unblock(self, org_id):
         """Removes a block, if one exists, on an organization and its descendants with the given
-        org ID. All users in the organization remain blocked until they are unblocked individually.
+        ID. All users in the organization remain blocked until they are unblocked individually.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#OrgBlock-delete>`__
 
         Args:
@@ -129,7 +129,7 @@ class OrgClient(BaseClient):
         return self._session.delete(uri)
 
     def deactivate(self, org_id):
-        """Deactivates the organization with the given org ID, including all users, plans, and
+        """Deactivates the organization with the given ID, including all users, plans, and
         devices. Backups stop and archives move to cold storage.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#OrgDeactivation-put>`__
 
@@ -143,7 +143,7 @@ class OrgClient(BaseClient):
         return self._session.put(uri)
 
     def reactivate(self, org_id):
-        """Reactivates the organization with the given org ID. Backups are *not* restarted
+        """Reactivates the organization with the given ID. Backups are *not* restarted
         automatically.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#OrgDeactivation-delete>`__
 

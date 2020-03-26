@@ -14,7 +14,7 @@ class ArchiveModule(object):
 
         Args:
             file_path (str): The path to the file in your archive.
-            device_guid (str): The device GUID for the device the file belongs to.
+            device_guid (str): The GUID for the device the file belongs to.
             destination_guid (str, optional): The device GUID for the server that stores the
                 backup of the file. If None, it will use the first destination GUID it finds for
                 your device. 'destination_guid' may be useful if the file is missing from one of
@@ -29,12 +29,12 @@ class ArchiveModule(object):
         return archive_accessor.stream_from_backup(file_path)
 
     def get_backup_sets(self, device_guid, destination_guid):
-        """Gets Code42 Backup sets, or response objects representing groups of files that are set
-        to back up to different locations with different settings.
+        """Gets all backup set names/identifiers referring to single destination for a specific
+        device.
         `Support Page: <https://support.code42.com/Administrator/Cloud/Configuring/Backup_sets>`__
 
         Args:
-            device_guid (str): The device GUID for the device to get backup sets for.
+            device_guid (str): The GUID for the device to get backup sets for.
             destination_guid (str): The destination GUID for the device containing the archive
                 to get backup sets for.
 
@@ -44,13 +44,12 @@ class ArchiveModule(object):
         return self._archive_client.get_backup_sets(device_guid, destination_guid)
 
     def get_data_key_token(self, device_guid):
-        """Gets a data key token for a storage node in order for it to request an encryption key,
-        which is necessary for performing a web store.
+        """Gets a data key token, which when passed to a storage node, authorizes it to decrypt
+        the device's archive for restore.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#DataKeyToken-post>`__
 
         Args:
-            device_guid (str): The device GUID for the device responsible for the archive you
-                eventually wish to restore from.
+            device_guid (str): The GUID for the device responsible for the archive.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the token.
@@ -77,7 +76,7 @@ class ArchiveModule(object):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
-            days (int): The number of days back to get all restore history from.
+            days (int): Number of days of restore history to retrieve.
             user_id (int): The user ID for the user to get restore history for.
 
         Returns:
@@ -91,7 +90,7 @@ class ArchiveModule(object):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
-            days (int): The number of days back to get all restore history from.
+            days (int): Number of days of restore history to retrieve.
             device_id (int): The device ID for the device to get restore history for.
 
         Returns:
@@ -106,7 +105,7 @@ class ArchiveModule(object):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#WebRestoreInfo-get>`__
 
         Args:
-            src_guid (str): The device GUID for the device responsible for the archive you
+            src_guid (str): The GUID for the device responsible for the archive you
                 eventually wish to restore from.
             dest_guid (str): The device GUID for the server containing the archive you eventually
                 wish to restore from.

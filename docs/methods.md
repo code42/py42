@@ -25,6 +25,7 @@ Explore the complete public documentation for `py42` below.
 * [Departing Employee](methoddocs/departingemployee.md)
 * [Alerts](methoddocs/alerts.md)
 * [File Event Queries](methoddocs/filleeventqueries.md)
+* [Archive](methoddocs/archive.md)
 * [Response](methoddocs/response.md)
 
 ```eval_rst

@@ -10,7 +10,7 @@ class ArchiveModule(object):
 
     def stream_from_backup(self, file_path, device_guid, destination_guid=None):
         """Streams a file from an archive to memory.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
             file_path (str): The path to the file in your archive.
@@ -31,7 +31,7 @@ class ArchiveModule(object):
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to single destination for a specific
         device.
-        `Support Page: <https://support.code42.com/Administrator/Cloud/Configuring/Backup_sets>`__
+        `Support Page <https://support.code42.com/Administrator/Cloud/Configuring/Backup_sets>`__
 
         Args:
             device_guid (str): The GUID for the device to get backup sets for.
@@ -46,7 +46,7 @@ class ArchiveModule(object):
     def get_data_key_token(self, device_guid):
         """Gets a data key token, which when passed to a storage node, authorizes it to decrypt
         the device's archive for restore.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#DataKeyToken-post>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#DataKeyToken-post>`__
 
         Args:
             device_guid (str): The GUID for the device responsible for the archive.
@@ -59,7 +59,7 @@ class ArchiveModule(object):
     def get_all_restore_history_by_org_id(self, days, org_id):
         """Gets all restore jobs from the past given days for the organization with the given
         org ID.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
             days (int): Number of days of restore history to retrieve.
@@ -73,7 +73,7 @@ class ArchiveModule(object):
 
     def get_all_restore_history_by_user_id(self, days, user_id):
         """Gets all restore jobs from the past given days for the user with the given user ID.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
             days (int): Number of days of restore history to retrieve.
@@ -87,7 +87,7 @@ class ArchiveModule(object):
 
     def get_all_restore_history_by_device_id(self, days, device_id):
         """Gets all restore jobs from the past given days for the device with the given device ID.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
             days (int): Number of days of restore history to retrieve.
@@ -102,7 +102,7 @@ class ArchiveModule(object):
     def get_web_restore_info(self, src_guid, dest_guid):
         """Gets necessary information for performing a web restore, such as the URL for the
         server where the archive is stored.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#WebRestoreInfo-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreInfo-get>`__
 
         Args:
             src_guid (str): The GUID for the device responsible for the archive.

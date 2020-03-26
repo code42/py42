@@ -82,8 +82,9 @@ class StorageArchiveClient(BaseClient):
         backup_set_id=None,
         include_os_metadata=None,
     ):
-        """Gets the children of a file or directory in a restore tree. If not given `file_id`, it
-        gets metadata for the archive's root directory.
+        """Gets information about the file with the given ID. If the file ID refers to a
+        directory, it returns a response containing its child file IDs. If not given `file_id`,
+        it returns metadata for the archive's root directory.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreTreeNode-get>`__
 
         Args:
@@ -135,7 +136,7 @@ class StorageArchiveClient(BaseClient):
             device_guid (str): A GUID for the device responsible for the archive in which to
                 create a web restore session with.
             data_key_token (str, optional): A token from the method
-                :method:`py42.clients.archive.get_data_key_token()` for authorizing the storage
+                :func:`py42.clients.archive.get_data_key_token()` for authorizing the storage
                 node to decrypt the archive. Required if not using `encryption_key`. Defaults to
                 None.
             private_password (str, optional): The user's archive password. Required if the
@@ -272,7 +273,7 @@ class RestorePath(object):
 
     @property
     def path_type(self):
-        """Either 'file' or 'directory'."""
+        """Either 'file', 'directory', or 'version'."""
         return self._path_type
 
     @property
@@ -282,7 +283,7 @@ class RestorePath(object):
 
     def to_dict(self):
         """Converts to a dict for putting in a list for the parameter `path_set` on the method
-        :method:`py42.clients.storage.archive.StorageArchiveClient.start_restore()`.
+        :func:`py42.clients.storage.archive.StorageArchiveClient.start_restore()`.
 
         Returns:
             dict: A dict with the type, path, and other required parameters.
@@ -307,7 +308,7 @@ class RestoreExclusion(object):
 
     def to_dict(self):
         """Converts to a dict for putting in a list for the parameter `exceptions` on the method
-        :method:`py42.clients.storage.archive.StorageArchiveClient.start_restore()`.
+        :func:`py42.clients.storage.archive.StorageArchiveClient.start_restore()`.
 
         Returns:
             dict: A dict with the path and timestamp.

@@ -14,12 +14,12 @@ class OSHostname(FileEventFilterStringField):
 
 
 class PrivateIPAddress(FileEventFilterStringField):
-    """Class that filters events by private (lan) IP address of device that observed the event."""
+    """Class that filters events by private (LAN) IP address of device that observed the event."""
 
     _term = u"privateIpAddresses"
 
 
 class PublicIPAddress(FileEventFilterStringField):
-    """Class that filters events by public (wan) IP address of device that observed the event."""
+    """Class that filters events by public (WAN) IP address of device that observed the event."""
 
     _term = u"publicIpAddress"

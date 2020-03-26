@@ -11,7 +11,7 @@ class FileEventQuery(BaseQuery):
     """Helper class for building Code42 Forensic Search queries.
 
     A FileEventQuery instance's ``all()`` and ``any()`` take one or more :class:`FilterGroup`
-    objects to construct a query that can be passed to the :class:`FileEventClient.search()` method.
+    objects to construct a query that can be passed to the :meth:`FileEventClient.search()` method.
     ``all()`` returns results that match all of the provided filter criteria, ``any()`` will return
     results that match any of the filters.
 

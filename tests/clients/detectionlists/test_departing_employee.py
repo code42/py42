@@ -343,7 +343,7 @@ class TestDepartingEmployeeClient(object):
         client.get_by_id.return_value = mock_py42_response
         mock_session.post.return_value = mock_get_case_details_function
         client.update(
-            "697", None, "Display Name", "These are notes", 24642747257, ["test@test.com"],
+            "697", None, "Display Name", "These are notes", 24642747257, ["test@test.com"]
         )
 
         # Have to convert the request data to a dict because

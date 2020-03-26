@@ -1,7 +1,7 @@
 import pytest
 import json
 
-from py42.clients.storage.archive import StorageArchiveClient
+from py42.clients.storage.archive import StorageArchiveClient, RestorePath, RestoreExclusion
 from py42.sdk.response import Py42Response
 from py42._internal.session import Py42Session
 
@@ -41,15 +41,20 @@ ENCRYPTION_KEY = "1234567890"
 PRIVATE_PASSWORD = "password123"
 WEB_RESTORE_SESSION_ID = "56729164827"
 FILE_PATH = "/directory/file.txt"
-PATH_SET = [{"type": "file", "path": FILE_PATH, "selected": True}]
+PATH_SET = [RestorePath("file", FILE_PATH)]
+PATH_SET_RAW = [{"type": "file", "path": FILE_PATH, "selected": True}]
 NUM_FILES = 1
 NUM_DIRS = 0
 SIZE = 3
 ZIP_RESULT = True
 TIMESTAMP = 1557139716
 EXCEPTIONS = [
-    {"path": "/dir/file.ext", TIMESTAMP_KEY: TIMESTAMP},
-    {"path": "/dir2/file2.ext", TIMESTAMP_KEY: TIMESTAMP},
+    RestoreExclusion("/dir/file.ext", TIMESTAMP),
+    RestoreExclusion("/dir2/file2.ext", TIMESTAMP),
+]
+EXCEPTIONS_RAW = [
+    {"path": "/dir/file.ext", TIMESTAMP_KEY: TIMESTAMP * 1000},
+    {"path": "/dir2/file2.ext", TIMESTAMP_KEY: TIMESTAMP * 1000},
 ]
 BACKUP_SET_ID = "12345"
 WEB_RESTORE_JOB_ID = "46289723"
@@ -291,7 +296,7 @@ class TestStorageArchiveClient(object):
             timestamp=TIMESTAMP,
         )
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(TIMESTAMP_KEY) == TIMESTAMP
+        assert json_arg.get(TIMESTAMP_KEY) == TIMESTAMP * 1000
 
     def test_start_restore_with_exceptions_calls_post_with_exceptions_in_data(self, session):
         storage_archive_client = StorageArchiveClient(session)
@@ -305,7 +310,7 @@ class TestStorageArchiveClient(object):
             exceptions=EXCEPTIONS,
         )
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(EXCEPTIONS_KEY) == EXCEPTIONS
+        assert json_arg.get(EXCEPTIONS_KEY) == EXCEPTIONS_RAW
 
     def test_start_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(self, session):
         storage_archive_client = StorageArchiveClient(session)
@@ -342,7 +347,7 @@ class TestStorageArchiveClient(object):
         expected_data = {
             GUID_KEY: DEVICE_GUID,
             WEB_RESTORE_SESSION_ID_KEY: WEB_RESTORE_SESSION_ID,
-            PATH_SET_KEY: PATH_SET,
+            PATH_SET_KEY: PATH_SET_RAW,
             NUM_FILES_KEY: NUM_FILES,
             NUM_DIRS_KEY: NUM_DIRS,
             SIZE_KEY: SIZE,
@@ -350,8 +355,8 @@ class TestStorageArchiveClient(object):
             EXPIRE_JOB_KEY: True,
             SHOW_DELETED_KEY: True,
             RESTORE_FULL_PATH_KEY: True,
-            TIMESTAMP_KEY: TIMESTAMP,
-            EXCEPTIONS_KEY: EXCEPTIONS,
+            TIMESTAMP_KEY: TIMESTAMP * 1000,
+            EXCEPTIONS_KEY: EXCEPTIONS_RAW,
             BACKUP_SET_ID_KEY: BACKUP_SET_ID,
         }
         assert json_arg == expected_data

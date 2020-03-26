@@ -15,10 +15,7 @@ from py42.clients import (
 
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient
-from py42.sdk.exceptions import (
-    Py42FeatureUnavailableError,
-    Py42SessionInitializationError,
-)
+from py42.sdk.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
 
 
 class AuthorityClientFactory(object):

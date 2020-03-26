@@ -3,13 +3,7 @@ from py42.clients import BaseClient
 
 class StorageArchiveClient(BaseClient):
     def search_paths(
-        self,
-        session_id,
-        device_guid,
-        regex,
-        max_results=None,
-        timestamp=None,
-        show_deleted=None,
+        self, session_id, device_guid, regex, max_results=None, timestamp=None, show_deleted=None
     ):
         """Searches all files from the device with the given GUID during a restore session for a
         filename matching the given regex.
@@ -210,8 +204,8 @@ class StorageArchiveClient(BaseClient):
         """
         uri = u"/api/WebRestoreJob"
         timestamp = timestamp * 1000 if timestamp else timestamp
-        path_set = [ps.to_dict() for ps in path_set]
-        exceptions = [ex.to_dict() for ex in exceptions]
+        path_set = [ps.to_dict() for ps in path_set] if path_set else path_set
+        exceptions = [ex.to_dict() for ex in exceptions] if exceptions else exceptions
         json_dict = {
             u"guid": device_guid,
             u"webRestoreSessionId": session_id,
@@ -284,7 +278,7 @@ class RestorePath(object):
     @property
     def path(self):
         """The path on an archive to a file or directory in which to restore."""
-        return self.path
+        return self._path
 
     def to_dict(self):
         """Converts to a dict for putting in a list for the parameter `path_set` on the method

@@ -129,7 +129,23 @@ class StorageArchiveClient(BaseClient):
         self, device_guid, data_key_token=None, private_password=None, encryption_key=None
     ):
         """Creates a web restore session.
-        See https://console.us.code42.com/apidocviewer/#WebRestoreSession
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreSession-post>`
+
+        Args:
+            device_guid (str): A GUID for the device responsible for the archive in which to
+                create a web restore session with.
+            data_key_token (str, optional): A token from the method
+                :method:`py42.clients.archive.get_data_key_token()` for authorizing the storage
+                node to decrypt the archive. Required if not using `encryption_key`. Defaults to
+                None.
+            private_password (str, optional): The user's archive password. Required if the
+                archive is encrypted with a private password. Defaults to None.
+            encryption_key (str, optional): The user's archive encryption key. Required if the
+                archive is encrypted with a custom encryption key. Defaults to None.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`: A response containing the web restore session
+            ID.
         """
         uri = u"/api/WebRestoreSession"
         json_dict = {

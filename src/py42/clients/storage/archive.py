@@ -16,7 +16,7 @@ class StorageArchiveClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreSearch-get>`__
 
         Args:
-            session_id (int): The ID for the web restore session.
+            session_id (str): The ID for the web restore session.
             device_guid (str): The GUID for the device.
             regex (str, optional): A filename regex to filter results by. Defaults to None.
             max_results (int, optional): The max results to return. Defaults to None.
@@ -87,7 +87,7 @@ class StorageArchiveClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreTreeNode-get>`__
 
         Args:
-            session_id (int): The ID for the web restore session.
+            session_id (str): The ID for the web restore session.
             device_guid (str): The GUID for the device.
             file_id (str, optional): The ID of the file or directory to get metadata for. When
                 None, it uses the root directory. Defaults to None.
@@ -129,7 +129,7 @@ class StorageArchiveClient(BaseClient):
         self, device_guid, data_key_token=None, private_password=None, encryption_key=None
     ):
         """Creates a web restore session.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreSession-post>`
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreSession-post>`__
 
         Args:
             device_guid (str): A GUID for the device responsible for the archive in which to
@@ -158,8 +158,8 @@ class StorageArchiveClient(BaseClient):
 
     def start_restore(
         self,
-        guid,
-        web_restore_session_id,
+        device_guid,
+        session_id,
         path_set,
         num_files,
         num_dirs,
@@ -173,12 +173,42 @@ class StorageArchiveClient(BaseClient):
         backup_set_id=None,
     ):
         """Submits a web restore job.
-        See https://console.us.code42.com/apidocviewer/#WebRestoreJob-post
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJob-post>`__
+
+        Args:
+            device_guid (str): A GUID for the device responsible for the archive in which to
+                start a restore with.
+            session_id (str): The ID for the web restore session.
+            path_set (iter[:class:`py42.clients.storage.archive.RestorePath`]):
+            num_files (int): The number of files anticipated to be restored.
+            num_dirs (int): The number of directories anticipated to be restored.
+            size (int): The number of bytes that are anticipated to be restored.
+            zip_result (bool, optional): If True, it will create a zip file for the files being
+                restored for download. Defaults to None.
+            expire_job (bool, optional): If True, it will schedule the job to be expired and
+                cleaned up after 24 hours. False will not schedule the job to be expired. Defaults
+                to None.
+            show_deleted (bool, optional): Set to True to include deleted files in the restore.
+                Defaults to None.
+            restore_full_path (bool, optional): Set to True to restore the entire path. Defaults
+                to None.
+            timestamp (float, optional): The POSIX timestamp (seconds) of the file version to
+                restore. 0 indicates the most recent version. It will return all versions older
+                than the timestamp you provide. Defaults to None.
+            exceptions (iter[:class:`py42.clients.storage.archive.RestoreExclusion`], optional):
+                Paths and version timestamps indicating what to exclude during this restore job.
+                Defaults to None.
+            backup_set_id (str, optional): The ID for the backup set governing the given paths
+                for the device with the given GUID on the storage node you are authenticated to.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
         """
         uri = u"/api/WebRestoreJob"
+        timestamp = timestamp * 1000 if timestamp else timestamp
         json_dict = {
-            u"guid": guid,
-            u"webRestoreSessionId": web_restore_session_id,
+            u"guid": device_guid,
+            u"webRestoreSessionId": session_id,
             u"pathSet": path_set,
             u"numFiles": num_files,
             u"numDirs": num_dirs,
@@ -191,18 +221,95 @@ class StorageArchiveClient(BaseClient):
             u"exceptions": exceptions,
             u"backupSetId": backup_set_id,
         }
-
         return self._session.post(uri, json=json_dict)
 
     def get_restore_status(self, job_id):
+        """Gets the status of a restore job.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJob-get>`__
+
+        Args:
+            job_id (str): The ID for the restore job to get the status of.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`: A response indicating if the job is done yet,
+        """
         uri = u"/api/WebRestoreJob/{}".format(job_id)
         return self._session.get(uri)
 
     def cancel_restore(self, job_id):
+        """Cancels a currently-running restore job.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJob-delete>`__
+
+        Args:
+            job_id (str): The ID for the restore job to delete.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         uri = u"/api/WebRestoreJob"
         json_dict = {u"jobId": job_id}
         return self._session.delete(uri, json=json_dict)
 
     def stream_restore_result(self, job_id):
+        """Streams the result of restore job as a zipped file. WARNING: If not zipped, it will
+        not be able to stream to a directory.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
+
+        Args:
+            job_id (str): The ID for the restore job result to stream.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         uri = u"/api/WebRestoreJobResult/{}".format(job_id)
         return self._session.get(uri, stream=True)
+
+
+class RestorePath(object):
+    def __init__(self, path_type, path):
+        self._path_type = path_type
+        self._path = path
+
+    @property
+    def path_type(self):
+        """Either 'file' or 'directory'."""
+        return self._path_type
+
+    @property
+    def path(self):
+        """The path to file or directory to restore."""
+        return self.path
+
+    def to_dict(self):
+        """Converts to a dict for putting in a list for the parameter `path_set` on the method
+        :method:`py42.clients.storage.archive.StorageArchiveClient.start_restore()`.
+
+        Returns:
+            dict: A dict with the type, path, and other required parameters.
+        """
+        return {u"type": self.path_type, u"path": self.path, u"selected": False}
+
+
+class RestoreExclusion(object):
+    def __init__(self, path, timestamp):
+        self._path = path
+        self._timestamp = timestamp * 1000
+
+    @property
+    def path(self):
+        """The path to exclude when doing a restore."""
+        return self._path
+
+    @property
+    def timestamp(self):
+        """The timestamp version of the path to exclude when doing a restore."""
+        return self._timestamp
+
+    def to_dict(self):
+        """Converts to a dict for putting in a list for the parameter `exceptions` on the method
+        :method:`py42.clients.storage.archive.StorageArchiveClient.start_restore()`.
+
+        Returns:
+            dict: A dict with the path and timestamp.
+        """
+        return {u"path": self.path, u"timestamp": self.timestamp}

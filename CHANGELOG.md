@@ -10,18 +10,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
-## Changed
-
-- Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
-    instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
-    - `get_all_matters()`
-    - `get_all_matter_custodians()`
-- Parameter `timestamp` for `StorageArchiveClient` methods:
-    - `search_paths()`
-    - `get_file_size()`
-    - `get_file_path_metadata()`
-    now use seconds instead of milliseconds.
-
 ### Removed
 
 - Parameter `classification` removed from `OrgClient.create_org()`
@@ -41,6 +29,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42ForbiddenError`
     - `Py42NotFoundError`
     - `Py42InternalServerError`
+- `py42.clients.storage.archive.WebRestorePath` class to abstract away required UI parameter `selected`.
 
 ### Changed
 
@@ -57,6 +46,22 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42ForbiddenError`
     - `Py42NotFoundError`
     - `Py42InternalServerError`
+- Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
+    instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
+    - `get_all_matters()`
+    - `get_all_matter_custodians()`
+- Parameter `timestamp` for `StorageArchiveClient` methods:
+    - `search_paths()`
+    - `get_file_size()`
+    - `get_file_path_metadata()`
+    - `start_restore()`
+    now use seconds instead of milliseconds.
+- Parameter `guid` renamed to `device_guid` in `StorageArchiveClient.start_restore()`.
+- Parameter `web_restore_session_id` renamed to `session_id` in `StorageArchiveClient.start_restore()`.
+- Parameter `path_set` for `StorageArchiveClient.start_restore()` now uses
+    `py42.clients.storage.archive.RestorePath` (previously was a list of dictionaries) and parameter `exceptions`
+    now uses `py42.clients.storage.archive.RestoreExclusion` and uses seconds instead of milliseconds for its
+   `timestamp` property.
 
 ## 0.6.1 - 2020-03-17
 

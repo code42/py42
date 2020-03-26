@@ -1,4 +1,4 @@
-"""On exception client API may raise one of below errors."""
+"""On exception, client API may raise one of below errors."""
 from py42._internal.compat import str
 
 
@@ -7,7 +7,7 @@ class Py42Error(Exception):
 
 
 class Py42ArchiveFileNotFoundError(Py42Error):
-    """An exception to raise error when resource file is not found or the path is invalid."""
+    """An exception raised when resource file is not found or the path is invalid."""
 
     def __init__(self, device_guid, file_path):
         message = u"File not found in archive " u"for device {0} at path {1}".format(
@@ -17,7 +17,7 @@ class Py42ArchiveFileNotFoundError(Py42Error):
 
 
 class Py42FeatureUnavailableError(Py42Error):
-    """An exception to raise error when a requested feature is not support by the API."""
+    """An exception raised when a requested feature is not supported by the API."""
 
     def __init__(self):
         super(Py42FeatureUnavailableError, self).__init__(
@@ -26,7 +26,7 @@ class Py42FeatureUnavailableError(Py42Error):
 
 
 class Py42SessionInitializationError(Py42Error):
-    """An exception to raise error when user session is invalid.
+    """An exception raised when user session is invalid.
 
     A session might be invalid due to session timeout, invalid token, etc.
     """
@@ -40,14 +40,14 @@ class Py42SessionInitializationError(Py42Error):
 
 
 class Py42SecurityPlanConnectionError(Py42Error):
-    """An exception to raise error when user is not authorized to access the resource."""
+    """An exception raised when user is not authorized to access the resource."""
 
     def __init__(self, error_message):
         super(Py42SecurityPlanConnectionError, self).__init__(error_message)
 
 
 class Py42StorageSessionInitializationError(Py42Error):
-    """An exception to raise error when user is not authorized to access requested storage device."""
+    """An exception raised when user is not authorized to access requested storage device."""
 
     def __init__(self, error_message):
         super(Py42StorageSessionInitializationError, self).__init__(error_message)

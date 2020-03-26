@@ -62,6 +62,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     `py42.clients.storage.archive.RestorePath` (previously was a list of dictionaries) and parameter `exceptions`
     now uses `py42.clients.storage.archive.RestoreExclusion` and uses seconds instead of milliseconds for its
    `timestamp` property.
+- Parameter `regex` on method `StorageArchiveClient.search_paths()` is now required.
 
 ## 0.6.1 - 2020-03-17
 

@@ -6,19 +6,19 @@ class StorageArchiveClient(BaseClient):
         self,
         session_id,
         device_guid,
-        regex=None,
+        regex,
         max_results=None,
         timestamp=None,
         show_deleted=None,
     ):
-        """Searches all files for a device with the given GUID during the web restore session with
-        the given ID.
+        """Searches all files from the device with the given GUID during a restore session for a
+        filename matching the given regex.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreSearch-get>`__
 
         Args:
             session_id (str): The ID for the web restore session.
             device_guid (str): The GUID for the device.
-            regex (str, optional): A filename regex to filter results by. Defaults to None.
+            regex (str): A filename regex to filter results by.
             max_results (int, optional): The max results to return. Defaults to None.
             timestamp (int, optional): The POSIX timestamp (seconds) of the archive against which
                 to search. 0 indicates the most recent version. It will return all versions older

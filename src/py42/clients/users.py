@@ -163,7 +163,7 @@ class UserClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#UserBlock-put>`__
 
         Args:
-            user_id (int): A user ID for a user.
+            user_id (int): An ID for a user.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -177,7 +177,7 @@ class UserClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#UserBlock-delete>`__
 
         Args:
-            user_id (int): A user ID for a user.
+            user_id (int): An ID for a user.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -191,7 +191,7 @@ class UserClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#UserDeactivation-put>`__
 
         Args:
-            user_id (int): A user ID for a user.
+            user_id (int): An ID for a user.
             block_user (bool, optional): Blocks the user upon deactivation. Defaults to None.
 
         Returns:
@@ -206,7 +206,7 @@ class UserClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#UserDeactivation-delete>`__
 
         Args:
-            user_id (int): A user ID for a user.
+            user_id (int): An ID for a user.
             unblock_user (bool, optional): Whether or not to unblock the user if they are blocked.
                 Defaults to None.
 
@@ -222,8 +222,8 @@ class UserClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#UserMoveProcess-post>`__
 
         Args:
-            user_id (int): A user ID for a user.
-            org_id (int): An org ID for the organization to move the user to.
+            user_id (int): An ID for a user.
+            org_id (int): An ID for the organization to move the user to.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

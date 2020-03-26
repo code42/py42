@@ -71,8 +71,7 @@ class ArchiveClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#WebRestoreInfo-get>`__
 
         Args:
-            src_guid (str): The GUID for the device responsible for the archive you
-                eventually wish to restore from.
+            src_guid (str): The GUID for the device responsible for the archive.
             dest_guid (str): The device GUID for the server containing the archive you eventually
                 wish to restore from.
 

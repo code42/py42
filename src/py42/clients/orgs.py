@@ -37,11 +37,11 @@ class OrgClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_by_id(self, org_id, **kwargs):
-        """Gets the organization with the given org ID.
+        """Gets the organization with the given ID.
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
-            org_id (int): An org ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the organization.
@@ -54,7 +54,7 @@ class OrgClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
-            org_uid (str): An org UID for an organization.
+            org_uid (str): A UID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the organization.
@@ -68,7 +68,7 @@ class OrgClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
-            org_name (str): An org name for an organization.
+            org_name (str): A name of an organization.
 
         Returns:
             list: A list of :class:`py42.sdk.response.Py42Response` objects each containing an
@@ -106,7 +106,7 @@ class OrgClient(BaseClient):
         `Rest Documentation: <https://console.us.code42.com/apidocviewer/#OrgBlock-put>`__
 
         Args:
-            org_id (int): An org ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -120,7 +120,7 @@ class OrgClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#OrgBlock-delete>`__
 
         Args:
-            org_id (int): An org ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -134,7 +134,7 @@ class OrgClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#OrgDeactivation-put>`__
 
         Args:
-            org_id (int): an org ID for an organization.
+            org_id (int): an ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -148,7 +148,7 @@ class OrgClient(BaseClient):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#OrgDeactivation-delete>`__
 
         Args:
-            org_id (int): An org ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

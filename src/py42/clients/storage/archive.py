@@ -44,6 +44,19 @@ class StorageArchiveClient(BaseClient):
     def get_file_size(
         self, device_guid, file_id, timestamp=None, show_deleted=None, backup_set_id=None
     ):
+        """Gets the size of the file with the given ID.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreFileSize-get>`__
+
+        Args:
+            device_guid (str): A GUID for a device.
+            file_id (int) :
+            timestamp:
+            show_deleted:
+            backup_set_id:
+
+        Returns:
+
+        """
         uri = u"/api/WebRestoreFileSize"
         params = {
             u"guid": device_guid,

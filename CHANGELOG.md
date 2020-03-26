@@ -29,7 +29,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42ForbiddenError`
     - `Py42NotFoundError`
     - `Py42InternalServerError`
-- `py42.clients.storage.archive.WebRestorePath` class to abstract away required UI parameter `selected`.
+- `py42.clients.storage.archive.RestorePath` class to abstract away required parameter `selected`.
+- `py42.clients.storage.archive.RestoreExclusion` to easily control the timestamp property and offer improved UX.
 
 ### Changed
 

@@ -22,8 +22,8 @@ class SecurityModule(object):
         return self._microservices_client_factory.get_alerts_client()
 
     def get_security_plan_storage_info_list(self, user_uid):
-        """Gets storage node IDs for the storage nodes containing the legacy security event data
-        for the user with the given user UID.
+        """Gets storage node IDs (locations( for the storage nodes containing the legacy security
+        event data for the user with the given user UID.
         `REST Documentation <https://console.us.code42.com/swagger/#/Feature/getStorageNode>`__
 
         Args:
@@ -130,7 +130,7 @@ class SecurityModule(object):
 
         Args:
             query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`: Also
-                accepts raw JSON text.
+                accepts a raw JSON str.
 
         Returns:
             A list of file events as JSON.

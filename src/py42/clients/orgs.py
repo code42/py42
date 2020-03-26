@@ -13,7 +13,7 @@ class OrgClient(BaseClient):
 
     def create_org(self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None):
         """Creates a new organization.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-post>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-post>`__
 
         Args:
             org_name (str): The name of the new organization.
@@ -38,7 +38,7 @@ class OrgClient(BaseClient):
 
     def get_by_id(self, org_id, **kwargs):
         """Gets the organization with the given ID.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
             org_id (int): An ID for an organization.
@@ -51,7 +51,7 @@ class OrgClient(BaseClient):
 
     def get_by_uid(self, org_uid, **kwargs):
         """Gets the organization with the given UID.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
             org_uid (str): A UID for an organization.
@@ -65,7 +65,7 @@ class OrgClient(BaseClient):
 
     def get_by_name(self, org_name, **kwargs):
         """Gets the organization with the given name.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
             org_name (str): A name of an organization.
@@ -90,7 +90,7 @@ class OrgClient(BaseClient):
 
     def get_all(self, **kwargs):
         """Gets all organizations.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
@@ -103,7 +103,7 @@ class OrgClient(BaseClient):
         blocked organization will not allow any of its users or devices to log in. New
         registrations will be rejected and all currently logged in clients will be logged out.
         Backups continue for any devices that are still active.
-        `Rest Documentation: <https://console.us.code42.com/apidocviewer/#OrgBlock-put>`__
+        `Rest Documentation <https://console.us.code42.com/apidocviewer/#OrgBlock-put>`__
 
         Args:
             org_id (int): An ID for an organization.
@@ -117,7 +117,7 @@ class OrgClient(BaseClient):
     def unblock(self, org_id):
         """Removes a block, if one exists, on an organization and its descendants with the given
         ID. All users in the organization remain blocked until they are unblocked individually.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#OrgBlock-delete>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgBlock-delete>`__
 
         Args:
             org_id (int): An ID for an organization.
@@ -131,7 +131,7 @@ class OrgClient(BaseClient):
     def deactivate(self, org_id):
         """Deactivates the organization with the given ID, including all users, plans, and
         devices. Backups stop and archives move to cold storage.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#OrgDeactivation-put>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgDeactivation-put>`__
 
         Args:
             org_id (int): an ID for an organization.
@@ -145,7 +145,7 @@ class OrgClient(BaseClient):
     def reactivate(self, org_id):
         """Reactivates the organization with the given ID. Backups are *not* restarted
         automatically.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#OrgDeactivation-delete>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgDeactivation-delete>`__
 
         Args:
             org_id (int): An ID for an organization.
@@ -158,7 +158,7 @@ class OrgClient(BaseClient):
 
     def get_current(self, **kwargs):
         """Gets the organization for the currently signed-in user.
-        `REST Documentation: <https://console.us.code42.com/apidocviewer/#Org-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the organization for the

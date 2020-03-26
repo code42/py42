@@ -63,7 +63,7 @@ class ArchiveModule(object):
         `REST Documentation: <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
-            days (int): The number of days back to get all restore history from.
+            days (int): Number of days of restore history to retrieve.
             org_id (int): The org ID for the organization to get restore history for.
 
         Returns:

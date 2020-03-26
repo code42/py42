@@ -51,11 +51,11 @@ class StorageSecurityClient(BaseClient):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy security events for the plan with the given plan UID. Plans are for either
+        """Gets legacy security events for the plan with the given UID. Plans are for either
         a single user, multiple users, or a backup.
 
         Args:
-            plan_uid (str): A plan UID for the plan to get security events for.
+            plan_uid (str): A UID for the plan to get security events for.
             cursor (str, optional): A cursor position for only getting events you did not
                 previously get. Defaults to None.
             include_files (bool, optional): Whether to include the files related to the security
@@ -91,10 +91,10 @@ class StorageSecurityClient(BaseClient):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy security events for the user with the given user UID.
+        """Gets legacy security events for the user with the given UID.
 
         Args:
-            user_uid (str): A user UID for the user to get security events for.
+            user_uid (str): A UID for the user to get security events for.
             cursor (str, optional): A cursor position for only getting events you did not
                 previously get. Defaults to None.
             include_files (bool, optional): Whether to include the files related to the security
@@ -125,10 +125,10 @@ class StorageSecurityClient(BaseClient):
         self, user_uid, cursor=None, min_timestamp=None, max_timestamp=None
     ):
         """Gets a summary of security events excluding data about individual events for the user
-        with the given user UID.
+        with the given UID.
 
         Args:
-            user_uid (str): The user UID for the user to get a security event summary for.
+            user_uid (str): The UID for the user to get a security event summary for.
             cursor (str, optional): A cursor position for only getting events you did not
                 previously get. Defaults to None.
             min_timestamp (float, optional): A POSIX timestamp to filter out events from the

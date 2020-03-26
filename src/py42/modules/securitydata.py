@@ -22,12 +22,12 @@ class SecurityModule(object):
         return self._microservices_client_factory.get_alerts_client()
 
     def get_security_plan_storage_info_list(self, user_uid):
-        """Gets storage node IDs (locations( for the storage nodes containing the legacy security
+        """Gets storage node IDs (locations) for the storage nodes containing the legacy security
         event data for the user with the given user UID.
         `REST Documentation <https://console.us.code42.com/swagger/#/Feature/getStorageNode>`__
 
         Args:
-            user_uid (str): A user UID for the user to get storage node locations for.
+            user_uid (str): A UID for the user to get storage node locations for.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing storage node IDs.
@@ -95,11 +95,11 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy security events for the user with the given user UID. Plans are either for
-        a single user, multiple users, or a backup.
+        """Gets legacy security events for the user with the given UID. Plans are either for a
+        single user, multiple users, or a backup.
 
         Args:
-            user_uid (str): The user UID for the user to get security event for.
+            user_uid (str): The UID for the user to get security event for.
             cursor (str, optional): A cursor position for only getting events you did not
                 previously get. Defaults to None.
             include_files (bool, optional): Whether to include the files related to the security
@@ -247,15 +247,15 @@ class PlanStorageInfo(object):
 
     @property
     def plan_uid(self):
-        """A plan UID for a storage plan."""
+        """A UID for a storage plan."""
         return self._plan_uid
 
     @property
     def destination_guid(self):
-        """A destination GUID for the server containing the storage archive."""
+        """A GUID for the server containing the storage archive."""
         return self._destination_uid
 
     @property
     def node_guid(self):
-        """The storage node GUID for the storage node containing the archive."""
+        """The GUID for the storage node containing the archive."""
         return self._node_guid

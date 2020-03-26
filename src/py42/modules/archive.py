@@ -10,7 +10,7 @@ class ArchiveModule(object):
 
     def stream_from_backup(self, file_path, device_guid, destination_guid=None):
         """Streams a file from an archive to memory.
-        `REST Documentation: <https://rain-green.qa.code42.com:4285/apidocviewer/#WebRestoreJobResult-get>`__
+        `REST Documentation: <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
             file_path (str): The path to the file on your archive.

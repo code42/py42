@@ -3,12 +3,12 @@ from py42.clients import BaseClient
 
 class SecurityClient(BaseClient):
     def get_security_event_locations(self, user_uid):
-        """Gets storage node IDs (locations) for the storage nodes containing the legacy security
-        event data for the user with the given user UID.
+        """Gets IDs for the storage nodes containing the legacy security event data for the user
+        with the given UID.
         `REST Documentation <https://console.us.code42.com/swagger/#/Feature/getStorageNode>`__
 
         Args:
-            user_uid (str): A user UID for the user to get storage node locations for.
+            user_uid (str): A UID for the user to get storage node locations for.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing storage node IDs.

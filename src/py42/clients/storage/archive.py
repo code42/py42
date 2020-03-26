@@ -18,9 +18,9 @@ class StorageArchiveClient(BaseClient):
         Args:
             session_id (str): The ID for the web restore session.
             device_guid (str): The GUID for the device.
-            regex (str): A filename regex to filter results by.
+            regex (str): A filename regex to search against.
             max_results (int, optional): The max results to return. Defaults to None.
-            timestamp (int, optional): The POSIX timestamp (seconds) of the archive against which
+            timestamp (int, optional): The version POSIX timestamp (seconds) of the archive which
                 to search. 0 indicates the most recent version. It will return all versions older
                 than the timestamp you provide. Defaults to None.
             show_deleted (bool, optional): Set to True to include deleted files in the search.
@@ -50,11 +50,13 @@ class StorageArchiveClient(BaseClient):
         Args:
             device_guid (str): A GUID for a device.
             file_id (str): An ID for the file to get the size for.
-            timestamp (float, optional): The POSIX timestamp (seconds) of the archive against which
-                to search. 0 indicates the most recent version. It will return all versions older
-                than the timestamp you provide. Defaults to None.
-            show_deleted:
-            backup_set_id:
+            timestamp (float, optional): The version POSIX timestamp (seconds) of the file. 0
+                indicates the most recent version. It will return the first version on or before
+                the given timestamp. Defaults to None.
+            show_deleted (bool, optional): Set to True to get the file size of a deleted file.
+                Defaults to None.
+            backup_set_id (str, optional): The ID of the backup set governing the file to get the
+                size of.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the file size.
@@ -92,17 +94,17 @@ class StorageArchiveClient(BaseClient):
             device_guid (str): The GUID for the device.
             file_id (str, optional): The ID of the file or directory to get metadata for. When
                 None, it uses the root directory. Defaults to None.
-            timestamp (float, optional): The POSIX timestamp (seconds) of the archive against which
-                to search. 0 indicates the most recent version. It will return all versions older
-                than the timestamp you provide. Defaults to None.
-            show_deleted (bool, optional): Set to True to include deleted files in the search.
+            timestamp (float, optional): The version POSIX timestamp (seconds) of the file. 0
+                indicates the most recent version. It will return the first version on or before
+                the given timestamp. Defaults to None.
+            show_deleted (bool, optional): Set to True to get metadata for a deleted file.
                 Defaults to None.
             batch_size (int, optional): The number of files to fetch in each batch. Defaults to
                 None.
-            last_batch_file_id (str, optional: Used for finding the next batch of files. Defaults
+            last_batch_file_id (str, optional): Used for finding the next batch of files. Defaults
                 to None.
-            backup_set_id (str, optional): The ID for the backup set the filepath is a part of.
-                Defaults to None.
+            backup_set_id (str, optional): The ID of the backup set governing the filepath to get
+                metadata for. Defaults to None.
             include_os_metadata (bool, optional): For Macs, it will add properties
                 'sourceBackupDate', 'sourceAccessDate', 'sourceCreationDate',
                 'sourceModificationDate', 'sourceChecksum', and 'sourceLength' to the response.
@@ -139,10 +141,10 @@ class StorageArchiveClient(BaseClient):
                 :func:`py42.clients.archive.get_data_key_token()` for authorizing the storage
                 node to decrypt the archive. Required if not using `encryption_key`. Defaults to
                 None.
-            private_password (str, optional): The user's archive password. Required if the
-                archive is encrypted with a private password. Defaults to None.
-            encryption_key (str, optional): The user's archive encryption key. Required if the
-                archive is encrypted with a custom encryption key. Defaults to None.
+            private_password (str, optional): An archive password. Required if the archive is
+                encrypted with a private password. Defaults to None.
+            encryption_key (str, optional): An archive encryption key. Required if the archive is
+                encrypted with a custom encryption key. Defaults to None.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the web restore session
@@ -178,9 +180,10 @@ class StorageArchiveClient(BaseClient):
 
         Args:
             device_guid (str): A GUID for the device responsible for the archive in which to
-                start a restore with.
+                restore from.
             session_id (str): The ID for the web restore session.
-            path_set (iter[:class:`py42.clients.storage.archive.RestorePath`]):
+            path_set (iter[:class:`py42.clients.storage.archive.RestorePath`]): A list of objects
+                representing files and directories that are selected for a restore.
             num_files (int): The number of files anticipated to be restored.
             num_dirs (int): The number of directories anticipated to be restored.
             size (int): The number of bytes that are anticipated to be restored.
@@ -193,9 +196,9 @@ class StorageArchiveClient(BaseClient):
                 Defaults to None.
             restore_full_path (bool, optional): Set to True to restore the entire path. Defaults
                 to None.
-            timestamp (float, optional): The POSIX timestamp (seconds) of the file version to
-                restore. 0 indicates the most recent version. It will return all versions older
-                than the timestamp you provide. Defaults to None.
+            timestamp (float, optional): The version POSIX timestamp (seconds) of the file. 0
+                indicates the most recent version. It will restore the first version on or before
+                the given timestamp. Defaults to None.
             exceptions (iter[:class:`py42.clients.storage.archive.RestoreExclusion`], optional):
                 Paths and version timestamps indicating what to exclude during this restore job.
                 Defaults to None.
@@ -207,6 +210,8 @@ class StorageArchiveClient(BaseClient):
         """
         uri = u"/api/WebRestoreJob"
         timestamp = timestamp * 1000 if timestamp else timestamp
+        path_set = [ps.to_dict() for ps in path_set]
+        exceptions = [ex.to_dict() for ex in exceptions]
         json_dict = {
             u"guid": device_guid,
             u"webRestoreSessionId": session_id,
@@ -232,7 +237,7 @@ class StorageArchiveClient(BaseClient):
             job_id (str): The ID for the restore job to get the status of.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response indicating if the job is done yet,
+            :class:`py42.sdk.response.Py42Response`: A response indicating if the job is done yet.
         """
         uri = u"/api/WebRestoreJob/{}".format(job_id)
         return self._session.get(uri)
@@ -242,7 +247,7 @@ class StorageArchiveClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJob-delete>`__
 
         Args:
-            job_id (str): The ID for the restore job to delete.
+            job_id (str): The ID for the restore job to cancel.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -252,8 +257,8 @@ class StorageArchiveClient(BaseClient):
         return self._session.delete(uri, json=json_dict)
 
     def stream_restore_result(self, job_id):
-        """Streams the result of restore job as a zipped file. WARNING: If not zipped, it will
-        not be able to stream to a directory.
+        """Streams the result of the restore job as a zipped file. WARNING: If not zipped, it will
+        not be able to stream a directory.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
@@ -278,7 +283,7 @@ class RestorePath(object):
 
     @property
     def path(self):
-        """The path to file or directory to restore."""
+        """The path on an archive to a file or directory in which to restore."""
         return self.path
 
     def to_dict(self):
@@ -288,7 +293,7 @@ class RestorePath(object):
         Returns:
             dict: A dict with the type, path, and other required parameters.
         """
-        return {u"type": self.path_type, u"path": self.path, u"selected": False}
+        return {u"type": self.path_type, u"path": self.path, u"selected": True}
 
 
 class RestoreExclusion(object):

@@ -99,7 +99,7 @@ class SecurityModule(object):
         single user, multiple users, or a backup.
 
         Args:
-            user_uid (str): The UID for the user to get security event for.
+            user_uid (str): The UID for the user to get security events for.
             cursor (str, optional): A cursor position for only getting events you did not
                 previously get. Defaults to None.
             include_files (bool, optional): Whether to include the files related to the security

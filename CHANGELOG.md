@@ -10,18 +10,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
-## Changed
-
-- Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
-    instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
-    - `get_all_matters()`
-    - `get_all_matter_custodians()`
-
 ### Removed
 
 - Parameter `classification` removed from `OrgClient.create_org()`
 - Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`
-- Removed `ArchiveClient`.
+- Removed `ArchiveClient`. Use `ArchiveModule`.
 
 ### Added
 
@@ -40,6 +33,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
+- Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
+    instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
+    - `get_all_matters()`
+    - `get_all_matter_custodians()`
 - `py42.sdk.archive.stream_from_backup()` now raises `Py42ArchiveFileNotFoundError` when it does not find a file.
 - `py42.sdk.alerts` and `py42.sdk.detectionlists` raise `Py42SessionInitializationError` if they are unable to
     connect to the necessary microservice and `Py42FeatureUnavailableError` if their environment does not support
@@ -53,9 +50,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42ForbiddenError`
     - `Py42NotFoundError`
     - `Py42InternalServerError`
-- `py42.clients.ArchiveClient.get_restore_history()` was renamed to
-    `py42.clients.ArchiveClient.get_all_restore_history()` and now returns a generator that pages through restore
-    history.
 - `py42.modules.ArchiveModule` methods:
     - `get_all_restore_history_by_device_id()` (formerly `get_restore_history_by_device_id()`)
     - `get_all_restore_history_by_user_id()` (formerly `get_restore_history_by_user_id()`)

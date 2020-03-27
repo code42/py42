@@ -86,7 +86,7 @@ class DeviceClient(BaseClient):
               computer name, etc Defaults to None.
 
         Returns:
-            A generator containing collection of :class:`Py42.sdk.response.Py42Response` objects.
+            generator: Collection of :class:`Py42.sdk.response.Py42Response` objects.
 
         """
 

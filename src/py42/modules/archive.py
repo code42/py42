@@ -1,7 +1,6 @@
 class ArchiveModule(object):
-    """A module that combines the class :class:`py42.clients.ArchiveClient` with functionality for
-    streaming a file from backup. It also simplifies getting restore history by providing methods
-    to get by org ID, device ID, and user ID.
+    """A module for getting information about archives on storage nodes along with functionality
+    for streaming a file from backup.
     """
 
     def __init__(self, archive_accessor_manager, archive_client):
@@ -42,19 +41,6 @@ class ArchiveModule(object):
             :class:`py42.sdk.response.Py42Response`: A response containing the backup sets.
         """
         return self._archive_client.get_backup_sets(device_guid, destination_guid)
-
-    def get_data_key_token(self, device_guid):
-        """Gets a data key token, which when passed to a storage node, authorizes it to decrypt
-        the device's archive for restore.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#DataKeyToken-post>`__
-
-        Args:
-            device_guid (str): The GUID for the device responsible for the archive.
-
-        Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the token.
-        """
-        return self._archive_client.get_data_key_token(device_guid)
 
     def get_all_restore_history_by_org_id(self, days, org_id):
         """Gets all restore jobs from the past given days for the organization with the given ID.

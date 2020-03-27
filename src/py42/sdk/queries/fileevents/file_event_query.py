@@ -55,6 +55,8 @@ def create_not_exists_filter_group(term):
 
 
 class FileEventFilterStringField(QueryFilterStringField):
+    """Helper class for creating filters with the ``EXISTS``/``NOT_EXISTS`` filter clauses."""
+
     @classmethod
     def exists(cls):
         return create_exists_filter_group(cls._term)

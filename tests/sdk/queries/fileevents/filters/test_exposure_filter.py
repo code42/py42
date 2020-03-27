@@ -175,26 +175,26 @@ def test_sync_destination_name_not_exists_str_gives_correct_json_representation(
 
 
 def test_sync_destination_name_eq_str_gives_correct_json_representation():
-    _filter = SyncDestination.eq("test_dest")
-    expected = IS.format("syncDestination", "test_dest")
+    _filter = SyncDestination.eq(SyncDestination.GOOGLE_DRIVE)
+    expected = IS.format("syncDestination", SyncDestination.GOOGLE_DRIVE)
     assert str(_filter) == expected
 
 
 def test_sync_destination_name_not_eq_str_gives_correct_json_representation():
-    _filter = SyncDestination.not_eq("test_dest")
-    expected = IS_NOT.format("syncDestination", "test_dest")
+    _filter = SyncDestination.not_eq(SyncDestination.GOOGLE_DRIVE)
+    expected = IS_NOT.format("syncDestination", SyncDestination.GOOGLE_DRIVE)
     assert str(_filter) == expected
 
 
 def test_sync_destination_name_is_in_str_gives_correct_json_representation():
-    items = ["dest1", "dest2", "dest3"]
+    items = [SyncDestination.GOOGLE_DRIVE, SyncDestination.BOX, SyncDestination.ICLOUD]
     _filter = SyncDestination.is_in(items)
     expected = IS_IN.format("syncDestination", *items)
     assert str(_filter) == expected
 
 
 def test_sync_destination_name_not_in_str_gives_correct_json_representation():
-    items = ["dest1", "dest2", "dest3"]
+    items = [SyncDestination.GOOGLE_DRIVE, SyncDestination.BOX, SyncDestination.ICLOUD]
     _filter = SyncDestination.not_in(items)
     expected = NOT_IN.format("syncDestination", *items)
     assert str(_filter) == expected

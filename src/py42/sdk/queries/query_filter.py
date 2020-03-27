@@ -53,7 +53,7 @@ def create_filter_group(query_filter_list, filter_clause):
 
 
 class QueryFilterStringField(object):
-    """Base class for filters where the search value is a string."""
+    """Helper class for creating filters where the search value is a string."""
 
     _term = u"override_string_field_name"
 

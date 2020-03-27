@@ -75,16 +75,16 @@ class SecurityModule(object):
             event_types: (str, optional): A comma-separated list of event types to filter by.
 
                     Available options are:
-                        - :attr:`DEVICE_APPEARED`
-                        - :attr:`DEVICE_DISAPPEARED`
-                        - :attr:`DEVICE_FILE_ACTIVITY`
-                        - :attr:`PERSONAL_CLOUD_FILE_ACTIVITY`
-                        - :attr:`RESTORE_JOB`
-                        - :attr:`RESTORE_FILE`
-                        - :attr:`FILE_OPENED`
-                        - :attr:`RULE_MATCH`
-                        - :attr:`DEVICE_SCAN_RESULT`
-                        - :attr:`PERSONAL_CLOUD_SCAN_RESULT`.
+                        - 'DEVICE_APPEARED'
+                        - 'DEVICE_DISAPPEARED'
+                        - 'DEVICE_FILE_ACTIVITY'
+                        - 'PERSONAL_CLOUD_FILE_ACTIVITY'
+                        - 'RESTORE_JOB'
+                        - 'RESTORE_FILE'
+                        - 'FILE_OPENED'
+                        - 'RULE_MATCH'
+                        - 'DEVICE_SCAN_RESULT'
+                        - 'PERSONAL_CLOUD_SCAN_RESULT'
 
                     Defaults to None.
             min_timestamp (float, optional): A POSIX timestamp to filter out events that did not
@@ -117,16 +117,16 @@ class SecurityModule(object):
             event_types: (str, optional): A comma-separated list of event types to filter by.
 
                     Available options are:
-                        - :attr:`DEVICE_APPEARED`
-                        - :attr:`DEVICE_DISAPPEARED`
-                        - :attr:`DEVICE_FILE_ACTIVITY`
-                        - :attr:`PERSONAL_CLOUD_FILE_ACTIVITY`
-                        - :attr:`RESTORE_JOB`
-                        - :attr:`RESTORE_FILE`
-                        - :attr:`FILE_OPENED`
-                        - :attr:`RULE_MATCH`
-                        - :attr:`DEVICE_SCAN_RESULT`
-                        - :attr:`PERSONAL_CLOUD_SCAN_RESULT`.
+                        - 'DEVICE_APPEARED'
+                        - 'DEVICE_DISAPPEARED'
+                        - 'DEVICE_FILE_ACTIVITY'
+                        - 'PERSONAL_CLOUD_FILE_ACTIVITY'
+                        - 'RESTORE_JOB'
+                        - 'RESTORE_FILE'
+                        - 'FILE_OPENED'
+                        - 'RULE_MATCH'
+                        - 'DEVICE_SCAN_RESULT'
+                        - 'PERSONAL_CLOUD_SCAN_RESULT'
 
                     Defaults to None.
             min_timestamp (float, optional): A POSIX timestamp to filter out events that did not

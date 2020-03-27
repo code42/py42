@@ -32,9 +32,8 @@ class StorageClientFactory(object):
 
         Args:
             device_guid (str): The GUID for the device to create a storage client for.
-            destination_guid (str, optional): The GUID for the destination containing the storage
-                node that the device stores its archives on. If None, it will use the first one
-                found. Defaults to None.
+            destination_guid (str, optional): The GUID for the destination containing the archive.
+                If None, it will use the first one found. Defaults to None.
 
         Returns:
             :class:`py42.clients.storage.securitydata.StorageSecurityClient`
@@ -53,8 +52,8 @@ class StorageClientFactory(object):
         Args:
             plan_uid (str): The UID for the plan to create a
                 :class:`py42.clients.storage.securitydata.StorageSecurityClient` factory for.
-            destination_guid (str): The GUID for the destination containing the storage
-                node that the device stores its archives on.
+            destination_guid (str, optional): The GUID for the destination containing the archive.
+                If None, it will use the first one found. Defaults to None.
 
         Returns:
             :class:`py42.clients.storage.securitydata.StorageSecurityClient`

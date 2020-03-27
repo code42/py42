@@ -132,7 +132,7 @@ class StorageSecurityClient(BaseClient):
             cursor (str, optional): A cursor position for only getting events you did not
                 previously get. Defaults to None.
             min_timestamp (float, optional): A POSIX timestamp to filter out events from the
-                summary that did not at occur on or after this date.
+                summary that did not occur on or after this date.
             max_timestamp (float, optional): A POSIX timestamp to filter out events from the
                 summary that did not occur on or before this date.
 

@@ -42,8 +42,11 @@ class ArchiveClient(BaseClient):
 
         Args:
             days (int): Number of days of restore history to retrieve.
-            id_type (str): Either the string 'orgId', 'computerId', or 'userId' and should describe
-                the parameter 'id_value'.
+            id_type (str): The ID type of parameter `id_value`.
+                Options include:
+                    - 'orgId'
+                    - 'computerId'
+                    - 'userId'
             id_value (str): The ID described by the parameter `id_type`.
 
         Returns:

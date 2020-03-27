@@ -3,7 +3,6 @@ import pytest
 from py42._internal.token_providers import StorageTokenProviderFactory
 from py42.clients import (
     administration,
-    archive,
     devices,
     file_event,
     legalhold,
@@ -12,7 +11,7 @@ from py42.clients import (
     storage,
 )
 from py42.clients import alerts, detectionlists, users
-from py42._internal import key_value_store
+from py42._internal.clients import key_value_store, archive
 from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory
 from py42.clients.storage import StorageClientFactory
 

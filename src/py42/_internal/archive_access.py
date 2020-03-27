@@ -1,9 +1,7 @@
 import posixpath
 import time
-import json
 from collections import namedtuple
 
-from py42.clients import BaseClient
 from py42.sdk.exceptions import Py42ArchiveFileNotFoundError
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
@@ -12,13 +10,6 @@ FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, si
 class FileType(object):
     DIRECTORY = u"directory"
     FILE = u"file"
-
-
-class ArchiveAccessClient(BaseClient):
-    def get_data_key_token(self, device_guid):
-        uri = u"/api/DataKeyToken"
-        data = {u"computerGuid": device_guid}
-        return self._session.post(uri, data=json.dumps(data))
 
 
 class ArchiveAccessorManager(object):

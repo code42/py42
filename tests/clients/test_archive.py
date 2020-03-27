@@ -2,7 +2,7 @@ import pytest
 from requests import Response
 
 import py42.sdk.settings
-from py42.clients.archive import ArchiveClient
+from py42._internal.clients.archive import ArchiveClient
 from py42.sdk.response import Py42Response
 
 

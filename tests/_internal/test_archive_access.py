@@ -8,9 +8,9 @@ from requests import Response
 
 import py42
 import py42._internal.archive_access as archive_access
+from py42._internal.clients.archive import ArchiveClient
 import py42.sdk.util
 from py42._internal.archive_access import (
-    ArchiveAccessClient,
     ArchiveAccessor,
     ArchiveAccessorManager,
     FileSelection,
@@ -273,8 +273,8 @@ class GetWebRestoreJobResponses(object):
 
 
 @pytest.fixture
-def archive_access_client(mocker):
-    client = mocker.MagicMock(spec=ArchiveAccessClient)
+def archive_client(mocker):
+    client = mocker.MagicMock(spec=ArchiveClient)
     py42_response = mocker.MagicMock(spec=Py42Response)
     py42_response.text = '{{"dataKeyToken": "{0}"}}'.format(DATA_KEY_TOKEN)
     py42_response.status_code = 200
@@ -428,47 +428,47 @@ def get_response_job_id(response_str):
 
 class TestArchiveAccessManager(object):
     def test_archive_accessor_manager_constructor_constructs_successfully(
-        self, archive_access_client, storage_client_factory
+        self, archive_client, storage_client_factory
     ):
-        assert ArchiveAccessorManager(archive_access_client, storage_client_factory)
+        assert ArchiveAccessorManager(archive_client, storage_client_factory)
 
     def test_get_archive_accessor_with_device_guid_and_destination_guid_returns(
-        self, archive_access_client, storage_client_factory, storage_client, storage_archive_client
+        self, archive_client, storage_client_factory, storage_client, storage_archive_client
     ):
         storage_client.archive = storage_archive_client
         storage_client_factory.from_device_guid.return_value = storage_client
-        accessor_manager = ArchiveAccessorManager(archive_access_client, storage_client_factory)
+        accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
 
         assert accessor_manager.get_archive_accessor(DEVICE_GUID, DESTINATION_GUID)
 
     def test_get_archive_accessor_calls_storage_client_factory_with_correct_args(
-        self, archive_access_client, storage_client_factory, storage_client, storage_archive_client
+        self, archive_client, storage_client_factory, storage_client, storage_archive_client
     ):
         storage_client.archive = storage_archive_client
         storage_client_factory.from_device_guid.return_value = storage_client
-        accessor_manager = ArchiveAccessorManager(archive_access_client, storage_client_factory)
+        accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
         storage_client_factory.from_device_guid.assert_called_with(
             DEVICE_GUID, destination_guid=None
         )
 
     def test_get_archive_accessor_with_opt_dest_guid_calls_storage_client_factory_with_correct_args(
-        self, archive_access_client, storage_client_factory, storage_client, storage_archive_client
+        self, archive_client, storage_client_factory, storage_client, storage_archive_client
     ):
         storage_client.archive = storage_archive_client
         storage_client_factory.from_device_guid.return_value = storage_client
-        accessor_manager = ArchiveAccessorManager(archive_access_client, storage_client_factory)
+        accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID, destination_guid=DESTINATION_GUID)
         storage_client_factory.from_device_guid.assert_called_with(
             DEVICE_GUID, destination_guid=DESTINATION_GUID
         )
 
     def test_get_archive_accessor_creates_web_restore_session_with_correct_args(
-        self, archive_access_client, storage_client, storage_client_factory, storage_archive_client
+        self, archive_client, storage_client, storage_client_factory, storage_archive_client
     ):
         storage_client.archive = storage_archive_client
         storage_client_factory.from_device_guid.return_value = storage_client
-        accessor_manager = ArchiveAccessorManager(archive_access_client, storage_client_factory)
+        accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
 
         storage_archive_client.create_restore_session.assert_called_once_with(
@@ -476,26 +476,26 @@ class TestArchiveAccessManager(object):
         )
 
     def test_get_archive_accessor_calls_create_restore_job_manager_with_correct_args(
-        self, mocker, archive_access_client, storage_client_factory, storage_archive_client, storage_client
+        self, mocker, archive_client, storage_client_factory, storage_archive_client, storage_client
     ):
         spy = mocker.spy(py42._internal.archive_access, "create_restore_job_manager")
         storage_client.archive = storage_archive_client
 
         storage_client_factory.from_device_guid.return_value = storage_client
 
-        accessor_manager = ArchiveAccessorManager(archive_access_client, storage_client_factory)
+        accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         accessor_manager.get_archive_accessor(DEVICE_GUID)
 
         assert spy.call_count == 1
         spy.assert_called_once_with(storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID)
 
     def test_get_archive_accessor_raises_exception_when_create_backup_client_raises(
-        self, archive_access_client, storage_client_factory
+        self, archive_client, storage_client_factory
     ):
         storage_client_factory.from_device_guid.side_effect = Exception(
             "Exception in create_backup_client"
         )
-        accessor_manager = ArchiveAccessorManager(archive_access_client, storage_client_factory)
+        accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
         with pytest.raises(Exception) as e:
             accessor_manager.get_archive_accessor(INVALID_DEVICE_GUID)
 

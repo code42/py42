@@ -1,12 +1,10 @@
 import json
 from requests import HTTPError
 
-from py42._internal.key_value_store import KeyValueStoreClient
-from py42._internal.archive_access import ArchiveAccessClient
+from py42._internal.clients import key_value_store, archive
 from py42.clients import (
     administration,
     alerts,
-    archive,
     devices,
     legalhold,
     orgs,
@@ -40,9 +38,6 @@ class AuthorityClientFactory(object):
 
     def create_archive_client(self):
         return archive.ArchiveClient(self.session)
-
-    def create_archive_access_client(self):
-        return ArchiveAccessClient(self.session)
 
     def create_security_client(self):
         return securitydata.SecurityClient(self.session)
@@ -92,7 +87,7 @@ class MicroserviceClientFactory(object):
         if not self._key_value_store_client:
             url = _hacky_get_microservice_url(self._root_session, u"simple-key-value-store")
             session = self._session_factory.create_anonymous_session(url)
-            self._key_value_store_client = KeyValueStoreClient(session)
+            self._key_value_store_client = key_value_store.KeyValueStoreClient(session)
         return self._key_value_store_client.get_stored_value(key).text
 
 

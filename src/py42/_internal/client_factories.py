@@ -9,9 +9,9 @@ from py42.clients import (
     devices,
     legalhold,
     orgs,
-    securitydata,
     users,
 )
+from py42._internal.clients import securitydata
 
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient

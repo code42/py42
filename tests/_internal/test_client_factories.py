@@ -13,8 +13,8 @@ from py42.clients import (
     file_event,
     legalhold,
     orgs,
-    securitydata,
 )
+from py42._internal.clients import securitydata
 from py42.clients import alerts, detectionlists, users
 from py42.sdk.usercontext import UserContext
 

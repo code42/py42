@@ -21,8 +21,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Removed
 
-- Parameter `classification` removed from `OrgClient.create_org()`
-- Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`
+- Parameter `classification` removed from `OrgClient.create_org()`.
+- Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`.
+- Removed `SecurityClient`. Use `SecurityModule`.
 
 ### Added
 

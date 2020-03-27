@@ -1,7 +1,7 @@
 import json
 from requests import HTTPError
 
-from py42._internal.key_value_store import KeyValueStoreClient
+from py42._internal.clients.key_value_store import KeyValueStoreClient
 from py42.clients import (
     administration,
     alerts,

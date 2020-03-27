@@ -16,6 +16,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
     - `get_all_matters()`
     - `get_all_matter_custodians()`
+- Parameter `storageaccess` was removed from `SDKClient`. To restore files, just use
+    `SDKClient.archive.stream_from_backup()`.
 
 ### Removed
 

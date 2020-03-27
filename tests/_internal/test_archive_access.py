@@ -16,13 +16,11 @@ from py42._internal.archive_access import (
     FileType,
     RestoreJobManager,
 )
-
-from py42.sdk.response import Py42Response
+from py42._internal.clients.storage import StorageArchiveClient
+from py42._internal.clients.storage import StorageClient, StorageClientFactory
 from py42.clients.archive import ArchiveClient
-from py42.clients.storage.archive import StorageArchiveClient
-from py42.clients.storage import StorageClient, StorageClientFactory
 from py42.sdk.exceptions import Py42ArchiveFileNotFoundError
-
+from py42.sdk.response import Py42Response
 
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"

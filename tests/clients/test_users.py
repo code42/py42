@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 import pytest
 from requests import Response
-
-import json
 
 import py42
 import py42.sdk.settings

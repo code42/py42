@@ -53,6 +53,8 @@ def create_filter_group(query_filter_list, filter_clause):
 
 
 class QueryFilterStringField(object):
+    """Base class for filters where the search value is a string."""
+
     _term = u"override_string_field_name"
 
     @classmethod
@@ -73,6 +75,8 @@ class QueryFilterStringField(object):
 
 
 class QueryFilterTimestampField(object):
+    """Helper class for creating filters where the search value is a timestamp."""
+
     _term = u"override_timestamp_field_name"
 
     @classmethod
@@ -106,6 +110,8 @@ class QueryFilterTimestampField(object):
 
 
 class QueryFilterBooleanField(object):
+    """Helper class for creating filters where the search value is a boolean."""
+
     _term = u"override_boolean_field_name"
 
     @classmethod
@@ -118,6 +124,13 @@ class QueryFilterBooleanField(object):
 
 
 class QueryFilter(object):
+    """Class for constructing a single filter object for use in a Forensic Search query.
+
+    When :func:`str()` is called on a :class:`QueryFilter` instance, the (``term``, ``operator``,
+    ``value``) attribute combination is transformed into a JSON string to be used as part of a
+    Forensic Search or Alert query.
+    """
+
     _term = None
 
     def __init__(self, term, operator, value=None):
@@ -133,6 +146,14 @@ class QueryFilter(object):
 
 
 class FilterGroup(object):
+    """Class for constructing a logical sub-group of related filters from a list of QueryFilter
+    objects. Takes a list of QueryFilter objects and combines them logically using the passed in
+    filter clause (``AND`` or ``OR``).
+
+    When :func:`str()` is called on a :class:`FilterGroup` instance, the combined filter items are
+    transformed into a JSON string to be used as part of a Forensic Search or Alert query.
+    """
+
     def __init__(self, filter_list, filter_clause=u"AND"):
         self._filter_list = filter_list
         self._filter_clause = filter_clause

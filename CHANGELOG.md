@@ -21,6 +21,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Parameter `classification` removed from `OrgClient.create_org()`
 - Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`
+- Removed function `get_data_key_token()` from `ArchiveClient`.
 
 ### Added
 

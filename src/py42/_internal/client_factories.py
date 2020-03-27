@@ -2,6 +2,7 @@ import json
 from requests import HTTPError
 
 from py42._internal.key_value_store import KeyValueStoreClient
+from py42._internal.archive_access import ArchiveAccessClient
 from py42.clients import (
     administration,
     alerts,
@@ -39,6 +40,9 @@ class AuthorityClientFactory(object):
 
     def create_archive_client(self):
         return archive.ArchiveClient(self.session)
+
+    def create_archive_access_client(self):
+        return ArchiveAccessClient(self.session)
 
     def create_security_client(self):
         return securitydata.SecurityClient(self.session)

@@ -1,25 +1,8 @@
-import json
-
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 
 
 class ArchiveClient(BaseClient):
-    def get_data_key_token(self, device_guid):
-        """Gets a data key token, which when passed to a storage node, authorizes it to decrypt
-        the device's archive for restore.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#DataKeyToken-post>`__
-
-        Args:
-            device_guid (str): The GUID for the device responsible for the archive.
-
-        Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the token.
-        """
-        uri = u"/api/DataKeyToken"
-        data = {u"computerGuid": device_guid}
-        return self._session.post(uri, data=json.dumps(data))
-
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to single destination for a specific
         device.
@@ -42,7 +25,7 @@ class ArchiveClient(BaseClient):
 
         Args:
             days (int): Number of days of restore history to retrieve.
-            id_type (str): The ID type of parameter `id_value`.
+            id_type (str): The type of ID describing parameter `id_value`.
                 Options include:
                     - 'orgId'
                     - 'computerId'

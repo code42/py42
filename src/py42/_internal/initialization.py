@@ -34,8 +34,11 @@ class SDKDependencies(object):
         self.storage_client_factory = _get_storage_client_factory(
             session_factory, archive_locator_factory
         )
+
+        archive_access_client = authority_client_factory.create_archive_access_client()
+
         archive_accessor_manager = ArchiveAccessorManager(
-            self.archive_client, self.storage_client_factory
+            archive_access_client, self.storage_client_factory
         )
 
         microservice_client_factory = MicroserviceClientFactory(

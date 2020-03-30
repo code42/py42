@@ -56,6 +56,18 @@ class DeviceClient(BaseClient):
 
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
+        It returns a generator of pages of devices, depending on logged in user account's role
+            in the organization.
+
+            * For a logged in ordinary end user, returns all devices of the user.
+
+            * For an organization administrator, returns all the devices in respective organization.
+
+            * For a cross-organization administrator, returns all devices across all organizations
+              that they are administrator of.
+
+            * Finally, for a customer cloud administrator, returns all devices in all organizations.
+
         Args:
             active (bool, optional): Filters results by device state. When set to True, gets all
                 active devices. When set to False, gets all deactivated devices. When set to None
@@ -74,6 +86,7 @@ class DeviceClient(BaseClient):
                 computer name, etc. Defaults to None.
 
         Returns:
+<<<<<<< HEAD
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
             that each contain a page of devices.
 
@@ -84,6 +97,10 @@ class DeviceClient(BaseClient):
             * For a cross-organization administrator, it returns all the devices from all the user's organizations.
 
             * Finally, for are a customer cloud administrator, it returns all devices in all organizations.
+=======
+            generator: Collection of :class:`Py42.sdk.response.Py42Response` objects.
+
+>>>>>>> b6aa26829305f3f428517ad7fc8cf08834c9ed33
         """
 
         return get_all_pages(
@@ -135,7 +152,7 @@ class DeviceClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def block(self, device_id):
-        """Blocks a device.
+        """Blocks a device causing the user not to be able to login or restore.
 
         `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
@@ -149,7 +166,7 @@ class DeviceClient(BaseClient):
         return self._session.put(uri)
 
     def unblock(self, device_id):
-        """Unblocks a device.
+        """Unblocks a device, permitting a user to be able to login and restore again.
 
         `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
@@ -163,7 +180,7 @@ class DeviceClient(BaseClient):
         return self._session.delete(uri)
 
     def deactivate(self, device_id):
-        """Deactivates a device.
+        """Deactivates a device, causing backups to stop and archives to go to cold storage.
 
         `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
 
@@ -178,7 +195,7 @@ class DeviceClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def reactivate(self, device_id):
-        """Activates a device.
+        """Activates a previously deactivated device.
 
         `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
 
@@ -193,7 +210,9 @@ class DeviceClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def deauthorize(self, device_id):
-        """Deauthorizes the device.
+        """
+        Deauthorizes the device with the given device ID. If used on a cloud connector device,
+        it will remove the authorization token for that account.
 
         `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeauthorization>`__
 

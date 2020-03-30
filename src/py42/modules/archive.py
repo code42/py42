@@ -14,10 +14,10 @@ class ArchiveModule(object):
         Args:
             file_path (str): The path to the file in your archive.
             device_guid (str): The GUID for the device the file belongs to.
-            destination_guid (str, optional): The device GUID for the server that stores the
-                backup of the file. If None, it will use the first destination GUID it finds for
-                your device. 'destination_guid' may be useful if the file is missing from one of
-                your destinations or if you want to optimize performance. Defaults to None.
+            destination_guid (str, optional): The GUID for the server that stores the backup of
+                the file. If None, it will use the first destination GUID it finds for your
+                device. 'destination_guid' may be useful if the file is missing from one of your
+                destinations or if you want to optimize performance. Defaults to None.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the streamed content.

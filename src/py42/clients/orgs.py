@@ -134,7 +134,7 @@ class OrgClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgDeactivation-put>`__
 
         Args:
-            org_id (int): an ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

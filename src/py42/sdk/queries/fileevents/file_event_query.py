@@ -59,8 +59,10 @@ class FileEventFilterStringField(QueryFilterStringField):
 
     @classmethod
     def exists(cls):
+        """Returns a FilterGroup to find events where filter data exists."""
         return create_exists_filter_group(cls._term)
 
     @classmethod
     def not_exists(cls):
+        """Returns a FilterGroup to find events where filter data does not exist."""
         return create_not_exists_filter_group(cls._term)

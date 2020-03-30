@@ -30,7 +30,7 @@ class SecurityModule(object):
             user_uid (str): A UID for the user to get storage node locations for.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing storage node IDs.
+            list[:class:`py42.modules.securitydata.PlanStorageInfo`]: A list of storage info.
         """
         locations = None
         try:

@@ -193,9 +193,8 @@ class DeviceClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def deauthorize(self, device_id):
-        """
-        Deauthorizes the device with the given device ID. If used on a cloud connector device,
-        it will remove the authorization token for that account.
+        """Deauthorizes the device with the given ID. If used on a cloud connector device, it will
+            remove the authorization token for that account.
 
         `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeauthorization>`__
 

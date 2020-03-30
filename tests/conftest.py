@@ -135,6 +135,7 @@ def unicode_query_filter():
 @pytest.fixture
 def mock_session(mocker):
     from py42._internal.session import Py42Session
+
     session = mocker.MagicMock(spec=Py42Session)
     session.headers = {}
 

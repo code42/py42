@@ -6,14 +6,7 @@ from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.clients import (
-    administration,
-    archive,
-    devices,
-    file_event,
-    legalhold,
-    orgs,
-)
+from py42.clients import administration, archive, devices, file_event, legalhold, orgs
 from py42._internal.clients import securitydata
 from py42.clients import alerts, detectionlists, users
 from py42.sdk.usercontext import UserContext

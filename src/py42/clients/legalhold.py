@@ -175,9 +175,7 @@ class LegalHoldClient(BaseClient):
         uri = u"/api/LegalHoldMembership"
         return self._session.get(uri, params=params)
 
-    def get_all_matter_custodians(
-        self, legal_hold_uid=None, user_uid=None, user=None, active=True,
-    ):
+    def get_all_matter_custodians(self, legal_hold_uid=None, user_uid=None, user=None, active=True):
         """Gets all Legal Hold memberships.
 
         Each user (Custodian) who has been added to a Legal Hold Matter is returned by the server as

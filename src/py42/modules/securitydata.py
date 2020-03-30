@@ -2,10 +2,7 @@ import json
 from threading import Lock
 from requests.exceptions import HTTPError
 
-from py42.sdk.exceptions import (
-    Py42SecurityPlanConnectionError,
-    raise_py42_error,
-)
+from py42.sdk.exceptions import Py42SecurityPlanConnectionError, raise_py42_error
 
 
 class SecurityModule(object):
@@ -22,8 +19,8 @@ class SecurityModule(object):
         return self._microservices_client_factory.get_alerts_client()
 
     def get_security_plan_storage_info_list(self, user_uid):
-        """Gets IDs for the storage nodes containing the legacy security event data for the user
-        with the given UID.
+        """Gets IDs (plan UID, node GUID, and destination GUID) for the storage nodes containing
+        the legacy security event data for the user with the given UID.
         `REST Documentation <https://console.us.code42.com/swagger/#/Feature/getStorageNode>`__
 
         Args:
@@ -47,9 +44,8 @@ class SecurityModule(object):
             selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
             if not selected_plan_infos:
                 raise Py42SecurityPlanConnectionError(
-                    u"Could not establish a connection to retrieve security events for user {0}".format(
-                        user_uid
-                    )
+                    u"Could not establish a connection to retrieve "
+                    u"security events for user {0}".format(user_uid)
                 )
 
             return selected_plan_infos

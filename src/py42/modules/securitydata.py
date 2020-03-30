@@ -105,8 +105,7 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy security events for the user with the given UID. Plans are either for a
-        single user, multiple users, or a backup.
+        """Gets legacy security events for the user with the given UID.
 
         Args:
             user_uid (str): The UID for the user to get security events for.
@@ -157,7 +156,8 @@ class SecurityModule(object):
                 accepts a raw JSON str.
 
         Returns:
-            A list of file events as JSON.
+            :class:`py42.sdk.response.Py42Response`: A response containing the first 10,000
+            events.
         """
         file_event_client = self._microservices_client_factory.get_file_event_client()
         return file_event_client.search(query)

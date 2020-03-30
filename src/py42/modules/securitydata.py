@@ -30,7 +30,7 @@ class SecurityModule(object):
             user_uid (str): A UID for the user to get storage node locations for.
 
         Returns:
-            list[:class:`py42.modules.securitydata.PlanStorageInfo`]: A list of storage info.
+            list[:class:`py42.modules.securitydata.PlanStorageInfo`]
         """
         locations = None
         try:
@@ -88,9 +88,13 @@ class SecurityModule(object):
 
                     Defaults to None.
             min_timestamp (float, optional): A POSIX timestamp to filter out events that did not
-                occur on or after this date.
+                occur on or after this date. Defaults to None.
             max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
-                occur on or before this date.
+                occur on or before this date. Defaults to None.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            that each contain a page of events.
         """
         return self._get_security_detection_events(
             plan_storage_info, cursor, include_files, event_types, min_timestamp, max_timestamp
@@ -130,9 +134,13 @@ class SecurityModule(object):
 
                     Defaults to None.
             min_timestamp (float, optional): A POSIX timestamp to filter out events that did not
-                occur on or after this date.
+                occur on or after this date. Defaults to None.
             max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
-                occur on or before this date.
+                occur on or before this date. Defaults to None.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            that each contain a page of events.
         """
         security_plan_storage_infos = self.get_security_plan_storage_info_list(user_uid)
         return self._get_security_detection_events(

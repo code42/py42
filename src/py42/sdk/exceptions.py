@@ -17,7 +17,7 @@ class Py42ArchiveFileNotFoundError(Py42Error):
 
 
 class Py42FeatureUnavailableError(Py42Error):
-    """An exception raised when a requested feature is not supported with your Code42 instance."""
+    """An exception raised when a requested feature is not supported in your Code42 instance."""
 
     def __init__(self):
         super(Py42FeatureUnavailableError, self).__init__(
@@ -26,9 +26,8 @@ class Py42FeatureUnavailableError(Py42Error):
 
 
 class Py42SessionInitializationError(Py42Error):
-    """An exception raised when user session is invalid.
-
-    A session might be invalid due to session timeout, invalid token, etc.
+    """An exception raised when a user session is invalid. A session might be invalid due to
+    session timeout, invalid token, etc.
     """
 
     def __init__(self, exception):
@@ -40,7 +39,7 @@ class Py42SessionInitializationError(Py42Error):
 
 
 class Py42SecurityPlanConnectionError(Py42Error):
-    """An exception raised when the user is not authorized to access the resource."""
+    """An exception raised when the user is not authorized to access the requested resource."""
 
     def __init__(self, error_message):
         super(Py42SecurityPlanConnectionError, self).__init__(error_message)
@@ -103,6 +102,9 @@ class Py42InternalServerError(Py42HTTPError):
 
 
 def raise_py42_error(raised_error):
+    """Raises the appropriate :class:`py42.sdk.exceptions.Py42HttpError` based on the given
+    error's response status code.
+    """
     if raised_error.response.status_code == 400:
         raise Py42BadRequestError(raised_error)
     elif raised_error.response.status_code == 401:

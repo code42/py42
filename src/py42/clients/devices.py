@@ -143,7 +143,7 @@ class DeviceClient(BaseClient):
             device_id (int): The ID of the device.
 
         Returns:
-            :class:`Py42.sdk.response.Py42Response`: A response containing state of the API call.
+            :class:`Py42.sdk.response.Py42Response`
         """
         uri = u"/api/ComputerBlock/{0}".format(device_id)
         return self._session.put(uri)

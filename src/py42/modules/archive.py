@@ -83,19 +83,3 @@ class ArchiveModule(object):
             that each contain a page of restore history.
         """
         return self._archive_client.get_all_restore_history(days, u"computerId", device_id)
-
-    def get_web_restore_info(self, src_guid, dest_guid):
-        """Gets necessary information for performing a web restore, such as the URL for the
-        server where the archive is stored.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreInfo-get>`__
-
-        Args:
-            src_guid (str): The GUID for the device responsible for the archive.
-            dest_guid (str): The device GUID for the server containing the archive you eventually
-                wish to restore from.
-
-        Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing information needed
-            to conduct a web restore.
-        """
-        return self._archive_client.get_web_restore_info(src_guid, dest_guid)

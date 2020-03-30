@@ -16,6 +16,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`
 - Removed `ArchiveClient`. Use `ArchiveModule`.
 - Removed function `ArchiveModule.get_data_key_token()`.
+- Removed function `ArchiveModule.get_web_restore_info()`.
 
 ### Added
 

@@ -3,11 +3,11 @@ from py42._internal.compat import str
 
 
 class Py42Error(Exception):
-    """A generic, Py42 custom base exception class."""
+    """A generic, Py42 custom base exception."""
 
 
 class Py42ArchiveFileNotFoundError(Py42Error):
-    """An exception raised when resource file is not found or the path is invalid."""
+    """An exception raised when a resource file is not found or the path is invalid."""
 
     def __init__(self, device_guid, file_path):
         message = u"File not found in archive " u"for device {0} at path {1}".format(
@@ -17,7 +17,7 @@ class Py42ArchiveFileNotFoundError(Py42Error):
 
 
 class Py42FeatureUnavailableError(Py42Error):
-    """An exception raised when a requested feature is not supported by the API."""
+    """An exception raised when a requested feature is not supported with your Code42 instance."""
 
     def __init__(self):
         super(Py42FeatureUnavailableError, self).__init__(
@@ -40,21 +40,22 @@ class Py42SessionInitializationError(Py42Error):
 
 
 class Py42SecurityPlanConnectionError(Py42Error):
-    """An exception raised when user is not authorized to access the resource."""
+    """An exception raised when the user is not authorized to access the resource."""
 
     def __init__(self, error_message):
         super(Py42SecurityPlanConnectionError, self).__init__(error_message)
 
 
 class Py42StorageSessionInitializationError(Py42Error):
-    """An exception raised when user is not authorized to access requested storage device."""
+    """An exception raised when the user is not authorized to initialize a storage session. This
+    may occur when trying to restore a file or trying to get legacy security events."""
 
     def __init__(self, error_message):
         super(Py42StorageSessionInitializationError, self).__init__(error_message)
 
 
 class Py42HTTPError(Py42Error):
-    """A base custom class to manage all HTTP errors raised by API endpoint."""
+    """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
     def __init__(self, http_response):
         message = u"Failure in HTTP call {0}".format(str(http_response))
@@ -67,35 +68,35 @@ class Py42HTTPError(Py42Error):
 
 
 class Py42BadRequestError(Py42HTTPError):
-    """A wrapper to represent HTTP 400 error."""
+    """A wrapper to represent a HTTP 400 error."""
 
     def __init__(self, exception):
         super(Py42BadRequestError, self).__init__(str(exception))
 
 
 class Py42UnauthorizedError(Py42HTTPError):
-    """A wrapper to represent HTTP 401 error."""
+    """A wrapper to represent a HTTP 401 error."""
 
     def __init__(self, exception):
         super(Py42UnauthorizedError, self).__init__(str(exception))
 
 
 class Py42ForbiddenError(Py42HTTPError):
-    """A wrapper to represent HTTP 403 error."""
+    """A wrapper to represent a HTTP 403 error."""
 
     def __init__(self, exception):
         super(Py42ForbiddenError, self).__init__(str(exception))
 
 
 class Py42NotFoundError(Py42HTTPError):
-    """A wrapper to represent HTTP 404 error."""
+    """A wrapper to represent a HTTP 404 error."""
 
     def __init__(self, exception):
         super(Py42NotFoundError, self).__init__(str(exception))
 
 
 class Py42InternalServerError(Py42HTTPError):
-    """A wrapper to represent HTTP 500 error."""
+    """A wrapper to represent a HTTP 500 error."""
 
     def __init__(self, exception):
         super(Py42InternalServerError, self).__init__(str(exception))

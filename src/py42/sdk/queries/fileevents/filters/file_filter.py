@@ -3,9 +3,7 @@ from py42.sdk.queries.query_filter import QueryFilterStringField
 
 
 class FileCategory(QueryFilterStringField):
-    """Class that filters events by category of the file observed.
-    `Available File Categories <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_file_categories>`__
-    """
+    """Class that filters events by category of the file observed."""
 
     _term = u"fileCategory"
 
@@ -17,7 +15,7 @@ class FileName(FileEventFilterStringField):
 
 
 class FileOwner(FileEventFilterStringField):
-    """Class that filters events by owner of the file observed."""
+    """Class that filters events by the owner of the file observed."""
 
     _term = u"fileOwner"
 

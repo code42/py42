@@ -2,15 +2,7 @@ import json
 from requests import HTTPError
 
 from py42._internal.clients import key_value_store, archive
-from py42.clients import (
-    administration,
-    alerts,
-    devices,
-    legalhold,
-    orgs,
-    securitydata,
-    users,
-)
+from py42.clients import administration, alerts, devices, legalhold, orgs, securitydata, users
 
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient

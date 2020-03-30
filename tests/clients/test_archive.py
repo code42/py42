@@ -6,7 +6,9 @@ from py42._internal.clients.archive import ArchiveClient
 from py42.sdk.response import Py42Response
 
 
-MOCK_GET_ORG_RESPONSE = """{"totalCount": 3000, "restoreEvents": [{"eventName": "foo", "eventUid": "123"}]}"""
+MOCK_GET_ORG_RESPONSE = (
+    """{"totalCount": 3000, "restoreEvents": [{"eventName": "foo", "eventUid": "123"}]}"""
+)
 
 MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "restoreEvents": []}"""
 

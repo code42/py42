@@ -1,15 +1,7 @@
 import pytest
 
 from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.clients import (
-    administration,
-    devices,
-    file_event,
-    legalhold,
-    orgs,
-    securitydata,
-    storage,
-)
+from py42.clients import administration, devices, file_event, legalhold, orgs, securitydata, storage
 from py42.clients import alerts, detectionlists, users
 from py42._internal.clients import key_value_store, archive
 from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory

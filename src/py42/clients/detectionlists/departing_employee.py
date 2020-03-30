@@ -14,7 +14,7 @@ class DepartingEmployeeClient(BaseClient):
         self._user_context = user_context
 
     def create(
-        self, username, tenant_id=None, notes=None, departure_epoch=None, cloud_usernames=None,
+        self, username, tenant_id=None, notes=None, departure_epoch=None, cloud_usernames=None
     ):
         """Adds a user to Departing Employees.
         `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Create>`__

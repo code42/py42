@@ -24,7 +24,7 @@ class SecurityModule(object):
         `REST Documentation <https://console.us.code42.com/swagger/#/Feature/getStorageNode>`__
 
         Args:
-            user_uid (str): A UID for the user to get storage node locations for.
+            user_uid (str): A UID for the user to get plan storage information for.
 
         Returns:
             list[:class:`py42.modules.securitydata.PlanStorageInfo`]

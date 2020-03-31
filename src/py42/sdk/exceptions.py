@@ -1,4 +1,3 @@
-"""On exception, client API may raise one of below errors."""
 from py42._internal.compat import str
 
 
@@ -63,39 +62,40 @@ class Py42HTTPError(Py42Error):
 
     @property
     def response(self):
+        """The response containing the HTTP error."""
         return self._response
 
 
 class Py42BadRequestError(Py42HTTPError):
-    """A wrapper to represent a HTTP 400 error."""
+    """A wrapper to represent an HTTP 400 error."""
 
     def __init__(self, exception):
         super(Py42BadRequestError, self).__init__(str(exception))
 
 
 class Py42UnauthorizedError(Py42HTTPError):
-    """A wrapper to represent a HTTP 401 error."""
+    """A wrapper to represent an HTTP 401 error."""
 
     def __init__(self, exception):
         super(Py42UnauthorizedError, self).__init__(str(exception))
 
 
 class Py42ForbiddenError(Py42HTTPError):
-    """A wrapper to represent a HTTP 403 error."""
+    """A wrapper to represent an HTTP 403 error."""
 
     def __init__(self, exception):
         super(Py42ForbiddenError, self).__init__(str(exception))
 
 
 class Py42NotFoundError(Py42HTTPError):
-    """A wrapper to represent a HTTP 404 error."""
+    """A wrapper to represent an HTTP 404 error."""
 
     def __init__(self, exception):
         super(Py42NotFoundError, self).__init__(str(exception))
 
 
 class Py42InternalServerError(Py42HTTPError):
-    """A wrapper to represent a HTTP 500 error."""
+    """A wrapper to represent an HTTP 500 error."""
 
     def __init__(self, exception):
         super(Py42InternalServerError, self).__init__(str(exception))

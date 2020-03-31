@@ -487,7 +487,6 @@ class TestArchiveAccessManager(object):
             DEVICE_GUID, data_key_token=DATA_KEY_TOKEN, private_password="TEST_PASSWORD"
         )
 
-
     def test_get_archive_accessor_when_given_encryption_key_creates_expected_restore_session(
         self, archive_client, storage_client, storage_client_factory, storage_archive_client
     ):

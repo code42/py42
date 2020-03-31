@@ -32,6 +32,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42ForbiddenError`
     - `Py42NotFoundError`
     - `Py42InternalServerError`
+- Parameters `archive_password` and `encryption_key` added to `ArchiveModule.stream_from_backup()`.
 
 ### Changed
 

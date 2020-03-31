@@ -7,7 +7,14 @@ class ArchiveModule(object):
         self._archive_accessor_manager = archive_accessor_manager
         self._archive_client = archive_client
 
-    def stream_from_backup(self, file_path, device_guid, destination_guid=None):
+    def stream_from_backup(
+        self,
+        file_path,
+        device_guid,
+        destination_guid=None,
+        archive_password=None,
+        encryption_key=None,
+    ):
         """Streams a file from an archive to memory.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
@@ -18,12 +25,20 @@ class ArchiveModule(object):
                 the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your
                 destinations or if you want to optimize performance. Defaults to None.
-
+            archive_password (str, None): The password for archives that are protected with an
+                additional password. This is only relevant to users with this level of archive
+                    security. Defaults to None.
+            encryption_key (str, None): A custom encryption key for decryption an archive's file
+                contents, necessary for restoring files. This is only relevant to users with
+                this level of archive security. Defaults to None.
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the streamed content.
         """
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
-            device_guid, destination_guid=destination_guid
+            device_guid,
+            destination_guid=destination_guid,
+            private_password=archive_password,
+            encryption_key=encryption_key,
         )
         return archive_accessor.stream_from_backup(file_path)
 

@@ -475,6 +475,31 @@ class TestArchiveAccessManager(object):
             DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
         )
 
+    def test_get_archive_accessor_when_given_private_password_creates_expected_restore_session(
+        self, archive_client, storage_client, storage_client_factory, storage_archive_client
+    ):
+        storage_client.archive = storage_archive_client
+        storage_client_factory.from_device_guid.return_value = storage_client
+        accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
+        accessor_manager.get_archive_accessor(DEVICE_GUID, private_password="TEST_PASSWORD")
+
+        storage_archive_client.create_restore_session.assert_called_once_with(
+            DEVICE_GUID, data_key_token=DATA_KEY_TOKEN, private_password="TEST_PASSWORD"
+        )
+
+
+    def test_get_archive_accessor_when_given_encryption_key_creates_expected_restore_session(
+        self, archive_client, storage_client, storage_client_factory, storage_archive_client
+    ):
+        storage_client.archive = storage_archive_client
+        storage_client_factory.from_device_guid.return_value = storage_client
+        accessor_manager = ArchiveAccessorManager(archive_client, storage_client_factory)
+        accessor_manager.get_archive_accessor(DEVICE_GUID, encryption_key="TEST_KEY")
+
+        storage_archive_client.create_restore_session.assert_called_once_with(
+            DEVICE_GUID, encryption_key="TEST_KEY"
+        )
+
     def test_get_archive_accessor_calls_create_restore_job_manager_with_correct_args(
         self, mocker, archive_client, storage_client_factory, storage_archive_client, storage_client
     ):

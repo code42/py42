@@ -78,7 +78,7 @@ class FileEventFilterStringField(QueryFilterStringField):
         return create_not_exists_filter_group(cls._term)
 
 
-class FileEventFilterSizeField(QueryFilterStringField):
+class FileEventFilterSizeField(object):
     """Helper class for creating filters with the ``GREATER_THAN``/``LESS_THAN`` filter clauses."""
 
     @classmethod

@@ -34,7 +34,7 @@ class ArchiveModule(object):
 
         Args:
             device_guid (str): The GUID for the device to get backup sets for.
-            destination_guid (str): The destination GUID for the device containing the archive
+            destination_guid (str): The destination GUID for the server containing the archive
                 to get backup sets for.
 
         Returns:

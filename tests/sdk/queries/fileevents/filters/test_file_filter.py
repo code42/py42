@@ -3,10 +3,20 @@ from py42.sdk.queries.fileevents.filters.file_filter import (
     FileName,
     FileOwner,
     FilePath,
+    FileSize,
     MD5,
     SHA256,
 )
-from tests.sdk.queries.conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
+from tests.sdk.queries.conftest import (
+    EXISTS,
+    IS,
+    IS_IN,
+    IS_NOT,
+    NOT_EXISTS,
+    NOT_IN,
+    GREATER_THAN,
+    LESS_THAN,
+)
 
 
 def test_file_category_eq_str_gives_correct_json_representation():
@@ -146,6 +156,42 @@ def test_file_path_not_in_str_gives_correct_json_representation():
     items = ["filePath1", "filePath2", "filePath3"]
     _filter = FilePath.not_in(items)
     expected = NOT_IN.format("filePath", *items)
+    assert str(_filter) == expected
+
+
+def test_file_size_greater_than_str_gives_correct_json_representation():
+    _filter = FileSize.greater_than("2048")
+    expected = GREATER_THAN.format("fileSize", "2048")
+    assert str(_filter) == expected
+
+
+def test_file_size_greater_than_int_gives_correct_json_representation():
+    _filter = FileSize.greater_than(2048)
+    expected = GREATER_THAN.format("fileSize", "2048")
+    assert str(_filter) == expected
+
+
+def test_file_size_greater_than_float_gives_correct_json_representation():
+    _filter = FileSize.greater_than(2048.10)
+    expected = GREATER_THAN.format("fileSize", "2048")
+    assert str(_filter) == expected
+
+
+def test_file_size_less_than_str_gives_correct_json_representation():
+    _filter = FileSize.less_than("2048")
+    expected = LESS_THAN.format("fileSize", "2048")
+    assert str(_filter) == expected
+
+
+def test_file_size_less_than_int_gives_correct_json_representation():
+    _filter = FileSize.less_than(2048)
+    expected = LESS_THAN.format("fileSize", "2048")
+    assert str(_filter) == expected
+
+
+def test_file_size_less_than_float_gives_correct_json_representation():
+    _filter = FileSize.less_than(2048.10)
+    expected = LESS_THAN.format("fileSize", "2048")
     assert str(_filter) == expected
 
 

@@ -54,6 +54,16 @@ def create_not_exists_filter_group(term):
     return create_filter_group(filter_list, u"AND")
 
 
+def create_greater_than_filter_group(term, value):
+    filter_list = [create_query_filter(term, u"GREATER_THAN", value)]
+    return create_filter_group(filter_list, u"AND")
+
+
+def create_less_than_filter_group(term, value):
+    filter_list = [create_query_filter(term, u"LESS_THAN", value)]
+    return create_filter_group(filter_list, u"AND")
+
+
 class FileEventFilterStringField(QueryFilterStringField):
     """Helper class for creating filters with the ``EXISTS``/``NOT_EXISTS`` filter clauses."""
 
@@ -66,3 +76,19 @@ class FileEventFilterStringField(QueryFilterStringField):
     def not_exists(cls):
         """Returns a FilterGroup to find events where filter data does not exist."""
         return create_not_exists_filter_group(cls._term)
+
+
+class FileEventFilterSizeField(QueryFilterStringField):
+    """Helper class for creating filters with the ``GREATER_THAN``/``LESS_THAN`` filter clauses."""
+
+    @classmethod
+    def greater_than(cls, value):
+        """Returns a FilterGroup to find events where filter data is greater than provided value."""
+        value = int(value)
+        return create_greater_than_filter_group(cls._term, value)
+
+    @classmethod
+    def less_than(cls, value):
+        """Returns a FilterGroup to find events where filter data is less than than provided value."""
+        value = int(value)
+        return create_less_than_filter_group(cls._term, value)

@@ -31,6 +31,11 @@ CONTAINS = (
 )
 NOT_CONTAINS = u'{{"filterClause":"AND", "filters":[{{"operator":"DOES_NOT_CONTAIN", "term":"{0}", "value":"{1}"}}]}}'
 
+GREATER_THAN = u'{{"filterClause":"AND", "filters":[{{"operator":"GREATER_THAN", "term":"{0}", "value":"{1}"}}]}}'
+LESS_THAN = (
+    u'{{"filterClause":"AND", "filters":[{{"operator":"LESS_THAN", "term":"{0}", "value":"{1}"}}]}}'
+)
+
 
 @pytest.fixture
 def event_filter_group(query_filter):

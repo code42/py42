@@ -1,4 +1,7 @@
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
+from py42.sdk.queries.fileevents.file_event_query import (
+    FileEventFilterStringField,
+    FileEventFilterSizeField,
+)
 from py42.sdk.queries.query_filter import QueryFilterStringField
 
 
@@ -24,6 +27,15 @@ class FilePath(FileEventFilterStringField):
     """Class that filters events by path of the file observed."""
 
     _term = u"filePath"
+
+
+class FileSize(FileEventFilterSizeField):
+    """Class that filters events by size of the file observed.
+
+    Size ``value`` must be bytes.
+    """
+
+    _term = u"fileSize"
 
 
 class MD5(FileEventFilterStringField):

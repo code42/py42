@@ -89,6 +89,13 @@ known MD5 hashes of the files:
 ```
 
 ```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.file_filter.FileSize
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.file_filter.MD5
     :members:
     :inherited-members:

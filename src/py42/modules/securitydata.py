@@ -152,7 +152,7 @@ class SecurityModule(object):
         `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
-            query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`: Also
+            query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`): Also
                 accepts a raw JSON str.
 
         Returns:

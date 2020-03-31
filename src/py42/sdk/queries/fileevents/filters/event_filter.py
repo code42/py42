@@ -9,7 +9,21 @@ class EventTimestamp(QueryFilterTimestampField):
 
 
 class EventType(FileEventFilterStringField):
-    """Class that filters file events based on event type."""
+    """Class that filters file events based on event type.
+
+    Available event types are provided as class attributes:
+
+        - :attr:`EventType.CREATED`
+        - :attr:`EventType.DELETED`
+        - :attr:`EventType.EMAILED`
+        - :attr:`EventType.MODIFIED`
+        - :attr:`EventType.READ_BY_APP`
+
+    Example::
+
+        filter = EventType.isin([EventType.READ_BY_APP, EventType.EMAILED])
+
+    """
 
     _term = u"eventType"
 
@@ -17,6 +31,7 @@ class EventType(FileEventFilterStringField):
     MODIFIED = u"MODIFIED"
     DELETED = u"DELETED"
     READ_BY_APP = u"READ_BY_APP"
+    EMAILED = u"EMAILED"
 
 
 class InsertionTimestamp(QueryFilterTimestampField):

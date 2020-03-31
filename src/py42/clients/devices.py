@@ -60,8 +60,8 @@ class DeviceClient(BaseClient):
             active (bool, optional): Filters results by device state. When set to True, gets all
                 active devices. When set to False, gets all deactivated devices. When set to None
                 or excluded, gets all devices regardless of state. Defaults to None.
-            blocked (bool, optional): Filters results by blocked status, True or False.
-                Defaults to None.
+            blocked (bool, optional): Filters results by blocked status, True or False. Defaults
+                to None.
             org_uid (int, optional): An ID of an Organization. Defaults to None.
             user_uid (int, optional): An ID of a User. Defaults to None.
             destination_guid (str of int, optional): The GUID of the server that the desktop
@@ -79,7 +79,7 @@ class DeviceClient(BaseClient):
 
             * For a logged in ordinary end user, it returns all the user's devices.
 
-            * For an organization administrator, it returns all the organization's devices.
+            * For an organization administrator, it returns all the devices in the organization.
 
             * For a cross-organization administrator, it returns all the devices from all the user's organizations.
 
@@ -101,7 +101,7 @@ class DeviceClient(BaseClient):
         )
 
     def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
-        """Gets device information by device_id.
+        """Gets device information by ID.
 
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 

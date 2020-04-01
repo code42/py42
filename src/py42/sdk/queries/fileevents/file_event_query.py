@@ -85,12 +85,16 @@ class FileEventFilterSizeField(object):
 
     @classmethod
     def greater_than(cls, value):
-        """Returns a FilterGroup to find events where filter data is greater than provided value."""
+        """Returns a :class:`FilterGroup` to find events where filter data is greater than the
+        provided value.
+        """
         value = int(value)
         return create_greater_than_filter_group(cls._term, value)
 
     @classmethod
     def less_than(cls, value):
-        """Returns a FilterGroup to find events where filter data is less than than provided value."""
+        """Returns a :class:`FilterGroup` to find events where filter data is less than than the
+        provided value.
+        """
         value = int(value)
         return create_less_than_filter_group(cls._term, value)

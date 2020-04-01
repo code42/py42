@@ -24,8 +24,8 @@ class ExposureType(FileEventFilterStringField):
 
 
 class ProcessName(FileEventFilterStringField):
-    """Class that filters events based on the process name that was involved in the exposure
-    (applies to ``read by browser or other app`` events only).
+    """Class that filters events based on the process name involved in the exposure (applies to
+    ``read by browser or other app`` events only).
     """
 
     _term = u"processName"
@@ -115,8 +115,8 @@ class SyncDestination(FileEventFilterStringField):
 
 
 class TabURL(FileEventFilterStringField):
-    """Class that filters events based on the URL of the active browser tab at the time a browser
-    read event occurred (applies to ``read by browser or other app`` events only).
+    """Class that filters events based on the URL of the active browser tab at the time the file
+    contents were read by the browser (applies to ``read by browser or other app`` events only).
     """
 
     _term = u"tabUrl"

@@ -81,6 +81,8 @@ class FileEventFilterStringField(QueryFilterStringField):
 class FileEventFilterSizeField(object):
     """Helper class for creating filters with the ``GREATER_THAN``/``LESS_THAN`` filter clauses."""
 
+    _term = u"override_boolean_field_name"
+
     @classmethod
     def greater_than(cls, value):
         """Returns a FilterGroup to find events where filter data is greater than provided value."""

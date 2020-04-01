@@ -3,6 +3,11 @@ from py42.sdk.queries.fileevents.filters.exposure_filter import (
     ProcessName,
     ProcessOwner,
     RemovableMediaName,
+    RemovableMediaVendor,
+    RemovableMediaMediaName,
+    RemovableMediaVolumeName,
+    RemovableMediaPartitionID,
+    RemovableMediaSerialNumber,
     SyncDestination,
     TabURL,
     WindowTitle,
@@ -159,6 +164,196 @@ def test_removable_media_name_not_in_str_gives_correct_json_representation():
     items = ["name1", "name2", "name3"]
     _filter = RemovableMediaName.not_in(items)
     expected = NOT_IN.format("removableMediaName", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_vendor_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaVendor.exists()
+    expected = EXISTS.format("removableMediaVendor")
+    assert str(_filter) == expected
+
+
+def test_removable_media_vendor_not_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaVendor.not_exists()
+    expected = NOT_EXISTS.format("removableMediaVendor")
+    assert str(_filter) == expected
+
+
+def test_removable_media_vendor_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaVendor.eq("test_name")
+    expected = IS.format("removableMediaVendor", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_vendor_not_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaVendor.not_eq("test_name")
+    expected = IS_NOT.format("removableMediaVendor", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_vendor_is_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaVendor.is_in(items)
+    expected = IS_IN.format("removableMediaVendor", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_vendor_not_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaVendor.not_in(items)
+    expected = NOT_IN.format("removableMediaVendor", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_medianame_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaMediaName.exists()
+    expected = EXISTS.format("removableMediaMediaName")
+    assert str(_filter) == expected
+
+
+def test_removable_media_medianame_not_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaMediaName.not_exists()
+    expected = NOT_EXISTS.format("removableMediaMediaName")
+    assert str(_filter) == expected
+
+
+def test_removable_media_medianame_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaMediaName.eq("test_name")
+    expected = IS.format("removableMediaMediaName", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_medianame_not_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaMediaName.not_eq("test_name")
+    expected = IS_NOT.format("removableMediaMediaName", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_medianame_is_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaMediaName.is_in(items)
+    expected = IS_IN.format("removableMediaMediaName", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_medianame_not_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaMediaName.not_in(items)
+    expected = NOT_IN.format("removableMediaMediaName", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_volume_name_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaVolumeName.exists()
+    expected = EXISTS.format("removableMediaVolumeName")
+    assert str(_filter) == expected
+
+
+def test_removable_media_volume_name_not_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaVolumeName.not_exists()
+    expected = NOT_EXISTS.format("removableMediaVolumeName")
+    assert str(_filter) == expected
+
+
+def test_removable_media_volume_name_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaVolumeName.eq("test_name")
+    expected = IS.format("removableMediaVolumeName", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_volume_name_not_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaVolumeName.not_eq("test_name")
+    expected = IS_NOT.format("removableMediaVolumeName", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_volume_name_is_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaVolumeName.is_in(items)
+    expected = IS_IN.format("removableMediaVolumeName", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_volume_name_not_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaVolumeName.not_in(items)
+    expected = NOT_IN.format("removableMediaVolumeName", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_partition_id_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaPartitionID.exists()
+    expected = EXISTS.format("removableMediaPartitionId")
+    assert str(_filter) == expected
+
+
+def test_removable_media_partition_id_not_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaPartitionID.not_exists()
+    expected = NOT_EXISTS.format("removableMediaPartitionId")
+    assert str(_filter) == expected
+
+
+def test_removable_media_partition_id_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaPartitionID.eq("test_name")
+    expected = IS.format("removableMediaPartitionId", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_partition_id_not_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaPartitionID.not_eq("test_name")
+    expected = IS_NOT.format("removableMediaPartitionId", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_partition_id_is_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaPartitionID.is_in(items)
+    expected = IS_IN.format("removableMediaPartitionId", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_partition_id_not_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaPartitionID.not_in(items)
+    expected = NOT_IN.format("removableMediaPartitionId", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_serial_number_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaSerialNumber.exists()
+    expected = EXISTS.format("removableMediaSerialNumber")
+    assert str(_filter) == expected
+
+
+def test_removable_media_serial_number_not_exists_str_gives_correct_json_representation():
+    _filter = RemovableMediaSerialNumber.not_exists()
+    expected = NOT_EXISTS.format("removableMediaSerialNumber")
+    assert str(_filter) == expected
+
+
+def test_removable_media_serial_number_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaSerialNumber.eq("test_name")
+    expected = IS.format("removableMediaSerialNumber", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_serial_number_not_eq_str_gives_correct_json_representation():
+    _filter = RemovableMediaSerialNumber.not_eq("test_name")
+    expected = IS_NOT.format("removableMediaSerialNumber", "test_name")
+    assert str(_filter) == expected
+
+
+def test_removable_media_serial_number_is_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaSerialNumber.is_in(items)
+    expected = IS_IN.format("removableMediaSerialNumber", *items)
+    assert str(_filter) == expected
+
+
+def test_removable_media_serial_number_not_in_str_gives_correct_json_representation():
+    items = ["name1", "name2", "name3"]
+    _filter = RemovableMediaSerialNumber.not_in(items)
+    expected = NOT_IN.format("removableMediaSerialNumber", *items)
     assert str(_filter) == expected
 
 

@@ -24,25 +24,74 @@ class ExposureType(FileEventFilterStringField):
 
 
 class ProcessName(FileEventFilterStringField):
-    """Class that filters events based on the process name that was involved in the exposure."""
+    """Class that filters events based on the process name that was involved in the exposure
+    (applies to ``read by browser or other app`` events only).
+    """
 
     _term = u"processName"
 
 
 class ProcessOwner(FileEventFilterStringField):
-    """Class that filters events based on the process owner that was involved in the exposure."""
+    """Class that filters events based on the process owner that was involved in the exposure
+    (applies to ``read by browser or other app`` events only).
+    """
 
     _term = u"processOwner"
 
 
 class RemovableMediaName(FileEventFilterStringField):
-    """Class that filters events based on the name of the removable media involved in the exposure."""
+    """Class that filters events based on the name of the removable media involved in the exposure
+    (applies to ``removable media`` events only).
+    """
 
     _term = u"removableMediaName"
 
 
+class RemovableMediaVendor(FileEventFilterStringField):
+    """Class that filters events based on the vendor of the removable media involved in the
+    exposure (applies to ``removable media`` events only).
+    """
+
+    _term = u"removableMediaVendor"
+
+
+class RemovableMediaMediaName(FileEventFilterStringField):
+    """Class that filters events based on the name of the removable media (as reported by the
+    vendor/device, usually very similar to RemovableMediaName) involved in the exposure (applies to
+    ``removable media`` events only).
+    """
+
+    _term = u"removableMediaMediaName"
+
+
+class RemovableMediaVolumeName(FileEventFilterStringField):
+    """Class that filters events based on the name of the formatted volume (as reported by the
+    operating system) of the removable media involved in the exposure (applies to ``removable media``
+    events only).
+    """
+
+    _term = u"removableMediaVolumeName"
+
+
+class RemovableMediaPartitionID(FileEventFilterStringField):
+    """Class that filters events based on the unique identifier assigned (by the operating system)
+    to the removable media involved in the exposure (applies to ``removable media`` events only).
+    """
+
+    _term = u"removableMediaPartitionId"
+
+
+class RemovableMediaSerialNumber(FileEventFilterStringField):
+    """Class that filters events based on the serial number of the connected hardware as reported
+    by the operating system (applies to ``removable media`` events only).
+    """
+
+    _term = u"removableMediaSerialNumber"
+
+
 class SyncDestination(FileEventFilterStringField):
-    """Class that filters events based on the name of the cloud service the file is synced with.
+    """Class that filters events based on the name of the cloud service the file is synced with
+    (applies to ``synced to cloud service`` events only).
 
     Available options are:
         - :attr:`SyncDestination.ICLOUD`
@@ -67,7 +116,7 @@ class SyncDestination(FileEventFilterStringField):
 
 class TabURL(FileEventFilterStringField):
     """Class that filters events based on the URL of the active browser tab at the time a browser
-    read event occurred.
+    read event occurred (applies to ``read by browser or other app`` events only).
     """
 
     _term = u"tabUrl"
@@ -75,7 +124,8 @@ class TabURL(FileEventFilterStringField):
 
 class WindowTitle(FileEventFilterStringField):
     """Class that filters events based on the name of the browser tab or application window that was
-    open when a browser or other app event occurred.
+    open when a browser or other app event occurred (applies to ``read by browser or other app``
+    events only).
     """
 
     _term = u"windowTitle"

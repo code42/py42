@@ -207,6 +207,41 @@ known MD5 hashes of the files:
 ```
 
 ```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.exposure_filter.RemovableMediaVendor
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.exposure_filter.RemovableMediaMediaName
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.exposure_filter.RemovableMediaVolumeName
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.exposure_filter.RemovableMediaPartitionID
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.exposure_filter.RemovableMediaSerialNumber
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.exposure_filter.SyncDestination
     :members:
     :inherited-members:
@@ -230,6 +265,20 @@ known MD5 hashes of the files:
 ## Email Filters
 
 ```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.email_filter.EmailPolicyName
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.email_filter.EmailSubject
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.email_filter.EmailRecipients
     :members:
     :inherited-members:
@@ -238,6 +287,13 @@ known MD5 hashes of the files:
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.email_filter.EmailSender
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.email_filter.EmailFrom
     :members:
     :inherited-members:
     :show-inheritance:

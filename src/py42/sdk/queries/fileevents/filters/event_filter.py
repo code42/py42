@@ -3,7 +3,7 @@ from py42.sdk.queries.query_filter import QueryFilterTimestampField
 
 
 class EventTimestamp(QueryFilterTimestampField):
-    """Class that filters events based on the timestamp event occurred."""
+    """Class that filters events based on the timestamp of the event that occurred."""
 
     _term = u"eventTimestamp"
 
@@ -35,8 +35,8 @@ class EventType(FileEventFilterStringField):
 
 
 class InsertionTimestamp(QueryFilterTimestampField):
-    """Class that filters events based on the timestamp the event was actually added to the event
-    store (which can be after the event occurred on the device itself).
+    """Class that filters events based on the timestamp of when the event was actually added to the
+    event store (which can be after the event occurred on the device itself).
     """
 
     _term = u"insertionTimestamp"

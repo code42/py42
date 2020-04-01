@@ -36,7 +36,7 @@ class SharedWith(FileEventFilterStringField):
 
 class SharingTypeAdded(FileEventFilterStringField):
     """Class that filters results to include events where a file's sharing permissions were
-    increased to increase exposure (applies to cloud data source events only).
+    changed to a value that increases exposure (applies to cloud data source events only).
 
     Available options are:
         - :class:`SharingTypeAdded.SHARED_VIA_LINK`

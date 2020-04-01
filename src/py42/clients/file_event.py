@@ -12,6 +12,9 @@ class FileEventClient(BaseClient):
         Args:
             query (:class:`FileEventQuery` or str): A composed FileEventQuery object or the raw
                 query as a JSON formatted string.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`: A response containing the query results.
         """
         query = str(query)
         uri = u"/forensic-search/queryservice/api/v1/fileevent"

@@ -9,7 +9,7 @@ of session / authentication management.
 
 ## Features
 
-* Managing users, orgs, and devices.
+* Managing users, organizations, and devices.
 * Searching file events and alerts.
 * Adding/Removing employees from detection lists.
 

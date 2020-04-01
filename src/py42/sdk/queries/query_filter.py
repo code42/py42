@@ -59,7 +59,7 @@ class QueryFilterStringField(object):
 
     @classmethod
     def eq(cls, value):
-        """Returns a FilterGroup to find events where filter equals provided ``value``.
+        """Returns a :class:`FilterGroup` to find events where the filter equals provided ``value``.
 
         Args:
             value (str): The value to match file events on.
@@ -68,7 +68,7 @@ class QueryFilterStringField(object):
 
     @classmethod
     def not_eq(cls, value):
-        """Returns a FilterGroup to find events where filter is not equal to provided ``value``.
+        """Returns a :class:`FilterGroup` to find events where the filter is not equal to provided ``value``.
 
         Args:
             value (str): The value to exclude file events on.
@@ -77,7 +77,7 @@ class QueryFilterStringField(object):
 
     @classmethod
     def is_in(cls, value_list):
-        """Returns a FilterGroup to find events where filter is in provided ``value_list``.
+        """Returns a :class:`FilterGroup` to find events where the filter is in provided ``value_list``.
 
         Args:
             value_list (list): The list of values to match file events on.
@@ -86,7 +86,7 @@ class QueryFilterStringField(object):
 
     @classmethod
     def not_in(cls, value_list):
-        """Returns a FilterGroup to find events where filter is not in provided ``value_list``.
+        """Returns a :class:`FilterGroup` to find events where the filter is not in provided ``value_list``.
 
         Args:
             value_list (list): The list of values to exclude file events on.
@@ -101,7 +101,7 @@ class QueryFilterTimestampField(object):
 
     @classmethod
     def on_or_after(cls, value):
-        """Returns a FilterGroup to find events where filter timestamp is on or after provided
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or after provided
         `value`.
         """
         formatted_timestamp = convert_timestamp_to_str(value)
@@ -109,7 +109,7 @@ class QueryFilterTimestampField(object):
 
     @classmethod
     def on_or_before(cls, value):
-        """Returns a FilterGroup to find events where filter timestamp is on or before provided
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or before provided
         `value`.
         """
         formatted_timestamp = convert_timestamp_to_str(value)
@@ -117,7 +117,7 @@ class QueryFilterTimestampField(object):
 
     @classmethod
     def in_range(cls, start_value, end_value):
-        """Returns a FilterGroup to find events where filter timestamp is in range between provided
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is in range between provided
         `start_value` and `end_value`.
         """
         formatted_start_time = convert_timestamp_to_str(start_value)
@@ -126,7 +126,7 @@ class QueryFilterTimestampField(object):
 
     @classmethod
     def on_same_day(cls, value):
-        """Returns a FilterGroup to find events where filter timestamp is within the same calendar
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is within the same calendar
         day as provided `value`.
         """
         date_from_value = datetime.utcfromtimestamp(value)
@@ -148,12 +148,12 @@ class QueryFilterBooleanField(object):
 
     @classmethod
     def is_true(cls):
-        """Returns a FilterGroup to find events where the filter state is True."""
+        """Returns a :class:`FilterGroup` to find events where the filter state is True."""
         return create_eq_filter_group(cls._term, u"TRUE")
 
     @classmethod
     def is_false(cls):
-        """Returns a FilterGroup to find events where the filter state is False."""
+        """Returns a :class:`FilterGroup` to find events where the filter state is False."""
         return create_eq_filter_group(cls._term, u"FALSE")
 
 

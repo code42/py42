@@ -27,8 +27,8 @@ class Shared(QueryFilterBooleanField):
 
 
 class SharedWith(FileEventFilterStringField):
-    """Class that filters events by the users files were explicitly shared with at the time of the
-    event (applies to cloud data source events only).
+    """Class that filters events by the list of users who had been granted access to the file at the
+    time of the event (applies to cloud data source events only).
     """
 
     _term = u"sharedWith"

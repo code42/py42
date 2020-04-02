@@ -2,7 +2,7 @@ from py42._internal.archive_access import ArchiveAccessorManager
 from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.clients.storage import StorageClientFactory
+from py42._internal.clients.storage import StorageClientFactory
 from py42.modules import archive as archive_module, detectionlists, securitydata as sec_module
 from py42.sdk.usercontext import UserContext
 

@@ -2,10 +2,7 @@ import json
 from threading import Lock
 from requests.exceptions import HTTPError
 
-from py42.sdk.exceptions import (
-    Py42SecurityPlanConnectionError,
-    raise_py42_error,
-)
+from py42.sdk.exceptions import Py42SecurityPlanConnectionError, raise_py42_error
 
 
 class SecurityModule(object):
@@ -18,9 +15,20 @@ class SecurityModule(object):
 
     @property
     def alerts(self):
+        """A collection of methods for retrieving and updating data about security alerts."""
         return self._microservices_client_factory.get_alerts_client()
 
     def get_security_plan_storage_info_list(self, user_uid):
+        """Gets IDs (plan UID, node GUID, and destination GUID) for the storage nodes containing
+        the legacy security event data for the user with the given UID.
+        `REST Documentation <https://console.us.code42.com/swagger/#/Feature/getStorageNode>`__
+
+        Args:
+            user_uid (str): A UID for the user to get plan storage information for.
+
+        Returns:
+            list[:class:`py42.modules.securitydata.PlanStorageInfo`]
+        """
         locations = None
         try:
             response = self._security_client.get_security_event_locations(user_uid)
@@ -36,9 +44,8 @@ class SecurityModule(object):
             selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
             if not selected_plan_infos:
                 raise Py42SecurityPlanConnectionError(
-                    u"Could not establish a connection to retrieve security events for user {0}".format(
-                        user_uid
-                    )
+                    u"Could not establish a connection to retrieve "
+                    u"security events for user {0}".format(user_uid)
                 )
 
             return selected_plan_infos
@@ -52,6 +59,40 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
+        """Gets legacy, endpoint security events.
+        `Support Article <https://support.code42.com/Administrator/6/Configuring/Endpoint_monitoring>`__
+
+        Args:
+            plan_storage_info (:class:`py42.sdk.modules.securitydata.PlanStorageInfo`):
+                Information about storage nodes for a plan to get security events for.
+            cursor (str, optional): A cursor position for only getting events you did not
+                previously get. Defaults to None.
+            include_files (bool, optional): Whether to include the files related to the security
+                events. Defaults to None.
+            event_types: (str, optional): A comma-separated list of event types to filter by.
+
+                    Available options are:
+                        - ``DEVICE_APPEARED``
+                        - ``DEVICE_DISAPPEARED``
+                        - ``DEVICE_FILE_ACTIVITY``
+                        - ``PERSONAL_CLOUD_FILE_ACTIVITY``
+                        - ``RESTORE_JOB``
+                        - ``RESTORE_FILE``
+                        - ``FILE_OPENED``
+                        - ``RULE_MATCH``
+                        - ``DEVICE_SCAN_RESULT``
+                        - ``PERSONAL_CLOUD_SCAN_RESULT``
+
+                    Defaults to None.
+            min_timestamp (float, optional): A POSIX timestamp representing the lower bound of the
+                date range of events to get. Defaults to None.
+            max_timestamp (float, optional): A POSIX timestamp representing the upper bound of the
+                date range of events to get. Defaults to None.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            that each contain a page of events.
+        """
         return self._get_security_detection_events(
             plan_storage_info, cursor, include_files, event_types, min_timestamp, max_timestamp
         )
@@ -65,6 +106,38 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
+        """Gets legacy security events for the user with the given UID.
+
+        Args:
+            user_uid (str): The UID for the user to get security events for.
+            cursor (str, optional): A cursor position for only getting events you did not
+                previously get. Defaults to None.
+            include_files (bool, optional): Whether to include the files related to the security
+                events. Defaults to None.
+            event_types: (str, optional): A comma-separated list of event types to filter by.
+
+                    Available options are:
+                        - ``DEVICE_APPEARED``
+                        - ``DEVICE_DISAPPEARED``
+                        - ``DEVICE_FILE_ACTIVITY``
+                        - ``PERSONAL_CLOUD_FILE_ACTIVITY``
+                        - ``RESTORE_JOB``
+                        - ``RESTORE_FILE``
+                        - ``FILE_OPENED``
+                        - ``RULE_MATCH``
+                        - ``DEVICE_SCAN_RESULT``
+                        - ``PERSONAL_CLOUD_SCAN_RESULT``
+
+                    Defaults to None.
+            min_timestamp (float, optional): A POSIX timestamp representing the lower bound of the
+                date range of events to get. Defaults to None.
+            max_timestamp (float, optional): A POSIX timestamp representing the upper bound of the
+                date range of events to get. Defaults to None.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            that each contain a page of events.
+        """
         security_plan_storage_infos = self.get_security_plan_storage_info_list(user_uid)
         return self._get_security_detection_events(
             security_plan_storage_infos,
@@ -76,13 +149,16 @@ class SecurityModule(object):
         )
 
     def search_file_events(self, query):
-        """Searches for file events
+        """Searches for file events.
+        `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
-            query: raw JSON query or FileEventQuery object. See https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API
+            query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`): Also
+                accepts a raw JSON str.
 
         Returns:
-            list of file events as JSON
+            :class:`py42.sdk.response.Py42Response`: A response containing the first 10,000
+            events.
         """
         file_event_client = self._microservices_client_factory.get_file_event_client()
         return file_event_client.search(query)
@@ -196,12 +272,15 @@ class PlanStorageInfo(object):
 
     @property
     def plan_uid(self):
+        """A UID for a storage plan."""
         return self._plan_uid
 
     @property
     def destination_guid(self):
+        """A GUID for the destination containing the storage archive."""
         return self._destination_uid
 
     @property
     def node_guid(self):
+        """The GUID for the storage node containing the archive."""
         return self._node_guid

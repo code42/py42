@@ -1,24 +1,13 @@
 import json
 from requests import HTTPError
 
-from py42._internal.key_value_store import KeyValueStoreClient
-from py42.clients import (
-    administration,
-    alerts,
-    archive,
-    devices,
-    legalhold,
-    orgs,
-    securitydata,
-    users,
-)
+from py42._internal.clients.key_value_store import KeyValueStoreClient
+from py42.clients import administration, alerts, archive, devices, legalhold, orgs, users
+from py42._internal.clients import securitydata
 
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient
-from py42.sdk.exceptions import (
-    Py42FeatureUnavailableError,
-    Py42SessionInitializationError,
-)
+from py42.sdk.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
 
 
 class AuthorityClientFactory(object):

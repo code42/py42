@@ -1,11 +1,10 @@
-import json
 import pytest
 
 from py42._internal.client_factories import MicroserviceClientFactory
+from py42._internal.clients.storage import StorageClient, StorageClientFactory
+from py42._internal.clients.storage import StorageSecurityClient
 from py42.clients.file_event import FileEventClient
-from py42.clients.securitydata import SecurityClient
-from py42.clients.storage.securitydata import StorageSecurityClient
-from py42.clients.storage import StorageClient, StorageClientFactory
+from py42._internal.clients.securitydata import SecurityClient
 from py42.modules.securitydata import PlanStorageInfo, SecurityModule
 from py42.sdk.response import Py42Response
 
@@ -396,7 +395,7 @@ class TestSecurityModule(object):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 2
 
-    def test_get_user_security_events_when_mutliple_plans_returned_calls_security_client_expected_number_of_times(
+    def test_get_user_security_events_when_multiple_plans_returned_calls_security_client_expected_number_of_times(
         self,
         mocker,
         security_client_two_plans_one_node,
@@ -417,7 +416,7 @@ class TestSecurityModule(object):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 2
 
-    def test_get_user_security_events_when_mutliple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
+    def test_get_user_security_events_when_multiple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
         self,
         mocker,
         security_client_two_plans_one_node,
@@ -492,7 +491,7 @@ class TestSecurityModule(object):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 2
 
-    def test_get_plan_security_events_when_mutliple_plans_returned_calls_security_client_expected_number_of_times(
+    def test_get_plan_security_events_when_multiple_plans_returned_calls_security_client_expected_number_of_times(
         self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
@@ -513,7 +512,7 @@ class TestSecurityModule(object):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 2
 
-    def test_get_plan_security_events_when_mutliple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
+    def test_get_plan_security_events_when_multiple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
         self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)

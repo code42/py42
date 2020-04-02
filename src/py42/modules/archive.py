@@ -7,7 +7,6 @@ class ArchiveModule(object):
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
             device_guid, destination_guid=destination_guid
         )
-
         return archive_accessor.stream_from_backup(file_path)
 
     def get_backup_sets(self, device_guid, destination_guid):

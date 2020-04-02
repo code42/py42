@@ -5,8 +5,6 @@ import json
 import pytest
 
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
-from py42.sdk.response import Py42Response
-
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
@@ -343,7 +341,7 @@ class TestDepartingEmployeeClient(object):
         client.get_by_id.return_value = mock_py42_response
         mock_session.post.return_value = mock_get_case_details_function
         client.update(
-            "697", None, "Display Name", "These are notes", 24642747257, ["test@test.com"],
+            "697", None, "Display Name", "These are notes", 24642747257, ["test@test.com"]
         )
 
         # Have to convert the request data to a dict because

@@ -15,7 +15,7 @@
 # Filter Classes
 
 The following classes construct filters for Forensic Search queries. Each filter class corresponds to a Forensic Search
-event detail. Call the appropriate classmethod on your desired filter class with the `value` you want to match, and it
+event detail. Call the appropriate classmethod on your desired filter class with the `value` you want to match and it
 will return a `FilterGroup` object that can be passed to `FileEventQuery`'s `all()` or `any()` methods to create complex
 queries that match multiple filter rules.
 

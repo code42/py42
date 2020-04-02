@@ -37,6 +37,8 @@ class EventType(FileEventFilterStringField):
 class InsertionTimestamp(QueryFilterTimestampField):
     """Class that filters events based on the timestamp of when the event was actually added to the
     event store (which can be after the event occurred on the device itself).
+
+    `value` must be a POSIX timestamp. ( See [Basicsdates](basics.md) )
     """
 
     _term = u"insertionTimestamp"

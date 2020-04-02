@@ -1,6 +1,6 @@
 from py42.sdk.queries.fileevents.file_event_query import (
     FileEventFilterStringField,
-    FileEventFilterSizeField,
+    FileEventFilterComparableField,
 )
 from py42.sdk.queries.query_filter import QueryFilterStringField
 
@@ -29,7 +29,7 @@ class FilePath(FileEventFilterStringField):
     _term = u"filePath"
 
 
-class FileSize(FileEventFilterSizeField):
+class FileSize(FileEventFilterComparableField):
     """Class that filters events by size of the file observed.
 
     Size ``value`` must be bytes.

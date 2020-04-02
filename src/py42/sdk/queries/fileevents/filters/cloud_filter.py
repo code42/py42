@@ -39,7 +39,7 @@ class SharingTypeAdded(FileEventFilterStringField):
     changed to a value that increases exposure (applies to cloud data source events only).
 
     Available options are:
-        - :atr:`SharingTypeAdded.SHARED_VIA_LINK`
+        - :attr:`SharingTypeAdded.SHARED_VIA_LINK`
         - :attr:`SharingTypeAdded.IS_PUBLIC`
         - :attr:`SharingTypeAdded.OUTSIDE_TRUSTED_DOMAIN`
     """

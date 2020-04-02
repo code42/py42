@@ -17,7 +17,7 @@ class FileEventQuery(BaseQuery):
 
     For convenience, the :class:`FileEventQuery` constructor does the same as ``all()``.
 
-    Usage example:::
+    Usage example::
 
         email_filter = EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
         exposure_filter = ExposureType.exists()
@@ -69,16 +69,16 @@ class FileEventFilterStringField(QueryFilterStringField):
 
     @classmethod
     def exists(cls):
-        """Returns a FilterGroup to find events where filter data exists."""
+        """Returns a :class:`FilterGroup` to find events where filter data exists."""
         return create_exists_filter_group(cls._term)
 
     @classmethod
     def not_exists(cls):
-        """Returns a FilterGroup to find events where filter data does not exist."""
+        """Returns a :class:`FilterGroup` to find events where filter data does not exist."""
         return create_not_exists_filter_group(cls._term)
 
 
-class FileEventFilterSizeField(object):
+class FileEventFilterComparableField(object):
     """Helper class for creating filters with the ``GREATER_THAN``/``LESS_THAN`` filter clauses."""
 
     _term = u"override_boolean_field_name"

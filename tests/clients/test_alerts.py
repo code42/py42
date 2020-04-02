@@ -1,5 +1,6 @@
-import pytest
 import json
+
+import pytest
 
 from py42.clients.alerts import AlertClient
 from py42.sdk.queries.alerts.alert_query import AlertQuery

@@ -7,7 +7,6 @@ from requests import HTTPError, Response, Session
 
 from py42._internal.auth_handling import AuthHandler
 from py42.sdk.queries.query_filter import QueryFilter
-from py42._internal.session import Py42Session
 from py42.sdk.response import Py42Response
 from py42.sdk.usercontext import UserContext
 
@@ -135,6 +134,8 @@ def unicode_query_filter():
 
 @pytest.fixture
 def mock_session(mocker):
+    from py42._internal.session import Py42Session
+
     session = mocker.MagicMock(spec=Py42Session)
     session.headers = {}
 

@@ -1,10 +1,10 @@
-import pytest
 import json
 
-from py42.clients.storage.archive import StorageArchiveClient
-from py42.sdk.response import Py42Response
-from py42._internal.session import Py42Session
+import pytest
 
+from py42._internal.clients.storage import StorageArchiveClient
+from py42._internal.session import Py42Session
+from py42.sdk.response import Py42Response
 
 DATA_KEYWORD = "data"
 JSON_KEYWORD = "json"

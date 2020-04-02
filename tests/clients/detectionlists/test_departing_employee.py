@@ -5,8 +5,6 @@ import json
 import pytest
 
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
-from py42.sdk.response import Py42Response
-
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"

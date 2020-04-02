@@ -1,15 +1,13 @@
 import pytest
 
+from py42._internal.initialization import SDKDependencies
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42.clients import administration, devices, legalhold, orgs
 from py42.clients import users
 from py42.modules import archive as arch_mod, detectionlists, securitydata as sec_mod
-from py42._internal.initialization import SDKDependencies
-from py42.clients.storage import StorageClientFactory
-from py42.sdk.usercontext import UserContext
-
 from py42.sdk import SDKClient
+from py42.sdk.usercontext import UserContext
 
 HOST_ADDRESS = "https://example.com"
 TEST_USERNAME = "test-username"
@@ -68,11 +66,6 @@ class TestSDK(object):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
         sdk = SDKClient(deps)
         assert type(sdk.users) == users.UserClient
-
-    def test_has_storage_client_factory_set(self, mock_session_factory, success_requests_session):
-        deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)
-        sdk = SDKClient(deps)
-        assert type(sdk.storageaccess) == StorageClientFactory
 
     def test_has_user_context_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(HOST_ADDRESS, mock_session_factory, success_requests_session)

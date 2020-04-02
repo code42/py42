@@ -1,6 +1,5 @@
 from datetime import datetime
 
-import py42._internal.session
 import py42.sdk.util as util
 
 

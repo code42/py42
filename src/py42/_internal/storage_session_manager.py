@@ -1,8 +1,9 @@
 from threading import Lock
+
 from requests import HTTPError
 
-from py42.sdk.exceptions import Py42StorageSessionInitializationError
 from py42._internal.compat import str
+from py42.sdk.exceptions import Py42StorageSessionInitializationError
 
 
 class StorageSessionManager(object):

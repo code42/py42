@@ -17,25 +17,18 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Removed `ArchiveClient`. Use `ArchiveModule`.
 - Removed function `ArchiveModule.get_data_key_token()`.
 - Removed function `ArchiveModule.get_web_restore_info()`.
+- Parameter `classification` removed from `OrgClient.create_org()`.
+- Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`.
+- Removed `SecurityClient`. Use `SecurityModule`.
 
-### Added
+## Changed
 
-- py42 specific exceptions at new module `py42.sdk.exceptions`:
-    - `Py42Error`
-    - `Py42ArchiveFileNotFoundError`
-    - `Py42SessionInitializationError`
-    - `Py42FeatureUnavailableError`
-    - `Py42SecurityPlanConnectionError`
-    - `Py42HTTPError`
-    - `Py42BadRequestError`
-    - `Py42UnauthorizedError`
-    - `Py42ForbiddenError`
-    - `Py42NotFoundError`
-    - `Py42InternalServerError`
-- Parameters `archive_password` and `encryption_key` added to `ArchiveModule.stream_from_backup()`.
-
-### Changed
-
+- Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
+    instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
+    - `get_all_matters()`
+    - `get_all_matter_custodians()`
+- Parameter `storageaccess` was removed from `SDKClient`. To restore files, just use
+    `SDKClient.archive.stream_from_backup()`.
 - Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
     instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
     - `get_all_matters()`
@@ -58,6 +51,22 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `get_all_restore_history_by_user_id()` (formerly `get_restore_history_by_user_id()`)
     - `get_all_restore_history_by_org_id()` (formerly `get_restore_history_by_org_id()`)
     now all return generator objects that handle paging through restore history.
+
+### Added
+
+- py42 specific exceptions at new module `py42.sdk.exceptions`:
+    - `Py42Error`
+    - `Py42ArchiveFileNotFoundError`
+    - `Py42SessionInitializationError`
+    - `Py42FeatureUnavailableError`
+    - `Py42SecurityPlanConnectionError`
+    - `Py42HTTPError`
+    - `Py42BadRequestError`
+    - `Py42UnauthorizedError`
+    - `Py42ForbiddenError`
+    - `Py42NotFoundError`
+    - `Py42InternalServerError`
+- Parameters `archive_password` and `encryption_key` added to `ArchiveModule.stream_from_backup()`.
 
 ## 0.6.1 - 2020-03-17
 

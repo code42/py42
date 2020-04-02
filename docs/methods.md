@@ -27,6 +27,7 @@ Explore the complete public documentation for `py42` below.
 * [File Event Queries](methoddocs/filleeventqueries.md)
 * [Archive](methoddocs/archive.md)
 * [Response](methoddocs/response.md)
+* [Util](methoddocs/util.md)
 
 ```eval_rst
 .. automodule:: py42.sdk

@@ -32,19 +32,18 @@ class AlertClient(BaseClient):
         uri = self._uri_prefix.format(u"query-alerts")
         return self._session.post(uri, data=query)
 
-    def get_query_details(self, alert_ids, tenant_id=None):
-        """Gets the details for a file event query that, when passed into a search, would result
-        in events that could have triggered the alerts with the given IDs.
+    def get_alert_details(self, alert_ids, tenant_id=None):
+        """Gets the details for the alerts with the given IDs, including the file event query that,
+        when passed into a search, would result in events that could have triggered the alerts.
 
         Args:
-            alert_ids (iter[str]): The IDs of the alerts for which you want to get file event
-                query details.
+            alert_ids (iter[str]): The IDs of the alerts for which you want to get details for.
             tenant_id (str, optional): The tenant ID for the tenant that the alerts belong to.
                 When given None, it uses the currently logged in user's tenant ID. Defaults to
                 None.
 
         Returns:
-            :class:`py42.sdk.response`:  A response containing file event query details.
+            :class:`py42.sdk.response`: A response containing the alert details.
         """
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]

@@ -4,7 +4,7 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringFi
 class ExposureType(FileEventFilterStringField):
     """Class that filters events based on exposure type.
 
-    Available options are:
+    Available options are provided as class attributes:
         - :attr:`ExposureType.SHARED_VIA_LINK`
         - :attr:`ExposureType.SHARED_TO_DOMAIN`
         - :attr:`ExposureType.APPLICATION_READ`
@@ -93,7 +93,7 @@ class SyncDestination(FileEventFilterStringField):
     """Class that filters events based on the name of the cloud service the file is synced with
     (applies to ``synced to cloud service`` events only).
 
-    Available options are:
+    Available options are provided as class attributes:
         - :attr:`SyncDestination.ICLOUD`
         - :attr:`SyncDestination.BOX`
         - :attr:`SyncDestination.BOX_DRIVE`

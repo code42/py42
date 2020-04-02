@@ -21,8 +21,8 @@ class ArchiveModule(object):
         Args:
             file_path (str): The path to the file in your archive.
             device_guid (str): The GUID for the device the file belongs to.
-            destination_guid (str, optional): The GUID for the server that stores the backup of
-                the file. If None, it will use the first destination GUID it finds for your
+            destination_guid (str, optional): The GUID for the destination that stores the backup
+                of the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your
                 destinations or if you want to optimize performance. Defaults to None.
             archive_password (str, None): The password for archives that are protected with an
@@ -57,8 +57,8 @@ class ArchiveModule(object):
 
         Args:
             device_guid (str): The GUID for the device to get backup sets for.
-            destination_guid (str): The destination GUID for the server containing the archive
-                to get backup sets for.
+            destination_guid (str): The GUID for the destination containing the archive to get
+                backup sets for.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the backup sets.

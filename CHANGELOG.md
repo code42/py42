@@ -59,7 +59,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `get_all_restore_history_by_org_id()` (formerly `get_restore_history_by_org_id()`)
     now all return generator objects that handle paging through restore history.
 
-
 ## 0.6.1 - 2020-03-17
 
 ### Changed

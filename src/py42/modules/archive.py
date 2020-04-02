@@ -33,6 +33,14 @@ class ArchiveModule(object):
                 this level of archive security. Defaults to None.
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the streamed content.
+
+        Usage example::
+
+            stream_response = sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
+            with open("/path/to/my/file", 'wb') as f:
+                for chunk in stream_response.iter_content(chunk_size=128):
+                    if chunk:
+                        f.write(chunk)
         """
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
             device_guid,

@@ -32,7 +32,7 @@ class AlertClient(BaseClient):
         uri = self._uri_prefix.format(u"query-alerts")
         return self._session.post(uri, data=query)
 
-    def get_alert_details(self, alert_ids, tenant_id=None):
+    def get_details(self, alert_ids, tenant_id=None):
         """Gets the details for the alerts with the given IDs, including the file event query that,
         when passed into a search, would result in events that could have triggered the alerts.
 

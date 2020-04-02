@@ -51,7 +51,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `get_all_restore_history_by_user_id()` (formerly `get_restore_history_by_user_id()`)
     - `get_all_restore_history_by_org_id()` (formerly `get_restore_history_by_org_id()`)
     now all return generator objects that handle paging through restore history.
-- Renamed `AlertClient.get_query_details()` to `AlertClient.get_alert_details()`.
+- Renamed `AlertClient.get_query_details()` to `AlertClient.get_details()`.
 
 ### Added
 

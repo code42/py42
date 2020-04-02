@@ -53,46 +53,82 @@ def create_filter_group(query_filter_list, filter_clause):
 
 
 class QueryFilterStringField(object):
+    """Helper class for creating filters where the search value is a string."""
+
     _term = u"override_string_field_name"
 
     @classmethod
     def eq(cls, value):
+        """Returns a :class:`FilterGroup` to find events where the filter equals provided ``value``.
+
+        Args:
+            value (str): The value to match file events on.
+        """
         return create_eq_filter_group(cls._term, value)
 
     @classmethod
     def not_eq(cls, value):
+        """Returns a :class:`FilterGroup` to find events where the filter is not equal to provided ``value``.
+
+        Args:
+            value (str): The value to exclude file events on.
+        """
         return create_not_eq_filter_group(cls._term, value)
 
     @classmethod
     def is_in(cls, value_list):
+        """Returns a :class:`FilterGroup` to find events where the filter is in provided ``value_list``.
+
+        Args:
+            value_list (list): The list of values to match file events on.
+        """
         return create_is_in_filter_group(cls._term, value_list)
 
     @classmethod
     def not_in(cls, value_list):
+        """Returns a :class:`FilterGroup` to find events where the filter is not in provided ``value_list``.
+
+        Args:
+            value_list (list): The list of values to exclude file events on.
+        """
         return create_not_in_filter_group(cls._term, value_list)
 
 
 class QueryFilterTimestampField(object):
+    """Helper class for creating filters where the search value is a timestamp."""
+
     _term = u"override_timestamp_field_name"
 
     @classmethod
     def on_or_after(cls, value):
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or after provided
+        `value`.
+        """
         formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_after_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
     def on_or_before(cls, value):
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or before provided
+        `value`.
+        """
         formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_before_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
     def in_range(cls, start_value, end_value):
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is in range between provided
+        `start_value` and `end_value`.
+        """
         formatted_start_time = convert_timestamp_to_str(start_value)
         formatted_end_time = convert_timestamp_to_str(end_value)
         return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
 
     @classmethod
     def on_same_day(cls, value):
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is within the same calendar
+        day as provided `value`.
+        """
         date_from_value = datetime.utcfromtimestamp(value)
         start_time = datetime(
             date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0
@@ -106,18 +142,29 @@ class QueryFilterTimestampField(object):
 
 
 class QueryFilterBooleanField(object):
+    """Helper class for creating filters where the search value is a boolean."""
+
     _term = u"override_boolean_field_name"
 
     @classmethod
     def is_true(cls):
+        """Returns a :class:`FilterGroup` to find events where the filter state is True."""
         return create_eq_filter_group(cls._term, u"TRUE")
 
     @classmethod
     def is_false(cls):
+        """Returns a :class:`FilterGroup` to find events where the filter state is False."""
         return create_eq_filter_group(cls._term, u"FALSE")
 
 
 class QueryFilter(object):
+    """Class for constructing a single filter object for use in a Forensic Search query.
+
+    When :func:`str()` is called on a :class:`QueryFilter` instance, the (``term``, ``operator``,
+    ``value``) attribute combination is transformed into a JSON string to be used as part of a
+    Forensic Search or Alert query.
+    """
+
     _term = None
 
     def __init__(self, term, operator, value=None):
@@ -133,6 +180,14 @@ class QueryFilter(object):
 
 
 class FilterGroup(object):
+    """Class for constructing a logical sub-group of related filters from a list of QueryFilter
+    objects. Takes a list of QueryFilter objects and combines them logically using the passed in
+    filter clause (``AND`` or ``OR``).
+
+    When :func:`str()` is called on a :class:`FilterGroup` instance, the combined filter items are
+    transformed into a JSON string to be used as part of a Forensic Search or Alert query.
+    """
+
     def __init__(self, filter_list, filter_clause=u"AND"):
         self._filter_list = filter_list
         self._filter_clause = filter_clause

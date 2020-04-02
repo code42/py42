@@ -1,17 +1,11 @@
-from py42.sdk.queries.fileevents.filters.email_filter import EmailRecipients, EmailSender
+from py42.sdk.queries.fileevents.filters.email_filter import (
+    EmailRecipients,
+    EmailSender,
+    EmailPolicyName,
+    EmailSubject,
+    EmailFrom,
+)
 from tests.sdk.queries.conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
-
-
-def test_email_recipients_exists_str_gives_correct_json_representation():
-    _filter = EmailRecipients.exists()
-    expected = EXISTS.format("emailRecipients")
-    assert str(_filter) == expected
-
-
-def test_email_recipients_not_exists_str_gives_correct_json_representation():
-    _filter = EmailRecipients.not_exists()
-    expected = NOT_EXISTS.format("emailRecipients")
-    assert str(_filter) == expected
 
 
 def test_email_recipients_eq_str_gives_correct_json_representation():
@@ -63,4 +57,82 @@ def test_email_sender_not_in_str_gives_correct_json_representation():
     items = ["email_sender1", "email_sender2", "email_sender3"]
     _filter = EmailSender.not_in(items)
     expected = NOT_IN.format("emailSender", *items)
+    assert str(_filter) == expected
+
+
+def test_email_subject_eq_str_gives_correct_json_representation():
+    _filter = EmailSubject.eq("test_subject")
+    expected = IS.format("emailSubject", "test_subject")
+    assert str(_filter) == expected
+
+
+def test_email_subject_not_eq_str_gives_correct_json_representation():
+    _filter = EmailSubject.not_eq("test_subject")
+    expected = IS_NOT.format("emailSubject", "test_subject")
+    assert str(_filter) == expected
+
+
+def test_email_subject_is_in_str_gives_correct_json_representation():
+    items = ["test_subject1", "test_subject2", "test_subject3"]
+    _filter = EmailSubject.is_in(items)
+    expected = IS_IN.format("emailSubject", *items)
+    assert str(_filter) == expected
+
+
+def test_email_subject_not_in_str_gives_correct_json_representation():
+    items = ["test_subject1", "test_subject2", "test_subject3"]
+    _filter = EmailSubject.not_in(items)
+    expected = NOT_IN.format("emailSubject", *items)
+    assert str(_filter) == expected
+
+
+def test_email_policy_name_eq_str_gives_correct_json_representation():
+    _filter = EmailPolicyName.eq("test_policy")
+    expected = IS.format("emailDlpPolicyNames", "test_policy")
+    assert str(_filter) == expected
+
+
+def test_email_policy_name_not_eq_str_gives_correct_json_representation():
+    _filter = EmailPolicyName.not_eq("test_policy")
+    expected = IS_NOT.format("emailDlpPolicyNames", "test_policy")
+    assert str(_filter) == expected
+
+
+def test_email_policy_name_is_in_str_gives_correct_json_representation():
+    items = ["test_policy1", "test_policy2", "test_policy3"]
+    _filter = EmailPolicyName.is_in(items)
+    expected = IS_IN.format("emailDlpPolicyNames", *items)
+    assert str(_filter) == expected
+
+
+def test_email_policy_name_not_in_str_gives_correct_json_representation():
+    items = ["test_policy1", "test_policy2", "test_policy3"]
+    _filter = EmailPolicyName.not_in(items)
+    expected = NOT_IN.format("emailDlpPolicyNames", *items)
+    assert str(_filter) == expected
+
+
+def test_email_from_eq_str_gives_correct_json_representation():
+    _filter = EmailFrom.eq("email_from")
+    expected = IS.format("emailFrom", "email_from")
+    assert str(_filter) == expected
+
+
+def test_email_from_not_eq_str_gives_correct_json_representation():
+    _filter = EmailFrom.not_eq("email_from")
+    expected = IS_NOT.format("emailFrom", "email_from")
+    assert str(_filter) == expected
+
+
+def test_email_from_is_in_str_gives_correct_json_representation():
+    items = ["email_from1", "email_from2", "email_from3"]
+    _filter = EmailFrom.is_in(items)
+    expected = IS_IN.format("emailFrom", *items)
+    assert str(_filter) == expected
+
+
+def test_email_from_not_in_str_gives_correct_json_representation():
+    items = ["email_from1", "email_from2", "email_from3"]
+    _filter = EmailFrom.not_in(items)
+    expected = NOT_IN.format("emailFrom", *items)
     assert str(_filter) == expected

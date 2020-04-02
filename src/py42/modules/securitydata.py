@@ -60,7 +60,7 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy, endpoint security events.
+        """Gets legacy endpoint monitoring events. This does not retrieve cloud events.
         `Support Article <https://support.code42.com/Administrator/6/Configuring/Endpoint_monitoring>`__
 
         Args:

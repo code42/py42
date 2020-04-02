@@ -27,7 +27,7 @@ class ArchiveModule(object):
                 destinations or if you want to optimize performance. Defaults to None.
             archive_password (str, None): The password for archives that are protected with an
                 additional password. This is only relevant to users with this level of archive
-                    security. Defaults to None.
+                security. Defaults to None.
             encryption_key (str, None): A custom encryption key for decryption an archive's file
                 contents, necessary for restoring files. This is only relevant to users with
                 this level of archive security. Defaults to None.

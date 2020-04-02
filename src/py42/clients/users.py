@@ -5,10 +5,8 @@ from py42.clients.util import get_all_pages
 
 
 class UserClient(BaseClient):
-    """A client for interacting with Code42 user APIs.
-
-    The UserClient has the ability to create and retrieve users.
-    Also, it manages blocking and deactivation.
+    """A client for interacting with Code42 user APIs. Use the UserClient to create and retrieve
+    users. You can also use it to block and deactivate users.
     """
 
     def create_user(
@@ -207,8 +205,7 @@ class UserClient(BaseClient):
 
         Args:
             user_id (int): An ID for a user.
-            unblock_user (bool, optional): Whether or not to unblock the user if they are blocked.
-                Defaults to None.
+            unblock_user (bool, optional): Whether or not to unblock the user. Defaults to None.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

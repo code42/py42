@@ -7,8 +7,8 @@ from py42.clients.util import get_all_pages
 class OrgClient(BaseClient):
     """A client for interacting with Code42 organization APIs.
 
-    The OrgClient has the ability to create and retrieve organizations.
-    Also, it manages blocking and deactivation.
+    Use the OrgClient to create and retrieve organizations. You can also use it to block and
+    deactivate organizations.
     """
 
     def create_org(self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None):

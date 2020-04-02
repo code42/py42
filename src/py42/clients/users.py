@@ -6,7 +6,7 @@ from py42.clients.util import get_all_pages
 
 class UserClient(BaseClient):
     """A client for interacting with Code42 user APIs. Use the UserClient to create and retrieve
-    users. You an also use it to block and deactivate users.
+    users. You can also use it to block and deactivate users.
     """
 
     def create_user(

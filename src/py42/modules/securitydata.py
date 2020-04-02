@@ -59,7 +59,8 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy security events.
+        """Gets legacy, endpoint security events.
+        `Support Article <https://support.code42.com/Administrator/6/Configuring/Endpoint_monitoring>`__
 
         Args:
             plan_storage_info (:class:`py42.sdk.modules.securitydata.PlanStorageInfo`):
@@ -71,22 +72,22 @@ class SecurityModule(object):
             event_types: (str, optional): A comma-separated list of event types to filter by.
 
                     Available options are:
-                        - 'DEVICE_APPEARED'
-                        - 'DEVICE_DISAPPEARED'
-                        - 'DEVICE_FILE_ACTIVITY'
-                        - 'PERSONAL_CLOUD_FILE_ACTIVITY'
-                        - 'RESTORE_JOB'
-                        - 'RESTORE_FILE'
-                        - 'FILE_OPENED'
-                        - 'RULE_MATCH'
-                        - 'DEVICE_SCAN_RESULT'
-                        - 'PERSONAL_CLOUD_SCAN_RESULT'
+                        - ``DEVICE_APPEARED``
+                        - ``DEVICE_DISAPPEARED``
+                        - ``DEVICE_FILE_ACTIVITY``
+                        - ``PERSONAL_CLOUD_FILE_ACTIVITY``
+                        - ``RESTORE_JOB``
+                        - ``RESTORE_FILE``
+                        - ``FILE_OPENED``
+                        - ``RULE_MATCH``
+                        - ``DEVICE_SCAN_RESULT``
+                        - ``PERSONAL_CLOUD_SCAN_RESULT``
 
                     Defaults to None.
-            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not
-                occur on or after this date. Defaults to None.
-            max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
-                occur on or before this date. Defaults to None.
+            min_timestamp (float, optional): A POSIX timestamp representing the lower bound of the
+                date range of events to get. Defaults to None.
+            max_timestamp (float, optional): A POSIX timestamp representing the upper bound of the
+                date range of events to get. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
@@ -116,22 +117,22 @@ class SecurityModule(object):
             event_types: (str, optional): A comma-separated list of event types to filter by.
 
                     Available options are:
-                        - 'DEVICE_APPEARED'
-                        - 'DEVICE_DISAPPEARED'
-                        - 'DEVICE_FILE_ACTIVITY'
-                        - 'PERSONAL_CLOUD_FILE_ACTIVITY'
-                        - 'RESTORE_JOB'
-                        - 'RESTORE_FILE'
-                        - 'FILE_OPENED'
-                        - 'RULE_MATCH'
-                        - 'DEVICE_SCAN_RESULT'
-                        - 'PERSONAL_CLOUD_SCAN_RESULT'
+                        - ``DEVICE_APPEARED``
+                        - ``DEVICE_DISAPPEARED``
+                        - ``DEVICE_FILE_ACTIVITY``
+                        - ``PERSONAL_CLOUD_FILE_ACTIVITY``
+                        - ``RESTORE_JOB``
+                        - ``RESTORE_FILE``
+                        - ``FILE_OPENED``
+                        - ``RULE_MATCH``
+                        - ``DEVICE_SCAN_RESULT``
+                        - ``PERSONAL_CLOUD_SCAN_RESULT``
 
                     Defaults to None.
-            min_timestamp (float, optional): A POSIX timestamp to filter out events that did not
-                occur on or after this date. Defaults to None.
-            max_timestamp (float, optional): A POSIX timestamp to filter out events that did not
-                occur on or before this date. Defaults to None.
+            min_timestamp (float, optional): A POSIX timestamp representing the lower bound of the
+                date range of events to get. Defaults to None.
+            max_timestamp (float, optional): A POSIX timestamp representing the upper bound of the
+                date range of events to get. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
@@ -276,7 +277,7 @@ class PlanStorageInfo(object):
 
     @property
     def destination_guid(self):
-        """A GUID for the server containing the storage archive."""
+        """A GUID for the destination containing the storage archive."""
         return self._destination_uid
 
     @property

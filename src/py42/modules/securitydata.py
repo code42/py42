@@ -51,7 +51,7 @@ class SecurityModule(object):
 
             return selected_plan_infos
 
-    def get_plan_security_events(
+    def get_all_plan_security_events(
         self,
         plan_storage_info,
         cursor=None,
@@ -98,7 +98,7 @@ class SecurityModule(object):
             plan_storage_info, cursor, include_files, event_types, min_timestamp, max_timestamp
         )
 
-    def get_user_security_events(
+    def get_all_user_security_events(
         self,
         user_uid,
         cursor=None,

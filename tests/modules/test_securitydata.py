@@ -344,7 +344,7 @@ class TestSecurityModule(object):
             storage_infos, "222222222222222222", "4", "41"
         ) or self._storage_info_contains(storage_infos, "222222222222222222", "5", "52")
 
-    def test_get_user_security_events_calls_security_client_with_expected_params(
+    def test_get_all_user_security_events_calls_security_client_with_expected_params(
         self,
         mocker,
         security_client_one_location,
@@ -361,7 +361,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client_one_location, storage_client_factory, microservice_client_factory
         )
-        for page, cursor in security_module.get_user_security_events("foo"):
+        for _, _ in security_module.get_all_user_security_events("foo"):
             pass
         mock_storage_security_client.get_plan_security_events.assert_called_once_with(
             "111111111111111111",
@@ -372,7 +372,7 @@ class TestSecurityModule(object):
             min_timestamp=None,
         )
 
-    def test_get_user_security_events_when_cursors_returned_calls_security_client_expected_number_of_times(
+    def test_get_all_user_security_events_when_cursors_returned_calls_security_client_expected_number_of_times(
         self,
         mocker,
         security_client_one_location,
@@ -391,11 +391,11 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client_one_location, storage_client_factory, microservice_client_factory
         )
-        for page, cursor in security_module.get_user_security_events("foo"):
+        for _, _ in security_module.get_all_user_security_events("foo"):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 2
 
-    def test_get_user_security_events_when_multiple_plans_returned_calls_security_client_expected_number_of_times(
+    def test_get_all_user_security_events_when_multiple_plans_returned_calls_security_client_expected_number_of_times(
         self,
         mocker,
         security_client_two_plans_one_node,
@@ -412,11 +412,11 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client_two_plans_one_node, storage_client_factory, microservice_client_factory
         )
-        for page, cursor in security_module.get_user_security_events("foo"):
+        for _, _ in security_module.get_all_user_security_events("foo"):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 2
 
-    def test_get_user_security_events_when_multiple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
+    def test_get_all_user_security_events_when_multiple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
         self,
         mocker,
         security_client_two_plans_one_node,
@@ -440,11 +440,11 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client_two_plans_one_node, storage_client_factory, microservice_client_factory
         )
-        for _, _ in security_module.get_user_security_events("foo"):
+        for _, _ in security_module.get_all_user_security_events("foo"):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 4
 
-    def test_get_plan_security_events_calls_security_client_with_expected_params(
+    def test_get_all_plan_security_events_calls_security_client_with_expected_params(
         self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
@@ -457,7 +457,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        for _, _ in security_module.get_plan_security_events(
+        for _, _ in security_module.get_all_plan_security_events(
             PlanStorageInfo("111111111111111111", "41", "4")
         ):
             pass
@@ -470,7 +470,7 @@ class TestSecurityModule(object):
             min_timestamp=None,
         )
 
-    def test_get_plan_security_events_when_cursors_returned_calls_security_client_expected_number_of_times(
+    def test_get_all_plan_security_events_when_cursors_returned_calls_security_client_expected_number_of_times(
         self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
@@ -485,13 +485,13 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        for page, cursor in security_module.get_plan_security_events(
+        for _, _ in security_module.get_all_plan_security_events(
             PlanStorageInfo("111111111111111111", "41", "4")
         ):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 2
 
-    def test_get_plan_security_events_when_multiple_plans_returned_calls_security_client_expected_number_of_times(
+    def test_get_all_plan_security_events_when_multiple_plans_returned_calls_security_client_expected_number_of_times(
         self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
@@ -508,11 +508,11 @@ class TestSecurityModule(object):
             PlanStorageInfo("111111111111111111", "41", "4"),
             PlanStorageInfo("222222222222222222", "41", "4"),
         ]
-        for page, cursor in security_module.get_plan_security_events(plans):
+        for _, _ in security_module.get_all_plan_security_events(plans):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 2
 
-    def test_get_plan_security_events_when_multiple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
+    def test_get_all_plan_security_events_when_multiple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
         self, mocker, security_client, storage_client_factory, microservice_client_factory
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
@@ -536,7 +536,7 @@ class TestSecurityModule(object):
             PlanStorageInfo("111111111111111111", "41", "4"),
             PlanStorageInfo("222222222222222222", "41", "4"),
         ]
-        for page, cursor in security_module.get_plan_security_events(plans):
+        for _, _ in security_module.get_all_plan_security_events(plans):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 4
 

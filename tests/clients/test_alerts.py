@@ -77,9 +77,7 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    def test_get_details_posts_to_expected_url(
-        self, mock_session, user_context, successful_post
-    ):
+    def test_get_details_posts_to_expected_url(self, mock_session, user_context, successful_post):
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_details(alert_ids)

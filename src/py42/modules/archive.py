@@ -65,7 +65,7 @@ class ArchiveModule(object):
         """
         return self._archive_client.get_backup_sets(device_guid, destination_guid)
 
-    def get_all_restore_history_by_org_id(self, days, org_id):
+    def get_all_org_restore_history(self, days, org_id):
         """Gets all restore jobs from the past given days for the organization with the given ID.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
@@ -79,7 +79,7 @@ class ArchiveModule(object):
         """
         return self._archive_client.get_all_restore_history(days, u"orgId", org_id)
 
-    def get_all_restore_history_by_user_id(self, days, user_id):
+    def get_all_user_restore_history(self, days, user_id):
         """Gets all restore jobs from the past given days for the user with the given ID.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
@@ -93,7 +93,7 @@ class ArchiveModule(object):
         """
         return self._archive_client.get_all_restore_history(days, u"userId", user_id)
 
-    def get_all_restore_history_by_device_id(self, days, device_id):
+    def get_all_device_restore_history(self, days, device_id):
         """Gets all restore jobs from the past given days for the device with the given ID.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 

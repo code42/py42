@@ -27,22 +27,39 @@ class AlertQueryFilterStringField(QueryFilterStringField):
 
 
 class DateObserved(QueryFilterTimestampField):
+    """Class that filters alerts based on the timestamp the alert was triggered."""
+
     _term = u"CreatedAt"
 
 
 class Actor(AlertQueryFilterStringField):
+    """Class that filters alerts based on the username that originated the event(s) that
+    triggered the alert."""
+
     _term = u"actor"
 
 
 class RuleName(AlertQueryFilterStringField):
+    """Class that filters alerts based on rule name."""
+
     _term = u"name"
 
 
 class Description(AlertQueryFilterStringField):
+    """Class that filters alerts based on rule description text."""
+
     _term = u"description"
 
 
 class Severity(QueryFilterStringField):
+    """Class that filters alerts based on severity.
+
+    Available options are:
+        - :attr:`Severity.HIGH`
+        - :attr:`Severity.MEDIUM`
+        - :attr:`Severity.LOW`
+    """
+
     _term = u"severity"
 
     HIGH = u"HIGH"
@@ -51,6 +68,13 @@ class Severity(QueryFilterStringField):
 
 
 class AlertState(QueryFilterStringField):
+    """Class that filters alerts based on alert state.
+
+    Available options are:
+        - :attr:`AlertState.OPEN`
+        - :attr:`AlertState.DISMISSED`
+    """
+
     _term = u"state"
 
     OPEN = u"OPEN"

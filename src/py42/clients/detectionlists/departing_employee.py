@@ -17,7 +17,7 @@ class DepartingEmployeeClient(BaseClient):
         self, username, tenant_id=None, notes=None, departure_epoch=None, cloud_usernames=None
     ):
         """Adds a user to Departing Employees.
-        `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Create>`__
+        `REST Documentation <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Create>`__
 
         Args:
             username (str): The username of the departing employee.
@@ -53,7 +53,7 @@ class DepartingEmployeeClient(BaseClient):
 
     def resolve(self, case_id, tenant_id=None):
         """Removes a user from Departing Employees.
-        `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_ResolveCase>`__
+        `REST Documentation <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_ResolveCase>`__
 
         Args:
             case_id (str): The identifier of the Departing Employee.
@@ -132,7 +132,7 @@ class DepartingEmployeeClient(BaseClient):
 
     def toggle_alerts(self, tenant_id=None, alerts_enabled=True):
         """Enable or disable email alerting on Departing Employee exposure events.
-        `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_ToggleAlerts>`__
+        `REST Documentation <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_ToggleAlerts>`__
 
         Args:
             tenant_id (str, optional): The identifier of the Customer tenant. Defaults to None (the
@@ -164,7 +164,7 @@ class DepartingEmployeeClient(BaseClient):
 
     def get_by_id(self, case_id, tenant_id=None):
         """Gets details about a Departing Employee case.
-        `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Details>`__
+        `REST Documentation <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Details>`__
 
         Args:
             case_id (str): Identifier of the Departing Employee case.
@@ -189,7 +189,7 @@ class DepartingEmployeeClient(BaseClient):
         cloud_usernames=None,
     ):
         """Add or modify details of an existing Departing Employee case.
-        `REST Documentation: <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Update>`__
+        `REST Documentation <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html#/DepartingEmployeeCase/DepartingEmployeeCase_Update>`__
 
         Args:
             case_id (str): Identifier of the Departing Employee case.

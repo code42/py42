@@ -7,7 +7,7 @@ class FileEventClient(BaseClient):
 
     def search(self, query):
         """Searches for file events matching query criteria.
-        `REST Documentation: <https://forensicsearch-east.us.code42.com/forensic-search/queryservice/swagger-ui.html#/file-event-controller/searchEventsUsingPOST>`__
+        `REST Documentation <https://forensicsearch-east.us.code42.com/forensic-search/queryservice/swagger-ui.html#/file-event-controller/searchEventsUsingPOST>`__
 
         Args:
             query (:class:`FileEventQuery` or str): A composed FileEventQuery object or the raw

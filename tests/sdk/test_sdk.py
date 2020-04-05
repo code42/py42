@@ -1,6 +1,5 @@
 import pytest
 
-from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.initialization import SDKDependencies
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory

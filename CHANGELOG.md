@@ -10,6 +10,17 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Removed
+
+- Parameter `classification` removed from `OrgClient.create_org()`
+- Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`
+- Removed `ArchiveClient`. Use `ArchiveModule`.
+- Removed function `ArchiveModule.get_data_key_token()`.
+- Removed function `ArchiveModule.get_web_restore_info()`.
+- Parameter `classification` removed from `OrgClient.create_org()`.
+- Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`.
+- Removed `SecurityClient`. Use `SecurityModule`.
+
 ## Changed
 
 - Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
@@ -18,12 +29,31 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `get_all_matter_custodians()`
 - Parameter `storageaccess` was removed from `SDKClient`. To restore files, just use
     `SDKClient.archive.stream_from_backup()`.
-
-### Removed
-
-- Parameter `classification` removed from `OrgClient.create_org()`.
-- Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`.
-- Removed `SecurityClient`. Use `SecurityModule`.
+- Parameter `active_state` was renamed to `active` and now accepts (True, False, or None)
+    instead of ("ACTIVE", "INACTIVE", or "ALL") on the following `LegalHoldClient` methods:
+    - `get_all_matters()`
+    - `get_all_matter_custodians()`
+- `py42.sdk.archive.stream_from_backup()` now raises `Py42ArchiveFileNotFoundError` when it does not find a file.
+- `py42.sdk.alerts` and `py42.sdk.detectionlists` raise `Py42SessionInitializationError` if they are unable to
+    connect to the necessary microservice and `Py42FeatureUnavailableError` if their environment does not support
+    the microservice.
+- `py42.sdk.securitydata.get_security_plan_storage_info_list()` raises `Py42SecurityPlanConnectionError` if it can't
+    connect to get plan info.
+- Storage node connection issues may raise `Py42StorageSessionInitializationError`.
+- All requests may raise a subclass of `Py42HTTPError` denoting which type of HTTP error it is:
+    - `Py42BadRequestError`
+    - `Py42UnauthorizedError`
+    - `Py42ForbiddenError`
+    - `Py42NotFoundError`
+    - `Py42InternalServerError`
+- `py42.modules.ArchiveModule` methods:
+    - `get_all_restore_history_by_device_id()` (formerly `get_restore_history_by_device_id()`)
+    - `get_all_restore_history_by_user_id()` (formerly `get_restore_history_by_user_id()`)
+    - `get_all_restore_history_by_org_id()` (formerly `get_restore_history_by_org_id()`)
+    now all return generator objects that handle paging through restore history.
+- Renamed `AlertClient.get_query_details()` to `AlertClient.get_details()`.
+- Renamed `SecurityModule.get_plan_security_events()` to `get_all_plan_security_events()`.
+- Renamed `SecurityModule.get_user_security_events()` to `get_all_user_security_events()`.
 
 ### Added
 
@@ -39,22 +69,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42ForbiddenError`
     - `Py42NotFoundError`
     - `Py42InternalServerError`
-
-### Changed
-
-- `py42.sdk.archive.stream_from_backup()` now raises `Py42ArchiveFileNotFoundError` when it does not find a file.
-- `py42.sdk.alerts` and `py42.sdk.detectionlists` raise `Py42SessionInitializationError` if they are unable to
-    connect to the necessary microservice and `Py42FeatureUnavailableError` if their environment does not support
-    the microservice.
-- `py42.sdk.securitydata.get_security_plan_storage_info_list()` raises `Py42SecurityPlanConnectionError` if it can't
-    connect to get plan info.
-- Storage node connection issues may raise `Py42StorageSessionInitializationError`.
-- All requests may raise a subclass of `Py42HTTPError` denoting which type of HTTP error it is:
-    - `Py42BadRequestError`
-    - `Py42UnauthorizedError`
-    - `Py42ForbiddenError`
-    - `Py42NotFoundError`
-    - `Py42InternalServerError`
+- Parameters `archive_password` and `encryption_key` added to `ArchiveModule.stream_from_backup()`.
 
 ## 0.6.1 - 2020-03-17
 

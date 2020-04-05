@@ -37,11 +37,11 @@ class OrgClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_by_id(self, org_id, **kwargs):
-        """Gets the organization with the given org ID.
+        """Gets the organization with the given ID.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
-            org_id (int): An org ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the organization.
@@ -50,11 +50,11 @@ class OrgClient(BaseClient):
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, org_uid, **kwargs):
-        """Gets the organization with the given org UID.
+        """Gets the organization with the given UID.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
-            org_uid (str): An org UID for an organization.
+            org_uid (str): A UID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`: A response containing the organization.
@@ -64,11 +64,11 @@ class OrgClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_by_name(self, org_name, **kwargs):
-        """Gets the organization with the given org name.
+        """Gets the organization with the given name.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
-            org_name (str): An org name for an organization.
+            org_name (str): A name of an organization.
 
         Returns:
             list: A list of :class:`py42.sdk.response.Py42Response` objects each containing an
@@ -106,7 +106,7 @@ class OrgClient(BaseClient):
         `Rest Documentation <https://console.us.code42.com/apidocviewer/#OrgBlock-put>`__
 
         Args:
-            org_id (int): An org ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -116,11 +116,11 @@ class OrgClient(BaseClient):
 
     def unblock(self, org_id):
         """Removes a block, if one exists, on an organization and its descendants with the given
-        org ID. All users in the organization remain blocked until they are unblocked individually.
+        ID. All users in the organization remain blocked until they are unblocked individually.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgBlock-delete>`__
 
         Args:
-            org_id (int): An org ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -129,12 +129,12 @@ class OrgClient(BaseClient):
         return self._session.delete(uri)
 
     def deactivate(self, org_id):
-        """Deactivates the organization with the given org ID, including all users, plans, and
+        """Deactivates the organization with the given ID, including all users, plans, and
         devices. Backups stop and archives move to cold storage.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgDeactivation-put>`__
 
         Args:
-            org_id (int): an org ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -143,12 +143,12 @@ class OrgClient(BaseClient):
         return self._session.put(uri)
 
     def reactivate(self, org_id):
-        """Reactivates the organization with the given org ID. Backups are *not* restarted
+        """Reactivates the organization with the given ID. Backups are *not* restarted
         automatically.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgDeactivation-delete>`__
 
         Args:
-            org_id (int): An org ID for an organization.
+            org_id (int): An ID for an organization.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

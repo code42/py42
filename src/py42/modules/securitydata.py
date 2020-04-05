@@ -1,5 +1,6 @@
 import json
 from threading import Lock
+
 from requests.exceptions import HTTPError
 
 from py42.sdk.exceptions import Py42SecurityPlanConnectionError, raise_py42_error
@@ -50,7 +51,7 @@ class SecurityModule(object):
 
             return selected_plan_infos
 
-    def get_plan_security_events(
+    def get_all_plan_security_events(
         self,
         plan_storage_info,
         cursor=None,
@@ -59,7 +60,7 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy, endpoint security events.
+        """Gets legacy endpoint monitoring events. This does not retrieve cloud events.
         `Support Article <https://support.code42.com/Administrator/6/Configuring/Endpoint_monitoring>`__
 
         Args:
@@ -97,7 +98,7 @@ class SecurityModule(object):
             plan_storage_info, cursor, include_files, event_types, min_timestamp, max_timestamp
         )
 
-    def get_user_security_events(
+    def get_all_user_security_events(
         self,
         user_uid,
         cursor=None,

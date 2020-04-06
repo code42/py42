@@ -47,9 +47,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42NotFoundError`
     - `Py42InternalServerError`
 - `py42.modules.ArchiveModule` methods:
-    - `get_all_restore_history_by_device_id()` (formerly `get_restore_history_by_device_id()`)
-    - `get_all_restore_history_by_user_id()` (formerly `get_restore_history_by_user_id()`)
-    - `get_all_restore_history_by_org_id()` (formerly `get_restore_history_by_org_id()`)
+    - `get_all_device_restore_history()` (formerly `get_restore_history_by_device_id()`)
+    - `get_all_user_restore_history()` (formerly `get_restore_history_by_user_id()`)
+    - `get_all_org_restore_history()` (formerly `get_restore_history_by_org_id()`)
     now all return generator objects that handle paging through restore history.
 - Renamed `AlertClient.get_query_details()` to `AlertClient.get_details()`.
 - Renamed `SecurityModule.get_plan_security_events()` to `get_all_plan_security_events()`.

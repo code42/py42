@@ -42,7 +42,7 @@ class LegalHoldClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def create_matter(self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None):
-        """Creates a new active Legal Hold Matter.
+        """Creates a new, active Legal Hold Matter.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-post>`__
 
         Args:
@@ -50,7 +50,7 @@ class LegalHoldClient(BaseClient):
             hold_policy_uid (str): The identifier of the Preservation Policy that will apply to this
                 Matter.
             description (str, optional): An optional description of the Matter. Defaults to None.
-            notes (str, optional): Optional descriptive information. Defaults to None.
+            notes (str, optional): Optional notes information. Defaults to None.
             hold_ext_ref (str, optional): Optional external reference information. Defaults to None.
 
         Returns:
@@ -134,8 +134,8 @@ class LegalHoldClient(BaseClient):
             active (bool or None, optional): Find Matters by their active state. True returns
                 active Matters, False returns inactive Matters, None returns all Matters regardless
                 of state. Defaults to True.
-            name (str, optional): Find Matters whose 'name' either equals or partially contains this
-                value. Defaults to None.
+            name (str, optional): Find Matters with a 'name' that either equals or partially
+                contains this value. Defaults to None.
             hold_ext_ref (str, optional): Find Matters having a matching external reference field.
                 Defaults to None.
 
@@ -187,7 +187,7 @@ class LegalHoldClient(BaseClient):
 
         Args:
             legal_hold_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter
-                having this unique identifier. Defaults to None.
+                with this unique identifier. Defaults to None.
             user_uid (str, optional): Find LegalHoldMemberships for the user with this identifier.
                 Defaults to None.
             user (str, optional): Find LegalHoldMemberships by flexibly searching on username,
@@ -210,7 +210,7 @@ class LegalHoldClient(BaseClient):
         )
 
     def add_to_matter(self, user_uid, legal_hold_uid):
-        """Add add a user (Custodian) to a Legal Hold Matter.
+        """Add a user (Custodian) to a Legal Hold Matter.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-post>`__
 
         Args:
@@ -230,7 +230,7 @@ class LegalHoldClient(BaseClient):
 
         Args:
             legal_hold_membership_uid (str): The identifier of the LegalHoldMembership representing
-                the Custodian -> Matter relationship.
+                the Custodian to Matter relationship.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

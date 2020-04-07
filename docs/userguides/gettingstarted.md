@@ -16,12 +16,14 @@ There are different ways to install py42.
 ### From PyPI
 
 The easiest and most common way is to use `pip`:
+
 ```bash
 pip install py42
 ```
 
 If you need to install a previous version of py42, `pip` lets you do that. For example, if you want to install version
 0.4.1, you would do this:
+
 ```bash
 pip install py42==0.4.1
 ```
@@ -31,10 +33,13 @@ Visit the [project history](https://pypi.org/project/py42/#history) on PyPI to s
 ### From Source
 
 Alternatively, you can install py42 directly from its [source code](https://github.com/code42/py42/pull/51/files):
+
 ```bash
 git clone https://github.com/code42/py42.git
 ```
+
 When it finishes downloading, from the root project directory, run:
+
 ```bash
 python setup.py install
 ```
@@ -42,11 +47,13 @@ python setup.py install
 ### From Distribution
 
 If you want create a `.tar` ball for installing elsewhere, run this command from the project's root directory:
+
 ```bash
 python setup.py sdist
 ```
 
 After it finishes building, the`.tar` ball will be located in the newly created `dist` directory. To install it, do:
+
 ```bash
 pip install py42-[VERSION].tar.gz
 ```
@@ -71,6 +78,7 @@ Okta.
 Debug mode may be useful if you are trying to determine if you are experiencing permission issues. When debug mode is
 on, py42 logs HTTP request data to the console. Use the following as a guide for how to turn debug mode
 on in py42:
+
 ```python
 import py42.sdk
 import py42.sdk.settings.debug as debug

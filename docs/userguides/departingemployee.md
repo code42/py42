@@ -5,6 +5,7 @@ this using the `py42.sdk.users.get_by_uid()` method to recover their username, a
 `py42.sdk.detectionlists.departing_employee.create()` method which requires a username as a parameter.
 
 This is how you can get the username from the user UID:
+
 ```python
 user = sdk.users.get_by_uid("895005723650937319")
 username = user["username"]
@@ -12,8 +13,10 @@ username = user["username"]
 
 Next, use the `py42.sdk.detectionlists.departing_employee.create()` method to add that user to the departing employee
 list. Take note of its case ID if you want to do anything else right away:
+
 ```python
-response = sdk.detectionlists.departing_employee.create(username)  # Add the departing employee
+# Add the departing employee
+response = sdk.detectionlists.departing_employee.create(username)
 case_id = response["caseId"]  # Make note of its case ID
 ```
 
@@ -25,12 +28,14 @@ case_id = response["caseId"]  # Make note of its case ID
 
 The case ID you get back when you create a departing employee is useful for doing other things, such as resolving the
 departing employee:
+
 ```python
 sdk.detectionlists.departing_employee.resolve(case_id)
 ```
 
 Let's say you do not have the case ID, now what do you do? We can get a case by username using the
 `py42.sdk.detectionlists.departing_employee.get_by_username()` method and extract the case ID from the response:
+
 ```python
 # Resolves departing employee 'test.user@example.com'
 

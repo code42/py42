@@ -2,15 +2,17 @@
 
 Gain confidence in writing your own scripts by learning the basics of py42. The following examples use
 `py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate how to use py42:
-* [Initialization](#initialization)
-* [Paging](#paging)
-* [Py42Response](#py42response)
-* [Dates](#dates)
-* [Exceptions](#exceptions)
+- [py42 Basics](#py42-basics)
+  - [Initialization](#initialization)
+  - [Paging](#paging)
+  - [Py42Response](#py42response)
+  - [Dates](#dates)
+  - [Exceptions](#exceptions)
 
 ## Initialization
 
 To do anything with py42, you need to initialize the SDK:
+
 ```python
 import py42.sdk
 
@@ -29,6 +31,7 @@ response items. Here are some examples:
 These methods each return a [python generator](https://wiki.python.org/moin/Generators). By looping over the pages
 returned by the generator, we can access the actual list of items we seek. Use the code snippet below as an example
 for working with generators and paging in py42:
+
 ```python
 # Prints the username and notes for all departing employees
 
@@ -48,8 +51,8 @@ Each page is a typical py42 response. The next section covers what you can do wi
 py42 clients return `Py42Response` objects which are intentionally similar to `requests.Response` objects.
 The `Py42Response` class hides unneeded metadata found on the raw `requests.Response.text` (which is available as
 `Py42Response.raw_text`) so that it's easier to get the most useful parts of the response. Also, the object is
-subscriptable, meaning you can access it with keys or indices (depending on the JSON type underneath `data` on Code42
-API responses):
+subscriptable, meaning you can access it with keys or indices (depending on the JSON type underneath `data` on Code42 API responses):
+
 ```python
 user = response["users"][0]
 item = list_response[0]["itemProperty"]
@@ -72,11 +75,13 @@ print(cloud_usernames)
 ```eval_rst
 .. _anchor_dates:
 ```
+
 ## Dates
 
 py42 supports [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) for date parameters. As an example, see
 the `departing_on_or_after_epoch` parameter in the
 `py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
+
 ```python
 import py42.sdk
 import py42.sdk.util
@@ -86,8 +91,10 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 
 # Prints all the departing employee cases on or after two weeks
 
-departing_date = datetime.utcnow() + timedelta(days=14)  # How to get a date in the future
-epoch = (departing_date - datetime.utcfromtimestamp(0)).total_seconds()  # How to get an epoch time (float)
+# get a date in the future
+departing_date = datetime.utcnow() + timedelta(days=14)
+epoch = (departing_date - datetime.utcfromtimestamp(0)).total_seconds()
+# get an epoch time (float)
 response = sdk.detectionlists.departing_employee.get_all(departing_on_or_after_epoch=epoch)
 for page in response:
     for case in page["cases"]:
@@ -105,6 +112,7 @@ to perform the action you were trying to do.
 
 Let's say you are making a `create_sdk()` function and want to print a more user-friendly message when the provided
 username or password are incorrect. This is how you would do that:
+
 ```python
 import keyring
 import py42.sdk

@@ -30,6 +30,7 @@ organization, you will get different lists of devices:
 ### Examples
 
 Here is an example using `get_all()` to get all active devices in your organization(s):
+
 ```python
 # For each active device in your organization, print its GUID and operating system
 
@@ -43,10 +44,12 @@ for page in response:
 Another example might be that you are a cross-organization administrator and you wish to get all the active devices for
 just one of your organizations. To do this, we can make use of the `py42.sdk.clients.devices.OrgClient.get_by_name()`
 method. The `get_by_name()` method returns a list of organizations matching the name you give it.
+
 ```python
 # For each active device in the engineering organization, print its GUID and operating system.
 
-engineering_org = sdk.orgs.get_by_name("Engineering")[0]  # Assume there is only one org named "Engineering"
+# Assume there is only one org named "Engineering"
+engineering_org = sdk.orgs.get_by_name("Engineering")[0]
 engineering_org_uid = engineering_org["orgUid"]
 response = sdk.devices.get_all(active=True, org_uid=engineering_org_uid)
 for page in response:

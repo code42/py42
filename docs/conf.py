@@ -21,7 +21,7 @@ from recommonmark.transform import AutoStructify
 # -- Project information -----------------------------------------------------
 
 project = u"py42"
-copyright = u"2019, Code42 Software"
+copyright = u"2020, Code42 Software"
 author = u"Code42 Software"
 
 # The short X.Y version

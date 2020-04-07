@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 import pytest
 from requests import Response
 
-import json
-
 import py42
+import py42.sdk.settings
 from py42.clients.users import UserClient
 from py42.sdk.response import Py42Response
 
@@ -74,7 +75,7 @@ class TestUserClient(object):
 
         mock_session.post.assert_called_once_with(USER_URI, data=json.dumps(expected_params))
 
-    def test_get_users_calls_get_with_uri_and_params(self, mock_session, mock_get_all_response):
+    def test_get_all_calls_get_with_uri_and_params(self, mock_session, mock_get_all_response):
         mock_session.get.side_effect = [mock_get_all_response]
         client = UserClient(mock_session)
         for _ in client.get_all():
@@ -100,7 +101,7 @@ class TestUserClient(object):
         uri = "{0}/{1}".format(USER_URI, "USER_ID")
         mock_session.get.assert_called_once_with(uri, params={})
 
-    def test_get_users_calls_get_expected_number_of_times(
+    def test_get_all_calls_get_expected_number_of_times(
         self, mock_session, mock_get_all_response, mock_get_all_empty_response
     ):
         py42.sdk.settings.items_per_page = 1

@@ -77,6 +77,7 @@ class C42APILoginTokenProvider(C42APITmpAuthProvider):
         response = self._auth_session.post(uri, data=json.dumps(data))
         return response
 
+
 class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
     def __init__(self, auth_session, plan_uid, destination_guid):
         super(C42APIStorageAuthTokenProvider, self).__init__()
@@ -88,6 +89,8 @@ class C42APIStorageAuthTokenProvider(C42APITmpAuthProvider):
         uri = u"/api/StorageAuthToken"
         data = {u"planUid": self._plan_uid, u"destinationGuid": self._destination_guid}
         response = self._auth_session.post(uri, data=json.dumps(data))
+        print("HERE!")
+        print(response)
         return response
 
 

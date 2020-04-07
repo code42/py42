@@ -17,25 +17,36 @@ class ArchiveAccessorManager(object):
         self._archive_client = archive_client
         self._storage_client_factory = storage_client_factory
 
-    def get_archive_accessor(self, device_guid, destination_guid=None):
+    def get_archive_accessor(
+        self, device_guid, destination_guid=None, private_password=None, encryption_key=None
+    ):
         client = self._storage_client_factory.from_device_guid(
             device_guid, destination_guid=destination_guid
         )
-        data_key_token = self._get_data_key_token(device_guid)
-        session_id = self._create_restore_session(client.archive, device_guid, data_key_token)
+        decryption_keys = self._get_decryption_keys(device_guid, private_password, encryption_key)
+        session_id = self._create_restore_session(client.archive, device_guid, **decryption_keys)
         restore_job_manager = create_restore_job_manager(client.archive, device_guid, session_id)
         return ArchiveAccessor(device_guid, session_id, client.archive, restore_job_manager)
 
+    def _get_decryption_keys(self, device_guid, private_password, encryption_key):
+        decryption_keys = {}
+        if encryption_key:
+            decryption_keys["encryption_key"] = encryption_key
+        else:
+            data_key_token = self._get_data_key_token(device_guid) if not encryption_key else None
+            if data_key_token:
+                decryption_keys["data_key_token"] = data_key_token
+
+            if private_password:
+                decryption_keys["private_password"] = private_password
+        return decryption_keys
+
     def _get_data_key_token(self, device_guid):
-        test = self._archive_client.get_data_key_token(device_guid)
-        test2 = test[u"dataKeyToken"]
         return self._archive_client.get_data_key_token(device_guid)[u"dataKeyToken"]
 
     @staticmethod
-    def _create_restore_session(storage_archive_client, device_guid, data_key_token):
-        response = storage_archive_client.create_restore_session(
-            device_guid, data_key_token=data_key_token
-        )
+    def _create_restore_session(storage_archive_client, device_guid, **kwargs):
+        response = storage_archive_client.create_restore_session(device_guid, **kwargs)
         return response[u"webRestoreSessionId"]
 
 
@@ -96,7 +107,6 @@ class ArchiveAccessor(object):
 
 
 class RestoreJobManager(object):
-
     JOB_POLLING_INTERVAL_SECONDS = 1
 
     def __init__(
@@ -141,7 +151,6 @@ class RestoreJobManager(object):
 
     def _get_stream(self, job_id):
         response = self._storage_archive_client.stream_restore_result(job_id)
-
         return response
 
 

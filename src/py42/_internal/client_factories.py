@@ -1,24 +1,14 @@
 import json
+
 from requests import HTTPError
 
-from py42._internal.key_value_store import KeyValueStoreClient
-from py42.clients import (
-    administration,
-    alerts,
-    archive,
-    devices,
-    legalhold,
-    orgs,
-    securitydata,
-    users,
-)
-
+from py42._internal.clients import archive
+from py42._internal.clients import key_value_store
+from py42._internal.clients import securitydata
+from py42.clients import administration, alerts, devices, legalhold, orgs, users
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.file_event import FileEventClient
-from py42.sdk.exceptions import (
-    Py42FeatureUnavailableError,
-    Py42SessionInitializationError,
-)
+from py42.sdk.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
 
 
 class AuthorityClientFactory(object):
@@ -91,7 +81,7 @@ class MicroserviceClientFactory(object):
         if not self._key_value_store_client:
             url = _hacky_get_microservice_url(self._root_session, u"simple-key-value-store")
             session = self._session_factory.create_anonymous_session(url)
-            self._key_value_store_client = KeyValueStoreClient(session)
+            self._key_value_store_client = key_value_store.KeyValueStoreClient(session)
         return self._key_value_store_client.get_stored_value(key).text
 
 

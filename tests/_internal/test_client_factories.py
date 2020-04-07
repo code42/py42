@@ -1,23 +1,15 @@
 import pytest
 
-from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.clients import (
-    administration,
-    archive,
-    devices,
-    file_event,
-    legalhold,
-    orgs,
-    securitydata,
-    storage,
-)
-from py42.clients import alerts, detectionlists, users
-from py42._internal import key_value_store
 from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory
-from py42.clients.storage import StorageClientFactory
-
+from py42._internal.clients import key_value_store, archive
+from py42._internal.clients import securitydata
+from py42._internal.clients.storage import StorageClientFactory, StorageClient
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
+from py42._internal.token_providers import StorageTokenProviderFactory
+from py42.clients import administration, devices, file_event, legalhold, orgs
+from py42.clients import alerts, detectionlists, users
+from py42.clients.detectionlists import departing_employee
 from py42.sdk.usercontext import UserContext
 
 _USER_UID = "user-uid"
@@ -97,12 +89,12 @@ class TestStorageClientFactory(object):
     def test_from_device_guid(self, token_provider_factory, storage_session_manager):
         factory = StorageClientFactory(storage_session_manager, token_provider_factory)
         client = factory.from_device_guid("test-device-guid")
-        assert type(client) == storage.StorageClient
+        assert type(client) == StorageClient
 
     def test_from_plan_info(self, token_provider_factory, storage_session_manager):
         factory = StorageClientFactory(storage_session_manager, token_provider_factory)
         client = factory.from_plan_info("test-plan-uid", "test-dest-guid")
-        assert type(client) == storage.StorageClient
+        assert type(client) == StorageClient
 
 
 class TestMicroserviceClientFactory(object):

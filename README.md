@@ -85,7 +85,6 @@ You should see something like the following:
 }
 ```
 
-
 ## Configuration
 
 There are a few default settings that affect the behavior of the client.

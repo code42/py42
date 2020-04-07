@@ -99,3 +99,12 @@ make html
 ```
 
 To view the resulting documentation, open `docs/_build/html/index.html`.
+
+For the best viewing experience, run a local server to view the documentation.
+You can this by running the below from the `docs` directory using python 3:
+
+```bash
+python -m http.server --directory "_build/html" 1337
+```
+
+and then pointing your browser to `localhost:1337`.

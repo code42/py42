@@ -2,7 +2,7 @@ from datetime import datetime
 
 import pytest
 
-from py42.clients.storage.securitydata import StorageSecurityClient
+from py42._internal.clients.storage import StorageSecurityClient
 from py42._internal.session import Py42Session
 
 uri = u"/api/SecurityDetectionEvent"

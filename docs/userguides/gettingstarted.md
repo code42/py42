@@ -100,4 +100,4 @@ If you don't have a GitHub account and are experiencing issues, reach out to
 
 ## What's Next?
 
-Learn the basics by following the py42 [Basics guide](basics.html).
+Learn the basics by following the py42 [Basics guide](basics.md).

@@ -15,5 +15,5 @@ of session / authentication management.
 
 ## Content
 
-* [Method Documentation](methods.md)
 * [User Guides](guides.md)
+* [Method Documentation](methods.md)

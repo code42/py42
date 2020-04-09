@@ -4,6 +4,7 @@
 ![Build status](https://github.com/code42/py42/workflows/build/badge.svg)
 [![versions](https://img.shields.io/pypi/pyversions/py42.svg)](https://pypi.org/project/py42/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Documentation Status](https://readthedocs.org/projects/py42/badge/?version=latest)](https://py42docs.code42.com/en/latest/?badge=latest)
 
 
 `py42` is a Python wrapper around the Code42 REST APIs that also provides several other useful utility methods.

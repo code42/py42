@@ -58,6 +58,8 @@ class MicroserviceClientFactory(object):
         self._alerts_client = None
         self._departing_employee_client = None
         self._file_event_client = None
+        self._high_risk_employee_client = None
+        self._detection_list_user_client = None
 
     def get_alerts_client(self):
         if not self._alerts_client:
@@ -89,16 +91,16 @@ class MicroserviceClientFactory(object):
         return self._key_value_store_client.get_stored_value(key).text
 
     def get_high_risk_employee_client(self):
-        # TODO figure out the correct session instance to be created.
-        session = ""
         if not self._high_risk_employee_client:
+            session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             self._high_risk_employee_client = HighRiskEmployeeClient(session, self._user_context)
-
-        # TODO similarly detection_list too but since there is no property to instantiate it, need
-        # to figure out when and where that would be done.
-        # if not self._detection_list_user_client:
-        #    self._detection_list_user_client = DetectionListUserClient(session, self._user_context)
         return self._high_risk_employee_client
+
+    def get_detection_list_user_client(self):
+        if not self._detection_list_user_client:
+            session = self._get_jwt_session(u"employeecasemanagement-API_URL")
+            self._detection_list_user_client = DetectionListUserClient(session, self._user_context)
+        return self._detection_list_user_client
 
 
 def _hacky_get_microservice_url(session, microservice_base_name):

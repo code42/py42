@@ -2,7 +2,7 @@
 .idea/
 .vscode/
 
-# compliled docs
+# compiled docs
 docs/_build
 
 # Byte-compiled / optimized / DLL files

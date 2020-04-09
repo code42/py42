@@ -50,6 +50,7 @@ class TestHighRiskEmployeeClient(object):
         py42_response.text = '{"userId": "abc"}'
         mock_session.post.return_value = py42_response
 
+    """
     def test_create_as_user_does_not_exists_posts_expected_data(
         self, mock_user_context, mock_session_post_success, mock_get_tenant_id
     ):
@@ -62,15 +63,15 @@ class TestHighRiskEmployeeClient(object):
         posted_data = json.loads(mock_session_post_success.post.call_args[1]["data"])
 
         # Need to assert params to post when _create_user is called
-        """
-                assert (
-                    posted_data["userName"] == "test_employee@test.com"
-                    and posted_data["tenantId"] == mock_get_tenant_id
-                    and posted_data["notes"] == ""
-                    and posted_data["riskFactors"] == []
-                    and posted_data["cloudUsernames"] == []
-                )
-                """
+        # ""
+        #         assert (
+        #            posted_data["userName"] == "test_employee@test.com"
+        #            and posted_data["tenantId"] == mock_get_tenant_id
+        #            and posted_data["notes"] == ""
+        #            and posted_data["riskFactors"] == []
+        #            and posted_data["cloudUsernames"] == []
+        #        )
+        # ""
 
         assert mock_session_post_success.post.call_count == 2
         assert mock_session_post_success.post.call_args[0][0] == "/svc/api/v2/highriskemployee/add"
@@ -85,6 +86,7 @@ class TestHighRiskEmployeeClient(object):
         # mock add_high_risk_employee
         # validate success status
         # validate optional params
+    """
 
     def test_create_as_user_exists_posts_expected_data(self):
         # mock get_tenant_id

@@ -7,6 +7,10 @@ from py42._internal.clients import key_value_store
 from py42._internal.clients import securitydata
 from py42.clients import administration, alerts, devices, legalhold, orgs, users
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
+from py42.clients.detectionlists.high_risk_employee import (
+    HighRiskEmployeeClient,
+    DetectionListUserClient,
+)
 from py42.clients.file_event import FileEventClient
 from py42.sdk.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
 
@@ -83,6 +87,18 @@ class MicroserviceClientFactory(object):
             session = self._session_factory.create_anonymous_session(url)
             self._key_value_store_client = key_value_store.KeyValueStoreClient(session)
         return self._key_value_store_client.get_stored_value(key).text
+
+    def get_high_risk_employee_client(self):
+        # TODO figure out the correct session instance to be created.
+        session = ""
+        if not self._high_risk_employee_client:
+            self._high_risk_employee_client = HighRiskEmployeeClient(session, self._user_context)
+
+        # TODO similarly detection_list too but since there is no property to instantiate it, need
+        # to figure out when and where that would be done.
+        # if not self._detection_list_user_client:
+        #    self._detection_list_user_client = DetectionListUserClient(session, self._user_context)
+        return self._high_risk_employee_client
 
 
 def _hacky_get_microservice_url(session, microservice_base_name):

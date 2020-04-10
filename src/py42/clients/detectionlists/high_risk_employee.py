@@ -7,7 +7,9 @@ from py42.sdk.exceptions import Py42NotFoundError
 
 class HighRiskEmployeeClient(BaseClient):
     """
-    TODO Documentation here
+    Administrator utility to manage High Risk employees.
+    `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
+
     """
 
     # In other modules URI is a single variable, breaking it up to have better control
@@ -38,17 +40,18 @@ class HighRiskEmployeeClient(BaseClient):
 
     def add(self, user_id=None, username=None):
         """
-        Adds a user to high risk employee lens, optionally creates a user if it doesn't exist.
-
-        If `user_id` is not available, pass `username` parameter, new user will be
-        created and added to high risk employee lens.
+        Adds a user to high risk employee lens.
 
         If a user is already added to high risk employee lens, further attempts to add will
         return failure error.
 
-        Args: Either of user_id or username must be defined.
-        TODO
+        Args:
+            user_id (str/int): Id of the user who needs to be added to HRE lens.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
         """
+
         tenant_id = self._user_context.get_current_tenant_id()
         if user_id:
             return self._add_high_risk_employee(tenant_id, user_id)
@@ -64,6 +67,17 @@ class HighRiskEmployeeClient(BaseClient):
         # raise CustomPy42Error("Either of user_id or username must be defined.")
 
     def set_alerts_enabled(self, enabled=True):
+        """
+        Enable alerts.
+        #TODO Confirm
+        # `toggle_alerts` would be a better method name, if we intend to allow to disable
+        # alerts as well.
+        Args:
+            enabled (bool): Whether to enable alerts for all users
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "alertsEnabled": enabled,
@@ -73,12 +87,30 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def remove(self, user_id):
+        """
+        Remove an user from high risk employee lens.
+
+        Args:
+            user_id (str/int): Id of the user who needs to be added to HRE lens.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         data = {"tenantId": self._user_context.get_current_tenant_id(), "userId": user_id}
         resource = u"/highriskemployee/remove"
         uri = u"{0}{1}".format(self._uri_prefix, resource)
         return self._session.post(uri, data=json.dumps(data))
 
     def get(self, user_id):
+        """
+        Get user information.
+
+        Args:
+            user_id (str/int): Id of the user who needs to be added to HRE lens.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         data = {"tenantId": self._user_context.get_current_tenant_id(), "userId": user_id}
         resource = u"/user/getbyid"
         uri = u"{0}{1}".format(self._uri_prefix, resource)
@@ -120,9 +152,16 @@ class HighRiskEmployeeClient(BaseClient):
         self, filter_type="OPEN", sort_key=None, sort_direction=None,
     ):
         """
-        Search High Risk employee list. Filter results by filter_type or risk factors.
+        Search High Risk employee list. Filter results by filter_type
 
-        #TODO Param description
+        Args:
+            filter_type (str): Valid filter types.
+            sort_key (str): Sort results based by field.
+            sort_direction (str): "ASC" or "DESC"
+
+        Returns:
+            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            that each contain a page of users.
         """
 
         return get_all_pages(
@@ -137,7 +176,8 @@ class HighRiskEmployeeClient(BaseClient):
 
 class DetectionListUserClient(BaseClient):
     """
-    TODO Documentation here
+    Administrator utility to manage High Risk employees information.
+    `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
     """
 
     _api_version = u"v2"
@@ -148,7 +188,15 @@ class DetectionListUserClient(BaseClient):
         self._user_context = user_context
 
     def update_notes(self, user_id, notes):
-        """Add or update notes related to the user"""
+        """Add or update notes related to the user.
+
+        Args:
+            user_id (str/int): The user_id whose notes need to be updated.
+            notes (str): Note.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
@@ -160,7 +208,13 @@ class DetectionListUserClient(BaseClient):
     def add_risk_tag(self, user_id, tags):
         """ Add one or more tags.
 
-            Fails with Bad Request Error, 400, when user_id or tags is None
+        Args:
+            user_id (str/int): The user_id whose tag(s) needs to be updated.
+            tags (str or list of str ): A single tag or multiple tags in a list to be added.
+                e.g "tag1" or ["tag1", "tag2"]
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
         """
 
         if type(tags) is str:
@@ -175,7 +229,16 @@ class DetectionListUserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def remove_risk_tag(self, user_id, tags):
-        """Remove one or more tags."""
+        """Remove one or more tags.Args:
+
+        Args:
+            user_id (str/int): The user_id whose tag(s) needs to be removed.
+            tags (str or list of str ): A single tag or multiple tags in a list to be removed.
+                e.g "tag1" or ["tag1", "tag2"]
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         if type(tags) is str:
             tags = [tags]
 
@@ -188,7 +251,16 @@ class DetectionListUserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def add_cloud_alias(self, user_id, aliases):
-        """Add one or more cloud alias."""
+        """Add one or more cloud alias.
+
+        Args:
+            user_id (str/int): The user_id whose alias(es) need to be updated.
+            aliases (str or list of str ): A single alias or multiple aliases in a list to be added.
+                e.g "x" or ["email@id", "y"]
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         if type(aliases) is str:
             aliases = [aliases]
 
@@ -201,7 +273,16 @@ class DetectionListUserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def remove_cloud_alias(self, user_id, aliases):
-        """Remove one or more cloud alias"""
+        """Remove one or more cloud alias.
+
+        Args:
+            user_id (str/int): The user_id whose alias(es) need to be removed.
+            aliases (str or list of str ): A single alias or multiple aliases in a list to be removed.
+                e.g "x" or ["email@id", "y"]
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
         if type(aliases) is str:
             aliases = [aliases]
 

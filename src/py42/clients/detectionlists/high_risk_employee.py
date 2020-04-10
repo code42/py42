@@ -21,16 +21,6 @@ class HighRiskEmployeeClient(BaseClient):
         super(HighRiskEmployeeClient, self).__init__(session)
         self._user_context = user_context
 
-    def _create_user(self, username, tenant_id):
-        resource = u"/user/create"
-        uri = u"{0}{1}".format(self._uri_prefix, resource)
-
-        data = {
-            "tenantId": tenant_id,
-            "userName": username,
-        }
-        return self._session.post(uri, data=json.dumps(data))
-
     def _add_high_risk_employee(self, tenant_id, user_id):
 
         data = {"tenantId": tenant_id, "userId": user_id}
@@ -38,7 +28,7 @@ class HighRiskEmployeeClient(BaseClient):
         uri = u"{0}{1}".format(self._uri_prefix, resource)
         return self._session.post(uri, data=json.dumps(data))
 
-    def add(self, user_id=None, username=None):
+    def add(self, user_id=None):
         """
         Adds a user to high risk employee lens.
 
@@ -53,18 +43,7 @@ class HighRiskEmployeeClient(BaseClient):
         """
 
         tenant_id = self._user_context.get_current_tenant_id()
-        if user_id:
-            return self._add_high_risk_employee(tenant_id, user_id)
-        if username:
-            try:
-                user_response = self._get_by_username(username)
-            except Py42NotFoundError:
-                user_response = self._create_user(username, tenant_id,)
-            user_id = user_response["userId"]
-            return self._add_high_risk_employee(tenant_id, user_id)
-
-        # TODO # Waiting on CustomError name?!!
-        # raise CustomPy42Error("Either of user_id or username must be defined.")
+        return self._add_high_risk_employee(tenant_id, user_id)
 
     def set_alerts_enabled(self, enabled=True):
         """
@@ -134,7 +113,7 @@ class HighRiskEmployeeClient(BaseClient):
         page_size=None,
     ):
         # Overwriting page_size since default value 1000 returns error
-        page_size = 20
+        page_size = 100
         data = {
             "tenantId": tenant_id,
             "filterType": filter_type,

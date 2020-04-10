@@ -95,14 +95,6 @@ class HighRiskEmployeeClient(BaseClient):
         uri = u"{0}{1}".format(self._uri_prefix, resource)
         return self._session.post(uri, data=json.dumps(data))
 
-    def _get_by_username(self, username):
-        # Made this as private method as it is not required as per requirement doc.
-        # This method is needed to check user existence, during create.
-        data = {"tenantId": self._user_context.get_current_tenant_id(), "username": username}
-        resource = u"/user/getbyusername"
-        uri = u"{0}{1}".format(self._uri_prefix, resource)
-        return self._session.post(uri, data=json.dumps(data))
-
     def _get_high_risk_employees_page(
         self,
         tenant_id,

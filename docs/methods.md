@@ -24,6 +24,7 @@ Explore the complete public documentation for `py42` below.
 * [Security Data](methoddocs/securitydata.md)
 * [Legal Hold](methoddocs/legalhold.md)
 * [Departing Employee](methoddocs/departingemployee.md)
+* [High Risk Employee Lens](methoddocs/high_risk_employee.md)
 * [Alerts](methoddocs/alerts.md)
 * [File Event Queries](methoddocs/filleeventqueries.md)
 * [Archive](methoddocs/archive.md)

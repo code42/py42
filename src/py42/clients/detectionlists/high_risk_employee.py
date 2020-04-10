@@ -43,6 +43,9 @@ class HighRiskEmployeeClient(BaseClient):
         If `user_id` is not available, pass `username` parameter, new user will be
         created and added to high risk employee lens.
 
+        If a user is already added to high risk employee lens, further attempts to add will
+        return failure error.
+
         Args: Either of user_id or username must be defined.
         TODO
         """
@@ -90,33 +93,31 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def _get_high_risk_employees_page(
-        self, risk_tags, filter_type, sort_key, sort_direction, page_size, page_num,
+        self,
+        tenant_id,
+        filter_type=None,
+        sort_key=None,
+        sort_direction=None,
+        page_num=None,
+        page_size=None,
     ):
-
+        # Overwriting page_size since default value 1000 returns error
+        page_size = 20
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
+            "tenantId": tenant_id,
             "filterType": filter_type,
-            "riskFactors": risk_tags,
-            "pgSize": page_size,
             "pgNum": page_num,
+            "pgSize": page_size,
+            "srtKey": sort_key,
+            "srtDirection": sort_direction,
         }
-        if sort_key:
-            data["srtKey"] = sort_key
-        if sort_direction:
-            data["srtDirection"] = sort_direction
 
         resource = u"/highriskemployee/search"
         uri = u"{0}{1}".format(self._uri_prefix, resource)
         return self._session.post(uri, data=json.dumps(data))
 
     def get_all(
-        self,
-        risk_tags=None,
-        filter_type="OPEN",
-        sort_key=None,
-        sort_direction=None,
-        page_size=100,
-        page_num=1,
+        self, filter_type="OPEN", sort_key=None, sort_direction=None,
     ):
         """
         Search High Risk employee list. Filter results by filter_type or risk factors.
@@ -127,12 +128,10 @@ class HighRiskEmployeeClient(BaseClient):
         return get_all_pages(
             self._get_high_risk_employees_page,
             "items",
-            risk_tags=risk_tags,
+            tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
-            page_size=page_size,
-            page_num=page_num,
         )
 
 
@@ -149,7 +148,7 @@ class DetectionListUserClient(BaseClient):
         self._user_context = user_context
 
     def update_notes(self, user_id, notes):
-
+        """Add or update notes related to the user"""
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
@@ -159,10 +158,14 @@ class DetectionListUserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def add_risk_tag(self, user_id, tags):
+        """ Add one or more tags.
 
-        tags = tags if tags else []
-        # TODO Return Error when user_id or tags is not defined. Similarly for all other
-        # methods below
+            Fails with Bad Request Error, 400, when user_id or tags is None
+        """
+
+        if type(tags) is str:
+            tags = [tags]
+
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
@@ -172,7 +175,9 @@ class DetectionListUserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def remove_risk_tag(self, user_id, tags):
-        tags = tags if tags else []
+        """Remove one or more tags."""
+        if type(tags) is str:
+            tags = [tags]
 
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
@@ -183,7 +188,9 @@ class DetectionListUserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def add_cloud_alias(self, user_id, aliases):
-        aliases = aliases if aliases else []
+        """Add one or more cloud alias."""
+        if type(aliases) is str:
+            aliases = [aliases]
 
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
@@ -193,13 +200,15 @@ class DetectionListUserClient(BaseClient):
         uri = u"{0}/{1}".format(self._uri_prefix, u"addcloudusernames")
         return self._session.post(uri, data=json.dumps(data))
 
-    def remove_cloud_alias(self, user_id, cloud_aliases):
-        cloud_aliases = cloud_aliases if cloud_aliases else []
+    def remove_cloud_alias(self, user_id, aliases):
+        """Remove one or more cloud alias"""
+        if type(aliases) is str:
+            aliases = [aliases]
 
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
-            "cloudUsernames": cloud_aliases,
+            "cloudUsernames": aliases,
         }
         uri = u"{0}/{1}".format(self._uri_prefix, u"removecloudusernames")
         return self._session.post(uri, data=json.dumps(data))

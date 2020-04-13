@@ -11,6 +11,48 @@ class DetectionListsModule(object):
     def high_risk_employee(self):
         return self._microservice_client_factory.get_high_risk_employee_client()
 
+    def create(self, username):
+        """Create a detection list profile for a user.
+
+        Args:
+            username (str): Username of the user.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        self._detection_list_user_client = (
+            self._microservice_client_factory.get_detection_list_user_client()
+        )
+        return self._detection_list_user_client.create(username)
+
+    def get(self, username):
+        """Get user details by username.
+
+        Args:
+            username (str): Username of the user.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        self._detection_list_user_client = (
+            self._microservice_client_factory.get_detection_list_user_client()
+        )
+        return self._detection_list_user_client.get(username)
+
+    def get_by_id(self, user_id):
+        """Get user details by user_id.
+
+        Args:
+            user_id (str or int): Id of the user.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        self._detection_list_user_client = (
+            self._microservice_client_factory.get_detection_list_user_client()
+        )
+        return self._detection_list_user_client.get_by_id(user_id)
+
     def update_notes(self, user_id, notes):
         """Add or update notes related to the user.
 

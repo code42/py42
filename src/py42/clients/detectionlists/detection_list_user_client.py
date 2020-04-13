@@ -21,6 +21,57 @@ class DetectionListUserClient(BaseClient):
     def _make_uri(self, action):
         return u"{0}{1}{2}".format(self._uri_prefix, self._resource, action)
 
+    def create(self, username):
+        """Create a detection list profile for a user.
+
+        Args:
+            username (str): Username of the user.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        data = {
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userName": username,
+            "notes": "",
+            "riskFactors": [],
+            "cloudUsernames": [],
+        }
+        uri = self._make_uri(u"/create")
+        return self._session.post(uri, data=json.dumps(data))
+
+    def get_by_id(self, user_id):
+        """Get user details by user id.
+
+        Args:
+            user_id (str or int): Id of the user.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        data = {
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+        }
+        uri = self._make_uri(u"/getbyuserid")
+        return self._session.post(uri, data=json.dumps(data))
+
+    def get(self, username):
+        """Get user details by username.
+
+        Args:
+            username (str): Username of the user.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        data = {
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "username": username,
+        }
+        uri = self._make_uri(u"/getbyusername")
+        return self._session.post(uri, data=json.dumps(data))
+
     def update_notes(self, user_id, notes):
         """Add or update notes related to the user.
 

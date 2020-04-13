@@ -3,6 +3,7 @@ import json
 
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 
+
 CREATE_USER_SAMPLE_RESPONSE = """
     {"type$":"USER_V2","tenantId":"1d71796f-af5b-4231-9d8e-df6434da4663",
     "userId":"942897397520289999",
@@ -75,7 +76,7 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
+        assert mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/get"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"

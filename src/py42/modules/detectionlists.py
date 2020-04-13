@@ -15,8 +15,8 @@ class DetectionListsModule(object):
         """Add or update notes related to the user.
 
         Args:
-            user_id (str/int): The user_id whose notes need to be updated.
-            notes (str): Note.
+            user_id (str or int): The user_id whose notes need to be updated.
+            notes (str): User profile notes.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -27,10 +27,10 @@ class DetectionListsModule(object):
         self._detection_list_user_client.update_notes(user_id, notes)
 
     def add_risk_tag(self, user_id, tags):
-        """ Add one or more tags.
+        """Add one or more tags.
 
         Args:
-            user_id (str/int): The user_id whose tag(s) needs to be updated.
+            user_id (str or int): The user_id whose tag(s) needs to be updated.
             tags (str or list of str ): A single tag or multiple tags in a list to be added.
                 e.g "tag1" or ["tag1", "tag2"]
 
@@ -43,10 +43,10 @@ class DetectionListsModule(object):
         self._detection_list_user_client.add_risk_tag(user_id, tags)
 
     def remove_risk_tag(self, user_id, tags):
-        """Remove one or more tags.Args:
+        """Remove one or more tags.
 
         Args:
-            user_id (str/int): The user_id whose tag(s) needs to be removed.
+            user_id (str or int): The user_id whose tag(s) needs to be removed.
             tags (str or list of str ): A single tag or multiple tags in a list to be removed.
                 e.g "tag1" or ["tag1", "tag2"]
 
@@ -62,7 +62,7 @@ class DetectionListsModule(object):
         """Add one or more cloud alias.
 
         Args:
-            user_id (str/int): The user_id whose alias(es) need to be updated.
+            user_id (str or int): The user_id whose alias(es) need to be updated.
             aliases (str or list of str ): A single alias or multiple aliases in a list to be added.
                 e.g "x" or ["email@id", "y"]
 
@@ -78,7 +78,7 @@ class DetectionListsModule(object):
         """Remove one or more cloud alias.
 
         Args:
-            user_id (str/int): The user_id whose alias(es) need to be removed.
+            user_id (str or int): The user_id whose alias(es) need to be removed.
             aliases (str or list of str ): A single alias or multiple aliases in a list to be removed.
                 e.g "x" or ["email@id", "y"]
 

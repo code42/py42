@@ -32,7 +32,7 @@ class DetectionListsModule(object):
         Args:
             user_id (str or int): The user_id whose tag(s) needs to be updated.
             tags (str or list of str ): A single tag or multiple tags in a list to be added.
-                e.g "tag1" or ["tag1", "tag2"]
+               e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -48,7 +48,7 @@ class DetectionListsModule(object):
         Args:
             user_id (str or int): The user_id whose tag(s) needs to be removed.
             tags (str or list of str ): A single tag or multiple tags in a list to be removed.
-                e.g "tag1" or ["tag1", "tag2"]
+               e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -64,7 +64,7 @@ class DetectionListsModule(object):
         Args:
             user_id (str or int): The user_id whose alias(es) need to be updated.
             aliases (str or list of str ): A single alias or multiple aliases in a list to be added.
-                e.g "x" or ["email@id", "y"]
+                e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -80,7 +80,7 @@ class DetectionListsModule(object):
         Args:
             user_id (str or int): The user_id whose alias(es) need to be removed.
             aliases (str or list of str ): A single alias or multiple aliases in a list to be removed.
-                e.g "x" or ["email@id", "y"]
+                e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

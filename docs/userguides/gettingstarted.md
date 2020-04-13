@@ -11,7 +11,7 @@ This project uses the [MIT License](https://github.com/code42/py42/blob/master/L
 
 ## Installation
 
-There are different ways to install py42.
+You can install py42 from PyPI, from source, or from distribution.
 
 ### From PyPI
 
@@ -21,8 +21,8 @@ The easiest and most common way is to use `pip`:
 pip install py42
 ```
 
-If you need to install a previous version of py42, `pip` lets you do that. For example, if you want to install version
-0.4.1, you would do this:
+To install a previous version of py42 via `pip`, add the version number. For example, to install version
+0.4.1, you would enter:
 
 ```bash
 pip install py42==0.4.1
@@ -30,9 +30,9 @@ pip install py42==0.4.1
 
 Visit the [project history](https://pypi.org/project/py42/#history) on PyPI to see all published versions.
 
-### From Source
+### From source
 
-Alternatively, you can install py42 directly from its [source code](https://github.com/code42/py42/pull/51/files):
+Alternatively, you can install py42 directly from [source code](https://github.com/code42/py42/pull/51/files):
 
 ```bash
 git clone https://github.com/code42/py42.git
@@ -44,7 +44,7 @@ When it finishes downloading, from the root project directory, run:
 python setup.py install
 ```
 
-### From Distribution
+### From distribution
 
 If you want create a `.tar` ball for installing elsewhere, run this command from the project's root directory:
 
@@ -52,7 +52,7 @@ If you want create a `.tar` ball for installing elsewhere, run this command from
 python setup.py sdist
 ```
 
-After it finishes building, the`.tar` ball will be located in the newly created `dist` directory. To install it, do:
+After it finishes building, the `.tar` ball will be located in the newly created `dist` directory. To install it, enter:
 
 ```bash
 pip install py42-[VERSION].tar.gz
@@ -64,20 +64,19 @@ pip install py42-[VERSION].tar.gz
 .. important:: py42 currently only supports token-based authentication.
 ```
 
-To initialize the `py42.sdk.SDKClient`, you must provide your credentials (basic auth). If you are writing a script,
+To initialize the `py42.sdk.SDKClient`, you must provide your credentials (basic authentication). If you are writing a script,
 we recommend using a secure password storage library, such as `keyring`, for retrieving passwords. However, subsequent
 requests use JWT authentication.
 
-py42 currently does **not** support SSO login providers or any other Identity providers such as Active Directory or
+py42 currently does **not** support SSO login providers or any other identity providers such as Active Directory or
 Okta.
 
-## Troubleshooting and Support
+## Troubleshooting and support
 
 ### Debug mode
 
-Debug mode may be useful if you are trying to determine if you are experiencing permission issues. When debug mode is
-on, py42 logs HTTP request data to the console. Use the following as a guide for how to turn debug mode
-on in py42:
+Debug mode may be useful if you are trying to determine if you are experiencing permissions issues. When debug mode is
+on, py42 logs HTTP request data to the console. Use the following as a guide for how to turn on debug mode in py42:
 
 ```python
 import py42.sdk
@@ -88,16 +87,14 @@ py42.sdk.settings.debug.level = debug.DEBUG
 
 ### File an issue on GitHub
 
-If you have found an issue with py42, you can create a *New Issue* at the
-[project repository](https://github.com/code42/py42/issues). See this
-[guide](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue) for more information on
-GitHub issues.
+If you are experiencing an issue with py42, you can create a *New issue* at the
+[project repository](https://github.com/code42/py42/issues). See the Github [guide on creating an issue](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue) for more information.
 
-### Reach out to Code42 Support
+### Contact Code42 Support
 
-If you don't have a GitHub account and are experiencing issues, reach out to
+If you don't have a GitHub account and are experiencing issues, contact
 [Code42 support](https://support.code42.com/).
 
-## What's Next?
+## What's next?
 
 Learn the basics by following the py42 [Basics guide](basics.md).

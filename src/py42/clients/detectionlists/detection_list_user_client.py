@@ -1,0 +1,129 @@
+import json
+
+from py42._internal.compat import str
+from py42.clients import BaseClient
+
+
+class DetectionListUserClient(BaseClient):
+    """Administrator utility to manage High Risk employees information.
+
+    `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
+    """
+
+    _api_version = u"v2"
+    _uri_prefix = u"/svc/api/{0}".format(_api_version)
+    _resource = u"/user"
+
+    def __init__(self, session, user_context):
+        super(DetectionListUserClient, self).__init__(session)
+        self._user_context = user_context
+
+    def _make_uri(self, action):
+        return u"{0}{1}{2}".format(self._uri_prefix, self._resource, action)
+
+    def update_notes(self, user_id, notes):
+        """Add or update notes related to the user.
+
+        Args:
+            user_id (str or int): The user_id whose notes need to be updated.
+            notes (str): User profile notes.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        data = {
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "notes": notes,
+        }
+        uri = self._make_uri(u"/updatenotes")
+        return self._session.post(uri, data=json.dumps(data))
+
+    def add_risk_tag(self, user_id, tags):
+        """Add one or more tags.
+
+        Args:
+            user_id (str or int): The user_id whose tag(s) needs to be updated.
+            tags (str or list of str ): A single tag or multiple tags in a list to be added.
+               e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+
+        if type(tags) is str:
+            tags = [tags]
+
+        data = {
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "riskFactors": tags,
+        }
+        uri = self._make_uri(u"/addriskfactors")
+        return self._session.post(uri, data=json.dumps(data))
+
+    def remove_risk_tag(self, user_id, tags):
+        """Remove one or more tags.Args:
+
+        Args:
+            user_id (str or int): The user_id whose tag(s) needs to be removed.
+            tags (str or list of str ): A single tag or multiple tags in a list to be removed.
+               e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        if type(tags) is str:
+            tags = [tags]
+
+        data = {
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "riskFactors": tags,
+        }
+        uri = self._make_uri(u"/removeriskfactors")
+        return self._session.post(uri, data=json.dumps(data))
+
+    def add_cloud_alias(self, user_id, aliases):
+        """Add one or more cloud alias.
+
+        Args:
+            user_id (str or int): The user_id whose alias(es) need to be updated.
+            aliases (str or list of str ): A single alias or multiple aliases in a list to be added.
+                e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        if type(aliases) is str:
+            aliases = [aliases]
+
+        data = {
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "cloudUsernames": aliases,
+        }
+        uri = self._make_uri(u"/addcloudusernames")
+        return self._session.post(uri, data=json.dumps(data))
+
+    def remove_cloud_alias(self, user_id, aliases):
+        """Remove one or more cloud alias.
+
+        Args:
+            user_id (str or int): The user_id whose alias(es) need to be removed.
+            aliases (str or list of str ): A single alias or multiple aliases in a list to be removed.
+                e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        if type(aliases) is str:
+            aliases = [aliases]
+
+        data = {
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "cloudUsernames": aliases,
+        }
+        uri = self._make_uri(u"/removecloudusernames")
+        return self._session.post(uri, data=json.dumps(data))

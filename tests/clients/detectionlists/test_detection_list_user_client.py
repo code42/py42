@@ -1,7 +1,7 @@
 import pytest
 import json
 
-from py42.clients.detectionlists.high_risk_employee import DetectionListUserClient
+from py42.clients.detectionlists.detection_list_user_client import DetectionListUserClient
 
 
 class TestDetectionListUserClient(object):

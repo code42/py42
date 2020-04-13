@@ -7,10 +7,8 @@ from py42._internal.clients import key_value_store
 from py42._internal.clients import securitydata
 from py42.clients import administration, alerts, devices, legalhold, orgs, users
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
-from py42.clients.detectionlists.high_risk_employee import (
-    HighRiskEmployeeClient,
-    DetectionListUserClient,
-)
+from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
+from py42.clients.detectionlists.detection_list_user_client import DetectionListUserClient
 from py42.clients.file_event import FileEventClient
 from py42.sdk.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
 

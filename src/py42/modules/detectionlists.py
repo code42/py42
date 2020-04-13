@@ -82,7 +82,7 @@ class DetectionListsModule(object):
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
         )
-        self._detection_list_user_client.add_risk_tag(user_id, tags)
+        self._detection_list_user_client.add_risk_tags(user_id, tags)
 
     def remove_risk_tag(self, user_id, tags):
         """Remove one or more tags.
@@ -98,7 +98,7 @@ class DetectionListsModule(object):
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
         )
-        self._detection_list_user_client.remove_risk_tag(user_id, tags)
+        self._detection_list_user_client.remove_risk_tags(user_id, tags)
 
     def add_cloud_alias(self, user_id, aliases):
         """Add one or more cloud alias.
@@ -114,7 +114,7 @@ class DetectionListsModule(object):
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
         )
-        self._detection_list_user_client.add_cloud_alias(user_id, aliases)
+        self._detection_list_user_client.add_cloud_aliases(user_id, aliases)
 
     def remove_cloud_alias(self, user_id, aliases):
         """Remove one or more cloud alias.
@@ -130,4 +130,4 @@ class DetectionListsModule(object):
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
         )
-        self._detection_list_user_client.remove_cloud_alias(user_id, aliases)
+        self._detection_list_user_client.remove_cloud_aliases(user_id, aliases)

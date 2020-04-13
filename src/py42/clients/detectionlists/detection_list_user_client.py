@@ -90,7 +90,7 @@ class DetectionListUserClient(BaseClient):
         uri = self._make_uri(u"/updatenotes")
         return self._session.post(uri, data=json.dumps(data))
 
-    def add_risk_tag(self, user_id, tags):
+    def add_risk_tags(self, user_id, tags):
         """Add one or more tags.
 
         Args:
@@ -113,7 +113,7 @@ class DetectionListUserClient(BaseClient):
         uri = self._make_uri(u"/addriskfactors")
         return self._session.post(uri, data=json.dumps(data))
 
-    def remove_risk_tag(self, user_id, tags):
+    def remove_risk_tags(self, user_id, tags):
         """Remove one or more tags.Args:
 
         Args:
@@ -135,7 +135,7 @@ class DetectionListUserClient(BaseClient):
         uri = self._make_uri(u"/removeriskfactors")
         return self._session.post(uri, data=json.dumps(data))
 
-    def add_cloud_alias(self, user_id, aliases):
+    def add_cloud_aliases(self, user_id, aliases):
         """Add one or more cloud alias.
 
         Args:
@@ -157,7 +157,7 @@ class DetectionListUserClient(BaseClient):
         uri = self._make_uri(u"/addcloudusernames")
         return self._session.post(uri, data=json.dumps(data))
 
-    def remove_cloud_alias(self, user_id, aliases):
+    def remove_cloud_aliases(self, user_id, aliases):
         """Remove one or more cloud alias.
 
         Args:

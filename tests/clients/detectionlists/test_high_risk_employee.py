@@ -2,6 +2,7 @@ import pytest
 import json
 
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
+from py42.clients.detectionlists.detection_list_user_client import DetectionListUserClient
 
 
 CREATE_USER_SAMPLE_RESPONSE = """
@@ -21,12 +22,22 @@ class TestHighRiskEmployeeClient(object):
         mock_session.post.return_value = py42_response
         return mock_session
 
-    def test_add_posts_expected_data(self, user_context, mock_session_post_success):
-        high_risk_employee_client = HighRiskEmployeeClient(mock_session_post_success, user_context)
+    @pytest.fixture
+    def mock_user_client(self, mock_session, user_context, py42_response):
+        user_client = DetectionListUserClient(mock_session, user_context)
+        mock_session.post.return_value = py42_response
+        return user_client
+
+    def test_add_posts_expected_data(
+        self, user_context, mock_session_post_success, mock_user_client
+    ):
+        high_risk_employee_client = HighRiskEmployeeClient(
+            mock_session_post_success, user_context, mock_user_client
+        )
         high_risk_employee_client.add("942897397520289999")
 
         posted_data = json.loads(mock_session_post_success.post.call_args[1]["data"])
-        assert mock_session_post_success.post.call_count == 1
+        assert mock_session_post_success.post.call_count == 2
         assert mock_session_post_success.post.call_args[0][0] == "/svc/api/v2/highriskemployee/add"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -34,9 +45,11 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_set_alerts_enabled_posts_expected_data_with_default_value(
-        self, user_context, mock_session
+        self, user_context, mock_session, mock_user_client
     ):
-        high_risk_employee_client = HighRiskEmployeeClient(mock_session, user_context)
+        high_risk_employee_client = HighRiskEmployeeClient(
+            mock_session, user_context, mock_user_client
+        )
         high_risk_employee_client.set_alerts_enabled()
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -47,8 +60,12 @@ class TestHighRiskEmployeeClient(object):
             and posted_data["alertsEnabled"] is True
         )
 
-    def test_set_alerts_enabled_posts_expected_data(self, user_context, mock_session):
-        high_risk_employee_client = HighRiskEmployeeClient(mock_session, user_context)
+    def test_set_alerts_enabled_posts_expected_data(
+        self, user_context, mock_session, mock_user_client
+    ):
+        high_risk_employee_client = HighRiskEmployeeClient(
+            mock_session, user_context, mock_user_client
+        )
         high_risk_employee_client.set_alerts_enabled(False)
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -59,8 +76,10 @@ class TestHighRiskEmployeeClient(object):
             and posted_data["alertsEnabled"] is False
         )
 
-    def test_remove_posts_expected_data(self, user_context, mock_session):
-        high_risk_employee_client = HighRiskEmployeeClient(mock_session, user_context)
+    def test_remove_posts_expected_data(self, user_context, mock_session, mock_user_client):
+        high_risk_employee_client = HighRiskEmployeeClient(
+            mock_session, user_context, mock_user_client
+        )
         high_risk_employee_client.remove("942897397520289999")
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -70,8 +89,10 @@ class TestHighRiskEmployeeClient(object):
         assert posted_data["tenantId"] == user_context.get_current_tenant_id()
         assert posted_data["userId"] == "942897397520289999"
 
-    def test_get_posts_expected_data(self, user_context, mock_session):
-        high_risk_employee_client = HighRiskEmployeeClient(mock_session, user_context)
+    def test_get_posts_expected_data(self, user_context, mock_session, mock_user_client):
+        high_risk_employee_client = HighRiskEmployeeClient(
+            mock_session, user_context, mock_user_client
+        )
         high_risk_employee_client.get("942897397520289999")
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -82,8 +103,10 @@ class TestHighRiskEmployeeClient(object):
             and posted_data["userId"] == "942897397520289999"
         )
 
-    def test_get_all_posts_expected_data(self, user_context, mock_session):
-        high_risk_employee_client = HighRiskEmployeeClient(mock_session, user_context)
+    def test_get_all_posts_expected_data(self, user_context, mock_session, mock_user_client):
+        high_risk_employee_client = HighRiskEmployeeClient(
+            mock_session, user_context, mock_user_client
+        )
         for _ in high_risk_employee_client.get_all():
             break
 
@@ -99,8 +122,12 @@ class TestHighRiskEmployeeClient(object):
             and posted_data["srtDirection"] is None
         )
 
-    def test_get_all_posts_expected_data_with_non_default_values(self, user_context, mock_session):
-        high_risk_employee_client = HighRiskEmployeeClient(mock_session, user_context)
+    def test_get_all_posts_expected_data_with_non_default_values(
+        self, user_context, mock_session, mock_user_client
+    ):
+        high_risk_employee_client = HighRiskEmployeeClient(
+            mock_session, user_context, mock_user_client
+        )
         for _ in high_risk_employee_client.get_all(
             filter_type="NEW_FILTER", sort_direction="DESC", sort_key="DISPLAY_NAME"
         ):

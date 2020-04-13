@@ -91,7 +91,9 @@ class MicroserviceClientFactory(object):
     def get_high_risk_employee_client(self):
         if not self._high_risk_employee_client:
             session = self._get_jwt_session(u"employeecasemanagement-API_URL")
-            self._high_risk_employee_client = HighRiskEmployeeClient(session, self._user_context)
+            self._high_risk_employee_client = HighRiskEmployeeClient(
+                session, self._user_context, self.get_detection_list_user_client()
+            )
         return self._high_risk_employee_client
 
     def get_detection_list_user_client(self):

@@ -15,9 +15,10 @@ class HighRiskEmployeeClient(BaseClient):
     _uri_prefix = u"/svc/api/{0}".format(_api_version)
     _resource = u"/highriskemployee"
 
-    def __init__(self, session, user_context):
+    def __init__(self, session, user_context, user_client):
         super(HighRiskEmployeeClient, self).__init__(session)
         self._user_context = user_context
+        self._user_client = user_client
 
     def _make_uri(self, action):
         return u"{0}{1}{2}".format(self._uri_prefix, self._resource, action)
@@ -31,8 +32,12 @@ class HighRiskEmployeeClient(BaseClient):
     def add(self, user_id):
         """Adds a user to high risk employee detection list.
 
-        If a user is already added to high risk employee, further attempts to add will
-        return failure error.
+        A user can only be added to high risk employee detection list if a user profile
+        exists in detection list.
+
+        It would return failure when
+            - a user already exists in high risk employee detection list
+            - user_id is not found in detection lists
 
         Args:
             user_id (str or int): Id of the user who needs to be added to HRE detection list.
@@ -40,9 +45,9 @@ class HighRiskEmployeeClient(BaseClient):
         Returns:
             :class:`py42.sdk.response.Py42Response`
         """
-
-        tenant_id = self._user_context.get_current_tenant_id()
-        return self._add_high_risk_employee(tenant_id, user_id)
+        if self._user_client.get_by_id(user_id):
+            tenant_id = self._user_context.get_current_tenant_id()
+            return self._add_high_risk_employee(tenant_id, user_id)
 
     def set_alerts_enabled(self, enabled=True):
         """Enable alerts.
@@ -77,7 +82,8 @@ class HighRiskEmployeeClient(BaseClient):
         """Get user information.
 
         Args:
-            user_id (str or int): Id of the user who needs to be added to HRE detection list.
+            user_id (str or int): Id of user who has been added to the High Risk Employee
+              detection list.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

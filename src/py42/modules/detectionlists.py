@@ -1,6 +1,7 @@
 class DetectionListsModule(object):
-    def __init__(self, microservice_client_factory):
+    def __init__(self, microservice_client_factory, user_client):
         self._microservice_client_factory = microservice_client_factory
+        self._user_client = user_client
         self._detection_list_user_client = None
 
     @property
@@ -9,7 +10,7 @@ class DetectionListsModule(object):
 
     @property
     def high_risk_employee(self):
-        return self._microservice_client_factory.get_high_risk_employee_client()
+        return self._microservice_client_factory.get_high_risk_employee_client(self._user_client)
 
     def create(self, username):
         """Create a detection list profile for a user.

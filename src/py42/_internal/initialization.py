@@ -51,7 +51,7 @@ class SDKDependencies(object):
             self.security_client, self.storage_client_factory, microservice_client_factory
         )
         self.detection_lists_module = detectionlists.DetectionListsModule(
-            microservice_client_factory
+            microservice_client_factory, self.user_client
         )
 
     def _set_v3_session(self, host_address, session_factory, root_session):

@@ -38,7 +38,7 @@ class TestDetectionListUserClient(object):
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyuserid"
+        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"

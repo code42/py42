@@ -2,6 +2,7 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.sdk.exceptions import Py42NotFoundError, Py42BadRequestError
 
 
 class HighRiskEmployeeClient(BaseClient):
@@ -15,10 +16,11 @@ class HighRiskEmployeeClient(BaseClient):
     _uri_prefix = u"/svc/api/{0}".format(_api_version)
     _resource = u"/highriskemployee"
 
-    def __init__(self, session, user_context, user_client):
+    def __init__(self, session, user_context, detection_list_user_client, user_client):
         super(HighRiskEmployeeClient, self).__init__(session)
         self._user_context = user_context
         self._user_client = user_client
+        self._detection_list_user_client = detection_list_user_client
 
     def _make_uri(self, action):
         return u"{0}{1}{2}".format(self._uri_prefix, self._resource, action)
@@ -32,22 +34,30 @@ class HighRiskEmployeeClient(BaseClient):
     def add(self, user_id):
         """Adds a user to high risk employee detection list.
 
-        A user can only be added to high risk employee detection list if a user profile
-        exists in detection list.
+        A user profile in detection list will be created before adding to High Risk Employee
+        list if it doesn't exist.
 
-        It would return failure when
+        Uid from user_client and user_id of detection list are identical, to add a user to
+        High Risk Employee list, Uid is the intended user_id in the argument.
+
+        Returns failure when
             - a user already exists in high risk employee detection list
-            - user_id is not found in detection lists
+            - user_id (uid) is not found in user client API.
 
         Args:
-            user_id (str or int): Id of the user who needs to be added to HRE detection list.
+            user_id (str or int): User id of the user who needs to be added to HRE detection list.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
         """
-        if self._user_client.get_by_id(user_id):
-            tenant_id = self._user_context.get_current_tenant_id()
-            return self._add_high_risk_employee(tenant_id, user_id)
+        try:
+            self._detection_list_user_client.get_by_id(user_id)
+        except (Py42NotFoundError, Py42BadRequestError):
+            user = self._user_client.get_by_uid(user_id)
+            self._detection_list_user_client.create(user["username"])
+
+        tenant_id = self._user_context.get_current_tenant_id()
+        return self._add_high_risk_employee(tenant_id, user_id)
 
     def set_alerts_enabled(self, enabled=True):
         """Enable alerts.

@@ -53,7 +53,7 @@ class DetectionListUserClient(BaseClient):
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
         }
-        uri = self._make_uri(u"/getbyuserid")
+        uri = self._make_uri(u"/getbyid")
         return self._session.post(uri, data=json.dumps(data))
 
     def get(self, username):

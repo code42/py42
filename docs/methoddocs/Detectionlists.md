@@ -1,4 +1,4 @@
-# Detection List
+# Detection Lists
 
 ```eval_rst
 .. autoclass:: py42.modules.detectionlists.DetectionListsModule

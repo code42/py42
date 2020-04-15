@@ -8,6 +8,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 0.8.0 - 2020-04-15
+
+### Added
+
+- `sdk.detectionlists` methods:
+  - `update_notes()`
+  - `remove_risk_tag()`
+  - `add_risk_tag()`
+  - `add_cloud_alias()`
+  - `remove_cloud_alias()`
+  - `create()`
+  - `get()`
+  - `get_by_id`()
+
+- `sdk.detectionlists.high_risk_employee` methods:
+    - `add()`
+    - `remove()`
+    - `get()`
+    - `search()`
+    - `set_alerts_enabled()`
+
 ## 0.7.0 - 2020-04-10
 
 ### Removed

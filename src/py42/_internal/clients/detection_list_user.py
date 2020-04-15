@@ -31,11 +31,11 @@ class DetectionListUserClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userName": username,
-            "notes": "",
-            "riskFactors": [],
-            "cloudUsernames": [],
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userName": username,
+            u"notes": "",
+            u"riskFactors": [],
+            u"cloudUsernames": [],
         }
         uri = self._make_uri(u"/create")
         return self._session.post(uri, data=json.dumps(data))
@@ -49,7 +49,7 @@ class DetectionListUserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {"tenantId": self._user_context.get_current_tenant_id(), "userId": user_id}
+        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"userId": user_id}
         uri = self._make_uri(u"/getbyid")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -62,7 +62,7 @@ class DetectionListUserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {"tenantId": self._user_context.get_current_tenant_id(), "username": username}
+        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"username": username}
         uri = self._make_uri(u"/getbyusername")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -77,9 +77,9 @@ class DetectionListUserClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "notes": notes,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"notes": notes,
         }
         uri = self._make_uri(u"/updatenotes")
         return self._session.post(uri, data=json.dumps(data))
@@ -100,9 +100,9 @@ class DetectionListUserClient(BaseClient):
             tags = [tags]
 
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "riskFactors": tags,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"riskFactors": tags,
         }
         uri = self._make_uri(u"/addriskfactors")
         return self._session.post(uri, data=json.dumps(data))
@@ -122,9 +122,9 @@ class DetectionListUserClient(BaseClient):
             tags = [tags]
 
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "riskFactors": tags,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"riskFactors": tags,
         }
         uri = self._make_uri(u"/removeriskfactors")
         return self._session.post(uri, data=json.dumps(data))
@@ -144,9 +144,9 @@ class DetectionListUserClient(BaseClient):
             aliases = [aliases]
 
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "cloudUsernames": aliases,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"cloudUsernames": aliases,
         }
         uri = self._make_uri(u"/addcloudusernames")
         return self._session.post(uri, data=json.dumps(data))
@@ -166,9 +166,9 @@ class DetectionListUserClient(BaseClient):
             aliases = [aliases]
 
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "cloudUsernames": aliases,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"cloudUsernames": aliases,
         }
         uri = self._make_uri(u"/removecloudusernames")
         return self._session.post(uri, data=json.dumps(data))

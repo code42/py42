@@ -27,7 +27,7 @@ class HighRiskEmployeeClient(BaseClient):
 
     def _add_high_risk_employee(self, tenant_id, user_id):
 
-        data = {"tenantId": tenant_id, "userId": user_id}
+        data = {u"tenantId": tenant_id, u"userId": user_id}
         uri = self._make_uri(u"/add")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -54,7 +54,7 @@ class HighRiskEmployeeClient(BaseClient):
             self._detection_list_user_client.get_by_id(user_id)
         except (Py42NotFoundError, Py42BadRequestError):
             user = self._user_client.get_by_uid(user_id)
-            self._detection_list_user_client.create(user["username"])
+            self._detection_list_user_client.create(user[u"username"])
 
         tenant_id = self._user_context.get_current_tenant_id()
         return self._add_high_risk_employee(tenant_id, user_id)
@@ -68,7 +68,7 @@ class HighRiskEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {"tenantId": self._user_context.get_current_tenant_id(), "alertsEnabled": enabled}
+        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"alertsEnabled": enabled}
         uri = self._make_uri(u"/setalertstate")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -81,7 +81,7 @@ class HighRiskEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {"tenantId": self._user_context.get_current_tenant_id(), "userId": user_id}
+        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"userId": user_id}
         uri = self._make_uri(u"/remove")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -95,7 +95,7 @@ class HighRiskEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {"tenantId": self._user_context.get_current_tenant_id(), "userId": user_id}
+        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"userId": user_id}
         uri = self._make_uri(u"/get")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -122,7 +122,7 @@ class HighRiskEmployeeClient(BaseClient):
         uri = self._make_uri(u"/search")
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_all(self, filter_type="OPEN", sort_key=None, sort_direction=None):
+    def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
         """Search High Risk employee list. Filter results by filter_type.
 
         Args:
@@ -137,7 +137,7 @@ class HighRiskEmployeeClient(BaseClient):
 
         return get_all_pages(
             self._get_high_risk_employees_page,
-            "items",
+            u"items",
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
             sort_key=sort_key,

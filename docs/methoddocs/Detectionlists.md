@@ -6,7 +6,6 @@
     :show-inheritance:
 ```
 
-
 ## Departing Employee
 
 ```eval_rst
@@ -14,7 +13,6 @@
     :members:
     :show-inheritance:
 ```
-
 
 ## High Risk Employee
 

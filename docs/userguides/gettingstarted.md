@@ -81,9 +81,9 @@ on in py42:
 
 ```python
 import py42.sdk
-import py42.sdk.settings.debug as debug
+import py42.settings.debug as debug
 
-py42.sdk.settings.debug.level = debug.DEBUG
+py42.settings.debug.level = debug.DEBUG
 ```
 
 ### File an issue on GitHub

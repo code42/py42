@@ -1,6 +1,6 @@
 # py42 Basics
 
-Gain confidence in writing your own scripts by learning the basics of py42. The following examples use
+This guide explains the basic concepts of py42. Learning these basics can help you gain confidence in writing your own scripts. The following examples use
 `py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate how to use py42:
 - [py42 Basics](#py42-basics)
   - [Initialization](#initialization)
@@ -9,9 +9,12 @@ Gain confidence in writing your own scripts by learning the basics of py42. The 
   - [Dates](#dates)
   - [Exceptions](#exceptions)
 
+The examples from this guide are intended as blanket concepts that apply to other
+areas in py42. For example, paging over users and devices works the same way as over departing employees and alerts.
+
 ## Initialization
 
-To do anything with py42, you need to initialize the SDK:
+To use py42, you must initialize the SDK:
 
 ```python
 import py42.sdk
@@ -28,8 +31,8 @@ response items. Here are some examples:
 * `py42.sdk.legalhold.get_all_matters()`
 * `py42.sdk.orgs.get_all()`
 
-These methods each return a [python generator](https://wiki.python.org/moin/Generators). By looping over the pages
-returned by the generator, we can access the actual list of items we seek. Use the code snippet below as an example
+These methods each return a [python generator](https://wiki.python.org/moin/Generators). Looping over the pages
+returned by the generator gives you access to the actual list of items. Use the code snippet below as an example
 for working with generators and paging in py42:
 
 ```python
@@ -50,7 +53,7 @@ Each page is a typical py42 response. The next section covers what you can do wi
 
 py42 clients return `Py42Response` objects which are intentionally similar to `requests.Response` objects.
 The `Py42Response` class hides unneeded metadata found on the raw `requests.Response.text` (which is available as
-`Py42Response.raw_text`) so that it's easier to get the most useful parts of the response. Also, the object is
+`Py42Response.raw_text`), making it easier to get the most useful parts of the response. Also, the object is
 subscriptable, meaning you can access it with keys or indices (depending on the JSON type underneath `data` on Code42 API responses):
 
 ```python
@@ -58,7 +61,7 @@ user = response["users"][0]
 item = list_response[0]["itemProperty"]
 ```
 
-To figure out all the keys on a response, you can observe its `.text` attribute. By printing the response, you
+To see all the keys on a response, observe its `.text` attribute. By printing the response, you
 essentially print its text property:
 
 ```python
@@ -104,14 +107,14 @@ for page in response:
 ## Exceptions
 
 py42 throws some of its own exceptions when failures occur. py42 exceptions are found in the `py42.sdk.exceptions`
-module. Here are some of the available exceptions:
-* `Py42ForbiddenError`: (403) Meaning you don't have the necessary permissions with your currently signed-in account
+module. Some of the available exceptions are:
+* `Py42ForbiddenError`: (403) With your currently signed-in account, you don't have the necessary permissions 
 to perform the action you were trying to do.
-* `Py42UnauthorizedError`: (401) Meaning you probably supplied the wrong username or password.
-* `Py42InternalServerError`: (500) Meaning it's likely an unhandled issue on our servers.
+* `Py42UnauthorizedError`: (401) The username or password is incorrect.
+* `Py42InternalServerError`: (500) Likely an unhandled issue on our servers.
 
-Let's say you are making a `create_sdk()` function and want to print a more user-friendly message when the provided
-username or password are incorrect. This is how you would do that:
+For example, you are making a `create_sdk()` function and want to print a more user-friendly message when the provided
+username or password are incorrect:
 
 ```python
 import keyring
@@ -129,5 +132,3 @@ def create_sdk(username):
         exit(1)
 ```
 
-In summary, keep in mind that the examples from this guide are intended to be blanket concepts that apply to other
-areas in py42. You will page over users and devices the same way you page over departing-employees and alerts.

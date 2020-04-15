@@ -1,6 +1,6 @@
 import json
 
-from py42._internal.detection_list_user import DetectionListUserClient
+from py42._internal.clients.detection_list_user import DetectionListUserClient
 
 
 class TestDetectionListUserClient(object):

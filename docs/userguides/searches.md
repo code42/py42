@@ -1,9 +1,9 @@
 # Executing Searches
 
-py42 includes a powerful, flexible query system that allows you to quickly and easily search file events and alerts.
-This guide helps you understand the syntax for building queries and executing searches.
+py42 features a powerful, flexible query system for quickly and easily searching file events and alerts.
+This guide explains the syntax for building queries and executing searches.
 
-## File Event Searches
+## Search File Events
 
 First, import the required modules and classes and create the SDK:
 
@@ -15,7 +15,7 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 ```
 
-You will need to create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type
+You must create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type
 (in the form of a class), such as `EmailSender`, and an operator (in the form of a function), such as `is_in()`.
 Some example filter groups look like this:
 
@@ -34,7 +34,7 @@ any_query = FileEventQuery.any(email_filter, exposure_filter)
 all_query = FileEventQuery.all(exposure_filter, ip_filter)
 ```
 
-For convenience, the `FileEventQuery` constructor does the same as `all()`:
+For convenience, the `FileEventQuery` constructor works the same way as `all()`:
 
 ```python
 all_query = FileEventQuery(exposure_filter, ip_filter)
@@ -68,10 +68,9 @@ for event in file_events:
     print(event["md5Checksum"])
 ```
 
-## Alert Searches
+## Search Alerts
 
-Conducting alert searches is very similar to file event searches. Much of the content for file event searches applies
-to alert searches.
+Alert searches work in a very similar way to file event searches. 
 
 To start, import the filters and query object:
 

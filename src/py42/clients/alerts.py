@@ -25,7 +25,7 @@ class AlertClient(BaseClient):
                 See `userguides.searches` to learn more about how to construct a query.
 
         Returns:
-            :class:`py42.sdk.reponse.Py42Response`: A response containing the alerts that match the given
+            :class:`py42.response.Py42Response`: A response containing the alerts that match the given
             query.
         """
         query = str(query)
@@ -43,7 +43,7 @@ class AlertClient(BaseClient):
                 None.
 
         Returns:
-            :class:`py42.sdk.reponse.Py42Response`: A response containing the alert details.
+            :class:`py42.response.Py42Response`: A response containing the alert details.
         """
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]
@@ -63,7 +63,7 @@ class AlertClient(BaseClient):
             reason (str, optional): The reason the alerts are now resolved. Defaults to None.
 
         Returns:
-            :class:`py42.sdk.reponse.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]
@@ -83,7 +83,7 @@ class AlertClient(BaseClient):
             reason (str, optional): The reason the alerts are reopened. Defaults to None.
 
         Returns:
-            :class:`py42.sdk.reponse.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]

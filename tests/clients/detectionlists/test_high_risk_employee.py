@@ -2,7 +2,7 @@ import pytest
 import json
 
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
-from py42.clients.detectionlists.detection_list_user_client import DetectionListUserClient
+from py42._internal.detection_list_user import DetectionListUserClient
 
 
 CREATE_USER_SAMPLE_RESPONSE = """

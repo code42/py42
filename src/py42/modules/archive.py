@@ -32,7 +32,7 @@ class ArchiveModule(object):
                 contents, necessary for restoring files. This is only relevant to users with
                 this level of archive security. Defaults to None.
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the streamed content.
+            :class:`py42.response.Py42Response`: A response containing the streamed content.
 
         Usage example::
 
@@ -61,7 +61,7 @@ class ArchiveModule(object):
                 backup sets for.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the backup sets.
+            :class:`py42.response.Py42Response`: A response containing the backup sets.
         """
         return self._archive_client.get_backup_sets(device_guid, destination_guid)
 
@@ -74,7 +74,7 @@ class ArchiveModule(object):
             org_id (int): The ID for the organization to get restore history for.
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of restore history.
         """
         return self._archive_client.get_all_restore_history(days, u"orgId", org_id)
@@ -88,7 +88,7 @@ class ArchiveModule(object):
             user_id (int): The ID for the user to get restore history for.
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of restore history.
         """
         return self._archive_client.get_all_restore_history(days, u"userId", user_id)
@@ -102,7 +102,7 @@ class ArchiveModule(object):
             device_id (int): The ID for the device to get restore history for.
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of restore history.
         """
         return self._archive_client.get_all_restore_history(days, u"computerId", device_id)

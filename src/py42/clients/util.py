@@ -1,5 +1,7 @@
+import py42.settings as settings
+
+
 def get_all_pages(func, key, *args, **kwargs):
-    import py42.sdk.settings as settings
 
     item_count = settings.items_per_page
     page_num = 0

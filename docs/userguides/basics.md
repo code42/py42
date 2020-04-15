@@ -87,7 +87,7 @@ the `departing_on_or_after_epoch` parameter in the
 
 ```python
 import py42.sdk
-import py42.sdk.util
+import py42.util
 from datetime import datetime, timedelta
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
@@ -119,7 +119,7 @@ username or password are incorrect:
 ```python
 import keyring
 import py42.sdk
-from py42.sdk.exceptions import Py42UnauthorizedError
+from py42.exceptions import Py42UnauthorizedError
 
 
 def create_sdk(username):

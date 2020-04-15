@@ -1,6 +1,6 @@
 import pytest
 
-from py42.sdk.exceptions import (
+from py42.exceptions import (
     raise_py42_error,
     Py42BadRequestError,
     Py42UnauthorizedError,

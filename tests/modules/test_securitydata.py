@@ -6,7 +6,7 @@ from py42._internal.clients.storage import StorageClient, StorageClientFactory
 from py42._internal.clients.storage import StorageSecurityClient
 from py42.clients.file_event import FileEventClient
 from py42.modules.securitydata import PlanStorageInfo, SecurityModule
-from py42.sdk.response import Py42Response
+from py42.response import Py42Response
 
 RAW_QUERY = "RAW JSON QUERY"
 

@@ -102,7 +102,7 @@ class Py42InternalServerError(Py42HTTPError):
 
 
 def raise_py42_error(raised_error):
-    """Raises the appropriate :class:`py42.sdk.exceptions.Py42HttpError` based on the given
+    """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     error's response status code.
     """
     if raised_error.response.status_code == 400:

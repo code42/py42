@@ -1,7 +1,7 @@
 import pytest
 
 from py42.clients.administration import AdministrationClient
-from py42.sdk.usercontext import UserContext
+from py42.usercontext import UserContext
 
 _GET_CURRENT_USER = """
 {

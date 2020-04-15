@@ -2,6 +2,7 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.util import convert_timestamp_to_str
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -31,9 +32,8 @@ class DepartingEmployeeClient(BaseClient):
                 OneDrive, Gmail, Office 365). Defaults to None.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
-        from py42.sdk.util import convert_timestamp_to_str
 
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         cloud_usernames = cloud_usernames if cloud_usernames else []
@@ -61,7 +61,7 @@ class DepartingEmployeeClient(BaseClient):
                 Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
 
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
@@ -78,7 +78,6 @@ class DepartingEmployeeClient(BaseClient):
         page_num=None,
         page_size=None,
     ):
-        from py42.sdk.util import convert_timestamp_to_str
 
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         departing_on_or_after_date = (
@@ -118,7 +117,7 @@ class DepartingEmployeeClient(BaseClient):
                 to ``DESC``.
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of departing employees.
         """
         return get_all_pages(
@@ -140,7 +139,7 @@ class DepartingEmployeeClient(BaseClient):
             alerts_enabled (bool): Set alerting to on (True) or off (False). Defaults to True.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"togglealerts")
@@ -156,7 +155,7 @@ class DepartingEmployeeClient(BaseClient):
                 Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the Departing Employee case.
+            :class:`py42.response.Py42Response`: A response containing the Departing Employee case.
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         case_id = self._get_case_id_from_username(tenant_id, username)
@@ -172,7 +171,7 @@ class DepartingEmployeeClient(BaseClient):
                 Defaults to None (the tenant_id of SDK authorization user will be used).
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the Departing Employee case.
+            :class:`py42.response.Py42Response`: A response containing the Departing Employee case.
         """
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"details")
@@ -207,9 +206,8 @@ class DepartingEmployeeClient(BaseClient):
                 OneDrive, Gmail, Office 365). Defaults to None.
 
         Returns:
-                :class:`py42.sdk.response.Py42Response`
+                :class:`py42.response.Py42Response`
         """
-        from py42.sdk.util import convert_timestamp_to_str
 
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
 

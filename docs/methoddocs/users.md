@@ -7,7 +7,7 @@
 ```
 
 ```eval_rst
-.. autoclass:: py42.sdk.usercontext.UserContext
+.. autoclass:: py42.usercontext.UserContext
     :members:
     :show-inheritance:
 ```

@@ -4,7 +4,7 @@ from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
 from py42.modules import archive as archive_module, detectionlists, securitydata as sec_module
-from py42.sdk.usercontext import UserContext
+from py42.usercontext import UserContext
 
 
 def _get_storage_client_factory(session_factory, archive_locator_factory):
@@ -51,7 +51,7 @@ class SDKDependencies(object):
             self.security_client, self.storage_client_factory, microservice_client_factory
         )
         self.detection_lists_module = detectionlists.DetectionListsModule(
-            microservice_client_factory
+            microservice_client_factory, self.user_client
         )
 
     def _set_v3_session(self, host_address, session_factory, root_session):

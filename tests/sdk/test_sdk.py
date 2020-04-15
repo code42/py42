@@ -7,7 +7,7 @@ from py42.clients import administration, devices, legalhold, orgs
 from py42.clients import users
 from py42.modules import archive as arch_mod, detectionlists, securitydata as sec_mod
 from py42.sdk import SDKClient
-from py42.sdk.usercontext import UserContext
+from py42.usercontext import UserContext
 
 HOST_ADDRESS = "https://example.com"
 TEST_USERNAME = "test-username"

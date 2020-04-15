@@ -74,7 +74,7 @@ class DeviceClient(BaseClient):
                 computer name, etc. Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of devices.
 
             * For a logged in ordinary end user, it returns all the user's devices.
@@ -111,7 +111,7 @@ class DeviceClient(BaseClient):
               backup summary. Defaults to None.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing device information.
+            :class:`py42.response.Py42Response`: A response containing device information.
         """
         uri = u"/api/Computer/{0}".format(device_id)
         params = dict(incBackupUsage=include_backup_usage, **kwargs)
@@ -128,7 +128,7 @@ class DeviceClient(BaseClient):
               backup summary. Defaults to None.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing device information.
+            :class:`py42.response.Py42Response`: A response containing device information.
         """
         uri = u"/api/Computer/{0}".format(guid)
         params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
@@ -143,7 +143,7 @@ class DeviceClient(BaseClient):
             device_id (int): The ID of the device.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/ComputerBlock/{0}".format(device_id)
         return self._session.put(uri)
@@ -157,7 +157,7 @@ class DeviceClient(BaseClient):
             device_id (int): The ID of the device.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/ComputerBlock/{0}".format(device_id)
         return self._session.delete(uri)
@@ -171,7 +171,7 @@ class DeviceClient(BaseClient):
             device_id (int): The ID of the device.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": device_id}
@@ -186,7 +186,7 @@ class DeviceClient(BaseClient):
             device_id (int): The ID of the device.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/v4/computer-deactivation/remove"
         data = {u"id": device_id}
@@ -202,7 +202,7 @@ class DeviceClient(BaseClient):
             device_id (int): The ID of the device.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/ComputerDeauthorization/{0}".format(device_id)
         return self._session.put(uri)
@@ -217,7 +217,7 @@ class DeviceClient(BaseClient):
             keys (type, optional): A comma separated list of device keys. Defaults to None.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing settings information.
+            :class:`py42.response.Py42Response`: A response containing settings information.
         """
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}

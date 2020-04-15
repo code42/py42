@@ -1,6 +1,5 @@
 import sys
 
-import py42
 from py42.__version__ import __version__
 
 proxies = None
@@ -22,4 +21,5 @@ def get_user_agent_string():
 
 
 def set_user_agent_suffix(suffix):
-    py42.sdk.settings._custom_user_suffix = u" {0}".format(suffix)
+    global _custom_user_suffix
+    _custom_user_suffix = u" {0}".format(suffix)

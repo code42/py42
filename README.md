@@ -39,7 +39,7 @@ Import a couple essentials
 
 ```python
 >>> import py42.sdk
->>> import py42.sdk.util as util
+>>> import py42.util as util
 ```
 
 Initialize the client.
@@ -94,15 +94,15 @@ There are a few default settings that affect the behavior of the client.
 | ---- | ----------- | ------- |
 | verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.| `True`
 | proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.| `None`
-| debug.level | Controls print statements for debugging | `py42.sdk.settings.debug.NONE`
+| debug.level | Controls print statements for debugging | `py42.settings.debug.NONE`
 | items_per_page | Controls how many items are retrieved per request for methods that loops over several "pages" of items in order to collect them all. | 1000
 
-To override these settings, import `py42.sdk.settings` and override values as necessary before creating the client.
+To override these settings, import `py42.settings` and override values as necessary before creating the client.
  For example, to disable certificate validation in a dev environment:
 
 ```python
 import py42.sdk
-import py42.sdk.settings as settings
+import py42.settings as settings
 
 settings.verify_ssl_certs = False
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")

@@ -3,7 +3,7 @@ from json import dumps
 import pytest
 
 from py42._internal.session import Py42Session
-from py42.sdk.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InternalServerError
 
 default_kwargs = {
     "params": None,

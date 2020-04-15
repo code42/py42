@@ -6,14 +6,14 @@ from threading import Lock
 import requests.adapters
 
 from py42._internal.compat import str, urljoin, urlparse
-from py42.sdk.exceptions import raise_py42_error
-from py42.sdk.response import Py42Response
+import py42.settings as settings
+import py42.settings.debug as debug
+from py42.exceptions import raise_py42_error
+from py42.response import Py42Response
 
 
 class Py42Session(object):
     def __init__(self, session, host_address, auth_handler=None):
-        import py42.sdk.settings as settings
-
         self._initialized = False
         self._needs_auth_renewal_check = False
         self._auth_lock = Lock()
@@ -175,8 +175,6 @@ class Py42Session(object):
         self._initialized = True
 
     def _print_request(self, method, url, params=None, data=None):
-        import py42.sdk.settings.debug as debug
-
         if debug.will_print_for(debug.INFO):
             print(u"{0}{1}".format(str(method).ljust(8), url))
         if debug.will_print_for(debug.TRACE):

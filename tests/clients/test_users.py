@@ -6,9 +6,9 @@ import pytest
 from requests import Response
 
 import py42
-import py42.sdk.settings
+import py42.settings
 from py42.clients.users import UserClient
-from py42.sdk.response import Py42Response
+from py42.response import Py42Response
 
 USER_URI = "/api/User"
 
@@ -104,7 +104,7 @@ class TestUserClient(object):
     def test_get_all_calls_get_expected_number_of_times(
         self, mock_session, mock_get_all_response, mock_get_all_empty_response
     ):
-        py42.sdk.settings.items_per_page = 1
+        py42.settings.items_per_page = 1
         client = UserClient(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_response,
@@ -113,5 +113,5 @@ class TestUserClient(object):
         ]
         for _ in client.get_all():
             pass
-        py42.sdk.settings.items_per_page = 1000
+        py42.settings.items_per_page = 1000
         assert mock_session.get.call_count == 3

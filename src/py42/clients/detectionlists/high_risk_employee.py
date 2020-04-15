@@ -37,15 +37,10 @@ class HighRiskEmployeeClient(BaseClient):
         A user profile in detection list will be created before adding to High Risk Employee
         list if it doesn't exist.
 
-        Uid from user_client and user_id of detection list are identical, to add a user to
-        High Risk Employee list, Uid is the intended user_id in the argument.
-
-        Returns failure when
-            - a user already exists in high risk employee detection list
-            - user_id (uid) is not found in user client API.
+        Returns failure when a user already exists in the high risk employee detection list.
 
         Args:
-            user_id (str or int): User id of the user who needs to be added to HRE detection list.
+            user_id (str or int): The Code42 userUid of the user who needs to be added to HRE detection list.
 
         Returns:
             :class:`py42.response.Py42Response`

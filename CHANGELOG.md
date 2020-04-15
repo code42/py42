@@ -20,7 +20,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
   - `remove_cloud_alias()`
   - `create()`
   - `get()`
-  - `get_by_id`()
+  - `get_by_id()`
 
 - `sdk.detectionlists.high_risk_employee` methods:
     - `add()`

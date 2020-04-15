@@ -111,12 +111,12 @@ class HighRiskEmployeeClient(BaseClient):
         # Overwriting page_size since default value 1000 returns error
         page_size = 100
         data = {
-            "tenantId": tenant_id,
-            "filterType": filter_type,
-            "pgNum": page_num,
-            "pgSize": page_size,
-            "srtKey": sort_key,
-            "srtDirection": sort_direction,
+            u"tenantId": tenant_id,
+            u"filterType": filter_type,
+            u"pgNum": page_num,
+            u"pgSize": page_size,
+            u"srtKey": sort_key,
+            u"srtDirection": sort_direction,
         }
 
         uri = self._make_uri(u"/search")

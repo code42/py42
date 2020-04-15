@@ -71,7 +71,7 @@ class HighRiskEmployeeClient(BaseClient):
         """Remove a user from high risk employee detection list.
 
         Args:
-            user_id (str or int): Id of the user who needs to be added to HRE detection lists.
+            user_id (str or int): The Code42 userUid of the user who needs to be added to HRE detection lists.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -84,7 +84,7 @@ class HighRiskEmployeeClient(BaseClient):
         """Get user information.
 
         Args:
-            user_id (str or int): Id of user who has been added to the High Risk Employee
+            user_id (str or int): The Code42 userUid of the user has been added to the High Risk Employee
               detection list.
 
         Returns:

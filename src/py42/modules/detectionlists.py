@@ -19,7 +19,7 @@ class DetectionListsModule(object):
             username (str): Username of the user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
@@ -33,7 +33,7 @@ class DetectionListsModule(object):
             username (str): Username of the user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
@@ -47,7 +47,7 @@ class DetectionListsModule(object):
             user_id (str or int): Id of the user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
@@ -62,7 +62,7 @@ class DetectionListsModule(object):
             notes (str): User profile notes.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
@@ -78,7 +78,7 @@ class DetectionListsModule(object):
                e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
@@ -94,7 +94,7 @@ class DetectionListsModule(object):
                e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
@@ -110,7 +110,7 @@ class DetectionListsModule(object):
                 e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()
@@ -126,7 +126,7 @@ class DetectionListsModule(object):
                 e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         self._detection_list_user_client = (
             self._microservice_client_factory.get_detection_list_user_client()

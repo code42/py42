@@ -25,7 +25,7 @@ class OrgClient(BaseClient):
                 None.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/Org/"
         data = {
@@ -44,7 +44,7 @@ class OrgClient(BaseClient):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the organization.
+            :class:`py42.response.Py42Response`: A response containing the organization.
         """
         uri = u"/api/Org/{0}".format(org_id)
         return self._session.get(uri, params=kwargs)
@@ -57,7 +57,7 @@ class OrgClient(BaseClient):
             org_uid (str): A UID for an organization.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the organization.
+            :class:`py42.response.Py42Response`: A response containing the organization.
         """
         uri = u"/api/Org/{0}".format(org_uid)
         params = dict(idType=u"orgUid", **kwargs)
@@ -71,7 +71,7 @@ class OrgClient(BaseClient):
             org_name (str): A name of an organization.
 
         Returns:
-            list: A list of :class:`py42.sdk.response.Py42Response` objects each containing an
+            list: A list of :class:`py42.response.Py42Response` objects each containing an
             organization that has the given name.
         """
         found_orgs = []
@@ -93,7 +93,7 @@ class OrgClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of organizations.
         """
         return get_all_pages(self._get_page, u"orgs", **kwargs)
@@ -109,7 +109,7 @@ class OrgClient(BaseClient):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._session.put(uri)
@@ -123,7 +123,7 @@ class OrgClient(BaseClient):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/OrgBlock/{0}".format(org_id)
         return self._session.delete(uri)
@@ -137,7 +137,7 @@ class OrgClient(BaseClient):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._session.put(uri)
@@ -151,7 +151,7 @@ class OrgClient(BaseClient):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/OrgDeactivation/{0}".format(org_id)
         return self._session.delete(uri)
@@ -161,7 +161,7 @@ class OrgClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the organization for the
+            :class:`py42.response.Py42Response`: A response containing the organization for the
             currently signed-in user.
         """
         uri = u"/api/Org/my"

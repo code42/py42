@@ -39,7 +39,7 @@ Import a couple essentials
 
 ```python
 >>> import py42.sdk
->>> import py42.sdk.util as util
+>>> import py42.util as util
 ```
 
 Initialize the client.
@@ -102,7 +102,7 @@ To override these settings, import `py42.sdk.settings` and override values as ne
 
 ```python
 import py42.sdk
-import py42.sdk.settings as settings
+import py42.settings as settings
 
 settings.verify_ssl_certs = False
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")

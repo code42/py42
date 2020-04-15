@@ -10,7 +10,7 @@ from py42._internal.token_providers import StorageTokenProviderFactory
 from py42.clients import administration, devices, file_event, legalhold, orgs
 from py42.clients import alerts, detectionlists, users
 from py42.clients.detectionlists import departing_employee
-from py42.sdk.usercontext import UserContext
+from py42.usercontext import UserContext
 
 _USER_UID = "user-uid"
 TEST_ROOT_URL = "https://example.com"

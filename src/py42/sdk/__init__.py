@@ -122,7 +122,7 @@ class SDKClient(object):
         user, such as the tenant ID.
 
         Returns:
-            :class:`py42.sdk.usercontext.UserContext`
+            :class:`py42.usercontext.UserContext`
         """
         return self._sdk_dependencies.user_context
 

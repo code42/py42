@@ -20,6 +20,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Parameter `classification` removed from `OrgClient.create_org()`.
 - Parameter `legal_hold_membership_uid` removed from `LegalHoldClient.get_all_matter_custodians()`.
 - Removed `SecurityClient`. Use `SecurityModule`.
+- `py42.sdk.util`. Use `py42.util` instead.
+- `py42.sdk.settings`. Use `py42.settings` instead.
+- `py42.sdk.response`. Use `py42.response` instead.
+- `py42.sdk.usercontext`. Use `py42.usercontext` instead. 
 
 ## Changed
 
@@ -57,7 +61,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- py42 specific exceptions at new module `py42.sdk.exceptions`:
+- py42 specific exceptions at new module `py42.exceptions`:
     - `Py42Error`
     - `Py42ArchiveFileNotFoundError`
     - `Py42SessionInitializationError`

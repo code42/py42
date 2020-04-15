@@ -28,7 +28,7 @@ class DetectionListUserClient(BaseClient):
             username (str): Username of the user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
@@ -47,12 +47,9 @@ class DetectionListUserClient(BaseClient):
             user_id (str or int): Id of the user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
-        data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-        }
+        data = {"tenantId": self._user_context.get_current_tenant_id(), "userId": user_id}
         uri = self._make_uri(u"/getbyid")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -63,12 +60,9 @@ class DetectionListUserClient(BaseClient):
             username (str): Username of the user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
-        data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "username": username,
-        }
+        data = {"tenantId": self._user_context.get_current_tenant_id(), "username": username}
         uri = self._make_uri(u"/getbyusername")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -80,7 +74,7 @@ class DetectionListUserClient(BaseClient):
             notes (str): User profile notes.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
@@ -99,7 +93,7 @@ class DetectionListUserClient(BaseClient):
                e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
 
         if type(tags) is str:
@@ -122,7 +116,7 @@ class DetectionListUserClient(BaseClient):
                e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         if type(tags) is str:
             tags = [tags]
@@ -144,7 +138,7 @@ class DetectionListUserClient(BaseClient):
                 e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         if type(aliases) is str:
             aliases = [aliases]
@@ -166,7 +160,7 @@ class DetectionListUserClient(BaseClient):
                 e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         if type(aliases) is str:
             aliases = [aliases]

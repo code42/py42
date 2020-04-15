@@ -3,7 +3,7 @@ from threading import Lock
 
 from requests.exceptions import HTTPError
 
-from py42.sdk.exceptions import Py42SecurityPlanConnectionError, raise_py42_error
+from py42.exceptions import Py42SecurityPlanConnectionError, raise_py42_error
 
 
 class SecurityModule(object):
@@ -91,7 +91,7 @@ class SecurityModule(object):
                 date range of events to get. Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of events.
         """
         return self._get_security_detection_events(
@@ -136,7 +136,7 @@ class SecurityModule(object):
                 date range of events to get. Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of events.
         """
         security_plan_storage_infos = self.get_security_plan_storage_info_list(user_uid)
@@ -158,7 +158,7 @@ class SecurityModule(object):
                 accepts a raw JSON str.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the first 10,000
+            :class:`py42.response.Py42Response`: A response containing the first 10,000
             events.
         """
         file_event_client = self._microservices_client_factory.get_file_event_client()

@@ -34,7 +34,7 @@ class UserClient(BaseClient):
             notes (str, optional): Descriptive information about the user. Defaults to None.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
 
         uri = u"/api/User"
@@ -57,7 +57,7 @@ class UserClient(BaseClient):
             user_id (int): An ID for a user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the user.
+            :class:`py42.response.Py42Response`: A response containing the user.
         """
         uri = u"/api/User/{0}".format(user_id)
         return self._session.get(uri, params=kwargs)
@@ -70,7 +70,7 @@ class UserClient(BaseClient):
             user_uid (str): A UID for a user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the user.
+            :class:`py42.response.Py42Response`: A response containing the user.
         """
         uri = u"/api/User/{0}".format(user_uid)
         params = dict(idType=u"uid", **kwargs)
@@ -84,7 +84,7 @@ class UserClient(BaseClient):
             username (str): A username for a user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the user.
+            :class:`py42.response.Py42Response`: A response containing the user.
         """
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
@@ -95,7 +95,7 @@ class UserClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`: A response containing the user.
+            :class:`py42.response.Py42Response`: A response containing the user.
         """
         uri = u"/api/User/my"
         return self._session.get(uri, params=kwargs)
@@ -141,7 +141,7 @@ class UserClient(BaseClient):
                 email. Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of users.
         """
         return get_all_pages(
@@ -164,7 +164,7 @@ class UserClient(BaseClient):
             user_id (int): An ID for a user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.put(uri)
@@ -178,7 +178,7 @@ class UserClient(BaseClient):
             user_id (int): An ID for a user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/UserBlock/{0}".format(user_id)
         return self._session.delete(uri)
@@ -193,7 +193,7 @@ class UserClient(BaseClient):
             block_user (bool, optional): Blocks the user upon deactivation. Defaults to None.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         data = {u"blockUser": block_user}
@@ -208,7 +208,7 @@ class UserClient(BaseClient):
             unblock_user (bool, optional): Whether or not to unblock the user. Defaults to None.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/UserDeactivation/{0}".format(user_id)
         params = {u"unblockUser": unblock_user}
@@ -223,7 +223,7 @@ class UserClient(BaseClient):
             org_id (int): An ID for the organization to move the user to.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}

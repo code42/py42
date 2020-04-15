@@ -12,7 +12,7 @@ from py42._internal.token_providers import (
     C42ApiV1TokenProvider,
     C42ApiV3TokenProvider,
 )
-from py42.sdk.response import Py42Response
+from py42.response import Py42Response
 
 USERNAME = "username"
 PASSWORD = "password"

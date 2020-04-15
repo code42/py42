@@ -2,7 +2,7 @@ import sys
 
 import pytest
 
-import py42.sdk.settings as settings
+import py42.settings as settings
 from py42.__version__ import __version__
 
 DEFAULT_USER_AGENT_FORMAT = "py42 {0} python {1}"

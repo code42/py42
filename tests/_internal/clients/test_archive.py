@@ -1,9 +1,9 @@
 import pytest
 from requests import Response
 
-import py42.sdk.settings
+import py42.settings
 from py42._internal.clients.archive import ArchiveClient
-from py42.sdk.response import Py42Response
+from py42.response import Py42Response
 
 MOCK_GET_ORG_RESPONSE = (
     """{"totalCount": 3000, "restoreEvents": [{"eventName": "foo", "eventUid": "123"}]}"""
@@ -32,7 +32,7 @@ class TestArchiveClient(object):
     def test_get_all_calls_get_expected_number_of_times(
         self, mock_session, mock_get_all_response, mock_get_all_empty_response
     ):
-        py42.sdk.settings.items_per_page = 1
+        py42.settings.items_per_page = 1
         client = ArchiveClient(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_response,
@@ -41,5 +41,5 @@ class TestArchiveClient(object):
         ]
         for _ in client.get_all_restore_history(10, "orgId", "123"):
             pass
-        py42.sdk.settings.items_per_page = 1000
+        py42.settings.items_per_page = 1000
         assert mock_session.get.call_count == 3

@@ -8,7 +8,7 @@ from requests import Response
 
 import py42
 import py42._internal.archive_access as archive_access
-import py42.sdk.util
+import py42.util
 from py42._internal.archive_access import (
     ArchiveAccessor,
     ArchiveAccessorManager,
@@ -19,8 +19,8 @@ from py42._internal.archive_access import (
 from py42._internal.clients.archive import ArchiveClient
 from py42._internal.clients.storage import StorageArchiveClient
 from py42._internal.clients.storage import StorageClient, StorageClientFactory
-from py42.sdk.exceptions import Py42ArchiveFileNotFoundError
-from py42.sdk.response import Py42Response
+from py42.exceptions import Py42ArchiveFileNotFoundError
+from py42.response import Py42Response
 
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"

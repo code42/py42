@@ -2,7 +2,7 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42.sdk.exceptions import Py42NotFoundError, Py42BadRequestError
+from py42.exceptions import Py42NotFoundError, Py42BadRequestError
 
 
 class HighRiskEmployeeClient(BaseClient):
@@ -48,7 +48,7 @@ class HighRiskEmployeeClient(BaseClient):
             user_id (str or int): User id of the user who needs to be added to HRE detection list.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         try:
             self._detection_list_user_client.get_by_id(user_id)
@@ -66,12 +66,9 @@ class HighRiskEmployeeClient(BaseClient):
             enabled (bool): Whether to enable alerts for all users
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
-        data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "alertsEnabled": enabled,
-        }
+        data = {"tenantId": self._user_context.get_current_tenant_id(), "alertsEnabled": enabled}
         uri = self._make_uri(u"/setalertstate")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -82,7 +79,7 @@ class HighRiskEmployeeClient(BaseClient):
             user_id (str or int): Id of the user who needs to be added to HRE detection lists.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         data = {"tenantId": self._user_context.get_current_tenant_id(), "userId": user_id}
         uri = self._make_uri(u"/remove")
@@ -96,7 +93,7 @@ class HighRiskEmployeeClient(BaseClient):
               detection list.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         data = {"tenantId": self._user_context.get_current_tenant_id(), "userId": user_id}
         uri = self._make_uri(u"/get")
@@ -125,9 +122,7 @@ class HighRiskEmployeeClient(BaseClient):
         uri = self._make_uri(u"/search")
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_all(
-        self, filter_type="OPEN", sort_key=None, sort_direction=None,
-    ):
+    def get_all(self, filter_type="OPEN", sort_key=None, sort_direction=None):
         """Search High Risk employee list. Filter results by filter_type.
 
         Args:
@@ -136,7 +131,7 @@ class HighRiskEmployeeClient(BaseClient):
             sort_direction (str): "ASC" or "DESC"
 
         Returns:
-            generator: An object that iterates over :class:`py42.sdk.response.Py42Response` objects
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of users.
         """
 

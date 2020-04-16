@@ -12,7 +12,7 @@ class DetectionListsModule(object):
     def high_risk_employee(self):
         return self._microservice_client_factory.get_high_risk_employee_client(self._user_client)
 
-    def create(self, username):
+    def create_user(self, username):
         """Create a detection list profile for a user.
 
         Args:
@@ -26,7 +26,7 @@ class DetectionListsModule(object):
         )
         return self._detection_list_user_client.create(username)
 
-    def get(self, username):
+    def get_user(self, username):
         """Get user details by username.
 
         Args:
@@ -40,7 +40,7 @@ class DetectionListsModule(object):
         )
         return self._detection_list_user_client.get(username)
 
-    def get_by_id(self, user_id):
+    def get_user_by_id(self, user_id):
         """Get user details by user_id.
 
         Args:
@@ -54,7 +54,7 @@ class DetectionListsModule(object):
         )
         return self._detection_list_user_client.get_by_id(user_id)
 
-    def update_notes(self, user_id, notes):
+    def update_user_notes(self, user_id, notes):
         """Add or update notes related to the user.
 
         Args:
@@ -69,7 +69,7 @@ class DetectionListsModule(object):
         )
         self._detection_list_user_client.update_notes(user_id, notes)
 
-    def add_risk_tag(self, user_id, tags):
+    def add_user_risk_tags(self, user_id, tags):
         """Add one or more tags.
 
         Args:
@@ -85,7 +85,7 @@ class DetectionListsModule(object):
         )
         self._detection_list_user_client.add_risk_tags(user_id, tags)
 
-    def remove_risk_tag(self, user_id, tags):
+    def remove_user_risk_tags(self, user_id, tags):
         """Remove one or more tags.
 
         Args:
@@ -101,7 +101,7 @@ class DetectionListsModule(object):
         )
         self._detection_list_user_client.remove_risk_tags(user_id, tags)
 
-    def add_cloud_alias(self, user_id, aliases):
+    def add_user_cloud_aliases(self, user_id, aliases):
         """Add one or more cloud alias.
 
         Args:
@@ -117,7 +117,7 @@ class DetectionListsModule(object):
         )
         self._detection_list_user_client.add_cloud_aliases(user_id, aliases)
 
-    def remove_cloud_alias(self, user_id, aliases):
+    def remove_user_cloud_aliases(self, user_id, aliases):
         """Remove one or more cloud alias.
 
         Args:

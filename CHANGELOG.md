@@ -20,7 +20,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `add_risk_tag()` -> `add_user_risk_tags()`
     - `remove_risk_tag()` -> `remove_user_risk_tags()`
     - `add_cloud_alias()` -> `add_user_cloud_aliases()`
-    - `remove_cloud_aliases()` -> `remove_user_cloud_aliases()`
+    - `remove_cloud_alias()` -> `remove_user_cloud_aliases()`
 
 ## 0.8.0 - 2020-04-15
 

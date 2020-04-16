@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 0.8.1 - 2020-04-16
+
+### Changed
+
+- `sdk.detectionlists` method renames:
+    - `add_risk_tag()` -> `add_risk_tags()`
+    - `remove_risk_tag()` -> `remove_risk_tags()`
+    - `add_cloud_alias()` -> `add_cloud_aliases()`
+    - `remove_cloud_aliases()` -> `remove_cloud_aliases()`
+
 ## 0.8.0 - 2020-04-15
 
 ### Added
@@ -44,7 +54,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `py42.sdk.util`. Use `py42.util` instead.
 - `py42.sdk.settings`. Use `py42.settings` instead.
 - `py42.sdk.response`. Use `py42.response` instead.
-- `py42.sdk.usercontext`. Use `py42.usercontext` instead. 
+- `py42.sdk.usercontext`. Use `py42.usercontext` instead.
 
 ## Changed
 

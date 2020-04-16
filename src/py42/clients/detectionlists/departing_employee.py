@@ -2,6 +2,7 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.exceptions import Py42NotFoundError, Py42BadRequestError
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -9,21 +10,29 @@ class DepartingEmployeeClient(BaseClient):
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
 
-    def __init__(self, session, user_context):
+    def __init__(self, session, user_context, detection_list_user_client, user_client):
         super(DepartingEmployeeClient, self).__init__(session)
         self._user_context = user_context
+        self._user_client = user_client
+        self._detection_list_user_client = detection_list_user_client
 
     def add(self, user_id, departure_date):
-        """Adds a user to Departing Employees.
+        """Adds a user to Departing Employees, creates the detection list profile if it doesn't
+        exist before adding.
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
         Args:
-            user_id (str or int): Id of the departing employee.
+            user_id (str or int): The Code42 userUid of the user, to be added to departing employee.
             departure_date (date): Date in YYYY-MM-DD format
 
         Returns:
             :class:`py42.response.Py42Response`
         """
+        try:
+            self._detection_list_user_client.get_by_id(user_id)
+        except (Py42NotFoundError, Py42BadRequestError):
+            user = self._user_client.get_by_uid(user_id)
+            self._detection_list_user_client.create(user[u"username"])
 
         tenant_id = self._user_context.get_current_tenant_id()
 
@@ -36,7 +45,7 @@ class DepartingEmployeeClient(BaseClient):
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
         Args:
-            user_id (str or int): User id of the Departing Employee.
+            user_id (str or int): The Code42 userUid of the user.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -51,7 +60,7 @@ class DepartingEmployeeClient(BaseClient):
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
         Args:
-            user_id (str or int): User id of the Departing Employee.
+            user_id (str or int): The Code42 userUid of the user.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -133,7 +142,7 @@ class DepartingEmployeeClient(BaseClient):
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
         Args:
-            user_id (str): User id of the Departing Employee.
+            user_id (str): The Code42 userUid of the user.
             departure_date (date): Date in YYYY-MM-DD format.
 
         Returns:

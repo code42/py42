@@ -65,10 +65,12 @@ class MicroserviceClientFactory(object):
             self._alerts_client = alerts.AlertClient(session, self._user_context)
         return self._alerts_client
 
-    def get_departing_employee_client(self):
+    def get_departing_employee_client(self, user_client):
         if not self._departing_employee_client:
             session = self._get_jwt_session(u"employeecasemanagement-API_URL")
-            self._departing_employee_client = DepartingEmployeeClient(session, self._user_context)
+            self._departing_employee_client = DepartingEmployeeClient(
+                session, self._user_context, self.get_detection_list_user_client(), user_client
+            )
         return self._departing_employee_client
 
     def get_file_event_client(self):

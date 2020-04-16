@@ -5,6 +5,9 @@ import json
 import pytest
 
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
+from py42._internal.clients.detection_list_user import DetectionListUserClient
+from py42.clients.users import UserClient
+
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
@@ -65,8 +68,19 @@ class TestDepartingEmployeeClient(object):
     @pytest.fixture
     def mock_get_all_cases_response_empty(self, mocker, py42_response):
         py42_response.text = _GET_ALL_CASES_EMPTY_RESPONSE
-
         return py42_response
+
+    @pytest.fixture
+    def mock_detection_list_user_client(self, mock_session, user_context, py42_response):
+        user_client = DetectionListUserClient(mock_session, user_context)
+        mock_session.post.return_value = py42_response
+        return user_client
+
+    @pytest.fixture
+    def mock_user_client(self, mock_session, user_context, py42_response):
+        user_client = UserClient(mock_session)
+        mock_session.post.return_value = py42_response
+        return user_client
 
     @pytest.fixture
     def mock_py42_response(self, mocker, mock_get_case_details_function, py42_response):
@@ -75,9 +89,16 @@ class TestDepartingEmployeeClient(object):
         return py42_response
 
     def test_add_posts_expected_data_and_to_expected_url(
-        self, mock_session, user_context, mock_get_all_cases_response
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response,
+        mock_user_client,
+        mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(mock_session, user_context)
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_detection_list_user_client, mock_user_client
+        )
         user_context.get_current_tenant_id.return_value = _TENANT_ID_PARAM
         # Return value should have been set based on the arguments passed
         # in add, here however as we are mocking it, it doesn't matter. Can be refactored
@@ -95,11 +116,19 @@ class TestDepartingEmployeeClient(object):
             and posted_data["departureDate"] == "2022-12-20"
         )
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/add"
+        assert mock_session.post.call_count == 2
 
     def test_remove_posts_expected_data_and_to_expected_url(
-        self, mock_session, user_context, mock_get_all_cases_response_empty
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response_empty,
+        mock_user_client,
+        mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(mock_session, user_context)
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_user_client, mock_detection_list_user_client
+        )
         mock_session.post.return_value = mock_get_all_cases_response_empty
         client.remove("999")
 
@@ -110,9 +139,16 @@ class TestDepartingEmployeeClient(object):
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/remove"
 
     def test_get_all_uses_given_tenant_id_over_current_id(
-        self, mock_session, user_context, mock_get_all_cases_response
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response,
+        mock_user_client,
+        mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(mock_session, user_context)
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_user_client, mock_detection_list_user_client
+        )
         mock_session.post.return_value = mock_get_all_cases_response
         for _ in client.get_all():
             break
@@ -130,9 +166,16 @@ class TestDepartingEmployeeClient(object):
         assert mock_session.post.call_count == 1
 
     def test_set_alerts_enabled_posts_expected_data(
-        self, mock_session, user_context, mock_get_all_cases_response_empty
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response_empty,
+        mock_user_client,
+        mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(mock_session, user_context)
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_user_client, mock_detection_list_user_client
+        )
         mock_session.post.return_value = mock_get_all_cases_response_empty
         client.set_alerts_enabled()
 
@@ -143,17 +186,31 @@ class TestDepartingEmployeeClient(object):
         )
 
     def test_set_alerts_enabled_posts_to_expected_url(
-        self, mock_session, user_context, mock_get_all_cases_response_empty
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response_empty,
+        mock_user_client,
+        mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(mock_session, user_context)
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_user_client, mock_detection_list_user_client
+        )
         mock_session.post.return_value = mock_get_all_cases_response_empty
         client.set_alerts_enabled()
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/setalertstate"
 
     def test_get_posts_expected_data(
-        self, mock_session, user_context, mock_get_all_cases_response_empty
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response_empty,
+        mock_user_client,
+        mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(mock_session, user_context)
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_user_client, mock_detection_list_user_client
+        )
         mock_session.post.return_value = mock_get_all_cases_response_empty
         client.get("999")
 
@@ -161,17 +218,31 @@ class TestDepartingEmployeeClient(object):
         assert posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE and posted_data["userId"] == "999"
 
     def test_get_posts_to_expected_url(
-        self, mock_session, user_context, mock_get_all_cases_response_empty
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response_empty,
+        mock_user_client,
+        mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(mock_session, user_context)
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_user_client, mock_detection_list_user_client
+        )
         mock_session.post.return_value = mock_get_all_cases_response_empty
         client.get("999")
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/get"
 
     def test_update_posts_expected_data(
-        self, mock_session, user_context, mock_get_all_cases_response
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response,
+        mock_user_client,
+        mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(mock_session, user_context)
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_user_client, mock_detection_list_user_client
+        )
         mock_session.post.return_value = mock_get_all_cases_response
         client.update_departure_date(_USER_ID, "2020-12-20")
 
@@ -184,7 +255,11 @@ class TestDepartingEmployeeClient(object):
             and posted_data["departureDate"] == "2020-12-20"
         )
 
-    def test_update_posts_to_expected_url(self, mock_session, user_context):
-        client = DepartingEmployeeClient(mock_session, user_context)
+    def test_update_posts_to_expected_url(
+        self, mock_session, user_context, mock_user_client, mock_detection_list_user_client
+    ):
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_user_client, mock_detection_list_user_client
+        )
         client.update_departure_date(_USER_ID, "2022-12-20")
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/update"

@@ -3,6 +3,7 @@ import json
 
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42._internal.clients.detection_list_user import DetectionListUserClient
+from py42.clients.users import UserClient
 
 
 CREATE_USER_SAMPLE_RESPONSE = """
@@ -30,7 +31,7 @@ class TestHighRiskEmployeeClient(object):
 
     @pytest.fixture
     def mock_user_client(self, mock_session, user_context, py42_response):
-        user_client = DetectionListUserClient(mock_session, user_context)
+        user_client = UserClient(mock_session)
         mock_session.post.return_value = py42_response
         return user_client
 

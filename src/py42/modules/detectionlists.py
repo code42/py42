@@ -6,7 +6,7 @@ class DetectionListsModule(object):
 
     @property
     def departing_employee(self):
-        return self._microservice_client_factory.get_departing_employee_client()
+        return self._microservice_client_factory.get_departing_employee_client(self._user_client)
 
     @property
     def high_risk_employee(self):

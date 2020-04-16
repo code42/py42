@@ -24,29 +24,24 @@ class TestHighRiskEmployeeClient(object):
         return mock_session
 
     @pytest.fixture
-    def mock_detection_list_user_client(self, mock_session, user_context, py42_response):
-        user_client = DetectionListUserClient(mock_session, user_context)
-        mock_session.post.return_value = py42_response
-        return user_client
-
-    @pytest.fixture
     def mock_user_client(self, mock_session, user_context, py42_response):
         user_client = UserClient(mock_session)
         mock_session.post.return_value = py42_response
         return user_client
 
+    @pytest.fixture
+    def mock_detection_list_user_client(
+        self, mock_session, user_context, py42_response, mock_user_client
+    ):
+        user_client = DetectionListUserClient(mock_session, user_context, mock_user_client)
+        mock_session.post.return_value = py42_response
+        return user_client
+
     def test_add_posts_expected_data(
-        self,
-        user_context,
-        mock_session_post_success,
-        mock_detection_list_user_client,
-        mock_user_client,
+        self, user_context, mock_session_post_success, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
-            mock_session_post_success,
-            user_context,
-            mock_detection_list_user_client,
-            mock_user_client,
+            mock_session_post_success, user_context, mock_detection_list_user_client,
         )
         high_risk_employee_client.add("942897397520289999")
 
@@ -59,10 +54,10 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_set_alerts_enabled_posts_expected_data_with_default_value(
-        self, user_context, mock_session, mock_detection_list_user_client, mock_user_client
+        self, user_context, mock_session, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
-            mock_session, user_context, mock_detection_list_user_client, mock_user_client
+            mock_session, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.set_alerts_enabled()
 
@@ -75,10 +70,10 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_set_alerts_enabled_posts_expected_data(
-        self, user_context, mock_session, mock_detection_list_user_client, mock_user_client
+        self, user_context, mock_session, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
-            mock_session, user_context, mock_detection_list_user_client, mock_user_client
+            mock_session, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.set_alerts_enabled(False)
 
@@ -91,10 +86,10 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_remove_posts_expected_data(
-        self, user_context, mock_session, mock_detection_list_user_client, mock_user_client
+        self, user_context, mock_session, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
-            mock_session, user_context, mock_detection_list_user_client, mock_user_client
+            mock_session, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.remove("942897397520289999")
 
@@ -109,7 +104,7 @@ class TestHighRiskEmployeeClient(object):
         self, user_context, mock_session, mock_detection_list_user_client, mock_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
-            mock_session, user_context, mock_detection_list_user_client, mock_user_client
+            mock_session, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.get("942897397520289999")
 
@@ -125,7 +120,7 @@ class TestHighRiskEmployeeClient(object):
         self, user_context, mock_session, mock_detection_list_user_client, mock_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
-            mock_session, user_context, mock_detection_list_user_client, mock_user_client
+            mock_session, user_context, mock_detection_list_user_client
         )
         for _ in high_risk_employee_client.get_all():
             break
@@ -143,10 +138,10 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_get_all_posts_expected_data_with_non_default_values(
-        self, user_context, mock_session, mock_detection_list_user_client, mock_user_client
+        self, user_context, mock_session, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
-            mock_session, user_context, mock_detection_list_user_client, mock_user_client
+            mock_session, user_context, mock_detection_list_user_client
         )
         for _ in high_risk_employee_client.get_all(
             filter_type="NEW_FILTER", sort_direction="DESC", sort_key="DISPLAY_NAME"

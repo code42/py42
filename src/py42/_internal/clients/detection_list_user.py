@@ -2,6 +2,7 @@ import json
 
 from py42._internal.compat import str
 from py42.clients import BaseClient
+from py42.exceptions import Py42NotFoundError, Py42BadRequestError
 
 
 class DetectionListUserClient(BaseClient):
@@ -14,12 +15,28 @@ class DetectionListUserClient(BaseClient):
     _uri_prefix = u"/svc/api/{0}".format(_api_version)
     _resource = u"/user"
 
-    def __init__(self, session, user_context):
+    def __init__(self, session, user_context, user_client):
         super(DetectionListUserClient, self).__init__(session)
         self._user_context = user_context
+        self._user_client = user_client
 
     def _make_uri(self, action):
         return u"{0}{1}{2}".format(self._uri_prefix, self._resource, action)
+
+    def create_if_not_exists(self, user_id):
+        """Find whether detection list profile exists for given uid.
+            If not, if its a valid uid of code42 user then create detection list profile.
+
+            Args: Uid of user.
+
+            Returns: bool : True when profile is created else raises error.
+        """
+        try:
+            self.get_by_id(user_id)
+        except (Py42NotFoundError, Py42BadRequestError):
+            user = self._user_client.get_by_uid(user_id)
+            self.create(user[u"username"])
+        return True
 
     def create(self, username):
         """Create a detection list profile for a user.

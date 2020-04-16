@@ -69,7 +69,7 @@ class MicroserviceClientFactory(object):
         if not self._departing_employee_client:
             session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             self._departing_employee_client = DepartingEmployeeClient(
-                session, self._user_context, self.get_detection_list_user_client(), user_client
+                session, self._user_context, self.get_detection_list_user_client(user_client)
             )
         return self._departing_employee_client
 
@@ -94,14 +94,16 @@ class MicroserviceClientFactory(object):
         if not self._high_risk_employee_client:
             session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             self._high_risk_employee_client = HighRiskEmployeeClient(
-                session, self._user_context, self.get_detection_list_user_client(), user_client
+                session, self._user_context, self.get_detection_list_user_client(user_client)
             )
         return self._high_risk_employee_client
 
-    def get_detection_list_user_client(self):
+    def get_detection_list_user_client(self, user_client):
         if not self._detection_list_user_client:
             session = self._get_jwt_session(u"employeecasemanagement-API_URL")
-            self._detection_list_user_client = DetectionListUserClient(session, self._user_context)
+            self._detection_list_user_client = DetectionListUserClient(
+                session, self._user_context, user_client
+            )
         return self._detection_list_user_client
 
 

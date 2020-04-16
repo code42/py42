@@ -2,7 +2,6 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42.exceptions import Py42NotFoundError, Py42BadRequestError
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -10,10 +9,9 @@ class DepartingEmployeeClient(BaseClient):
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
 
-    def __init__(self, session, user_context, detection_list_user_client, user_client):
+    def __init__(self, session, user_context, detection_list_user_client):
         super(DepartingEmployeeClient, self).__init__(session)
         self._user_context = user_context
-        self._user_client = user_client
         self._detection_list_user_client = detection_list_user_client
 
     def add(self, user_id, departure_date):
@@ -28,17 +26,12 @@ class DepartingEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        try:
-            self._detection_list_user_client.get_by_id(user_id)
-        except (Py42NotFoundError, Py42BadRequestError):
-            user = self._user_client.get_by_uid(user_id)
-            self._detection_list_user_client.create(user[u"username"])
+        if self._detection_list_user_client.create_if_not_exists(user_id):
+            tenant_id = self._user_context.get_current_tenant_id()
 
-        tenant_id = self._user_context.get_current_tenant_id()
-
-        data = {u"tenantId": tenant_id, u"userId": user_id, u"departureDate": departure_date}
-        uri = self._uri_prefix.format(u"add")
-        return self._session.post(uri, data=json.dumps(data))
+            data = {u"tenantId": tenant_id, u"userId": user_id, u"departureDate": departure_date}
+            uri = self._uri_prefix.format(u"add")
+            return self._session.post(uri, data=json.dumps(data))
 
     def get(self, user_id):
         """Gets departing employee data of a user.

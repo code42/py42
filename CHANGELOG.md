@@ -16,7 +16,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `create()` -> `create_user()`
     - `get()` -> `get_user()`
     - `get_by_id()` -> `get_user_by_id()`
-    - `update_noteS()` -> `update_user_notes()`
+    - `update_notes()` -> `update_user_notes()`
     - `add_risk_tag()` -> `add_user_risk_tags()`
     - `remove_risk_tag()` -> `remove_user_risk_tags()`
     - `add_cloud_alias()` -> `add_user_cloud_aliases()`

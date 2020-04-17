@@ -155,7 +155,7 @@ class TestMicroserviceClientFactory(object):
         factory.get_departing_employee_client(user_client)
 
         key_value_store_client.get_stored_value.assert_called_with("employeecasemanagement-API_URL")
-        assert key_value_store_client.get_stored_value.call_count == 2
+        assert key_value_store_client.get_stored_value.call_count == 1
 
     def test_get_departing_employee_client_creates_client_with_expected_url(
         self, mock_session, session_factory, user_context, key_value_store_client
@@ -167,7 +167,7 @@ class TestMicroserviceClientFactory(object):
         user_client = UserClient(mock_session)
         factory.get_departing_employee_client(user_client)
         session_factory.create_jwt_session.assert_called_with(DEPARTING_EMPLOYEE_URL, mock_session)
-        assert session_factory.create_jwt_session.call_count == 2
+        assert session_factory.create_jwt_session.call_count == 1
 
     def test_get_departing_employee_client_returns_same_intance_on_multiple_calls(
         self, mock_session, session_factory, user_context

@@ -1,6 +1,13 @@
-# Add or Remove user to Departing Employee List
+# Add or Remove users from the Departing Employee List
 
 Let's say you want to add a user to the departing employee list then all you need to know is their user UID.
+
+To get user UID based on username
+
+```python
+user = sdk.users.get_by_username("username")
+uid = user["users"][0]["userUid"]
+```
 
 `user_id` below refers to user UID.
 

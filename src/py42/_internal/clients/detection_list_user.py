@@ -24,8 +24,9 @@ class DetectionListUserClient(BaseClient):
         return u"{0}{1}{2}".format(self._uri_prefix, self._resource, action)
 
     def create_if_not_exists(self, user_id):
-        """Find whether detection list profile exists for given uid. If not, if user_id is a
-           valid uid of code42 user then it will create detection list profile of the user.
+        """Find out whether the detection list profile exists for a given uid. If not,
+           if user_id is a valid uid of code42 user then it will create detection list profile
+           of the user.
 
             Returns True when profile is created else raises error.
 

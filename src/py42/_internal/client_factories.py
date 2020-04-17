@@ -58,6 +58,7 @@ class MicroserviceClientFactory(object):
         self._file_event_client = None
         self._high_risk_employee_client = None
         self._detection_list_user_client = None
+        self._ecm_session = None
 
     def get_alerts_client(self):
         if not self._alerts_client:
@@ -65,10 +66,15 @@ class MicroserviceClientFactory(object):
             self._alerts_client = alerts.AlertClient(session, self._user_context)
         return self._alerts_client
 
-    def get_departing_employee_client(self):
+    def get_departing_employee_client(self, user_client):
         if not self._departing_employee_client:
-            session = self._get_jwt_session(u"employeecasemanagement-API_URL")
-            self._departing_employee_client = DepartingEmployeeClient(session, self._user_context)
+            if not self._ecm_session:
+                self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
+            self._departing_employee_client = DepartingEmployeeClient(
+                self._ecm_session,
+                self._user_context,
+                self.get_detection_list_user_client(user_client),
+            )
         return self._departing_employee_client
 
     def get_file_event_client(self):
@@ -90,16 +96,22 @@ class MicroserviceClientFactory(object):
 
     def get_high_risk_employee_client(self, user_client):
         if not self._high_risk_employee_client:
-            session = self._get_jwt_session(u"employeecasemanagement-API_URL")
+            if not self._ecm_session:
+                self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             self._high_risk_employee_client = HighRiskEmployeeClient(
-                session, self._user_context, self.get_detection_list_user_client(), user_client
+                self._ecm_session,
+                self._user_context,
+                self.get_detection_list_user_client(user_client),
             )
         return self._high_risk_employee_client
 
-    def get_detection_list_user_client(self):
+    def get_detection_list_user_client(self, user_client):
         if not self._detection_list_user_client:
-            session = self._get_jwt_session(u"employeecasemanagement-API_URL")
-            self._detection_list_user_client = DetectionListUserClient(session, self._user_context)
+            if not self._ecm_session:
+                self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
+            self._detection_list_user_client = DetectionListUserClient(
+                self._ecm_session, self._user_context, user_client
+            )
         return self._detection_list_user_client
 
 

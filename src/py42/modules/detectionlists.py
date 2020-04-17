@@ -6,7 +6,7 @@ class DetectionListsModule(object):
 
     @property
     def departing_employee(self):
-        return self._microservice_client_factory.get_departing_employee_client()
+        return self._microservice_client_factory.get_departing_employee_client(self._user_client)
 
     @property
     def high_risk_employee(self):
@@ -21,8 +21,8 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._detection_list_user_client = (
-            self._microservice_client_factory.get_detection_list_user_client()
+        self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
+            self._user_client
         )
         return self._detection_list_user_client.create(username)
 
@@ -35,8 +35,8 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._detection_list_user_client = (
-            self._microservice_client_factory.get_detection_list_user_client()
+        self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
+            self._user_client
         )
         return self._detection_list_user_client.get(username)
 
@@ -49,8 +49,8 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._detection_list_user_client = (
-            self._microservice_client_factory.get_detection_list_user_client()
+        self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
+            self._user_client
         )
         return self._detection_list_user_client.get_by_id(user_id)
 
@@ -64,8 +64,8 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._detection_list_user_client = (
-            self._microservice_client_factory.get_detection_list_user_client()
+        self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
+            self._user_client
         )
         self._detection_list_user_client.update_notes(user_id, notes)
 
@@ -80,8 +80,8 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._detection_list_user_client = (
-            self._microservice_client_factory.get_detection_list_user_client()
+        self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
+            self._user_client
         )
         self._detection_list_user_client.add_risk_tags(user_id, tags)
 
@@ -96,8 +96,8 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._detection_list_user_client = (
-            self._microservice_client_factory.get_detection_list_user_client()
+        self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
+            self._user_client
         )
         self._detection_list_user_client.remove_risk_tags(user_id, tags)
 
@@ -112,8 +112,8 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._detection_list_user_client = (
-            self._microservice_client_factory.get_detection_list_user_client()
+        self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
+            self._user_client
         )
         self._detection_list_user_client.add_cloud_aliases(user_id, aliases)
 
@@ -128,7 +128,7 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._detection_list_user_client = (
-            self._microservice_client_factory.get_detection_list_user_client()
+        self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
+            self._user_client
         )
         self._detection_list_user_client.remove_cloud_aliases(user_id, aliases)

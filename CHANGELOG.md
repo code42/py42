@@ -8,6 +8,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- `sdk.detectionlists.departing_employee` methods:
+    - `set_alerts_enabled()`
+
+###  Changed
+
+- `sdk.detectionlists.departing_employee` methods:
+    - `create()` -> `add()`
+    - `resolve()` -> `remove()`
+    - `update()` -> `update_departure_date()`
+    - `get_by_id()` -> `get()`
+
 ## 0.8.1 - 2020-04-16
 
 ### Changed

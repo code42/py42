@@ -16,10 +16,9 @@ class HighRiskEmployeeClient(BaseClient):
     _uri_prefix = u"/svc/api/{0}".format(_api_version)
     _resource = u"/highriskemployee"
 
-    def __init__(self, session, user_context, detection_list_user_client, user_client):
+    def __init__(self, session, user_context, detection_list_user_client):
         super(HighRiskEmployeeClient, self).__init__(session)
         self._user_context = user_context
-        self._user_client = user_client
         self._detection_list_user_client = detection_list_user_client
 
     def _make_uri(self, action):
@@ -45,14 +44,9 @@ class HighRiskEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        try:
-            self._detection_list_user_client.get_by_id(user_id)
-        except (Py42NotFoundError, Py42BadRequestError):
-            user = self._user_client.get_by_uid(user_id)
-            self._detection_list_user_client.create(user[u"username"])
-
-        tenant_id = self._user_context.get_current_tenant_id()
-        return self._add_high_risk_employee(tenant_id, user_id)
+        if self._detection_list_user_client.create_if_not_exists(user_id):
+            tenant_id = self._user_context.get_current_tenant_id()
+            return self._add_high_risk_employee(tenant_id, user_id)
 
     def set_alerts_enabled(self, enabled=True):
         """Enable alerts.

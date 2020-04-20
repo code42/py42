@@ -1,7 +1,8 @@
-# Response
+# Exceptions
 
 ```eval_rst
-.. autoclass:: py42.response.Py42Response
+.. automodule:: py42.exceptions
     :members:
     :show-inheritance:
+
 ```

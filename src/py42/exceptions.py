@@ -16,7 +16,7 @@ class Py42ArchiveFileNotFoundError(Py42Error):
 
 
 class Py42FeatureUnavailableError(Py42Error):
-    """An exception raised when a requested feature is not supported in your Code42 instance."""
+    """An exception raised when a requested feature is not supported in your Code42 environment."""
 
     def __init__(self):
         super(Py42FeatureUnavailableError, self).__init__(
@@ -46,7 +46,8 @@ class Py42SecurityPlanConnectionError(Py42Error):
 
 class Py42StorageSessionInitializationError(Py42Error):
     """An exception raised when the user is not authorized to initialize a storage session. This
-    may occur when trying to restore a file or trying to get legacy security events."""
+    may occur when trying to restore a file or trying to get events for file activity on removable
+    media, in cloud sync folders, and browser uploads."""
 
     def __init__(self, error_message):
         super(Py42StorageSessionInitializationError, self).__init__(error_message)

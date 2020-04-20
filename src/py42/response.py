@@ -36,7 +36,7 @@ class Py42Response(object):
         return self._response.headers
 
     def iter_content(self, chunk_size=1, decode_unicode=False):
-        """Iterates over the response data. When stream=True is set on the request, this avoids
+        """Iterates over the response data. When ``stream=True`` is set on the request, this avoids
         reading the content at once into memory for large responses.
 
         Args:
@@ -52,7 +52,7 @@ class Py42Response(object):
 
     @property
     def raw_text(self):
-        """The response.Response.text property. It contains raw metadata that is not included in
+        """The ``response.Response.text`` property. It contains raw metadata that is not included in
         the Py42Response.text property."""
         return self._response.text
 

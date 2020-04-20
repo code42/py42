@@ -1,6 +1,6 @@
 class ArchiveModule(object):
-    """A module for getting information about archives on storage nodes along with functionality
-    for streaming a file from backup.
+    """A module for getting information about backup archives on storage nodes along with
+    functionality for streaming a file from backup.
     """
 
     def __init__(self, archive_accessor_manager, archive_client):
@@ -15,22 +15,22 @@ class ArchiveModule(object):
         archive_password=None,
         encryption_key=None,
     ):
-        """Streams a file from an archive to memory.
+        """Streams a file from a backup archive to memory.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
             file_path (str): The path to the file in your archive.
-            device_guid (str): The GUID for the device the file belongs to.
-            destination_guid (str, optional): The GUID for the destination that stores the backup
+            device_guid (str): The GUID of the device the file belongs to.
+            destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your
                 destinations or if you want to optimize performance. Defaults to None.
             archive_password (str, None): The password for archives that are protected with an
-                additional password. This is only relevant to users with this level of archive
+                additional password. This is only relevant to users with archive key password
                 security. Defaults to None.
             encryption_key (str, None): A custom encryption key for decryption an archive's file
-                contents, necessary for restoring files. This is only relevant to users with
-                this level of archive security. Defaults to None.
+                contents, necessary for restoring files. This is only relevant to users with custom
+                key archive security. Defaults to None.
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.
 
@@ -51,13 +51,13 @@ class ArchiveModule(object):
         return archive_accessor.stream_from_backup(file_path)
 
     def get_backup_sets(self, device_guid, destination_guid):
-        """Gets all backup set names/identifiers referring to single destination for a specific
+        """Gets all backup set names/identifiers referring to a single destination for a specific
         device.
-        `Support Page <https://support.code42.com/Administrator/Cloud/Configuring/Backup_sets>`__
+        `Learn more about backup sets. <https://support.code42.com/Administrator/Cloud/Configuring/Backup_sets>`__
 
         Args:
-            device_guid (str): The GUID for the device to get backup sets for.
-            destination_guid (str): The GUID for the destination containing the archive to get
+            device_guid (str): The GUID of the device to get backup sets for.
+            destination_guid (str): The GUID of the destination containing the archive to get
                 backup sets for.
 
         Returns:
@@ -71,7 +71,7 @@ class ArchiveModule(object):
 
         Args:
             days (int): Number of days of restore history to retrieve.
-            org_id (int): The ID for the organization to get restore history for.
+            org_id (int): The identification number of the organization to get restore history for.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -85,7 +85,7 @@ class ArchiveModule(object):
 
         Args:
             days (int): Number of days of restore history to retrieve.
-            user_id (int): The ID for the user to get restore history for.
+            user_id (int): The identification number of the user to get restore history for.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -99,7 +99,7 @@ class ArchiveModule(object):
 
         Args:
             days (int): Number of days of restore history to retrieve.
-            device_id (int): The ID for the device to get restore history for.
+            device_id (int): The identification number of the device to get restore history for.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

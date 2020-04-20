@@ -15,7 +15,8 @@ class AlertQuery(BaseQuery):
     A tenant ID is required in either the constructor or ``all()`` or ``any()``. You can get the
     tenant ID from the method :meth:`SDKClient.usercontext.get_current_tenant_id()`.
 
-    Usage example:::
+    Usage example::
+
         state_filter = AlertState.eq(AlertState.OPEN)
         rule_name_filter = RuleName.contains("EmailRule")
         tenant_id = sdk.usercontext.get_current_tenant_id()

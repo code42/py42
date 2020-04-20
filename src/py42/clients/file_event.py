@@ -3,7 +3,11 @@ from py42.clients import BaseClient
 
 
 class FileEventClient(BaseClient):
-    """A client for searching file events."""
+    """A client for searching file events.
+
+    See the :ref:`Executing Searches User Guide <anchor_search_file_events>` to learn more about how
+    to construct a query.
+    """
 
     def search(self, query):
         """Searches for file events matching the query criteria.

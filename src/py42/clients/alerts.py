@@ -22,7 +22,8 @@ class AlertClient(BaseClient):
 
         Args:
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
-                See `userguides.searches` to learn more about how to construct a query.
+                See the :ref:`Executing Searches User Guide <anchor_search_alerts>` to learn more
+                about how to construct a query.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the alerts that match the given

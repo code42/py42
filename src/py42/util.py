@@ -22,7 +22,7 @@ def print_response(response, label=None):
     prints the given response.
 
     Args:
-        response (:class:`py42.response.Py42Response`)
+        response (:class:`py42.response.Py42Response`): The ``Py42Response`` to print.
         label (str, optional): A label at the beginning of the printed text. Defaults to None.
     """
     if label:
@@ -53,7 +53,7 @@ def convert_datetime_to_timestamp_str(date):
     directives %Y-%m-%dT%H:%M:%S.%f.
 
     Args:
-        date (datetime)
+        date (datetime): ``datetime`` object to convert.
 
     Returns:
         (str): A str representing the given date. Example output looks like

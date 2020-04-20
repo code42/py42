@@ -39,7 +39,7 @@ class InsertionTimestamp(QueryFilterTimestampField):
     event store (which can be after the event occurred on the device itself).
 
     `value` must be a POSIX timestamp. (see the :ref:`Dates <anchor_dates>` section of the Basics
-    userguide for details on timestamp arguments in py42)
+    user guide for details on timestamp arguments in py42)
     """
 
     _term = u"insertionTimestamp"

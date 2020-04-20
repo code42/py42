@@ -3,10 +3,10 @@ from py42.clients import BaseClient
 
 
 class FileEventClient(BaseClient):
-    """A client for querying Code42 Forensic Search events."""
+    """A client for searching file events."""
 
     def search(self, query):
-        """Searches for file events matching query criteria.
+        """Searches for file events matching the query criteria.
         `REST Documentation <https://forensicsearch-east.us.code42.com/forensic-search/queryservice/swagger-ui.html#/file-event-controller/searchEventsUsingPOST>`__
 
         Args:

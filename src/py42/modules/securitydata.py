@@ -60,8 +60,8 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets events for file activity on removable media, in cloud sync folders, and browser
-        uploads.
+        """Gets events for endpoint file activity on removable media, in cloud sync folders, and
+        browser uploads.
         `Support Article <https://support.code42.com/Administrator/6/Configuring/Endpoint_monitoring>`__
 
         Args:
@@ -108,7 +108,7 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets file activity events for the user with the given UID.
+        """Gets endpoint file activity events for the user with the given UID.
 
         Args:
             user_uid (str): The UID of the user to get security events for.

@@ -27,7 +27,7 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def add(self, user_id):
-        """Adds a user to the high risk employee detection list. Creates a detection list user
+        """Adds a user to the High Risk Employee detection list. Creates a detection list user
         profile if one didn't already exist.
 
         Raises a :class:`Py42BadRequestError` when a user already exists in the High Risk Employee

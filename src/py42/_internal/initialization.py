@@ -26,6 +26,9 @@ class SDKDependencies(object):
         self.archive_client = authority_client_factory.create_archive_client()
         self.security_client = authority_client_factory.create_security_client()
         self.user_context = UserContext(self.administration_client)
+        self.alert_rules_client = authority_client_factory.create_alert_rules_client(
+            self.user_context
+        )
 
         archive_locator_factory = StorageTokenProviderFactory(
             self.session, self.security_client, self.device_client

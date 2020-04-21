@@ -1,6 +1,8 @@
-# Add or Remove users from the Departing Employee List
+# Add or Remove Users From the Departing Employees List
 
-Let's say you want to add a user to the departing employee list. All you need to know is the user's Code42 user UID.
+Use py42 to quickly and easily manage users on the Departing Employees list. This guide describes how to add users to and remove users from the Departing Employees list. 
+
+To add a user to the Departing Employees list, all you need to know is the user's Code42 user UID.
 
 To get the user UID based on username:
 
@@ -24,11 +26,11 @@ response = sdk.detectionlists.departing_employee.add(user_id, departure_date)
     if a detection list profile for this user doesn't exist yet, it will automatically be created before adding to the departing employee list. 
 ```
 
-To remove a user from departing employee list
+To remove a user from the Departing Employees list:
 ```python
 sdk.detectionlists.departing_employee.remove(user_id)
 ```
 
-To get complete options on departing employee
-refer [Departing Employee](../methoddocs/detectionlists.html#departing-employee) .
+For complete details, see
+ [Departing Employee](../methoddocs/detectionlists.html#departing-employee).
 

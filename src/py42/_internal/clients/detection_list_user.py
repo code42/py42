@@ -155,7 +155,7 @@ class DetectionListUserClient(BaseClient):
         """Add a cloud alias.
 
         Args:
-            user_id (str or int): The user_id whose alias(es) need to be updated.
+            user_id (str or int): The user_id whose alias needs to be updated.
             alias (str): An alias to be added.
 
         Returns:
@@ -173,7 +173,7 @@ class DetectionListUserClient(BaseClient):
         """Remove one or more cloud alias.
 
         Args:
-            user_id (str or int): The user_id whose alias(es) need to be removed.
+            user_id (str or int): The user_id whose alias needs to be removed.
             alias (str): An alias to be removed.
 
         Returns:

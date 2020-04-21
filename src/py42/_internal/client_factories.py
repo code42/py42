@@ -5,7 +5,7 @@ from requests import HTTPError
 from py42._internal.clients import archive
 from py42._internal.clients import key_value_store
 from py42._internal.clients import securitydata
-from py42.clients import administration, alerts, devices, legalhold, orgs, users
+from py42.clients import administration, alerts, devices, legalhold, orgs, users, alertrules
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42._internal.clients.detection_list_user import DetectionListUserClient
@@ -37,6 +37,9 @@ class AuthorityClientFactory(object):
 
     def create_security_client(self):
         return securitydata.SecurityClient(self.session)
+
+    def create_alert_rules_client(self):
+        return alertrules.AlertRulesClient(self.session)
 
 
 class MicroserviceClientFactory(object):

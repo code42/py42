@@ -101,13 +101,12 @@ class DetectionListsModule(object):
         )
         self._detection_list_user_client.remove_risk_tags(user_id, tags)
 
-    def add_user_cloud_aliases(self, user_id, aliases):
+    def add_user_cloud_alias(self, user_id, alias):
         """Add one or more cloud alias.
 
         Args:
             user_id (str or int): The user_id whose alias(es) need to be updated.
-            aliases (str or list of str ): A single alias or multiple aliases in a list to be added.
-                e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
+            alias (str): An alias to be added.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -115,15 +114,14 @@ class DetectionListsModule(object):
         self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
             self._user_client
         )
-        self._detection_list_user_client.add_cloud_aliases(user_id, aliases)
+        self._detection_list_user_client.add_cloud_alias(user_id, alias)
 
-    def remove_user_cloud_aliases(self, user_id, aliases):
+    def remove_user_cloud_alias(self, user_id, alias):
         """Remove one or more cloud alias.
 
         Args:
             user_id (str or int): The user_id whose alias(es) need to be removed.
-            aliases (str or list of str ): A single alias or multiple aliases in a list to be removed.
-                e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
+            alias (str): An alias to be removed.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -131,4 +129,4 @@ class DetectionListsModule(object):
         self._detection_list_user_client = self._microservice_client_factory.get_detection_list_user_client(
             self._user_client
         )
-        self._detection_list_user_client.remove_cloud_aliases(user_id, aliases)
+        self._detection_list_user_client.remove_cloud_alias(user_id, alias)

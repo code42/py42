@@ -61,8 +61,8 @@ class DeviceClient(BaseClient):
                 or excluded, gets all devices regardless of state. Defaults to None.
             blocked (bool, optional): Filters results by blocked status: True or False. Defaults
                 to None.
-            org_uid (int, optional): The ID of an Organization. Defaults to None.
-            user_uid (int, optional): The ID of a User. Defaults to None.
+            org_uid (int, optional): The identification number of an Organization. Defaults to None.
+            user_uid (int, optional): The identification number of a User. Defaults to None.
             destination_guid (str or int, optional): The globally unique identifier of the storage
                 server that the device back up to. Defaults to None.
             include_backup_usage (bool, optional): A flag to denote whether to include the

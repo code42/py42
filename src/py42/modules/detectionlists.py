@@ -122,7 +122,7 @@ class DetectionListsModule(object):
         """Remove a cloud alias from a user.
 
         Args:
-            user_id (str or int): The user_id whose alias(es) need to be removed.
+            user_id (str or int): The user_id whose alias needs to be removed.
             alias (str): The alias to be removed.
 
         Returns:

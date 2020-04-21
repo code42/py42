@@ -20,10 +20,10 @@ response = sdk.detectionlists.departing_employee.add(user_id, departure_date)
 
 ```eval_rst
 .. important::
-    If the user is already in the departing employee list, you will get a response indicating that it is a
+    If the user is already in the Departing Employees list, you will get a response indicating that it is a
     bad request.
 
-    if a detection list profile for this user doesn't exist yet, it will automatically be created before adding to the departing employee list. 
+    If a detection list user profile doesn't exist yet for this user, one will automatically be created before adding the user to the Departing Employees list. 
 ```
 
 To remove a user from the Departing Employees list:

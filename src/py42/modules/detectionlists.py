@@ -73,10 +73,10 @@ class DetectionListsModule(object):
         """Add one or more risk factor tags.
 
         Args:
-            user_id (str or int): The Code42 userUid whose risk factor(s) you want to update.
-            tags (str or list of str ): A single risk factor or multiple risk factors in a list to
-                be added. For example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X,
-                pass ``u"str"`` instead of ``"str"``.
+            user_id (str or int): The Code42 userUid whose risk factor tag(s) you want to update.
+            tags (str or list of str ): A single tag or multiple tags in a list to be added. For
+                example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X, pass ``u"str"``
+                instead of ``"str"``.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -90,10 +90,10 @@ class DetectionListsModule(object):
         """Remove one or more risk factor tags.
 
         Args:
-            user_id (str or int): The Code42 userUid whose tag(s) needs you want to remove.
-            tags (str or list of str ): A single risk factor or multiple risk factors in a list to
-                be removed. For example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X,
-                pass ``u"str"`` instead of ``"str"``.
+            user_id (str or int): The Code42 userUid whose risk factor tag(s) needs you want to remove.
+            tags (str or list of str ): A single tag or multiple tags in a list to be removed. For
+                example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X, pass ``u"str"``
+                instead of ``"str"``.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -108,7 +108,7 @@ class DetectionListsModule(object):
 
         Args:
             user_id (str or int): The Code42 userUid whose alias you want to update.
-            alias (str): An alias to be added.
+            alias (str): The alias to be added.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -119,11 +119,11 @@ class DetectionListsModule(object):
         self._detection_list_user_client.add_cloud_alias(user_id, alias)
 
     def remove_user_cloud_alias(self, user_id, alias):
-        """Remove one or more cloud alias.
+        """Remove a cloud alias from a user.
 
         Args:
             user_id (str or int): The user_id whose alias(es) need to be removed.
-            alias (str): An alias to be removed.
+            alias (str): The alias to be removed.
 
         Returns:
             :class:`py42.response.Py42Response`

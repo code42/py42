@@ -6,11 +6,7 @@ from py42.exceptions import Py42NotFoundError, Py42BadRequestError
 
 
 class HighRiskEmployeeClient(BaseClient):
-    """Administrator utility to manage High Risk employees.
-
-    `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
-
-    """
+    """A client for interacting with High Risk Employee APIs."""
 
     _api_version = u"v2"
     _uri_prefix = u"/svc/api/{0}".format(_api_version)
@@ -31,15 +27,15 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def add(self, user_id):
-        """Adds a user to high risk employee detection list.
+        """Adds a user to the high risk employee detection list. Creates a detection list user
+        profile if one didn't already exist.
 
-        A user profile in detection list will be created before adding to High Risk Employee
-        list if it doesn't exist.
-
-        Returns failure when a user already exists in the high risk employee detection list.
+        Raises a :class:`Py42BadRequestError` when a user already exists in the High Risk Employee
+        detection list.
 
         Args:
-            user_id (str or int): The Code42 userUid of the user who needs to be added to HRE detection list.
+            user_id (str or int): The Code42 userUid of the user you want to add to the High Risk
+                Employee detection list.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -52,7 +48,7 @@ class HighRiskEmployeeClient(BaseClient):
         """Enable alerts.
 
         Args:
-            enabled (bool): Whether to enable alerts for all users
+            enabled (bool): Whether to enable alerts for all users.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -62,10 +58,11 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def remove(self, user_id):
-        """Remove a user from high risk employee detection list.
+        """Remove a user from the High Risk Employee detection list.
 
         Args:
-            user_id (str or int): The Code42 userUid of the user who needs to be added to HRE detection lists.
+            user_id (str or int): The Code42 userUid of the user you want to add to the High Risk
+                Employee detection list.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -78,8 +75,8 @@ class HighRiskEmployeeClient(BaseClient):
         """Get user information.
 
         Args:
-            user_id (str or int): The Code42 userUid of the user has been added to the High Risk Employee
-              detection list.
+            user_id (str or int): The Code42 userUid of the user has been added to the High Risk
+                Employee detection list.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -112,12 +109,12 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
-        """Search High Risk employee list. Filter results by filter_type.
+        """Search High Risk Employee list. Filter results by filter_type.
 
         Args:
             filter_type (str): Valid filter types.
             sort_key (str): Sort results based by field.
-            sort_direction (str): "ASC" or "DESC"
+            sort_direction (str): ``ASC`` or ``DESC``
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

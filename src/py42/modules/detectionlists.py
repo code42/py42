@@ -16,7 +16,7 @@ class DetectionListsModule(object):
         """Create a detection list profile for a user.
 
         Args:
-            username (str): Username of the user.
+            username (str): The Code42 username of the user.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -30,7 +30,7 @@ class DetectionListsModule(object):
         """Get user details by username.
 
         Args:
-            username (str): Username of the user.
+            username (str): The Code42 username of the user.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -44,7 +44,7 @@ class DetectionListsModule(object):
         """Get user details by user_id.
 
         Args:
-            user_id (str or int): Id of the user.
+            user_id (str or int): The Code42 userId of the user.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -58,7 +58,7 @@ class DetectionListsModule(object):
         """Add or update notes related to the user.
 
         Args:
-            user_id (str or int): The user_id whose notes need to be updated.
+            user_id (str or int): The Code42 userUid whose notes you want to update.
             notes (str): User profile notes.
 
         Returns:
@@ -73,9 +73,10 @@ class DetectionListsModule(object):
         """Add one or more tags.
 
         Args:
-            user_id (str or int): The user_id whose tag(s) needs to be updated.
-            tags (str or list of str ): A single tag or multiple tags in a list to be added.
-               e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
+            user_id (str or int): The Code42 userUid whose risk factor(s) you want to update.
+            tags (str or list of str ): A single risk factor or multiple risk factors in a list to
+                be added. For example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X,
+                pass ``u"str"`` instead of ``"str"``.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -86,12 +87,13 @@ class DetectionListsModule(object):
         self._detection_list_user_client.add_risk_tags(user_id, tags)
 
     def remove_user_risk_tags(self, user_id, tags):
-        """Remove one or more tags.
+        """Remove one or more risk factors.
 
         Args:
-            user_id (str or int): The user_id whose tag(s) needs to be removed.
-            tags (str or list of str ): A single tag or multiple tags in a list to be removed.
-               e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
+            user_id (str or int): The Code42 userUid whose tag(s) needs you want to remove.
+            tags (str or list of str ): A single risk factor or multiple risk factors in a list to
+                be removed. For example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X,
+                pass ``u"str"`` instead of ``"str"``.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -102,12 +104,13 @@ class DetectionListsModule(object):
         self._detection_list_user_client.remove_risk_tags(user_id, tags)
 
     def add_user_cloud_aliases(self, user_id, aliases):
-        """Add one or more cloud alias.
+        """Add one or more cloud aliases.
 
         Args:
-            user_id (str or int): The user_id whose alias(es) need to be updated.
+            user_id (str or int): The Code42 userUid whose alias(es) you want to update.
             aliases (str or list of str ): A single alias or multiple aliases in a list to be added.
-                e.g u"x" or ["email@id", "y"], for python version 2.X, pass u"str" instead of "str"
+                For example: ``"x"`` or ``["email@id", "y"]``. For python version 2.X, pass ``u"str"``
+                instead of ``"str"``.
 
         Returns:
             :class:`py42.response.Py42Response`

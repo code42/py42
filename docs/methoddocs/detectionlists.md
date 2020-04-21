@@ -6,7 +6,7 @@
     :show-inheritance:
 ```
 
-## Departing Employee
+## Departing Employees
 
 ```eval_rst
 .. autoclass:: py42.clients.detectionlists.departing_employee.DepartingEmployeeClient

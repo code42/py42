@@ -23,6 +23,12 @@ setup(
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4",
     install_requires=["requests>=2.3"],
     license="MIT",
+    url="https://github.com/code42/py42",
+    project_urls={
+        "Issue Tracker": "https://github.com/code42/py42/issues",
+        "Documentation": "https://py42docs.code42.com/",
+        "Source Code": "https://github.com/code42/py42",
+    },
     include_package_data=True,
     zip_safe=False,
     extras_require={

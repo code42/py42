@@ -12,25 +12,25 @@
     :show-inheritance:
 ```
 
-# Filter Classes
+## Filter Classes
 
-The following classes construct filters for Forensic Search queries. Each filter class corresponds to a Forensic Search
-event detail. Call the appropriate classmethod on your desired filter class with the `value` you want to match and it
-will return a `FilterGroup` object that can be passed to `FileEventQuery`'s `all()` or `any()` methods to create complex
-queries that match multiple filter rules.
+The following classes construct filters for file event queries. Each filter class corresponds to a file event detail.
+Call the appropriate classmethod on your desired filter class with the `value` you want to match and it will return a
+`FilterGroup` object that can be passed to `FileEventQuery`'s `all()` or `any()` methods to create complex queries
+that match multiple filter rules.
 
 Example:
 
-To search for events concerning a certain set of documents, you can use the `FileName` and `MD5` filter classes to
+To search for events observed for certain set of documents, you can use the `FileName` and `MD5` filter classes to
 construct `FilterGroup`s that will search for matching filenames or (in case someone renamed the sensitive file) the
 known MD5 hashes of the files:
 
     filename_filter = FileName.is_in(['confidential_plans.docx', 'confidential_plan_projections.xlsx'])
     md5_filter = MD5.is_in(['133765f4fff5e3038b9352a4d14e1532', 'ea16f0cbfc76f6eba292871f8a8c794b'])
 
-See [Executing Searches](../userguides/searches.md) for more on crafting search queries.
+See [Executing Searches](../userguides/searches.md) for more on building search queries.
 
-## Event Filters
+### Event Filters
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.EventTimestamp
@@ -60,7 +60,7 @@ See [Executing Searches](../userguides/searches.md) for more on crafting search 
     :show-inheritance:
 ```
 
-## File Filters
+### File Filters
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.file_filter.FileCategory
@@ -111,7 +111,7 @@ See [Executing Searches](../userguides/searches.md) for more on crafting search 
     :show-inheritance:
 ```
 
-## Device Filters
+### Device Filters
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.device_filter.DeviceUsername
@@ -141,7 +141,7 @@ See [Executing Searches](../userguides/searches.md) for more on crafting search 
     :show-inheritance:
 ```
 
-## Cloud Filters
+### Cloud Filters
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.cloud_filter.Actor
@@ -178,7 +178,7 @@ See [Executing Searches](../userguides/searches.md) for more on crafting search 
     :show-inheritance:
 ```
 
-## Exposure Filters
+### Exposure Filters
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.exposure_filter.ExposureType
@@ -264,7 +264,7 @@ See [Executing Searches](../userguides/searches.md) for more on crafting search 
     :show-inheritance:
 ```
 
-## Email Filters
+### Email Filters
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.email_filter.EmailPolicyName

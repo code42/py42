@@ -59,7 +59,8 @@ class QueryFilterStringField(object):
 
     @classmethod
     def eq(cls, value):
-        """Returns a :class:`FilterGroup` to find events where the filter equals provided ``value``.
+        """Returns a :class:`FilterGroup` to find events where the filter equals the provided
+        ``value``.
 
         Args:
             value (str): The value to match file events on.
@@ -68,7 +69,8 @@ class QueryFilterStringField(object):
 
     @classmethod
     def not_eq(cls, value):
-        """Returns a :class:`FilterGroup` to find events where the filter is not equal to provided ``value``.
+        """Returns a :class:`FilterGroup` to find events where the filter is not equal to the
+        provided ``value``.
 
         Args:
             value (str): The value to exclude file events on.
@@ -77,7 +79,8 @@ class QueryFilterStringField(object):
 
     @classmethod
     def is_in(cls, value_list):
-        """Returns a :class:`FilterGroup` to find events where the filter is in provided ``value_list``.
+        """Returns a :class:`FilterGroup` to find events where the filter is in the provided
+        ``value_list``.
 
         Args:
             value_list (list): The list of values to match file events on.
@@ -86,7 +89,8 @@ class QueryFilterStringField(object):
 
     @classmethod
     def not_in(cls, value_list):
-        """Returns a :class:`FilterGroup` to find events where the filter is not in provided ``value_list``.
+        """Returns a :class:`FilterGroup` to find events where the filter is not in the provided
+        ``value_list``.
 
         Args:
             value_list (list): The list of values to exclude file events on.
@@ -101,24 +105,24 @@ class QueryFilterTimestampField(object):
 
     @classmethod
     def on_or_after(cls, value):
-        """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or after provided
-        `value`.
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or after
+        the provided `value`.
         """
         formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_after_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
     def on_or_before(cls, value):
-        """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or before provided
-        `value`.
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or before
+        the provided `value`.
         """
         formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_before_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
     def in_range(cls, start_value, end_value):
-        """Returns a :class:`FilterGroup` to find events where the filter timestamp is in range between provided
-        `start_value` and `end_value`.
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is in range
+        between the provided `start_value` and `end_value`.
         """
         formatted_start_time = convert_timestamp_to_str(start_value)
         formatted_end_time = convert_timestamp_to_str(end_value)
@@ -126,8 +130,8 @@ class QueryFilterTimestampField(object):
 
     @classmethod
     def on_same_day(cls, value):
-        """Returns a :class:`FilterGroup` to find events where the filter timestamp is within the same calendar
-        day as provided `value`.
+        """Returns a :class:`FilterGroup` to find events where the filter timestamp is within the
+        same calendar day as the provided `value`.
         """
         date_from_value = datetime.utcfromtimestamp(value)
         start_time = datetime(

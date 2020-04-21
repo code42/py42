@@ -28,6 +28,7 @@ Explore the complete public documentation for `py42` below.
 * [File Event Queries](methoddocs/filleeventqueries.md)
 * [Archive](methoddocs/archive.md)
 * [Response](methoddocs/response.md)
+* [Exceptions](methoddocs/exceptions.md)
 * [Util](methoddocs/util.md)
 
 ```eval_rst

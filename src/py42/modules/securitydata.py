@@ -21,11 +21,11 @@ class SecurityModule(object):
 
     def get_security_plan_storage_info_list(self, user_uid):
         """Gets IDs (plan UID, node GUID, and destination GUID) for the storage nodes containing
-        the legacy security event data for the user with the given UID.
+        the file activity event data for the user with the given UID.
         `REST Documentation <https://console.us.code42.com/swagger/#/Feature/getStorageNode>`__
 
         Args:
-            user_uid (str): A UID for the user to get plan storage information for.
+            user_uid (str): The UID of the user to get plan storage information for.
 
         Returns:
             list[:class:`py42.modules.securitydata.PlanStorageInfo`]
@@ -60,16 +60,17 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy endpoint monitoring events. This does not retrieve cloud events.
+        """Gets events for legacy Endpoint Monitoring file activity on removable media, in cloud
+        sync folders, and browser uploads.
         `Support Article <https://support.code42.com/Administrator/6/Configuring/Endpoint_monitoring>`__
 
         Args:
             plan_storage_info (:class:`py42.sdk.modules.securitydata.PlanStorageInfo`):
-                Information about storage nodes for a plan to get security events for.
-            cursor (str, optional): A cursor position for only getting events you did not
+                Information about storage nodes for a plan to get file event activity for.
+            cursor (str, optional): A cursor position for only getting file events you did not
                 previously get. Defaults to None.
-            include_files (bool, optional): Whether to include the files related to the security
-                events. Defaults to None.
+            include_files (bool, optional): Whether to include the files related to the file events.
+            Defaults to None.
             event_types: (str, optional): A comma-separated list of event types to filter by.
 
                     Available options are:
@@ -85,10 +86,10 @@ class SecurityModule(object):
                         - ``PERSONAL_CLOUD_SCAN_RESULT``
 
                     Defaults to None.
-            min_timestamp (float, optional): A POSIX timestamp representing the lower bound of the
+            min_timestamp (float, optional): A POSIX timestamp representing the beginning of the
                 date range of events to get. Defaults to None.
-            max_timestamp (float, optional): A POSIX timestamp representing the upper bound of the
-                date range of events to get. Defaults to None.
+            max_timestamp (float, optional): A POSIX timestamp representing the end of the date
+                range of events to get. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -107,14 +108,14 @@ class SecurityModule(object):
         min_timestamp=None,
         max_timestamp=None,
     ):
-        """Gets legacy security events for the user with the given UID.
+        """Gets legacy Endpoint Monitoring file activity events for the user with the given UID.
 
         Args:
-            user_uid (str): The UID for the user to get security events for.
+            user_uid (str): The UID of the user to get security events for.
             cursor (str, optional): A cursor position for only getting events you did not
                 previously get. Defaults to None.
-            include_files (bool, optional): Whether to include the files related to the security
-                events. Defaults to None.
+            include_files (bool, optional): Whether to include the files related to the file
+                activity events. Defaults to None.
             event_types: (str, optional): A comma-separated list of event types to filter by.
 
                     Available options are:
@@ -130,10 +131,10 @@ class SecurityModule(object):
                         - ``PERSONAL_CLOUD_SCAN_RESULT``
 
                     Defaults to None.
-            min_timestamp (float, optional): A POSIX timestamp representing the lower bound of the
+            min_timestamp (float, optional): A POSIX timestamp representing the beginning of the
                 date range of events to get. Defaults to None.
-            max_timestamp (float, optional): A POSIX timestamp representing the upper bound of the
-                date range of events to get. Defaults to None.
+            max_timestamp (float, optional): A POSIX timestamp representing the end of the date
+                range of events to get. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -273,15 +274,15 @@ class PlanStorageInfo(object):
 
     @property
     def plan_uid(self):
-        """A UID for a storage plan."""
+        """The UID of the storage plan."""
         return self._plan_uid
 
     @property
     def destination_guid(self):
-        """A GUID for the destination containing the storage archive."""
+        """The GUID of the destination containing the storage archive."""
         return self._destination_uid
 
     @property
     def node_guid(self):
-        """The GUID for the storage node containing the archive."""
+        """The GUID of the storage node containing the archive."""
         return self._node_guid

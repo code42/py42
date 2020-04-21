@@ -15,13 +15,17 @@ class DepartingEmployeeClient(BaseClient):
         self._detection_list_user_client = detection_list_user_client
 
     def add(self, user_id, departure_date):
-        """Adds a user to Departing Employees, creates the detection list profile if it doesn't
-        exist before adding.
+        """Adds a user to the Departing Employees list. Creates a detection list user profile if one
+         didn't already exist.
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
+        Raises a :class:`Py42BadRequestError` when a user already exists in the Departing Employee
+        detection list.
+
         Args:
-            user_id (str or int): The Code42 userUid of the user, to be added to departing employee.
-            departure_date (date): Date in YYYY-MM-DD format
+            user_id (str or int): The Code42 userUid of the user you want to add to the departing
+                employees list.
+            departure_date (date): Date in YYYY-MM-DD format. Date is treated as UTC.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -49,7 +53,7 @@ class DepartingEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def remove(self, user_id):
-        """Removes a user from Departing Employees.
+        """Removes a user from the Departing Employees list.
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
         Args:
@@ -116,8 +120,8 @@ class DepartingEmployeeClient(BaseClient):
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
         Args:
-            tenant_id (str, optional): The identifier of the Customer tenant. Defaults to None (the
-                tenant_id of SDK authorization user will be used).
+            tenant_id (str, optional): The unique identifier of the customer tenant. Defaults to
+                None (the tenant_id of SDK authorization user will be used).
             alerts_enabled (bool): Set alerting to on (True) or off (False). Defaults to True.
 
         Returns:
@@ -136,7 +140,7 @@ class DepartingEmployeeClient(BaseClient):
 
         Args:
             user_id (str): The Code42 userUid of the user.
-            departure_date (date): Date in YYYY-MM-DD format.
+            departure_date (date): Date in YYYY-MM-DD format. Date is treated as UTC.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

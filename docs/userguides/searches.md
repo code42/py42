@@ -3,6 +3,9 @@
 py42 features a powerful, flexible query system for quickly and easily searching file events and alerts.
 This guide explains the syntax for building queries and executing searches.
 
+```eval_rst
+.. _anchor_search_file_events:
+```
 ## Search File Events
 
 First, import the required modules and classes and create the SDK:
@@ -68,9 +71,12 @@ for event in file_events:
     print(event["md5Checksum"])
 ```
 
+```eval_rst
+.. _anchor_search_alerts:
+```
 ## Search Alerts
 
-Alert searches work in a very similar way to file event searches. 
+Alert searches work in a very similar way to file event searches.
 
 To start, import the filters and query object:
 

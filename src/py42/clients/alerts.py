@@ -22,7 +22,8 @@ class AlertClient(BaseClient):
 
         Args:
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
-                See `userguides.searches` to learn more about how to construct a query.
+                See the :ref:`Executing Searches User Guide <anchor_search_alerts>` to learn more
+                about how to construct a query.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the alerts that match the given
@@ -37,8 +38,9 @@ class AlertClient(BaseClient):
         when passed into a search, would result in events that could have triggered the alerts.
 
         Args:
-            alert_ids (iter[str]): The IDs of the alerts for which you want to get details for.
-            tenant_id (str, optional): The tenant ID for the tenant that the alerts belong to.
+            alert_ids (iter[str]): The identification numbers of the alerts for which you want to
+                get details for.
+            tenant_id (str, optional): The unique identifier of the tenant that the alerts belong to.
                 When given None, it uses the currently logged in user's tenant ID. Defaults to
                 None.
 
@@ -56,9 +58,9 @@ class AlertClient(BaseClient):
         """Resolves the alerts with the given IDs.
 
         Args:
-            alert_ids (iter[str]): The IDs for the alerts to resolve.
-            tenant_id (str, optional): The ID for the tenant that the alerts belong to.
-                When given None, it uses the currently logged in user's tenant ID. Defaults to
+            alert_ids (iter[str]): The identification numbers for the alerts to resolve.
+            tenant_id (str, optional): The unique identifier for the tenant that the alerts belong
+                to. When given None, it uses the currently logged in user's tenant ID. Defaults to
                 None.
             reason (str, optional): The reason the alerts are now resolved. Defaults to None.
 
@@ -77,9 +79,10 @@ class AlertClient(BaseClient):
         """Reopens the resolved alerts with the given IDs.
 
         Args:
-            alert_ids (iter[str]): The IDs for the alerts to reopen.
-            tenant_id (str, optional): The ID for the tenant that the alerts belong to. When given
-                None, it uses the currently logged in user's tenant ID. Defaults to None.
+            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
+            tenant_id (str, optional): The unique identifier for the tenant that the alerts belong
+                to. When given None, it uses the currently logged in user's tenant ID. Defaults to
+                None.
             reason (str, optional): The reason the alerts are reopened. Defaults to None.
 
         Returns:

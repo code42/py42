@@ -2,13 +2,13 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringFi
 
 
 class DeviceUsername(FileEventFilterStringField):
-    """Class that filters events by Code42 username of the device that observed the event."""
+    """Class that filters events by the Code42 username of the device that observed the event."""
 
     _term = u"deviceUserName"
 
 
 class OSHostname(FileEventFilterStringField):
-    """Class that filters events by Hostname of the device that observed the event."""
+    """Class that filters events by hostname of the device that observed the event."""
 
     _term = u"osHostName"
 

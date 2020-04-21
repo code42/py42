@@ -48,7 +48,7 @@ class RemovableMediaName(FileEventFilterStringField):
 
 
 class RemovableMediaVendor(FileEventFilterStringField):
-    """Class that filters events based on the vendor of the removable media involved in the
+    """Class that filters events based on the vendor of the removable media device involved in the
     exposure (applies to ``removable media`` events only).
     """
 
@@ -66,8 +66,8 @@ class RemovableMediaMediaName(FileEventFilterStringField):
 
 class RemovableMediaVolumeName(FileEventFilterStringField):
     """Class that filters events based on the name of the formatted volume (as reported by the
-    operating system) of the removable media involved in the exposure (applies to ``removable media``
-    events only).
+    operating system) of the removable media device involved in the exposure (applies to
+    ``removable media`` events only).
     """
 
     _term = u"removableMediaVolumeName"

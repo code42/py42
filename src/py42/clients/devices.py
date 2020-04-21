@@ -117,7 +117,7 @@ class DeviceClient(BaseClient):
         Args:
             guid (str): The globally unique identifier of the device.
             include_backup_usage (bool, optional): A flag to denote whether to include the
-            destination and its backup stats. Defaults to None.
+                destination and its backup stats. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing device information.

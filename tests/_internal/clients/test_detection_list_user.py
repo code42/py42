@@ -127,7 +127,7 @@ class TestDetectionListUserClient(object):
         detection_list_user_client = DetectionListUserClient(
             mock_session, user_context, mock_user_client
         )
-        detection_list_user_client.add_cloud_aliases("942897397520289999", u"Test")
+        detection_list_user_client.add_cloud_alias("942897397520289999", u"Test")
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1
@@ -144,7 +144,7 @@ class TestDetectionListUserClient(object):
         detection_list_user_client = DetectionListUserClient(
             mock_session, user_context, mock_user_client
         )
-        detection_list_user_client.remove_cloud_aliases("942897397520289999", u"Test")
+        detection_list_user_client.remove_cloud_alias("942897397520289999", u"Test")
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1

@@ -56,14 +56,14 @@ class Py42StorageSessionInitializationError(Py42Error):
 class Py42HTTPError(Py42Error):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
-    def __init__(self, http_response):
-        message = u"Failure in HTTP call {0}".format(str(http_response))
+    def __init__(self, exception):
+        message = u"Failure in HTTP call {0}".format(str(exception))
         super(Py42HTTPError, self).__init__(message)
-        self._response = http_response
+        self._response = exception.response
 
     @property
     def response(self):
-        """The response containing the HTTP error."""
+        """The response object containing the HTTP error details."""
         return self._response
 
 
@@ -71,35 +71,35 @@ class Py42BadRequestError(Py42HTTPError):
     """A wrapper to represent an HTTP 400 error."""
 
     def __init__(self, exception):
-        super(Py42BadRequestError, self).__init__(str(exception))
+        super(Py42BadRequestError, self).__init__(exception)
 
 
 class Py42UnauthorizedError(Py42HTTPError):
     """A wrapper to represent an HTTP 401 error."""
 
     def __init__(self, exception):
-        super(Py42UnauthorizedError, self).__init__(str(exception))
+        super(Py42UnauthorizedError, self).__init__(exception)
 
 
 class Py42ForbiddenError(Py42HTTPError):
     """A wrapper to represent an HTTP 403 error."""
 
     def __init__(self, exception):
-        super(Py42ForbiddenError, self).__init__(str(exception))
+        super(Py42ForbiddenError, self).__init__(exception)
 
 
 class Py42NotFoundError(Py42HTTPError):
     """A wrapper to represent an HTTP 404 error."""
 
     def __init__(self, exception):
-        super(Py42NotFoundError, self).__init__(str(exception))
+        super(Py42NotFoundError, self).__init__(exception)
 
 
 class Py42InternalServerError(Py42HTTPError):
     """A wrapper to represent an HTTP 500 error."""
 
     def __init__(self, exception):
-        super(Py42InternalServerError, self).__init__(str(exception))
+        super(Py42InternalServerError, self).__init__(exception)
 
 
 def raise_py42_error(raised_error):
@@ -117,4 +117,4 @@ def raise_py42_error(raised_error):
     elif 500 <= raised_error.response.status_code < 600:
         raise Py42InternalServerError(raised_error)
     else:
-        raise Py42HTTPError(raised_error.response)
+        raise Py42HTTPError(raised_error)

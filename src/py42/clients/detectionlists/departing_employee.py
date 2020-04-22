@@ -1,7 +1,9 @@
 import json
+from datetime import datetime
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -25,7 +27,7 @@ class DepartingEmployeeClient(BaseClient):
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the departing
                 employees list.
-            departure_date (date): Date in YYYY-MM-DD format. Date is treated as UTC.
+            departure_date (date): Date as a POSIX timestamp.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -33,6 +35,7 @@ class DepartingEmployeeClient(BaseClient):
         if self._detection_list_user_client.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
 
+            departure_date = datetime.utcfromtimestamp(departure_date)
             data = {u"tenantId": tenant_id, u"userId": user_id, u"departureDate": departure_date}
             uri = self._uri_prefix.format(u"add")
             return self._session.post(uri, data=json.dumps(data))

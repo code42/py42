@@ -79,36 +79,11 @@ print(cloud_usernames)
 .. _anchor_dates:
 ```
 
-## Dates
-
-py42 supports [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) for date parameters. As an example, see
-the `departing_on_or_after_epoch` parameter in the
-`py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
-
-```python
-import py42.sdk
-import py42.util
-from datetime import datetime, timedelta
-sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
-
-
-# Prints all the departing employee cases on or after two weeks
-
-# get a date in the future
-departing_date = datetime.utcnow() + timedelta(days=14)
-epoch = (departing_date - datetime.utcfromtimestamp(0)).total_seconds()
-# get an epoch time (float)
-response = sdk.detectionlists.departing_employee.get_all(departing_on_or_after_epoch=epoch)
-for page in response:
-    for case in page["cases"]:
-        print(case)
-```
-
 ## Exceptions
 
 py42 throws some of its own exceptions when failures occur. py42 exceptions are found in the `py42.sdk.exceptions`
 module. Some of the available exceptions are:
-* `Py42ForbiddenError`: (403) With your currently signed-in account, you don't have the necessary permissions 
+* `Py42ForbiddenError`: (403) With your currently signed-in account, you don't have the necessary permissions
 to perform the action you were trying to do.
 * `Py42UnauthorizedError`: (401) The username or password is incorrect.
 * `Py42InternalServerError`: (500) Likely an unhandled issue on our servers.

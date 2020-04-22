@@ -4,6 +4,7 @@ from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients.users import UserClient
 from py42.exceptions import Py42BadRequestError
 from requests import Response
+from requests.exceptions import HTTPError
 
 
 class TestDetectionListUserClient(object):
@@ -18,7 +19,9 @@ class TestDetectionListUserClient(object):
     def mock_get_by_id_fails(self, mocker, mock_session):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 400
-        mock_session.post.side_effect = Py42BadRequestError(response)
+        exception = mocker.MagicMock(spec=HTTPError)
+        exception.response = response
+        mock_session.post.side_effect = Py42BadRequestError(exception)
         return mock_session
 
     @pytest.fixture
@@ -26,7 +29,9 @@ class TestDetectionListUserClient(object):
         user_client = UserClient(mock_session)
         response = mocker.MagicMock(spec=Response)
         response.status_code = 400
-        mock_session.post.side_effect = Py42BadRequestError(response)
+        exception = mocker.MagicMock(spec=HTTPError)
+        exception.response = response
+        mock_session.post.side_effect = Py42BadRequestError(exception)
         return user_client
 
     def test_create_posts_expected_data(self, mock_session, user_context, mock_user_client):

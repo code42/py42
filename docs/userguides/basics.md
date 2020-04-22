@@ -1,7 +1,7 @@
 # py42 Basics
 
-This guide explains the basic concepts of py42. Learning these basics can help you gain confidence in writing your own scripts. The following examples use
-`py42.sdk.clients.departing_employee.DepartingEmployeeClient` to demonstrate how to use py42:
+This guide explains the basic concepts of py42. Learning these basics can help you gain confidence in writing your own
+scripts.
 - [py42 Basics](#py42-basics)
   - [Initialization](#initialization)
   - [Paging](#paging)
@@ -9,8 +9,8 @@ This guide explains the basic concepts of py42. Learning these basics can help y
   - [Dates](#dates)
   - [Exceptions](#exceptions)
 
-The examples from this guide are intended as blanket concepts that apply to other
-areas in py42. For example, paging over users and devices works the same way as over departing employees and alerts.
+The examples from this guide are intended as blanket concepts that apply to other areas in py42. For example, paging
+over users and devices works the same way as over departing employees and alerts.
 
 ## Initialization
 
@@ -40,7 +40,7 @@ for working with generators and paging in py42:
 
 pages = sdk.detectionlists.departing_employee.get_all()  # pages has 'generator' type
 for page in pages:  # page has 'Py42Response' type
-    employees = page["cases"]
+    employees = page["items"]
     for employee in employees:
         username = employee["userName"]
         notes = employee["notes"]
@@ -65,9 +65,9 @@ To see all the keys on a response, observe its `.text` attribute. By printing th
 essentially print its text property:
 
 ```python
-# Prints details about the response from getting a departing employee
+# Prints details about the response from a getting a detection list user.
 
-response = sdk.detectionlists.departing_employee.get_by_username("test.user@example.com")
+response = sdk.detectionlists.get_user("test.user@example.com")
 print(response)  # JSON as Dictionary - same as print(response.text)
 print(response.raw_text)  # Raw API response
 print(response.status_code)  # 200
@@ -81,34 +81,39 @@ print(cloud_usernames)
 
 ## Dates
 
-py42 supports [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) for date parameters. As an example, see
-the `departing_on_or_after_epoch` parameter in the
-`py42.sdk.clients.departing_employee.DepartingEmployeeClient.get_all()` method.
+Most dates in py42 support [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) for date parameters. As an
+example, see :class:`sdk.queries.filevents.filters.event_filter.EventTimestamp` which is used for querying file events
+by their event timestamp.
 
 ```python
+from datetime import datetime, timedelta
+
 import py42.sdk
 import py42.util
-from datetime import datetime, timedelta
+from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
+from py42.sdk.queries.fileevents.filters.event_filter import EventTimestamp
+
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 
+# Get the epoch date 14 days in the past
+query_date = datetime.utcnow() - timedelta(days=14)
+query_epoch = (query_date - datetime.utcfromtimestamp(0)).total_seconds()
 
-# Prints all the departing employee cases on or after two weeks
+query = FileEventQuery(EventTimestamp.on_or_after(query_epoch))
 
-# get a date in the future
-departing_date = datetime.utcnow() + timedelta(days=14)
-epoch = (departing_date - datetime.utcfromtimestamp(0)).total_seconds()
-# get an epoch time (float)
-response = sdk.detectionlists.departing_employee.get_all(departing_on_or_after_epoch=epoch)
-for page in response:
-    for case in page["cases"]:
-        print(case)
+response = sdk.securitydata.search_file_events(query)
+
+# Print all the md5 Checksums from every file event within the past 14 days.
+file_events = response["fileEvents"]
+for event in file_events:
+    print(event["md5Checksum"])
 ```
 
 ## Exceptions
 
 py42 throws some of its own exceptions when failures occur. py42 exceptions are found in the `py42.sdk.exceptions`
 module. Some of the available exceptions are:
-* `Py42ForbiddenError`: (403) With your currently signed-in account, you don't have the necessary permissions 
+* `Py42ForbiddenError`: (403) With your currently signed-in account, you don't have the necessary permissions
 to perform the action you were trying to do.
 * `Py42UnauthorizedError`: (401) The username or password is incorrect.
 * `Py42InternalServerError`: (500) Likely an unhandled issue on our servers.

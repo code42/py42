@@ -8,9 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Changed
+
+- Exceptions that inherit from `Py42HTTPError` now return the original `requests.Response` object on the exception's
+    `.response` property instead of a string representation of the `HTTPError` that was raised.
+
 ## 1.0.0 - 2020-04-21
 
-## Changed
+### Changed
 
 - `sdk.detectionlists` methods:
   - `add_cloud_aliases()` > `add_cloud_alias()`

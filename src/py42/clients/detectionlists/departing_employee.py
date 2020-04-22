@@ -14,7 +14,7 @@ class DepartingEmployeeClient(BaseClient):
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
 
-    def add(self, user_id, departure_date):
+    def add(self, user_id, departure_date=None):
         """Adds a user to the Departing Employees list. Creates a detection list user profile if one
          didn't already exist.
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
@@ -25,7 +25,7 @@ class DepartingEmployeeClient(BaseClient):
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the departing
                 employees list.
-            departure_date (date): Date in YYYY-MM-DD format. Date is treated as UTC.
+            departure_date (str, optional): Date in YYYY-MM-DD format. Date is treated as UTC.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -89,9 +89,7 @@ class DepartingEmployeeClient(BaseClient):
         }
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_all(
-        self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC",
-    ):
+    def get_all(self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"):
         """Gets all Departing Employees.
 
         Args:
@@ -132,9 +130,7 @@ class DepartingEmployeeClient(BaseClient):
         data = {u"tenantId": tenant_id, u"alertsEnabled": alerts_enabled}
         return self._session.post(uri, data=json.dumps(data))
 
-    def update_departure_date(
-        self, user_id, departure_date,
-    ):
+    def update_departure_date(self, user_id, departure_date):
         """Add or modify details of an existing Departing Employee case.
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 

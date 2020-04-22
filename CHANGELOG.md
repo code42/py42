@@ -15,6 +15,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Exceptions that inherit from `Py42HTTPError` now return the original `requests.Response` object on the exception's
     `.response` property instead of a string representation of the `HTTPError` that was raised.
 
+- `departure_date` is now an optional paramater for `sdk.detectionlists.departing_employee.add()`.
+
 ## 1.0.0 - 2020-04-21
 
 ### Changed

@@ -56,14 +56,14 @@ class Py42StorageSessionInitializationError(Py42Error):
 class Py42HTTPError(Py42Error):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
-    def __init__(self, http_response):
-        message = u"Failure in HTTP call {0}".format(str(http_response))
+    def __init__(self, exception):
+        message = u"Failure in HTTP call {0}".format(str(exception))
         super(Py42HTTPError, self).__init__(message)
-        self._response = http_response.response
+        self._response = exception.response
 
     @property
     def response(self):
-        """The response containing the HTTP error."""
+        """The response object containing the HTTP error details."""
         return self._response
 
 

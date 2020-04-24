@@ -119,7 +119,7 @@ class MicroserviceClientFactory(object):
 
     def get_alert_rules_client(self):
         if not self._alert_rules_client:
-            session = self._get_jwt_session(u"FedService-API_URL")
+            session = self._get_jwt_session(u"FedObserver-API_URL")
             self._alert_rules_client = alertrules.AlertRulesClient(session, self._user_context)
         return self._alert_rules_client
 

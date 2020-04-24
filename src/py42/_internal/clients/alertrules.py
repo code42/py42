@@ -1,6 +1,7 @@
 import json
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.exceptions import Py42NotFoundError
 
 
 _ALERT_RULE_ENDPOINTS = {
@@ -26,8 +27,8 @@ class AlertRulesClient(BaseClient):
 
         Args:
             rule_id (str): Id of a rule to be updated.
-            user_id (str): User id who needs to be added to the criteria.
-            user_aliases (str): Email ids/Aliases who needs to be added to criteria.
+            user_id (str): A custom identifier to uniquely identify the specified user aliases
+            user_aliases (list): List of Email aliases those needs to be added to criteria.
 
         Returns
             :class:`py42.response.Py42Response`
@@ -36,13 +37,7 @@ class AlertRulesClient(BaseClient):
         data = {
             u"tenantId": tenant_id,
             u"ruleId": rule_id,
-            u"userList": [
-                {
-                    # not sure what should be passed here and its significance.
-                    u"userIdFromAuthority": user_id,
-                    u"userAliasList": [user_aliases],
-                }
-            ],
+            u"userList": [{u"userIdFromAuthority": user_id, u"userAliasList": user_aliases,}],
         }
         uri = u"{0}{1}".format(self._api_prefix, u"add-users")
         return self._session.post(uri, data=json.dumps(data))
@@ -51,23 +46,23 @@ class AlertRulesClient(BaseClient):
         """Update alert rule criteria to remove users from the rule's user criteria.
 
         Args:
-            rule_id (str): Id of a rule to be updated.
-            user_ids (str): List of comma separated user ids who needs to be added to the criteria.
+            rule_id (str): Observer rule Id of a rule to be updated.
+            user_ids (list): List of custom identifiers used while adding user.
+             It will remove all the aliases specified against these identifiers.
 
         Returns
             :class:`py42.response.Py42Response`
         """
         tenant_id = self._user_context.get_current_tenant_id()
-        data = {u"tenantId": tenant_id, u"ruleId": rule_id, u"userIdList": [user_ids]}
+        data = {u"tenantId": tenant_id, u"ruleId": rule_id, u"userIdList": user_ids}
         uri = u"{0}{1}".format(self._api_prefix, u"remove-users")
         return self._session.post(uri, data=json.dumps(data))
-        pass
 
     def remove_all_users(self, rule_id):
         """Update alert rule criteria to remove all users the from the rule's user criteria.
 
         Args:
-            rule_id (str): Id of a rule to be updated.
+            rule_id (str): Observer rule Id of a rule to be updated.
 
         Returns
             :class:`py42.response.Py42Response`
@@ -81,7 +76,7 @@ class AlertRulesClient(BaseClient):
         """Fetch alert rules by rule id.
 
         Args:
-            rule_id (str): Id of a rule to be updated.
+            rule_id (str): Observer rule Id of a rule to be fetched.
             rule_type (str): Either of 'exfiltration', 'cloudshare', 'typemismatch' where
               'exfiltration' implies rules related to movement of files,
               'cloudshare' implies rules related to sharing/providing public access to files
@@ -114,7 +109,7 @@ class AlertRulesManagerClient(BaseClient):
             "tenantId": tenant_id,
             "groups": [],
             "groupClause": "AND",
-            "pgNum": page_num,
+            "pgNum": 0,  # This API expects first page to start with zero, hence hard-coded.
             "pgSize": page_size,
             "srtKey": sort_key,
             "srtDirection": sort_direction,
@@ -145,17 +140,18 @@ class AlertRulesManagerClient(BaseClient):
     def get_by_name(self, rule_name):
         """Fetch a rule by its name.
 
+            Raises Py42NotFoundError when no match is found.
         Args:
-            rule_name (str): Name to search for, case insensitive search.
+            rule_name (str): Rule name to search for, case insensitive search.
 
         Returns
-            :class:`py42.response.Py42Response`
+            :dict: Dictionary containing rule-details.
         """
-        rules = self.get_all()
+        rule_pages = self.get_all()
 
-        for rule in rules:
-            print(rule)
-            if rule_name.lower() in rule["name"].lower():
-                # TODO
-                break
-        pass
+        for rule_page in rule_pages:
+            rules = rule_page["ruleMetadata"]
+            for rule in rules:
+                if rule_name.lower() in rule["name"].lower():
+                    return rule
+        raise Py42NotFoundError("No Alert Rules found with name: {0}".format(rule_name))

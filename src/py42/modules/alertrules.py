@@ -4,38 +4,39 @@ class AlertRulesModule(object):
         self._alert_rules_manager_client = None
         self._alert_rules_client = None
 
-    def add_user(self, rule_id, user_id):
+    def add_user(self, rule_id, user_id, user_aliases):
         """Update alert rule criteria to apply the rule for specific user(s) for the given rule id.
 
         Args:
             rule_id (str): Id of a rule to be updated.
-            user_id (str): User id who needs to be added to the criteria.
-            user_aliases (str): Email ids/Aliases who needs to be added to criteria.
+            user_id (str): A custom identifier to uniquely identify the specified user aliases
+            user_aliases (str): List of Email ids/Aliases those need to be added to criteria.
 
         Returns
             :class:`py42.response.Py42Response`
         """
         self._alert_rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return self._alert_rules_client.add_user(rule_id, user_id)
+        return self._alert_rules_client.add_user(rule_id, user_id, user_aliases)
 
     def remove_users(self, rule_id, user_ids):
         """Update alert rule criteria to remove users from the rule's user criteria.
 
         Args:
-            rule_id (str): Id of a rule to be updated.
-            user_ids (str): List of comma separated user ids who needs to be added to the criteria.
+            rule_id (str): Observer rule Id of a rule to be updated.
+            user_ids (list): List of custom identifiers used while adding user.
+             It will remove all the aliases specified against these identifiers.
 
         Returns
             :class:`py42.response.Py42Response`
         """
         self._alert_rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return self._alert_rules_client.remove_user(rule_id, user_ids)
+        return self._alert_rules_client.remove_users(rule_id, user_ids)
 
     def remove_all_users(self, rule_id):
         """Update alert rule criteria to remove all users the from the rule's user criteria.
 
         Args:
-            rule_id (str): Id of a rule to be updated.
+            rule_id (str): Observer rule Id of a rule to be updated.
 
         Returns
             :class:`py42.response.Py42Response`
@@ -47,7 +48,7 @@ class AlertRulesModule(object):
         """Fetch alert rules by rule id.
 
         Args:
-            rule_id (str): Id of a rule to be updated.
+            rule_id (str): Observer rule Id of a rule to be fetched.
             rule_type (str): Either of 'exfiltration', 'cloudshare', 'typemismatch' where
               'exfiltration' implies rules related to movement of files,
               'cloudshare' implies rules related to sharing/providing public access to files
@@ -79,10 +80,10 @@ class AlertRulesModule(object):
         """Fetch a rule by its name.
 
         Args:
-            rule_name (str): Name to search for, case insensitive search.
+            rule_name (str): Rule name to search for, case insensitive search.
 
         Returns
-            :class:`py42.response.Py42Response`
+            :dict: Dictionary containing rule-details.
         """
         self._alert_rules_manager_client = (
             self.microservice_client_factory.get_alert_rules_manager_client()

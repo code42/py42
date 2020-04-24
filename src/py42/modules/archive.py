@@ -116,6 +116,6 @@ class ArchiveModule(object):
             purge_date (str): The date on which the archive should be purged in yyyy-MM-dd format
 
         Returns:
-            :class: `py42.response.Py42Response`: the response from the ColdStorage API.
+            :class:`py42.response.Py42Response`: the response from the ColdStorage API.
         """
         return self._archive_client.update_cold_storage_purge_date(archive_guid, purge_date)

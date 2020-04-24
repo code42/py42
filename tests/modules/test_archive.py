@@ -40,3 +40,12 @@ class TestArchiveModule(object):
         archive._archive_client.get_all_restore_history.assert_called_once_with(
             self._TEST_DAYS, "computerId", self._TEST_ID
         )
+
+    def test_update_cold_storage_purge_date_calls_update_cold_storage_with_expected_data(
+        self, mocker
+    ):
+        archive = _get_module(mocker)
+        archive.update_cold_storage_purge_date(u"123", u"2020-04-24")
+        archive._archive_client.update_cold_storage_purge_date.assert_called_once_with(
+            u"123", u"2020-04-24"
+        )

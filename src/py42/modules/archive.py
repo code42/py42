@@ -106,3 +106,16 @@ class ArchiveModule(object):
             that each contain a page of restore history.
         """
         return self._archive_client.get_all_restore_history(days, u"computerId", device_id)
+
+    def update_cold_storage_purge_date(self, archive_guid, purge_date):
+        """Updates the cold storage purge date for a specified archive.
+        REST Documentation <https://www.crashplan.com/apidocviewer/#ColdStorage-put>
+
+        Args:
+            archive_guid (str): The identification number of the archive that should be updated
+            purge_date (str): The date on which the archive should be purged in yyyy-MM-dd format
+
+        Returns:
+            :class: py42.response.Py42Response: the response from the ColdStorage API.
+        """
+        return self._archive_client.update_cold_storage_purge_date(archive_guid, purge_date)

@@ -1,7 +1,7 @@
 import pytest
 import json
 
-from py42.clients.alertrules import AlertRulesClient
+from py42._internal.clients.alertrules import AlertRulesClient, AlertRulesManagerClient
 
 
 class TestAlertRulesClient(object):
@@ -51,7 +51,7 @@ class TestAlertRulesClient(object):
 
     def test_get_by_id_posts_expected_data_for_exfiltration_type(self, mock_session, user_context):
         alert_rule_client = AlertRulesClient(mock_session, user_context)
-        alert_rule_client.get(u"rule-id", "exfiltration")
+        alert_rule_client.get("exfiltration", u"rule-id")
 
         assert mock_session.post.call_count == 1
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -65,7 +65,7 @@ class TestAlertRulesClient(object):
         self, mock_session, user_context
     ):
         alert_rule_client = AlertRulesClient(mock_session, user_context)
-        alert_rule_client.get(u"rule-id", "cloudshare")
+        alert_rule_client.get("cloudshare", u"rule-id")
         url = mock_session.post.call_args[0][0]
         assert url == "/svc/api/v1/Rules/query-cloud-share-permissions-rule"
 
@@ -73,22 +73,24 @@ class TestAlertRulesClient(object):
         self, mock_session, user_context
     ):
         alert_rule_client = AlertRulesClient(mock_session, user_context)
-        alert_rule_client.get(u"rule-id", "typemismatch")
+        alert_rule_client.get("typemismatch", u"rule-id")
         url = mock_session.post.call_args[0][0]
         assert url == "/svc/api/v1/Rules/query-file-type-mismatch-rule"
 
+
+class TestAlertRulesManagerClient(object):
     def test_get_by_name_posts_expected_data(self, mock_session, user_context):
-        alert_rule_client = AlertRulesClient(mock_session, user_context)
+        alert_rule_client = AlertRulesManagerClient(mock_session, user_context)
         alert_rule_client.get_by_name(u"name")
         pass
 
     def test_get_by_name_filters_correct_record(self, mock_session, user_context):
-        alert_rule_client = AlertRulesClient(mock_session, user_context)
+        alert_rule_client = AlertRulesManagerClient(mock_session, user_context)
         alert_rule_client.get_by_name(u"name")
         pass
 
     def test_get_all_posts_expected_data(self, mock_session, user_context):
-        alert_rule_client = AlertRulesClient(mock_session, user_context)
+        alert_rule_client = AlertRulesManagerClient(mock_session, user_context)
 
         for _ in alert_rule_client.get_all(sort_key="key", sort_direction="ASC"):
             break

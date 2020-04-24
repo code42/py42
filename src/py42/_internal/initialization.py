@@ -4,6 +4,7 @@ from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
 from py42.modules import archive as archive_module, detectionlists, securitydata as sec_module
+from py42.modules import alertrules
 from py42.usercontext import UserContext
 
 
@@ -26,9 +27,6 @@ class SDKDependencies(object):
         self.archive_client = authority_client_factory.create_archive_client()
         self.security_client = authority_client_factory.create_security_client()
         self.user_context = UserContext(self.administration_client)
-        self.alert_rules_client = authority_client_factory.create_alert_rules_client(
-            self.user_context
-        )
 
         archive_locator_factory = StorageTokenProviderFactory(
             self.session, self.security_client, self.device_client
@@ -56,6 +54,7 @@ class SDKDependencies(object):
         self.detection_lists_module = detectionlists.DetectionListsModule(
             microservice_client_factory, self.user_client
         )
+        self.alert_rules_module = alertrules.AlertRulesModule(microservice_client_factory)
 
     def _set_v3_session(self, host_address, session_factory, root_session):
         self.root_session = root_session

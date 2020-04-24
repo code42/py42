@@ -5,7 +5,8 @@ from requests import HTTPError
 from py42._internal.clients import archive
 from py42._internal.clients import key_value_store
 from py42._internal.clients import securitydata
-from py42.clients import administration, alerts, devices, legalhold, orgs, users, alertrules
+from py42.clients import administration, alerts, devices, legalhold, orgs, users
+from py42._internal.clients import alertrules
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42._internal.clients.detection_list_user import DetectionListUserClient
@@ -38,9 +39,6 @@ class AuthorityClientFactory(object):
     def create_security_client(self):
         return securitydata.SecurityClient(self.session)
 
-    def create_alert_rules_client(self, user_context):
-        return alertrules.AlertRulesClient(self.session, user_context)
-
 
 class MicroserviceClientFactory(object):
     def __init__(
@@ -62,6 +60,8 @@ class MicroserviceClientFactory(object):
         self._high_risk_employee_client = None
         self._detection_list_user_client = None
         self._ecm_session = None
+        self._alert_rules_client = None
+        self._alert_rules_manager_client = None
 
     def get_alerts_client(self):
         if not self._alerts_client:
@@ -116,6 +116,20 @@ class MicroserviceClientFactory(object):
                 self._ecm_session, self._user_context, user_client
             )
         return self._detection_list_user_client
+
+    def get_alert_rules_client(self):
+        if not self._alert_rules_client:
+            session = self._get_jwt_session(u"FedService-API_URL")
+            self._alert_rules_client = alertrules.AlertRulesClient(session, self._user_context)
+        return self._alert_rules_client
+
+    def get_alert_rules_manager_client(self):
+        if not self._alert_rules_manager_client:
+            session = self._get_jwt_session(u"AlertService-API_URL")
+            self._alert_rules_manager_client = alertrules.AlertRulesManagerClient(
+                session, self._user_context
+            )
+        return self._alert_rules_manager_client
 
 
 def _hacky_get_microservice_url(session, microservice_base_name):

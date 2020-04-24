@@ -155,4 +155,4 @@ class SDKClient(object):
         Returns:
             :class:`py42.clients.AlertRules
         """
-        return self._sdk_dependencies.alert_rule
+        return self._sdk_dependencies.alert_rules_module

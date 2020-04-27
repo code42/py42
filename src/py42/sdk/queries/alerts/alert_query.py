@@ -26,7 +26,7 @@ class AlertQuery(BaseQuery):
     def __init__(self, tenant_id, *args, **kwargs):
         super(AlertQuery, self).__init__(*args, **kwargs)
         self._tenant_id = tenant_id
-        self.sort_key = u"CreatedAt"
+        self.sort_key = u"createdAt"
         self.page_number = 0
         self.sort_direction = u"desc"
 
@@ -42,3 +42,15 @@ class AlertQuery(BaseQuery):
             self.sort_key,
         )
         return json
+
+    def all(self, *args):
+        tenant_id = self._tenant_id
+        if tenant_id is None:
+            raise TypeError("tenant_id cannot be None.")
+        return self.__class__(tenant_id, *args, group_clause=u"AND")
+
+    def any(self, *args):
+        tenant_id = self._tenant_id
+        if tenant_id is None:
+            raise TypeError("tenant_id cannot be None.")
+        return self.__class__(tenant_id, *args, group_clause=u"OR")

@@ -29,7 +29,7 @@ class AlertQueryFilterStringField(QueryFilterStringField):
 class DateObserved(QueryFilterTimestampField):
     """Class that filters alerts based on the timestamp the alert was triggered."""
 
-    _term = u"CreatedAt"
+    _term = u"createdAt"
 
 
 class Actor(AlertQueryFilterStringField):

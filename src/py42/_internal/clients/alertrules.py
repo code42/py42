@@ -140,7 +140,7 @@ class AlertRulesManagerClient(BaseClient):
     def get_by_name(self, rule_name):
         """Fetch a rule by its name.
 
-            Raises Py42NotFoundError when no match is found.
+            Raises :class:`py42.exceptions.Py42NotFoundError` when no match is found.
         Args:
             rule_name (str): Rule name to search for, case insensitive search.
 
@@ -148,7 +148,6 @@ class AlertRulesManagerClient(BaseClient):
             :dict: Dictionary containing rule-details.
         """
         rule_pages = self.get_all()
-
         for rule_page in rule_pages:
             rules = rule_page["ruleMetadata"]
             for rule in rules:

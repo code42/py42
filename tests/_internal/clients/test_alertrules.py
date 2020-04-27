@@ -12,7 +12,8 @@ TEST_RESPONSE = """
  'Alerting', 'tenantId': '1d71796f-af5b-4231-9d8e-df6434da4663',
  'observerRuleId': 'e57ae2e7-b1f8-4332-92e7-1ff4d47bd951', 'type': 'FED_CLOUD_SHARE_PERMISSIONS',
  'id': '6930a1fe-73fc-4f89-8c45-96cba5547b71', 'createdBy': 'test@code42.com',
- 'createdAt': '2020-04-20T06:51:10.9420250Z'}]
+ 'createdAt': '2020-04-20T06:51:10.9420250Z'
+ }]
 , 'totalCount': 1, 'problems': []}
 """
 
@@ -111,35 +112,31 @@ class TestAlertRulesManagerClient(object):
             and posted_data["srtDirection"] == "ASC"
         )
 
-    @pytest.mark.skip("TODO Fix failing test")
-    def test_get_by_name_posts_expected_data(self, mock_session, user_context):
-        alert_rule_client = AlertRulesManagerClient(mock_session, user_context)
-        alert_rule_client.get_by_name(u"TestName")
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
-
-    @pytest.mark.skip("TODO Fix failing test")
-    def test_get_by_name_filters_correct_record(self, mock_session, user_context, py42_response):
+    @pytest.mark.skip("TODO add assert statements")
+    def test_get_by_name_posts_expected_data(self, mocker, py42_response):
+        alert_rule_client = mocker.MagicMock(spec=AlertRulesManagerClient)
         py42_response.text = TEST_RESPONSE
-        mock_session.post.return_value = py42_response
-        alert_rule_client = AlertRulesManagerClient(mock_session, user_context)
+        alert_rule_client.get_all.return_value = [py42_response]
+        alert_rule_client.get_by_name(u"TestName")
+
+    @pytest.mark.skip("TODO add assert statements")
+    def test_get_by_name_filters_correct_record(self, mocker, py42_response):
+        alert_rule_client = mocker.MagicMock(spec=AlertRulesManagerClient)
+        py42_response.text = TEST_RESPONSE
+        alert_rule_client.get_all.return_value = [py42_response]
         alert_rule_client.get_by_name(u"TESTNAME")
 
-    @pytest.mark.skip("TODO Fix failing test")
-    def test_get_by_name_filters_correct_record_case_insenstive_search(
-        self, mock_session, user_context, py42_response
-    ):
+    @pytest.mark.skip("TODO add assert statements")
+    def test_get_by_name_filters_correct_record_case_insenstive_search(self, mocker, py42_response):
+        alert_rule_client = mocker.MagicMock(spec=AlertRulesManagerClient)
         py42_response.text = TEST_RESPONSE
-        mock_session.post.return_value = py42_response
-        alert_rule_client = AlertRulesManagerClient(mock_session, user_context)
+        alert_rule_client.get_all.return_value = [py42_response]
         alert_rule_client.get_by_name(u"TestName")
 
-    @pytest.mark.skip("TODO Fix failing test")
-    def test_get_by_name_raises_exception_when_name_does_not_match(
-        self, mock_session, user_context, py42_response
-    ):
+    @pytest.mark.skip("TODO Fix")
+    def test_get_by_name_raises_exception_when_name_does_not_match(self, mocker, py42_response):
+        alert_rule_client = mocker.MagicMock(spec=AlertRulesManagerClient)
         py42_response.text = TEST_RESPONSE
-        mock_session.post.return_value = py42_response
-        alert_rule_client = AlertRulesManagerClient(mock_session, user_context)
+        alert_rule_client.get_all.return_value = [py42_response]
         with pytest.raises(Py42NotFoundError):
             alert_rule_client.get_by_name(u"TESTNAME2")

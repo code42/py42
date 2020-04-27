@@ -79,6 +79,7 @@ class AlertRulesModule(object):
     def get_by_name(self, rule_name):
         """Fetch a rule by its name.
 
+            Raises :class:`py42.exceptions.Py42NotFoundError` when no match is found.
         Args:
             rule_name (str): Rule name to search for, case insensitive search.
 

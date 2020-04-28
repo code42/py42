@@ -10,6 +10,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
+
+- `sdk.archives.update_cold_storage_purge_date()`, allowing the changing of the date at which a cold storage archive
+    will be purged.
+
 ### Changed
 
 - Exceptions that inherit from `Py42HTTPError` now return the original `requests.Response` object on the exception's
@@ -19,6 +24,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `py42.sdk.queries.alerts.alert_query.AlertQuery` no longer requires a `tenant_id` to be added to the query manually,
     the `AlertClient.search()` method now adds the tenant_id automatically from the user_context.
+
 
 ## 1.0.0 - 2020-04-21
 

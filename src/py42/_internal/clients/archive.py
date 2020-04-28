@@ -34,3 +34,9 @@ class ArchiveClient(BaseClient):
         uri = u"/api/WebRestoreInfo"
         params = {u"srcGuid": src_guid, u"destGuid": dest_guid}
         return self._session.get(uri, params=params)
+
+    def update_cold_storage_purge_date(self, archive_guid, purge_date):
+        uri = u"/api/coldStorage/{0}".format(archive_guid)
+        params = {u"idType": u"guid"}
+        data = {u"archiveHoldExpireDate": purge_date}
+        return self._session.put(uri, params=params, data=json.dumps(data))

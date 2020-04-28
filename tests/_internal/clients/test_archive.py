@@ -1,5 +1,6 @@
 import pytest
 from requests import Response
+import json
 
 import py42.settings
 from py42._internal.clients.archive import ArchiveClient
@@ -43,3 +44,14 @@ class TestArchiveClient(object):
             pass
         py42.settings.items_per_page = 1000
         assert mock_session.get.call_count == 3
+
+    def test_update_cold_storage_purge_date_calls_coldstorage_with_expected_data(
+        self, mock_session
+    ):
+        client = ArchiveClient(mock_session)
+        client.update_cold_storage_purge_date(u"123", u"2020-04-24")
+        mock_session.put.assert_called_once_with(
+            u"/api/coldStorage/123",
+            params={u"idType": u"guid"},
+            data=json.dumps({u"archiveHoldExpireDate": u"2020-04-24"}),
+        )

@@ -2,7 +2,7 @@ import pytest
 import json
 
 from py42._internal.clients.alertrules import AlertRulesClient, AlertRulesManagerClient
-from py42.exceptions import Py42NotFoundError
+from py42.exceptions import Py42Error
 
 TEST_RESPONSE = """
 {'type$': 'RULE_METADATA_SEARCH_RESPONSE',
@@ -112,31 +112,37 @@ class TestAlertRulesManagerClient(object):
             and posted_data["srtDirection"] == "ASC"
         )
 
-    @pytest.mark.skip("TODO add assert statements")
+    @pytest.mark.skip("TODO Fix")
     def test_get_by_name_posts_expected_data(self, mocker, py42_response):
         alert_rule_client = mocker.MagicMock(spec=AlertRulesManagerClient)
         py42_response.text = TEST_RESPONSE
         alert_rule_client.get_all.return_value = [py42_response]
-        alert_rule_client.get_by_name(u"TestName")
+        rule_str = alert_rule_client.get_by_name(u"TestName")
+        rule = json.loads(rule_str)
+        assert rule["name"] == u"TestName"
 
-    @pytest.mark.skip("TODO add assert statements")
+    @pytest.mark.skip("TODO Fix")
     def test_get_by_name_filters_correct_record(self, mocker, py42_response):
         alert_rule_client = mocker.MagicMock(spec=AlertRulesManagerClient)
         py42_response.text = TEST_RESPONSE
         alert_rule_client.get_all.return_value = [py42_response]
-        alert_rule_client.get_by_name(u"TESTNAME")
+        rule_str = alert_rule_client.get_by_name(u"TESTNAME")
+        rule = json.loads(rule_str)
+        assert rule["name"] == u"TestName"
 
-    @pytest.mark.skip("TODO add assert statements")
+    @pytest.mark.skip("TODO Fix")
     def test_get_by_name_filters_correct_record_case_insenstive_search(self, mocker, py42_response):
         alert_rule_client = mocker.MagicMock(spec=AlertRulesManagerClient)
         py42_response.text = TEST_RESPONSE
         alert_rule_client.get_all.return_value = [py42_response]
-        alert_rule_client.get_by_name(u"TestName")
+        rule_str = alert_rule_client.get_by_name(u"TestName")
+        rule = json.loads(rule_str)
+        assert rule["name"] == u"TestName"
 
     @pytest.mark.skip("TODO Fix")
     def test_get_by_name_raises_exception_when_name_does_not_match(self, mocker, py42_response):
         alert_rule_client = mocker.MagicMock(spec=AlertRulesManagerClient)
         py42_response.text = TEST_RESPONSE
         alert_rule_client.get_all.return_value = [py42_response]
-        with pytest.raises(Py42NotFoundError):
+        with pytest.raises(Py42Error):
             alert_rule_client.get_by_name(u"TESTNAME2")

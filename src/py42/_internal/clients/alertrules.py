@@ -1,7 +1,7 @@
 import json
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42.exceptions import Py42NotFoundError
+from py42.exceptions import Py42Error
 
 
 _ALERT_RULE_ENDPOINTS = {
@@ -153,4 +153,4 @@ class AlertRulesManagerClient(BaseClient):
             for rule in rules:
                 if rule_name.lower() in rule["name"].lower():
                     return rule
-        raise Py42NotFoundError("No Alert Rules found with name: {0}".format(rule_name))
+        raise Py42Error("No Alert Rules found with name: {0}".format(rule_name))

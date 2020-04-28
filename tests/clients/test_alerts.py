@@ -16,7 +16,7 @@ class TestAlertClient(object):
     def test_search_posts_expected_data(self, mock_session, user_context, successful_post):
         alert_client = AlertClient(mock_session, user_context)
         _filter = AlertState.eq("OPEN")
-        query = AlertQuery(TENANT_ID_FROM_RESPONSE, _filter)
+        query = AlertQuery(_filter)
         alert_client.search(query)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
@@ -35,7 +35,7 @@ class TestAlertClient(object):
     def test_search_posts_to_expected_url(self, mock_session, user_context, successful_post):
         alert_client = AlertClient(mock_session, user_context)
         _filter = AlertState.eq("OPEN")
-        query = AlertQuery(TENANT_ID_FROM_RESPONSE, _filter)
+        query = AlertQuery(_filter)
         alert_client.search(query)
         assert mock_session.post.call_args[0][0] == u"/svc/api/v1/query-alerts"
 

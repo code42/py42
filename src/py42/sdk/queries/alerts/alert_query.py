@@ -12,28 +12,22 @@ class AlertQuery(BaseQuery):
 
     For convenience, the :class:`AlertQuery` constructor does the same as ``all()``.
 
-    A tenant ID is required in either the constructor or ``all()`` or ``any()``. You can get the
-    tenant ID from the method :meth:`SDKClient.usercontext.get_current_tenant_id()`.
-
     Usage example::
 
         state_filter = AlertState.eq(AlertState.OPEN)
         rule_name_filter = RuleName.contains("EmailRule")
-        tenant_id = sdk.usercontext.get_current_tenant_id()
-        query = AlertQuery(tenant_id).all(state_filter, rule_name_filter)
+        query = AlertQuery.all(state_filter, rule_name_filter)
     """
 
-    def __init__(self, tenant_id, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(AlertQuery, self).__init__(*args, **kwargs)
-        self._tenant_id = tenant_id
         self.sort_key = u"CreatedAt"
         self.page_number = 0
         self.sort_direction = u"desc"
 
     def __str__(self):
         groups_string = u",".join(str(group_item) for group_item in self._filter_group_list)
-        json = u'{{"tenantId":"{0}", "groupClause":"{1}", "groups":[{2}], "pgNum":{3}, "pgSize":{4}, "srtDirection":"{5}", "srtKey":"{6}"}}'.format(
-            self._tenant_id,
+        json = u'{{"tenantId": null, "groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDirection":"{4}", "srtKey":"{5}"}}'.format(
             self._group_clause,
             groups_string,
             self.page_number,

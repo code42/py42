@@ -29,7 +29,7 @@ class AlertClient(BaseClient):
             :class:`py42.response.Py42Response`: A response containing the alerts that match the given
             query.
         """
-        query = str(query)
+        query = self._add_tenant_id_if_missing(query)
         uri = self._uri_prefix.format(u"query-alerts")
         return self._session.post(uri, data=query)
 
@@ -94,3 +94,12 @@ class AlertClient(BaseClient):
         uri = self._uri_prefix.format(u"reopen-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
         return self._session.post(uri, data=json.dumps(data))
+
+    def _add_tenant_id_if_missing(self, query):
+        query_dict = json.loads(str(query))
+        tenant_id = query_dict.get(u"tenantId", None)
+        if tenant_id is None:
+            query_dict[u"tenantId"] = self._user_context.get_current_tenant_id()
+            return json.dumps(query_dict)
+        else:
+            return str(query)

@@ -17,6 +17,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `departure_date` is now an optional parameter for `sdk.detectionlists.departing_employee.add()`.
 
+- `py42.sdk.queries.alerts.alert_query.AlertQuery` no longer requires a `tenant_id` to be added to the query manually,
+    the `AlertClient.search()` method now adds the tenant_id automatically from the user_context.
+
 ## 1.0.0 - 2020-04-21
 
 ### Changed

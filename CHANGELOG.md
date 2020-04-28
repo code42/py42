@@ -17,6 +17,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `departure_date` is now an optional parameter for `sdk.detectionlists.departing_employee.add()`.
 
+- Added `sdk.archives.update_cold_storage_purge_date()`, allowing the changing of the date at which a cold storage archive will be purged.
+
 ## 1.0.0 - 2020-04-21
 
 ### Changed

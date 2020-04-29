@@ -149,7 +149,7 @@ class SDKClient(object):
         return self._sdk_dependencies.detection_lists_module
 
     @property
-    def alertrules(self):
+    def alerts(self):
         """A collection of methods related to retrieving, updating alerts rules.
 
         Returns:

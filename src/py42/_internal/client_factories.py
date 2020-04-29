@@ -6,7 +6,7 @@ from py42._internal.clients import archive
 from py42._internal.clients import key_value_store
 from py42._internal.clients import securitydata
 from py42.clients import administration, alerts, devices, legalhold, orgs, users
-from py42._internal.clients import alertrules
+from py42._internal.clients.alert_rules import AlertRulesClient
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42._internal.clients.detection_list_user import DetectionListUserClient
@@ -117,19 +117,13 @@ class MicroserviceClientFactory(object):
             )
         return self._detection_list_user_client
 
-    def get_alert_rules_client(self):
+    def get_alert_rules_client(self, detection_list_user_client):
         if not self._alert_rules_client:
             session = self._get_jwt_session(u"FedObserver-API_URL")
-            self._alert_rules_client = alertrules.AlertRulesClient(session, self._user_context)
-        return self._alert_rules_client
-
-    def get_alert_rules_manager_client(self):
-        if not self._alert_rules_manager_client:
-            session = self._get_jwt_session(u"AlertService-API_URL")
-            self._alert_rules_manager_client = alertrules.AlertRulesManagerClient(
-                session, self._user_context
+            self._alert_rules_client = AlertRulesClient(
+                session, self._user_context, detection_list_user_client
             )
-        return self._alert_rules_manager_client
+        return self._alert_rules_client
 
 
 def _hacky_get_microservice_url(session, microservice_base_name):

@@ -2,6 +2,8 @@ import json
 
 from py42._internal.compat import str
 from py42.clients import BaseClient
+from py42.exceptions import Py42Error
+from py42.clients.util import get_all_pages
 
 
 class AlertClient(BaseClient):
@@ -103,3 +105,56 @@ class AlertClient(BaseClient):
             return json.dumps(query_dict)
         else:
             return str(query)
+
+    def _get_alert_rules(
+        self, tenant_id, sort_key=None, sort_direction=None, page_num=None, page_size=None
+    ):
+        data = {
+            "tenantId": tenant_id,
+            "groups": [],
+            "groupClause": "AND",
+            "pgNum": 0,  # This API expects first page to start with zero, hence hard-coded.
+            "pgSize": page_size,
+            "srtKey": sort_key,
+            "srtDirection": sort_direction,
+        }
+        uri = self._uri_prefix.format(u"rules/query-rule-metadata")
+        return self._session.post(uri, data=json.dumps(data))
+
+    def get_all(self, sort_key="CreatedAt", sort_direction="DESC"):
+        """Fetch all available rules.
+
+        Args:
+            sort_key (str): Sort results based by field, default 'CreatedAt'.
+            sort_direction (str): ``ASC`` or ``DESC``, default "DESC"
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of events.
+        """
+        tenant_id = self._user_context.get_current_tenant_id()
+        return get_all_pages(
+            self._get_alert_rules,
+            u"ruleMetadata",
+            tenant_id=tenant_id,
+            sort_key=sort_key,
+            sort_direction=sort_direction,
+        )
+
+    def get_by_name(self, rule_name):
+        """Fetch a rule by its name.
+
+            Raises :class:`py42.exceptions.Py42NotFoundError` when no match is found.
+        Args:
+            rule_name (str): Rule name to search for, case insensitive search.
+
+        Returns
+            :dict: Dictionary containing rule-details.
+        """
+        rule_pages = self.get_all()
+        for rule_page in rule_pages:
+            rules = rule_page["ruleMetadata"]
+            for rule in rules:
+                if rule_name.lower() in rule["name"].lower():
+                    return rule
+        raise Py42Error("No Alert Rules found with name: {0}".format(rule_name))

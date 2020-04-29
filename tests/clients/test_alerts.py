@@ -1,25 +1,27 @@
 import json
-
 import pytest
 
+from py42._internal.session import Py42Session
 from py42.clients.alerts import AlertClient
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import AlertState
 from tests.conftest import TENANT_ID_FROM_RESPONSE
+from py42.exceptions import Py42Error
 
 
 TEST_RESPONSE = """
 {"type$": "RULE_METADATA_SEARCH_RESPONSE",
- "ruleMetadata": [{"type$": "RULE_METADATA", "modifiedBy": "Email@code42.com",
- "modifiedAt": "2020-04-24T16:49:42.9767920Z", "name": "TESTNAME",
- "description": "", "severity": "LOW", "isSystem": False, "isEnabled": True, "ruleSource":
- "Alerting", "tenantId": "1d71796f-af5b-4231-9d8e-df6434da4663",
- "observerRuleId": "e57ae2e7-b1f8-4332-92e7-1ff4d47bd951", "type": "FED_CLOUD_SHARE_PERMISSIONS",
- "id": "6930a1fe-73fc-4f89-8c45-96cba5547b71", "createdBy": "test@code42.com",
- "createdAt": "2020-04-20T06:51:10.9420250Z"
- }]
+ "ruleMetadata": [{ "name": "TESTNAME"}]
 , "totalCount": 1, "problems": []}
 """
+
+
+@pytest.fixture
+def mock_get_all_session(mocker, py42_response):
+    py42_response.text = TEST_RESPONSE
+    session = mocker.MagicMock(spec=Py42Session)
+    session.post.return_value = py42_response
+    return session
 
 
 class TestAlertClient(object):
@@ -201,3 +203,22 @@ class TestAlertClient(object):
             and posted_data["srtKey"] == "key"
             and posted_data["srtDirection"] == "ASC"
         )
+
+    def test_get_by_name_filters_correct_record(self, mock_get_all_session, user_context):
+        alert_client = AlertClient(mock_get_all_session, user_context)
+        rule = alert_client.get_by_name(u"TESTNAME")
+        assert rule["name"] == u"TESTNAME"
+
+    def test_get_by_name_filters_correct_record_case_insenstive_search(
+        self, mock_get_all_session, user_context
+    ):
+        alert_client = AlertClient(mock_get_all_session, user_context)
+        rule = alert_client.get_by_name(u"TestName")
+        assert rule["name"] == u"TESTNAME"
+
+    def test_get_by_name_raises_exception_when_name_does_not_match(
+        self, mock_get_all_session, user_context
+    ):
+        alert_client = AlertClient(mock_get_all_session, user_context)
+        with pytest.raises(Py42Error):
+            alert_client.get_by_name(u"TESTNAME2")

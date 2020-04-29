@@ -8,12 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.0.1 - 2020-04-29
 
 ### Added
 
-- `sdk.archives.update_cold_storage_purge_date()`, allowing the changing of the date at which a cold storage archive
-    will be purged.
+- `sdk.archive.update_cold_storage_purge_date()`, allowing the changing of the date at which a cold storage archive will be purged.
 
 ### Changed
 
@@ -24,7 +23,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `py42.sdk.queries.alerts.alert_query.AlertQuery` no longer requires a `tenant_id` to be added to the query manually,
     the `AlertClient.search()` method now adds the tenant_id automatically from the user_context.
-
 
 ## 1.0.0 - 2020-04-21
 

@@ -10,10 +10,10 @@ class AlertsModule(object):
 
     @property
     def rules(self):
-        """[summary]
+        """A collection of methods for managing alert rules.
 
         Returns:
-            [type]: [description]
+            :class:`py42.modules.alertrules.AlertRulesModule`
         """
         return self._alert_rules_module
 

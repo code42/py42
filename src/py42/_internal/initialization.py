@@ -54,7 +54,7 @@ class SDKDependencies(object):
         self.detection_lists_module = detectionlists.DetectionListsModule(
             microservice_client_factory, self.user_client
         )
-        self.alert_rules_module = alertrules.AlertModule(
+        self.alert_rules_module = alertrules.AlertRulesModule(
             microservice_client_factory, self.user_client
         )
 

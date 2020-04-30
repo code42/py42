@@ -2,7 +2,6 @@ import json
 
 from py42._internal.compat import str
 from py42.clients import BaseClient
-from py42.exceptions import Py42Error
 from py42.clients.util import get_all_pages
 
 
@@ -113,7 +112,7 @@ class AlertClient(BaseClient):
             "tenantId": tenant_id,
             "groups": [],
             "groupClause": "AND",
-            "pgNum": 0,  # This API expects first page to start with zero, hence hard-coded.
+            "pgNum": page_num - 1,  # Minus 1, as this API expects first page to start with zero.
             "pgSize": page_size,
             "srtKey": sort_key,
             "srtDirection": sort_direction,
@@ -125,8 +124,8 @@ class AlertClient(BaseClient):
         """Fetch all available rules.
 
         Args:
-            sort_key (str): Sort results based by field, default 'CreatedAt'.
-            sort_direction (str): ``ASC`` or ``DESC``, default "DESC"
+            sort_key (str): Sort results based by field. Defaults to 'CreatedAt'.
+            sort_direction (str): ``ASC`` or ``DESC``. Defaults to "DESC"
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -141,20 +140,20 @@ class AlertClient(BaseClient):
             sort_direction=sort_direction,
         )
 
-    def get_by_name(self, rule_name):
+    def get_rules_by_name(self, rule_name):
         """Fetch a rule by its name.
 
-            Raises :class:`py42.exceptions.Py42NotFoundError` when no match is found.
         Args:
             rule_name (str): Rule name to search for, case insensitive search.
 
         Returns
-            :dict: Dictionary containing rule-details.
+            :list: List of dictionary containing rule-details.
         """
         rule_pages = self.get_all()
+        matched_rules = []
         for rule_page in rule_pages:
             rules = rule_page["ruleMetadata"]
             for rule in rules:
                 if rule_name.lower() in rule["name"].lower():
-                    return rule
-        raise Py42Error("No Alert Rules found with name: {0}".format(rule_name))
+                    matched_rules.append(rule)
+        return matched_rules

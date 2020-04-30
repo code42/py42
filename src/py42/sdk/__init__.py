@@ -150,9 +150,9 @@ class SDKClient(object):
 
     @property
     def alerts(self):
-        """A collection of methods related to retrieving, updating alerts rules.
+        """A collection of methods related to retrieving and updating alerts rules.
 
         Returns:
-            :class:`py42.clients.AlertRules
+            :class:`py42.clients.AlertRules`
         """
         return self._sdk_dependencies.alert_rules_module

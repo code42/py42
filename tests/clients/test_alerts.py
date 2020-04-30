@@ -6,12 +6,11 @@ from py42.clients.alerts import AlertClient
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import AlertState
 from tests.conftest import TENANT_ID_FROM_RESPONSE
-from py42.exceptions import Py42Error
 
 
 TEST_RESPONSE = """
 {"type$": "RULE_METADATA_SEARCH_RESPONSE",
- "ruleMetadata": [{ "name": "TESTNAME"}]
+ "ruleMetadata": [{ "name": "TESTNAME"}, { "name": "TSTNAME"}, { "name": "TesTNAME"}]
 , "totalCount": 1, "problems": []}
 """
 
@@ -206,19 +205,19 @@ class TestAlertClient(object):
 
     def test_get_by_name_filters_correct_record(self, mock_get_all_session, user_context):
         alert_client = AlertClient(mock_get_all_session, user_context)
-        rule = alert_client.get_by_name(u"TESTNAME")
-        assert rule["name"] == u"TESTNAME"
+        rule = alert_client.get_rules_by_name(u"TESTNAME")
+        assert len(rule) == 2
 
     def test_get_by_name_filters_correct_record_case_insenstive_search(
         self, mock_get_all_session, user_context
     ):
         alert_client = AlertClient(mock_get_all_session, user_context)
-        rule = alert_client.get_by_name(u"TestName")
-        assert rule["name"] == u"TESTNAME"
+        rule = alert_client.get_rules_by_name(u"TestName")
+        assert len(rule) == 2
 
     def test_get_by_name_raises_exception_when_name_does_not_match(
         self, mock_get_all_session, user_context
     ):
         alert_client = AlertClient(mock_get_all_session, user_context)
-        with pytest.raises(Py42Error):
-            alert_client.get_by_name(u"TESTNAME2")
+        rule = alert_client.get_rules_by_name(u"TESTNAME2")
+        assert len(rule) == 0

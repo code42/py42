@@ -3,14 +3,14 @@ import json
 from py42.clients import BaseClient
 
 
-class FileTypeMisMatch(BaseClient):
+class FileTypeMismatchClient(BaseClient):
 
     _version = u"v1"
     _resource = u"query-file-type-mismatch-rule"
     _api_prefix = u"/svc/api/{0}/Rules/{1}".format(_version, _resource)
 
     def __init__(self, session, tenant_id):
-        super(FileTypeMisMatch, self).__init__(session)
+        super(FileTypeMismatchClient, self).__init__(session)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):

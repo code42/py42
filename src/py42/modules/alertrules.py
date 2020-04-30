@@ -1,4 +1,4 @@
-class AlertModule(object):
+class AlertRulesModule(object):
     def __init__(self, microservice_client_factory, user_client):
         self.microservice_client_factory = microservice_client_factory
         self._user_client = user_client
@@ -14,8 +14,8 @@ class AlertModule(object):
         """Fetch all available rules.
 
         Args:
-            sort_key (str): Sort results based by field, default 'CreatedAt'.
-            sort_direction (str): ``ASC`` or ``DESC``, default "DESC"
+            sort_key (str): Sort results based by field. Defaults to 'CreatedAt'.
+            sort_direction (str): ``ASC`` or ``DESC``. Defaults to  "DESC"
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -27,7 +27,6 @@ class AlertModule(object):
     def get_by_name(self, rule_name):
         """Fetch a rule by its name.
 
-            Raises :class:`py42.exceptions.Py42NotFoundError` when no match is found.
         Args:
             rule_name (str): Rule name to search for, case insensitive search.
 
@@ -35,4 +34,4 @@ class AlertModule(object):
             :dict: Dictionary containing rule-details.
         """
         alert_client = self.microservice_client_factory.get_alerts_client()
-        return alert_client.get_by_name(rule_name)
+        return alert_client.get_rules_by_name(rule_name)

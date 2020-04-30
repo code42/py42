@@ -3,14 +3,14 @@ import json
 from py42.clients import BaseClient
 
 
-class CloudShare(BaseClient):
+class CloudShareClient(BaseClient):
 
     _version = u"v1"
     _resource = u"query-cloud-share-permissions-rule"
     _api_prefix = u"/svc/api/{0}/Rules/{1}".format(_version, _resource)
 
     def __init__(self, session, tenant_id):
-        super(CloudShare, self).__init__(session)
+        super(CloudShareClient, self).__init__(session)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):

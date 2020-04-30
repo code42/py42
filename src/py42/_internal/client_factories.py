@@ -61,7 +61,6 @@ class MicroserviceClientFactory(object):
         self._detection_list_user_client = None
         self._ecm_session = None
         self._alert_rules_client = None
-        self._alert_rules_manager_client = None
 
     def get_alerts_client(self):
         if not self._alerts_client:

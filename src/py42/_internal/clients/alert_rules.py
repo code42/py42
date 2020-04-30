@@ -1,8 +1,8 @@
 import json
 
-from py42._internal.clients.alertrules.cloud_share import CloudShare
-from py42._internal.clients.alertrules.exfiltration import Exfiltration
-from py42._internal.clients.alertrules.file_type_mismatch import FileTypeMisMatch
+from py42._internal.clients.alertrules.cloud_share import CloudShareClient
+from py42._internal.clients.alertrules.exfiltration import ExfiltrationClient
+from py42._internal.clients.alertrules.file_type_mismatch import FileTypeMismatchClient
 from py42.clients import BaseClient
 
 
@@ -25,19 +25,19 @@ class AlertRulesClient(BaseClient):
     @property
     def exfiltration(self):
         if not self._exfiltration:
-            self._exfiltration = Exfiltration(self._session, self._tenant_id)
+            self._exfiltration = ExfiltrationClient(self._session, self._tenant_id)
         return self._exfiltration
 
     @property
     def cloudshare(self):
         if not self._cloud_share:
-            self._cloud_share = CloudShare(self._session, self._tenant_id)
+            self._cloud_share = CloudShareClient(self._session, self._tenant_id)
         return self._cloud_share
 
     @property
     def filetypemismatch(self):
         if not self._file_type_mismatch:
-            self._file_type_mismatch = FileTypeMisMatch(self._session, self._tenant_id)
+            self._file_type_mismatch = FileTypeMismatchClient(self._session, self._tenant_id)
         return self._file_type_mismatch
 
     def add_user(self, rule_id, user_id):
@@ -45,14 +45,13 @@ class AlertRulesClient(BaseClient):
 
         Args:
             rule_id (str): Observer Id of a rule to be updated.
-            user_id (str): A custom identifier to uniquely identify the specified user aliases
+            user_id (str): The Code42 userUid  of the user to add to the alert
 
         Returns
             :class:`py42.response.Py42Response`
         """
         tenant_id = self._user_context.get_current_tenant_id()
         user_details = self._detection_list_user_client.get_by_id(user_id)
-        print(user_details)
         user_aliases = user_details["cloudUsernames"] or []
         data = {
             u"tenantId": tenant_id,
@@ -63,11 +62,11 @@ class AlertRulesClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def remove_user(self, rule_id, user_id):
-        """Update alert rule criteria to remove all aliases specified against the user-uid.
+        """Update alert rule criteria to remove a user and all its aliases from a rule.
 
         Args:
             rule_id (str): Observer rule Id of a rule to be updated.
-            user_id (str): A valid user Uid.
+            user_id (str): The Code42 userUid  of the user to remove from the alert
 
         Returns
             :class:`py42.response.Py42Response`

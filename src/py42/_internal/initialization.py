@@ -41,7 +41,7 @@ class SDKDependencies(object):
         )
 
         microservice_client_factory = MicroserviceClientFactory(
-            host_address, root_session, session_factory, self.user_context
+            host_address, root_session, session_factory, self.user_client, self.user_context
         )
 
         # modules (feature sets that combine info from multiple clients)

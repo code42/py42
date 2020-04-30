@@ -2,12 +2,19 @@ from py42.modules.alertrules import AlertRulesModule
 
 
 class AlertsModule(object):
-    def __init__(self, microservice_client_factory, user_client, alert_rules_module=None):
+    def __init__(self, microservice_client_factory, alert_rules_module=None):
         self._microservice_client_factory = microservice_client_factory
-        self._alert_rules_module = AlertRulesModule(self._microservice_client_factory, user_client)
+        self._alert_rules_module = alert_rules_module or AlertRulesModule(
+            self._microservice_client_factory
+        )
 
     @property
     def rules(self):
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        """
         return self._alert_rules_module
 
     def search(self, query):
@@ -23,6 +30,7 @@ class AlertsModule(object):
             query.
         """
         alert_client = self._microservice_client_factory.get_alerts_client()
+        return alert_client.search(query)
 
     def get_details(self, alert_ids, tenant_id=None):
         """Gets the details for the alerts with the given IDs, including the file event query that,
@@ -39,6 +47,7 @@ class AlertsModule(object):
             :class:`py42.response.Py42Response`: A response containing the alert details.
         """
         alert_client = self._microservice_client_factory.get_alerts_client()
+        return alert_client.get_details(alert_ids, tenant_id=tenant_id)
 
     def resolve(self, alert_ids, tenant_id=None, reason=None):
         """Resolves the alerts with the given IDs.
@@ -54,6 +63,7 @@ class AlertsModule(object):
             :class:`py42.response.Py42Response`
         """
         alert_client = self._microservice_client_factory.get_alerts_client()
+        return alert_client.resolve(alert_ids, tenant_id=tenant_id, reason=reason)
 
     def reopen(self, alert_ids, tenant_id=None, reason=None):
         """Reopens the resolved alerts with the given IDs.
@@ -69,27 +79,4 @@ class AlertsModule(object):
             :class:`py42.response.Py42Response`
         """
         alert_client = self._microservice_client_factory.get_alerts_client()
-
-    def get_all(self, sort_key="CreatedAt", sort_direction="DESC"):
-        """Fetch all available rules.
-
-        Args:
-            sort_key (str): Sort results based by field. Defaults to 'CreatedAt'.
-            sort_direction (str): ``ASC`` or ``DESC``. Defaults to "DESC"
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of events.
-        """
-        alert_client = self._microservice_client_factory.get_alerts_client()
-
-    def get_rules_by_name(self, rule_name):
-        """Fetch a rule by its name.
-
-        Args:
-            rule_name (str): Rule name to search for, case insensitive search.
-
-        Returns
-            :list: List of dictionary containing rule-details.
-        """
-        pass
+        return alert_client.reopen(alert_ids, tenant_id=tenant_id, reason=reason)

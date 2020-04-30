@@ -6,12 +6,6 @@ from py42.clients.util import get_all_pages
 
 
 class AlertClient(BaseClient):
-    """A client for interacting with Code42 security alerts.
-
-    The AlertClient has the ability to search, resolve, and reopen alerts.
-    Also, it can get the details for the file event query for the event that triggered the alert.
-    """
-
     _uri_prefix = u"/svc/api/v1/{0}"
 
     def __init__(self, session, user_context):
@@ -19,35 +13,11 @@ class AlertClient(BaseClient):
         self._user_context = user_context
 
     def search(self, query):
-        """Searches alerts using the given :class:`py42.sdk.queries.alerts.alert_query.AlertQuery`.
-
-        Args:
-            query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
-                See the :ref:`Executing Searches User Guide <anchor_search_alerts>` to learn more
-                about how to construct a query.
-
-        Returns:
-            :class:`py42.response.Py42Response`: A response containing the alerts that match the given
-            query.
-        """
         query = self._add_tenant_id_if_missing(query)
         uri = self._uri_prefix.format(u"query-alerts")
         return self._session.post(uri, data=query)
 
     def get_details(self, alert_ids, tenant_id=None):
-        """Gets the details for the alerts with the given IDs, including the file event query that,
-        when passed into a search, would result in events that could have triggered the alerts.
-
-        Args:
-            alert_ids (iter[str]): The identification numbers of the alerts for which you want to
-                get details for.
-            tenant_id (str, optional): The unique identifier of the tenant that the alerts belong to.
-                When given None, it uses the currently logged in user's tenant ID. Defaults to
-                None.
-
-        Returns:
-            :class:`py42.response.Py42Response`: A response containing the alert details.
-        """
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
@@ -56,18 +26,6 @@ class AlertClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def resolve(self, alert_ids, tenant_id=None, reason=None):
-        """Resolves the alerts with the given IDs.
-
-        Args:
-            alert_ids (iter[str]): The identification numbers for the alerts to resolve.
-            tenant_id (str, optional): The unique identifier for the tenant that the alerts belong
-                to. When given None, it uses the currently logged in user's tenant ID. Defaults to
-                None.
-            reason (str, optional): The reason the alerts are now resolved. Defaults to None.
-
-        Returns:
-            :class:`py42.response.Py42Response`
-        """
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
@@ -77,18 +35,6 @@ class AlertClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def reopen(self, alert_ids, tenant_id=None, reason=None):
-        """Reopens the resolved alerts with the given IDs.
-
-        Args:
-            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
-            tenant_id (str, optional): The unique identifier for the tenant that the alerts belong
-                to. When given None, it uses the currently logged in user's tenant ID. Defaults to
-                None.
-            reason (str, optional): The reason the alerts are reopened. Defaults to None.
-
-        Returns:
-            :class:`py42.response.Py42Response`
-        """
         if type(alert_ids) is not list:
             alert_ids = [alert_ids]
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
@@ -120,17 +66,7 @@ class AlertClient(BaseClient):
         uri = self._uri_prefix.format(u"rules/query-rule-metadata")
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_all(self, sort_key="CreatedAt", sort_direction="DESC"):
-        """Fetch all available rules.
-
-        Args:
-            sort_key (str): Sort results based by field. Defaults to 'CreatedAt'.
-            sort_direction (str): ``ASC`` or ``DESC``. Defaults to "DESC"
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of events.
-        """
+    def get_all_rules(self, sort_key="CreatedAt", sort_direction="DESC"):
         tenant_id = self._user_context.get_current_tenant_id()
         return get_all_pages(
             self._get_alert_rules,
@@ -141,19 +77,11 @@ class AlertClient(BaseClient):
         )
 
     def get_rules_by_name(self, rule_name):
-        """Fetch a rule by its name.
-
-        Args:
-            rule_name (str): Rule name to search for, case insensitive search.
-
-        Returns
-            :list: List of dictionary containing rule-details.
-        """
-        rule_pages = self.get_all()
+        rule_pages = self.get_all_rules()
         matched_rules = []
         for rule_page in rule_pages:
             rules = rule_page["ruleMetadata"]
             for rule in rules:
-                if rule_name.lower() in rule["name"].lower():
+                if rule_name.lower() == rule["name"].lower():
                     matched_rules.append(rule)
         return matched_rules

@@ -1,7 +1,6 @@
-import pytest
 import json
 
-from py42._internal.clients.alertrules.exfiltration import ExfiltrationClient
+from py42.clients.alertrules.exfiltration import ExfiltrationClient
 
 
 class TestExfiltration(object):

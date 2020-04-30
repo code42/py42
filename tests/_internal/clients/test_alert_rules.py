@@ -2,7 +2,7 @@ import pytest
 import json
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
-from py42._internal.clients.alert_rules import AlertRulesClient
+from py42.clients.alertrules import AlertRulesClient
 
 
 MOCK_DETECTION_LIST_GET_RESPONSE = """

@@ -187,7 +187,7 @@ class TestAlertClient(object):
     def test_get_all_posts_expected_data(self, mock_session, user_context):
         alert_client = AlertClient(mock_session, user_context)
 
-        for _ in alert_client.get_all(sort_key="key", sort_direction="ASC"):
+        for _ in alert_client.get_all_rules(sort_key="key", sort_direction="ASC"):
             break
 
         assert mock_session.post.call_count == 1

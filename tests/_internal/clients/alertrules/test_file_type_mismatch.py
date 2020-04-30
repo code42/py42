@@ -1,7 +1,6 @@
-import pytest
 import json
 
-from py42._internal.clients.alertrules.file_type_mismatch import FileTypeMismatchClient
+from py42.clients.alertrules import FileTypeMismatchClient
 
 
 class TestFileTypeMisMatch(object):

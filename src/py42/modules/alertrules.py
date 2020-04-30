@@ -1,14 +1,74 @@
 class AlertRulesModule(object):
-    def __init__(self, microservice_client_factory, user_client):
+    def __init__(self, microservice_client_factory):
         self.microservice_client_factory = microservice_client_factory
-        self._user_client = user_client
-        self._alert_client = None
 
     @property
-    def rules(self):
-        return self.microservice_client_factory.get_alert_rules_client(
-            self.microservice_client_factory.get_detection_list_user_client(self._user_client)
-        )
+    def exfiltration(self):
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        """
+        rules_client = self.microservice_client_factory.get_alert_rules_client()
+        return rules_client.exfiltration
+
+    @property
+    def cloudshare(self):
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        """
+        rules_client = self.microservice_client_factory.get_alert_rules_client()
+        return rules_client.cloudshare
+
+    @property
+    def filetypemismatch(self):
+        """[summary]
+
+        Returns:
+            [type]: [description]
+        """
+        rules_client = self.microservice_client_factory.get_alert_rules_client()
+        return rules_client.filetypemismatch
+
+    def add_user(self, rule_id, user_id):
+        """Update alert rule to monitor user aliases against the Uid for the given rule id.
+
+        Args:
+            rule_id (str): Observer Id of a rule to be updated.
+            user_id (str): The Code42 userUid  of the user to add to the alert
+
+        Returns
+            :class:`py42.response.Py42Response`
+        """
+        rules_client = self.microservice_client_factory.get_alert_rules_client()
+        return rules_client.add_user(rule_id, user_id)
+
+    def remove_user(self, rule_id, user_id):
+        """Update alert rule criteria to remove a user and all its aliases from a rule.
+
+        Args:
+            rule_id (str): Observer rule Id of a rule to be updated.
+            user_id (str): The Code42 userUid  of the user to remove from the alert
+
+        Returns
+            :class:`py42.response.Py42Response`
+        """
+        rules_client = self.microservice_client_factory.get_alert_rules_client()
+        return rules_client.remove_user(rule_id, user_id)
+
+    def remove_all_users(self, rule_id):
+        """Update alert rule criteria to remove all users the from the alert rule.
+
+        Args:
+            rule_id (str): Observer rule Id of a rule to be updated.
+
+        Returns
+            :class:`py42.response.Py42Response`
+        """
+        rules_client = self.microservice_client_factory.get_alert_rules_client()
+        return rules_client.remove_all_users(rule_id)
 
     def get_all(self, sort_key="CreatedAt", sort_direction="DESC"):
         """Fetch all available rules.
@@ -19,19 +79,19 @@ class AlertRulesModule(object):
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of events.
+            that each contain a page of rules.
         """
-        alert_client = self.microservice_client_factory.get_alerts_client()
-        return alert_client.get_all(sort_key=sort_key, sort_direction=sort_direction)
+        alerts_client = self.microservice_client_factory.get_alerts_client()
+        return alerts_client.get_all_rules(sort_key=sort_key, sort_direction=sort_direction)
 
     def get_by_name(self, rule_name):
-        """Fetch a rule by its name.
+        """Search for matching rules by name.
 
         Args:
             rule_name (str): Rule name to search for, case insensitive search.
 
         Returns
-            :dict: Dictionary containing rule-details.
+            :list: List of dictionary containing rule-details.
         """
-        alert_client = self.microservice_client_factory.get_alerts_client()
-        return alert_client.get_rules_by_name(rule_name)
+        alerts_client = self.microservice_client_factory.get_alerts_client()
+        return alerts_client.get_rules_by_name(rule_name)

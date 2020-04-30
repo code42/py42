@@ -28,6 +28,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 -  `sdk.alert.rules.filetypemismatch` methods:
     - `get()`
 
+## 1.0.1 - 2020-04-29
+
+### Added
+
+- `sdk.archive.update_cold_storage_purge_date()`, allowing the changing of the date at which a cold storage archive will be purged.
 
 ### Changed
 
@@ -38,7 +43,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `py42.sdk.queries.alerts.alert_query.AlertQuery` no longer requires a `tenant_id` to be added to the query manually,
     the `AlertClient.search()` method now adds the tenant_id automatically from the user_context.
-
 
 ## 1.0.0 - 2020-04-21
 

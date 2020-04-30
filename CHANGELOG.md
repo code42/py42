@@ -12,17 +12,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- `sdk.archives.update_cold_storage_purge_date()`, allowing the changing of the date at which a cold storage archive
-    will be purged.
-
--  `sdk.alert` methods:
-    - `get_all()`
-    - `get_by_name()`
-
 -  `sdk.alert.rules` methods:
     - `add_user()`
     - `remove_user()`
     - `remove_all_users()`
+    - `get_all()`
+    - `get_by_name()`
 
 -  `sdk.alert.rules.exfiltration` methods:
     - `get()`

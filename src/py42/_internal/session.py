@@ -5,9 +5,9 @@ from threading import Lock
 
 import requests.adapters
 
-from py42._internal.compat import str, urljoin, urlparse
 import py42.settings as settings
 import py42.settings.debug as debug
+from py42._internal.compat import str, urljoin, urlparse
 from py42.exceptions import raise_py42_error
 from py42.response import Py42Response
 

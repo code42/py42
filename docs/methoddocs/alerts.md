@@ -1,7 +1,7 @@
 # Alerts
 
 ```eval_rst
-.. autoclass:: py42.clients.alerts.AlertClient
+.. autoclass:: py42.modules.alerts.AlertsModule
     :members:
     :show-inheritance:
 ```

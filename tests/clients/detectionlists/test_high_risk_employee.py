@@ -1,10 +1,10 @@
-import pytest
 import json
 
-from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
-from py42._internal.clients.detection_list_user import DetectionListUserClient
-from py42.clients.users import UserClient
+import pytest
 
+from py42._internal.clients.detection_list_user import DetectionListUserClient
+from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
+from py42.clients.users import UserClient
 
 CREATE_USER_SAMPLE_RESPONSE = """
     {"type$":"USER_V2","tenantId":"1d71796f-af5b-4231-9d8e-df6434da4663",
@@ -41,7 +41,7 @@ class TestHighRiskEmployeeClient(object):
         self, user_context, mock_session_post_success, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
-            mock_session_post_success, user_context, mock_detection_list_user_client,
+            mock_session_post_success, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.add("942897397520289999")
 

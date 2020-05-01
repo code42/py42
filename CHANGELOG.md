@@ -8,6 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+-  `sdk.alert.rules` methods:
+    - `add_user()`
+    - `remove_user()`
+    - `remove_all_users()`
+    - `get_all()`
+    - `get_by_name()`
+
+-  `sdk.alert.rules.exfiltration` methods:
+    - `get()`
+
+-  `sdk.alert.rules.cloudshare` methods:
+    - `get()`
+
+-  `sdk.alert.rules.filetypemismatch` methods:
+    - `get()`
+    
+### Removed
+
+- `sdk.securitydata.alerts`. use `sdk.alerts` instead.
+
 ## 1.0.1 - 2020-04-29
 
 ### Added

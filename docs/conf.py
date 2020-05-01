@@ -15,8 +15,9 @@
 import os
 import sys
 
-import py42.__version__ as meta
 from recommonmark.transform import AutoStructify
+
+import py42.__version__ as meta
 
 # -- Project information -----------------------------------------------------
 

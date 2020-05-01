@@ -1,21 +1,21 @@
-import json
-
-from py42._internal.compat import str
-from py42.clients import BaseClient
+from py42.modules.alertrules import AlertRulesModule
 
 
-class AlertClient(BaseClient):
-    """A client for interacting with Code42 security alerts.
+class AlertsModule(object):
+    def __init__(self, microservice_client_factory, alert_rules_module=None):
+        self._microservice_client_factory = microservice_client_factory
+        self._alert_rules_module = alert_rules_module or AlertRulesModule(
+            self._microservice_client_factory
+        )
 
-    The AlertClient has the ability to search, resolve, and reopen alerts.
-    Also, it can get the details for the file event query for the event that triggered the alert.
-    """
+    @property
+    def rules(self):
+        """A collection of methods for managing alert rules.
 
-    _uri_prefix = u"/svc/api/v1/{0}"
-
-    def __init__(self, session, user_context):
-        super(AlertClient, self).__init__(session)
-        self._user_context = user_context
+        Returns:
+            :class:`py42.modules.alertrules.AlertRulesModule`
+        """
+        return self._alert_rules_module
 
     def search(self, query):
         """Searches alerts using the given :class:`py42.sdk.queries.alerts.alert_query.AlertQuery`.
@@ -29,9 +29,8 @@ class AlertClient(BaseClient):
             :class:`py42.response.Py42Response`: A response containing the alerts that match the given
             query.
         """
-        query = self._add_tenant_id_if_missing(query)
-        uri = self._uri_prefix.format(u"query-alerts")
-        return self._session.post(uri, data=query)
+        alert_client = self._microservice_client_factory.get_alerts_client()
+        return alert_client.search(query)
 
     def get_details(self, alert_ids, tenant_id=None):
         """Gets the details for the alerts with the given IDs, including the file event query that,
@@ -47,12 +46,8 @@ class AlertClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the alert details.
         """
-        if type(alert_ids) is not list:
-            alert_ids = [alert_ids]
-        tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format(u"query-details")
-        data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
-        return self._session.post(uri, data=json.dumps(data))
+        alert_client = self._microservice_client_factory.get_alerts_client()
+        return alert_client.get_details(alert_ids, tenant_id=tenant_id)
 
     def resolve(self, alert_ids, tenant_id=None, reason=None):
         """Resolves the alerts with the given IDs.
@@ -67,13 +62,8 @@ class AlertClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        if type(alert_ids) is not list:
-            alert_ids = [alert_ids]
-        tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
-        reason = reason if reason else u""
-        uri = self._uri_prefix.format(u"resolve-alert")
-        data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
-        return self._session.post(uri, data=json.dumps(data))
+        alert_client = self._microservice_client_factory.get_alerts_client()
+        return alert_client.resolve(alert_ids, tenant_id=tenant_id, reason=reason)
 
     def reopen(self, alert_ids, tenant_id=None, reason=None):
         """Reopens the resolved alerts with the given IDs.
@@ -88,18 +78,5 @@ class AlertClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        if type(alert_ids) is not list:
-            alert_ids = [alert_ids]
-        tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format(u"reopen-alert")
-        data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
-        return self._session.post(uri, data=json.dumps(data))
-
-    def _add_tenant_id_if_missing(self, query):
-        query_dict = json.loads(str(query))
-        tenant_id = query_dict.get(u"tenantId", None)
-        if tenant_id is None:
-            query_dict[u"tenantId"] = self._user_context.get_current_tenant_id()
-            return json.dumps(query_dict)
-        else:
-            return str(query)
+        alert_client = self._microservice_client_factory.get_alerts_client()
+        return alert_client.reopen(alert_ids, tenant_id=tenant_id, reason=reason)

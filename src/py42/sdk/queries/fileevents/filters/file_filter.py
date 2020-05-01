@@ -1,6 +1,6 @@
 from py42.sdk.queries.fileevents.file_event_query import (
-    FileEventFilterStringField,
     FileEventFilterComparableField,
+    FileEventFilterStringField,
 )
 from py42.sdk.queries.query_filter import QueryFilterStringField
 

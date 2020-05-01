@@ -9,13 +9,13 @@ from py42.sdk.queries.fileevents.filters.file_filter import (
 )
 from tests.sdk.queries.conftest import (
     EXISTS,
+    GREATER_THAN,
     IS,
     IS_IN,
     IS_NOT,
+    LESS_THAN,
     NOT_EXISTS,
     NOT_IN,
-    GREATER_THAN,
-    LESS_THAN,
 )
 
 

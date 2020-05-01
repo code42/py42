@@ -1,6 +1,7 @@
+import json
+
 import pytest
 from requests import Response
-import json
 
 import py42.settings
 from py42._internal.clients.archive import ArchiveClient

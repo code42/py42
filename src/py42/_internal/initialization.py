@@ -3,7 +3,12 @@ from py42._internal.client_factories import AuthorityClientFactory, Microservice
 from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.modules import archive as archive_module, detectionlists, securitydata as sec_module
+from py42.modules import (
+    alerts,
+    archive as archive_module,
+    detectionlists,
+    securitydata as sec_module,
+)
 from py42.usercontext import UserContext
 
 
@@ -40,7 +45,7 @@ class SDKDependencies(object):
         )
 
         microservice_client_factory = MicroserviceClientFactory(
-            host_address, root_session, session_factory, self.user_context
+            host_address, root_session, session_factory, self.user_context, self.user_client
         )
 
         # modules (feature sets that combine info from multiple clients)
@@ -53,6 +58,8 @@ class SDKDependencies(object):
         self.detection_lists_module = detectionlists.DetectionListsModule(
             microservice_client_factory, self.user_client
         )
+
+        self.alerts_module = alerts.AlertsModule(microservice_client_factory)
 
     def _set_v3_session(self, host_address, session_factory, root_session):
         self.root_session = root_session

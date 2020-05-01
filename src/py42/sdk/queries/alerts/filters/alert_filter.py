@@ -1,8 +1,8 @@
 from py42.sdk.queries.query_filter import (
     QueryFilterStringField,
+    QueryFilterTimestampField,
     create_filter_group,
     create_query_filter,
-    QueryFilterTimestampField,
 )
 
 

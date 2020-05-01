@@ -2,10 +2,25 @@ import json
 
 import pytest
 
-from py42.clients.alerts import AlertClient
+from py42._internal.clients.alerts import AlertClient
+from py42._internal.session import Py42Session
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import AlertState
 from tests.conftest import TENANT_ID_FROM_RESPONSE
+
+TEST_RESPONSE = """
+{"type$": "RULE_METADATA_SEARCH_RESPONSE",
+ "ruleMetadata": [{ "name": "TESTNAME"}, { "name": "TSTNAME"}, { "name": "TesTNAME"}]
+, "totalCount": 1, "problems": []}
+"""
+
+
+@pytest.fixture
+def mock_get_all_session(mocker, py42_response):
+    py42_response.text = TEST_RESPONSE
+    session = mocker.MagicMock(spec=Py42Session)
+    session.post.return_value = py42_response
+    return session
 
 
 class TestAlertClient(object):
@@ -168,3 +183,41 @@ class TestAlertClient(object):
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.reopen(alert_ids, "some-tenant-id")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/reopen-alert"
+
+    def test_get_all_posts_expected_data(self, mock_session, user_context):
+        alert_client = AlertClient(mock_session, user_context)
+
+        for _ in alert_client.get_all_rules(sort_key="key", sort_direction="ASC"):
+            break
+
+        assert mock_session.post.call_count == 1
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        assert mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
+        assert (
+            posted_data["tenantId"] == user_context.get_current_tenant_id()
+            and posted_data["groups"] == []
+            and posted_data["groupClause"] == "AND"
+            and posted_data["pgNum"] == 0
+            and posted_data["pgSize"] == 1000
+            and posted_data["srtKey"] == "key"
+            and posted_data["srtDirection"] == "ASC"
+        )
+
+    def test_get_by_name_filters_correct_record(self, mock_get_all_session, user_context):
+        alert_client = AlertClient(mock_get_all_session, user_context)
+        rule = alert_client.get_rules_by_name(u"TESTNAME")
+        assert len(rule) == 2
+
+    def test_get_by_name_filters_correct_record_case_insenstive_search(
+        self, mock_get_all_session, user_context
+    ):
+        alert_client = AlertClient(mock_get_all_session, user_context)
+        rule = alert_client.get_rules_by_name(u"TestName")
+        assert len(rule) == 2
+
+    def test_get_by_name_raises_exception_when_name_does_not_match(
+        self, mock_get_all_session, user_context
+    ):
+        alert_client = AlertClient(mock_get_all_session, user_context)
+        rule = alert_client.get_rules_by_name(u"TESTNAME2")
+        assert len(rule) == 0

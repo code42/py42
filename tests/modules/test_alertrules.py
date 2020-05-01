@@ -62,7 +62,7 @@ class TestAlertRulesModules(object):
         mock_microservice_client_factory.get_alerts_client.return_value = mock_alerts_client
         alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
         alert_rules_module.get_all()
-        mock_alerts_client.get_all_rules.assert_called_once()
+        mock_alerts_client.get_all_rules.assert_called()
 
     def test_alert_rules_module_calls_get_by_name_with_expected_value(
         self, mock_microservice_client_factory, mock_alerts_client

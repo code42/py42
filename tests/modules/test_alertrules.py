@@ -1,5 +1,5 @@
 import pytest
-
+import sys
 from py42.modules.alertrules import AlertRulesModule
 from py42.clients.alertrules import AlertRulesClient
 from py42._internal.client_factories import MicroserviceClientFactory
@@ -56,13 +56,14 @@ class TestAlertRulesModules(object):
         alert_rules_module.remove_all_users(self._rule_id)
         mock_alert_rules_client.remove_all_users.assert_called_once_with(self._rule_id)
 
+    @pytest.mark.skipif(sys.version_info < (3, 6), reason="requires python3.6 or higher")
     def test_alert_rules_module_calls_get_all_with_expected_value(
         self, mock_microservice_client_factory, mock_alerts_client
     ):
         mock_microservice_client_factory.get_alerts_client.return_value = mock_alerts_client
         alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
         alert_rules_module.get_all()
-        mock_alerts_client.get_all_rules.assert_called()
+        mock_alerts_client.get_all_rules.assert_called_once()
 
     def test_alert_rules_module_calls_get_by_name_with_expected_value(
         self, mock_microservice_client_factory, mock_alerts_client

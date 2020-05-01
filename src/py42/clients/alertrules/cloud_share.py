@@ -22,5 +22,5 @@ class CloudShareClient(BaseClient):
         Returns
             :class:`py42.response.Py42Response`
         """
-        data = {"tenantId": self._tenant_id, "ruleIds": [rule_id]}
+        data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
         return self._session.post(self._api_prefix, data=json.dumps(data))

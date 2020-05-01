@@ -2,7 +2,7 @@ import json
 
 from py42._internal.compat import str
 from py42.clients import BaseClient
-from py42.exceptions import Py42NotFoundError, Py42BadRequestError
+from py42.exceptions import Py42BadRequestError, Py42NotFoundError
 
 
 class DetectionListUserClient(BaseClient):

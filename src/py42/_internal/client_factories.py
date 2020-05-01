@@ -2,14 +2,12 @@ import json
 
 from requests import HTTPError
 
-from py42._internal.clients import archive, alerts
-from py42._internal.clients import key_value_store
-from py42._internal.clients import securitydata
+from py42._internal.clients import alerts, archive, key_value_store, securitydata
+from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients import administration, devices, legalhold, orgs, users
 from py42.clients.alertrules import AlertRulesClient
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
-from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients.file_event import FileEventClient
 from py42.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
 

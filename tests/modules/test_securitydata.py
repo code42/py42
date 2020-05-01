@@ -2,8 +2,11 @@ import pytest
 
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.securitydata import SecurityClient
-from py42._internal.clients.storage import StorageClient, StorageClientFactory
-from py42._internal.clients.storage import StorageSecurityClient
+from py42._internal.clients.storage import (
+    StorageClient,
+    StorageClientFactory,
+    StorageSecurityClient,
+)
 from py42.clients.file_event import FileEventClient
 from py42.modules.securitydata import PlanStorageInfo, SecurityModule
 from py42.response import Py42Response

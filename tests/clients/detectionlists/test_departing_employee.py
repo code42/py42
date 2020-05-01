@@ -4,10 +4,9 @@ import json
 
 import pytest
 
-from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42._internal.clients.detection_list_user import DetectionListUserClient
+from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.users import UserClient
-
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
@@ -104,9 +103,7 @@ class TestDepartingEmployeeClient(object):
         # Return value should have been set based on the arguments passed
         # in add, here however as we are mocking it, it doesn't matter. Can be refactored
         mock_session.post.return_value = mock_get_all_cases_response
-        client.add(
-            _USER_ID, "2022-12-20",
-        )
+        client.add(_USER_ID, "2022-12-20")
 
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.

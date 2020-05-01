@@ -3,8 +3,12 @@ from py42._internal.client_factories import AuthorityClientFactory, Microservice
 from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.modules import archive as archive_module, detectionlists, securitydata as sec_module
-from py42.modules import alertrules, alerts
+from py42.modules import (
+    alerts,
+    archive as archive_module,
+    detectionlists,
+    securitydata as sec_module,
+)
 from py42.usercontext import UserContext
 
 

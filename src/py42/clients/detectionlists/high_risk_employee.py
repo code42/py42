@@ -2,7 +2,6 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42.exceptions import Py42NotFoundError, Py42BadRequestError
 
 
 class HighRiskEmployeeClient(BaseClient):

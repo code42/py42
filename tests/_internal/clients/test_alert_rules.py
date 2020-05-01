@@ -1,9 +1,9 @@
-import pytest
 import json
+
+import pytest
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients.alertrules import AlertRulesClient
-
 
 MOCK_DETECTION_LIST_GET_RESPONSE = """
 {"type$": "USER_V2", "tenantId": "1d71796f-af5b-4231-9d8e-df6434da4663",

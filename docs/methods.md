@@ -25,12 +25,12 @@ Explore the complete public documentation for `py42` below.
 * [Legal Hold](methoddocs/legalhold.md)
 * [Detection Lists](methoddocs/detectionlists.md)
 * [Alerts](methoddocs/alerts.md)
+* [Alert Rules](methoddocs/alertrules.md)
 * [File Event Queries](methoddocs/filleeventqueries.md)
 * [Archive](methoddocs/archive.md)
 * [Response](methoddocs/response.md)
 * [Exceptions](methoddocs/exceptions.md)
 * [Util](methoddocs/util.md)
-* [Alert Rules](methoddocs/alertrules.md)
 
 ```eval_rst
 .. automodule:: py42.sdk

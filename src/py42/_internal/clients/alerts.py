@@ -55,18 +55,18 @@ class AlertClient(BaseClient):
         self, tenant_id, sort_key=None, sort_direction=None, page_num=None, page_size=None
     ):
         data = {
-            "tenantId": tenant_id,
-            "groups": [],
-            "groupClause": "AND",
-            "pgNum": page_num - 1,  # Minus 1, as this API expects first page to start with zero.
-            "pgSize": page_size,
-            "srtKey": sort_key,
-            "srtDirection": sort_direction,
+            u"tenantId": tenant_id,
+            u"groups": [],
+            u"groupClause": u"AND",
+            u"pgNum": page_num - 1,  # Minus 1, as this API expects first page to start with zero.
+            u"pgSize": page_size,
+            u"srtKey": sort_key,
+            u"srtDirection": sort_direction,
         }
         uri = self._uri_prefix.format(u"rules/query-rule-metadata")
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_all_rules(self, sort_key="CreatedAt", sort_direction="DESC"):
+    def get_all_rules(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
         tenant_id = self._user_context.get_current_tenant_id()
         return get_all_pages(
             self._get_alert_rules,
@@ -80,8 +80,8 @@ class AlertClient(BaseClient):
         rule_pages = self.get_all_rules()
         matched_rules = []
         for rule_page in rule_pages:
-            rules = rule_page["ruleMetadata"]
+            rules = rule_page[u"ruleMetadata"]
             for rule in rules:
-                if rule_name.lower() == rule["name"].lower():
+                if rule_name.lower() == rule[u"name"].lower():
                     matched_rules.append(rule)
         return matched_rules

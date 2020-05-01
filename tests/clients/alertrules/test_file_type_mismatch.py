@@ -3,7 +3,7 @@ import json
 from py42.clients.alertrules import FileTypeMismatchClient
 
 
-class TestFileTypeMisMatch(object):
+class TestFileTypeMisMatchClient(object):
     def test_get_by_id_posts_to_correct_endpoint_for_type_mismatch_rule_type(self, mock_session):
         alert_rule_client = FileTypeMismatchClient(mock_session, u"tenant-id")
         alert_rule_client.get(u"rule-id")

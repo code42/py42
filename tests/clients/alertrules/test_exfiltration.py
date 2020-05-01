@@ -3,7 +3,7 @@ import json
 from py42.clients.alertrules.exfiltration import ExfiltrationClient
 
 
-class TestExfiltration(object):
+class TestExfiltrationClient(object):
     def test_get_by_id_posts_expected_data_for_exfiltration_type(self, mock_session):
         alert_rule_client = ExfiltrationClient(mock_session, u"tenant-id")
         alert_rule_client.get(u"rule-id")

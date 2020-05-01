@@ -30,6 +30,7 @@ Explore the complete public documentation for `py42` below.
 * [Response](methoddocs/response.md)
 * [Exceptions](methoddocs/exceptions.md)
 * [Util](methoddocs/util.md)
+* [Alert Rules](methoddocs/alertrules.md)
 
 ```eval_rst
 .. automodule:: py42.sdk

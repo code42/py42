@@ -55,11 +55,7 @@ class SDKDependencies(object):
             microservice_client_factory, self.user_client
         )
 
-        alert_rules_module = alertrules.AlertRulesModule(microservice_client_factory)
-
-        self.alerts_module = alerts.AlertsModule(
-            microservice_client_factory, alert_rules_module=alert_rules_module
-        )
+        self.alerts_module = alerts.AlertsModule(microservice_client_factory)
 
     def _set_v3_session(self, host_address, session_factory, root_session):
         self.root_session = root_session

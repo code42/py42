@@ -27,7 +27,7 @@ def mock_detection_list_user_client(mocker, py42_response):
 
 
 class TestAlertRulesClient(object):
-    def test_all_rules_posts_expected_data(
+    def test_add_user_posts_expected_data(
         self, mock_session, user_context, mock_detection_list_user_client
     ):
         alert_rule_client = AlertRulesClient(

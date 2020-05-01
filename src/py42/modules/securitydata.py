@@ -14,11 +14,6 @@ class SecurityModule(object):
         self._client_cache = {}
         self._client_cache_lock = Lock()
 
-    @property
-    def alerts(self):
-        """A collection of methods for retrieving and updating data about security alerts."""
-        return self._microservices_client_factory.get_alerts_client()
-
     def get_security_plan_storage_info_list(self, user_uid):
         """Gets IDs (plan UID, node GUID, and destination GUID) for the storage nodes containing
         the file activity event data for the user with the given UID.

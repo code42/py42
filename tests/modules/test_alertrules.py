@@ -2,7 +2,7 @@ import pytest
 
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.alerts import AlertClient
-from py42.clients.alertrules import AlertRulesClient
+from py42._internal.clients.alertrules import AlertRulesClient
 from py42.modules.alertrules import AlertRulesModule
 
 

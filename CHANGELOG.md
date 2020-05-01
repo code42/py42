@@ -27,6 +27,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 -  `sdk.alert.rules.filetypemismatch` methods:
     - `get()`
+    
+### Removed
+
+- `sdk.securitydata.alerts`. use `sdk.alerts` instead.
 
 ## 1.0.1 - 2020-04-29
 

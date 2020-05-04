@@ -16,31 +16,26 @@ def mock_detection_list_user_client(mocker):
     return mocker.MagicMock(spec=DetectionListUserClient)
 
 
-@pytest.fixture
-def mock_user_client(mocker):
-    return mocker.MagicMock(spec=UserClient)
-
-
 TEST_USER_ID = "12345"
 
 
 class TestDetectionListModule(object):
     def test_departing_employee_call_get_departing_employee_client_with_expected_values(
-        self, mock_microservice_client_factory, mock_user_client
+        self, mock_microservice_client_factory
     ):
         module = DetectionListsModule(mock_microservice_client_factory)
         _ = module.departing_employee
         assert mock_microservice_client_factory.get_departing_employee_client.call_count
 
     def test_high_risk_employee_returns_high_risk_employee_client(
-        self, mock_microservice_client_factory, mock_user_client
+        self, mock_microservice_client_factory
     ):
         module = DetectionListsModule(mock_microservice_client_factory)
         _ = module.high_risk_employee
         assert mock_microservice_client_factory.get_high_risk_employee_client.call_count
 
     def test_create_user_calls_user_client_with_expected_values(
-        self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client
+        self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
             mock_detection_list_user_client
@@ -50,7 +45,7 @@ class TestDetectionListModule(object):
         mock_detection_list_user_client.create.assert_called_once_with("testusername")
 
     def test_get_user_calls_user_client_with_expected_values(
-        self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client
+        self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
             mock_detection_list_user_client
@@ -60,7 +55,7 @@ class TestDetectionListModule(object):
         mock_detection_list_user_client.get.assert_called_once_with("testusername")
 
     def test_get_user_by_id_calls_user_client_with_expected_values(
-        self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client
+        self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
             mock_detection_list_user_client
@@ -70,7 +65,7 @@ class TestDetectionListModule(object):
         mock_detection_list_user_client.get_by_id.assert_called_once_with(TEST_USER_ID)
 
     def test_update_user_notes_calls_user_client_with_expected_values(
-        self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client
+        self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
             mock_detection_list_user_client
@@ -82,7 +77,7 @@ class TestDetectionListModule(object):
         )
 
     def test_add_user_risk_tag_calls_user_client_with_expected_values(
-        self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client
+        self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
             mock_detection_list_user_client
@@ -94,7 +89,7 @@ class TestDetectionListModule(object):
         )
 
     def test_remove_user_risk_tag_calls_user_client_with_expected_values(
-        self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client
+        self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
             mock_detection_list_user_client
@@ -106,7 +101,7 @@ class TestDetectionListModule(object):
         )
 
     def test_add_user_cloud_alias_calls_user_client_with_expected_values(
-        self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client
+        self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
             mock_detection_list_user_client
@@ -118,7 +113,7 @@ class TestDetectionListModule(object):
         )
 
     def test_remove_user_cloud_alias_calls_user_client_with_expected_values(
-        self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client
+        self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
             mock_detection_list_user_client

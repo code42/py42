@@ -29,19 +29,15 @@ class TestDetectionListModule(object):
         self, mock_microservice_client_factory, mock_user_client
     ):
         module = DetectionListsModule(mock_microservice_client_factory, mock_user_client)
-        test = module.departing_employee
-        mock_microservice_client_factory.get_departing_employee_client.assert_called_once_with(
-            mock_user_client
-        )
+        _ = module.departing_employee
+        assert mock_microservice_client_factory.get_departing_employee_client.call_count
 
     def test_high_risk_employee_returns_high_risk_employee_client(
         self, mock_microservice_client_factory, mock_user_client
     ):
         module = DetectionListsModule(mock_microservice_client_factory, mock_user_client)
-        test = module.high_risk_employee
-        mock_microservice_client_factory.get_high_risk_employee_client.assert_called_once_with(
-            mock_user_client
-        )
+        _ = module.high_risk_employee
+        assert mock_microservice_client_factory.get_high_risk_employee_client
 
     def test_create_user_calls_user_client_with_expected_values(
         self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client

@@ -6,11 +6,11 @@ class DetectionListsModule(object):
 
     @property
     def departing_employee(self):
-        return self._microservice_client_factory.get_departing_employee_client(self._user_client)
+        return self._microservice_client_factory.get_departing_employee_client()
 
     @property
     def high_risk_employee(self):
-        return self._microservice_client_factory.get_high_risk_employee_client(self._user_client)
+        return self._microservice_client_factory.get_high_risk_employee_client()
 
     def create_user(self, username):
         """Create a detection list profile for a user.

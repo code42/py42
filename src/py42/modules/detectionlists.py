@@ -46,7 +46,6 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-
         factory = self._microservice_client_factory
         self._detection_list_user_client = factory.get_detection_list_user_client()
         return self._detection_list_user_client.get_by_id(user_id)

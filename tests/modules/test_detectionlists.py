@@ -37,7 +37,7 @@ class TestDetectionListModule(object):
     ):
         module = DetectionListsModule(mock_microservice_client_factory, mock_user_client)
         _ = module.high_risk_employee
-        assert mock_microservice_client_factory.get_high_risk_employee_client
+        assert mock_microservice_client_factory.get_high_risk_employee_client.call_count
 
     def test_create_user_calls_user_client_with_expected_values(
         self, mock_microservice_client_factory, mock_detection_list_user_client, mock_user_client

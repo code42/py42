@@ -1,7 +1,6 @@
 class DetectionListsModule(object):
-    def __init__(self, microservice_client_factory, user_client):
+    def __init__(self, microservice_client_factory):
         self._microservice_client_factory = microservice_client_factory
-        self._user_client = user_client
         self._detection_list_user_client = None
 
     @property

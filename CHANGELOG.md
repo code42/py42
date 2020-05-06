@@ -12,7 +12,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- `RuleId` and `RuleSource` filter classes to `py42.sdk.queries.alerts.filters.alert_filter` module.
+- `RuleId`, `RuleSource` and `RuleType` filter classes to `py42.sdk.queries.alerts.filters.alert_filter` module.
 
 ## 1.1.1 - 2020-05-04
 

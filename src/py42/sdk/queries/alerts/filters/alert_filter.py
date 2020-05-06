@@ -67,6 +67,20 @@ class RuleSource(QueryFilterStringField):
     HIGH_RISK_EMPLOYEE = u"High Risk Employee"
 
 
+class RuleType(QueryFilterStringField):
+    """Class that filters alerts based on rule type.
+
+    Available options are:
+        - :attr:`RuleType.ENDPOINT_EXFILTRATION`
+        - :attr:`RuleType.CLOUD_SHARE_PERMISSIONS`
+        - :attr:`RuleType.FILE_TYPE_MISMATCH`
+    """
+
+    ENDPOINT_EXFILTRATION = u"FedEndpointExfiltration"
+    CLOUD_SHARE_PERMISSIONS = u"FedCloudSharePermissions"
+    FILE_TYPE_MISMATCH = u"FedFileTypeMismatch"
+
+
 class Description(AlertQueryFilterStringField):
     """Class that filters alerts based on rule description text."""
 

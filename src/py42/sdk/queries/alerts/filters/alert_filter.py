@@ -45,6 +45,28 @@ class RuleName(AlertQueryFilterStringField):
     _term = u"name"
 
 
+class RuleId(QueryFilterStringField):
+    """Class that filters alerts based on rule identifier."""
+
+    _term = u"ruleId"
+
+
+class RuleSource(QueryFilterStringField):
+    """Class that filters alerts based on rule source.
+
+    Available options are:
+        - :attr:`RuleSource.ALERTING`
+        - :attr:`RuleSource.DEPARTING_EMPLOYEE`
+        - :attr:`RuleSource.HIGH_RISK_EMPLOYEE`
+    """
+
+    _term = u"ruleSource"
+
+    ALERTING = u"Alerting"
+    DEPARTING_EMPLOYEE = u"Departing Employee"
+    HIGH_RISK_EMPLOYEE = u"High Risk Employee"
+
+
 class Description(AlertQueryFilterStringField):
     """Class that filters alerts based on rule description text."""
 

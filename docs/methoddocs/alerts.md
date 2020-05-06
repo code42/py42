@@ -43,6 +43,20 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 ```
 
 ```eval_rst
+.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.RuleId
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.RuleSource
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
 .. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.Description
     :members:
     :inherited-members:

@@ -76,6 +76,8 @@ class RuleType(QueryFilterStringField):
         - :attr:`RuleType.FILE_TYPE_MISMATCH`
     """
 
+    _term = u"type"
+
     ENDPOINT_EXFILTRATION = u"FedEndpointExfiltration"
     CLOUD_SHARE_PERMISSIONS = u"FedCloudSharePermissions"
     FILE_TYPE_MISMATCH = u"FedFileTypeMismatch"

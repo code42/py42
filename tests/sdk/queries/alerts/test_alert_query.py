@@ -273,6 +273,84 @@ def test_rule_name_not_contains_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
+def test_rule_id_eq_str_gives_correct_json_representation():
+    _filter = RuleId.eq("rule123")
+    expected = IS.format("ruleId", "rule123")
+    assert str(_filter) == expected
+
+
+def test_rule_id_not_eq_str_gives_correct_json_representation():
+    _filter = RuleId.not_eq("rule123")
+    expected = IS_NOT.format("ruleId", "rule123")
+    assert str(_filter) == expected
+
+
+def test_rule_id_is_in_str_gives_correct_json_representation():
+    items = ["rule1", "rule2", "rule3"]
+    _filter = RuleId.is_in(items)
+    expected = IS_IN.format("ruleId", *items)
+    assert str(_filter) == expected
+
+
+def test_rule_id_not_in_str_gives_correct_json_representation():
+    items = ["rule 1", "rule 2", "rule 3"]
+    _filter = RuleId.not_in(items)
+    expected = NOT_IN.format("ruleId", *items)
+    assert str(_filter) == expected
+
+
+def test_rule_type_eq_str_gives_correct_json_representation():
+    _filter = RuleType.eq("rule123")
+    expected = IS.format("type", "rule123")
+    assert str(_filter) == expected
+
+
+def test_rule_type_not_eq_str_gives_correct_json_representation():
+    _filter = RuleType.not_eq("rule123")
+    expected = IS_NOT.format("type", "rule123")
+    assert str(_filter) == expected
+
+
+def test_rule_type_is_in_str_gives_correct_json_representation():
+    items = ["rule1", "rule2", "rule3"]
+    _filter = RuleType.is_in(items)
+    expected = IS_IN.format("type", *items)
+    assert str(_filter) == expected
+
+
+def test_rule_type_not_in_str_gives_correct_json_representation():
+    items = ["rule 1", "rule 2", "rule 3"]
+    _filter = RuleType.not_in(items)
+    expected = NOT_IN.format("type", *items)
+    assert str(_filter) == expected
+
+
+def test_rule_source_eq_str_gives_correct_json_representation():
+    _filter = RuleSource.eq("rule123")
+    expected = IS.format("ruleSource", "rule123")
+    assert str(_filter) == expected
+
+
+def test_rule_source_not_eq_str_gives_correct_json_representation():
+    _filter = RuleSource.not_eq("rule123")
+    expected = IS_NOT.format("ruleSource", "rule123")
+    assert str(_filter) == expected
+
+
+def test_rule_source_is_in_str_gives_correct_json_representation():
+    items = ["rule1", "rule2", "rule3"]
+    _filter = RuleSource.is_in(items)
+    expected = IS_IN.format("ruleSource", *items)
+    assert str(_filter) == expected
+
+
+def test_rule_source_not_in_str_gives_correct_json_representation():
+    items = ["rule 1", "rule 2", "rule 3"]
+    _filter = RuleSource.not_in(items)
+    expected = NOT_IN.format("ruleSource", *items)
+    assert str(_filter) == expected
+
+
 def test_description_eq_str_gives_correct_json_representation():
     _filter = Description.eq("Departing Employee")
     expected = IS.format("description", "Departing Employee")

@@ -22,6 +22,9 @@ class Py42Response(object):
     def __getitem__(self, key):
         return self._data_root[key]
 
+    def __setitem__(self, key, value):
+        self._data_root[key] = value
+
     def __iter__(self):
         return self._iter
 

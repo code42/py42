@@ -62,6 +62,34 @@ class TestPy42Response(object):
         response = Py42Response(mock_response_dict_no_data_node)
         assert type(response["item_list_key"]) == dict
 
+    def test_setitem_modifies_dict_keys_with_data_node_to_expected_value(
+        self, mock_response_dict_data_node
+    ):
+        response = Py42Response(mock_response_dict_data_node)
+        response["item_list_key"]["foo"] = "newfooval"
+        assert response["item_list_key"]["foo"] == "newfooval"
+
+    def test_setitem_modifies_dict_keys_with_no_data_node_to_expected_value(
+        self, mock_response_dict_no_data_node
+    ):
+        response = Py42Response(mock_response_dict_no_data_node)
+        response["item_list_key"]["foo"] = "newfooval"
+        assert response["item_list_key"]["foo"] == "newfooval"
+
+    def test_setitem_modifies_list_items_with_data_node_to_expected_value(
+        self, mock_response_list_data_node
+    ):
+        response = Py42Response(mock_response_list_data_node)
+        response["item_list_key"][0] = "testmodifylistitem"
+        assert response["item_list_key"][0] == "testmodifylistitem"
+
+    def test_setitem_modifies_list_items_with_no_data_node_to_expected_value(
+        self, mock_response_list_no_data_node
+    ):
+        response = Py42Response(mock_response_list_no_data_node)
+        response["item_list_key"][0] = "testmodifylistitem"
+        assert response["item_list_key"][0] == "testmodifylistitem"
+
     def test_text_json_no_data_node_returns_raw_json(self, mock_response_list_no_data_node):
         response = Py42Response(mock_response_list_no_data_node)
         assert response.text == JSON_LIST_NO_DATA_NODE

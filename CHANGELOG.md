@@ -14,6 +14,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `RuleId`, `RuleSource` and `RuleType` filter classes to `py42.sdk.queries.alerts.filters.alert_filter` module.
 
+- `Py42Response` items now have `__setitem__` support in order facilitate manipulating a response. For example, `response["users"][0]["username"] = "something else` is now possible.
+
 ## 1.1.1 - 2020-05-04
 
 ### Fixed

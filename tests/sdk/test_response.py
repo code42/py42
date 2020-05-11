@@ -2,12 +2,13 @@ import pytest
 from requests import Response
 
 from py42.response import Py42Response
+from py42.exceptions import Py42Error
 
 JSON_LIST_WITH_DATA_NODE = '{"data": {"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}}'
 JSON_DICT_WITH_DATA_NODE = '{"data": {"item_list_key": {"foo": "foo_val"}}}'
 
 JSON_LIST_NO_DATA_NODE = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
-JSON_DICT_NO_DATA_NODE = '{"item_list_key": {"foo": "foo_val"}}'
+JSON_DICT_NO_DATA_NODE = '{"item_list_key": {"foo": "foo_val", "bar": "bar_val"}}'
 
 PLAIN_TEXT = "TEST_PLAIN_TEXT"
 
@@ -62,6 +63,34 @@ class TestPy42Response(object):
         response = Py42Response(mock_response_dict_no_data_node)
         assert type(response["item_list_key"]) == dict
 
+    def test_setitem_modifies_dict_keys_with_data_node_to_expected_value(
+        self, mock_response_dict_data_node
+    ):
+        response = Py42Response(mock_response_dict_data_node)
+        response["item_list_key"]["foo"] = "newfooval"
+        assert response["item_list_key"]["foo"] == "newfooval"
+
+    def test_setitem_modifies_dict_keys_with_no_data_node_to_expected_value(
+        self, mock_response_dict_no_data_node
+    ):
+        response = Py42Response(mock_response_dict_no_data_node)
+        response["item_list_key"]["foo"] = "newfooval"
+        assert response["item_list_key"]["foo"] == "newfooval"
+
+    def test_setitem_modifies_list_items_with_data_node_to_expected_value(
+        self, mock_response_list_data_node
+    ):
+        response = Py42Response(mock_response_list_data_node)
+        response["item_list_key"][0] = "testmodifylistitem"
+        assert response["item_list_key"][0] == "testmodifylistitem"
+
+    def test_setitem_modifies_list_items_with_no_data_node_to_expected_value(
+        self, mock_response_list_no_data_node
+    ):
+        response = Py42Response(mock_response_list_no_data_node)
+        response["item_list_key"][0] = "testmodifylistitem"
+        assert response["item_list_key"][0] == "testmodifylistitem"
+
     def test_text_json_no_data_node_returns_raw_json(self, mock_response_list_no_data_node):
         response = Py42Response(mock_response_list_no_data_node)
         assert response.text == JSON_LIST_NO_DATA_NODE
@@ -100,3 +129,26 @@ class TestPy42Response(object):
         mock_response_not_json.iter_content.assert_called_once_with(
             chunk_size=128, decode_unicode=True
         )
+
+    def test_iter_can_be_looped_over_multiple_times(self, mock_response_dict_no_data_node):
+        response = Py42Response(mock_response_dict_no_data_node)
+        items = 0
+        for dictitem in response["item_list_key"]:
+            items += 1
+        assert items == 2
+
+        items = 0
+
+        for dictitem in response["item_list_key"]:
+            items += 1
+        assert items == 2
+
+    def test_setitem_raises_py42_error_on_invalid_assignment(self, mock_response_not_json):
+        response = Py42Response(mock_response_not_json)
+        with pytest.raises(Py42Error):
+            response[0] = "test"
+
+    def test_getitem_raises_py42_error_on_invalid_subscript(self, mock_response_not_json):
+        response = Py42Response(mock_response_not_json)
+        with pytest.raises(Py42Error):
+            response["test"]

@@ -16,6 +16,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `Py42Response` items now have `__setitem__` support in order facilitate manipulating a response. For example, `response["users"][0]["username"] = "something else` is now possible.
 
+- `Py42Resonse` items can now be iterated over multiple times.
+
 ## 1.1.1 - 2020-05-04
 
 ### Fixed

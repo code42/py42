@@ -2,6 +2,7 @@ import pytest
 from requests import Response
 
 from py42.response import Py42Response
+from py42.exceptions import Py42Error
 
 JSON_LIST_WITH_DATA_NODE = '{"data": {"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}}'
 JSON_DICT_WITH_DATA_NODE = '{"data": {"item_list_key": {"foo": "foo_val"}}}'
@@ -141,3 +142,13 @@ class TestPy42Response(object):
         for dictitem in response["item_list_key"]:
             items += 1
         assert items == 2
+
+    def test_setitem_raises_py42_error_on_invalid_assignment(self, mock_response_not_json):
+        response = Py42Response(mock_response_not_json)
+        with pytest.raises(Py42Error):
+            response[0] = "test"
+
+    def test_getitem_raises_py42_error_on_invalid_subscript(self, mock_response_not_json):
+        response = Py42Response(mock_response_not_json)
+        with pytest.raises(Py42Error):
+            response["test"]

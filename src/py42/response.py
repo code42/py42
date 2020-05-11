@@ -18,7 +18,12 @@ class Py42Response(object):
             self._data_root = self._response.text or u""
 
     def __getitem__(self, key):
-        return self._data_root[key]
+        try:
+            return self._data_root[key]
+        except TypeError as e:
+            data_root_type = type(self._data_root)
+            message = u"The Py42Respose root is of type {}, but __getitem__ got a key of {}, which is incompatible."
+            raise Py42Error(message)
 
     def __setitem__(self, key, value):
         try:

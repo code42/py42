@@ -8,11 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.1.2 - 2020-05-11
 
 ### Added
 
 - `RuleId`, `RuleSource` and `RuleType` filter classes to `py42.sdk.queries.alerts.filters.alert_filter` module.
+
+- `Py42Response` items now have `__setitem__` support in order facilitate manipulating a response. For example, `response["users"][0]["username"] = "something else` is now possible.
+
+- `Py42Resonse` items can now be iterated over multiple times.
 
 ## 1.1.1 - 2020-05-04
 

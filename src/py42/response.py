@@ -1,6 +1,7 @@
 import json
 
 from py42._internal.compat import reprlib, str
+from py42.exceptions import Py42Error
 
 
 class Py42Response(object):
@@ -16,14 +17,25 @@ class Py42Response(object):
         except ValueError:
             self._data_root = self._response.text or u""
 
-        # looping over a Py42Response will loop through list items, dict keys, or str characters
-        self._iter = iter(self._data_root)
-
     def __getitem__(self, key):
-        return self._data_root[key]
+        try:
+            return self._data_root[key]
+        except TypeError as e:
+            data_root_type = type(self._data_root)
+            message = u"The Py42Response root is of type {}, but __getitem__ got a key of {}, which is incompatible."
+            raise Py42Error(message)
+
+    def __setitem__(self, key, value):
+        try:
+            self._data_root[key] = value
+        except TypeError as e:
+            data_root_type = type(self._data_root)
+            message = u"The Py42Response root is of type {}, but __setitem__ got a key of {} and value of {}, which is incompatible."
+            raise Py42Error(message)
 
     def __iter__(self):
-        return self._iter
+        # looping over a Py42Response will loop through list items, dict keys, or str characters
+        return iter(self._data_root)
 
     @property
     def encoding(self):

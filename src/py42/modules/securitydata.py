@@ -209,7 +209,7 @@ class SecurityModule(object):
     def _get_security_detection_events(
         self, plan_storage_infos, cursor, include_files, event_types, min_timestamp, max_timestamp
     ):
-        if type(plan_storage_infos) is not list:
+        if not isinstance(plan_storage_infos, (list, tuple)):
             plan_storage_infos = [plan_storage_infos]
 
         # get the storage node client for each plan

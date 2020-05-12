@@ -23,7 +23,8 @@ class AlertClient(BaseClient):
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"query-details")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
-        return self._session.post(uri, data=json.dumps(data))
+        results = self._session.post(uri, data=json.dumps(data))
+        return _convert_observation_json_strings_to_objects(results)
 
     def resolve(self, alert_ids, tenant_id=None, reason=None):
         if type(alert_ids) is not list:
@@ -85,3 +86,14 @@ class AlertClient(BaseClient):
                 if rule_name.lower() == rule[u"name"].lower():
                     matched_rules.append(rule)
         return matched_rules
+
+
+def _convert_observation_json_strings_to_objects(results):
+    for alert in results[u"alerts"]:
+        if u"observations" in alert:
+            for observation in alert[u"observations"]:
+                try:
+                    observation[u"data"] = json.loads(observation[u"data"])
+                except:
+                    continue
+    return results

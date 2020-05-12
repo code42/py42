@@ -1,9 +1,12 @@
 import json
 
 import pytest
+from requests import Response
 
 from py42._internal.clients.alerts import AlertClient
 from py42._internal.session import Py42Session
+from py42.response import Py42Response
+from py42.exceptions import Py42Error
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import AlertState
 from tests.conftest import TENANT_ID_FROM_RESPONSE
@@ -12,6 +15,46 @@ TEST_RESPONSE = """
 {"type$": "RULE_METADATA_SEARCH_RESPONSE",
  "ruleMetadata": [{ "name": "TESTNAME"}, { "name": "TSTNAME"}, { "name": "TesTNAME"}]
 , "totalCount": 1, "problems": []}
+"""
+
+TEST_PARSEABLE_ALERT_DETAIL_RESPONSE = """
+{
+    "type$": "ALERT_DETAILS_RESPONSE",
+    "alerts": [
+        {
+            "type$": "ALERT_DETAILS",
+            "observations": [
+                {
+                    "type$": "OBSERVATION",
+                    "id": "example_obsv_id",
+                    "observedAt": "2020-01-01T00:00:00.0000000Z",
+                    "type": "FedEndpointExfiltration",
+                    "data": "{\\"example_key\\":\\"example_string_value\\",\\"example_list\\":[\\"example_list_item_1\\",\\"example_list_item_2\\"]}"
+                }
+            ]
+        }
+    ]
+}
+"""
+
+TEST_NON_PARSEABLE_ALERT_DETAIL_RESPONSE = """
+{
+    "type$": "ALERT_DETAILS_RESPONSE",
+    "alerts": [
+        {
+            "type$": "ALERT_DETAILS",
+            "observations": [
+                {
+                    "type$": "OBSERVATION",
+                    "id": "example_obsv_id",
+                    "observedAt": "2020-01-01T00:00:00.0000000Z",
+                    "type": "FedEndpointExfiltration",
+                    "data": "{\\"invalid_json\\": ][ }"
+                }
+            ]
+        }
+    ]
+}
 """
 
 
@@ -55,9 +98,10 @@ class TestAlertClient(object):
         assert mock_session.post.call_args[0][0] == u"/svc/api/v1/query-alerts"
 
     def test_get_details_when_not_given_tenant_id_posts_expected_data(
-        self, mock_session, user_context, successful_response
+        self, mock_session, user_context, py42_response
     ):
-        mock_session.post.return_value = successful_response
+        py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
+        mock_session.post.return_value = py42_response
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_details(alert_ids)
@@ -69,8 +113,10 @@ class TestAlertClient(object):
         )
 
     def test_get_details_when_given_single_alert_id_posts_expected_data(
-        self, mock_session, user_context, successful_post
+        self, mock_session, user_context, successful_post, py42_response
     ):
+        py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
+        mock_session.post.return_value = py42_response
         alert_client = AlertClient(mock_session, user_context)
         alert_client.get_details("ALERT_ID_1")
         post_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -80,8 +126,10 @@ class TestAlertClient(object):
         )
 
     def test_get_details_when_given_tenant_id_posts_expected_data(
-        self, mock_session, user_context, successful_post
+        self, mock_session, user_context, successful_post, py42_response
     ):
+        py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
+        mock_session.post.return_value = py42_response
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_details(alert_ids, "some-tenant-id")
@@ -92,11 +140,41 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    def test_get_details_posts_to_expected_url(self, mock_session, user_context, successful_post):
+    def test_get_details_posts_to_expected_url(
+        self, mock_session, user_context, successful_post, py42_response
+    ):
+        py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
+        mock_session.post.return_value = py42_response
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_details(alert_ids)
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/query-details"
+
+    def test_get_details_converts_json_observation_strings_to_objects(
+        self, mocker, mock_session, user_context
+    ):
+        requests_response = mocker.MagicMock(spec=Response)
+        requests_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
+        py42_response = Py42Response(requests_response)
+        mock_session.post.return_value = py42_response
+        alert_client = AlertClient(mock_session, user_context)
+        response = alert_client.get_details("alert_id")
+        observation_data = response["alerts"][0]["observations"][0]["data"]
+        assert observation_data["example_key"] == "example_string_value"
+        assert type(observation_data["example_list"]) is list
+
+    def test_get_details_when_observation_data_not_parseable_remains_unchanged(
+        self, mocker, mock_session, user_context
+    ):
+        requests_response = mocker.MagicMock(spec=Response)
+        requests_response.text = TEST_NON_PARSEABLE_ALERT_DETAIL_RESPONSE
+        py42_response = Py42Response(requests_response)
+        mock_session.post.return_value = py42_response
+        alert_client = AlertClient(mock_session, user_context)
+        response = alert_client.get_details("alert_id")
+        observation_data = response["alerts"][0]["observations"][0]["data"]
+        expected_observation_data = '{"invalid_json": ][ }'
+        assert observation_data == expected_observation_data
 
     def test_resolve_when_not_given_tenant_id_posts_expected_data(
         self, mock_session, user_context, successful_post

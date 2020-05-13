@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Changed
+
+- The following methods that required either a single str or list of string argument can now also accept a tuple of strings:
+    - `py42._internal.clients.alerts.AlertClient.get_details`
+    - `py42._internal.clients.alerts.AlertClient.resolve`
+    - `py42._internal.clients.alerts.AlertClient.reopen`
+    - `py42._internal.clients.detection_list_user.DetectionListUserClient.add_risk_tags`
+    - `py42._internal.clients.detection_list_user.DetectionListUserClient.remove_risk_tags`
+
 ## 1.1.3 - 2020-05-12
 
 ### Changed

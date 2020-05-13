@@ -96,11 +96,14 @@ class TestDetectionListUserClient(object):
             and posted_data["notes"] == "Test"
         )
 
-    def test_add_risk_tag_posts_expected_data(self, mock_session, user_context, mock_user_client):
+    @pytest.mark.parametrize("tags", ["test_tag", ("test_tag",), ["test_tag"]])
+    def test_add_risk_tag_posts_expected_data(
+        self, mock_session, user_context, mock_user_client, tags
+    ):
         detection_list_user_client = DetectionListUserClient(
             mock_session, user_context, mock_user_client
         )
-        detection_list_user_client.add_risk_tags("942897397520289999", u"Test")
+        detection_list_user_client.add_risk_tags("942897397520289999", tags)
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1
@@ -108,7 +111,7 @@ class TestDetectionListUserClient(object):
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
-            and posted_data["riskFactors"] == ["Test"]
+            and posted_data["riskFactors"] == ["test_tag"]
         )
 
     def test_remove_risk_tag_posts_expected_data(

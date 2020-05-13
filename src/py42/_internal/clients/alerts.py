@@ -18,7 +18,7 @@ class AlertClient(BaseClient):
         return self._session.post(uri, data=query)
 
     def get_details(self, alert_ids, tenant_id=None):
-        if type(alert_ids) is not list:
+        if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"query-details")
@@ -27,7 +27,7 @@ class AlertClient(BaseClient):
         return _convert_observation_json_strings_to_objects(results)
 
     def resolve(self, alert_ids, tenant_id=None, reason=None):
-        if type(alert_ids) is not list:
+        if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         reason = reason if reason else u""
@@ -36,7 +36,7 @@ class AlertClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def reopen(self, alert_ids, tenant_id=None, reason=None):
-        if type(alert_ids) is not list:
+        if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
         tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"reopen-alert")

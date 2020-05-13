@@ -447,8 +447,21 @@ class TestSecurityModule(object):
             pass
         assert mock_storage_security_client.get_plan_security_events.call_count == 4
 
+    @pytest.mark.parametrize(
+        "plan_storage_info",
+        [
+            PlanStorageInfo("111111111111111111", "41", "4"),
+            (PlanStorageInfo("111111111111111111", "41", "4"),),
+            [PlanStorageInfo("111111111111111111", "41", "4")],
+        ],
+    )
     def test_get_all_plan_security_events_calls_security_client_with_expected_params(
-        self, mocker, security_client, storage_client_factory, microservice_client_factory
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        plan_storage_info,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
         mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
@@ -460,9 +473,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        for _, _ in security_module.get_all_plan_security_events(
-            PlanStorageInfo("111111111111111111", "41", "4")
-        ):
+        for _, _ in security_module.get_all_plan_security_events(plan_storage_info):
             pass
         mock_storage_security_client.get_plan_security_events.assert_called_once_with(
             "111111111111111111",

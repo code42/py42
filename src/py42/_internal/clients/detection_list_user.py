@@ -112,13 +112,13 @@ class DetectionListUserClient(BaseClient):
         Args:
             user_id (str or int): The user_id whose tag(s) needs to be updated.
             tags (str or list of str ): A single tag or multiple tags in a list to be added.
-               e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
+               e.g "tag1" or ["tag1", "tag2"]
 
         Returns:
             :class:`py42.response.Py42Response`
         """
 
-        if type(tags) is str:
+        if not isinstance(tags, (list, tuple)):
             tags = [tags]
 
         data = {
@@ -135,12 +135,12 @@ class DetectionListUserClient(BaseClient):
         Args:
             user_id (str or int): The user_id whose tag(s) needs to be removed.
             tags (str or list of str ): A single tag or multiple tags in a list to be removed.
-               e.g u"tag1" or ["tag1", "tag2"], for python version 2.X, pass u"str" instead of "str"
+               e.g "tag1" or ["tag1", "tag2"].
 
         Returns:
             :class:`py42.response.Py42Response`
         """
-        if type(tags) is str:
+        if not isinstance(tags, (list, tuple)):
             tags = [tags]
 
         data = {

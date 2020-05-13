@@ -112,13 +112,14 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
+    @pytest.mark.parametrize("alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]])
     def test_get_details_when_given_single_alert_id_posts_expected_data(
-        self, mock_session, user_context, successful_post, py42_response
+        self, mock_session, user_context, successful_post, py42_response, alert_id
     ):
         py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         mock_session.post.return_value = py42_response
         alert_client = AlertClient(mock_session, user_context)
-        alert_client.get_details("ALERT_ID_1")
+        alert_client.get_details(alert_id)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -189,11 +190,12 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
+    @pytest.mark.parametrize("alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]])
     def test_resolve_when_given_single_alert_id_posts_expected_data(
-        self, mock_session, user_context, successful_post
+        self, mock_session, user_context, successful_post, alert_id
     ):
         alert_client = AlertClient(mock_session, user_context)
-        alert_client.resolve("ALERT_ID_1")
+        alert_client.resolve(alert_id)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -232,11 +234,12 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
+    @pytest.mark.parametrize("alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]])
     def test_reopen_when_given_single_alert_id_posts_expected_data(
-        self, mock_session, user_context, successful_post
+        self, mock_session, user_context, successful_post, alert_id
     ):
         alert_client = AlertClient(mock_session, user_context)
-        alert_client.reopen("ALERT_ID_1")
+        alert_client.reopen(alert_id)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE

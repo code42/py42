@@ -265,7 +265,7 @@ class TestAlertClient(object):
         alert_client.reopen(alert_ids, "some-tenant-id")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/reopen-alert"
 
-    def test_get_all_posts_expected_data(self, mock_session, user_context):
+    def test_get_all_rules_posts_expected_data(self, mock_session, user_context):
         alert_client = AlertClient(mock_session, user_context)
 
         for _ in alert_client.get_all_rules(sort_key="key", sort_direction="ASC"):
@@ -282,4 +282,54 @@ class TestAlertClient(object):
             and posted_data["pgSize"] == 1000
             and posted_data["srtKey"] == "key"
             and posted_data["srtDirection"] == "ASC"
+        )
+
+    def test_get_all_rules_by_name_posts_expected_data(
+        self, mock_session, user_context, successful_post
+    ):
+        alert_client = AlertClient(mock_session, user_context)
+        for _ in alert_client.get_all_rules_by_name(
+            "testname", sort_key="key", sort_direction="ASC"
+        ):
+            break
+
+        assert mock_session.post.call_count == 1
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        filter_group = posted_data["groups"][0]["filters"][0]
+
+        assert filter_group["term"] == "Name"
+        assert filter_group["operator"] == "IS"
+        assert filter_group["value"] == "testname"
+        assert mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
+        assert (
+            posted_data["tenantId"] == user_context.get_current_tenant_id()
+            and posted_data["groupClause"] == "AND"
+            and posted_data["pgNum"] == 0
+            and posted_data["pgSize"] == 1000
+            and posted_data["srtKey"] == "key"
+            and posted_data["srtDirection"] == "ASC"
+        )
+
+    def test_get_rule_by_observer_id_posts_expected_data(
+        self, mock_session, user_context, successful_post
+    ):
+        alert_client = AlertClient(mock_session, user_context)
+        for _ in alert_client.get_rule_by_observer_id("testid"):
+            break
+
+        assert mock_session.post.call_count == 1
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        filter_group = posted_data["groups"][0]["filters"][0]
+
+        assert filter_group["term"] == "ObserverRuleId"
+        assert filter_group["operator"] == "IS"
+        assert filter_group["value"] == "testid"
+        assert mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
+        assert (
+            posted_data["tenantId"] == user_context.get_current_tenant_id()
+            and posted_data["groupClause"] == "AND"
+            and posted_data["pgNum"] == 0
+            and posted_data["pgSize"] == 1000
+            and posted_data["srtKey"] == "CreatedAt"
+            and posted_data["srtDirection"] == "DESC"
         )

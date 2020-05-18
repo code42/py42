@@ -3,6 +3,7 @@ import pytest
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.alerts import AlertClient
 from py42.modules.alerts import AlertsModule
+from py42.modules.alertrules import AlertRulesModule
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 
 
@@ -24,6 +25,11 @@ def mock_file_event_query(mocker):
 class TestAlertsModule(object):
 
     _alert_ids = [u"test-id1", u"test-id2"]
+
+    def test_rules_returns_rules_module(self, mock_microservice_client_factory, mock_alerts_client):
+        mock_microservice_client_factory.get_alerts_client.return_value = mock_alerts_client
+        alert_module = AlertsModule(mock_microservice_client_factory)
+        assert type(alert_module.rules) == AlertRulesModule
 
     def test_alerts_module_calls_search_with_expected_value(
         self, mock_microservice_client_factory, mock_alerts_client, mock_file_event_query

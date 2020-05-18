@@ -31,7 +31,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- `py42._internal.clients.alerts.AlertClient.get_details` now attempts to parse the "observation data" json string from the response data automatically.
+- `sdk.alerts.get_details()` now attempts to parse the "observation data" json string from the response data automatically.
 
 ## 1.1.2 - 2020-05-11
 

@@ -10,14 +10,22 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
+
+- `sdk.alerts.rules.get_by_observer_id()` to look up an alert rule by its observer id.
+
 ### Changed
 
 - The following methods that required either a single str or list of string argument can now also accept a tuple of strings:
-    - `py42._internal.clients.alerts.AlertClient.get_details`
-    - `py42._internal.clients.alerts.AlertClient.resolve`
-    - `py42._internal.clients.alerts.AlertClient.reopen`
-    - `py42._internal.clients.detection_list_user.DetectionListUserClient.add_risk_tags`
-    - `py42._internal.clients.detection_list_user.DetectionListUserClient.remove_risk_tags`
+    - `sdk.alerts.get_details()`
+    - `sdk.alerts.resolve()`
+    - `sdk.alerts.reopen()`
+    - `sdk.detectionlists.add_risk_tags()`
+    - `sdk.detectionlists.remove_risk_tags()`
+
+#### Removed
+
+- `sdk.alerts.rules.get_by_name()`. Use `sdk.alerts.rules.get_all_by_name()` instead. It functions identically except for that it returns a generator of `Py42Response` objects rather than a list.
 
 ## 1.1.3 - 2020-05-12
 

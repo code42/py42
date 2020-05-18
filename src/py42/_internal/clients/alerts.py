@@ -4,6 +4,8 @@ from py42._internal.compat import str
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 
+from py42.sdk.queries.query_filter import create_eq_filter_group
+
 
 class AlertClient(BaseClient):
     _uri_prefix = u"/svc/api/v1/{0}"
@@ -90,12 +92,7 @@ class AlertClient(BaseClient):
             self._get_alert_rules,
             u"ruleMetadata",
             tenant_id=tenant_id,
-            groups=[
-                {
-                    u"filterClause": u"AND",
-                    u"filters": [{u"term": u"Name", u"operator": u"IS", u"value": rule_name}],
-                }
-            ],
+            groups=[json.loads(str(create_eq_filter_group(u"Name", rule_name)))],
             sort_key=sort_key,
             sort_direction=sort_direction,
         )
@@ -106,14 +103,7 @@ class AlertClient(BaseClient):
             self._get_alert_rules,
             u"ruleMetadata",
             tenant_id=tenant_id,
-            groups=[
-                {
-                    u"filterClause": u"AND",
-                    u"filters": [
-                        {u"term": u"ObserverRuleId", u"operator": u"IS", u"value": observer_id}
-                    ],
-                }
-            ],
+            groups=[json.loads(str(create_eq_filter_group(u"ObserverRuleId", observer_id)))],
             sort_key=sort_key,
             sort_direction=sort_direction,
         )

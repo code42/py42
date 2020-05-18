@@ -283,22 +283,3 @@ class TestAlertClient(object):
             and posted_data["srtKey"] == "key"
             and posted_data["srtDirection"] == "ASC"
         )
-
-    def test_get_by_name_filters_correct_record(self, mock_get_all_session, user_context):
-        alert_client = AlertClient(mock_get_all_session, user_context)
-        rule = alert_client.get_rules_by_name(u"TESTNAME")
-        assert len(rule) == 2
-
-    def test_get_by_name_filters_correct_record_case_insenstive_search(
-        self, mock_get_all_session, user_context
-    ):
-        alert_client = AlertClient(mock_get_all_session, user_context)
-        rule = alert_client.get_rules_by_name(u"TestName")
-        assert len(rule) == 2
-
-    def test_get_by_name_raises_exception_when_name_does_not_match(
-        self, mock_get_all_session, user_context
-    ):
-        alert_client = AlertClient(mock_get_all_session, user_context)
-        rule = alert_client.get_rules_by_name(u"TESTNAME2")
-        assert len(rule) == 0

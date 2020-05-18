@@ -8,22 +8,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.2.0 - 2020-05-18
+
+### Added
+
+- `sdk.alerts.rules.get_by_observer_id()` to look up an alert rule by its observer id.
 
 ### Changed
 
 - The following methods that required either a single str or list of string argument can now also accept a tuple of strings:
-    - `py42._internal.clients.alerts.AlertClient.get_details`
-    - `py42._internal.clients.alerts.AlertClient.resolve`
-    - `py42._internal.clients.alerts.AlertClient.reopen`
-    - `py42._internal.clients.detection_list_user.DetectionListUserClient.add_risk_tags`
-    - `py42._internal.clients.detection_list_user.DetectionListUserClient.remove_risk_tags`
+    - `sdk.alerts.get_details()`
+    - `sdk.alerts.resolve()`
+    - `sdk.alerts.reopen()`
+    - `sdk.detectionlists.add_risk_tags()`
+    - `sdk.detectionlists.remove_risk_tags()`
+
+#### Removed
+
+- `sdk.alerts.rules.get_by_name()`. Use `sdk.alerts.rules.get_all_by_name()` instead. It functions identically except for that it returns a generator of `Py42Response` objects rather than a list.
 
 ## 1.1.3 - 2020-05-12
 
 ### Changed
 
-- `py42._internal.clients.alerts.AlertClient.get_details` now attempts to parse the "observation data" json string from the response data automatically.
+- `sdk.alerts.get_details()` now attempts to parse the "observation data" json string from the response data automatically.
 
 ## 1.1.2 - 2020-05-11
 
@@ -33,7 +41,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `Py42Response` items now have `__setitem__` support in order facilitate manipulating a response. For example, `response["users"][0]["username"] = "something else` is now possible.
 
-- `Py42Resonse` items can now be iterated over multiple times.
+- `Py42Response` items can now be iterated over multiple times.
 
 ## 1.1.1 - 2020-05-04
 

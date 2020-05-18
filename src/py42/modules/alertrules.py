@@ -84,14 +84,27 @@ class AlertRulesModule(object):
         alerts_client = self.microservice_client_factory.get_alerts_client()
         return alerts_client.get_all_rules(sort_key=sort_key, sort_direction=sort_direction)
 
-    def get_by_name(self, rule_name):
+    def get_all_by_name(self, rule_name):
         """Search for matching rules by name.
 
         Args:
             rule_name (str): Rule name to search for, case insensitive search.
 
-        Returns
-            :list: List of dictionary containing rule-details.
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of rules with the given name.
         """
         alerts_client = self.microservice_client_factory.get_alerts_client()
-        return alerts_client.get_rules_by_name(rule_name)
+        return alerts_client.get_all_rules_by_name(rule_name)
+
+    def get_by_observer_id(self, observer_id):
+        """Get the rule with the matching observer ID.
+
+        Args:
+            observer_id (str): The observer ID of the rule to return.
+
+        Returns
+            :class:`py42.response.Py42Response`
+        """
+        alerts_client = self.microservice_client_factory.get_alerts_client()
+        return alerts_client.get_rule_by_observer_id(observer_id)

@@ -95,7 +95,7 @@ class AlertRulesModule(object):
             that each contain a page of rules with the given name.
         """
         alerts_client = self.microservice_client_factory.get_alerts_client()
-        return alerts_client.get_rules_by_name(rule_name)
+        return alerts_client.get_all_rules_by_name(rule_name)
 
     def get_by_observer_id(self, observer_id):
         """Get the rule with the matching observer ID.

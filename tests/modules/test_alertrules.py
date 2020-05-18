@@ -64,11 +64,11 @@ class TestAlertRulesModules(object):
         alert_rules_module.get_all()
         assert mock_alerts_client.get_all_rules.call_count == 1
 
-    def test_alert_rules_module_calls_get_by_name_with_expected_value(
+    def test_alert_rules_module_calls_get_all_by_name_with_expected_value(
         self, mock_microservice_client_factory, mock_alerts_client
     ):
         rule_name = u"test rule"
         mock_microservice_client_factory.get_alerts_client.return_value = mock_alerts_client
         alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
-        alert_rules_module.get_by_name(rule_name)
-        mock_alerts_client.get_rules_by_name.assert_called_once_with(rule_name)
+        alert_rules_module.get_all_by_name(rule_name)
+        mock_alerts_client.get_all_rules_by_name.assert_called_once_with(rule_name)

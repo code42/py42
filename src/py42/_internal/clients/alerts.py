@@ -84,7 +84,7 @@ class AlertClient(BaseClient):
             sort_direction=sort_direction,
         )
 
-    def get_rules_by_name(self, rule_name, sort_key=u"CreatedAt", sort_direction=u"DESC"):
+    def get_all_rules_by_name(self, rule_name, sort_key=u"CreatedAt", sort_direction=u"DESC"):
         tenant_id = self._user_context.get_current_tenant_id()
         return get_all_pages(
             self._get_alert_rules,
@@ -99,6 +99,25 @@ class AlertClient(BaseClient):
             sort_key=sort_key,
             sort_direction=sort_direction,
         )
+
+    def get_rule_by_observer_id(self, observer_id, sort_key=u"CreatedAt", sort_direction=u"DESC"):
+        tenant_id = self._user_context.get_current_tenant_id()
+        results = get_all_pages(
+            self._get_alert_rules,
+            u"ruleMetadata",
+            tenant_id=tenant_id,
+            groups=[
+                {
+                    u"filterClause": u"AND",
+                    u"filters": [
+                        {u"term": u"ObserverRuleId", u"operator": u"IS", u"value": observer_id}
+                    ],
+                }
+            ],
+            sort_key=sort_key,
+            sort_direction=sort_direction,
+        )
+        return next(results)
 
 
 def _convert_observation_json_strings_to_objects(results):

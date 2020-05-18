@@ -53,11 +53,17 @@ class AlertClient(BaseClient):
             return str(query)
 
     def _get_alert_rules(
-        self, tenant_id, sort_key=None, sort_direction=None, page_num=None, page_size=None
+        self,
+        tenant_id,
+        groups=None,
+        sort_key=None,
+        sort_direction=None,
+        page_num=None,
+        page_size=None,
     ):
         data = {
             u"tenantId": tenant_id,
-            u"groups": [],
+            u"groups": groups or [],
             u"groupClause": u"AND",
             u"pgNum": page_num - 1,  # Minus 1, as this API expects first page to start with zero.
             u"pgSize": page_size,
@@ -73,19 +79,26 @@ class AlertClient(BaseClient):
             self._get_alert_rules,
             u"ruleMetadata",
             tenant_id=tenant_id,
+            groups=None,
             sort_key=sort_key,
             sort_direction=sort_direction,
         )
 
-    def get_rules_by_name(self, rule_name):
-        rule_pages = self.get_all_rules()
-        matched_rules = []
-        for rule_page in rule_pages:
-            rules = rule_page[u"ruleMetadata"]
-            for rule in rules:
-                if rule_name.lower() == rule[u"name"].lower():
-                    matched_rules.append(rule)
-        return matched_rules
+    def get_rules_by_name(self, rule_name, sort_key=u"CreatedAt", sort_direction=u"DESC"):
+        tenant_id = self._user_context.get_current_tenant_id()
+        return get_all_pages(
+            self._get_alert_rules,
+            u"ruleMetadata",
+            tenant_id=tenant_id,
+            groups=[
+                {
+                    u"filterClause": u"AND",
+                    u"filters": [{u"term": u"Name", u"operator": u"IS", u"value": rule_name}],
+                }
+            ],
+            sort_key=sort_key,
+            sort_direction=sort_direction,
+        )
 
 
 def _convert_observation_json_strings_to_objects(results):

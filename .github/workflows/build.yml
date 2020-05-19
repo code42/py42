@@ -1,6 +1,12 @@
 name: build
 
-on: [pull_request]
+on:
+  push:
+    branches:
+      - master
+    tags:
+      - v*
+    pull_request:
 
 jobs:
   build:

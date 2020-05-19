@@ -20,3 +20,7 @@ jobs:
         run: pip install tox==3.14.3
       - name: Run Tox
         run: tox -e py  # Run tox using the version of Python in `PATH`
+      - name: Submit coverage report
+      - uses: codecov/codecov-action@v1.0.7
+        with:
+          file: ./coverage.xml

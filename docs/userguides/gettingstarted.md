@@ -32,7 +32,7 @@ Visit the [project history](https://pypi.org/project/py42/#history) on PyPI to s
 
 ### From source
 
-Alternatively, you can install py42 directly from [source code](https://github.com/code42/py42/pull/51/files):
+Alternatively, you can install py42 directly from [source code](https://github.com/code42/py42):
 
 ```bash
 git clone https://github.com/code42/py42.git

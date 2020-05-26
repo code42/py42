@@ -4,6 +4,7 @@ from requests import HTTPError
 
 from py42._internal.clients import alerts, archive, key_value_store, securitydata
 from py42._internal.clients.detection_list_user import DetectionListUserClient
+from py42._internal.clients.investigation import SavedSearchClient
 from py42.clients import administration, devices, legalhold, orgs, users
 from py42._internal.clients.alertrules import AlertRulesClient
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
@@ -62,6 +63,7 @@ class MicroserviceClientFactory(object):
         self._detection_list_user_client = None
         self._ecm_session = None
         self._alert_rules_client = None
+        self._saved_search_client = None
 
     def get_alerts_client(self):
         if not self._alerts_client:
@@ -110,6 +112,12 @@ class MicroserviceClientFactory(object):
                 session, self._user_context, self.get_detection_list_user_client()
             )
         return self._alert_rules_client
+
+    def get_saved_search_client(self):
+        if not self._saved_search_client:
+            session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
+            self._saved_search_client = SavedSearchClient(session, self.get_file_event_client())
+        return self._saved_search_client
 
     def _get_jwt_session(self, key):
         url = self._get_stored_value(key)

@@ -118,8 +118,6 @@ class DepartingEmployeeClient(BaseClient):
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
         Args:
-            tenant_id (str, optional): The unique identifier of the customer tenant. Defaults to
-                None (the tenant_id of SDK authorization user will be used).
             alerts_enabled (bool): Set alerting to on (True) or off (False). Defaults to True.
 
         Returns:

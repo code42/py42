@@ -125,7 +125,7 @@ current_user = sdk.users.get_current()
 
 # page through all devices available to this user.
 for device_page in sdk.devices.get_all():
-    for device in device_page["computers"]
+    for device in device_page["computers"]:
         print(device)
 
 # page through all orgs available to this user.

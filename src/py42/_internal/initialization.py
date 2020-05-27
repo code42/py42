@@ -8,7 +8,6 @@ from py42.modules import (
     archive as archive_module,
     detectionlists,
     securitydata as sec_module,
-    investigation,
 )
 from py42.usercontext import UserContext
 
@@ -61,8 +60,6 @@ class SDKDependencies(object):
         )
 
         self.alerts_module = alerts.AlertsModule(microservice_client_factory)
-
-        self.investigation = investigation.InvestigateModule(microservice_client_factory)
 
     def _set_v3_session(self, host_address, session_factory, root_session):
         self.root_session = root_session

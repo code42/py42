@@ -156,12 +156,3 @@ class SDKClient(object):
             :class:`py42.modules.alertrules.AlertRulesModule`
         """
         return self._sdk_dependencies.alerts_module
-
-    @property
-    def investigate(self):
-        """A collection of methods related to retrieving forensic search data.
-
-        Returns:
-            :class: `py42.clients.investigation.SavedSearchClient`
-        """
-        return self._sdk_dependencies.investigation

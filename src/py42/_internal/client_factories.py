@@ -4,7 +4,7 @@ from requests import HTTPError
 
 from py42._internal.clients import alerts, archive, key_value_store, securitydata
 from py42._internal.clients.detection_list_user import DetectionListUserClient
-from py42._internal.clients.investigation import SavedSearchClient
+from py42._internal.clients.securitydata import SavedSearchClient
 from py42.clients import administration, devices, legalhold, orgs, users
 from py42._internal.clients.alertrules import AlertRulesClient
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
@@ -64,6 +64,7 @@ class MicroserviceClientFactory(object):
         self._ecm_session = None
         self._alert_rules_client = None
         self._saved_search_client = None
+        self._file_event_session = None
 
     def get_alerts_client(self):
         if not self._alerts_client:
@@ -82,8 +83,9 @@ class MicroserviceClientFactory(object):
 
     def get_file_event_client(self):
         if not self._file_event_client:
-            session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
-            self._file_event_client = FileEventClient(session)
+            if not self._file_event_session:
+                self._file_event_session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
+            self._file_event_client = FileEventClient(self._file_event_session)
         return self._file_event_client
 
     def get_high_risk_employee_client(self):
@@ -115,8 +117,11 @@ class MicroserviceClientFactory(object):
 
     def get_saved_search_client(self):
         if not self._saved_search_client:
-            session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
-            self._saved_search_client = SavedSearchClient(session, self.get_file_event_client())
+            if not self._file_event_session:
+                self._file_event_session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
+            self._saved_search_client = SavedSearchClient(
+                self._file_event_session, self.get_file_event_client()
+            )
         return self._saved_search_client
 
     def _get_jwt_session(self, key):

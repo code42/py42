@@ -5,6 +5,11 @@ from py42._internal.clients.securitydata import SavedSearchClient
 from py42.clients.file_event import FileEventClient
 
 
+SAVED_SEARCH_GET_RESPONSE = """
+    {"searches": [{"groups": [] }]}
+"""
+
+
 class TestSavedSearchClient(object):
     def test_get_calls_get_with_expected_uri(self, mock_session, py42_response):
         mock_session.get.return_value = py42_response
@@ -35,7 +40,7 @@ class TestSavedSearchClient(object):
         assert mock_session.post.call_args[0][0] == "/forensic-search/queryservice/api/v1/fileevent"
 
     def test_execute_calls_post_with_expected_query(self, mock_session, py42_response):
-        py42_response.text = """{"searches": [{"groups": [] }] }"""
+        py42_response.text = SAVED_SEARCH_GET_RESPONSE
         mock_session.get.return_value = py42_response
         file_event_client = FileEventClient(mock_session)
         saved_search_client = SavedSearchClient(mock_session, file_event_client)

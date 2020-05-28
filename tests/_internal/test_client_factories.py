@@ -247,3 +247,18 @@ class TestMicroserviceClientFactory(object):
         client2 = factory.get_file_event_client()
 
         assert client1 is client2
+
+    def test_get_saved_search_client_calls_creates_client_with_expected_url(
+        self, mock_session, key_value_store_client, user_context, user_client, session_factory
+    ):
+        key_value_store_client.get_stored_value.return_value.text = FILE_EVENTS_URL
+        factory = MicroserviceClientFactory(
+            TEST_ROOT_URL,
+            mock_session,
+            session_factory,
+            user_context,
+            user_client,
+            key_value_store_client,
+        )
+        factory.get_saved_search_client()
+        session_factory.create_jwt_session.assert_called_once_with(FILE_EVENTS_URL, mock_session)

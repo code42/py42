@@ -563,3 +563,12 @@ class TestSecurityModule(object):
             and item.node_guid == node_guid
             for item in storage_info_list
         )
+
+    def test_saved_searches_returns_saved_search_client(
+        self, security_client, storage_client_factory, microservice_client_factory
+    ):
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        _ = security_module.savedsearches
+        assert microservice_client_factory.get_saved_search_client.call_count

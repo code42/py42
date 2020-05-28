@@ -36,3 +36,17 @@ class AlertQuery(BaseQuery):
             self.sort_key,
         )
         return json
+
+    def __iter__(self):
+        filter_group_list = [dict(item) for item in self._filter_group_list]
+        output_dict = {
+            u"tenantId": None,
+            u"groupClause": self._group_clause,
+            u"groups": filter_group_list,
+            u"pgNum": self.page_number,
+            u"pgSize": self.page_size,
+            u"srtDirection": self.sort_direction,
+            u"srtKey": self.sort_key,
+        }
+        for key in output_dict:
+            yield (key, output_dict[key])

@@ -3,7 +3,6 @@ import json
 from py42._internal.compat import str
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-
 from py42.sdk.queries.query_filter import create_eq_filter_group
 
 

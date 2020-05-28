@@ -167,6 +167,10 @@ class QueryFilter(object):
     When :func:`str()` is called on a :class:`QueryFilter` instance, the (``term``, ``operator``,
     ``value``) attribute combination is transformed into a JSON string to be used as part of a
     Forensic Search or Alert query.
+
+    When :func:`dict()` is called on a :class:`QueryFilter` instance, the (``term``, ``operator``,
+    ``value``) attribute combination is transformed into the Python `dict` equivalent of their JSON representation. This can be useful
+    for programmatically manipulating a :class:`QueryFilter` after it's been created.
     """
 
     _term = None
@@ -176,11 +180,32 @@ class QueryFilter(object):
         self._operator = operator
         self._value = value
 
+    @classmethod
+    def from_dict(cls, _dict):
+        return cls(_dict[u"term"], _dict[u"operator"], value=_dict.get(u"value"))
+
+    @property
+    def term(self):
+        return self._term
+
+    @property
+    def operator(self):
+        return self._operator
+
+    @property
+    def value(self):
+        return self._value
+
     def __str__(self):
         value = u"null" if self._value is None else u'"{0}"'.format(self._value)
         return u'{{"operator":"{0}", "term":"{1}", "value":{2}}}'.format(
             self._operator, self._term, value
         )
+
+    def __iter__(self):
+        output_dict = {u"operator": self._operator, u"term": self._term, u"value": self._value}
+        for key in output_dict:
+            yield (key, output_dict[key])
 
 
 class FilterGroup(object):
@@ -190,14 +215,37 @@ class FilterGroup(object):
 
     When :func:`str()` is called on a :class:`FilterGroup` instance, the combined filter items are
     transformed into a JSON string to be used as part of a Forensic Search or Alert query.
+
+    When :func:`dict()` is called on a :class:`FilterGroup` instance, the combined filter items are
+    transformed into the Python `dict` equivalent of their JSON representation. This can be useful
+    for programmatically manipulating a :class:`FilterGroup` after it's been created.
     """
 
     def __init__(self, filter_list, filter_clause=u"AND"):
         self._filter_list = filter_list
         self._filter_clause = filter_clause
 
+    @classmethod
+    def from_dict(cls, _dict, filter_clause=u"AND"):
+        filter_list = [QueryFilter.from_dict(item) for item in _dict[u"filters"]]
+        return cls(filter_list, filter_clause=filter_clause)
+
+    @property
+    def filter_list(self):
+        return self._filter_list
+
+    @property
+    def filter_clause(self):
+        return self._filter_clause
+
     def __str__(self):
         filters_string = u",".join(str(filter_item) for filter_item in self._filter_list)
         return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(
             self._filter_clause, filters_string
         )
+
+    def __iter__(self):
+        filter_list = [dict(item) for item in self._filter_list]
+        output_dict = {u"filterClause": self._filter_clause, u"filters": filter_list}
+        for key in output_dict:
+            yield (key, output_dict[key])

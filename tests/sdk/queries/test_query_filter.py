@@ -12,6 +12,7 @@ from py42.sdk.queries.query_filter import (
     create_on_or_after_filter_group,
     create_on_or_before_filter_group,
     create_query_filter,
+    FilterGroup,
 )
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
@@ -43,6 +44,36 @@ def test_query_filter_unicode_outputs_correct_json_representation(unicode_query_
     assert str(unicode_query_filter) == expected
 
 
+def test_query_filter_from_dict_gives_correct_json_representation():
+    filter_dict = {"operator": "IS", "term": "testterm", "value": "testval"}
+    filter_json = '{"operator":"IS", "term":"testterm", "value":"testval"}'
+    alert_query = QueryFilter.from_dict(filter_dict)
+    assert str(alert_query) == filter_json
+
+
+def test_query_filter_dict_gives_expected_dict_representation(event_filter_group):
+    query_filter = QueryFilter("testterm", "IS", value="testval")
+    alert_query_query_dict = dict(query_filter)
+    assert alert_query_query_dict["term"] == "testterm"
+    assert alert_query_query_dict["operator"] == "IS"
+    assert alert_query_query_dict["value"] == "testval"
+
+
+def test_query_filter_operator_returns_expected_value():
+    query_filter = QueryFilter("testterm", "IS", value="testval")
+    assert query_filter.term == "testterm"
+
+
+def test_query_filter_operator_returns_expected_value():
+    query_filter = QueryFilter("testterm", "IS", value="testval")
+    assert query_filter.operator == "IS"
+
+
+def test_query_filter_operator_returns_expected_value():
+    query_filter = QueryFilter("testterm", "IS", value="testval")
+    assert query_filter.value == "testval"
+
+
 def test_filter_group_constructs_successfully(query_filter):
     assert create_filter_group(query_filter, "AND")
 
@@ -57,6 +88,34 @@ def test_filter_group_with_and_specified_str_gives_correct_json_representation(q
 
 def test_filter_group_with_or_specified_str_gives_correct_json_representation(query_filter):
     assert str(create_filter_group([query_filter], "OR")) == JSON_FILTER_GROUP_OR
+
+
+def test_filter_group_from_dict_gives_correct_json_representation(query_filter):
+    filter_group_dict = {
+        "filterClause": "AND",
+        "filters": [{"operator": "IS", "term": "testterm", "value": "testval"}],
+    }
+    filter_group_json_str = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"testterm", "value":"testval"}]}'
+    filter_group = FilterGroup.from_dict(filter_group_dict)
+    assert str(filter_group) == filter_group_json_str
+
+
+def test_filter_group_dict_gives_expected_dict_representation(query_filter):
+    filter_group = create_filter_group([query_filter], "AND")
+    filter_group_dict = dict(filter_group)
+    assert filter_group_dict["filterClause"] == "AND"
+    assert type(filter_group_dict["filters"]) == list
+
+
+def test_filter_group_filter_list_returns_expected_value(query_filter):
+    filter_list = [query_filter]
+    filter_group = create_filter_group(filter_list, "AND")
+    assert filter_group.filter_list == filter_list
+
+
+def test_filter_group_filter_clause_returns_excepted_value(query_filter):
+    filter_group = create_filter_group([query_filter], "AND")
+    assert filter_group.filter_clause == "AND"
 
 
 def test_filter_group_with_multiple_filters_str_gives_correct_json_representation(

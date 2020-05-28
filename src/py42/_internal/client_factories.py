@@ -3,12 +3,13 @@ import json
 from requests import HTTPError
 
 from py42._internal.clients import alerts, archive, key_value_store, securitydata
+from py42._internal.clients.alertrules import AlertRulesClient
 from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients import administration, devices, legalhold, orgs, users
-from py42._internal.clients.alertrules import AlertRulesClient
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42.clients.file_event import FileEventClient
+from py42.clients.savedsearch import SavedSearchClient
 from py42.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
 
 
@@ -62,6 +63,8 @@ class MicroserviceClientFactory(object):
         self._detection_list_user_client = None
         self._ecm_session = None
         self._alert_rules_client = None
+        self._saved_search_client = None
+        self._file_event_session = None
 
     def get_alerts_client(self):
         if not self._alerts_client:
@@ -71,35 +74,28 @@ class MicroserviceClientFactory(object):
 
     def get_departing_employee_client(self):
         if not self._departing_employee_client:
-            if not self._ecm_session:
-                self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             self._departing_employee_client = DepartingEmployeeClient(
-                self._ecm_session, self._user_context, self.get_detection_list_user_client()
+                self._get_ecm_session(), self._user_context, self.get_detection_list_user_client()
             )
         return self._departing_employee_client
 
     def get_file_event_client(self):
         if not self._file_event_client:
-            session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
-            self._file_event_client = FileEventClient(session)
+            self._file_event_client = FileEventClient(self._get_file_event_session())
         return self._file_event_client
 
     def get_high_risk_employee_client(self):
         if not self._high_risk_employee_client:
-            if not self._ecm_session:
-                self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             self._high_risk_employee_client = HighRiskEmployeeClient(
-                self._ecm_session, self._user_context, self.get_detection_list_user_client()
+                self._get_ecm_session(), self._user_context, self.get_detection_list_user_client()
             )
         return self._high_risk_employee_client
 
     def get_detection_list_user_client(self):
         if not self._detection_list_user_client:
-            if not self._ecm_session:
-                self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             user_client = self._user_client
             self._detection_list_user_client = DetectionListUserClient(
-                self._ecm_session, self._user_context, user_client
+                self._get_ecm_session(), self._user_context, user_client
             )
         return self._detection_list_user_client
 
@@ -111,9 +107,26 @@ class MicroserviceClientFactory(object):
             )
         return self._alert_rules_client
 
+    def get_saved_search_client(self):
+        if not self._saved_search_client:
+            self._saved_search_client = SavedSearchClient(
+                self._get_file_event_session(), self.get_file_event_client()
+            )
+        return self._saved_search_client
+
     def _get_jwt_session(self, key):
         url = self._get_stored_value(key)
         return self._session_factory.create_jwt_session(url, self._root_session)
+
+    def _get_ecm_session(self):
+        if not self._ecm_session:
+            self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
+        return self._ecm_session
+
+    def _get_file_event_session(self):
+        if not self._file_event_session:
+            self._file_event_session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
+        return self._file_event_session
 
     def _get_stored_value(self, key):
         if not self._key_value_store_client:

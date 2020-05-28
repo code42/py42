@@ -12,6 +12,14 @@
     :show-inheritance:
 ```
 
+## Saved Searches
+
+```eval_rst
+.. autoclass:: py42.sdk.client.savedsearch.SavedSearchClient
+    :members:
+    :show-inheritance:
+```
+
 ## Filter Classes
 
 The following classes construct filters for file event queries. Each filter class corresponds to a file event detail.

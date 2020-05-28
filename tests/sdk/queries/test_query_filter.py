@@ -91,7 +91,13 @@ def test_filter_group_with_or_specified_str_gives_correct_json_representation(qu
 
 
 def test_filter_group_from_dict_gives_correct_json_representation(query_filter):
-    filter_group = FilterGroup.from_dict
+    filter_group_dict = {
+        "filterClause": "AND",
+        "filters": [{"operator": "IS", "term": "testterm", "value": "testval"}],
+    }
+    filter_group_json_str = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"testterm", "value":"testval"}]}'
+    filter_group = FilterGroup.from_dict(filter_group_dict)
+    assert str(filter_group) == filter_group_json_str
 
 
 def test_filter_group_dict_gives_expected_dict_representation(query_filter):

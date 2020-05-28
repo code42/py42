@@ -14,30 +14,18 @@ class SavedSearchClient(BaseClient):
     _version = u"v1"
     _resource = u"/forensic-search/queryservice/api/{}/saved".format(_version)
 
-    _response_header = [u"name", u"id", u"notes", u"modifiedByUsername", u"modifiedTimestamp"]
-
     def __init__(self, session, file_event_client):
         super(SavedSearchClient, self).__init__(session)
         self._file_event_client = file_event_client
 
-    def _parse_response(self, response):
-        if u"searches" in response:
-            return {
-                key: search[key]
-                for search in response[u"searches"]
-                for key in self._response_header
-            }
-
     def get(self):
         """Fetch details of existing saved searches.
-        Provides details such as saved search id, name, notes, modifier name, last modified time.
 
         Returns:
-            dict
+            :class:`py42.response.Py42Response`
         """
         uri = u"{}".format(self._resource)
-        response = self._session.get(uri)
-        return self._parse_response(response)
+        return self._session.get(uri)
 
     def get_by_id(self, search_id):
         """Fetch details of saved search for given search Id.

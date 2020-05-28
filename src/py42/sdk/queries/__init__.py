@@ -1,5 +1,3 @@
-import json
-
 from py42.sdk.queries.query_filter import FilterGroup
 
 

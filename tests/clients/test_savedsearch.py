@@ -1,9 +1,7 @@
-import pytest
 import json
 
-from py42._internal.clients.securitydata import SavedSearchClient
 from py42.clients.file_event import FileEventClient
-
+from py42.clients.savedsearch import SavedSearchClient
 
 SAVED_SEARCH_GET_RESPONSE = """
     {"searches": [{"groups": [] }]}

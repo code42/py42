@@ -12,6 +12,7 @@ from py42.sdk.queries.query_filter import (
     create_on_or_after_filter_group,
     create_on_or_before_filter_group,
     create_query_filter,
+    FilterGroup,
 )
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
@@ -87,6 +88,28 @@ def test_filter_group_with_and_specified_str_gives_correct_json_representation(q
 
 def test_filter_group_with_or_specified_str_gives_correct_json_representation(query_filter):
     assert str(create_filter_group([query_filter], "OR")) == JSON_FILTER_GROUP_OR
+
+
+def test_filter_group_from_dict_gives_correct_json_representation(query_filter):
+    filter_group = FilterGroup.from_dict
+
+
+def test_filter_group_dict_gives_expected_dict_representation(query_filter):
+    filter_group = create_filter_group([query_filter], "AND")
+    filter_group_dict = dict(filter_group)
+    assert filter_group_dict["filterClause"] == "AND"
+    assert type(filter_group_dict["filters"]) == list
+
+
+def test_filter_group_filter_list_returns_expected_value(query_filter):
+    filter_list = [query_filter]
+    filter_group = create_filter_group(filter_list, "AND")
+    assert filter_group.filter_list == filter_list
+
+
+def test_filter_group_filter_clause_returns_excepted_value(query_filter):
+    filter_group = create_filter_group([query_filter], "AND")
+    assert filter_group.filter_clause == "AND"
 
 
 def test_filter_group_with_multiple_filters_str_gives_correct_json_representation(

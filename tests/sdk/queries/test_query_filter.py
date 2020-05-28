@@ -43,6 +43,36 @@ def test_query_filter_unicode_outputs_correct_json_representation(unicode_query_
     assert str(unicode_query_filter) == expected
 
 
+def test_query_filter_from_dict_gives_correct_json_representation():
+    filter_dict = {"operator": "IS", "term": "testterm", "value": "testval"}
+    filter_json = '{"operator":"IS", "term":"testterm", "value":"testval"}'
+    alert_query = QueryFilter.from_dict(filter_dict)
+    assert str(alert_query) == filter_json
+
+
+def test_query_filter_dict_gives_expected_dict_representation(event_filter_group):
+    query_filter = QueryFilter("testterm", "IS", value="testval")
+    alert_query_query_dict = dict(query_filter)
+    assert alert_query_query_dict["term"] == "testterm"
+    assert alert_query_query_dict["operator"] == "IS"
+    assert alert_query_query_dict["value"] == "testval"
+
+
+def test_query_filter_operator_returns_expected_value():
+    query_filter = QueryFilter("testterm", "IS", value="testval")
+    assert query_filter.term == "testterm"
+
+
+def test_query_filter_operator_returns_expected_value():
+    query_filter = QueryFilter("testterm", "IS", value="testval")
+    assert query_filter.operator == "IS"
+
+
+def test_query_filter_operator_returns_expected_value():
+    query_filter = QueryFilter("testterm", "IS", value="testval")
+    assert query_filter.value == "testval"
+
+
 def test_filter_group_constructs_successfully(query_filter):
     assert create_filter_group(query_filter, "AND")
 

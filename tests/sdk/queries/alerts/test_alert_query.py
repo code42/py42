@@ -133,7 +133,7 @@ def test_alert_query_str_with_sort_key_gives_correct_json_representation(event_f
     assert str(alert_query) == json_query_str
 
 
-def test_alert_query_query_from_dict_gives_correct_json_representation():
+def test_alert_query_from_dict_gives_correct_json_representation():
     group = {
         "filterClause": "AND",
         "filters": [{"operator": "IS", "term": "testterm", "value": "testval"}],
@@ -147,7 +147,7 @@ def test_alert_query_query_from_dict_gives_correct_json_representation():
     assert str(alert_query) == json_query_str
 
 
-def test_alert_query_query_dict_gives_expected_dict_representation(event_filter_group):
+def test_alert_query_dict_gives_expected_dict_representation(event_filter_group):
     alert_query = AlertQuery(event_filter_group)
     alert_query_query_dict = dict(alert_query)
     assert alert_query_query_dict["groupClause"] == "AND"

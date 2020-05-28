@@ -1,3 +1,5 @@
+import json
+
 from py42._internal.compat import str
 from py42.sdk.queries import BaseQuery
 from py42.sdk.queries.query_filter import (
@@ -42,6 +44,19 @@ class FileEventQuery(BaseQuery):
             self.sort_key,
         )
         return json
+
+    def __iter__(self):
+        filter_group_list = [dict(item) for item in self._filter_group_list]
+        output_dict = {
+            u"groupClause": self._group_clause,
+            u"groups": filter_group_list,
+            u"pgNum": self.page_number,
+            u"pgSize": self.page_size,
+            u"srtDir": self.sort_direction,
+            u"srtKey": self.sort_key,
+        }
+        for key in output_dict:
+            yield (key, output_dict[key])
 
 
 def create_exists_filter_group(term):

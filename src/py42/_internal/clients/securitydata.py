@@ -1,4 +1,7 @@
+import json
+
 from py42.clients import BaseClient
+from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 
 
 class SecurityClient(BaseClient):
@@ -14,58 +17,46 @@ class SavedSearchClient(BaseClient):
     _version = u"v1"
     _resource = u"/forensic-search/queryservice/api/{}/saved".format(_version)
 
-    _response_header = [u"name", u"id", u"notes", u"modifiedByUsername", u"modifiedTimestamp"]
-
     def __init__(self, session, file_event_client):
         super(SavedSearchClient, self).__init__(session)
         self._file_event_client = file_event_client
-
-    def _parse_response(self, response):
-        if u"searches" in response:
-            return {
-                key: search[key]
-                for search in response[u"searches"]
-                for key in self._response_header
-            }
 
     def get(self):
         """Fetch details of existing saved searches.
         Provides details such as saved search id, name, notes, modifier name, last modified time.
 
         Returns:
-            dict
+            :class:`py42.response.Py42Response`
         """
         uri = u"{}".format(self._resource)
         response = self._session.get(uri)
         return self._parse_response(response)
 
     def get_by_id(self, search_id):
-        """Fetch details of saved search for given search Id.
+        """Fetch the details of a saved search by its given search Id.
 
         Args:
-            search_id (str): Unique search Id of the saved search, Required.
+            search_id (str): Unique search Id of the saved search.
         Returns:
             :class:`py42.response.Py42Response`
         """
         uri = u"{}/{}".format(self._resource, search_id)
         return self._session.get(uri)
 
-    @staticmethod
-    def _make_query(response):
-        query = dict(pgNum=1, pgSize=100, purpose=u"USER_EXECUTED_SEARCH")
-        query["groups"] = response[u"searches"][0][u"groups"]
-        return query
-
-    def execute(self, search_id):
+    def execute(self, search_id, pg_num=1, pg_size=10000):
         """
-        Execute a saved search for given search Id and return incremental results based
-        on the previous execution.
+        Execute a saved search for given search Id and return its results.
 
         Args:
-            search_id (str): Unique search Id of the saved search, Required.
+            search_id (str): Unique search Id of the saved search.
+            pg_num (int): The consecutive group of results of size pg_size in the result set to return.
+            pg_size (int): The maximum number of results to be returned.
         Returns:
             :class:`py42.response.Py42Response`
         """
         response = self.get_by_id(search_id)
-        query = SavedSearchClient._make_query(response)
-        return self._file_event_client.search(query=query)
+        search = response[u"searches"][0]
+        print(search)
+        query = FileEventQuery.from_dict(search)
+        print(str(query))
+        return self._file_event_client.search(query)

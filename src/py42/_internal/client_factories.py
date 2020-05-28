@@ -74,36 +74,28 @@ class MicroserviceClientFactory(object):
 
     def get_departing_employee_client(self):
         if not self._departing_employee_client:
-            if not self._ecm_session:
-                self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             self._departing_employee_client = DepartingEmployeeClient(
-                self._ecm_session, self._user_context, self.get_detection_list_user_client()
+                self._get_ecm_session(), self._user_context, self.get_detection_list_user_client()
             )
         return self._departing_employee_client
 
     def get_file_event_client(self):
         if not self._file_event_client:
-            if not self._file_event_session:
-                self._file_event_session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
-            self._file_event_client = FileEventClient(self._file_event_session)
+            self._file_event_client = FileEventClient(self._get_file_event_session())
         return self._file_event_client
 
     def get_high_risk_employee_client(self):
         if not self._high_risk_employee_client:
-            if not self._ecm_session:
-                self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             self._high_risk_employee_client = HighRiskEmployeeClient(
-                self._ecm_session, self._user_context, self.get_detection_list_user_client()
+                self._get_ecm_session(), self._user_context, self.get_detection_list_user_client()
             )
         return self._high_risk_employee_client
 
     def get_detection_list_user_client(self):
         if not self._detection_list_user_client:
-            if not self._ecm_session:
-                self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
             user_client = self._user_client
             self._detection_list_user_client = DetectionListUserClient(
-                self._ecm_session, self._user_context, user_client
+                self._get_ecm_session(), self._user_context, user_client
             )
         return self._detection_list_user_client
 
@@ -117,16 +109,24 @@ class MicroserviceClientFactory(object):
 
     def get_saved_search_client(self):
         if not self._saved_search_client:
-            if not self._file_event_session:
-                self._file_event_session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
             self._saved_search_client = SavedSearchClient(
-                self._file_event_session, self.get_file_event_client()
+                self._get_file_event_session(), self.get_file_event_client()
             )
         return self._saved_search_client
 
     def _get_jwt_session(self, key):
         url = self._get_stored_value(key)
         return self._session_factory.create_jwt_session(url, self._root_session)
+
+    def _get_ecm_session(self):
+        if not self._ecm_session:
+            self._ecm_session = self._get_jwt_session(u"employeecasemanagement-API_URL")
+        return self._ecm_session
+
+    def _get_file_event_session(self):
+        if not self._file_event_session:
+            self._file_event_session = self._get_jwt_session(u"FORENSIC_SEARCH-API_URL")
+        return self._file_event_session
 
     def _get_stored_value(self, key):
         if not self._key_value_store_client:

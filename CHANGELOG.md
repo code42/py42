@@ -10,7 +10,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
-- `sdk.securitydata.savedsearches` module with functions:
+- `SavedSearchClient` available at `sdk.securitydata.savedsearches` with the following functions:
     - `get()`
     - `get_by_id()`
     - `execute()`

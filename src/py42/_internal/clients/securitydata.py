@@ -54,7 +54,5 @@ class SavedSearchClient(BaseClient):
         """
         response = self.get_by_id(search_id)
         search = response[u"searches"][0]
-        print(search)
         query = FileEventQuery.from_dict(search)
-        print(str(query))
         return self._file_event_client.search(query)

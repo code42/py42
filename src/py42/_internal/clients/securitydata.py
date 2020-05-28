@@ -23,14 +23,12 @@ class SavedSearchClient(BaseClient):
 
     def get(self):
         """Fetch details of existing saved searches.
-        Provides details such as saved search id, name, notes, modifier name, last modified time.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
         uri = u"{}".format(self._resource)
-        response = self._session.get(uri)
-        return self._parse_response(response)
+        return self._session.get(uri)
 
     def get_by_id(self, search_id):
         """Fetch the details of a saved search by its given search Id.

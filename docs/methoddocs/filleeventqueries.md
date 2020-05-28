@@ -15,7 +15,7 @@
 ## Saved Searches
 
 ```eval_rst
-.. autoclass:: py42.sdk.client.savedsearch.SavedSearchClient
+.. autoclass:: py42.clients.savedsearch.SavedSearchClient
     :members:
     :show-inheritance:
 ```

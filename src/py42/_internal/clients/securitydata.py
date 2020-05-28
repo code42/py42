@@ -47,8 +47,8 @@ class SavedSearchClient(BaseClient):
 
         Args:
             search_id (str): Unique search Id of the saved search.
-            pg_num (int): The consecutive group of results of size pg_size in the result set to return.
-            pg_size (int): The maximum number of results to be returned.
+            pg_num (int, optional): The consecutive group of results of size pg_size in the result set to return. Defaults to 1.
+            pg_size (int, optional): The maximum number of results to be returned. Defaults to 10,000.
         Returns:
             :class:`py42.response.Py42Response`
         """

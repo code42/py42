@@ -15,6 +15,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `get_by_id()`
     - `execute()`
 
+- `get_scim_data_by_uid()` function to `UserClient`, available at `sdk.users.get_scim_data_by_uid()`.
+
 ## 1.2.0 - 2020-05-18
 
 ### Added

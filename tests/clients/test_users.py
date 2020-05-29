@@ -115,3 +115,9 @@ class TestUserClient(object):
             pass
         py42.settings.items_per_page = 1000
         assert mock_session.get.call_count == 3
+
+    def test_get_scim_data_by_uid_calls_get_with_expected_uri_and_params(self, mock_session):
+        client = UserClient(mock_session)
+        client.get_scim_data_by_uid("USER_ID")
+        uri = "/api/v7/scim-user-data/collated-view"
+        mock_session.get.assert_called_once_with(uri, params={"userId": "USER_ID"})

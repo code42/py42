@@ -155,6 +155,21 @@ class UserClient(BaseClient):
             **kwargs
         )
 
+    def get_scim_data_by_uid(self, user_uid):
+        """Returns SCIM data such as division, department, and title for
+        a given user.
+        `REST Documentation <https://console.us.code42.com/swagger/#/scim-user-data/ScimUserData_CollatedView>
+
+        Args:
+            user_uid (str): A Code42 user uid.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        uri = u"/api/v7/scim-user-data/collated-view"
+        params = dict(userId=user_uid)
+        return self._session.get(uri, params=params)
+
     def block(self, user_id):
         """Blocks the user with the given ID. A blocked user is not allowed to log in or restore
         files. Backups will continue if the user is still active.

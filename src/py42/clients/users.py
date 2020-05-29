@@ -166,7 +166,7 @@ class UserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"api/v7/scim-user-data/collated-view"
+        uri = u"/api/v7/scim-user-data/collated-view"
         params = dict(userId=user_uid)
         return self._session.get(uri, params=params)
 

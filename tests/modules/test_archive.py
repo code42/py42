@@ -14,7 +14,7 @@ class TestArchiveModule(object):
     _TEST_DAYS = 42
     _TEST_ID = 424242
 
-    def test_stream_from_backup_creates_archive_accessor_with_expected_arguments(self, mocker):
+    def test_stream_from_backup_calls_get_archive_accessor_with_expected_arguments(self, mocker):
         archive = _get_module(mocker)
         archive.stream_from_backup("path", "device_guid", "dest_guid", "password", "encryption_key")
         archive._archive_accessor_manager.get_archive_accessor.assert_called_once_with(

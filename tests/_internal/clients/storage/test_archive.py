@@ -70,6 +70,67 @@ def storage_archive_client(mocker):
 
 
 class TestStorageArchiveClient(object):
+    def test_search_paths_calls_get_with_expected_params(self, session):
+        storage_archive_client = StorageArchiveClient(session)
+        storage_archive_client.search_paths(
+            "session_id", "device_id", "regex", 1000, "timestamp", True
+        )
+        session.get.assert_called_once_with(
+            "/api/WebRestoreSearch",
+            params={
+                "webRestoreSessionId": "session_id",
+                "guid": "device_id",
+                "regex": "regex",
+                "maxResults": 1000,
+                "timestamp": "timestamp",
+                "showDeleted": True,
+            },
+        )
+
+    def test_get_file_size_calls_get_with_expected_params(self, session):
+        storage_archive_client = StorageArchiveClient(session)
+        storage_archive_client.get_file_size(
+            "device_guid", "file_id", "timestamp", True, "backupset_id"
+        )
+        session.get.assert_called_once_with(
+            u"/api/WebRestoreFileSize",
+            params={
+                "guid": "device_guid",
+                "fileId": "file_id",
+                "timestamp": "timestamp",
+                "showDeleted": True,
+                "backupSetId": "backupset_id",
+            },
+        )
+
+    def test_get_file_path_metadata_calls_get_with_expected_params(self, session):
+        storage_archive_client = StorageArchiveClient(session)
+        storage_archive_client.get_file_path_metadata(
+            "session",
+            "guid",
+            "file_id",
+            "timestamp",
+            True,
+            "batch_size",
+            "lastBatchId",
+            "backupset_id",
+            True,
+        )
+        session.get.assert_called_once_with(
+            u"/api/WebRestoreTreeNode",
+            params={
+                "webRestoreSessionId": "session",
+                "guid": "guid",
+                "fileId": "file_id",
+                "timestamp": "timestamp",
+                "showDeleted": True,
+                "batchSize": "batch_size",
+                "lastBatchFileId": "lastBatchId",
+                "backupSetId": "backupset_id",
+                "includeOsMetadata": True,
+            },
+        )
+
     def test_create_restore_session_calls_post_with_correct_url(self, mocker, session):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.create_restore_session(DEVICE_GUID)

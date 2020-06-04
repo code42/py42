@@ -56,7 +56,7 @@ response = sdk.detectionlists.add_user_risk_tags(user_id, tag_list)
 response = sdk.detectionlists.remove_user_risk_tags(user_id, tag_list)
 ```
 
-The available risk tags that can be added are:
+The available risk tags are:
 
 - `HIGH_IMPACT_EMPLOYEE`
 - `ELEVATED_ACCESS_PRIVILEGES`

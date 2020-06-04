@@ -123,31 +123,33 @@ class ArchiveModule(object):
     def get_all_cold_storage_archives_by_org_id(
         self, org_id, include_child_orgs=True, sort_key=None, sort_dir="asc"
     ):
-        """[summary]
+        """Returns a detailed list of cold storage archive information for a given org ID.
 
         Args:
-            org_id ([type]): [description]
-            include_child_orgs (bool, optional): [description]. Defaults to True.
-            sort_key ([type], optional): [description]. Defaults to None.
-            sort_dir (str, optional): [description]. Defaults to "asc".
+            org_id (str): The ID of a Code42 organization.
+            include_child_orgs (bool, optional): Determines whether cold storage information from the Org's children is also returned. Defaults to True.
+            sort_key (str, optional): Sets the property by which the returned results will be sorted. Choose from orgName, mountPointName, archiveBytes, and archiveType. Defaults to None.
+            sort_dir (str, optional): Sets the order by which sort_key should be sorted. Choose from asc or desc. Defaults to "asc".
 
         Returns:
-            [type]: [description]
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of cold storage archive information.
         """
         return self.get_all_cold_storage_archives_by_org_id(org_id)
 
     def get_all_cold_storage_archives_by_destination_guid(
         self, destination_guid, sort_key=None, sort_dir="asc"
     ):
-        """[summary]
+        """Returns a detailed list of cold storage archive information for a given destination guid.
 
         Args:
-            destination_guid ([type]): [description]
-            sort_key ([type], optional): [description]. Defaults to None.
-            sort_dir (str, optional): [description]. Defaults to "asc".
+            destination_guid (str): The GUID of the destination on which the returned archives are stored.
+            sort_key (str, optional): Sets the property by which the returned results will be sorted. Choose from orgName, mountPointName, archiveBytes, and archiveType. Defaults to None.
+            sort_dir (str, optional): Sets the order by which sort_key should be sorted. Choose from asc or desc. Defaults to "asc".
 
         Returns:
-            [type]: [description]
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of cold storage archive information.
         """
         return self._archive_client.get_all_cold_storage_archives_by_destination_guid(
             destination_guid

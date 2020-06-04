@@ -120,7 +120,7 @@ class ArchiveModule(object):
         """
         return self._archive_client.update_cold_storage_purge_date(archive_guid, purge_date)
 
-    def get_all_cold_storage_archives_by_org_id(
+    def get_all_org_cold_storage_archives(
         self, org_id, include_child_orgs=True, sort_key="archiveHoldExpireDate", sort_dir="asc"
     ):
         """Returns a detailed list of cold storage archive information for a given org ID.
@@ -138,26 +138,4 @@ class ArchiveModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cold storage archive information.
         """
-        return self.get_all_cold_storage_archives_by_org_id(org_id)
-
-    def get_all_cold_storage_archives_by_destination_guid(
-        self, destination_guid, sort_key="archiveHoldExpireDate", sort_dir="asc"
-    ):
-        """Returns a detailed list of cold storage archive information for a given destination guid.
-
-        Args:
-            destination_guid (str): The GUID of the destination on which the returned archives
-             are stored.
-            sort_key (str, optional): Sets the property by which the returned results
-             will be sorted. Choose from archiveHoldExpireDate, orgName, mountPointName,
-              archiveBytes, and archiveType. Defaults to archiveHoldExpireDate.
-            sort_dir (str, optional): Sets the order by which sort_key should be sorted. Choose
-             from asc or desc. Defaults to "asc".
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of cold storage archive information.
-        """
-        return self._archive_client.get_all_cold_storage_archives_by_destination_guid(
-            destination_guid
-        )
+        return self._archive_client.get_all_org_cold_storage_archives(org_id)

@@ -35,15 +35,38 @@ class ArchiveClient(BaseClient):
         params = {u"srcGuid": src_guid, u"destGuid": dest_guid}
         return self._session.get(uri, params=params)
 
-    def get_all_cold_storage_archives_by_org_id(
-        self, org_id, inc_child_orgs=True, sort_key="archiveHoldExpireDate", sort_dir="asc"
+    def _get_cold_storage_archives_page(
+        self,
+        org_id=None,
+        include_child_orgs=None,
+        sort_key="archiveHoldExpireDate",
+        sort_dir="asc",
+        page_size=None,
+        page_num=None,
     ):
-        pass
+        uri = u"/api/ColdStorage"
+        params = {
+            u"orgId": org_id,
+            u"incChildOrgs": include_child_orgs,
+            u"srtKey": sort_key,
+            u"srtDir": sort_dir,
+            u"pgSize": page_size,
+            u"pgNum": page_num,
+        }
 
-    def get_all_cold_storage_archives_by_destination_guid(
-        self, destination_guid, sort_key="archiveHoldExpireDate", sort_dir="asc"
+        return self._session.get(uri, params=params)
+
+    def get_all_org_cold_storage_archives(
+        self, org_id, include_child_orgs=True, sort_key="archiveHoldExpireDate", sort_dir="asc"
     ):
-        pass
+        return get_all_pages(
+            self._get_cold_storage_archives_page,
+            u"coldStorageRows",
+            org_id=org_id,
+            include_child_orgs=include_child_orgs,
+            sort_key=sort_key,
+            sort_dir=sort_dir,
+        )
 
     def update_cold_storage_purge_date(self, archive_guid, purge_date):
         uri = u"/api/coldStorage/{0}".format(archive_guid)

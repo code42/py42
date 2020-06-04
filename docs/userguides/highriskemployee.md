@@ -1,4 +1,6 @@
-# Add or Remove Users From the High Risk Employee List
+# High Risk Employee
+
+## Add or Remove Users From the High Risk Employee List
 
 Use py42 to quickly and easily manage users on the High Risk Employee list. This guide describes how to add users to and remove users from the High Risk Employee list.
 
@@ -35,7 +37,7 @@ For complete details, see
  [High Risk Employee](../methoddocs/detectionlists.html#high-risk-employee).
 
 
-# Add or Remove Risk Factors From Users
+## Add or Remove Risk Factors From Users
 
 You can add/remove risk factor tags from a user programmatically using the `add_user_risk_tags()` and `remove_user_risk_tags()`
 methods in the `detectionlists` module. Both methods take a user_id and a list of tags that you want to add/remove:

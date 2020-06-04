@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- `get_all_org_cold_storage_archives()` function to `ArchiveModule`, available at `sdk.archive.get_all_org_cold_storage_archives()`.
+
+
 ## 1.3.0 - 2020-06-02
 
 ### Added

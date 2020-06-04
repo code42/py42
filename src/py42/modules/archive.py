@@ -119,3 +119,36 @@ class ArchiveModule(object):
             :class:`py42.response.Py42Response`: the response from the ColdStorage API.
         """
         return self._archive_client.update_cold_storage_purge_date(archive_guid, purge_date)
+
+    def get_all_cold_storage_archives_by_org_id(
+        self, org_id, include_child_orgs=True, sort_key=None, sort_dir="asc"
+    ):
+        """[summary]
+
+        Args:
+            org_id ([type]): [description]
+            include_child_orgs (bool, optional): [description]. Defaults to True.
+            sort_key ([type], optional): [description]. Defaults to None.
+            sort_dir (str, optional): [description]. Defaults to "asc".
+
+        Returns:
+            [type]: [description]
+        """
+        return self.get_all_cold_storage_archives_by_org_id(org_id)
+
+    def get_all_cold_storage_archives_by_destination_guid(
+        self, destination_guid, sort_key=None, sort_dir="asc"
+    ):
+        """[summary]
+
+        Args:
+            destination_guid ([type]): [description]
+            sort_key ([type], optional): [description]. Defaults to None.
+            sort_dir (str, optional): [description]. Defaults to "asc".
+
+        Returns:
+            [type]: [description]
+        """
+        return self._archive_client.get_all_cold_storage_archives_by_destination_guid(
+            destination_guid
+        )

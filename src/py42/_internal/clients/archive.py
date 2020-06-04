@@ -35,6 +35,16 @@ class ArchiveClient(BaseClient):
         params = {u"srcGuid": src_guid, u"destGuid": dest_guid}
         return self._session.get(uri, params=params)
 
+    def get_all_cold_storage_archives_by_org_id(
+        self, org_id, inc_child_orgs=True, sort_key=None, sort_dir="asc"
+    ):
+        pass
+
+    def get_all_cold_storage_archives_by_destination_guid(
+        self, destination_guid, sort_key=None, sort_dir="asc"
+    ):
+        pass
+
     def update_cold_storage_purge_date(self, archive_guid, purge_date):
         uri = u"/api/coldStorage/{0}".format(archive_guid)
         params = {u"idType": u"guid"}

@@ -26,7 +26,7 @@ response = sdk.detectionlists.high_risk_employee.add(user_id)
     If a detection list user profile doesn't exist yet for this user, one will automatically be created before adding the user to the High Risk Employee list.
 ```
 
-To remove a user from the Departing Employee list:
+To remove a user from the High Risk Employee list:
 ```python
 sdk.detectionlists.high_risk_employee.remove(user_id)
 ```

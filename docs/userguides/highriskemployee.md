@@ -14,7 +14,7 @@ uid = user["users"][0]["userUid"]
 `user_id` below refers to the user UID.
 
 ```python
-# Add the departing employee
+# Add the high risk employee
 response = sdk.detectionlists.high_risk_employee.add(user_id)
 ```
 

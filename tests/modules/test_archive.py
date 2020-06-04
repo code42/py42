@@ -70,6 +70,6 @@ class TestArchiveModule(object):
     def test_get_all_org_cold_storage_archives_calls_client_with_expected_data(self, mocker):
         archive = _get_module(mocker)
         archive.get_all_org_cold_storage_archives("TEST ORG ID")
-        archive._archive_client.update_cold_storage_purge_date.assert_called_once_with(
+        archive._archive_client.get_all_org_cold_storage_archives.assert_called_once_with(
             "TEST ORG ID"
         )

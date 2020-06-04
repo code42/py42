@@ -16,7 +16,7 @@ MOCK_EMPTY_GET_ORG_RESTORE_HISTORY_RESPONSE = """{"totalCount": 3000, "restoreEv
 
 class TestArchiveClient(object):
     @pytest.fixture
-    def mock_get_all_restore_history_response(self, mocker):
+    def mock_get_all_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 200
         response.encoding = "utf-8"
@@ -24,11 +24,11 @@ class TestArchiveClient(object):
         return Py42Response(response)
 
     @pytest.fixture
-    def mock_get_all_restore_history_empty_response(self, mocker):
+    def mock_get_all_empty_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 200
         response.encoding = "utf-8"
-        response.text = MOCK_GET_ORG_RESTORE_HISTORY_RESPONSE
+        response.text = MOCK_EMPTY_GET_ORG_RESTORE_HISTORY_RESPONSE
         return Py42Response(response)
 
     def test_get_all_restore_history_calls_get_expected_number_of_times(

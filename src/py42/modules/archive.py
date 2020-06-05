@@ -132,7 +132,7 @@ class ArchiveModule(object):
             sort_key (str, optional): Sets the property by which the returned results will be sorted.
              Choose from archiveHoldExpireDate, orgName, mountPointName, archiveBytes, and archiveType. Defaults to archiveHoldExpireDate.
             sort_dir (str, optional): Sets the order by which sort_key should be sorted. Choose from
-             asc or desc. Defaults to "asc".
+             asc or desc. Defaults to asc.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

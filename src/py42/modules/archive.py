@@ -119,3 +119,23 @@ class ArchiveModule(object):
             :class:`py42.response.Py42Response`: the response from the ColdStorage API.
         """
         return self._archive_client.update_cold_storage_purge_date(archive_guid, purge_date)
+
+    def get_all_org_cold_storage_archives(
+        self, org_id, include_child_orgs=True, sort_key="archiveHoldExpireDate", sort_dir="asc"
+    ):
+        """Returns a detailed list of cold storage archive information for a given org ID.
+
+        Args:
+            org_id (str): The ID of a Code42 organization.
+            include_child_orgs (bool, optional): Determines whether cold storage information from
+             the Org's children is also returned. Defaults to True.
+            sort_key (str, optional): Sets the property by which the returned results will be sorted.
+             Choose from archiveHoldExpireDate, orgName, mountPointName, archiveBytes, and archiveType. Defaults to archiveHoldExpireDate.
+            sort_dir (str, optional): Sets the order by which sort_key should be sorted. Choose from
+             asc or desc. Defaults to asc.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of cold storage archive information.
+        """
+        return self._archive_client.get_all_org_cold_storage_archives(org_id)

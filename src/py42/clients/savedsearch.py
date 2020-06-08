@@ -33,6 +33,13 @@ class SavedSearchClient(BaseClient):
         return self._session.get(uri)
 
     def get_query(self, search_id):
+        """Get the saved search in form of a query(`py42.sdk.queries.fileevents.file_event_query`).
+        
+        Args:
+            search_id (str): Unique search Id of the saved search.
+        Returns:
+            :class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`
+        """
         response = self.get_by_id(search_id)
         search = response[u"searches"][0]
         return FileEventQuery.from_dict(search)

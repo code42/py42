@@ -13,7 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Added
 
 - `get_all_org_cold_storage_archives()` function to `ArchiveModule`, available at `sdk.archive.get_all_org_cold_storage_archives()`.
-
+- `get_query()` function to `sdk.securitydata.savedsearches` to get query against a saved search id.
 
 ## 1.3.0 - 2020-06-02
 

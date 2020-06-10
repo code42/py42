@@ -191,5 +191,5 @@ def _filter_out_none(_dict):
 def _printable_dict(dict_, label=None):
     indented_dict = json_lib.dumps(dict_, indent=4)
     if label:
-        return "{} {}".format(label, indented_dict)
+        return u"{} {}".format(label, indented_dict)
     return indented_dict

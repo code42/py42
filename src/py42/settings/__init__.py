@@ -27,7 +27,6 @@ def set_user_agent_suffix(suffix):
 
 
 class DebugSettings(object):
-    WARNING = logging.WARNING
     INFO = logging.INFO
     DEBUG = logging.DEBUG
     TRACE = logging.DEBUG

@@ -6,7 +6,7 @@ from threading import Lock
 import requests.adapters
 
 import py42.settings as settings
-import py42.settings.debug as debug
+from py42.settings import debug
 from py42._internal.compat import str, urljoin, urlparse
 from py42.exceptions import raise_py42_error
 from py42.response import Py42Response
@@ -175,23 +175,21 @@ class Py42Session(object):
         self._initialized = True
 
     def _print_request(self, method, url, params=None, data=None):
-        if debug.will_print_for(debug.INFO):
-            print(u"{0}{1}".format(str(method).ljust(8), url))
-        if debug.will_print_for(debug.TRACE):
-            if self.headers:
-                _print_dict(self.headers, u"  headers")
-        if debug.will_print_for(debug.DEBUG):
-            if params:
-                _print_dict(params, u"  params")
-            if data:
-                _print_dict(data, u"  data")
+        debug.logger.info(u"{0}{1}".format(str(method).ljust(8), url))
+        if self.headers:
+            debug.logger.debug(_printable_dict(self.headers, u"  headers"))
+        if params:
+            debug.logger.debug(_printable_dict(params, u"  params"))
+        if data:
+            debug.logger.debug(_printable_dict(data, u"  data"))
 
 
 def _filter_out_none(_dict):
     return {key: _dict[key] for key in _dict if _dict[key] is not None}
 
 
-def _print_dict(dict_, label=None):
+def _printable_dict(dict_, label=None):
+    indented_dict = json_lib.dumps(dict_, indent=4)
     if label:
-        print(label, end=" ")
-    print(json_lib.dumps(dict_, indent=4))
+        return "{} {}".format(label, indented_dict)
+    return indented_dict

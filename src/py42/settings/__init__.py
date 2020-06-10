@@ -1,3 +1,4 @@
+import logging
 import sys
 
 from py42.__version__ import __version__
@@ -23,3 +24,25 @@ def get_user_agent_string():
 def set_user_agent_suffix(suffix):
     global _custom_user_suffix
     _custom_user_suffix = u" {0}".format(suffix)
+
+
+class DebugSettings(object):
+    WARNING = logging.WARNING
+    INFO = logging.INFO
+    DEBUG = logging.DEBUG
+    TRACE = logging.DEBUG
+    NONE = logging.NOTSET
+
+    def __init__(self):
+        self.logger = logging.getLogger("py42")
+        self.logger.addHandler(logging.StreamHandler(sys.stderr))
+
+    @property
+    def level(self):
+        return self.logger.level
+
+    @level.setter
+    def level(self, level):
+        self.logger.setLevel(level)
+
+debug = DebugSettings()

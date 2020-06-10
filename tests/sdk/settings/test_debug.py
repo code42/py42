@@ -1,11 +1,19 @@
 import pytest
+import logging
 
 import py42
-import py42.settings.debug as debug
+from py42.settings import debug
 
 
 @pytest.fixture
 def none_enabled():
+    py42.settings.debug.level = debug.NONE
+
+
+@pytest.fixture
+def warning_enabled():
+    py42.settings.debug.level = debug.WARNING
+    yield warning_enabled
     py42.settings.debug.level = debug.NONE
 
 
@@ -30,84 +38,40 @@ def trace_enabled():
     py42.settings.debug.level = debug.NONE
 
 
-@pytest.mark.parametrize("level", [debug.NONE], ids=["NONE"])
-def test_will_print_for_given_none_enabled_with_none_returns_true(none_enabled, level):
-    assert debug.will_print_for(level)
+test_logger_name = "test"
+
+@pytest.fixture
+def custom_logger():
+    default_logger = py42.settings.debug.logger
+    py42.settings.debug.logger = logging.getLogger(test_logger_name)
+    yield custom_logger
+    py42.settings.debug.logger = default_logger
 
 
-@pytest.mark.parametrize(
-    "level", [debug.INFO, debug.DEBUG, debug.TRACE], ids=["INFO", "DEBUG", "TRACE"]
-)
-def test_will_print_for_given_none_enabled_with_level_higher_than_none_returns_false(
-    none_enabled, level
-):
-    assert not debug.will_print_for(level)
+def test_setting_debug_level_to_warning_sets_default_logger_to_warning(warning_enabled):
+    assert debug.logger.level == logging.WARNING
 
+def test_setting_debug_level_to_info_sets_default_logger_to_info(info_enabled):
+    assert debug.logger.level == logging.INFO
 
-@pytest.mark.parametrize("level", [debug.NONE, debug.INFO], ids=["NONE", "INFO"])
-def test_will_print_for_given_info_enabled_with_level_lower_than_or_equal_to_info_returns_true(
-    info_enabled, level
-):
-    assert debug.will_print_for(level)
+def test_setting_debug_level_to_debug_sets_default_logger_to_debug(debug_enabled):
+    assert debug.logger.level == logging.DEBUG
 
+def test_setting_debug_level_to_trace_sets_default_logger_to_debug(debug_enabled):
+    assert debug.logger.level == logging.DEBUG
 
-@pytest.mark.parametrize("level", [debug.DEBUG, debug.TRACE], ids=["DEBUG", "TRACE"])
-def test_will_print_for_given_info_enabled_with_level_higher_than_info_returns_false(
-    info_enabled, level
-):
-    assert not debug.will_print_for(level)
+def test_setting_debug_level_to_warning_sets_custom_logger_to_warning(custom_logger, warning_enabled):
+    assert debug.logger.name == test_logger_name
+    assert debug.logger.level == logging.WARNING
 
+def test_setting_debug_level_to_info_sets_custom_logger_to_info(custom_logger, info_enabled):
+    assert debug.logger.name == test_logger_name
+    assert debug.logger.level == logging.INFO
 
-@pytest.mark.parametrize(
-    "level", [debug.NONE, debug.INFO, debug.DEBUG], ids=["NONE", "INFO", "DEBUG"]
-)
-def test_will_print_for_given_debug_enabled_with_level_lower_than_or_equal_to_debug_returns_true(
-    debug_enabled, level
-):
-    assert debug.will_print_for(level)
+def test_setting_debug_level_to_debug_sets_custom_logger_to_debug(custom_logger, debug_enabled):
+    assert debug.logger.name == test_logger_name
+    assert debug.logger.level == logging.DEBUG
 
-
-@pytest.mark.parametrize("level", [debug.TRACE], ids=["TRACE"])
-def test_will_print_for_given_debug_enabled_with_level_higher_than_debug_returns_false(
-    debug_enabled, level
-):
-    assert not debug.will_print_for(level)
-
-
-@pytest.mark.parametrize(
-    "level",
-    [debug.NONE, debug.INFO, debug.DEBUG, debug.TRACE],
-    ids=["NONE", "INFO", "DEBUG", "TRACE"],
-)
-def test_will_print_for_given_trace_enabled_with_level_lower_than_or_equal_to_trace_returns_true(
-    trace_enabled, level
-):
-    assert debug.will_print_for(level)
-
-
-@pytest.mark.parametrize("level", [-1, 4, 10])
-def test_will_print_for_given_none_level_enabled_with_undefined_level_returns_false(
-    none_enabled, level
-):
-    assert not debug.will_print_for(level)
-
-
-@pytest.mark.parametrize("level", [-1, 4, 10])
-def test_will_print_for_given_info_level_enabled_with_undefined_level_returns_false(
-    info_enabled, level
-):
-    assert not debug.will_print_for(level)
-
-
-@pytest.mark.parametrize("level", [-1, 4, 10])
-def test_will_print_for_given_debug_enabled_with_undefined_level_returns_false(
-    debug_enabled, level
-):
-    assert not debug.will_print_for(level)
-
-
-@pytest.mark.parametrize("level", [-1, 4, 10])
-def test_will_print_for_given_trace_level_enabled_with_undefined_level_returns_false(
-    trace_enabled, level
-):
-    assert not debug.will_print_for(level)
+def test_setting_debug_level_to_trace_sets_custom_logger_to_debug(custom_logger, debug_enabled):
+    assert debug.logger.name == test_logger_name
+    assert debug.logger.level == logging.DEBUG

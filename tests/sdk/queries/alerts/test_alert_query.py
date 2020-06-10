@@ -25,9 +25,7 @@ JSON_QUERY_BASE = u'{{"tenantId": {0}, "groupClause":"{1}", "groups":[{2}], "pgN
 
 
 def build_query_json(group_clause, group_list):
-    return JSON_QUERY_BASE.format(
-        _TENANT_ID, group_clause, group_list, 0, 10000, "desc", "CreatedAt"
-    )
+    return JSON_QUERY_BASE.format(_TENANT_ID, group_clause, group_list, 0, 500, "desc", "CreatedAt")
 
 
 def test_alert_query_repr_does_not_throw_type_error():
@@ -101,16 +99,16 @@ def test_alert_query_str_with_page_num_gives_correct_json_representation(event_f
     alert_query = AlertQuery(event_filter_group)
     alert_query.page_number = 5
     json_query_str = JSON_QUERY_BASE.format(
-        _TENANT_ID, "AND", event_filter_group, 5, 10000, "desc", "CreatedAt"
+        _TENANT_ID, "AND", event_filter_group, 5, 500, "desc", "CreatedAt"
     )
     assert str(alert_query) == json_query_str
 
 
 def test_alert_query_str_with_page_size_gives_correct_json_representation(event_filter_group):
     alert_query = AlertQuery(event_filter_group)
-    alert_query.page_size = 500
+    alert_query.page_size = 250
     json_query_str = JSON_QUERY_BASE.format(
-        _TENANT_ID, "AND", event_filter_group, 0, 500, "desc", "CreatedAt"
+        _TENANT_ID, "AND", event_filter_group, 0, 250, "desc", "CreatedAt"
     )
     assert str(alert_query) == json_query_str
 
@@ -119,7 +117,7 @@ def test_alert_query_str_with_sort_direction_gives_correct_json_representation(e
     alert_query = AlertQuery(event_filter_group)
     alert_query.sort_direction = "asc"
     json_query_str = JSON_QUERY_BASE.format(
-        _TENANT_ID, "AND", event_filter_group, 0, 10000, "asc", "CreatedAt"
+        _TENANT_ID, "AND", event_filter_group, 0, 500, "asc", "CreatedAt"
     )
     assert str(alert_query) == json_query_str
 
@@ -128,7 +126,7 @@ def test_alert_query_str_with_sort_key_gives_correct_json_representation(event_f
     alert_query = AlertQuery(event_filter_group)
     alert_query.sort_key = "some_field_to_sort_by"
     json_query_str = JSON_QUERY_BASE.format(
-        _TENANT_ID, "AND", event_filter_group, 0, 10000, "desc", "some_field_to_sort_by"
+        _TENANT_ID, "AND", event_filter_group, 0, 500, "desc", "some_field_to_sort_by"
     )
     assert str(alert_query) == json_query_str
 
@@ -142,7 +140,7 @@ def test_alert_query_from_dict_gives_correct_json_representation():
     alert_query_dict = {"groupClause": "AND", "groups": [group]}
     alert_query = AlertQuery.from_dict(alert_query_dict)
     json_query_str = JSON_QUERY_BASE.format(
-        _TENANT_ID, "AND", group_str, 0, 10000, "desc", "CreatedAt"
+        _TENANT_ID, "AND", group_str, 0, 500, "desc", "CreatedAt"
     )
     assert str(alert_query) == json_query_str
 
@@ -152,7 +150,7 @@ def test_alert_query_dict_gives_expected_dict_representation(event_filter_group)
     alert_query_query_dict = dict(alert_query)
     assert alert_query_query_dict["groupClause"] == "AND"
     assert alert_query_query_dict["pgNum"] == 0
-    assert alert_query_query_dict["pgSize"] == 10000
+    assert alert_query_query_dict["pgSize"] == 500
     assert alert_query_query_dict["srtDirection"] == "desc"
     assert alert_query_query_dict["srtKey"] == "CreatedAt"
     assert type(alert_query_query_dict["groups"]) == list

@@ -32,9 +32,6 @@ class TestSavedSearchClient(object):
         file_event_client = FileEventClient(mock_session)
         saved_search_client = SavedSearchClient(mock_session, file_event_client)
         saved_search_client.execute(u"test-id")
-        assert (
-            mock_session.get.call_args[0][0] == "/forensic-search/queryservice/api/v1/saved/test-id"
-        )
         assert mock_session.post.call_args[0][0] == "/forensic-search/queryservice/api/v1/fileevent"
 
     def test_execute_calls_post_with_expected_query(self, mock_session, py42_response):
@@ -49,4 +46,14 @@ class TestSavedSearchClient(object):
             posted_data["pgSize"] == 10000
             and posted_data[u"pgNum"] == 1
             and posted_data[u"groups"] == []
+        )
+
+    def test_get_query_calls_get_with_expected_uri(self, mock_session, py42_response):
+        py42_response.text = '{u"searches": [{u"groups": []}]}'
+        mock_session.post.return_value = py42_response
+        file_event_client = FileEventClient(mock_session)
+        saved_search_client = SavedSearchClient(mock_session, file_event_client)
+        saved_search_client.get_query(u"test-id")
+        assert (
+            mock_session.get.call_args[0][0] == "/forensic-search/queryservice/api/v1/saved/test-id"
         )

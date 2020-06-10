@@ -12,7 +12,7 @@ def none_enabled():
 
 @pytest.fixture
 def warning_enabled():
-    py42.settings.debug.level = debug.WARNING
+    py42.settings.debug.level = logging.WARNING
     yield warning_enabled
     py42.settings.debug.level = debug.NONE
 

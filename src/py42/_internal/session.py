@@ -177,18 +177,18 @@ class Py42Session(object):
     def _print_request(self, method, url, params=None, data=None):
         debug.logger.info(u"{0}{1}".format(str(method).ljust(8), url))
         if self.headers:
-            debug.logger.debug(_printable_dict(self.headers, u"  headers"))
+            debug.logger.debug(_format_dict(self.headers, u"  headers"))
         if params:
-            debug.logger.debug(_printable_dict(params, u"  params"))
+            debug.logger.debug(_format_dict(params, u"  params"))
         if data:
-            debug.logger.debug(_printable_dict(data, u"  data"))
+            debug.logger.debug(_format_dict(data, u"  data"))
 
 
 def _filter_out_none(_dict):
     return {key: _dict[key] for key in _dict if _dict[key] is not None}
 
 
-def _printable_dict(dict_, label=None):
+def _format_dict(dict_, label=None):
     indented_dict = json_lib.dumps(dict_, indent=4)
     if label:
         return u"{} {}".format(label, indented_dict)

@@ -8,11 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.4.0 - 2020-06-10
 
 ### Added
 
 - `get_all_org_cold_storage_archives()` function to `ArchiveModule`, available at `sdk.archive.get_all_org_cold_storage_archives()`.
+
+### Fixed
+
+- `AlertQuery` now defaults to a `page_size` of 500. A change made to the backing api of `sdk.alerts.search()` was causing all requests made with the previous default (10000) to fail.
 
 
 ## 1.3.0 - 2020-06-02

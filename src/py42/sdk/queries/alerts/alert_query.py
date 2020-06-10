@@ -23,6 +23,7 @@ class AlertQuery(BaseQuery):
         super(AlertQuery, self).__init__(*args, **kwargs)
         self.sort_key = u"CreatedAt"
         self.page_number = 0
+        self.page_size = 500
         self.sort_direction = u"desc"
 
     def __str__(self):

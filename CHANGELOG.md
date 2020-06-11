@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- Ability for users to provide their own logger for debug logging
+
+### Changed
+
+- Default debug logging moved from print statements to a logger writing to `sys.stderr`
+- Debug logging levels now use standard levels from the `logging` module (old levels still work but are now
+    automatically mapped to appropriate `logging` module level, with both `debug.DEBUG` and `debug.TRACE` being mapped
+    to `logging.DEBUG`, as `DEBUG` is the lowest level of the `logging` module options).
+
 ## 1.4.0 - 2020-06-10
 
 ### Added

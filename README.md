@@ -95,7 +95,8 @@ There are a few default settings that affect the behavior of the client.
 | ---- | ----------- | ------- |
 | verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.| `True`
 | proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.| `None`
-| debug.level | Controls print statements for debugging | `py42.settings.debug.NONE`
+| debug.level | Controls log level | `logging.NOTSET`
+| debug.logger | Controls logger used | `logging.Logger` with `StreamHandler` sending to `sys.stderr`
 | items_per_page | Controls how many items are retrieved per request for methods that loops over several "pages" of items in order to collect them all. | 1000
 
 To override these settings, import `py42.settings` and override values as necessary before creating the client.
@@ -104,8 +105,17 @@ To override these settings, import `py42.settings` and override values as necess
 ```python
 import py42.sdk
 import py42.settings as settings
+import logging
 
 settings.verify_ssl_certs = False
+
+# customize logging
+custom_logger = logging.getLogger("my_app")
+handler = logging.FileHandler("my_app.log")
+custom_logger.addHandler(handler)
+settings.debug.logger = custom_logger
+settings.debug.level = logging.DEBUG
+
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 ```
 

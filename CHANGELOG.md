@@ -14,8 +14,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Ability for users to provide their own logger for debug logging
 
+### Fixed
+
+- An issue that caused requests to `sdk.alerts.rules.get_all()`, `sdk.alerts.rules.get_all_by_name()`, and `sdk.alerts.rules.get_by_observerid()` to fail due to a change made to their backing api.
+
 ### Changed
 
+- The default value of `py42.settings.items_per_page` has been changed to 500 (was 1000).
 - Default debug logging moved from print statements to a logger writing to `sys.stderr`
 - Debug logging levels now use standard levels from the `logging` module (old levels still work but are now
     automatically mapped to appropriate `logging` module level, with both `debug.DEBUG` and `debug.TRACE` being mapped

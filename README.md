@@ -111,7 +111,7 @@ settings.verify_ssl_certs = False
 
 # customize logging
 custom_logger = logging.getLogger("my_app")
-handler = logging.FileHandler("my_app_log.log")
+handler = logging.FileHandler("my_app.log")
 custom_logger.addHandler(handler)
 settings.debug.logger = custom_logger
 settings.debug.level = logging.DEBUG

@@ -279,7 +279,7 @@ class TestAlertClient(object):
             and posted_data["groups"] == []
             and posted_data["groupClause"] == "AND"
             and posted_data["pgNum"] == 0
-            and posted_data["pgSize"] == 1000
+            and posted_data["pgSize"] == 500
             and posted_data["srtKey"] == "key"
             and posted_data["srtDirection"] == "ASC"
         )
@@ -305,7 +305,7 @@ class TestAlertClient(object):
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["groupClause"] == "AND"
             and posted_data["pgNum"] == 0
-            and posted_data["pgSize"] == 1000
+            and posted_data["pgSize"] == 500
             and posted_data["srtKey"] == "key"
             and posted_data["srtDirection"] == "ASC"
         )
@@ -329,7 +329,7 @@ class TestAlertClient(object):
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["groupClause"] == "AND"
             and posted_data["pgNum"] == 0
-            and posted_data["pgSize"] == 1000
+            and posted_data["pgSize"] == 500
             and posted_data["srtKey"] == "CreatedAt"
             and posted_data["srtDirection"] == "DESC"
         )

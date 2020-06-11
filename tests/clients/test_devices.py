@@ -18,7 +18,7 @@ DEFAULT_GET_DEVICES_PARAMS = {
     "incBackupUsage": None,
     "incCounts": True,
     "pgNum": 1,
-    "pgSize": 1000,
+    "pgSize": 500,
     "q": None,
 }
 
@@ -89,5 +89,5 @@ class TestDeviceClient(object):
         ]
         for _ in client.get_all():
             pass
-        py42.settings.items_per_page = 1000
+        py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3

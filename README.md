@@ -97,7 +97,7 @@ There are a few default settings that affect the behavior of the client.
 | proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.| `None`
 | debug.level | Controls log level | `logging.NOTSET`
 | debug.logger | Controls logger used | `logging.Logger` with `StreamHandler` sending to `sys.stderr`
-| items_per_page | Controls how many items are retrieved per request for methods that loops over several "pages" of items in order to collect them all. | 1000
+| items_per_page | Controls how many items are retrieved per request for methods that loops over several "pages" of items in order to collect them all. | 500
 
 To override these settings, import `py42.settings` and override values as necessary before creating the client.
  For example, to disable certificate validation in a dev environment:

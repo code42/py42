@@ -66,7 +66,7 @@ class TestArchiveClient(object):
         ]
         for _ in client.get_all_restore_history(10, "orgId", "123"):
             pass
-        py42.settings.items_per_page = 1000
+        py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
 
     def test_update_cold_storage_purge_date_calls_coldstorage_with_expected_data(
@@ -95,7 +95,7 @@ class TestArchiveClient(object):
         ]
         for _ in client.get_all_org_cold_storage_archives("orgId"):
             pass
-        py42.settings.items_per_page = 1000
+        py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
 
     def test_get_all_org_cold_storage_archives_calls_get_with_expected_uri_and_params(
@@ -110,7 +110,7 @@ class TestArchiveClient(object):
             "orgId": "orgId",
             "incChildOrgs": True,
             "pgNum": 1,
-            "pgSize": 1000,
+            "pgSize": 500,
             "srtDir": "asc",
             "srtKey": "archiveHoldExpireDate",
         }

@@ -16,7 +16,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Fixed
 
-- An issue that caused requests to `sdk.alerts.rules.get_all()`, `sdk.alerts.rules.get_all_by_name()`, and `sdk.alerts.rules.get_by_observerid()` to fail due to a change made to their backing api.
+- An issue that caused requests to `sdk.alerts.rules.get_all()`, `sdk.alerts.rules.get_all_by_name()`, and `sdk.alerts.rules.get_by_observer_id()` to fail due to a change made to their backing api.
 
 ### Changed
 

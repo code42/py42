@@ -51,7 +51,7 @@ class TestOrgClient(object):
         ]
         for _ in client.get_all():
             pass
-        py42.settings.items_per_page = 1000
+        py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
 
     def test_get_org_by_name_returns_expected_org(
@@ -65,7 +65,7 @@ class TestOrgClient(object):
             mock_get_all_empty_response,
         ]
         actual = client.get_by_name("foo")[0]
-        py42.settings.items_per_page = 1000
+        py42.settings.items_per_page = 500
         assert actual["orgUid"] == "123"
 
     def test_get_org_by_name_returns_expected_number_of_orgs(
@@ -79,7 +79,7 @@ class TestOrgClient(object):
             mock_get_all_empty_response,
         ]
         actual = len(client.get_by_name("foo"))
-        py42.settings.items_per_page = 1000
+        py42.settings.items_per_page = 500
         assert actual == 2
 
     def test_get_org_by_name_when_not_found_returns_empty_list(

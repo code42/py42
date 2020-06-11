@@ -16,7 +16,7 @@ DEFAULT_GET_LEGAL_HOLDS_PARAMS = {
     "incBackupUsage": None,
     "incCounts": True,
     "pgNum": 1,
-    "pgSize": 1000,
+    "pgSize": 500,
     "q": None,
 }
 
@@ -83,7 +83,7 @@ class TestLegalHoldClient(object):
         ]
         for _ in client.get_all_matters():
             pass
-        py42.settings.items_per_page = 1000
+        py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
 
     def test_get_all_matter_custodians_calls_get_expected_number_of_times(
@@ -101,5 +101,5 @@ class TestLegalHoldClient(object):
         ]
         for _ in client.get_all_matter_custodians():
             pass
-        py42.settings.items_per_page = 1000
+        py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3

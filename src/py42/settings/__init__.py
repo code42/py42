@@ -9,7 +9,7 @@ proxies = None
 # True, False, or a path to a CA bundle to use.
 verify_ssl_certs = True
 
-items_per_page = 1000
+items_per_page = 500
 
 _custom_user_suffix = u""
 _python_version = u"{0}.{1}.{2}".format(
@@ -43,5 +43,6 @@ class DebugSettings(object):
     @level.setter
     def level(self, level):
         self.logger.setLevel(level)
+
 
 debug = DebugSettings()

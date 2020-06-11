@@ -18,7 +18,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Default debug logging moved from print statements to a logger writing to `sys.stderr`
 - Debug logging levels now use standard levels from the `logging` module (old levels still work but are now
-    automatically mapped to appropriate `logging` module level)
+    automatically mapped to appropriate `logging` module level, with both `debug.DEBUG` and `debug.TRACE` being mapped
+    to `logging.DEBUG`, as `DEBUG` is the lowest level of the `logging` module options).
 
 ## 1.4.0 - 2020-06-10
 

@@ -123,3 +123,16 @@ class DetectionListsModule(object):
         factory = self._microservice_client_factory
         self._detection_list_user_client = factory.get_detection_list_user_client()
         self._detection_list_user_client.remove_cloud_alias(user_id, alias)
+
+    def refresh_user_scim_attributes(self, user_id):
+        """Refresh SCIM attributes for the user.
+
+        Args:
+            user_id (str or int): The Code42 userUid whose attributes you wish to refresh.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        factory = self._microservice_client_factory
+        self._detection_list_user_client = factory.get_detection_list_user_client()
+        return self._detection_list_user_client.refresh(user_id)

@@ -125,10 +125,11 @@ class DetectionListsModule(object):
         self._detection_list_user_client.remove_cloud_alias(user_id, alias)
 
     def refresh_user_scim_attributes(self, user_id):
-        """Refresh SCIM attributes for the user.
+        """Refresh SCIM attributes of a user.
+        `REST documentation <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html?urls.primaryName=v2#/User/UserControllerV2_RefreshUser>`__
 
         Args:
-            user_id (str or int): The Code42 userUid whose attributes you wish to refresh.
+            user_id (str or int): The Code42 userUid of the user whose attributes you wish to refresh.
 
         Returns:
             :class:`py42.response.Py42Response`

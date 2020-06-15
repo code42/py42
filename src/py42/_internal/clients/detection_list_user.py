@@ -187,10 +187,10 @@ class DetectionListUserClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def refresh(self, user_id):
-        """Refresh SCIM attributes for the user.
+        """Refresh SCIM attributes of a user.
 
         Args:
-            user_id (str or int): The user_id whose attributes need to be refreshed.
+            user_id (str or int): The user_id of the user whose attributes need to be refreshed.
 
         Returns:
             :class:`py42.response.Py42Response`

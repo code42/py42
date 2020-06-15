@@ -13,6 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Added
 
 - Ability for users to provide their own logger for debug logging
+- adds `sdk.detectionlists.refresh_user_scim_attributes()` to update user SCIM attributes in detection lists.
 
 ### Fixed
 

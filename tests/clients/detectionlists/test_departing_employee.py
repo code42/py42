@@ -22,7 +22,7 @@ _GET_CASE_DETAILS_RESPONSE = """
     "notes":"notes notes notes",
     "createdAt":"2020-02-14T20:11:29.5563480Z",
     "status":"OPEN",
-    "cloudUsernames":["test.testerson+partners@code42.com","test.s@c42fc.com"],
+    "cloudUsernames":["test.testerson+partners@example.com","test.s@example.com"],
     "departureDate":"2020-02-13",
     "alertsEnabled":true
 }}
@@ -37,12 +37,12 @@ _GET_ALL_CASES_RESPONSE = """
  {{"type$": "DEPARTING_EMPLOYEE_V2",
  "tenantId": {0},
  "userId": "890973079883949999",
- "userName": "test@test.com",
+ "userName": "test@example.com",
  "displayName": "Name",
  "notes": "",
  "createdAt": "2019-10-25T13:31:14.1199010Z",
  "status": "OPEN",
- "cloudUsernames": ["test@cloud.com"],
+ "cloudUsernames": ["test@example.com"],
  "totalBytes": 139856482,
  "numEvents": 11
 }}],

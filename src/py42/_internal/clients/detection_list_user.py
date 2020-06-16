@@ -185,3 +185,19 @@ class DetectionListUserClient(BaseClient):
         }
         uri = self._make_uri(u"/removecloudusernames")
         return self._session.post(uri, data=json.dumps(data))
+
+    def refresh(self, user_id):
+        """Refresh SCIM attributes of a user.
+
+        Args:
+            user_id (str or int): The user_id of the user whose attributes need to be refreshed.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        data = {
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+        }
+        uri = self._make_uri(u"/refresh")
+        return self._session.post(uri, data=json.dumps(data))

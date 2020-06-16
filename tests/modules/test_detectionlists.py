@@ -123,3 +123,13 @@ class TestDetectionListModule(object):
         mock_detection_list_user_client.remove_cloud_alias.assert_called_once_with(
             TEST_USER_ID, "oldalias"
         )
+
+    def test_refresh_user_scim_attributes_calls_user_client_with_expected_values(
+        self, mock_microservice_client_factory, mock_detection_list_user_client
+    ):
+        mock_microservice_client_factory.get_detection_list_user_client.return_value = (
+            mock_detection_list_user_client
+        )
+        module = DetectionListsModule(mock_microservice_client_factory)
+        module.refresh_user_scim_attributes(TEST_USER_ID)
+        mock_detection_list_user_client.refresh.assert_called_once_with(TEST_USER_ID)

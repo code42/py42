@@ -2,7 +2,7 @@ import pytest
 import logging
 
 import py42
-from py42.settings import debug, DebugSettings
+from py42.settings import debug
 
 
 @pytest.fixture
@@ -88,6 +88,5 @@ def test_setting_debug_level_to_trace_sets_custom_logger_to_debug(custom_logger,
 
 
 def test_debug_settings_class_creates_default_logger():
-    test_debug = DebugSettings()
-    assert test_debug.logger.name == "py42"
-    assert test_debug.level == logging.NOTSET
+    assert debug.logger.name == "py42"
+    assert debug.level == logging.NOTSET

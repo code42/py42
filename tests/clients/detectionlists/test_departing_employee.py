@@ -135,7 +135,7 @@ class TestDepartingEmployeeClient(object):
         assert posted_data["userId"] == "999" and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/remove"
 
-    def test_get_all_uses_given_tenant_id_over_current_id(
+    def test_get_all_posts_expected_data_to_expected_url(
         self,
         mock_session,
         user_context,

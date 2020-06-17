@@ -176,8 +176,6 @@ class Py42Session(object):
 
     def _print_request(self, method, url, params=None, data=None):
         debug.logger.info(u"{0}{1}".format(str(method).ljust(8), url))
-        if self.headers:
-            debug.logger.debug(_format_dict(self.headers, u"  headers"))
         if params:
             debug.logger.debug(_format_dict(params, u"  params"))
         if data:

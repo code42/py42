@@ -21,6 +21,7 @@ class ExposureType(FileEventFilterStringField):
     CLOUD_STORAGE = u"CloudStorage"
     REMOVABLE_MEDIA = u"RemovableMedia"
     IS_PUBLIC = u"IsPublic"
+    OUTSIDE_TRUSTED_DOMAINS = u"OutsideTrustedDomains"
 
 
 class ProcessName(FileEventFilterStringField):

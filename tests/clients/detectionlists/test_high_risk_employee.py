@@ -9,7 +9,7 @@ from py42.clients.users import UserClient
 CREATE_USER_SAMPLE_RESPONSE = """
     {"type$":"USER_V2","tenantId":"1d71796f-af5b-4231-9d8e-df6434da4663",
     "userId":"942897397520289999",
-    "userName":"test.employee@test.com",
+    "userName":"test.employee@example.com",
     "displayName":"Test Employee",
     "cloudUsernames":["test.employee@test.com"],"riskFactors":[]}
 """

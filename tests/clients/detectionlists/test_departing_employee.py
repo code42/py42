@@ -20,9 +20,9 @@ _GET_CASE_DETAILS_RESPONSE = """
     "userName":"test.example@example.com",
     "displayName":"Test Testerson",
     "notes":"notes notes notes",
-    "adddAt":"2020-02-14T20:11:29.5563480Z",
+    "createdAt":"2020-02-14T20:11:29.5563480Z",
     "status":"OPEN",
-    "cloudUsernames":["test.testerson+partners@code42.com","test.s@c42fc.com"],
+    "cloudUsernames":["test.testerson+partners@example.com","test.s@example.com"],
     "departureDate":"2020-02-13",
     "alertsEnabled":true
 }}
@@ -37,12 +37,12 @@ _GET_ALL_CASES_RESPONSE = """
  {{"type$": "DEPARTING_EMPLOYEE_V2",
  "tenantId": {0},
  "userId": "890973079883949999",
- "userName": "test@test.com",
+ "userName": "test@example.com",
  "displayName": "Name",
  "notes": "",
- "adddAt": "2019-10-25T13:31:14.1199010Z",
+ "createdAt": "2019-10-25T13:31:14.1199010Z",
  "status": "OPEN",
- "cloudUsernames": ["test@cloud.com"],
+ "cloudUsernames": ["test@example.com"],
  "totalBytes": 139856482,
  "numEvents": 11
 }}],
@@ -135,7 +135,7 @@ class TestDepartingEmployeeClient(object):
         assert posted_data["userId"] == "999" and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/remove"
 
-    def test_get_all_uses_given_tenant_id_over_current_id(
+    def test_get_all_posts_expected_data_to_expected_url(
         self,
         mock_session,
         user_context,

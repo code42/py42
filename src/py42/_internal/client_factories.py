@@ -122,6 +122,9 @@ class MicroserviceClientFactory(object):
             self._pds_client = PreservationDataServiceClient(session)
         return self._pds_client
 
+    def get_storage_node_session(self, host_address):
+        return self._session_factory.create_jwt_session(host_address, self._root_session)
+
     def _get_jwt_session(self, key):
         url = self._get_stored_value(key)
         return self._session_factory.create_jwt_session(url, self._root_session)

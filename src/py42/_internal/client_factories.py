@@ -10,6 +10,7 @@ from py42.clients.detectionlists.departing_employee import DepartingEmployeeClie
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42.clients.file_event import FileEventClient
 from py42.clients.savedsearch import SavedSearchClient
+from py42.clients.pds import PreservationDataServiceClient
 from py42.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
 
 
@@ -65,6 +66,7 @@ class MicroserviceClientFactory(object):
         self._alert_rules_client = None
         self._saved_search_client = None
         self._file_event_session = None
+        self._pds_client = None
 
     def get_alerts_client(self):
         if not self._alerts_client:
@@ -113,6 +115,12 @@ class MicroserviceClientFactory(object):
                 self._get_file_event_session(), self.get_file_event_client()
             )
         return self._saved_search_client
+
+    def get_preservation_data_service_client(self):
+        if not self._pds_client:
+            session = self._get_jwt_session(u"PRESERVATION-DATA-SERVICE_API-URL")
+            self._pds_client = PreservationDataServiceClient(session)
+        return self._pds_client
 
     def _get_jwt_session(self, key):
         url = self._get_stored_value(key)

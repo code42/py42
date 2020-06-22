@@ -4,6 +4,8 @@ from threading import Lock
 from requests.exceptions import HTTPError
 
 from py42.exceptions import Py42SecurityPlanConnectionError, raise_py42_error
+from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
+from py42.sdk.queries.fileevents.filters.file_filter import MD5, SHA256
 
 
 class SecurityModule(object):
@@ -168,6 +170,49 @@ class SecurityModule(object):
         """
         file_event_client = self._microservices_client_factory.get_file_event_client()
         return file_event_client.search(query)
+
+    def _search_by_hash(self, hash, type):
+        query = FileEventQuery.all(type.eq(hash))
+        response = self.search_file_events(query)
+        return response["fileEvents"]
+
+    def _stream_file(self, md5_hash, sha256_hash):
+        file_event_client = self._microservices_client_factory.get_file_event_client()
+        pds_client = self._microservices_client_factory.get_preservation_data_service_client()
+        for device_id, paths in file_event_client.get_file_location_detail_by_sha256(sha256_hash):
+            yield pds_client.find_file_versions(md5_hash, sha256_hash, device_id, paths)
+
+    def stream_file_by_sha256(self, checksum):
+        """Stream file based on SHA256 checksum.
+
+        Args:
+            checksum (str): SHA256 encoded hash of the file.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contains file to download, if available.
+        """
+        events = self._search_by_hash(checksum, SHA256)
+        if not len(events):
+            raise FileNotFoundError(u"No such file found by given hash {0}".format(checksum))
+        md5_hash = events[0][u"md5Checksum"]
+        return self._stream_file(md5_hash, checksum)
+
+    def stream_file_by_md5(self, checksum):
+        """Stream file based on MD5 checksum.
+
+        Args:
+            checksum (str): MD5 encoded hash of the file.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contains file to download, if available.
+        """
+        events = self._search_by_hash(checksum, MD5)
+        if not len(events):
+            raise FileNotFoundError(u"No such file found by given hash {0}".format(checksum))
+        sha256_hash = events[0][u"sha256Checksum"]
+        return self._stream_file(checksum, sha256_hash)
 
     def _get_plan_storage_infos(self, plan_destination_map):
         plan_infos = []

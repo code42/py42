@@ -23,3 +23,13 @@ class FileEventClient(BaseClient):
         query = str(query)
         uri = u"/forensic-search/queryservice/api/v1/fileevent"
         return self._session.post(uri, data=query)
+
+    def get_file_location_detail_by_sha256(self, hash):
+        uri = u"/forensic-search/queryservice/api/v1/filelocations?sha256={0}".format(hash)
+        response = self._session.get(uri)
+        file_name = response[u"locations"][0][u"fileName"]
+        paths = []
+        for location in response[u"locations"]:
+            device_id = location[u"deviceUid"]
+            paths.append("{0}{1}".format(location[u"filePath"], file_name))
+            yield device_id, paths

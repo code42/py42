@@ -3,10 +3,14 @@ from threading import Lock
 
 from requests.exceptions import HTTPError
 
-from py42.exceptions import Py42SecurityPlanConnectionError, raise_py42_error
+from py42.exceptions import (
+    Py42SecurityPlanConnectionError,
+    raise_py42_error,
+    Py42Error,
+    Py42HTTPError,
+)
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters.file_filter import MD5, SHA256
-from py42._internal.clients.storage.storagenode import StorageNodeClient
 
 
 class SecurityModule(object):
@@ -180,56 +184,57 @@ class SecurityModule(object):
     def _find_file_versions(self, md5_hash, sha256_hash):
         file_event_client = self._microservices_client_factory.get_file_event_client()
         pds_client = self._microservices_client_factory.get_preservation_data_service_client()
-        for device_id, paths in file_event_client.get_file_location_detail_by_sha256(sha256_hash):
+        response = file_event_client.get_file_location_detail_by_sha256(sha256_hash)
+        for device_id, paths in parse_file_location_response(response):
             yield pds_client.find_file_versions(md5_hash, sha256_hash, device_id, paths)
 
-    def _stream_file(self, file_generator, file):
+    def _stream_file(self, file_generator):
         for response in file_generator:
             if response.status_code != 200:
                 continue
-            session = self._microservices_client_factory.get_storage_node_session(
-                response[u"storageNodeURL"]
-            )
-            storage_node_client = StorageNodeClient(
-                session,
-                response[u"archiveGuid"],
-                response[u"fileId"],
-                response[u"versionTimestamp"],
-            )
-            token = storage_node_client.get_download_token()
-            return storage_node_client.get_file(response[u"storageNodeURL"], token, file)
-        raise FileNotFoundError("No file available for download.")
+            try:
+                storage_node_client = self._microservices_client_factory.create_storage_preservation_client(
+                    response[u"storageNodeURL"]
+                )
+                token = storage_node_client.get_download_token(
+                    response[u"archiveGuid"], response[u"fileId"], response[u"versionTimestamp"],
+                )
+                return storage_node_client.get_file(str(token))
+            except Py42HTTPError as err:
+                raise_py42_error(err)
+
+        raise Py42Error("No file available for download.")
 
     def stream_file_by_sha256(self, checksum):
         """Stream file based on SHA256 checksum.
 
         Args:
-            checksum (str): SHA256 encoded hash of the file.
+            checksum (str): SHA256 hash of the file.
 
         Returns:
-            Downloads the requested file if found.
+            Returns a stream of the requested file.
         """
         events = self._search_by_hash(checksum, SHA256)
         if not len(events):
             raise FileNotFoundError(u"No file found with SHA256 checksum: {0}".format(checksum))
         md5_hash = events[0][u"md5Checksum"]
 
-        return self._stream_file(self._find_file_versions(md5_hash, checksum), checksum)
+        return self._stream_file(self._find_file_versions(md5_hash, checksum))
 
     def stream_file_by_md5(self, checksum):
         """Stream file based on MD5 checksum.
 
         Args:
-            checksum (str): MD5 encoded hash of the file.
+            checksum (str): MD5 hash of the file.
 
         Returns:
-            Downloads the requested file if found.
+            Returns a stream of the requested file.
         """
         events = self._search_by_hash(checksum, MD5)
         if not len(events):
             raise FileNotFoundError(u"No file found with MD5 checksum: {0}".format(checksum))
         sha256_hash = events[0][u"sha256Checksum"]
-        return self._stream_file(self._find_file_versions(checksum, sha256_hash), checksum)
+        return self._stream_file(self._find_file_versions(checksum, sha256_hash))
 
     def _get_plan_storage_infos(self, plan_destination_map):
         plan_infos = []
@@ -330,6 +335,15 @@ def _get_plans_in_node(destination, node):
         ]
         for plan_uid in node[u"securityPlanUids"]
     }
+
+
+def parse_file_location_response(response):
+    file_name = response[u"locations"][0][u"fileName"]
+    paths = []
+    for location in response[u"locations"]:
+        device_id = location[u"deviceUid"]
+        paths.append("{0}{1}".format(location[u"filePath"], file_name))
+        yield device_id, paths
 
 
 class PlanStorageInfo(object):

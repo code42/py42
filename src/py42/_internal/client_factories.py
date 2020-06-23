@@ -5,12 +5,13 @@ from requests import HTTPError
 from py42._internal.clients import alerts, archive, key_value_store, securitydata
 from py42._internal.clients.alertrules import AlertRulesClient
 from py42._internal.clients.detection_list_user import DetectionListUserClient
+from py42._internal.clients.pds import PreservationDataServiceClient
+from py42._internal.clients.storage.storagenode import StoragePreservationDataClient
 from py42.clients import administration, devices, legalhold, orgs, users
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42.clients.file_event import FileEventClient
 from py42.clients.savedsearch import SavedSearchClient
-from py42.clients.pds import PreservationDataServiceClient
 from py42.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
 
 
@@ -122,8 +123,9 @@ class MicroserviceClientFactory(object):
             self._pds_client = PreservationDataServiceClient(session)
         return self._pds_client
 
-    def get_storage_node_session(self, host_address):
-        return self._session_factory.create_jwt_session(host_address, self._root_session)
+    def create_storage_preservation_client(self, host_address):
+        session = self._session_factory.create_jwt_session(host_address, self._root_session)
+        return StoragePreservationDataClient(session)
 
     def _get_jwt_session(self, key):
         url = self._get_stored_value(key)

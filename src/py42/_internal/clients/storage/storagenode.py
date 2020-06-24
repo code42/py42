@@ -41,6 +41,6 @@ class StoragePreservationDataClient(BaseClient):
         resource = u"GetFile"
         uri = "{0}/{1}{2}".format(self._session.host_address, self._base_uri, resource)
         if token.__contains__(u"PDSDownloadToken="):
-            token = token.replace(u"PDSDownloadToken=", "")
+            token = token.replace(u"PDSDownloadToken= ", "")
         params = {u"PDSDownloadToken": token}
         return requests.get(uri, params=params, stream=True)

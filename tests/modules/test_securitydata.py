@@ -1,4 +1,5 @@
 import pytest
+import json
 
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.securitydata import SecurityClient
@@ -7,13 +8,18 @@ from py42._internal.clients.storage import (
     StorageClientFactory,
     StorageSecurityClient,
 )
+from py42._internal.clients.pds import PreservationDataServiceClient
+from py42._internal.clients.storage.storagenode import StoragePreservationDataClient
 from py42.clients.file_event import FileEventClient
 from py42.modules.securitydata import PlanStorageInfo, SecurityModule
 from py42.response import Py42Response
+from py42.exceptions import Py42Error, Py42ArchiveFileNotFoundError
 
 RAW_QUERY = "RAW JSON QUERY"
 
 USER_UID = "user-uid"
+
+PDS_EXCEPTION_MESSAGE = "No file available for download."
 
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION = """{
         "securityPlanLocationsByDestination": [
@@ -165,6 +171,38 @@ GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODE
             }
         ],
         "userUid": "917354657784339860"
+}"""
+
+
+FILE_EVENTS_RESPONSE = """{
+    "fileEvents":[
+        {
+            "md5Checksum":"mdhash",
+            "sha256Checksum":"shahash"
+        }
+    ]
+}"""
+
+FILE_LOCATION_RESPONSE = """{
+    "locations": [
+        {
+            "fileName": "file1",
+            "deviceUid": "device1",
+            "filePath": "path1"
+        },
+        {
+            "fileName": "file2",
+            "deviceUid": "device2",
+            "filePath": "path2"
+        }
+    ]
+}"""
+
+PDS_FILE_VERSIONS = """{
+    "storageNodeURL": "https://host.com",
+    "archiveGuid": "archiveid",
+    "fileId": "fileid",
+    "versionTimestamp": 12345
 }"""
 
 
@@ -572,3 +610,311 @@ class TestSecurityModule(object):
         )
         _ = security_module.savedsearches
         assert microservice_client_factory.get_saved_search_client.call_count
+
+    @pytest.fixture
+    def file_event_search(self, mocker):
+        response = mocker.MagicMock(spec=Py42Response)
+        response.status_code = 200
+        response.encoding = None
+        response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
+        file_event_response = response
+        file_event_response.text = FILE_EVENTS_RESPONSE
+        return file_event_response
+
+    @pytest.fixture
+    def file_location(self, mocker):
+        response = mocker.MagicMock(spec=Py42Response)
+        response.status_code = 200
+        response.encoding = None
+        response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
+        file_location_response = response
+        file_location_response.text = FILE_LOCATION_RESPONSE
+        return file_location_response
+
+    @pytest.fixture
+    def find_file_version(self, mocker):
+        response = mocker.MagicMock(spec=Py42Response)
+        response.status_code = 200
+        response.encoding = None
+        response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
+        pds_file_version_response = response
+        pds_file_version_response.text = PDS_FILE_VERSIONS
+        return pds_file_version_response
+
+    @pytest.fixture
+    def file_download(self, mocker):
+        response = mocker.MagicMock(spec=Py42Response)
+        response.status_code = 200
+        response.encoding = None
+        response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
+        download_token_response = response
+        download_token_response.text = "PDSDownloadToken=token"
+        return download_token_response
+
+    def test_stream_file_by_sha256_returns_stream_of_file(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+        file_location,
+        find_file_version,
+        file_download,
+    ):
+
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        file_event_client.get_file_location_detail_by_sha256.return_value = file_location
+        microservice_client_factory.get_file_event_client.return_value = file_event_client
+
+        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client.find_file_versions.return_value = find_file_version
+        microservice_client_factory.get_preservation_data_service_client.return_value = pds_client
+
+        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
+        storage_node_client.get_download_token.return_value = file_download
+        storage_node_client.get_file.return_value = b"stream"
+        microservice_client_factory.create_storage_preservation_client.return_value = (
+            storage_node_client
+        )
+
+        response = security_module.stream_file_by_sha256("shahash")
+        assert response == b"stream"
+
+    def test_stream_file_by_sha256_raises_file_not_found_error(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+    ):
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_search.text = "{}"
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        with pytest.raises(Py42ArchiveFileNotFoundError):
+            security_module.stream_file_by_sha256("shahash")
+
+    def test_stream_file_by_sha256_raises_py42_error_when_file_location_returns_empty_response(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+        file_location,
+    ):
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        file_location.text = """{"locations": []}"""
+        file_event_client.get_file_location_detail_by_sha256.return_value = file_location
+        microservice_client_factory.get_file_event_client.return_value = file_event_client
+        with pytest.raises(Py42Error) as e:
+            security_module.stream_file_by_sha256("shahash")
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+
+    def test_stream_file_by_sha256_raises_py42_error_when_find_file_versions_returns_204_status_code(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+        file_location,
+        find_file_version,
+    ):
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        file_event_client.get_file_location_detail_by_sha256.return_value = file_location
+        microservice_client_factory.get_file_event_client.return_value = file_event_client
+
+        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        find_file_version.status_code = 204
+        pds_client.find_file_versions.return_value = find_file_version
+        microservice_client_factory.get_preservation_data_service_client.return_value = pds_client
+
+        with pytest.raises(Py42Error) as e:
+            security_module.stream_file_by_sha256("shahash")
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+
+    def test_stream_file_by_sha256_raises_py42_error_when_file_download_returns_failure_response(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+        file_location,
+        find_file_version,
+        file_download,
+        error_response,
+    ):
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        file_event_client.get_file_location_detail_by_sha256.return_value = file_location
+        microservice_client_factory.get_file_event_client.return_value = file_event_client
+
+        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client.find_file_versions.return_value = find_file_version
+        microservice_client_factory.get_preservation_data_service_client.return_value = pds_client
+
+        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
+        storage_node_client.get_download_token.return_value = file_download
+        storage_node_client.get_file.side_effect = error_response
+        microservice_client_factory.create_storage_preservation_client.return_value = (
+            storage_node_client
+        )
+
+        with pytest.raises(Py42Error) as e:
+            security_module.stream_file_by_sha256("shahash")
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+
+    def test_stream_file_by_md5_returns_stream_of_file(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+        file_location,
+        find_file_version,
+        file_download,
+    ):
+
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        file_event_client.get_file_location_detail_by_sha256.return_value = file_location
+        microservice_client_factory.get_file_event_client.return_value = file_event_client
+
+        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client.find_file_versions.return_value = find_file_version
+        microservice_client_factory.get_preservation_data_service_client.return_value = pds_client
+
+        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
+        storage_node_client.get_download_token.return_value = file_download
+        storage_node_client.get_file.return_value = b"stream"
+        microservice_client_factory.create_storage_preservation_client.return_value = (
+            storage_node_client
+        )
+
+        response = security_module.stream_file_by_md5("md5hash")
+        assert response == b"stream"
+
+    def test_stream_file_by_md5_raises_file_not_found_error(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+    ):
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_search.text = "{}"
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        with pytest.raises(Py42ArchiveFileNotFoundError):
+            security_module.stream_file_by_md5("md5hash")
+
+    def test_stream_file_by_md5_raises_py42_error_when_file_location_returns_empty_response(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+        file_location,
+    ):
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        file_location.text = """{"locations": []}"""
+        file_event_client.get_file_location_detail_by_sha256.return_value = file_location
+        microservice_client_factory.get_file_event_client.return_value = file_event_client
+        with pytest.raises(Py42Error) as e:
+            security_module.stream_file_by_md5("md5hash")
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+
+    def test_stream_file_by_md5_raises_py42_error_when_find_file_versions_returns_204_status_code(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+        file_location,
+        find_file_version,
+    ):
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        file_event_client.get_file_location_detail_by_sha256.return_value = file_location
+        microservice_client_factory.get_file_event_client.return_value = file_event_client
+
+        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        find_file_version.status_code = 204
+        pds_client.find_file_versions.return_value = find_file_version
+        microservice_client_factory.get_preservation_data_service_client.return_value = pds_client
+
+        with pytest.raises(Py42Error) as e:
+            security_module.stream_file_by_md5("md5hash")
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+
+    def test_stream_file_by_md5_raises_py42_error_when_file_download_returns_failure_response(
+        self,
+        mocker,
+        security_client,
+        storage_client_factory,
+        microservice_client_factory,
+        file_event_search,
+        file_location,
+        find_file_version,
+        file_download,
+        error_response,
+    ):
+        security_module = SecurityModule(
+            security_client, storage_client_factory, microservice_client_factory
+        )
+        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client.search.return_value = file_event_search
+        file_event_client.get_file_location_detail_by_sha256.return_value = file_location
+        microservice_client_factory.get_file_event_client.return_value = file_event_client
+
+        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client.find_file_versions.return_value = find_file_version
+        microservice_client_factory.get_preservation_data_service_client.return_value = pds_client
+
+        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
+        storage_node_client.get_download_token.return_value = file_download
+        storage_node_client.get_file.side_effect = error_response
+        microservice_client_factory.create_storage_preservation_client.return_value = (
+            storage_node_client
+        )
+
+        with pytest.raises(Py42Error) as e:
+            security_module.stream_file_by_md5("md5hash")
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE

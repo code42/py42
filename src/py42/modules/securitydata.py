@@ -8,6 +8,7 @@ from py42.exceptions import (
     raise_py42_error,
     Py42Error,
     Py42HTTPError,
+    Py42ArchiveFileNotFoundError,
 )
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters.file_filter import MD5, SHA256
@@ -185,8 +186,13 @@ class SecurityModule(object):
         file_event_client = self._microservices_client_factory.get_file_event_client()
         pds_client = self._microservices_client_factory.get_preservation_data_service_client()
         response = file_event_client.get_file_location_detail_by_sha256(sha256_hash)
-        for device_id, paths in parse_file_location_response(response):
-            yield pds_client.find_file_versions(md5_hash, sha256_hash, device_id, paths)
+
+        for device_id, paths in _parse_file_location_response(response):
+            try:
+                yield pds_client.find_file_versions(md5_hash, sha256_hash, device_id, paths)
+            except Py42HTTPError:
+                pass
+        raise StopIteration
 
     def _stream_file(self, file_generator):
         for response in file_generator:
@@ -200,9 +206,8 @@ class SecurityModule(object):
                     response[u"archiveGuid"], response[u"fileId"], response[u"versionTimestamp"],
                 )
                 return storage_node_client.get_file(str(token))
-            except Py42HTTPError as err:
-                raise_py42_error(err)
-
+            except HTTPError:
+                pass
         raise Py42Error("No file available for download.")
 
     def stream_file_by_sha256(self, checksum):
@@ -216,7 +221,7 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, SHA256)
         if not len(events):
-            raise FileNotFoundError(u"No file found with SHA256 checksum: {0}".format(checksum))
+            raise Py42ArchiveFileNotFoundError(checksum, "")
         md5_hash = events[0][u"md5Checksum"]
 
         return self._stream_file(self._find_file_versions(md5_hash, checksum))
@@ -232,7 +237,7 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, MD5)
         if not len(events):
-            raise FileNotFoundError(u"No file found with MD5 checksum: {0}".format(checksum))
+            raise Py42ArchiveFileNotFoundError(checksum, "")
         sha256_hash = events[0][u"sha256Checksum"]
         return self._stream_file(self._find_file_versions(checksum, sha256_hash))
 
@@ -337,14 +342,15 @@ def _get_plans_in_node(destination, node):
     }
 
 
-def parse_file_location_response(response):
+def _parse_file_location_response(response):
 
-    paths = []
     for location in response[u"locations"]:
+        paths = []
         file_name = location[u"fileName"]
         device_id = location[u"deviceUid"]
         paths.append("{0}{1}".format(location[u"filePath"], file_name))
         yield device_id, paths
+    raise StopIteration
 
 
 class PlanStorageInfo(object):

@@ -26,3 +26,13 @@ class TestFileEventClient(object):
         session.post.return_value = successful_response
         client.search(RAW_UNICODE_QUERY)
         session.post.assert_called_once_with(FILE_EVENT_URI, data=RAW_UNICODE_QUERY)
+
+    def test_get_file_location_detail_by_sha256_calls_get_with_hash(
+        self, session, successful_response
+    ):
+        client = FileEventClient(session)
+        session.get.return_value = successful_response
+        client.get_file_location_detail_by_sha256("abc")
+        session.get.assert_called_once_with(
+            u"/forensic-search/queryservice/api/v1/filelocations", params={"sha256": "abc"}
+        )

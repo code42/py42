@@ -262,3 +262,12 @@ class TestMicroserviceClientFactory(object):
         )
         factory.get_saved_search_client()
         session_factory.create_jwt_session.assert_called_once_with(FILE_EVENTS_URL, mock_session)
+
+    def test_create_storage_preservation_client(
+        self, mock_session, user_context, user_client, session_factory
+    ):
+        factory = MicroserviceClientFactory(
+            TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+        )
+        factory.create_storage_preservation_client("https://host.com")
+        session_factory.create_jwt_session.assert_called_once_with("https://host.com", mock_session)

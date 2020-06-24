@@ -190,7 +190,7 @@ class SecurityModule(object):
 
     def _stream_file(self, file_generator):
         for response in file_generator:
-            if response.status_code != 200:
+            if response.status_code == 204:
                 continue
             try:
                 storage_node_client = self._microservices_client_factory.create_storage_preservation_client(
@@ -338,9 +338,10 @@ def _get_plans_in_node(destination, node):
 
 
 def parse_file_location_response(response):
-    file_name = response[u"locations"][0][u"fileName"]
+
     paths = []
     for location in response[u"locations"]:
+        file_name = location[u"fileName"]
         device_id = location[u"deviceUid"]
         paths.append("{0}{1}".format(location[u"filePath"], file_name))
         yield device_id, paths

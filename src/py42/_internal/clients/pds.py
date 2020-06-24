@@ -16,9 +16,9 @@ class PreservationDataServiceClient(BaseClient):
         """
 
         data = {
-            "fileSHA256": file_sha256,
-            "fileMD5": file_md5,
-            "devicePaths": [{"deviceGuid": device_id, "paths": paths}],
+            u"fileSHA256": file_sha256,
+            u"fileMD5": file_md5,
+            u"devicePaths": [{u"deviceGuid": device_id, u"paths": paths}],
         }
         uri = u"/api/v1/FindAvailableVersion"
         return self._session.post(uri, json=data)

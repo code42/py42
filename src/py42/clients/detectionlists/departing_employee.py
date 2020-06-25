@@ -80,8 +80,8 @@ class DepartingEmployeeClient(BaseClient):
 
         Args:
             filter_type (str, optional): Valid filter types. Defaults to None.
-            sort_key (str, optional): Sort results based by field. Defaults to None.
-            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
+            sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
             page_num (str or int, optional): The page number to request. Defaults to None.
             page_size (str or int, optional): The items to have per page. Defaults to None.
 
@@ -102,8 +102,8 @@ class DepartingEmployeeClient(BaseClient):
 
         Args:
             filter_type (str, optional): Valid filter types. Defaults to None.
-            sort_key (str, optional): Sort results based by field. Defaults to None.
-            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
+            sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

@@ -117,9 +117,9 @@ class HighRiskEmployeeClient(BaseClient):
         """Search High Risk Employee list. Filter results by filter_type.
 
         Args:
-            filter_type (str): Valid filter types.
-            sort_key (str): Sort results based by field.
-            sort_direction (str): ``ASC`` or ``DESC``.
+            filter_type (str, optional): Valid filter types. Defaults to "OPEN".
+            sort_key (str, optional): Sort results based by field. Defaults to None.
+            sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

@@ -90,7 +90,7 @@ class HighRiskEmployeeClient(BaseClient):
         sort_key=None,
         sort_direction=None,
         page_num=None,
-        page_size=100,
+        page_size=None,
     ):
         """Get a single page of High Risk Employees.
 
@@ -99,7 +99,7 @@ class HighRiskEmployeeClient(BaseClient):
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
             page_num (str or int, optional): The page number to request. Defaults to None.
-            page_size (str or int, optional): The items to have per page. Defaults to 100.
+            page_size (str or int, optional): The items to have per page. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -143,7 +143,7 @@ class HighRiskEmployeeClient(BaseClient):
         sort_key=None,
         sort_direction=None,
         page_num=None,
-        page_size=100,
+        page_size=None,
     ):
         # Overwriting page_size since default value 1000 returns error
         data = {

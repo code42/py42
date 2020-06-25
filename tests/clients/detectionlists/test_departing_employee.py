@@ -172,7 +172,6 @@ class TestDepartingEmployeeClient(object):
             mock_session, user_context, mock_detection_list_user_client
         )
         client.get_departing_employees_page(
-            TENANT_ID_FROM_RESPONSE,
             filter_type="OPEN",
             sort_key="CREATED_AT",
             sort_direction="DESC",

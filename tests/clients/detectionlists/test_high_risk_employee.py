@@ -168,7 +168,6 @@ class TestHighRiskEmployeeClient(object):
             mock_session, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.get_high_risk_employees_page(
-            tenant_id,
             filter_type="NEW_FILTER",
             page_num=3,
             page_size=10,

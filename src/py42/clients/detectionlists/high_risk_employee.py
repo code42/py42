@@ -86,6 +86,45 @@ class HighRiskEmployeeClient(BaseClient):
 
     def get_high_risk_employees_page(
         self,
+        filter_type=None,
+        sort_key=None,
+        sort_direction=None,
+        page_num=None,
+        page_size=100,
+    ):
+        return self._get_high_risk_employees_page(
+            tenant_id=self._user_context.get_current_tenant_id(),
+            filter_type=filter_type,
+            sort_key=sort_key,
+            sort_direction=sort_direction,
+            page_num=page_num,
+            page_size=page_size,
+        )
+
+    def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
+        """Search High Risk Employee list. Filter results by filter_type.
+
+        Args:
+            filter_type (str): Valid filter types.
+            sort_key (str): Sort results based by field.
+            sort_direction (str): ``ASC`` or ``DESC``
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of users.
+        """
+
+        return get_all_pages(
+            self._get_high_risk_employees_page,
+            u"items",
+            tenant_id=self._user_context.get_current_tenant_id(),
+            filter_type=filter_type,
+            sort_key=sort_key,
+            sort_direction=sort_direction,
+        )
+
+    def _get_high_risk_employees_page(
+        self,
         tenant_id,
         filter_type=None,
         sort_key=None,
@@ -105,25 +144,3 @@ class HighRiskEmployeeClient(BaseClient):
 
         uri = self._make_uri(u"/search")
         return self._session.post(uri, data=json.dumps(data))
-
-    def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
-        """Search High Risk Employee list. Filter results by filter_type.
-
-        Args:
-            filter_type (str): Valid filter types.
-            sort_key (str): Sort results based by field.
-            sort_direction (str): ``ASC`` or ``DESC``
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of users.
-        """
-
-        return get_all_pages(
-            self.get_high_risk_employees_page,
-            u"items",
-            tenant_id=self._user_context.get_current_tenant_id(),
-            filter_type=filter_type,
-            sort_key=sort_key,
-            sort_direction=sort_direction,
-        )

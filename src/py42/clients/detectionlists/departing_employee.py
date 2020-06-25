@@ -70,24 +70,20 @@ class DepartingEmployeeClient(BaseClient):
 
     def get_departing_employees_page(
         self,
-        tenant_id=None,
         filter_type=None,
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
         page_num=None,
         page_size=100,
     ):
-
-        uri = self._uri_prefix.format(u"search")
-        data = {
-            u"tenantId": tenant_id,
-            u"pgSize": page_size,
-            u"pgNum": page_num,
-            u"filterType": filter_type,
-            u"srtKey": sort_key,
-            u"srtDirection": sort_direction,
-        }
-        return self._session.post(uri, data=json.dumps(data))
+        return self._get_departing_employees_page(
+            tenant_id=self._user_context.get_current_tenant_id(),
+            filter_type=filter_type,
+            sort_key=sort_key,
+            sort_direction=sort_direction,
+            page_num=page_num,
+            page_size=page_size,
+        )
 
     def get_all(self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"):
         """Gets all Departing Employees.
@@ -105,7 +101,7 @@ class DepartingEmployeeClient(BaseClient):
             that each contain a page of departing employees.
         """
         return get_all_pages(
-            self.get_departing_employees_page,
+            self._get_departing_employees_page,
             u"items",
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
@@ -113,6 +109,26 @@ class DepartingEmployeeClient(BaseClient):
             sort_direction=sort_direction,
             page_size=100,
         )
+
+    def _get_departing_employees_page(
+        self,
+        tenant_id=None,
+        filter_type=None,
+        sort_key=u"CREATED_AT",
+        sort_direction=u"DESC",
+        page_num=None,
+        page_size=100,
+    ):
+        uri = self._uri_prefix.format(u"search")
+        data = {
+            u"tenantId": tenant_id,
+            u"pgSize": page_size,
+            u"pgNum": page_num,
+            u"filterType": filter_type,
+            u"srtKey": sort_key,
+            u"srtDirection": sort_direction,
+        }
+        return self._session.post(uri, data=json.dumps(data))
 
     def set_alerts_enabled(self, alerts_enabled=True):
         """Enable or disable email alerting on Departing Employee exposure events.

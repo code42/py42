@@ -74,7 +74,7 @@ class DepartingEmployeeClient(BaseClient):
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
         page_num=None,
-        page_size=100,
+        page_size=None,
     ):
         """Get a single page of Departing Employees.
 
@@ -83,7 +83,7 @@ class DepartingEmployeeClient(BaseClient):
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
             page_num (str or int, optional): The page number to request. Defaults to None.
-            page_size (str or int, optional): The items to have per page. Defaults to 100.
+            page_size (str or int, optional): The items to have per page. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -126,7 +126,7 @@ class DepartingEmployeeClient(BaseClient):
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
         page_num=None,
-        page_size=100,
+        page_size=None,
     ):
         uri = self._uri_prefix.format(u"search")
         data = {

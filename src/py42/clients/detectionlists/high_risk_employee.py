@@ -92,6 +92,18 @@ class HighRiskEmployeeClient(BaseClient):
         page_num=None,
         page_size=100,
     ):
+        """Get a single page of High Risk Employees.
+
+        Args:
+            filter_type (str, optional): Valid filter types. Defaults to None.
+            sort_key (str, optional): Sort results based by field. Defaults to None.
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
+            page_num (str or int, optional): The page number to request. Defaults to None.
+            page_size (str or int, optional): The items to have per page. Defaults to 100.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
         return self._get_high_risk_employees_page(
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
@@ -107,7 +119,7 @@ class HighRiskEmployeeClient(BaseClient):
         Args:
             filter_type (str): Valid filter types.
             sort_key (str): Sort results based by field.
-            sort_direction (str): ``ASC`` or ``DESC``
+            sort_direction (str): ``ASC`` or ``DESC``.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -121,6 +133,7 @@ class HighRiskEmployeeClient(BaseClient):
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
+            page_size=100,
         )
 
     def _get_high_risk_employees_page(

@@ -76,6 +76,18 @@ class DepartingEmployeeClient(BaseClient):
         page_num=None,
         page_size=100,
     ):
+        """Get a single page of Departing Employees.
+
+        Args:
+            filter_type (str, optional): Valid filter types. Defaults to None.
+            sort_key (str, optional): Sort results based by field. Defaults to None.
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
+            page_num (str or int, optional): The page number to request. Defaults to None.
+            page_size (str or int, optional): The items to have per page. Defaults to 100.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
         return self._get_departing_employees_page(
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
@@ -89,12 +101,9 @@ class DepartingEmployeeClient(BaseClient):
         """Gets all Departing Employees.
 
         Args:
-            filter_type (str, optional): Filter results by status. Defaults to "OPEN".
-            sort_key (str, optional): Key to sort results on. Options: (``CREATED_AT``,
-                ``DEPARTURE_DATE``, ``DISPLAY_NAME``, ``NUM_EVENTS``, ``TOTAL_BYTES``). Defaults to
-                ``CREATED_AT``.
-            sort_direction (str, optional): Sort direction. Options: (``ASC``, ``DESC``). Defaults
-                to ``DESC``.
+            filter_type (str, optional): Valid filter types. Defaults to None.
+            sort_key (str, optional): Sort results based by field. Defaults to None.
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

@@ -84,17 +84,16 @@ class HighRiskEmployeeClient(BaseClient):
         uri = self._make_uri(u"/get")
         return self._session.post(uri, data=json.dumps(data))
 
-    def _get_high_risk_employees_page(
+    def get_high_risk_employees_page(
         self,
         tenant_id,
         filter_type=None,
         sort_key=None,
         sort_direction=None,
         page_num=None,
-        page_size=None,
+        page_size=100,
     ):
         # Overwriting page_size since default value 1000 returns error
-        page_size = 100
         data = {
             u"tenantId": tenant_id,
             u"filterType": filter_type,
@@ -121,7 +120,7 @@ class HighRiskEmployeeClient(BaseClient):
         """
 
         return get_all_pages(
-            self._get_high_risk_employees_page,
+            self.get_high_risk_employees_page,
             u"items",
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,

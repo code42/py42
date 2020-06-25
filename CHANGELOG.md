@@ -10,7 +10,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
 - Make `ExposureType.OUTSIDE_TRUSTED_DOMAINS` constant available.
+- Exposed methods `get_high_risk_employee_page()` and `get_departing_employee_page()` that accepts `pg_num` and
+    `pg_size` for getting individual pages.
 
 ## 1.5.1 - 2020-06-17
 

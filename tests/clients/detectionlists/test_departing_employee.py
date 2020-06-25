@@ -161,6 +161,38 @@ class TestDepartingEmployeeClient(object):
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/search"
         assert mock_session.post.call_count == 1
 
+    def test_get_departing_employee_page_posts_data_to_expected_url(
+        self,
+        mock_session,
+        user_context,
+        mock_get_all_cases_response,
+        mock_detection_list_user_client,
+    ):
+        client = DepartingEmployeeClient(
+            mock_session, user_context, mock_detection_list_user_client
+        )
+        client.get_departing_employees_page(
+            TENANT_ID_FROM_RESPONSE,
+            filter_type="OPEN",
+            sort_key="CREATED_AT",
+            sort_direction="DESC",
+            page_num=1,
+            page_size=100,
+        )
+        mock_session.post.return_value = mock_get_all_cases_response
+        first_call = mock_session.post.call_args_list[0]
+        posted_data = json.loads(first_call[1]["data"])
+        assert (
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and posted_data["pgSize"] == 100
+            and posted_data["pgNum"] == 1
+            and posted_data["filterType"] == "OPEN"
+            and posted_data["srtKey"] == "CREATED_AT"
+            and posted_data["srtDirection"] == "DESC"
+        )
+        assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/search"
+        assert mock_session.post.call_count == 1
+
     def test_set_alerts_enabled_posts_expected_data(
         self,
         mock_session,

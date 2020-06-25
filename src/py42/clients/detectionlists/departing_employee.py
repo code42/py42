@@ -68,20 +68,20 @@ class DepartingEmployeeClient(BaseClient):
         data = {u"userId": user_id, u"tenantId": tenant_id}
         return self._session.post(uri, data=json.dumps(data))
 
-    def _get_departing_employees_page(
+    def get_departing_employees_page(
         self,
         tenant_id=None,
         filter_type=None,
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
         page_num=None,
-        page_size=None,
+        page_size=100,
     ):
 
         uri = self._uri_prefix.format(u"search")
         data = {
             u"tenantId": tenant_id,
-            u"pgSize": 100,
+            u"pgSize": page_size,
             u"pgNum": page_num,
             u"filterType": filter_type,
             u"srtKey": sort_key,
@@ -105,12 +105,13 @@ class DepartingEmployeeClient(BaseClient):
             that each contain a page of departing employees.
         """
         return get_all_pages(
-            self._get_departing_employees_page,
+            self.get_departing_employees_page,
             u"items",
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
+            page_size=100,
         )
 
     def set_alerts_enabled(self, alerts_enabled=True):

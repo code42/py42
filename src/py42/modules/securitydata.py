@@ -192,7 +192,6 @@ class SecurityModule(object):
                 yield pds_client.find_file_versions(md5_hash, sha256_hash, device_id, paths)
             except Py42HTTPError:
                 pass
-        raise StopIteration
 
     def _stream_file(self, file_generator):
         for response in file_generator:
@@ -350,7 +349,6 @@ def _parse_file_location_response(response):
         device_id = location[u"deviceUid"]
         paths.append("{0}{1}".format(location[u"filePath"], file_name))
         yield device_id, paths
-    raise StopIteration
 
 
 class PlanStorageInfo(object):

@@ -8,7 +8,7 @@ class PreservationDataServiceClient(BaseClient):
         Args:
             file_md5 (str): MD5 encoded hash of the file.
             file_sha256 (str): SHA256 encoded hash of the file.
-            device_id (str): Device id.
+            device_id (str): Id of the device where the files are from.
             paths (str): File path with filename to fetch.
 
         Returns:

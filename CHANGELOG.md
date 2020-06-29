@@ -14,6 +14,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Make `ExposureType.OUTSIDE_TRUSTED_DOMAINS` constant available.
 
+### Changed
+
+- `email` is now a required param on `py42.users.create_user()`.
+
 ### Removed
 
 - Faulty `py42.orgs.get_by_name()` method. Use `py42.orgs.get_all()` and/or any of the other `get_by_()` methods.

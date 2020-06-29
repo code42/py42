@@ -14,9 +14,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Make `ExposureType.OUTSIDE_TRUSTED_DOMAINS` constant available.
 
-### Changed
+### Removed
 
-- `py42.orgs.get_by_name()` renamed to `py42.orgs.get_all_by_name()` and now returns a generator of `Py42Response` objects.
+- Faulty `py42.orgs.get_by_name()` method. Use `py42.orgs.get_all()` and/or any of the other `get_by_()` methods.
 
 ## 1.5.1 - 2020-06-17
 

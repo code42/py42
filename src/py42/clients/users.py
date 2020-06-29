@@ -38,6 +38,8 @@ class UserClient(BaseClient):
         """
 
         uri = u"/api/User"
+        if email is None:
+            email = username
         data = {
             u"orgUid": org_uid,
             u"username": username,

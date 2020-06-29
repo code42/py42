@@ -78,7 +78,8 @@ class OrgClient(BaseClient):
         response = self.get_all(**kwargs)
         for page in response:
             page[u"orgs"] = [o for o in page[u"orgs"] if o[u"orgName"] == org_name]
-            page._data_root.pop("totalCount")
+            if page._data_root.get("totalCount"):
+                page._data_root.pop("totalCount")
             yield page
 
     def _get_page(self, page_num=None, page_size=None, **kwargs):

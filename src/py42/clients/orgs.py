@@ -71,8 +71,8 @@ class OrgClient(BaseClient):
             org_name (str): A name of an organization.
 
         Returns:
-            list: A list of :class:`py42.response.Py42Response` objects each containing an
-            organization that has the given name.
+            list: A list of all the organizations with the given name. If no organizations found,
+            returns the empty list.
         """
         found_orgs = []
         response = self.get_all(**kwargs)

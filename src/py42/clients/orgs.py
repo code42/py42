@@ -63,7 +63,7 @@ class OrgClient(BaseClient):
         params = dict(idType=u"orgUid", **kwargs)
         return self._session.get(uri, params=params)
 
-    def get_by_name(self, org_name, **kwargs):
+    def get_all_by_name(self, org_name, **kwargs):
         """Gets the organization with the given name.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
@@ -71,17 +71,15 @@ class OrgClient(BaseClient):
             org_name (str): A name of an organization.
 
         Returns:
-            list: A list of all the organizations with the given name. If no organizations found,
-            returns the empty list.
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of organizations with the given name.
         """
         found_orgs = []
         response = self.get_all(**kwargs)
         for page in response:
-            org_list = page[u"orgs"]
-            for org in org_list:
-                if org[u"orgName"] == org_name:
-                    found_orgs.append(org)
-        return found_orgs
+            page[u"orgs"] = [o for o in page[u"orgs"] if o[u"orgName"] == org_name]
+            page._data_root.pop("totalCount")
+            yield page
 
     def _get_page(self, page_num=None, page_size=None, **kwargs):
         uri = u"/api/Org"

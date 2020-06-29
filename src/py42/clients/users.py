@@ -13,7 +13,7 @@ class UserClient(BaseClient):
         self,
         org_uid,
         username,
-        email=None,
+        email,
         password=None,
         first_name=None,
         last_name=None,

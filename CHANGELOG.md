@@ -10,7 +10,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
 - Make `ExposureType.OUTSIDE_TRUSTED_DOMAINS` constant available.
+
+### Changed
+- `email` is now a required param on `py42.users.create_user()`.
 
 ## 1.5.1 - 2020-06-17
 

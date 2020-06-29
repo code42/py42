@@ -38,7 +38,7 @@ class TestStoragePreservationDataClient(object):
     def test_get_file_calls_get_with_valid_params(self, mock_session, mock_request):
         mock_session.host_address = "https://host.com"
         client = StoragePreservationDataClient(mock_session)
-        client.get_file("PDSDownloadToken= token")
+        client.get_file("PDSDownloadToken=token")
         mock_request.assert_called_once_with(
             "https://host.com/c42api/v3/GetFile", params={"PDSDownloadToken": "token"}, stream=True
         )

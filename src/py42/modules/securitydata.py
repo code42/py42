@@ -10,6 +10,7 @@ from py42.exceptions import (
     Py42HTTPError,
     Py42ArchiveFileNotFoundError,
 )
+from py42.settings import debug
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters.file_filter import MD5, SHA256
 
@@ -190,7 +191,8 @@ class SecurityModule(object):
         for device_id, paths in _parse_file_location_response(response):
             try:
                 yield pds_client.find_file_versions(md5_hash, sha256_hash, device_id, paths)
-            except Py42HTTPError:
+            except Py42HTTPError as err:
+                debug.logger.warning("PDS, fetch file version API failed. Error: ", err)
                 pass
 
     def _stream_file(self, file_generator):
@@ -205,7 +207,8 @@ class SecurityModule(object):
                     response[u"archiveGuid"], response[u"fileId"], response[u"versionTimestamp"],
                 )
                 return storage_node_client.get_file(str(token))
-            except HTTPError:
+            except HTTPError as err:
+                debug.logger.warning("PDS stream file token API failed, Error:", err)
                 pass
         raise Py42Error("No file available for download.")
 

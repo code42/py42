@@ -1,5 +1,9 @@
-from py42.clients import BaseClient
 import requests
+
+from py42.util import format_dict
+
+from py42.settings import debug
+from py42.clients import BaseClient
 
 
 class StoragePreservationDataClient(BaseClient):
@@ -39,8 +43,12 @@ class StoragePreservationDataClient(BaseClient):
             Returns a stream of the requested token.
         """
         resource = u"GetFile"
-        uri = "{0}/{1}{2}".format(self._session.host_address, self._base_uri, resource)
+        uri = u"{0}/{1}{2}".format(self._session.host_address, self._base_uri, resource)
         if u"PDSDownloadToken=" in token:
-            token = token.replace(u"PDSDownloadToken= ", "")
-        params = {u"PDSDownloadToken": token}
+            replaced_token = token.replace(u"PDSDownloadToken=", "")
+        else:
+            replaced_token = token
+        params = {u"PDSDownloadToken": replaced_token}
+        debug.logger.info(u"{0}{1}".format(str("GET").ljust(8), uri))
+        debug.logger.debug(format_dict(params, u"  params"))
         return requests.get(uri, params=params, stream=True)

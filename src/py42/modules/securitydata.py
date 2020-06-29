@@ -181,18 +181,24 @@ class SecurityModule(object):
     def _search_by_hash(self, hash, type):
         query = FileEventQuery.all(type.eq(hash))
         response = self.search_file_events(query)
-        return response["fileEvents"]
+        return response[u"fileEvents"]
 
     def _find_file_versions(self, md5_hash, sha256_hash):
         file_event_client = self._microservices_client_factory.get_file_event_client()
         pds_client = self._microservices_client_factory.get_preservation_data_service_client()
         response = file_event_client.get_file_location_detail_by_sha256(sha256_hash)
 
+        if u"locations" not in response and not len(response[u"locations"]):
+            raise Py42ArchiveFileNotFoundError(u"PDS service can't find requested file.")
+
         for device_id, paths in _parse_file_location_response(response):
             try:
                 yield pds_client.find_file_versions(md5_hash, sha256_hash, device_id, paths)
             except Py42HTTPError as err:
-                debug.logger.warning("PDS, fetch file version API failed. Error: ", err)
+                # API searches multiple paths to find the file to be streamed, as returned by
+                # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
+                # to return
+                debug.logger.warning(u"PDS fetch file version API failed. Error: ", err)
                 pass
 
     def _stream_file(self, file_generator):
@@ -208,9 +214,12 @@ class SecurityModule(object):
                 )
                 return storage_node_client.get_file(str(token))
             except HTTPError as err:
-                debug.logger.warning("PDS stream file token API failed, Error:", err)
+                # API searches multiple paths to find the file to be streamed, as returned by
+                # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
+                # to return
+                debug.logger.warning(u"PDS stream file token API failed, Error:", err)
                 pass
-        raise Py42Error("No file available for download.")
+        raise Py42Error(u"No file available for download.")
 
     def stream_file_by_sha256(self, checksum):
         """Stream file based on SHA256 checksum.
@@ -223,7 +232,8 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, SHA256)
         if not len(events):
-            raise Py42ArchiveFileNotFoundError(checksum, "")
+            message = u"File not found in archive with sha256 checksum {0}".format(checksum)
+            raise Py42Error(message)
         md5_hash = events[0][u"md5Checksum"]
 
         return self._stream_file(self._find_file_versions(md5_hash, checksum))
@@ -350,7 +360,7 @@ def _parse_file_location_response(response):
         paths = []
         file_name = location[u"fileName"]
         device_id = location[u"deviceUid"]
-        paths.append("{0}{1}".format(location[u"filePath"], file_name))
+        paths.append(u"{0}{1}".format(location[u"filePath"], file_name))
         yield device_id, paths
 
 

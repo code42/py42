@@ -702,7 +702,7 @@ class TestSecurityModule(object):
         with pytest.raises(Py42ArchiveFileNotFoundError):
             security_module.stream_file_by_sha256("shahash")
 
-    def test_stream_file_by_sha256_raises_py42_error_when_file_location_returns_empty_response(
+    def test_stream_file_by_sha256_raises_file_not_found_error_when_file_location_returns_empty_response(
         self,
         mocker,
         security_client,
@@ -719,9 +719,9 @@ class TestSecurityModule(object):
         file_location.text = """{"locations": []}"""
         file_event_client.get_file_location_detail_by_sha256.return_value = file_location
         microservice_client_factory.get_file_event_client.return_value = file_event_client
-        with pytest.raises(Py42Error) as e:
+        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
             security_module.stream_file_by_sha256("shahash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+            assert e.value.args[0] == u"PDS service can't find requested file."
 
     def test_stream_file_by_sha256_raises_py42_error_when_find_file_versions_returns_204_status_code(
         self,
@@ -836,7 +836,7 @@ class TestSecurityModule(object):
         with pytest.raises(Py42ArchiveFileNotFoundError):
             security_module.stream_file_by_md5("md5hash")
 
-    def test_stream_file_by_md5_raises_py42_error_when_file_location_returns_empty_response(
+    def test_stream_file_by_md5_raises_file_not_found_error_when_file_location_returns_empty_response(
         self,
         mocker,
         security_client,
@@ -853,9 +853,9 @@ class TestSecurityModule(object):
         file_location.text = """{"locations": []}"""
         file_event_client.get_file_location_detail_by_sha256.return_value = file_location
         microservice_client_factory.get_file_event_client.return_value = file_event_client
-        with pytest.raises(Py42Error) as e:
+        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
             security_module.stream_file_by_md5("md5hash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+            assert e.value.args[0] == u"PDS service can't find requested file."
 
     def test_stream_file_by_md5_raises_py42_error_when_find_file_versions_returns_204_status_code(
         self,

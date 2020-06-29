@@ -140,3 +140,9 @@ def mock_session(mocker):
     session.headers = {}
 
     return session
+
+
+@pytest.fixture
+def mock_successful_session(mock_session, successful_response):
+    mock_session.get.return_value = successful_response
+    return mock_session

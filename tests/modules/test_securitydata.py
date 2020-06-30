@@ -13,13 +13,13 @@ from py42._internal.clients.storage.storagenode import StoragePreservationDataCl
 from py42.clients.file_event import FileEventClient
 from py42.modules.securitydata import PlanStorageInfo, SecurityModule
 from py42.response import Py42Response
-from py42.exceptions import Py42Error, Py42ArchiveFileNotFoundError
+from py42.exceptions import Py42Error
 
 RAW_QUERY = "RAW JSON QUERY"
 
 USER_UID = "user-uid"
 
-PDS_EXCEPTION_MESSAGE = "No file available for download."
+PDS_EXCEPTION_MESSAGE = u"No file with hash {0} available for download on any storage node."
 
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION = """{
         "securityPlanLocationsByDestination": [
@@ -699,7 +699,7 @@ class TestSecurityModule(object):
         file_event_search.text = "{}"
         file_event_client = mocker.MagicMock(spec=FileEventClient)
         file_event_client.search.return_value = file_event_search
-        with pytest.raises(Py42ArchiveFileNotFoundError):
+        with pytest.raises(Py42Error):
             security_module.stream_file_by_sha256("shahash")
 
     def test_stream_file_by_sha256_raises_file_not_found_error_when_file_location_returns_empty_response(
@@ -719,9 +719,9 @@ class TestSecurityModule(object):
         file_location.text = """{"locations": []}"""
         file_event_client.get_file_location_detail_by_sha256.return_value = file_location
         microservice_client_factory.get_file_event_client.return_value = file_event_client
-        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
+        with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_sha256("shahash")
-            assert e.value.args[0] == u"PDS service can't find requested file."
+            assert e.value.args[0].contains(u"PDS service can't find requested file")
 
     def test_stream_file_by_sha256_raises_py42_error_when_find_file_versions_returns_204_status_code(
         self,
@@ -748,7 +748,7 @@ class TestSecurityModule(object):
 
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_sha256("shahash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
     def test_stream_file_by_sha256_raises_py42_error_when_file_download_returns_failure_response(
         self,
@@ -783,7 +783,7 @@ class TestSecurityModule(object):
 
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_sha256("shahash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
     def test_stream_file_by_md5_returns_stream_of_file(
         self,
@@ -833,7 +833,7 @@ class TestSecurityModule(object):
         file_event_search.text = "{}"
         file_event_client = mocker.MagicMock(spec=FileEventClient)
         file_event_client.search.return_value = file_event_search
-        with pytest.raises(Py42ArchiveFileNotFoundError):
+        with pytest.raises(Py42Error):
             security_module.stream_file_by_md5("md5hash")
 
     def test_stream_file_by_md5_raises_file_not_found_error_when_file_location_returns_empty_response(
@@ -853,9 +853,9 @@ class TestSecurityModule(object):
         file_location.text = """{"locations": []}"""
         file_event_client.get_file_location_detail_by_sha256.return_value = file_location
         microservice_client_factory.get_file_event_client.return_value = file_event_client
-        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
+        with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_md5("md5hash")
-            assert e.value.args[0] == u"PDS service can't find requested file."
+            assert e.value.args[0].contains(u"PDS service can't find requested file")
 
     def test_stream_file_by_md5_raises_py42_error_when_find_file_versions_returns_204_status_code(
         self,
@@ -882,7 +882,7 @@ class TestSecurityModule(object):
 
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_md5("md5hash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")
 
     def test_stream_file_by_md5_raises_py42_error_when_file_download_returns_failure_response(
         self,
@@ -917,4 +917,4 @@ class TestSecurityModule(object):
 
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_md5("md5hash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE
+            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")

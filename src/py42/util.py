@@ -65,3 +65,10 @@ def convert_datetime_to_timestamp_str(date):
 
 def convert_datetime_to_epoch(date):
     return (date - datetime.utcfromtimestamp(0)).total_seconds()
+
+
+def format_dict(dict_, label=None):
+    indented_dict = json.dumps(dict_, indent=4)
+    if label:
+        return u"{} {}".format(label, indented_dict)
+    return indented_dict

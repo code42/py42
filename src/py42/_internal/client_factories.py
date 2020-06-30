@@ -5,6 +5,8 @@ from requests import HTTPError
 from py42._internal.clients import alerts, archive, key_value_store, securitydata
 from py42._internal.clients.alertrules import AlertRulesClient
 from py42._internal.clients.detection_list_user import DetectionListUserClient
+from py42._internal.clients.pds import PreservationDataServiceClient
+from py42._internal.clients.storage.storagenode import StoragePreservationDataClient
 from py42.clients import administration, devices, legalhold, orgs, users
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
@@ -65,6 +67,7 @@ class MicroserviceClientFactory(object):
         self._alert_rules_client = None
         self._saved_search_client = None
         self._file_event_session = None
+        self._pds_client = None
 
     def get_alerts_client(self):
         if not self._alerts_client:
@@ -113,6 +116,16 @@ class MicroserviceClientFactory(object):
                 self._get_file_event_session(), self.get_file_event_client()
             )
         return self._saved_search_client
+
+    def get_preservation_data_service_client(self):
+        if not self._pds_client:
+            session = self._get_jwt_session(u"PRESERVATION-DATA-SERVICE_API-URL")
+            self._pds_client = PreservationDataServiceClient(session)
+        return self._pds_client
+
+    def create_storage_preservation_client(self, host_address):
+        session = self._session_factory.create_jwt_session(host_address, self._root_session)
+        return StoragePreservationDataClient(session)
 
     def _get_jwt_session(self, key):
         url = self._get_stored_value(key)

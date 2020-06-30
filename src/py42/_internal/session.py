@@ -10,6 +10,7 @@ from py42.settings import debug
 from py42._internal.compat import str, urljoin, urlparse
 from py42.exceptions import raise_py42_error
 from py42.response import Py42Response
+from py42.util import format_dict
 
 
 class Py42Session(object):
@@ -177,17 +178,10 @@ class Py42Session(object):
     def _print_request(self, method, url, params=None, data=None):
         debug.logger.info(u"{0}{1}".format(str(method).ljust(8), url))
         if params:
-            debug.logger.debug(_format_dict(params, u"  params"))
+            debug.logger.debug(format_dict(params, u"  params"))
         if data:
-            debug.logger.debug(_format_dict(data, u"  data"))
+            debug.logger.debug(format_dict(data, u"  data"))
 
 
 def _filter_out_none(_dict):
     return {key: _dict[key] for key in _dict if _dict[key] is not None}
-
-
-def _format_dict(dict_, label=None):
-    indented_dict = json_lib.dumps(dict_, indent=4)
-    if label:
-        return u"{} {}".format(label, indented_dict)
-    return indented_dict

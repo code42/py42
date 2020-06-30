@@ -3,7 +3,16 @@ from threading import Lock
 
 from requests.exceptions import HTTPError
 
-from py42.exceptions import Py42SecurityPlanConnectionError, raise_py42_error
+from py42.exceptions import (
+    Py42SecurityPlanConnectionError,
+    raise_py42_error,
+    Py42Error,
+    Py42HTTPError,
+    Py42ArchiveFileNotFoundError,
+)
+from py42.settings import debug
+from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
+from py42.sdk.queries.fileevents.filters.file_filter import MD5, SHA256
 
 
 class SecurityModule(object):
@@ -169,6 +178,92 @@ class SecurityModule(object):
         file_event_client = self._microservices_client_factory.get_file_event_client()
         return file_event_client.search(query)
 
+    def _search_by_hash(self, hash, type):
+        query = FileEventQuery.all(type.eq(hash))
+        response = self.search_file_events(query)
+        return response[u"fileEvents"]
+
+    def _find_file_versions(self, md5_hash, sha256_hash):
+        file_event_client = self._microservices_client_factory.get_file_event_client()
+        pds_client = self._microservices_client_factory.get_preservation_data_service_client()
+        response = file_event_client.get_file_location_detail_by_sha256(sha256_hash)
+
+        if u"locations" not in response and not len(response[u"locations"]):
+            raise Py42Error(
+                u"PDS service can't find requested file "
+                u"with md5 hash {0} and sha256 hash {1}.".format(md5_hash, sha256_hash)
+            )
+
+        for device_id, paths in _parse_file_location_response(response):
+            try:
+                yield pds_client.find_file_versions(md5_hash, sha256_hash, device_id, paths)
+            except Py42HTTPError as err:
+                # API searches multiple paths to find the file to be streamed, as returned by
+                # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
+                # to return
+                debug.logger.warning(
+                    u"PDS fetch file version API failed for md5 hash {0} and sha256 hash {1}. "
+                    u"Error: ".format(md5_hash, sha256_hash),
+                    err,
+                )
+                pass
+
+    def _stream_file(self, file_generator, checksum):
+        for response in file_generator:
+            if response.status_code == 204:
+                continue
+            try:
+                storage_node_client = self._microservices_client_factory.create_storage_preservation_client(
+                    response[u"storageNodeURL"]
+                )
+                token = storage_node_client.get_download_token(
+                    response[u"archiveGuid"], response[u"fileId"], response[u"versionTimestamp"],
+                )
+                return storage_node_client.get_file(str(token))
+            except HTTPError as err:
+                # API searches multiple paths to find the file to be streamed, as returned by
+                # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
+                # to return
+                debug.logger.warning(
+                    u"PDS stream file token API failed for hash {0}, Error:".format(checksum), err
+                )
+                pass
+        raise Py42Error(
+            u"No file with hash {0} available for download on any storage node.".format(checksum)
+        )
+
+    def stream_file_by_sha256(self, checksum):
+        """Stream file based on SHA256 checksum.
+
+        Args:
+            checksum (str): SHA256 hash of the file.
+
+        Returns:
+            Returns a stream of the requested file.
+        """
+        events = self._search_by_hash(checksum, SHA256)
+        if not len(events):
+            message = u"File not found in archive with sha256 checksum {0}".format(checksum)
+            raise Py42Error(message)
+        md5_hash = events[0][u"md5Checksum"]
+
+        return self._stream_file(self._find_file_versions(md5_hash, checksum), checksum)
+
+    def stream_file_by_md5(self, checksum):
+        """Stream file based on MD5 checksum.
+
+        Args:
+            checksum (str): MD5 hash of the file.
+
+        Returns:
+            Returns a stream of the requested file.
+        """
+        events = self._search_by_hash(checksum, MD5)
+        if not len(events):
+            raise Py42ArchiveFileNotFoundError(checksum, "")
+        sha256_hash = events[0][u"sha256Checksum"]
+        return self._stream_file(self._find_file_versions(checksum, sha256_hash), checksum)
+
     def _get_plan_storage_infos(self, plan_destination_map):
         plan_infos = []
         for plan_uid in plan_destination_map:
@@ -268,6 +363,16 @@ def _get_plans_in_node(destination, node):
         ]
         for plan_uid in node[u"securityPlanUids"]
     }
+
+
+def _parse_file_location_response(response):
+
+    for location in response[u"locations"]:
+        paths = []
+        file_name = location[u"fileName"]
+        device_id = location[u"deviceUid"]
+        paths.append(u"{0}{1}".format(location[u"filePath"], file_name))
+        yield device_id, paths
 
 
 class PlanStorageInfo(object):

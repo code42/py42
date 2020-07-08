@@ -209,9 +209,9 @@ class SecurityModule(object):
 
     def _stream_file(self, file_generator, checksum):
         for response in file_generator:
-            url = response[u"storageNodeURL"]
             if response.status_code == 204:
                 continue
+            url = response[u"storageNodeURL"]
             try:
                 storage_node_client = self._microservices_client_factory.create_storage_preservation_client(
                     url

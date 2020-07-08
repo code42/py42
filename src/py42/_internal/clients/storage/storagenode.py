@@ -46,4 +46,5 @@ class StoragePreservationDataClient(BaseClient):
         else:
             replaced_token = token
         params = {u"PDSDownloadToken": replaced_token}
-        return self._streaming_session.get(uri, params=params, stream=True)
+        headers = {u"Accept": "*/*"}
+        return self._streaming_session.get(uri, params=params, headers=headers, stream=True)

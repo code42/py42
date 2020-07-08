@@ -14,6 +14,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - An issue where `sdk.securitydata.stream_file_by_md5()` and `sdk.securitydata.stream_file_by_sha256()` would return streams containing an error message instead of properly failing.
 
+- An issue where streaming methods would load the stream completely into memory instead of retrieving it one chunk at a time.
+
 ## 1.6.0 - 2020-06-30
 
 ### Added

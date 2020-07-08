@@ -211,10 +211,9 @@ class SecurityModule(object):
         for response in file_generator:
             if response.status_code == 204:
                 continue
-            url = response[u"storageNodeURL"]
             try:
                 storage_node_client = self._microservices_client_factory.create_storage_preservation_client(
-                    url
+                    response[u"storageNodeURL"]
                 )
                 token = storage_node_client.get_download_token(
                     response[u"archiveGuid"], response[u"fileId"], response[u"versionTimestamp"]
@@ -225,7 +224,9 @@ class SecurityModule(object):
                 # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
                 # to return
                 debug.logger.warning(
-                    u"Failed to stream file with hash {0} from {1}.".format(checksum, url)
+                    u"Failed to stream file with hash {0}, info: {1}.".format(
+                        checksum, response.text
+                    )
                 )
         raise Py42Error(
             u"No file with hash {0} available for download on any storage node.".format(checksum)

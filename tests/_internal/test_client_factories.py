@@ -271,3 +271,4 @@ class TestMicroserviceClientFactory(object):
         )
         factory.create_storage_preservation_client("https://host.com")
         session_factory.create_jwt_session.assert_called_once_with("https://host.com", mock_session)
+        session_factory.create_anonymous_session.assert_called_once_with("https://host.com")

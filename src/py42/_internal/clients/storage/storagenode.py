@@ -10,6 +10,10 @@ class StoragePreservationDataClient(BaseClient):
 
     _base_uri = u"c42api/v3/"
 
+    def __init__(self, main_session, streaming_session):
+        super(StoragePreservationDataClient, self).__init__(main_session)
+        self._streaming_session = streaming_session
+
     def get_download_token(self, archive_guid, file_id, timestamp):
         """Get PDS download token for a file.
 
@@ -42,6 +46,4 @@ class StoragePreservationDataClient(BaseClient):
         else:
             replaced_token = token
         params = {u"PDSDownloadToken": replaced_token}
-        debug.logger.info(u"{0}{1}".format(str("GET").ljust(8), uri))
-        debug.logger.debug(format_dict(params, u"  params"))
-        return requests.get(uri, params=params, stream=True)
+        return self._streaming_session.get(uri, params=params, stream=True)

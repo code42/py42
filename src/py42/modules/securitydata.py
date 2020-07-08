@@ -217,10 +217,10 @@ class SecurityModule(object):
                     response[u"storageNodeURL"]
                 )
                 token = storage_node_client.get_download_token(
-                    response[u"archiveGuid"], response[u"fileId"], response[u"versionTimestamp"],
+                    response[u"archiveGuid"], response[u"fileId"], response[u"versionTimestamp"]
                 )
                 return storage_node_client.get_file(str(token))
-            except HTTPError as err:
+            except Py42HTTPError as err:
                 # API searches multiple paths to find the file to be streamed, as returned by
                 # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
                 # to return

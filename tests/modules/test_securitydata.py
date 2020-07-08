@@ -1,6 +1,8 @@
 import pytest
 import json
 
+from requests.exceptions import HTTPError
+
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.securitydata import SecurityClient
 from py42._internal.clients.storage import (
@@ -13,7 +15,7 @@ from py42._internal.clients.storage.storagenode import StoragePreservationDataCl
 from py42.clients.file_event import FileEventClient
 from py42.modules.securitydata import PlanStorageInfo, SecurityModule
 from py42.response import Py42Response
-from py42.exceptions import Py42Error
+from py42.exceptions import Py42Error, Py42HTTPError
 
 RAW_QUERY = "RAW JSON QUERY"
 
@@ -760,7 +762,6 @@ class TestSecurityModule(object):
         file_location,
         find_file_version,
         file_download,
-        error_response,
     ):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
@@ -776,7 +777,7 @@ class TestSecurityModule(object):
 
         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
         storage_node_client.get_download_token.return_value = file_download
-        storage_node_client.get_file.side_effect = error_response
+        storage_node_client.get_file.side_effect = Py42HTTPError(HTTPError())
         microservice_client_factory.create_storage_preservation_client.return_value = (
             storage_node_client
         )
@@ -894,7 +895,6 @@ class TestSecurityModule(object):
         file_location,
         find_file_version,
         file_download,
-        error_response,
     ):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
@@ -910,7 +910,7 @@ class TestSecurityModule(object):
 
         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
         storage_node_client.get_download_token.return_value = file_download
-        storage_node_client.get_file.side_effect = error_response
+        storage_node_client.get_file.side_effect = Py42HTTPError(HTTPError())
         microservice_client_factory.create_storage_preservation_client.return_value = (
             storage_node_client
         )

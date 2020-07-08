@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Fixed
+
+- An issue where `sdk.securitydata.stream_file_by_md5()` and `sdk.securitydata.stream_file_by_sha256()` would return streams containing an error message instead of properly failing.
+
+- An issue where streaming methods would load the stream completely into memory instead of retrieving it one chunk at a time.
+
 ## 1.6.0 - 2020-06-30
 
 ### Added

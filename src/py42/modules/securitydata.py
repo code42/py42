@@ -202,19 +202,19 @@ class SecurityModule(object):
                 # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
                 # to return
                 debug.logger.warning(
-                    u"PDS fetch file version API failed for md5 hash {0} and sha256 hash {1}. "
+                    u"Failed to find any file version for md5 hash {0} / sha256 hash {1}. "
                     u"Error: ".format(md5_hash, sha256_hash),
                     err,
                 )
-                pass
 
     def _stream_file(self, file_generator, checksum):
         for response in file_generator:
+            url = response[u"storageNodeURL"]
             if response.status_code == 204:
                 continue
             try:
                 storage_node_client = self._microservices_client_factory.create_storage_preservation_client(
-                    response[u"storageNodeURL"]
+                    url
                 )
                 token = storage_node_client.get_download_token(
                     response[u"archiveGuid"], response[u"fileId"], response[u"versionTimestamp"]
@@ -225,9 +225,8 @@ class SecurityModule(object):
                 # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
                 # to return
                 debug.logger.warning(
-                    u"PDS stream file token API failed for hash {0}, Error:".format(checksum), err
+                    u"Failed to stream file with hash {0} from {1}.".format(checksum, url)
                 )
-                pass
         raise Py42Error(
             u"No file with hash {0} available for download on any storage node.".format(checksum)
         )

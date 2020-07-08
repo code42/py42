@@ -27,7 +27,10 @@ class TestStoragePreservationDataClient(object):
         client = StoragePreservationDataClient(mock_successful_session, mock_successful_session)
         client.get_file("token")
         mock_successful_session.get.assert_called_once_with(
-            "https://host.com/c42api/v3/GetFile", params={"PDSDownloadToken": "token"}, stream=True
+            "https://host.com/c42api/v3/GetFile",
+            headers={"Accept": "*/*"},
+            params={"PDSDownloadToken": "token"},
+            stream=True,
         )
 
     def test_get_file_calls_get_with_valid_params(self, mock_successful_session, mock_request):
@@ -35,5 +38,8 @@ class TestStoragePreservationDataClient(object):
         client = StoragePreservationDataClient(mock_successful_session, mock_successful_session)
         client.get_file("PDSDownloadToken=token")
         mock_successful_session.get.assert_called_once_with(
-            "https://host.com/c42api/v3/GetFile", params={"PDSDownloadToken": "token"}, stream=True
+            "https://host.com/c42api/v3/GetFile",
+            headers={"Accept": "*/*"},
+            params={"PDSDownloadToken": "token"},
+            stream=True,
         )

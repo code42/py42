@@ -19,28 +19,28 @@ class TestPy42Response(object):
     @pytest.fixture
     def mock_response_list_data_node(self, mocker):
         mock_response = mocker.MagicMock(spec=Response)
-        mock_response.content = json.loads(JSON_LIST_WITH_DATA_NODE)
+        mock_response.content = JSON_LIST_WITH_DATA_NODE.encode("utf-8")
         mock_response.text = JSON_LIST_WITH_DATA_NODE
         return mock_response
 
     @pytest.fixture
     def mock_response_list_no_data_node(self, mocker):
         mock_response = mocker.MagicMock(spec=Response)
-        mock_response.content = json.loads(JSON_LIST_NO_DATA_NODE)
+        mock_response.content = JSON_LIST_NO_DATA_NODE.encode("utf-8")
         mock_response.text = JSON_LIST_NO_DATA_NODE
         return mock_response
 
     @pytest.fixture
     def mock_response_dict_data_node(self, mocker):
         mock_response = mocker.MagicMock(spec=Response)
-        mock_response.content = json.loads(JSON_DICT_WITH_DATA_NODE)
+        mock_response.content = JSON_DICT_WITH_DATA_NODE.encode("utf-8")
         mock_response.text = JSON_DICT_WITH_DATA_NODE
         return mock_response
 
     @pytest.fixture
     def mock_response_dict_no_data_node(self, mocker):
         mock_response = mocker.MagicMock(spec=Response)
-        mock_response.content = json.loads(JSON_DICT_NO_DATA_NODE)
+        mock_response.content = JSON_DICT_NO_DATA_NODE.encode("utf-8")
         mock_response.text = JSON_DICT_NO_DATA_NODE
         return mock_response
 
@@ -161,19 +161,19 @@ class TestPy42Response(object):
 
     def test_content_dict_no_data_node_returns_expected_dict(self, mock_response_dict_no_data_node):
         response = Py42Response(mock_response_dict_no_data_node)
-        assert response.content == json.loads(JSON_DICT_NO_DATA_NODE)
+        assert response.content == JSON_DICT_NO_DATA_NODE.encode("utf-8")
 
     def test_content_dict_data_node_returns_expected_dict(self, mock_response_dict_data_node):
         response = Py42Response(mock_response_dict_data_node)
-        assert response.content == json.loads(JSON_DICT_WITH_DATA_NODE)
+        assert response.content == JSON_DICT_WITH_DATA_NODE.encode("utf-8")
 
     def test_content_list_no_data_node_returns_expected_list(self, mock_response_list_no_data_node):
         response = Py42Response(mock_response_list_no_data_node)
-        assert response.content == json.loads(JSON_LIST_NO_DATA_NODE)
+        assert response.content == JSON_LIST_NO_DATA_NODE.encode("utf-8")
 
     def test_content_list_data_node_returns_expected_list(self, mock_response_list_data_node):
         response = Py42Response(mock_response_list_data_node)
-        assert response.content == json.loads(JSON_LIST_WITH_DATA_NODE)
+        assert response.content == JSON_LIST_WITH_DATA_NODE.encode("utf-8")
 
     def test_data_with_data_node_returns_list_items(self, mock_response_list_data_node):
         response = Py42Response(mock_response_list_data_node)

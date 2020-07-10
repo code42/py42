@@ -7,13 +7,13 @@ from py42.exceptions import Py42Error
 class Py42Response(object):
     def __init__(self, requests_response):
         self._response = requests_response
-        self._data_root = None
+        self._data = None
 
     def __getitem__(self, key):
         try:
-            return self._data[key]
+            return self._data_root[key]
         except TypeError as e:
-            data_root_type = type(self._data)
+            data_root_type = type(self._data_root)
             message = u"The Py42Response root is of type {0}, but __getitem__ got a key of {1}, which is incompatible.".format(
                 data_root_type, key
             )
@@ -21,7 +21,7 @@ class Py42Response(object):
 
     def __setitem__(self, key, value):
         try:
-            self._data[key] = value
+            self._data_root[key] = value
         except TypeError as e:
             data_root_type = type(self._data_root)
             message = u"The Py42Response root is of type {0}, but __setitem__ got a key of {1} and value of {2}, which is incompatible.".format(
@@ -31,7 +31,7 @@ class Py42Response(object):
 
     def __iter__(self):
         # looping over a Py42Response will loop through list items, dict keys, or str characters
-        return iter(self._data)
+        return iter(self._data_root)
 
     @property
     def encoding(self):
@@ -67,7 +67,7 @@ class Py42Response(object):
     @property
     def text(self):
         """The more useful parts of the HTTP response dumped into a dictionary."""
-        return json.dumps(self._data) if type(self._data) != str else self._data
+        return json.dumps(self._data_root) if type(self._data_root) != str else self._data_root
 
     @property
     def url(self):
@@ -80,24 +80,32 @@ class Py42Response(object):
         return self._response.status_code
 
     def __str__(self):
-        return str(self._data)
+        return str(self._data_root)
 
     def __repr__(self):
-        data = self._data
+        data = self._data_root
         return u"<{} [status={}, data={}]>".format(
             self.__class__.__name__, self._response.status_code, reprlib.repr(data)
         )
 
     @property
-    def _data(self):
+    def content(self):
+        return self._response.content
+
+    @property
+    def data(self):
+        return self._data_root
+
+    @property
+    def _data_root(self):
         try:
-            if not self._data_root:
+            if not self._data:
                 response_dict = json.loads(self._response.text)
                 if type(response_dict) == dict:
-                    self._data_root = response_dict.get(u"data") or response_dict
+                    self._data = response_dict.get(u"data") or response_dict
                 else:
-                    self._data_root = response_dict
+                    self._data = response_dict
         except ValueError:
-            self._data_root = self._response.text or u""
+            self._data = self._response.text or u""
 
-        return self._data_root
+        return self._data

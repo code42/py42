@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 1.6.2 - 2020-07-10
+
+### Added
+
+- `data` to `Py42Response`. This allows a developer to retrieve the full dict of the response under the `data` json node, if present, enabling the use of typical dict functions such as `get()`.
+
+- `content` to `Py42Response`. This exposes the underlying `requests.Response.content`, which contains the fully body of the response as a byte array.
+
 ## 1.6.1 - 2020-07-09
 
 ### Fixed

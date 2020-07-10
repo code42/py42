@@ -16,7 +16,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `content` to `Py42Response`. This exposes the underlying `requests.Response.content`, which contains the fully body of the response as a byte array.
 
-
 ## 1.6.1 - 2020-07-09
 
 ### Fixed

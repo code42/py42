@@ -83,7 +83,10 @@ class Py42Response(object):
         return str(self._data_root)
 
     def __repr__(self):
-        data = self._data_root
+        if not self._response._content_consumed:
+            data = "<streamed>"
+        else:
+            data = self._data_root
         return u"<{} [status={}, data={}]>".format(
             self.__class__.__name__, self._response.status_code, reprlib.repr(data)
         )

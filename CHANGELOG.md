@@ -12,7 +12,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- 
+- `data` to `Py42Response`. This allows a developer to retrieve the full dict of the response under the `data` json node, if present, enabling the use of typical dict functions such as `get()`.
+
+- `content` to `Py42Response`. This exposes the underlying `requests.Response.content`, which contains the fully body of the response as a byte array.
+
 
 ## 1.6.1 - 2020-07-09
 

@@ -174,3 +174,19 @@ class TestPy42Response(object):
     def test_content_list_data_node_returns_expected_list(self, mock_response_list_data_node):
         response = Py42Response(mock_response_list_data_node)
         assert response.content == json.loads(JSON_LIST_WITH_DATA_NODE)
+
+    def test_data_with_data_node_returns_list_items(self, mock_response_list_data_node):
+        response = Py42Response(mock_response_list_data_node)
+        assert type(response.data["item_list_key"]) == list
+
+    def test_data_with_data_node_returns_dict_keys(self, mock_response_dict_data_node):
+        response = Py42Response(mock_response_dict_data_node)
+        assert type(response.data["item_list_key"]) == dict
+
+    def test_data_no_data_node_returns_list_items_(self, mock_response_list_no_data_node):
+        response = Py42Response(mock_response_list_no_data_node)
+        assert type(response.data["item_list_key"]) == list
+
+    def test_data_no_data_node_returns_dict_keys(self, mock_response_dict_no_data_node):
+        response = Py42Response(mock_response_dict_no_data_node)
+        assert type(response.data["item_list_key"]) == dict

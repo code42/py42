@@ -93,6 +93,10 @@ class Py42Response(object):
         return self._response.content
 
     @property
+    def data(self):
+        return self._data_root
+
+    @property
     def _data_root(self):
         try:
             if not self._data:

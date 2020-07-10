@@ -11,9 +11,9 @@ class Py42Response(object):
 
     def __getitem__(self, key):
         try:
-            return self.content[key]
+            return self._data_root[key]
         except TypeError as e:
-            data_root_type = type(self.content)
+            data_root_type = type(self._data_root)
             message = u"The Py42Response root is of type {0}, but __getitem__ got a key of {1}, which is incompatible.".format(
                 data_root_type, key
             )
@@ -21,9 +21,9 @@ class Py42Response(object):
 
     def __setitem__(self, key, value):
         try:
-            self.content[key] = value
+            self._data_root[key] = value
         except TypeError as e:
-            data_root_type = type(self.content)
+            data_root_type = type(self._data_root)
             message = u"The Py42Response root is of type {0}, but __setitem__ got a key of {1} and value of {2}, which is incompatible.".format(
                 data_root_type, key, value
             )
@@ -31,7 +31,7 @@ class Py42Response(object):
 
     def __iter__(self):
         # looping over a Py42Response will loop through list items, dict keys, or str characters
-        return iter(self.content)
+        return iter(self._data_root)
 
     @property
     def encoding(self):
@@ -67,7 +67,7 @@ class Py42Response(object):
     @property
     def text(self):
         """The more useful parts of the HTTP response dumped into a dictionary."""
-        return json.dumps(self.content) if type(self.content) != str else self.content
+        return json.dumps(self._data_root) if type(self._data_root) != str else self._data_root
 
     @property
     def url(self):
@@ -80,17 +80,17 @@ class Py42Response(object):
         return self._response.status_code
 
     def __str__(self):
-        return str(self.content)
+        return str(self._data_root)
 
     def __repr__(self):
-        data = self.content
+        data = self._data_root
         return u"<{} [status={}, data={}]>".format(
             self.__class__.__name__, self._response.status_code, reprlib.repr(data)
         )
 
     @property
     def content(self):
-        return self._data_root
+        return self._response.content
 
     @property
     def _data_root(self):

@@ -20,9 +20,9 @@ class LegalHoldClient(BaseClient):
 
     The LegalHoldClient provides the ability to manage Code42 Legal Hold Policies and Matters.
     It can:
-        - Create, view, and list all existing Policies.
-        - Create, view, deactivate, reactivate, and list all existing Matters.
-        - Add/remove Custodians from a Matter.
+    - Create, view, and list all existing Policies.
+    - Create, view, deactivate, reactivate, and list all existing Matters.
+    - Add/remove Custodians from a Matter.
     """
 
     def create_policy(self, name, policy=None):

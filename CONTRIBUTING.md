@@ -6,13 +6,13 @@ First, create a python virtual environment and activate it. This keeps your depe
 
 Install `pyenv` and `pyenv-virtualenv` via [homebrew](https://brew.sh/):
 
-```
+```bash
 brew install pyenv pyenv-virtualenv
 ```
 
 After installing `pyenv` and `pyenv-virtualenv`, be sure to add the following entries to your `.zshrc` (or `.bashrc` if you are using bash) and restart your shell:
 
-```
+```bash
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 ```

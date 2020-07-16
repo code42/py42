@@ -1,25 +1,37 @@
 # Contributing to py42
 
-## Development environment
+## Set up your Development environment
 
-Install py42 and its development dependencies. The `-e` option installs py42 in 
-["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs). 
+First, create a python virtual environment and activate it. This keeps your dependencies sandboxed so that they are unaffected by (and do not affect) other python packages you may have installed. There are many ways to do this, but We recommend using [pyenv](https://github.com/pyenv/pyenv) and
+[pyenv-virtualenv](). While py42 runs on python 2.7 and 3.5, a 3.6+ version is required for development in order to run all of the unit tests and style checks.
+
+After installing `pyenv` and `pyenv-virtualenv`, be sure to add the following entries to your `.zshrc` (or `.bashrc` if you are using bash) and restart your shell:
+
+```
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+```
+
+Then, create your virtual environment:
+
+```bash
+$ pyenv install 3.6.10
+$ pyenv virtualenv 3.6.10 py42
+$ pyenv activate py42
+```
+
+Use `source deactivate` to exit the virtual environment and `pyenv activate py42` to reactivate it.
+
+
+Next, install py42 and its development dependencies. The `-e` option installs py42 in
+["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs).
 
 ```bash
 $ pip install -e .[dev]
 ```
 
-If you are using `zsh`, you may need to escape the brackets.
-
-We use [black](https://black.readthedocs.io/en/stable/) to automatically format our code.
-After installing dependencies, be sure to run:
-
-```bash
-$ pre-commit install
-```
-
-This will set up a pre-commit hook that will automatically format your code to our desired styles whenever you commit.
-It requires python 3.6 to run, so be sure to have a python 3.6 executable of some kind in your PATH when you commit.
+Open the project in your IDE of choice and change the python environment to
+point to your virtual environment, and you should be ready to go!
 
 ## General
 
@@ -32,37 +44,25 @@ It requires python 3.6 to run, so be sure to have a python 3.6 executable of som
 * Name the method starting with a verb
 * Specify required arguments as positional arguments
 * Specify optional arguments as keyword arguments
-* Use the newest supported implementation (e.g. v4 instead of v1, even if a related API only has a v1 implementation)
 
 ## Changes
 
-Document all notable consumer-affecting changes in CHANGELOG.md per principles and guidelines at 
+Document all notable consumer-affecting changes in CHANGELOG.md per principles and guidelines at
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## Tests
 
-We use [tox](https://tox.readthedocs.io/en/latest/#) to run the 
-[pytest](https://docs.pytest.org/) test framework on Python 2.7, 3.5, 3.6, and 3.7.
+We use [tox](https://tox.readthedocs.io/en/latest/#) to run the
+[pytest](https://docs.pytest.org/) test framework on Python 2.7, 3.5, 3.6,3.7, and 3.8.
 
-To run all tests, run this at the root of the repo:
+Run the below at the root of the repo to run the tests on all versions of python
+that are available within your PATH.
 
 ```bash
 $ tox
 ```
 
-If you're using a virtual environment, this will only run the tests within that environment/version of Python.
-To run the tests on all supported versions of Python in a local dev environment, we recommend using 
-[pyenv](https://github.com/pyenv/pyenv) and tox in your system (non-virtual) environment:
-
-```bash
-$ pip install tox
-$ pyenv install 2.7.16
-$ pyenv install 3.5.7
-$ pyenv install 3.6.9
-$ pyenv install 3.7.4
-$ pyenv local 2.7.16 3.5.7 3.6.9 3.7.4
-$ tox
-```
+This will also test that the documentation build passes.
 
 ### Writing tests
 
@@ -73,7 +73,7 @@ a = 4
 assert a % 2 == 0
 ```
 
-Use the following naming convention with test methods:  
+Use the following naming convention with test methods:
 
 test\_\[unit_under_test\]\_\[variables_for_the_test\]\_\[expected_state\]
 
@@ -85,7 +85,7 @@ def test_add_one_and_one_equals_two():
 
 ## Documentation
 
-Public functions, classes, and methods should have docstrings. 
+Public functions, classes, and methods should have docstrings.
 Follow [Google's format](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).
 
 ### Generating documentation

@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install tox
-        run: pip install tox==3.14.3
+        run: pip install tox==3.17.1
       - name: Run Unit tests
         run: tox -e py  # Run tox using the version of Python in `PATH`
       - name: Submit coverage report

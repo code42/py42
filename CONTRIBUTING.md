@@ -2,7 +2,14 @@
 
 ## Set up your Development environment
 
-First, create a python virtual environment and activate it. This keeps your dependencies sandboxed so that they are unaffected by (and do not affect) other python packages you may have installed. There are many ways to do this, but We recommend using [pyenv](https://github.com/pyenv/pyenv).
+The very first thing to do is to clone the py42 repo and make it your working directory!
+
+```bash
+git clone https://github.com/code42/py42
+cd py42
+```
+
+To set up your development environment, create a python virtual environment and activate it. This keeps your dependencies sandboxed so that they are unaffected by (and do not affect) other python packages you may have installed. There are many ways to do this, but we recommend using [pyenv](https://github.com/pyenv/pyenv).
 
 Install `pyenv` and `pyenv-virtualenv` via [homebrew](https://brew.sh/):
 

@@ -32,6 +32,9 @@ setup(
     install_requires=["requests>=2.3"],
     extras_require={
         "dev": [
+            "pytest==4.6.11",
+            "pytest-cov==2.10.0",
+            "pytest-mock==2.0.0",
             "tox>=3.17.1",
         ]
     },

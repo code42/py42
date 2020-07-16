@@ -65,7 +65,7 @@ Document all notable consumer-affecting changes in CHANGELOG.md per principles a
 ## Tests
 
 We use [tox](https://tox.readthedocs.io/en/latest/#) to run the
-[pytest](https://docs.pytest.org/) test framework on Python 2.7, 3.5, 3.6,3.7, and 3.8.
+[pytest](https://docs.pytest.org/) test framework on Python 2.7, 3.5, 3.6, 3.7, and 3.8.
 
 Run the below at the root of the repo to run the tests on all versions of python
 that are available within your PATH.

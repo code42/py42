@@ -2,8 +2,13 @@
 
 ## Set up your Development environment
 
-First, create a python virtual environment and activate it. This keeps your dependencies sandboxed so that they are unaffected by (and do not affect) other python packages you may have installed. There are many ways to do this, but We recommend using [pyenv](https://github.com/pyenv/pyenv) and
-[pyenv-virtualenv](). While py42 runs on python 2.7 and 3.5, a 3.6+ version is required for development in order to run all of the unit tests and style checks.
+First, create a python virtual environment and activate it. This keeps your dependencies sandboxed so that they are unaffected by (and do not affect) other python packages you may have installed. There are many ways to do this, but We recommend using [pyenv](https://github.com/pyenv/pyenv). While py42 runs on python 2.7 and 3.5, a 3.6+ version is required for development in order to run all of the unit tests and style checks.
+
+Install `pyenv` and `pyenv-virtualenv` via [homebrew](https://brew.sh/):
+
+```
+brew install pyenv pyenv-virtualenv
+```
 
 After installing `pyenv` and `pyenv-virtualenv`, be sure to add the following entries to your `.zshrc` (or `.bashrc` if you are using bash) and restart your shell:
 
@@ -23,7 +28,7 @@ $ pyenv activate py42
 Use `source deactivate` to exit the virtual environment and `pyenv activate py42` to reactivate it.
 
 
-Next, install py42 and its development dependencies. The `-e` option installs py42 in
+Next, with your virtual environment activated, install py42 and its development dependencies. The `-e` option installs py42 in
 ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs).
 
 ```bash

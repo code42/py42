@@ -63,7 +63,7 @@ python -m venv py42
 # macOS/Linux
 source py42/bin/activate
 # Windows
-.\env\Scripts\Activate
+.\py42\Scripts\Activate
 ```
 
 To leave the virtual environment, simply use:

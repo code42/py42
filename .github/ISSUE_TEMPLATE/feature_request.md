@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest an idea for py42
 title: "[Enhancement] YOUR IDEA!"
-labels: enhancement ➕
+labels: enhancement
 assignees: ''
 
 ---

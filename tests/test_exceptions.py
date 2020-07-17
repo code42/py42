@@ -35,24 +35,8 @@ class TestPy42Errors(object):
         with pytest.raises(Py42InternalServerError):
             raise_py42_error(error_response)
 
-        error_response.response.status_code = 501
-        with pytest.raises(Py42InternalServerError):
-            raise_py42_error(error_response)
-
-        error_response.response.status_code = 599
-        with pytest.raises(Py42InternalServerError):
-            raise_py42_error(error_response)
-
-        error_response.response.status_code = 550
-        with pytest.raises(Py42InternalServerError):
-            raise_py42_error(error_response)
-
     def test_raise_py42_error_raises_py42_http_error(self, error_response):
         error_response.response.status_code = 600
-        with pytest.raises(Py42HTTPError):
-            raise_py42_error(error_response)
-
-        error_response.response.status_code = 999
         with pytest.raises(Py42HTTPError):
             raise_py42_error(error_response)
 
@@ -64,4 +48,4 @@ class TestPy42Errors(object):
         try:
             raise_py42_error(error_response)
         except Exception as e:
-            assert isinstance(type(e.response), type(error_response.response))
+            assert isinstance(e.response, type(error_response.response))

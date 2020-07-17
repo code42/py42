@@ -48,9 +48,7 @@ class C42APITmpAuthProvider(TokenProvider):
 
     def get_login_info(self):
         if self._cached_info is None:
-            response = (
-                self.get_tmp_auth_token()
-            )
+            response = self.get_tmp_auth_token()
             self._cached_info = response
         return self._cached_info
 

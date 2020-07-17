@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-
 import json
 
 import pytest
+from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.users import UserClient
-from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
 _USER_ID = "890973079883949999"
@@ -79,7 +78,9 @@ class TestDepartingEmployeeClient(object):
     def mock_detection_list_user_client(
         self, mock_session, user_context, py42_response, mock_user_client
     ):
-        user_client = DetectionListUserClient(mock_session, user_context, mock_user_client)
+        user_client = DetectionListUserClient(
+            mock_session, user_context, mock_user_client
+        )
         mock_session.post.return_value = py42_response
         return user_client
 
@@ -132,8 +133,13 @@ class TestDepartingEmployeeClient(object):
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
-        assert posted_data["userId"] == "999" and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/remove"
+        assert (
+            posted_data["userId"] == "999"
+            and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+        )
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/remove"
+        )
 
     def test_get_all_posts_expected_data_to_expected_url(
         self,
@@ -158,7 +164,9 @@ class TestDepartingEmployeeClient(object):
             and posted_data["srtKey"] == "CREATED_AT"
             and posted_data["srtDirection"] == "DESC"
         )
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/search"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/search"
+        )
         assert mock_session.post.call_count == 1
 
     def test_set_alerts_enabled_posts_expected_data(
@@ -192,7 +200,10 @@ class TestDepartingEmployeeClient(object):
         )
         mock_session.post.return_value = mock_get_all_cases_response_empty
         client.set_alerts_enabled()
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/setalertstate"
+        assert (
+            mock_session.post.call_args[0][0]
+            == "/svc/api/v2/departingemployee/setalertstate"
+        )
 
     def test_get_posts_expected_data(
         self,
@@ -208,7 +219,10 @@ class TestDepartingEmployeeClient(object):
         client.get("999")
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
-        assert posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE and posted_data["userId"] == "999"
+        assert (
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and posted_data["userId"] == "999"
+        )
 
     def test_get_posts_to_expected_url(
         self,
@@ -253,4 +267,6 @@ class TestDepartingEmployeeClient(object):
             mock_session, user_context, mock_detection_list_user_client
         )
         client.update_departure_date(_USER_ID, "2022-12-20")
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/update"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/update"
+        )

@@ -1,7 +1,9 @@
 import pytest
 from requests import Response
 
-from py42._internal.auth_handling import AuthHandler, HeaderModifier, TokenProvider
+from py42._internal.auth_handling import AuthHandler
+from py42._internal.auth_handling import HeaderModifier
+from py42._internal.auth_handling import TokenProvider
 
 ORIGINAL_VALUE = "test-original-value"
 UPDATED_VALUE = "test-updated-value"
@@ -48,7 +50,9 @@ def test_auth_handler_renew_authentication_using_cache_calls_modify_session_on_s
 ):
     auth_handler = AuthHandler(mock_token_provider, mock_header_modifier)
     auth_handler.renew_authentication(mock_session, use_cache=True)
-    mock_header_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
+    mock_header_modifier.modify_session.assert_called_once_with(
+        mock_session, TEST_SECRET
+    )
 
 
 def test_auth_handler_renew_authentication_no_cache_calls_modify_session_on_session_modifier_with_correct_params(
@@ -56,7 +60,9 @@ def test_auth_handler_renew_authentication_no_cache_calls_modify_session_on_sess
 ):
     auth_handler = AuthHandler(mock_token_provider, mock_header_modifier)
     auth_handler.renew_authentication(mock_session)
-    mock_header_modifier.modify_session.assert_called_once_with(mock_session, TEST_SECRET)
+    mock_header_modifier.modify_session.assert_called_once_with(
+        mock_session, TEST_SECRET
+    )
 
 
 def test_auth_handler_response_indicates_unauthorized_returns_true_for_401(mocker):

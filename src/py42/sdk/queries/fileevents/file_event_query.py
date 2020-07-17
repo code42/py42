@@ -1,10 +1,8 @@
 from py42._internal.compat import str
 from py42.sdk.queries import BaseQuery
-from py42.sdk.queries.query_filter import (
-    QueryFilterStringField,
-    create_filter_group,
-    create_query_filter,
-)
+from py42.sdk.queries.query_filter import create_filter_group
+from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import QueryFilterStringField
 
 
 class FileEventQuery(BaseQuery):
@@ -32,7 +30,9 @@ class FileEventQuery(BaseQuery):
         self.page_number = 1
 
     def __str__(self):
-        groups_string = u",".join(str(group_item) for group_item in self._filter_group_list)
+        groups_string = u",".join(
+            str(group_item) for group_item in self._filter_group_list
+        )
         json = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'.format(
             self._group_clause,
             groups_string,

@@ -34,7 +34,7 @@ class SavedSearchClient(BaseClient):
 
     def get_query(self, search_id):
         """Get the saved search in form of a query(`py42.sdk.queries.fileevents.file_event_query`).
-        
+
         Args:
             search_id (str): Unique search Id of the saved search.
         Returns:

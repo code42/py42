@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
+from tests.sdk.queries.conftest import EXISTS
+from tests.sdk.queries.conftest import IS
+from tests.sdk.queries.conftest import IS_IN
+from tests.sdk.queries.conftest import IS_NOT
+from tests.sdk.queries.conftest import NOT_EXISTS
+from tests.sdk.queries.conftest import NOT_IN
 
 from py42._internal.compat import str
-from py42.sdk.queries.fileevents.filters.device_filter import (
-    DeviceUsername,
-    OSHostname,
-    PrivateIPAddress,
-    PublicIPAddress,
-)
-from tests.sdk.queries.conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
+from py42.sdk.queries.fileevents.filters.device_filter import DeviceUsername
+from py42.sdk.queries.fileevents.filters.device_filter import OSHostname
+from py42.sdk.queries.fileevents.filters.device_filter import PrivateIPAddress
+from py42.sdk.queries.fileevents.filters.device_filter import PublicIPAddress
 
 
 def test_device_username_exists_str_gives_correct_json_representation():
@@ -52,7 +55,8 @@ def test_device_username_eq_unicode_str_gives_correct_json_representation():
     unicode_username = u"您已经发现了秘密信息"
     _filter = DeviceUsername.eq(unicode_username)
     expected = IS.format(
-        u"deviceUserName", u"\u60a8\u5df2\u7ecf\u53d1\u73b0\u4e86\u79d8\u5bc6\u4fe1\u606f"
+        u"deviceUserName",
+        u"\u60a8\u5df2\u7ecf\u53d1\u73b0\u4e86\u79d8\u5bc6\u4fe1\u606f",
     )
     assert str(_filter) == expected
 

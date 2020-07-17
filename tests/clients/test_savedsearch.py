@@ -15,7 +15,10 @@ class TestSavedSearchClient(object):
         saved_search_client = SavedSearchClient(mock_session, file_event_client)
         saved_search_client.get()
         assert mock_session.get.call_count == 1
-        assert mock_session.get.call_args[0][0] == "/forensic-search/queryservice/api/v1/saved"
+        assert (
+            mock_session.get.call_args[0][0]
+            == "/forensic-search/queryservice/api/v1/saved"
+        )
 
     def test_get_by_id_calls_get_with_expected_uri(self, mock_session, py42_response):
         mock_session.get.return_value = py42_response
@@ -23,7 +26,8 @@ class TestSavedSearchClient(object):
         saved_search_client = SavedSearchClient(mock_session, file_event_client)
         saved_search_client.get_by_id(u"TEst-id")
         assert (
-            mock_session.get.call_args[0][0] == "/forensic-search/queryservice/api/v1/saved/TEst-id"
+            mock_session.get.call_args[0][0]
+            == "/forensic-search/queryservice/api/v1/saved/TEst-id"
         )
 
     def test_execute_calls_post_with_expected_uri(self, mock_session, py42_response):
@@ -32,7 +36,10 @@ class TestSavedSearchClient(object):
         file_event_client = FileEventClient(mock_session)
         saved_search_client = SavedSearchClient(mock_session, file_event_client)
         saved_search_client.execute(u"test-id")
-        assert mock_session.post.call_args[0][0] == "/forensic-search/queryservice/api/v1/fileevent"
+        assert (
+            mock_session.post.call_args[0][0]
+            == "/forensic-search/queryservice/api/v1/fileevent"
+        )
 
     def test_execute_calls_post_with_expected_query(self, mock_session, py42_response):
         py42_response.text = SAVED_SEARCH_GET_RESPONSE
@@ -55,5 +62,6 @@ class TestSavedSearchClient(object):
         saved_search_client = SavedSearchClient(mock_session, file_event_client)
         saved_search_client.get_query(u"test-id")
         assert (
-            mock_session.get.call_args[0][0] == "/forensic-search/queryservice/api/v1/saved/test-id"
+            mock_session.get.call_args[0][0]
+            == "/forensic-search/queryservice/api/v1/saved/test-id"
         )

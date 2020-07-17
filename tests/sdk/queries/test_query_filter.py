@@ -1,19 +1,16 @@
 # -*- coding: utf-8 -*-
-
 from py42._internal.compat import str
-from py42.sdk.queries.query_filter import (
-    QueryFilter,
-    create_eq_filter_group,
-    create_filter_group,
-    create_in_range_filter_group,
-    create_is_in_filter_group,
-    create_not_eq_filter_group,
-    create_not_in_filter_group,
-    create_on_or_after_filter_group,
-    create_on_or_before_filter_group,
-    create_query_filter,
-    FilterGroup,
-)
+from py42.sdk.queries.query_filter import create_eq_filter_group
+from py42.sdk.queries.query_filter import create_filter_group
+from py42.sdk.queries.query_filter import create_in_range_filter_group
+from py42.sdk.queries.query_filter import create_is_in_filter_group
+from py42.sdk.queries.query_filter import create_not_eq_filter_group
+from py42.sdk.queries.query_filter import create_not_in_filter_group
+from py42.sdk.queries.query_filter import create_on_or_after_filter_group
+from py42.sdk.queries.query_filter import create_on_or_before_filter_group
+from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import FilterGroup
+from py42.sdk.queries.query_filter import QueryFilter
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
@@ -59,7 +56,7 @@ def test_query_filter_dict_gives_expected_dict_representation(event_filter_group
     assert alert_query_query_dict["value"] == "testval"
 
 
-def test_query_filter_operator_returns_expected_value():
+def test_query_filter_term_returns_expected_value():
     query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.term == "testterm"
 
@@ -69,7 +66,7 @@ def test_query_filter_operator_returns_expected_value():
     assert query_filter.operator == "IS"
 
 
-def test_query_filter_operator_returns_expected_value():
+def test_query_filter_value_returns_expected_value():
     query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.value == "testval"
 
@@ -82,11 +79,15 @@ def test_filter_group_str_gives_correct_json_representation(query_filter):
     assert str(create_filter_group([query_filter], "AND")) == JSON_FILTER_GROUP_AND
 
 
-def test_filter_group_with_and_specified_str_gives_correct_json_representation(query_filter):
+def test_filter_group_with_and_specified_str_gives_correct_json_representation(
+    query_filter,
+):
     assert str(create_filter_group([query_filter], "AND")) == JSON_FILTER_GROUP_AND
 
 
-def test_filter_group_with_or_specified_str_gives_correct_json_representation(query_filter):
+def test_filter_group_with_or_specified_str_gives_correct_json_representation(
+    query_filter,
+):
     assert str(create_filter_group([query_filter], "OR")) == JSON_FILTER_GROUP_OR
 
 
@@ -193,7 +194,9 @@ def test_create_on_or_before_filter_group_returns_obj_with_correct_json_represen
 
 
 def test_create_in_range_filter_group_returns_obj_with_correct_json_representation():
-    filter_group = create_in_range_filter_group("rangeterm", "beforevalue", "aftervalue")
+    filter_group = create_in_range_filter_group(
+        "rangeterm", "beforevalue", "aftervalue"
+    )
     assert (
         str(filter_group) == '{"filterClause":"AND",'
         ' "filters":[{"operator":"ON_OR_AFTER", "term":"rangeterm", "value":"beforevalue"},'
@@ -202,7 +205,11 @@ def test_create_in_range_filter_group_returns_obj_with_correct_json_representati
 
 
 def test_create_query_filter_returns_obj_with_correct_json_representation():
-    query_filter = create_query_filter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
-    assert str(query_filter) == '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+    query_filter = create_query_filter(
+        EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING
+    )
+    assert str(
+        query_filter
+    ) == '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
         OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
     )

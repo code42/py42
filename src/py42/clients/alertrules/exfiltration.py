@@ -7,7 +7,7 @@ class ExfiltrationClient(BaseClient):
 
     _version = u"v1"
     _resource = u"query-endpoint-exfiltration-rule"
-    _api_prefix = u"/svc/api/{0}/Rules/{1}".format(_version, _resource)
+    _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
 
     def __init__(self, session, tenant_id):
         super(ExfiltrationClient, self).__init__(session)

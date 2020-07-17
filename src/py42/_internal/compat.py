@@ -2,8 +2,6 @@
 This module handles import compatibility issues between Python 2 and
 Python 3.
 """
-# pylint: disable=undefined-variable,import-error,unused-import,no-name-in-module
-
 import sys
 
 _ver = sys.version_info

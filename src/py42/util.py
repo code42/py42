@@ -60,7 +60,7 @@ def convert_datetime_to_timestamp_str(date):
         '2020-03-25T15:29:04.465Z'.
     """
     prefix = date.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
-    return u"{0}Z".format(prefix)
+    return u"{}Z".format(prefix)
 
 
 def convert_datetime_to_epoch(date):

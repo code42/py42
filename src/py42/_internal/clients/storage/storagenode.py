@@ -1,8 +1,3 @@
-import requests
-
-from py42.util import format_dict
-
-from py42.settings import debug
 from py42.clients import BaseClient
 
 
@@ -25,9 +20,13 @@ class StoragePreservationDataClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing download token for the file.
         """
-        params = {u"archiveGuid": archive_guid, u"fileId": file_id, u"versionTimestamp": timestamp}
+        params = {
+            u"archiveGuid": archive_guid,
+            u"fileId": file_id,
+            u"versionTimestamp": timestamp,
+        }
         resource = u"FileDownloadToken"
-        uri = "{0}{1}".format(self._base_uri, resource)
+        uri = "{}{}".format(self._base_uri, resource)
         return self._session.get(uri, params=params)
 
     def get_file(self, token):
@@ -40,11 +39,13 @@ class StoragePreservationDataClient(BaseClient):
             Returns a stream of the requested token.
         """
         resource = u"GetFile"
-        uri = u"{0}/{1}{2}".format(self._session.host_address, self._base_uri, resource)
+        uri = u"{}/{}{}".format(self._session.host_address, self._base_uri, resource)
         if u"PDSDownloadToken=" in token:
             replaced_token = token.replace(u"PDSDownloadToken=", "")
         else:
             replaced_token = token
         params = {u"PDSDownloadToken": replaced_token}
         headers = {u"Accept": "*/*"}
-        return self._streaming_session.get(uri, params=params, headers=headers, stream=True)
+        return self._streaming_session.get(
+            uri, params=params, headers=headers, stream=True
+        )

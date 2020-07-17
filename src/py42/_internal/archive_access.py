@@ -18,22 +18,36 @@ class ArchiveAccessorManager(object):
         self._storage_client_factory = storage_client_factory
 
     def get_archive_accessor(
-        self, device_guid, destination_guid=None, private_password=None, encryption_key=None
+        self,
+        device_guid,
+        destination_guid=None,
+        private_password=None,
+        encryption_key=None,
     ):
         client = self._storage_client_factory.from_device_guid(
             device_guid, destination_guid=destination_guid
         )
-        decryption_keys = self._get_decryption_keys(device_guid, private_password, encryption_key)
-        session_id = self._create_restore_session(client.archive, device_guid, **decryption_keys)
-        restore_job_manager = create_restore_job_manager(client.archive, device_guid, session_id)
-        return ArchiveAccessor(device_guid, session_id, client.archive, restore_job_manager)
+        decryption_keys = self._get_decryption_keys(
+            device_guid, private_password, encryption_key
+        )
+        session_id = self._create_restore_session(
+            client.archive, device_guid, **decryption_keys
+        )
+        restore_job_manager = create_restore_job_manager(
+            client.archive, device_guid, session_id
+        )
+        return ArchiveAccessor(
+            device_guid, session_id, client.archive, restore_job_manager
+        )
 
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):
         decryption_keys = {}
         if encryption_key:
             decryption_keys["encryption_key"] = encryption_key
         else:
-            data_key_token = self._get_data_key_token(device_guid) if not encryption_key else None
+            data_key_token = (
+                self._get_data_key_token(device_guid) if not encryption_key else None
+            )
             if data_key_token:
                 decryption_keys["data_key_token"] = data_key_token
 
@@ -56,7 +70,11 @@ class ArchiveAccessor(object):
     JOB_POLLING_INTERVAL = 1
 
     def __init__(
-        self, device_guid, archive_session_id, storage_archive_client, restore_job_manager
+        self,
+        device_guid,
+        archive_session_id,
+        storage_archive_client,
+        restore_job_manager,
     ):
         self._device_guid = device_guid
         self._archive_session_id = archive_session_id
@@ -65,7 +83,9 @@ class ArchiveAccessor(object):
 
     def stream_from_backup(self, file_path):
         metadata = self._get_file_via_walking_tree(file_path)
-        file_selection = self._build_file_selection(metadata[u"path"], metadata[u"type"])
+        file_selection = self._build_file_selection(
+            metadata[u"path"], metadata[u"type"]
+        )
         return self._restore_job_manager.get_stream(file_selection)
 
     def _get_file_via_walking_tree(self, file_path):
@@ -85,7 +105,9 @@ class ArchiveAccessor(object):
 
         children = self._get_children(node_id=current_node[u"id"])
         current_node_path = current_node[u"path"]
-        target_child_path = posixpath.join(current_node_path, remaining_path_components[0])
+        target_child_path = posixpath.join(
+            current_node_path, remaining_path_components[0]
+        )
 
         for child in children:
             if child[u"path"].lower() == target_child_path.lower():
@@ -95,7 +117,10 @@ class ArchiveAccessor(object):
 
     def _get_children(self, node_id=None):
         return self._storage_archive_client.get_file_path_metadata(
-            self._archive_session_id, self._device_guid, file_id=node_id, show_deleted=True
+            self._archive_session_id,
+            self._device_guid,
+            file_id=node_id,
+            show_deleted=True,
         )
 
     @staticmethod

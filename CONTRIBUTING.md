@@ -1,6 +1,6 @@
 - [Set up your Development environment](#set-up-your-development-environment)
   - [macOS](#macos)
-- [Windows/Linux](#windowslinux)
+  - [Windows/Linux](#windowslinux)
 - [Run a full build](#run-a-full-build)
 - [Coding Style](#coding-style)
   - [General](#general)
@@ -52,7 +52,7 @@ pyenv activate py42
 
 Use `source deactivate` to exit the virtual environment and `pyenv activate py42` to reactivate it.
 
-## Windows/Linux
+### Windows/Linux
 
 Install a version of python 3.6 or higher from [python.org](https://python.org).
 Next, in a directory somewhere outside the project, create and activate your virtual environment:

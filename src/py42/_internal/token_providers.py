@@ -50,7 +50,7 @@ class C42APITmpAuthProvider(TokenProvider):
         if self._cached_info is None:
             response = (
                 self.get_tmp_auth_token()
-            )  # pylint: disable=assignment-from-no-return
+            )
             self._cached_info = response
         return self._cached_info
 

@@ -5,7 +5,7 @@
 ### Issues Resolved ###
 <!-- Please use the format "fixes #xxxx" for each issue this PR addresses -->
 
-- fixes #
+- closes #
 
 ### Testing Procedure ###
 <!-- Please list the steps that should be taken to properly test that this change works as intended. What functions should be run? How can testers obtain valid parameters to test those functions? Where in the console can the actions of the functions be verified? -->

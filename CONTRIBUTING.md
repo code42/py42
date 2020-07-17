@@ -1,4 +1,18 @@
-# Contributing to py42
+- [Set up your Development environment](#set-up-your-development-environment)
+  - [macOS](#macos)
+- [Windows/Linux](#windowslinux)
+- [Run a full build](#run-a-full-build)
+- [Coding Style](#coding-style)
+  - [General](#general)
+  - [Wrapping web APIs](#wrapping-web-apis)
+  - [Style linter](#style-linter)
+- [Tests](#tests)
+  - [Writing tests](#writing-tests)
+- [Documentation](#documentation)
+  - [Generating documentation](#generating-documentation)
+    - [Performing a test build](#performing-a-test-build)
+    - [Running the docs locally](#running-the-docs-locally)
+- [Changes](#changes)
 
 ## Set up your Development environment
 

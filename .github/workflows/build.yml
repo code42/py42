@@ -30,7 +30,31 @@ jobs:
         uses: codecov/codecov-action@v1.0.7
         with:
           file: ./coverage.xml
-      - name: Build docs
+
+  docs:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - name: Install tox
+        run: pip install tox==3.17.1
+    - name: Build docs
         run: tox -e docs
-      - name: Run style checks
+
+  style:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
+    uses: actions/setup-python@v1
+    with:
+        python-version: '3.x'
+    - name: Install tox
+        run: pip install tox==3.17.1
+    - name: Run style checks
         run: tox -e style

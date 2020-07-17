@@ -32,3 +32,5 @@ jobs:
           file: ./coverage.xml
       - name: Build docs
         run: tox -e docs
+      - name: Run style checks
+        run: tox -e style

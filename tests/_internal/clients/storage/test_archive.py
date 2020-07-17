@@ -1,5 +1,3 @@
-import json
-
 import pytest
 
 from py42._internal.clients.storage import StorageArchiveClient
@@ -449,7 +447,6 @@ class TestStorageArchiveClient(object):
     def test_cancel_restore_calls_delete_with_job_id_in_data(self, mocker, session):
         storage_archive_client = StorageArchiveClient(session)
         api_response = mocker.MagicMock(spec=Py42Response)
-        text = json.dumps({JOB_ID_KEY: WEB_RESTORE_JOB_ID})
         session.delete.return_value = api_response
         storage_archive_client.cancel_restore(WEB_RESTORE_JOB_ID)
         json_arg = session.delete.call_args[KWARGS_INDEX][JSON_KEYWORD]

@@ -64,4 +64,4 @@ class TestPy42Errors(object):
         try:
             raise_py42_error(error_response)
         except Exception as e:
-            assert type(e.response) == type(error_response.response)
+            assert isinstance(type(e.response), type(error_response.response))

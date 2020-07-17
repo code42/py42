@@ -5,7 +5,6 @@ import posixpath
 import pytest
 from requests import Response
 
-import py42._internal.archive_access as archive_access
 import py42.util
 from py42._internal.archive_access import ArchiveAccessor
 from py42._internal.archive_access import ArchiveAccessorManager
@@ -576,7 +575,7 @@ class TestArchiveAccessManager(object):
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_client_factory
         )
-        with pytest.raises(Exception) as e:
+        with pytest.raises(Exception):
             accessor_manager.get_archive_accessor(INVALID_DEVICE_GUID)
 
 

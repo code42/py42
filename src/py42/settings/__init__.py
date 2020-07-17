@@ -1,4 +1,3 @@
-import logging
 import sys
 
 from py42.__version__ import __version__

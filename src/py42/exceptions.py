@@ -9,7 +9,7 @@ class Py42ArchiveFileNotFoundError(Py42Error):
     """An exception raised when a resource file is not found or the path is invalid."""
 
     def __init__(self, device_guid, file_path):
-        message = u"File not found in archive " u"for device {} at path {}".format(
+        message = u"File not found in archive for device {} at path {}".format(
             device_guid, file_path
         )
         super(Py42ArchiveFileNotFoundError, self).__init__(message)

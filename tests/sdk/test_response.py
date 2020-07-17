@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from requests import Response
 
@@ -119,12 +117,6 @@ class TestPy42Response(object):
         response = Py42Response(mock_response_list_data_node)
         assert response.raw_text == JSON_LIST_WITH_DATA_NODE
 
-    def test_raw_text_with_data_node_returns_raw_json_with_data_node(
-        self, mock_response_list_data_node
-    ):
-        response = Py42Response(mock_response_list_data_node)
-        assert response.raw_text == JSON_LIST_WITH_DATA_NODE
-
     def test_raw_text_no_data_node_returns_raw_json_no_data_node(
         self, mock_response_not_json
     ):
@@ -155,13 +147,13 @@ class TestPy42Response(object):
     ):
         response = Py42Response(mock_response_dict_no_data_node)
         items = 0
-        for dictitem in response["item_list_key"]:
+        for _ in response["item_list_key"]:
             items += 1
         assert items == 2
 
         items = 0
 
-        for dictitem in response["item_list_key"]:
+        for _ in response["item_list_key"]:
             items += 1
         assert items == 2
 

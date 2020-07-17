@@ -1,5 +1,3 @@
-import json
-
 from py42._internal.compat import str
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 
@@ -17,7 +15,7 @@ def test_file_event_query_repr_does_not_throw_type_error():
     try:
         _ = repr(FileEventQuery())
     except TypeError:
-        assert False
+        raise AssertionError()
 
 
 def test_file_event_query_constructs_successfully(event_filter_group):

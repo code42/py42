@@ -231,7 +231,7 @@ class SecurityModule(object):
                     response[u"versionTimestamp"],
                 )
                 return storage_node_client.get_file(str(token))
-            except Py42HTTPError as err:
+            except Py42HTTPError:
                 # API searches multiple paths to find the file to be streamed, as returned by
                 # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
                 # to return

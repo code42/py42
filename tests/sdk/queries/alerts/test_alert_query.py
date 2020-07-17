@@ -16,7 +16,15 @@ from tests.sdk.queries.conftest import ON_OR_BEFORE
 
 from py42._internal.compat import str
 from py42.sdk.queries.alerts.alert_query import AlertQuery
-from py42.sdk.queries.alerts.filters import *
+from py42.sdk.queries.alerts.filters import Actor
+from py42.sdk.queries.alerts.filters import AlertState
+from py42.sdk.queries.alerts.filters import DateObserved
+from py42.sdk.queries.alerts.filters import Description
+from py42.sdk.queries.alerts.filters import RuleId
+from py42.sdk.queries.alerts.filters import RuleName
+from py42.sdk.queries.alerts.filters import RuleSource
+from py42.sdk.queries.alerts.filters import RuleType
+from py42.sdk.queries.alerts.filters import Severity
 
 _TENANT_ID = u"null"
 JSON_QUERY_BASE = u'{{"tenantId": {0}, "groupClause":"{1}", "groups":[{2}], "pgNum":{3}, "pgSize":{4}, "srtDirection":"{5}", "srtKey":"{6}"}}'
@@ -34,7 +42,7 @@ def test_alert_query_repr_does_not_throw_type_error():
     try:
         _ = repr(AlertQuery())
     except TypeError:
-        assert False
+        raise AssertionError()
 
 
 def test_alert_query_constructs_successfully(event_filter_group):

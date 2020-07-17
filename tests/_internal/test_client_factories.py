@@ -18,11 +18,9 @@ from py42.clients import file_event
 from py42.clients import legalhold
 from py42.clients import orgs
 from py42.clients import users
-from py42.clients.detectionlists import departing_employee
 from py42.clients.users import UserClient
 from py42.usercontext import UserContext
 
-_USER_UID = "user-uid"
 TEST_ROOT_URL = "https://example.com"
 ALERTS_URL = "alerts.example.com"
 FILE_EVENTS_URL = "fileevents.example.com"

@@ -56,7 +56,7 @@ def test_query_filter_dict_gives_expected_dict_representation(event_filter_group
     assert alert_query_query_dict["value"] == "testval"
 
 
-def test_query_filter_operator_returns_expected_value():
+def test_query_filter_term_returns_expected_value():
     query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.term == "testterm"
 
@@ -66,7 +66,7 @@ def test_query_filter_operator_returns_expected_value():
     assert query_filter.operator == "IS"
 
 
-def test_query_filter_operator_returns_expected_value():
+def test_query_filter_value_returns_expected_value():
     query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.value == "testval"
 

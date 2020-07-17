@@ -9,7 +9,11 @@ git clone https://github.com/myaccount/py42
 cd py42
 ```
 
-To set up your development environment, create a python virtual environment and activate it. This keeps your dependencies sandboxed so that they are unaffected by (and do not affect) other python packages you may have installed. There are many ways to do this, but we recommend using [pyenv](https://github.com/pyenv/pyenv).
+To set up your development environment, create a python virtual environment and activate it. This keeps your dependencies sandboxed so that they are unaffected by (and do not affect) other python packages you may have installed.
+
+### macOS
+
+There are many ways to do this (you can also use the method outlined for Windows/Linux below), but we recommend using [pyenv](https://github.com/pyenv/pyenv).
 
 Install `pyenv` and `pyenv-virtualenv` via [homebrew](https://brew.sh/):
 
@@ -34,6 +38,23 @@ pyenv activate py42
 
 Use `source deactivate` to exit the virtual environment and `pyenv activate py42` to reactivate it.
 
+## Windows/Linux
+
+Install a version of python 3.6 or higher from [python.org](https://python.org).
+Next, in a directory somewhere outside the project, create and activate your virtual environment:
+
+```bash
+python -m venv py42
+# macOS/Linux
+source py42/bin/activate
+# Windows
+.\env\Scripts\Activate
+```
+
+To leave the virtual environment, simply use:
+```bash
+deactivate
+```
 
 Next, with your virtual environment activated, install py42 and its development dependencies. The `-e` option installs py42 in
 ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs).

@@ -15,15 +15,15 @@ class DepartingEmployeeClient(BaseClient):
         self._detection_list_user_client = detection_list_user_client
 
     def add(self, user_id, departure_date=None):
-        """Adds a user to the Departing Employees list. Creates a detection list user profile if one
-         didn't already exist.
+        """Adds a user to the Departing Employees list. Creates a detection list user profile if one \
+            didn't already exist.
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
-        Raises a :class:`Py42BadRequestError` when a user already exists in the Departing Employee
-        detection list.
+        Raises a :class:`Py42BadRequestError` when a user already exists in the Departing Employee \
+            detection list.
 
         Args:
-            user_id (str or int): The Code42 userUid of the user you want to add to the departing
+            user_id (str or int): The Code42 userUid of the user you want to add to the departing \
                 employees list.
             departure_date (str, optional): Date in YYYY-MM-DD format. Date is treated as UTC. Defaults to None.
 

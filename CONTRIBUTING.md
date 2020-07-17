@@ -13,6 +13,7 @@
     - [Performing a test build](#performing-a-test-build)
     - [Running the docs locally](#running-the-docs-locally)
 - [Changes](#changes)
+- [Opening a PR](#opening-a-pr)
 
 ## Set up your Development environment
 
@@ -82,7 +83,7 @@ point to your virtual environment, and you should be ready to go!
 
 ## Run a full build
 
-We use [tox](https://tox.readthedocs.io/en/latest/#) to run our build against Python 2.7, 3.5, 3.6, 3.7, and 3.8. When run locally, `tox` will run everything against the version of python that your virtual envrionment is running. When you open a PR, this process will be run against _all_ supported python versions.
+We use [tox](https://tox.readthedocs.io/en/latest/#) to run our build against Python 2.7, 3.5, 3.6, 3.7, and 3.8. When run locally, `tox` will run only against the version of python that your virtual envrionment is running, but all versions will be validated against when you [open a PR](#opening-a-pr).
 
 To run all the unit tests, do a test build of the documentation, and check that the code meets all style requirements, simply run:
 
@@ -191,3 +192,9 @@ and then pointing your browser to `localhost:1337`.
 
 Document all notable consumer-affecting changes in CHANGELOG.md per principles and guidelines at
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+
+## Opening a PR
+
+When you're satisified with your changes, open a PR and fill out the pull request template file. We recommend prefixing the name of your branch and/or PR title with `bugfix`, `chore`, or `feature` to help quickly categorize your change. Your unit tests and other checks will run against all supported python versions when you do this.
+
+A team member should get in contact with you shortly to help merge your PR to completion and get it ready for a release!

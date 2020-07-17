@@ -1,7 +1,8 @@
 import json
 
 from py42.clients import BaseClient
-from py42.exceptions import Py42BadRequestError, Py42NotFoundError
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42NotFoundError
 
 
 class DetectionListUserClient(BaseClient):

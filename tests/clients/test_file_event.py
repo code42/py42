@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import pytest
 
 from py42._internal.session import Py42Session

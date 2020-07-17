@@ -1,6 +1,7 @@
 import json
 
-from py42._internal.compat import reprlib, str
+from py42._internal.compat import reprlib
+from py42._internal.compat import str
 from py42.exceptions import Py42Error
 
 

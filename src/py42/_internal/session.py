@@ -6,10 +6,12 @@ from threading import Lock
 import requests.adapters
 
 import py42.settings as settings
-from py42.settings import debug
-from py42._internal.compat import str, urljoin, urlparse
+from py42._internal.compat import str
+from py42._internal.compat import urljoin
+from py42._internal.compat import urlparse
 from py42.exceptions import raise_py42_error
 from py42.response import Py42Response
+from py42.settings import debug
 from py42.util import format_dict
 
 

@@ -1,1 +1,2 @@
-from py42 import settings, sdk
+from py42 import sdk
+from py42 import settings

@@ -3,13 +3,15 @@ import pytest
 from py42._internal.initialization import SDKDependencies
 from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
-from py42.clients import administration, devices, legalhold, orgs, users
-from py42.modules import (
-    alerts,
-    archive as arch_mod,
-    detectionlists,
-    securitydata as sec_mod,
-)
+from py42.clients import administration
+from py42.clients import devices
+from py42.clients import legalhold
+from py42.clients import orgs
+from py42.clients import users
+from py42.modules import alerts
+from py42.modules import archive as arch_mod
+from py42.modules import detectionlists
+from py42.modules import securitydata as sec_mod
 from py42.sdk import SDKClient
 from py42.usercontext import UserContext
 

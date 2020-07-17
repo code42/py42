@@ -1,11 +1,9 @@
 from requests import Session
 
 from py42._internal.initialization import SDKDependencies
-from py42._internal.session_factory import (
-    AuthHandlerFactory,
-    SessionFactory,
-    SessionModifierFactory,
-)
+from py42._internal.session_factory import AuthHandlerFactory
+from py42._internal.session_factory import SessionFactory
+from py42._internal.session_factory import SessionModifierFactory
 
 
 def from_local_account(host_address, username, password):

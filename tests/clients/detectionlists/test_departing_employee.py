@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
-
 import json
 
 import pytest
+from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.users import UserClient
-from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
 _USER_ID = "890973079883949999"

@@ -1,27 +1,21 @@
 # -*- coding: utf-8 -*-
-
 import json
 import posixpath
 
 import pytest
 from requests import Response
 
-import py42
 import py42._internal.archive_access as archive_access
 import py42.util
-from py42._internal.archive_access import (
-    ArchiveAccessor,
-    ArchiveAccessorManager,
-    FileSelection,
-    FileType,
-    RestoreJobManager,
-)
+from py42._internal.archive_access import ArchiveAccessor
+from py42._internal.archive_access import ArchiveAccessorManager
+from py42._internal.archive_access import FileSelection
+from py42._internal.archive_access import FileType
+from py42._internal.archive_access import RestoreJobManager
 from py42._internal.clients.archive import ArchiveClient
-from py42._internal.clients.storage import (
-    StorageArchiveClient,
-    StorageClient,
-    StorageClientFactory,
-)
+from py42._internal.clients.storage import StorageArchiveClient
+from py42._internal.clients.storage import StorageClient
+from py42._internal.clients.storage import StorageClientFactory
 from py42.exceptions import Py42ArchiveFileNotFoundError
 from py42.response import Py42Response
 

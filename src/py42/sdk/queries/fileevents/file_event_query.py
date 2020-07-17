@@ -1,10 +1,8 @@
 from py42._internal.compat import str
 from py42.sdk.queries import BaseQuery
-from py42.sdk.queries.query_filter import (
-    QueryFilterStringField,
-    create_filter_group,
-    create_query_filter,
-)
+from py42.sdk.queries.query_filter import create_filter_group
+from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import QueryFilterStringField
 
 
 class FileEventQuery(BaseQuery):

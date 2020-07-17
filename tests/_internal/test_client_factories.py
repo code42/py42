@@ -1,23 +1,23 @@
 import pytest
 
-from py42._internal.client_factories import (
-    AuthorityClientFactory,
-    MicroserviceClientFactory,
-)
-from py42._internal.clients import alerts, archive, key_value_store, securitydata
-from py42._internal.clients.storage import StorageClient, StorageClientFactory
+from py42._internal.client_factories import AuthorityClientFactory
+from py42._internal.client_factories import MicroserviceClientFactory
+from py42._internal.clients import alerts
+from py42._internal.clients import archive
+from py42._internal.clients import key_value_store
+from py42._internal.clients import securitydata
+from py42._internal.clients.storage import StorageClient
+from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.clients import (
-    administration,
-    detectionlists,
-    devices,
-    file_event,
-    legalhold,
-    orgs,
-    users,
-)
+from py42.clients import administration
+from py42.clients import detectionlists
+from py42.clients import devices
+from py42.clients import file_event
+from py42.clients import legalhold
+from py42.clients import orgs
+from py42.clients import users
 from py42.clients.detectionlists import departing_employee
 from py42.clients.users import UserClient
 from py42.usercontext import UserContext

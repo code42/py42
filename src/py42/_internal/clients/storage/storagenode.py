@@ -1,9 +1,8 @@
 import requests
 
-from py42.util import format_dict
-
-from py42.settings import debug
 from py42.clients import BaseClient
+from py42.settings import debug
+from py42.util import format_dict
 
 
 class StoragePreservationDataClient(BaseClient):

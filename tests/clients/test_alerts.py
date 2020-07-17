@@ -2,14 +2,14 @@ import json
 
 import pytest
 from requests import Response
+from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42._internal.clients.alerts import AlertClient
 from py42._internal.session import Py42Session
-from py42.response import Py42Response
 from py42.exceptions import Py42Error
+from py42.response import Py42Response
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import AlertState
-from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 TEST_RESPONSE = """
 {"type$": "RULE_METADATA_SEARCH_RESPONSE",

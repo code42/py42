@@ -1,5 +1,6 @@
-import pytest
 import logging
+
+import pytest
 
 import py42
 from py42.settings import debug

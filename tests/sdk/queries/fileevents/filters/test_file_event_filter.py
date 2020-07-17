@@ -1,8 +1,6 @@
 from py42._internal.compat import str
-from py42.sdk.queries.fileevents.file_event_query import (
-    create_exists_filter_group,
-    create_not_exists_filter_group,
-)
+from py42.sdk.queries.fileevents.file_event_query import create_exists_filter_group
+from py42.sdk.queries.fileevents.file_event_query import create_not_exists_filter_group
 
 
 def test_create_exists_filter_returns_filter_group_with_correct_json_representation():

@@ -1,14 +1,12 @@
 import pytest
 
-from py42.exceptions import (
-    Py42BadRequestError,
-    Py42ForbiddenError,
-    Py42HTTPError,
-    Py42InternalServerError,
-    Py42NotFoundError,
-    Py42UnauthorizedError,
-    raise_py42_error,
-)
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42ForbiddenError
+from py42.exceptions import Py42HTTPError
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42NotFoundError
+from py42.exceptions import Py42UnauthorizedError
+from py42.exceptions import raise_py42_error
 
 
 class TestPy42Errors(object):

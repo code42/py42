@@ -3,8 +3,8 @@ import json
 import pytest
 from requests import Response
 
-from py42.response import Py42Response
 from py42.exceptions import Py42Error
+from py42.response import Py42Response
 
 JSON_LIST_WITH_DATA_NODE = (
     '{"data": {"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}}'

@@ -2,17 +2,13 @@ import pytest
 from requests import Session
 
 from py42._internal.auth_handling import HeaderModifier
-from py42._internal.session_factory import (
-    AuthHandlerFactory,
-    SessionFactory,
-    SessionModifierFactory,
-)
-from py42._internal.token_providers import (
-    BasicAuthProvider,
-    C42APILoginTokenProvider,
-    C42ApiV1TokenProvider,
-    C42ApiV3TokenProvider,
-)
+from py42._internal.session_factory import AuthHandlerFactory
+from py42._internal.session_factory import SessionFactory
+from py42._internal.session_factory import SessionModifierFactory
+from py42._internal.token_providers import BasicAuthProvider
+from py42._internal.token_providers import C42APILoginTokenProvider
+from py42._internal.token_providers import C42ApiV1TokenProvider
+from py42._internal.token_providers import C42ApiV3TokenProvider
 
 TARGET_HOST_ADDRESS = "http://target-host-address.com"
 

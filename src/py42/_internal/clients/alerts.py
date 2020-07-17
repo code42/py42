@@ -21,7 +21,9 @@ class AlertClient(BaseClient):
     def get_details(self, alert_ids, tenant_id=None):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
-        tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
+        tenant_id = (
+            tenant_id if tenant_id else self._user_context.get_current_tenant_id()
+        )
         uri = self._uri_prefix.format(u"query-details")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
         results = self._session.post(uri, data=json.dumps(data))
@@ -30,7 +32,9 @@ class AlertClient(BaseClient):
     def resolve(self, alert_ids, tenant_id=None, reason=None):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
-        tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
+        tenant_id = (
+            tenant_id if tenant_id else self._user_context.get_current_tenant_id()
+        )
         reason = reason if reason else u""
         uri = self._uri_prefix.format(u"resolve-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
@@ -39,7 +43,9 @@ class AlertClient(BaseClient):
     def reopen(self, alert_ids, tenant_id=None, reason=None):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
-        tenant_id = tenant_id if tenant_id else self._user_context.get_current_tenant_id()
+        tenant_id = (
+            tenant_id if tenant_id else self._user_context.get_current_tenant_id()
+        )
         uri = self._uri_prefix.format(u"reopen-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
         return self._session.post(uri, data=json.dumps(data))
@@ -66,7 +72,8 @@ class AlertClient(BaseClient):
             u"tenantId": tenant_id,
             u"groups": groups or [],
             u"groupClause": u"AND",
-            u"pgNum": page_num - 1,  # Minus 1, as this API expects first page to start with zero.
+            u"pgNum": page_num
+            - 1,  # Minus 1, as this API expects first page to start with zero.
             u"pgSize": page_size,
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,
@@ -85,7 +92,9 @@ class AlertClient(BaseClient):
             sort_direction=sort_direction,
         )
 
-    def get_all_rules_by_name(self, rule_name, sort_key=u"CreatedAt", sort_direction=u"DESC"):
+    def get_all_rules_by_name(
+        self, rule_name, sort_key=u"CreatedAt", sort_direction=u"DESC"
+    ):
         tenant_id = self._user_context.get_current_tenant_id()
         return get_all_pages(
             self._get_alert_rules,
@@ -96,13 +105,17 @@ class AlertClient(BaseClient):
             sort_direction=sort_direction,
         )
 
-    def get_rule_by_observer_id(self, observer_id, sort_key=u"CreatedAt", sort_direction=u"DESC"):
+    def get_rule_by_observer_id(
+        self, observer_id, sort_key=u"CreatedAt", sort_direction=u"DESC"
+    ):
         tenant_id = self._user_context.get_current_tenant_id()
         results = get_all_pages(
             self._get_alert_rules,
             u"ruleMetadata",
             tenant_id=tenant_id,
-            groups=[json.loads(str(create_eq_filter_group(u"ObserverRuleId", observer_id)))],
+            groups=[
+                json.loads(str(create_eq_filter_group(u"ObserverRuleId", observer_id)))
+            ],
             sort_key=sort_key,
             sort_direction=sort_direction,
         )

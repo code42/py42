@@ -106,7 +106,7 @@ class DeviceClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing device information.
         """
-        uri = u"/api/Computer/{0}".format(device_id)
+        uri = u"/api/Computer/{}".format(device_id)
         params = dict(incBackupUsage=include_backup_usage, **kwargs)
         return self._session.get(uri, params=params)
 
@@ -122,7 +122,7 @@ class DeviceClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing device information.
         """
-        uri = u"/api/Computer/{0}".format(guid)
+        uri = u"/api/Computer/{}".format(guid)
         params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
         return self._session.get(uri, params=params)
 
@@ -137,7 +137,7 @@ class DeviceClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/ComputerBlock/{0}".format(device_id)
+        uri = u"/api/ComputerBlock/{}".format(device_id)
         return self._session.put(uri)
 
     def unblock(self, device_id):
@@ -150,7 +150,7 @@ class DeviceClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/ComputerBlock/{0}".format(device_id)
+        uri = u"/api/ComputerBlock/{}".format(device_id)
         return self._session.delete(uri)
 
     def deactivate(self, device_id):
@@ -192,7 +192,7 @@ class DeviceClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/ComputerDeauthorization/{0}".format(device_id)
+        uri = u"/api/ComputerDeauthorization/{}".format(device_id)
         return self._session.put(uri)
 
     def get_settings(self, guid, keys=None):

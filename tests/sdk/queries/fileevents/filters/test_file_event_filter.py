@@ -18,6 +18,7 @@ def test_create_not_exists_filter_returns_filter_group_with_correct_json_represe
     term = "test_is_in_term"
     _group = create_not_exists_filter_group(term)
     assert (
-        str(_group) == '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_EXIST", '
+        str(_group)
+        == '{"filterClause":"AND", "filters":[{"operator":"DOES_NOT_EXIST", '
         '"term":"test_is_in_term", "value":null}]}'
     )

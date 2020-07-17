@@ -20,8 +20,10 @@ class Py42Session(object):
         self._auth_lock = Lock()
         self._session = session
         adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
-        if not host_address.startswith(u"http://") and not host_address.startswith(u"https://"):
-            host_address = u"https://{0}".format(host_address)
+        if not host_address.startswith(u"http://") and not host_address.startswith(
+            u"https://"
+        ):
+            host_address = u"https://{}".format(host_address)
 
         self._host_address = host_address
         self._auth_handler = auth_handler
@@ -107,7 +109,9 @@ class Py42Session(object):
                     response.raise_for_status()
 
                 if not kwargs.get(u"stream"):
-                    response.encoding = u"utf-8"  # setting this manually speeds up read times
+                    response.encoding = (
+                        u"utf-8"  # setting this manually speeds up read times
+                    )
 
                 return Py42Response(response)
         except requests.HTTPError as err:
@@ -152,8 +156,9 @@ class Py42Session(object):
             cert=cert,
         )
 
-        unauthorized = self._auth_handler and self._auth_handler.response_indicates_unauthorized(
-            response
+        unauthorized = (
+            self._auth_handler
+            and self._auth_handler.response_indicates_unauthorized(response)
         )
 
         return response, unauthorized
@@ -176,7 +181,7 @@ class Py42Session(object):
         self._initialized = True
 
     def _print_request(self, method, url, params=None, data=None):
-        debug.logger.info(u"{0}{1}".format(str(method).ljust(8), url))
+        debug.logger.info(u"{}{}".format(str(method).ljust(8), url))
         if params:
             debug.logger.debug(format_dict(params, u"  params"))
         if data:

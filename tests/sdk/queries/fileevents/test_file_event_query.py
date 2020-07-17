@@ -80,17 +80,25 @@ def test_file_event_query_str_with_many_filters_or_specified_gives_correct_json_
     assert str(file_event_query) == json_query_str
 
 
-def test_file_event_query_str_with_page_num_gives_correct_json_representation(event_filter_group):
+def test_file_event_query_str_with_page_num_gives_correct_json_representation(
+    event_filter_group,
+):
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.page_number = 5
-    json_query_str = JSON_QUERY_BASE.format("AND", event_filter_group, 5, 10000, "asc", "eventId")
+    json_query_str = JSON_QUERY_BASE.format(
+        "AND", event_filter_group, 5, 10000, "asc", "eventId"
+    )
     assert str(file_event_query) == json_query_str
 
 
-def test_file_event_query_str_with_page_size_gives_correct_json_representation(event_filter_group):
+def test_file_event_query_str_with_page_size_gives_correct_json_representation(
+    event_filter_group,
+):
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.page_size = 500
-    json_query_str = JSON_QUERY_BASE.format("AND", event_filter_group, 1, 500, "asc", "eventId")
+    json_query_str = JSON_QUERY_BASE.format(
+        "AND", event_filter_group, 1, 500, "asc", "eventId"
+    )
     assert str(file_event_query) == json_query_str
 
 
@@ -99,11 +107,15 @@ def test_file_event_query_str_with_sort_direction_gives_correct_json_representat
 ):
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.sort_direction = "desc"
-    json_query_str = JSON_QUERY_BASE.format("AND", event_filter_group, 1, 10000, "desc", "eventId")
+    json_query_str = JSON_QUERY_BASE.format(
+        "AND", event_filter_group, 1, 10000, "desc", "eventId"
+    )
     assert str(file_event_query) == json_query_str
 
 
-def test_file_event_query_str_with_sort_key_gives_correct_json_representation(event_filter_group):
+def test_file_event_query_str_with_sort_key_gives_correct_json_representation(
+    event_filter_group,
+):
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.sort_key = "some_field_to_sort_by"
     json_query_str = JSON_QUERY_BASE.format(
@@ -120,7 +132,9 @@ def test_file_event_query_from_dict_gives_correct_json_representation():
     group_str = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"testterm", "value":"testval"}]}'
     file_event_query_dict = {"groupClause": "AND", "groups": [group]}
     file_event_query = FileEventQuery.from_dict(file_event_query_dict)
-    json_query_str = JSON_QUERY_BASE.format("AND", group_str, 1, 10000, "asc", "eventId")
+    json_query_str = JSON_QUERY_BASE.format(
+        "AND", group_str, 1, 10000, "asc", "eventId"
+    )
     assert str(file_event_query) == json_query_str
 
 

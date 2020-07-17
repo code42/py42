@@ -46,7 +46,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
-        uri = u"/api/Org/{0}".format(org_id)
+        uri = u"/api/Org/{}".format(org_id)
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, org_uid, **kwargs):
@@ -59,7 +59,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
-        uri = u"/api/Org/{0}".format(org_uid)
+        uri = u"/api/Org/{}".format(org_uid)
         params = dict(idType=u"orgUid", **kwargs)
         return self._session.get(uri, params=params)
 
@@ -91,7 +91,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/OrgBlock/{0}".format(org_id)
+        uri = u"/api/OrgBlock/{}".format(org_id)
         return self._session.put(uri)
 
     def unblock(self, org_id):
@@ -105,7 +105,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/OrgBlock/{0}".format(org_id)
+        uri = u"/api/OrgBlock/{}".format(org_id)
         return self._session.delete(uri)
 
     def deactivate(self, org_id):
@@ -119,7 +119,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/OrgDeactivation/{0}".format(org_id)
+        uri = u"/api/OrgDeactivation/{}".format(org_id)
         return self._session.put(uri)
 
     def reactivate(self, org_id):
@@ -133,7 +133,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/OrgDeactivation/{0}".format(org_id)
+        uri = u"/api/OrgDeactivation/{}".format(org_id)
         return self._session.delete(uri)
 
     def get_current(self, **kwargs):

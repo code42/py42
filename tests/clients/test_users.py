@@ -73,9 +73,13 @@ class TestUserClient(object):
             u"notes": note,
         }
 
-        mock_session.post.assert_called_once_with(USER_URI, data=json.dumps(expected_params))
+        mock_session.post.assert_called_once_with(
+            USER_URI, data=json.dumps(expected_params)
+        )
 
-    def test_get_all_calls_get_with_uri_and_params(self, mock_session, mock_get_all_response):
+    def test_get_all_calls_get_with_uri_and_params(
+        self, mock_session, mock_get_all_response
+    ):
         mock_session.get.side_effect = [mock_get_all_response]
         client = UserClient(mock_session)
         for _ in client.get_all():
@@ -94,11 +98,13 @@ class TestUserClient(object):
         expected_params = {u"username": username}
         mock_session.get.assert_called_once_with(USER_URI, params=expected_params)
 
-    def test_get_user_by_id_calls_get_with_uri_and_params(self, mock_session, successful_response):
+    def test_get_user_by_id_calls_get_with_uri_and_params(
+        self, mock_session, successful_response
+    ):
         mock_session.get.return_value = successful_response
         client = UserClient(mock_session)
         client.get_by_id("USER_ID")
-        uri = "{0}/{1}".format(USER_URI, "USER_ID")
+        uri = "{}/{}".format(USER_URI, "USER_ID")
         mock_session.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
@@ -116,7 +122,9 @@ class TestUserClient(object):
         py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
 
-    def test_get_scim_data_by_uid_calls_get_with_expected_uri_and_params(self, mock_session):
+    def test_get_scim_data_by_uid_calls_get_with_expected_uri_and_params(
+        self, mock_session
+    ):
         client = UserClient(mock_session)
         client.get_scim_data_by_uid("USER_ID")
         uri = "/api/v7/scim-user-data/collated-view"

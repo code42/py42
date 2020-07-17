@@ -11,7 +11,7 @@ class DetectionListUserClient(BaseClient):
     """
 
     _api_version = u"v2"
-    _uri_prefix = u"/svc/api/{0}".format(_api_version)
+    _uri_prefix = u"/svc/api/{}".format(_api_version)
     _resource = u"/user"
 
     def __init__(self, session, user_context, user_client):
@@ -20,7 +20,7 @@ class DetectionListUserClient(BaseClient):
         self._user_client = user_client
 
     def _make_uri(self, action):
-        return u"{0}{1}{2}".format(self._uri_prefix, self._resource, action)
+        return u"{}{}{}".format(self._uri_prefix, self._resource, action)
 
     def create_if_not_exists(self, user_id):
         """Find out whether the detection list profile exists for a given uid. If not,
@@ -70,7 +70,10 @@ class DetectionListUserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"userId": user_id}
+        data = {
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+        }
         uri = self._make_uri(u"/getbyid")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -83,7 +86,10 @@ class DetectionListUserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"username": username}
+        data = {
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"username": username,
+        }
         uri = self._make_uri(u"/getbyusername")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -195,6 +201,9 @@ class DetectionListUserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"userId": user_id}
+        data = {
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+        }
         uri = self._make_uri(u"/refresh")
         return self._session.post(uri, data=json.dumps(data))

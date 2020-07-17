@@ -78,7 +78,9 @@ class MicroserviceClientFactory(object):
     def get_departing_employee_client(self):
         if not self._departing_employee_client:
             self._departing_employee_client = DepartingEmployeeClient(
-                self._get_ecm_session(), self._user_context, self.get_detection_list_user_client()
+                self._get_ecm_session(),
+                self._user_context,
+                self.get_detection_list_user_client(),
             )
         return self._departing_employee_client
 
@@ -90,7 +92,9 @@ class MicroserviceClientFactory(object):
     def get_high_risk_employee_client(self):
         if not self._high_risk_employee_client:
             self._high_risk_employee_client = HighRiskEmployeeClient(
-                self._get_ecm_session(), self._user_context, self.get_detection_list_user_client()
+                self._get_ecm_session(),
+                self._user_context,
+                self.get_detection_list_user_client(),
             )
         return self._high_risk_employee_client
 
@@ -124,7 +128,9 @@ class MicroserviceClientFactory(object):
         return self._pds_client
 
     def create_storage_preservation_client(self, host_address):
-        main_session = self._session_factory.create_jwt_session(host_address, self._root_session)
+        main_session = self._session_factory.create_jwt_session(
+            host_address, self._root_session
+        )
         streaming_session = self._session_factory.create_anonymous_session(host_address)
         return StoragePreservationDataClient(main_session, streaming_session)
 
@@ -144,7 +150,9 @@ class MicroserviceClientFactory(object):
 
     def _get_stored_value(self, key):
         if not self._key_value_store_client:
-            url = _hacky_get_microservice_url(self._root_session, u"simple-key-value-store")
+            url = _hacky_get_microservice_url(
+                self._root_session, u"simple-key-value-store"
+            )
             session = self._session_factory.create_anonymous_session(url)
             self._key_value_store_client = key_value_store.KeyValueStoreClient(session)
         return self._key_value_store_client.get_stored_value(key).text

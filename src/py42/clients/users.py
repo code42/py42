@@ -59,7 +59,7 @@ class UserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = u"/api/User/{0}".format(user_id)
+        uri = u"/api/User/{}".format(user_id)
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, user_uid, **kwargs):
@@ -72,7 +72,7 @@ class UserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = u"/api/User/{0}".format(user_uid)
+        uri = u"/api/User/{}".format(user_uid)
         params = dict(idType=u"uid", **kwargs)
         return self._session.get(uri, params=params)
 
@@ -125,7 +125,9 @@ class UserClient(BaseClient):
 
         return self._session.get(uri, params=params)
 
-    def get_all(self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs):
+    def get_all(
+        self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs
+    ):
         """Gets all users.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
@@ -180,7 +182,7 @@ class UserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserBlock/{0}".format(user_id)
+        uri = u"/api/UserBlock/{}".format(user_id)
         return self._session.put(uri)
 
     def unblock(self, user_id):
@@ -194,7 +196,7 @@ class UserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserBlock/{0}".format(user_id)
+        uri = u"/api/UserBlock/{}".format(user_id)
         return self._session.delete(uri)
 
     def deactivate(self, user_id, block_user=None):
@@ -209,7 +211,7 @@ class UserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserDeactivation/{0}".format(user_id)
+        uri = u"/api/UserDeactivation/{}".format(user_id)
         data = {u"blockUser": block_user}
         return self._session.put(uri, data=json.dumps(data))
 
@@ -224,7 +226,7 @@ class UserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserDeactivation/{0}".format(user_id)
+        uri = u"/api/UserDeactivation/{}".format(user_id)
         params = {u"unblockUser": unblock_user}
         return self._session.delete(uri, params=params)
 

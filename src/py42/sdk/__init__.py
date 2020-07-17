@@ -53,7 +53,9 @@ class SDKClient(object):
         basic_auth_session = session_factory.create_basic_auth_session(
             host_address, username, password
         )
-        sdk_dependencies = SDKDependencies(host_address, session_factory, basic_auth_session)
+        sdk_dependencies = SDKDependencies(
+            host_address, session_factory, basic_auth_session
+        )
         return cls(sdk_dependencies)
 
     @property

@@ -82,11 +82,15 @@ def test_filter_group_str_gives_correct_json_representation(query_filter):
     assert str(create_filter_group([query_filter], "AND")) == JSON_FILTER_GROUP_AND
 
 
-def test_filter_group_with_and_specified_str_gives_correct_json_representation(query_filter):
+def test_filter_group_with_and_specified_str_gives_correct_json_representation(
+    query_filter,
+):
     assert str(create_filter_group([query_filter], "AND")) == JSON_FILTER_GROUP_AND
 
 
-def test_filter_group_with_or_specified_str_gives_correct_json_representation(query_filter):
+def test_filter_group_with_or_specified_str_gives_correct_json_representation(
+    query_filter,
+):
     assert str(create_filter_group([query_filter], "OR")) == JSON_FILTER_GROUP_OR
 
 
@@ -193,7 +197,9 @@ def test_create_on_or_before_filter_group_returns_obj_with_correct_json_represen
 
 
 def test_create_in_range_filter_group_returns_obj_with_correct_json_representation():
-    filter_group = create_in_range_filter_group("rangeterm", "beforevalue", "aftervalue")
+    filter_group = create_in_range_filter_group(
+        "rangeterm", "beforevalue", "aftervalue"
+    )
     assert (
         str(filter_group) == '{"filterClause":"AND",'
         ' "filters":[{"operator":"ON_OR_AFTER", "term":"rangeterm", "value":"beforevalue"},'
@@ -202,7 +208,11 @@ def test_create_in_range_filter_group_returns_obj_with_correct_json_representati
 
 
 def test_create_query_filter_returns_obj_with_correct_json_representation():
-    query_filter = create_query_filter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
-    assert str(query_filter) == '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+    query_filter = create_query_filter(
+        EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING
+    )
+    assert str(
+        query_filter
+    ) == '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
         OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
     )

@@ -33,7 +33,11 @@ class DepartingEmployeeClient(BaseClient):
         if self._detection_list_user_client.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
 
-            data = {u"tenantId": tenant_id, u"userId": user_id, u"departureDate": departure_date}
+            data = {
+                u"tenantId": tenant_id,
+                u"userId": user_id,
+                u"departureDate": departure_date,
+            }
             uri = self._uri_prefix.format(u"add")
             return self._session.post(uri, data=json.dumps(data))
 
@@ -89,7 +93,9 @@ class DepartingEmployeeClient(BaseClient):
         }
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_all(self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"):
+    def get_all(
+        self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"
+    ):
         """Gets all Departing Employees.
 
         Args:
@@ -143,5 +149,9 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id = self._user_context.get_current_tenant_id()
 
         uri = self._uri_prefix.format(u"update")
-        data = {u"tenantId": tenant_id, u"userId": user_id, u"departureDate": departure_date}
+        data = {
+            u"tenantId": tenant_id,
+            u"userId": user_id,
+            u"departureDate": departure_date,
+        }
         return self._session.post(uri, data=json.dumps(data))

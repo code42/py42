@@ -82,7 +82,9 @@ class AlertRulesModule(object):
             that each contain a page of rules.
         """
         alerts_client = self.microservice_client_factory.get_alerts_client()
-        return alerts_client.get_all_rules(sort_key=sort_key, sort_direction=sort_direction)
+        return alerts_client.get_all_rules(
+            sort_key=sort_key, sort_direction=sort_direction
+        )
 
     def get_all_by_name(self, rule_name):
         """Search for matching rules by name.

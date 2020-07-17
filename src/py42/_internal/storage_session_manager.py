@@ -26,7 +26,9 @@ class StorageSessionManager(object):
                         session = self.create_storage_session(url, token_provider)
                         self._session_cache.update({url.lower(): session})
         except HTTPError as ex:
-            message = u"Failed to create or retrieve session, caused by: {0}".format(str(ex))
+            message = u"Failed to create or retrieve session, caused by: {}".format(
+                str(ex)
+            )
             raise Py42StorageSessionInitializationError(message)
         return session
 

@@ -42,7 +42,8 @@ class TestAlertRulesClient(object):
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["ruleId"] == u"rule-id"
             and posted_data["userList"][0]["userIdFromAuthority"] == u"user-id"
-            and posted_data["userList"][0]["userAliasList"] == [u"user.aliases@code42.com"]
+            and posted_data["userList"][0]["userAliasList"]
+            == [u"user.aliases@code42.com"]
         )
 
     def test_remove_user_posts_expected_data(

@@ -59,7 +59,9 @@ class TestStorageSessionManager(object):
         expected_message = "Mock error!"
         assert e.value.args[0] == expected_message
 
-    def test_get_storage_session_get_saved_session_initially_returns_none(self, session_factory):
+    def test_get_storage_session_get_saved_session_initially_returns_none(
+        self, session_factory
+    ):
         storage_session_manager = StorageSessionManager(session_factory)
         assert storage_session_manager.get_saved_session_for_url("TEST-URI") is None
 

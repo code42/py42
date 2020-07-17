@@ -1,5 +1,8 @@
 from py42._internal.archive_access import ArchiveAccessorManager
-from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory
+from py42._internal.client_factories import (
+    AuthorityClientFactory,
+    MicroserviceClientFactory,
+)
 from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
@@ -23,7 +26,9 @@ class SDKDependencies(object):
 
         # authority clients
         authority_client_factory = AuthorityClientFactory(self.session)
-        self.administration_client = authority_client_factory.create_administration_client()
+        self.administration_client = (
+            authority_client_factory.create_administration_client()
+        )
         self.user_client = authority_client_factory.create_user_client()
         self.device_client = authority_client_factory.create_device_client()
         self.org_client = authority_client_factory.create_org_client()
@@ -45,7 +50,11 @@ class SDKDependencies(object):
         )
 
         microservice_client_factory = MicroserviceClientFactory(
-            host_address, root_session, session_factory, self.user_context, self.user_client
+            host_address,
+            root_session,
+            session_factory,
+            self.user_context,
+            self.user_client,
         )
 
         # modules (feature sets that combine info from multiple clients)
@@ -53,7 +62,9 @@ class SDKDependencies(object):
             archive_accessor_manager, self.archive_client
         )
         self.security_module = sec_module.SecurityModule(
-            self.security_client, self.storage_client_factory, microservice_client_factory
+            self.security_client,
+            self.storage_client_factory,
+            microservice_client_factory,
         )
         self.detection_lists_module = detectionlists.DetectionListsModule(
             microservice_client_factory

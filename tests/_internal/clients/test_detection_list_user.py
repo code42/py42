@@ -27,7 +27,9 @@ class TestDetectionListUserClient(object):
         return mock_session
 
     @pytest.fixture
-    def mock_user_client_raises_exception(self, mocker, mock_session, user_context, py42_response):
+    def mock_user_client_raises_exception(
+        self, mocker, mock_session, user_context, py42_response
+    ):
         user_client = UserClient(mock_session)
         response = mocker.MagicMock(spec=Response)
         response.status_code = 400
@@ -36,7 +38,9 @@ class TestDetectionListUserClient(object):
         mock_session.post.side_effect = Py42BadRequestError(exception)
         return user_client
 
-    def test_create_posts_expected_data(self, mock_session, user_context, mock_user_client):
+    def test_create_posts_expected_data(
+        self, mock_session, user_context, mock_user_client
+    ):
         detection_list_user_client = DetectionListUserClient(
             mock_session, user_context, mock_user_client
         )
@@ -53,7 +57,9 @@ class TestDetectionListUserClient(object):
             and posted_data["notes"] == ""
         )
 
-    def test_get_posts_expected_data(self, mock_session, user_context, mock_user_client):
+    def test_get_posts_expected_data(
+        self, mock_session, user_context, mock_user_client
+    ):
         detection_list_user_client = DetectionListUserClient(
             mock_session, user_context, mock_user_client
         )
@@ -67,7 +73,9 @@ class TestDetectionListUserClient(object):
             and posted_data["username"] == "942897397520289999"
         )
 
-    def test_get_by_id_posts_expected_data(self, mock_session, user_context, mock_user_client):
+    def test_get_by_id_posts_expected_data(
+        self, mock_session, user_context, mock_user_client
+    ):
         detection_list_user_client = DetectionListUserClient(
             mock_session, user_context, mock_user_client
         )
@@ -81,7 +89,9 @@ class TestDetectionListUserClient(object):
             and posted_data["userId"] == "942897397520289999"
         )
 
-    def test_update_notes_posts_expected_data(self, mock_session, user_context, mock_user_client):
+    def test_update_notes_posts_expected_data(
+        self, mock_session, user_context, mock_user_client
+    ):
         detection_list_user_client = DetectionListUserClient(
             mock_session, user_context, mock_user_client
         )
@@ -158,7 +168,9 @@ class TestDetectionListUserClient(object):
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/removecloudusernames"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v2/user/removecloudusernames"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -171,7 +183,10 @@ class TestDetectionListUserClient(object):
         detection_list_user_client = DetectionListUserClient(
             mock_session, user_context, mock_user_client
         )
-        assert detection_list_user_client.create_if_not_exists("942897397520289999") is True
+        assert (
+            detection_list_user_client.create_if_not_exists("942897397520289999")
+            is True
+        )
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
@@ -203,9 +218,14 @@ class TestDetectionListUserClient(object):
         )
         assert mock_get_by_id_fails.post.call_count == 2
         assert mock_user_client._session.get.call_count == 1
-        assert mock_user_client._session.get.call_args[0][0] == "/api/User/942897397520289999"
+        assert (
+            mock_user_client._session.get.call_args[0][0]
+            == "/api/User/942897397520289999"
+        )
 
-    def test_refresh_posts_expected_data(self, mock_session, user_context, mock_user_client):
+    def test_refresh_posts_expected_data(
+        self, mock_session, user_context, mock_user_client
+    ):
         detection_list_user_client = DetectionListUserClient(
             mock_session, user_context, mock_user_client
         )

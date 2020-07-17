@@ -71,7 +71,9 @@ class TestAlertClient(object):
     def successful_post(self, mock_session, successful_response):
         mock_session.post.return_value = successful_response
 
-    def test_search_posts_expected_data(self, mock_session, user_context, successful_post):
+    def test_search_posts_expected_data(
+        self, mock_session, user_context, successful_post
+    ):
         alert_client = AlertClient(mock_session, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)
@@ -90,7 +92,9 @@ class TestAlertClient(object):
             and post_data["groups"][0]["filters"][0]["value"] == "OPEN"
         )
 
-    def test_search_posts_to_expected_url(self, mock_session, user_context, successful_post):
+    def test_search_posts_to_expected_url(
+        self, mock_session, user_context, successful_post
+    ):
         alert_client = AlertClient(mock_session, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)
@@ -112,7 +116,9 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    @pytest.mark.parametrize("alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]])
+    @pytest.mark.parametrize(
+        "alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]]
+    )
     def test_get_details_when_given_single_alert_id_posts_expected_data(
         self, mock_session, user_context, successful_post, py42_response, alert_id
     ):
@@ -190,7 +196,9 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    @pytest.mark.parametrize("alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]])
+    @pytest.mark.parametrize(
+        "alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]]
+    )
     def test_resolve_when_given_single_alert_id_posts_expected_data(
         self, mock_session, user_context, successful_post, alert_id
     ):
@@ -215,7 +223,9 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    def test_resolve_posts_to_expected_url(self, mock_session, user_context, successful_post):
+    def test_resolve_posts_to_expected_url(
+        self, mock_session, user_context, successful_post
+    ):
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.resolve(alert_ids, "some-tenant-id")
@@ -234,7 +244,9 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    @pytest.mark.parametrize("alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]])
+    @pytest.mark.parametrize(
+        "alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]]
+    )
     def test_reopen_when_given_single_alert_id_posts_expected_data(
         self, mock_session, user_context, successful_post, alert_id
     ):
@@ -259,7 +271,9 @@ class TestAlertClient(object):
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
-    def test_reopen_posts_to_expected_url(self, mock_session, user_context, successful_post):
+    def test_reopen_posts_to_expected_url(
+        self, mock_session, user_context, successful_post
+    ):
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.reopen(alert_ids, "some-tenant-id")
@@ -273,7 +287,9 @@ class TestAlertClient(object):
 
         assert mock_session.post.call_count == 1
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
-        assert mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["groups"] == []
@@ -300,7 +316,9 @@ class TestAlertClient(object):
         assert filter_group["term"] == "Name"
         assert filter_group["operator"] == "IS"
         assert filter_group["value"] == "testname"
-        assert mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["groupClause"] == "AND"
@@ -324,7 +342,9 @@ class TestAlertClient(object):
         assert filter_group["term"] == "ObserverRuleId"
         assert filter_group["operator"] == "IS"
         assert filter_group["value"] == "testid"
-        assert mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["groupClause"] == "AND"

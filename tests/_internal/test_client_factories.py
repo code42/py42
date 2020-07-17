@@ -1,12 +1,23 @@
 import pytest
 
-from py42._internal.client_factories import AuthorityClientFactory, MicroserviceClientFactory
+from py42._internal.client_factories import (
+    AuthorityClientFactory,
+    MicroserviceClientFactory,
+)
 from py42._internal.clients import alerts, archive, key_value_store, securitydata
 from py42._internal.clients.storage import StorageClient, StorageClientFactory
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.clients import administration, detectionlists, devices, file_event, legalhold, orgs, users
+from py42.clients import (
+    administration,
+    detectionlists,
+    devices,
+    file_event,
+    legalhold,
+    orgs,
+    users,
+)
 from py42.clients.detectionlists import departing_employee
 from py42.clients.users import UserClient
 from py42.usercontext import UserContext
@@ -102,7 +113,9 @@ class TestStorageClientFactory(object):
 
 
 class TestMicroserviceClientFactory(object):
-    def test_get_alerts_client(self, mock_session, session_factory, user_context, user_client):
+    def test_get_alerts_client(
+        self, mock_session, session_factory, user_context, user_client
+    ):
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
         )
@@ -110,7 +123,12 @@ class TestMicroserviceClientFactory(object):
         assert type(client) == alerts.AlertClient
 
     def test_get_alerts_client_calls_get_stored_value_with_expected_key(
-        self, mock_session, session_factory, user_context, user_client, key_value_store_client
+        self,
+        mock_session,
+        session_factory,
+        user_context,
+        user_client,
+        key_value_store_client,
     ):
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL,
@@ -121,10 +139,17 @@ class TestMicroserviceClientFactory(object):
             key_value_store_client,
         )
         factory.get_alerts_client()
-        key_value_store_client.get_stored_value.assert_called_once_with("AlertService-API_URL")
+        key_value_store_client.get_stored_value.assert_called_once_with(
+            "AlertService-API_URL"
+        )
 
     def test_get_alerts_client_creates_client_with_expected_url(
-        self, mock_session, session_factory, user_context, user_client, key_value_store_client
+        self,
+        mock_session,
+        session_factory,
+        user_context,
+        user_client,
+        key_value_store_client,
     ):
         key_value_store_client.get_stored_value.return_value.text = ALERTS_URL
         factory = MicroserviceClientFactory(
@@ -136,7 +161,9 @@ class TestMicroserviceClientFactory(object):
             key_value_store_client,
         )
         factory.get_alerts_client()
-        session_factory.create_jwt_session.assert_called_once_with(ALERTS_URL, mock_session)
+        session_factory.create_jwt_session.assert_called_once_with(
+            ALERTS_URL, mock_session
+        )
 
     def test_get_alerts_client_returns_same_intance_on_multiple_calls(
         self, mock_session, session_factory, user_context, user_client
@@ -159,7 +186,12 @@ class TestMicroserviceClientFactory(object):
         assert type(client) == detectionlists.departing_employee.DepartingEmployeeClient
 
     def test_get_departing_employee_client_calls_get_stored_value_with_expected_key(
-        self, mock_session, session_factory, user_context, user_client, key_value_store_client
+        self,
+        mock_session,
+        session_factory,
+        user_context,
+        user_client,
+        key_value_store_client,
     ):
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL,
@@ -171,13 +203,22 @@ class TestMicroserviceClientFactory(object):
         )
         factory.get_departing_employee_client()
 
-        key_value_store_client.get_stored_value.assert_called_with("employeecasemanagement-API_URL")
+        key_value_store_client.get_stored_value.assert_called_with(
+            "employeecasemanagement-API_URL"
+        )
         assert key_value_store_client.get_stored_value.call_count == 1
 
     def test_get_departing_employee_client_creates_client_with_expected_url(
-        self, mock_session, session_factory, user_context, user_client, key_value_store_client
+        self,
+        mock_session,
+        session_factory,
+        user_context,
+        user_client,
+        key_value_store_client,
     ):
-        key_value_store_client.get_stored_value.return_value.text = DEPARTING_EMPLOYEE_URL
+        key_value_store_client.get_stored_value.return_value.text = (
+            DEPARTING_EMPLOYEE_URL
+        )
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL,
             mock_session,
@@ -187,7 +228,9 @@ class TestMicroserviceClientFactory(object):
             key_value_store_client,
         )
         factory.get_departing_employee_client()
-        session_factory.create_jwt_session.assert_called_with(DEPARTING_EMPLOYEE_URL, mock_session)
+        session_factory.create_jwt_session.assert_called_with(
+            DEPARTING_EMPLOYEE_URL, mock_session
+        )
         assert session_factory.create_jwt_session.call_count == 1
 
     def test_get_departing_employee_client_returns_same_intance_on_multiple_calls(
@@ -201,7 +244,9 @@ class TestMicroserviceClientFactory(object):
 
         assert client1 is client2
 
-    def test_get_file_event_client(self, mock_session, session_factory, user_context, user_client):
+    def test_get_file_event_client(
+        self, mock_session, session_factory, user_context, user_client
+    ):
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
         )
@@ -209,7 +254,12 @@ class TestMicroserviceClientFactory(object):
         assert type(client) == file_event.FileEventClient
 
     def test_get_file_event_client_calls_get_stored_value_with_expected_key(
-        self, mock_session, session_factory, user_context, user_client, key_value_store_client
+        self,
+        mock_session,
+        session_factory,
+        user_context,
+        user_client,
+        key_value_store_client,
     ):
         factory = MicroserviceClientFactory(
             TEST_ROOT_URL,
@@ -220,10 +270,17 @@ class TestMicroserviceClientFactory(object):
             key_value_store_client,
         )
         factory.get_file_event_client()
-        key_value_store_client.get_stored_value.assert_called_once_with("FORENSIC_SEARCH-API_URL")
+        key_value_store_client.get_stored_value.assert_called_once_with(
+            "FORENSIC_SEARCH-API_URL"
+        )
 
     def test_get_file_event_client_calls_creates_client_with_expected_url(
-        self, mock_session, session_factory, user_context, user_client, key_value_store_client
+        self,
+        mock_session,
+        session_factory,
+        user_context,
+        user_client,
+        key_value_store_client,
     ):
         key_value_store_client.get_stored_value.return_value.text = FILE_EVENTS_URL
         factory = MicroserviceClientFactory(
@@ -235,7 +292,9 @@ class TestMicroserviceClientFactory(object):
             key_value_store_client,
         )
         factory.get_file_event_client()
-        session_factory.create_jwt_session.assert_called_once_with(FILE_EVENTS_URL, mock_session)
+        session_factory.create_jwt_session.assert_called_once_with(
+            FILE_EVENTS_URL, mock_session
+        )
 
     def test_get_file_event_client_returns_same_intance_on_multiple_calls(
         self, mock_session, session_factory, user_context, user_client
@@ -249,7 +308,12 @@ class TestMicroserviceClientFactory(object):
         assert client1 is client2
 
     def test_get_saved_search_client_calls_creates_client_with_expected_url(
-        self, mock_session, key_value_store_client, user_context, user_client, session_factory
+        self,
+        mock_session,
+        key_value_store_client,
+        user_context,
+        user_client,
+        session_factory,
     ):
         key_value_store_client.get_stored_value.return_value.text = FILE_EVENTS_URL
         factory = MicroserviceClientFactory(
@@ -261,7 +325,9 @@ class TestMicroserviceClientFactory(object):
             key_value_store_client,
         )
         factory.get_saved_search_client()
-        session_factory.create_jwt_session.assert_called_once_with(FILE_EVENTS_URL, mock_session)
+        session_factory.create_jwt_session.assert_called_once_with(
+            FILE_EVENTS_URL, mock_session
+        )
 
     def test_create_storage_preservation_client(
         self, mock_session, user_context, user_client, session_factory
@@ -270,5 +336,9 @@ class TestMicroserviceClientFactory(object):
             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
         )
         factory.create_storage_preservation_client("https://host.com")
-        session_factory.create_jwt_session.assert_called_once_with("https://host.com", mock_session)
-        session_factory.create_anonymous_session.assert_called_once_with("https://host.com")
+        session_factory.create_jwt_session.assert_called_once_with(
+            "https://host.com", mock_session
+        )
+        session_factory.create_anonymous_session.assert_called_once_with(
+            "https://host.com"
+        )

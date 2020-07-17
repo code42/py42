@@ -59,7 +59,9 @@ class TestPy42Errors(object):
             raise_py42_error(error_response)
 
     @pytest.mark.parametrize("status_code", [400, 401, 403, 404, 500, 600])
-    def test_raise_py42_http_error_has_correct_response_type(self, error_response, status_code):
+    def test_raise_py42_http_error_has_correct_response_type(
+        self, error_response, status_code
+    ):
         error_response.response.status_code = status_code
         try:
             raise_py42_error(error_response)

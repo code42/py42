@@ -77,7 +77,9 @@ def login_token_provider(mocker):
         return Py42Response(response)
 
     auth_session.post.side_effect = mock_post
-    return C42APILoginTokenProvider(auth_session, "my", "device-guid", "destination-guid")
+    return C42APILoginTokenProvider(
+        auth_session, "my", "device-guid", "destination-guid"
+    )
 
 
 @pytest.fixture
@@ -142,7 +144,7 @@ def test_basic_provider_constructs_successfully():
 
 
 def test_basic_provider_secret_returns_base64_credentials(basic_auth_provider):
-    expected_credentials = "{0}:{1}".format(USERNAME, PASSWORD).encode("utf-8")
+    expected_credentials = "{}:{}".format(USERNAME, PASSWORD).encode("utf-8")
     expected_b64_credentials = base64.b64encode(expected_credentials).decode("utf-8")
 
     provider_credentials = basic_auth_provider.get_secret_value()
@@ -157,7 +159,9 @@ def test_v1_auth_provider_constructs_successfully(mocker):
 
 
 def test_v1_auth_provider_secret_returns_v1_token(v1_auth_provider):
-    assert v1_auth_provider.get_secret_value() == "{0}-{1}".format(V1_TOKEN_PART1, V1_TOKEN_PART2)
+    assert v1_auth_provider.get_secret_value() == "{}-{}".format(
+        V1_TOKEN_PART1, V1_TOKEN_PART2
+    )
 
 
 def test_v3_auth_provider_constructs_successfully(mocker):
@@ -173,7 +177,9 @@ def test_v3_auth_provider_secret_returns_v3_token(v3_auth_provider):
 def test_login_token_provider_constructs_successfully(mocker):
     auth_session = mocker.MagicMock(spec=Py42Session)
     auth_session.host_address = HOST_ADDRESS
-    assert C42APILoginTokenProvider(auth_session, "my", "device-guid", "destination-guid")
+    assert C42APILoginTokenProvider(
+        auth_session, "my", "device-guid", "destination-guid"
+    )
 
 
 def test_login_token_provider_secret_returns_tmp_login_token(login_token_provider):
@@ -186,7 +192,9 @@ def test_storage_auth_token_provider_constructs_successfully(mocker):
     assert C42APIStorageAuthTokenProvider(auth_session, "plan-id", "destination-guid")
 
 
-def test_storage_auth_token_provider_returns_tmp_login_token(storage_auth_token_provider):
+def test_storage_auth_token_provider_returns_tmp_login_token(
+    storage_auth_token_provider,
+):
     assert storage_auth_token_provider.get_secret_value() == TMP_LOGIN_TOKEN
 
 
@@ -201,11 +209,13 @@ def test_tmp_token_provider_uses_cache_after_get_login_info_called(
     tmp_token_provider = request.getfixturevalue(tmp_token_provider)
     mocker.spy(tmp_token_provider, "get_tmp_auth_token")
     tmp_token_provider.get_login_info()
-    assert tmp_token_provider.get_tmp_auth_token.call_count == 1, "get_tmp_auth_token never called"
+    assert (
+        tmp_token_provider.get_tmp_auth_token.call_count == 1
+    ), "get_tmp_auth_token never called"
     tmp_token_provider.get_login_info()
 
     call_count = tmp_token_provider.get_tmp_auth_token.call_count
-    message = "get_tmp_auth_token was called {0} times, expected once".format(call_count)
+    message = "get_tmp_auth_token was called {} times, expected once".format(call_count)
     assert call_count == 1, message
 
 
@@ -220,9 +230,11 @@ def test_tmp_token_provider_uses_cache_after_get_secret_value_called(
     tmp_token_provider = request.getfixturevalue(tmp_token_provider)
     mocker.spy(tmp_token_provider, "get_tmp_auth_token")
     tmp_token_provider.get_secret_value()
-    assert tmp_token_provider.get_tmp_auth_token.call_count == 1, "get_tmp_auth_token never called"
+    assert (
+        tmp_token_provider.get_tmp_auth_token.call_count == 1
+    ), "get_tmp_auth_token never called"
     tmp_token_provider.get_secret_value()
 
     call_count = tmp_token_provider.get_tmp_auth_token.call_count
-    message = "get_tmp_auth_token was called {0} times, expected once".format(call_count)
+    message = "get_tmp_auth_token was called {} times, expected once".format(call_count)
     assert call_count == 1, message

@@ -126,7 +126,9 @@ class QueryFilterTimestampField(object):
         """
         formatted_start_time = convert_timestamp_to_str(start_value)
         formatted_end_time = convert_timestamp_to_str(end_value)
-        return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
+        return create_in_range_filter_group(
+            cls._term, formatted_start_time, formatted_end_time
+        )
 
     @classmethod
     def on_same_day(cls, value):
@@ -142,7 +144,9 @@ class QueryFilterTimestampField(object):
         )
         formatted_start_time = convert_datetime_to_timestamp_str(start_time)
         formatted_end_time = convert_datetime_to_timestamp_str(end_time)
-        return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
+        return create_in_range_filter_group(
+            cls._term, formatted_start_time, formatted_end_time
+        )
 
 
 class QueryFilterBooleanField(object):
@@ -197,13 +201,17 @@ class QueryFilter(object):
         return self._value
 
     def __str__(self):
-        value = u"null" if self._value is None else u'"{0}"'.format(self._value)
+        value = u"null" if self._value is None else u'"{}"'.format(self._value)
         return u'{{"operator":"{0}", "term":"{1}", "value":{2}}}'.format(
             self._operator, self._term, value
         )
 
     def __iter__(self):
-        output_dict = {u"operator": self._operator, u"term": self._term, u"value": self._value}
+        output_dict = {
+            u"operator": self._operator,
+            u"term": self._term,
+            u"value": self._value,
+        }
         for key in output_dict:
             yield (key, output_dict[key])
 
@@ -239,7 +247,9 @@ class FilterGroup(object):
         return self._filter_clause
 
     def __str__(self):
-        filters_string = u",".join(str(filter_item) for filter_item in self._filter_list)
+        filters_string = u",".join(
+            str(filter_item) for filter_item in self._filter_list
+        )
         return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(
             self._filter_clause, filters_string
         )

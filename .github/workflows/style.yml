@@ -23,6 +23,3 @@ jobs:
       run: pip install tox==3.17.1
     - name: Run style checks
       run: tox -e style
-
-
-

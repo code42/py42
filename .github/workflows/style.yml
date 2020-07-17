@@ -9,18 +9,20 @@ on:
   pull_request:
 
 jobs:
-    style:
-      runs-on: ubuntu-latest
-      steps:
-      - uses: actions/checkout@v2
-      - name: Setup Python
+
+  style:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python
       uses: actions/setup-python@v1
       with:
         python-version: '3.x'
-      - name: Install tox
-        run: pip install tox==3.17.1
-      - name: Run style checks
-        run: tox -e style
+    - name: Install tox
+      run: pip install tox==3.17.1
+    - name: Run style checks
+      run: tox -e style
 
 
 

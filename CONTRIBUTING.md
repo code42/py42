@@ -2,10 +2,10 @@
 
 ## Set up your Development environment
 
-The very first thing to do is to clone the py42 repo and make it your working directory!
+The very first thing to do is to fork the py42 repo, clone it, and make it your working directory!
 
 ```bash
-git clone https://github.com/code42/py42
+git clone https://github.com/myaccount/py42
 cd py42
 ```
 
@@ -27,9 +27,9 @@ eval "$(pyenv virtualenv-init -)"
 Then, create your virtual environment. While py42 runs on python 2.7 and 3.5+, a 3.6+ version is required for development in order to run all of the unit tests and style checks.
 
 ```bash
-$ pyenv install 3.6.10
-$ pyenv virtualenv 3.6.10 py42
-$ pyenv activate py42
+pyenv install 3.6.10
+pyenv virtualenv 3.6.10 py42
+pyenv activate py42
 ```
 
 Use `source deactivate` to exit the virtual environment and `pyenv activate py42` to reactivate it.
@@ -45,36 +45,56 @@ $ pip install -e .[dev]
 Open the project in your IDE of choice and change the python environment to
 point to your virtual environment, and you should be ready to go!
 
-## General
+## Run a full build
 
-* Use positional argument specifiers in `str.format()`
+We use [tox](https://tox.readthedocs.io/en/latest/#) to run our build against Python 2.7, 3.5, 3.6, 3.7, and 3.8. When run locally, `tox` will run everything against the version of python that your virtual envrionment is running. When you open a PR, this process will be run against _all_ supported python versions.
+
+To run all the unit tests, do a test build of the documentation, and check that the code meets all style requirements, simply run:
+
+```bash
+tox
+```
+If the full process runs without any errors, your environment is set up correctly! You can also use `tox` to run sub-parts of the build, as explained below.
+
+## Coding Style
+
+### General
+
 * Use syntax and built-in modules that are compatible with both Python 2 and 3.
 * Use the `py42._internal.compat` module to create abstractions around functionality that differs between 2 and 3.
 
-## Wrapping web APIs
+### Wrapping web APIs
 
 * Name the method starting with a verb
 * Specify required arguments as positional arguments
 * Specify optional arguments as keyword arguments
 
-## Changes
+### Style linter
 
-Document all notable consumer-affecting changes in CHANGELOG.md per principles and guidelines at
-[Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
+When you open a PR, after all of the unit tests successfully pass, a series
+of style checks will run. See the [pre-commit-config.yaml](.pre-commit-config.yaml) file to see a list of the projects involved in this automation. If your code does not pass the style checks, the PR will not be allowed to merge. Many of the style rules can be corrected automatically by running a simple command once you are satisfied with your change:
+
+```bash
+tox -e style
+```
+
+This will output a diff of the files that were changed as well a list of files / line numbers / error descriptions for any style problems that need to corrected manually. Once these have been corrected and re-pushed, the PR checks should pass.
+
+You can optionally also choose to have these checks / automatic adjustments
+occur automatically on each git commit that you make (instead of only when running `tox`.) To do so, install `pre-commit` and install the pre-commit hooks:
+
+```bash
+pip install pre-commit
+pre-commit install
+```
 
 ## Tests
 
-We use [tox](https://tox.readthedocs.io/en/latest/#) to run the
-[pytest](https://docs.pytest.org/) test framework on Python 2.7, 3.5, 3.6, 3.7, and 3.8.
-
-Run the below at the root of the repo to run the tests on all versions of python
-that are available within your PATH.
+This will also test that the documentation build passes and run the style checks. If you want to _only_ run the unit tests, you can use:
 
 ```bash
-$ tox
+$ tox -e py
 ```
-
-This will also test that the documentation build passes.
 
 ### Writing tests
 
@@ -104,9 +124,20 @@ Follow [Google's format](https://google.github.io/styleguide/pyguide.html#38-com
 
 py42 uses [Sphinx](http://www.sphinx-doc.org/) to generate documentation.
 
-To build the documentation, run the following from the `docs` directory:
+#### Performing a test build
+
+To simply test that the documentation build without errors, you can run:
 
 ```bash
+tox -e docs
+```
+
+#### Running the docs locally
+
+To build and run the documentation locally, run the following from the `docs` directory:
+
+```bash
+pip install sphinx recommonmark sphinx_rtd_theme
 make html
 ```
 
@@ -120,3 +151,8 @@ python -m http.server --directory "_build/html" 1337
 ```
 
 and then pointing your browser to `localhost:1337`.
+
+## Changes
+
+Document all notable consumer-affecting changes in CHANGELOG.md per principles and guidelines at
+[Keep a Changelog](https://keepachangelog.com/en/1.0.0/).

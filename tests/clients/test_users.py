@@ -127,3 +127,29 @@ class TestUserClient(object):
         client.get_scim_data_by_uid("USER_ID")
         uri = "/api/v7/scim-user-data/collated-view"
         mock_session.get.assert_called_once_with(uri, params={"userId": "USER_ID"})
+
+    def test_get_available_roles_calls_get_with_expected_uri(self, mock_session):
+        client = UserClient(mock_session)
+        client.get_available_roles()
+        uri = "/api/v4/role/view"
+        mock_session.get.assert_called_once_with(uri)
+
+    def test_get_roles_calls_get_with_expected_uri(self, mock_session):
+        client = UserClient(mock_session)
+        client.get_roles(12345)
+        uri = "/api/UserRole/12345"
+        mock_session.get.assert_called_once_with(uri)
+
+    def test_add_role_calls_post_with_expected_uri_and_data(self, mock_session):
+        client = UserClient(mock_session)
+        client.add_role(12345, "Test Role Name")
+        uri = "/api/UserRole"
+        assert mock_session.post.call_args[0][0] == uri
+        assert '"roleName": "Test Role Name"' in mock_session.post.call_args[1]["data"]
+        assert '"userId": 12345' in mock_session.post.call_args[1]["data"]
+
+    def test_delete_role_calls_delete_with_expected_uri_and_params(self, mock_session):
+        client = UserClient(mock_session)
+        client.remove_role("12345", "Test Role Name")
+        uri = "/api/UserRole?userId=12345&roleName=Test%20Role%20Name"
+        mock_session.delete.assert_called_once_with(uri)

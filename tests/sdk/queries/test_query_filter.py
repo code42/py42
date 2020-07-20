@@ -341,3 +341,21 @@ def test_filter_group_contains_expected_query_filter_returns_true(filter_class):
     assert str(filter_class) in group
     assert tuple(filter_class) in group
     assert list(filter_class) in group
+
+
+@pytest.mark.parametrize(
+    "filter_class",
+    [
+        QueryFilter("term", "IS", "value4"),
+        QueryFilter("different_term", "IS", "value2"),
+        QueryFilter("term", "DIFFERENT_OPERATOR", "value3"),
+    ],
+)
+def test_filter_group_when_does_not_contain_expected_query_filter_returns_false(
+    filter_class,
+):
+    group = create_is_in_filter_group("term", ["value1", "value2", "value3"])
+    assert filter_class not in group
+    assert str(filter_class) not in group
+    assert tuple(filter_class) not in group
+    assert list(filter_class) not in group

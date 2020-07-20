@@ -267,7 +267,6 @@ class UserClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/UserRole/{}".format(user_id)
-        oops_unused_var = "foo"
         return self._session.get(uri)
 
     def add_role(self, user_id, role_name):

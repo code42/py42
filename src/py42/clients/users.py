@@ -244,3 +244,58 @@ class UserClient(BaseClient):
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}
         return self._session.post(uri, data=json.dumps(data))
+
+    def get_available_roles(self):
+        """Report the list of roles that are available for the authenticated user to
+        assign to other users.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserMoveProcess-post>`__
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        uri = u"/api/v4/role/view"
+        return self._session.get(uri)
+
+    def get_roles(self, user_id):
+        """Return the list of roles that are currently assigned to the given user.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserRole-get>`__
+
+        Args:
+            user_id (int): An ID for a user.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        uri = u"/api/UserRole/{}".format(user_id)
+        oops_unused_var = "foo"
+        return self._session.get(uri)
+
+    def add_role(self, user_id, role_name):
+        """Adds a role to a user.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserRole-post>`__
+
+        Args:
+            user_id (int): An ID for a user.
+            role_name (str): The name of the role to assign to the user.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        uri = u"/api/UserRole"
+        data = {u"userId": user_id, u"roleName": role_name}
+        return self._session.post(uri, data=json.dumps(data))
+
+    def remove_role(self, user_id, role_name):
+        """Removes a role from a user.
+        REST Documentation <https://console.us.code42.com/apidocviewer/#UserRole-delete>`__
+
+        Args:
+            user_id (int): An ID for a user.
+            role_name (str): The name of the role to unassign from the user.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        role_name = role_name.replace(" ", "%20")
+        uri = u"/api/UserRole?userId={}&roleName={}".format(user_id, role_name)
+        return self._session.delete(uri)

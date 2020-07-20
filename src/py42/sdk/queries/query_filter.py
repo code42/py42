@@ -207,6 +207,15 @@ class QueryFilter(object):
         for key in output_dict:
             yield (key, output_dict[key])
 
+    def __eq__(self, other):
+        if isinstance(other, (QueryFilter, tuple, list)):
+            return tuple(self) == tuple(other)
+        elif isinstance(other, str):
+            return str(self) == other
+        else:
+            return False
+
+
 
 class FilterGroup(object):
     """Class for constructing a logical sub-group of related filters from a list of QueryFilter
@@ -249,3 +258,23 @@ class FilterGroup(object):
         output_dict = {u"filterClause": self._filter_clause, u"filters": filter_list}
         for key in output_dict:
             yield (key, output_dict[key])
+
+    def __eq__(self, other):
+        if isinstance(other, FilterGroup):
+            if not self.filter_clause == other.filter_clause:
+                return False
+            filter_tuples = [tuple(f) for f in self.filter_list]
+            other_filter_tuples = [tuple(f) for f in other.filter_list]
+            return set(filter_tuples) == set(other_filter_tuples)
+        else:
+            return False
+
+    def __contains__(self, item):
+        if isinstance(item, (QueryFilter, tuple, list)):
+            filter_tuples = [tuple(f) for f in self.filter_list]
+            return tuple(item) in filter_tuples
+        elif isinstance(item, str):
+            filter_strings = [str(f) for f in self.filter_list]
+            return item in filter_strings
+        else:
+            return False

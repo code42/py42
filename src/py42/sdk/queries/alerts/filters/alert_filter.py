@@ -41,9 +41,10 @@ def create_not_contains_filter_group(term, value):
 class AlertQueryFilterStringField(QueryFilterStringField):
     @classmethod
     def contains(cls, value):
-        """Creates a :class:`FilterGroup` for filtering results where the value with key
-        ``self._term`` contains the given value. Useful for creating ``CONTAINS`` filters
-        that not yet supported in py42 or programmatically crafting filter groups.
+        """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering
+        results where the value with key ``self._term`` contains the given value. Useful
+        for creating ``CONTAINS`` filters that not yet supported in py42 or programmatically
+        crafting filter groups.
 
         Args:
             value (str): The value used to match on.
@@ -56,9 +57,10 @@ class AlertQueryFilterStringField(QueryFilterStringField):
 
     @classmethod
     def not_contains(cls, value):
-        """Creates a :class:`FilterGroup` for filtering results where the value with key
-        ``self._term`` does not contain the given value. Useful for creating ``CONTAINS``
-        filters that not yet supported in py42 or programmatically crafting filter groups.
+        """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering
+        results where the value with key ``self._term`` does not contain the given value.
+        Useful for creating ``CONTAINS`` filters that not yet supported in py42 or programmatically
+        crafting filter groups.
 
         Args:
             value (str): The value used to match on.

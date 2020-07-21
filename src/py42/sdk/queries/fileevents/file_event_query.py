@@ -58,16 +58,42 @@ class FileEventQuery(BaseQuery):
 
 
 def create_exists_filter_group(term):
+    """Creates a :class`FilterGroup` to find events where filter data exists.
+
+    Args:
+        term (str): The term of the filter.
+
+    Returns:
+        class:`FilterGroup`
+    """
     filter_list = [create_query_filter(term, u"EXISTS")]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_not_exists_filter_group(term):
+    """Creates a :class`FilterGroup` to find events where filter data does not exist.
+
+    Args:
+        term (str): The term of the filter.
+
+    Returns:
+        class:`FilterGroup`
+    """
     filter_list = [create_query_filter(term, u"DOES_NOT_EXIST")]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_greater_than_filter_group(term, value):
+    """Creates a :class`FilterGroup` for matching file events where the value with key ``term``
+    is greater than the given value.
+
+    Args:
+        term (str): The term of the filter.
+        value (str or int): The value used to filter file events.
+
+    Returns:
+        class:`FilterGroup`
+    """
     filter_list = [create_query_filter(term, u"GREATER_THAN", value)]
     return create_filter_group(filter_list, u"AND")
 
@@ -82,12 +108,20 @@ class FileEventFilterStringField(QueryFilterStringField):
 
     @classmethod
     def exists(cls):
-        """Returns a :class:`FilterGroup` to find events where filter data exists."""
+        """Returns a :class:`FilterGroup` to find events where filter data exists.
+
+        Returns:
+            class:`FilterGroup`
+        """
         return create_exists_filter_group(cls._term)
 
     @classmethod
     def not_exists(cls):
-        """Returns a :class:`FilterGroup` to find events where filter data does not exist."""
+        """Returns a :class:`FilterGroup` to find events where filter data does not exist.
+
+        Returns:
+            class:`FilterGroup`
+        """
         return create_not_exists_filter_group(cls._term)
 
 
@@ -100,6 +134,12 @@ class FileEventFilterComparableField(object):
     def greater_than(cls, value):
         """Returns a :class:`FilterGroup` to find events where filter data is greater than the
         provided value.
+
+        Args:
+            value (str or int or float): The value used to filter file events.
+
+        Returns:
+            class:`FilterGroup`
         """
         value = int(value)
         return create_greater_than_filter_group(cls._term, value)
@@ -108,6 +148,12 @@ class FileEventFilterComparableField(object):
     def less_than(cls, value):
         """Returns a :class:`FilterGroup` to find events where filter data is less than than the
         provided value.
+
+        Args:
+            value (str or int or float): The value used to filter file events.
+
+        Returns:
+            class:`FilterGroup`
         """
         value = int(value)
         return create_less_than_filter_group(cls._term, value)

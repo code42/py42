@@ -7,49 +7,162 @@ from py42.util import convert_timestamp_to_str
 
 
 def create_query_filter(term, operator, value=None):
+    """Creates a :class:`QueryFilter` object. Useful for creating filters that are not yet
+    defined in py42 or programmatically crafting filters.
+
+    Args:
+        term (str): The term of the filter, such as ``actor`` or ``sharedWith``.
+        operator (str): The operator between ``term`` and ``value``, such as ``IS`` or `IS_NOT`.
+        value (str): The value used to filter results.
+
+    Returns:
+        :class:`QueryFilter`
+    """
+
     return QueryFilter(term, operator, value)
 
 
+def create_filter_group(query_filter_list, filter_clause):
+    """Creates a :class:`FilterGroup` object. Useful for creating custom filter groups not yet
+    supported in py42 or programmatically crafting filter groups. Alternatively, if you
+    want to create custom filter groups with previously defined operators such `IS` or `IS_IN`,
+    see the other methods in this module, such as :meth:`create_eq_filter_group()`.
+
+    Args:
+        query_filter_list (list): a list of :class:`QueryFilter` objects.
+        filter_clause (str): The clauses joining the filters, such as ``AND`` or ``OR``.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
+    return FilterGroup(query_filter_list, filter_clause)
+
+
 def create_eq_filter_group(term, value):
+    """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
+    equals the given value. Useful for creating ``IS`` filters that not yet supported in py42
+    or programmatically crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
+        value (str): The value used to match on.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
     filter_list = [create_query_filter(term, u"IS", value)]
     return create_filter_group(filter_list, u"AND")
 
 
+def create_not_eq_filter_group(term, value):
+    """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
+    equals the given value. Useful for creating ``IS_NOT`` filters that not yet supported
+    in py42  or programmatically crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
+        value (str): The value used to exclude on.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
+    filter_list = [create_query_filter(term, u"IS_NOT", value)]
+    return create_filter_group(filter_list, u"AND")
+
+
 def create_is_in_filter_group(term, value_list):
+    """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
+    is one of several values. Useful for creating ``IS_IN`` filters that not yet supported in
+    py42 or programmatically crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
+        value_list (str): The list of values to match on.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
     filter_list = [create_query_filter(term, u"IS", value) for value in value_list]
     return create_filter_group(filter_list, u"OR" if len(filter_list) > 1 else u"AND")
 
 
 def create_not_in_filter_group(term, value_list):
+    """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
+    is not one of several values. Useful for creating ``NOT_IN`` filters that not yet supported
+    in py42 or programmatically crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
+        value_list (str): The list of values to exclude on.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
     filter_list = [create_query_filter(term, u"IS_NOT", value) for value in value_list]
     return create_filter_group(filter_list, u"AND")
 
 
-def create_not_eq_filter_group(term, value):
-    filter_list = [create_query_filter(term, u"IS_NOT", value)]
-    return create_filter_group(filter_list, u"AND")
-
-
 def create_on_or_after_filter_group(term, value):
+    """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
+    is on or after the given value. Examples include values describing dates. Useful for
+    creating ``ON_OR_AFTER`` filters that not yet supported in py42  or programmatically
+    crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
+        value (str or int): The value used to filter results.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
     filter_list = [create_query_filter(term, u"ON_OR_AFTER", value)]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_on_or_before_filter_group(term, value):
+    """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
+    is on or before the given value. Examples include values describing dates. Useful for
+    creating ``ON_OR_BEFORE`` filters that not yet supported in py42  or programmatically
+    crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
+        value (str or int): The value used to filter results.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
     filter_list = [create_query_filter(term, u"ON_OR_BEFORE", value)]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_in_range_filter_group(term, start_value, end_value):
+    """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
+    is in the given range. Examples include values describing dates. Useful for creating
+    a combination of ``ON_OR_AFTER`` and ``ON_OR_BEFORE`` filters that not yet supported
+    in py42  or programmatically crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
+        start_value (str or int): The start value used to filter results.
+        end_value (str or int): The end value used to filter results.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
     filter_list = [
         create_query_filter(term, u"ON_OR_AFTER", start_value),
         create_query_filter(term, u"ON_OR_BEFORE", end_value),
     ]
     return create_filter_group(filter_list, u"AND")
-
-
-def create_filter_group(query_filter_list, filter_clause):
-    return FilterGroup(query_filter_list, filter_clause)
 
 
 class QueryFilterStringField(object):
@@ -63,7 +176,10 @@ class QueryFilterStringField(object):
         ``value``.
 
         Args:
-            value (str): The value to match file events on.
+            value (str): The value to match on.
+
+        Returns:
+            :class`FilterGroup`
         """
         return create_eq_filter_group(cls._term, value)
 
@@ -74,6 +190,9 @@ class QueryFilterStringField(object):
 
         Args:
             value (str): The value to exclude file events on.
+
+        Returns:
+            :class`FilterGroup`
         """
         return create_not_eq_filter_group(cls._term, value)
 
@@ -83,7 +202,10 @@ class QueryFilterStringField(object):
         ``value_list``.
 
         Args:
-            value_list (list): The list of values to match file events on.
+            value_list (list): The list of values to match on.
+
+        Returns:
+            :class`FilterGroup`
         """
         return create_is_in_filter_group(cls._term, value_list)
 
@@ -93,7 +215,10 @@ class QueryFilterStringField(object):
         ``value_list``.
 
         Args:
-            value_list (list): The list of values to exclude file events on.
+            value_list (list): The list of values to exclude on.
+
+        Returns:
+            :class`FilterGroup`
         """
         return create_not_in_filter_group(cls._term, value_list)
 
@@ -107,6 +232,12 @@ class QueryFilterTimestampField(object):
     def on_or_after(cls, value):
         """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or after
         the provided `value`.
+
+        Args:
+            value (str or int): The value used to filter results.
+
+        Returns:
+            :class`FilterGroup`
         """
         formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_after_filter_group(cls._term, formatted_timestamp)
@@ -115,6 +246,12 @@ class QueryFilterTimestampField(object):
     def on_or_before(cls, value):
         """Returns a :class:`FilterGroup` to find events where the filter timestamp is on or before
         the provided `value`.
+
+        Args:
+            value (str or int): The value used to filter results.
+
+        Returns:
+            :class`FilterGroup`
         """
         formatted_timestamp = convert_timestamp_to_str(value)
         return create_on_or_before_filter_group(cls._term, formatted_timestamp)
@@ -123,6 +260,13 @@ class QueryFilterTimestampField(object):
     def in_range(cls, start_value, end_value):
         """Returns a :class:`FilterGroup` to find events where the filter timestamp is in range
         between the provided `start_value` and `end_value`.
+
+        Args:
+            start_value (str or int): The start value used to filter results.
+            end_value (str or int): The end value used to filter results.
+
+        Returns:
+            :class`FilterGroup`
         """
         formatted_start_time = convert_timestamp_to_str(start_value)
         formatted_end_time = convert_timestamp_to_str(end_value)
@@ -134,6 +278,12 @@ class QueryFilterTimestampField(object):
     def on_same_day(cls, value):
         """Returns a :class:`FilterGroup` to find events where the filter timestamp is within the
         same calendar day as the provided `value`.
+
+        Args:
+            value (str or int): The value used to filter results.
+
+        Returns:
+            :class`FilterGroup`
         """
         date_from_value = datetime.utcfromtimestamp(value)
         start_time = datetime(
@@ -156,12 +306,20 @@ class QueryFilterBooleanField(object):
 
     @classmethod
     def is_true(cls):
-        """Returns a :class:`FilterGroup` to find events where the filter state is True."""
+        """Returns a :class:`FilterGroup` to find events where the filter state is True.
+
+        Returns:
+            :class`FilterGroup`
+        """
         return create_eq_filter_group(cls._term, u"TRUE")
 
     @classmethod
     def is_false(cls):
-        """Returns a :class:`FilterGroup` to find events where the filter state is False."""
+        """Returns a :class:`FilterGroup` to find events where the filter state is False.
+
+        Returns:
+            :class`FilterGroup`
+        """
         return create_eq_filter_group(cls._term, u"FALSE")
 
 
@@ -186,18 +344,34 @@ class QueryFilter(object):
 
     @classmethod
     def from_dict(cls, _dict):
+        """Creates an instance of :class:`QueryFilter` from the values found in ``_dict``.
+        ``_dict`` must contain keys ``term``, ``operator``, and ``value``.
+
+        Args:
+            _dict (dict): A dictionary containing keys ``term``, ``operator``, and ``value``.
+
+        Returns:
+            :class:`QueryFilter`
+        """
+
         return cls(_dict[u"term"], _dict[u"operator"], value=_dict.get(u"value"))
 
     @property
     def term(self):
+        """The term of the filter, such as ``actor`` or ``sharedWith``."""
+
         return self._term
 
     @property
     def operator(self):
+        """The operator between ``term`` and ``value``, such as ``IS`` or `IS_NOT`."""
+
         return self._operator
 
     @property
     def value(self):
+        """The value used to filter results."""
+
         return self._value
 
     def __str__(self):
@@ -235,15 +409,29 @@ class FilterGroup(object):
 
     @classmethod
     def from_dict(cls, _dict, filter_clause=u"AND"):
+        """Creates an instance of :class:`FilterGroup` from the values found in ``_dict``
+        and the given clause. ``_dict`` must contain keys ``term``, ``operator``, and ``value``.
+
+        Args:
+            _dict (dict): A dictionary containing keys ``term``, ``operator``, and ``value``.
+            filter_clause (str): The clauses joining the filters, such as ``AND`` or ``OR``.
+
+        Returns:
+            :class:`FilterGroup`
+        """
         filter_list = [QueryFilter.from_dict(item) for item in _dict[u"filters"]]
         return cls(filter_list, filter_clause=filter_clause)
 
     @property
     def filter_list(self):
+        """The list of :class:`QueryFilter` in this group."""
+
         return self._filter_list
 
     @property
     def filter_clause(self):
+        """The clauses joining the filters, such as ``AND`` or ``OR``."""
+
         return self._filter_clause
 
     def __str__(self):

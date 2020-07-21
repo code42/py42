@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
 from datetime import datetime
 
 from py42._internal.compat import str, string_type
@@ -207,11 +208,10 @@ class QueryFilter(object):
         )
 
     def __iter__(self):
-        output_dict = {
-            u"operator": self._operator,
-            u"term": self._term,
-            u"value": self._value,
-        }
+        output_dict = OrderedDict()
+        output_dict[u"operator"] = self._operator
+        output_dict[u"term"] = self._term
+        output_dict[u"value"] = self._value
         for key in output_dict:
             yield (key, output_dict[key])
 

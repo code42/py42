@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from py42._internal.compat import str
+from py42._internal.compat import str, string_type
 from py42.util import convert_datetime_to_timestamp_str
 from py42.util import convert_timestamp_to_str
 
@@ -218,7 +218,7 @@ class QueryFilter(object):
     def __eq__(self, other):
         if isinstance(other, (QueryFilter, tuple, list)):
             return tuple(self) == tuple(other)
-        elif isinstance(other, str):
+        elif isinstance(other, string_type):
             return str(self) == other
         else:
             return False
@@ -262,9 +262,7 @@ class FilterGroup(object):
         return sorted(list(set(self.filter_list)), key=str)
 
     def __str__(self):
-        filters_string = u",".join(
-            str(filter_item) for filter_item in self._filter_set
-        )
+        filters_string = u",".join(str(filter_item) for filter_item in self._filter_set)
         return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(
             self._filter_clause, filters_string
         )
@@ -283,7 +281,7 @@ class FilterGroup(object):
             )
         elif isinstance(other, (tuple, list)):
             return tuple(self) == tuple(other)
-        elif isinstance(other, str):
+        elif isinstance(other, string_type):
             return str(self) == other
         else:
             return False

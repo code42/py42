@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
+
 from py42._internal.compat import str
 from py42.sdk.queries.query_filter import create_eq_filter_group
 from py42.sdk.queries.query_filter import create_filter_group

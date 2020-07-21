@@ -25,6 +25,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - When calling `__str__` or `__iter__` on a `FilterGroup` instance, the filter results have `set()` called on them to remove duplicate filters (if they exist) as well
     as sorts the results. This enables comparing two `FilterGroup`s that might have been constructed differently but ultimately return the exact same results in a query.
+- `FilterGroup.filter_clause` property now has a setter, making it easy to change the clause on an existing filter group.
+
+### Removed
+
+- `filter_clause` arg on `FilterGroup.from_dict` method. The clause will automatically be derived from the dict itself.
 
 ## 1.6.2 - 2020-07-10
 

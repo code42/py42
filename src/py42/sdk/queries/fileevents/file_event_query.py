@@ -54,11 +54,13 @@ class FileEventQuery(BaseQuery):
             u"srtKey": self.sort_key,
         }
         for key in output_dict:
-            yield (key, output_dict[key])
+            yield key, output_dict[key]
 
 
 def create_exists_filter_group(term):
-    """Creates a :class`FilterGroup` to find events where filter data exists.
+    """Creates a :class`FilterGroup` to find events where filter data exists. Useful for
+    creating ``EXISTS`` filters that are not yet supported in py42 or programmatically
+    crafting filter groups.
 
     Args:
         term (str): The term of the filter.
@@ -71,7 +73,10 @@ def create_exists_filter_group(term):
 
 
 def create_not_exists_filter_group(term):
-    """Creates a :class`FilterGroup` to find events where filter data does not exist.
+    """Creates a :class`FilterGroup` to find events where filter data does not exist. Useful for
+    creating ``DOES_NOT_EXIST`` filters that are not yet supported in py42 or programmatically
+    crafting filter groups.
+
 
     Args:
         term (str): The term of the filter.
@@ -85,7 +90,8 @@ def create_not_exists_filter_group(term):
 
 def create_greater_than_filter_group(term, value):
     """Creates a :class`FilterGroup` for matching file events where the value with key ``term``
-    is greater than the given value.
+    is greater than the given value. Useful for creating ``GREATER_THAN`` filters that
+    are not yet supported in py42 or programmatically crafting filter groups.
 
     Args:
         term (str): The term of the filter.
@@ -99,6 +105,17 @@ def create_greater_than_filter_group(term, value):
 
 
 def create_less_than_filter_group(term, value):
+    """Creates a :class`FilterGroup` for matching file events where the value with key ``term``
+    is less than the given value. Useful for creating ``LESS_THAN`` filters that
+    are not yet supported in py42 or programmatically crafting filter groups.
+
+    Args:
+        term (str): The term of the filter.
+        value (str or int): The value used to filter file events.
+
+    Returns:
+        class:`FilterGroup`
+    """
     filter_list = [create_query_filter(term, u"LESS_THAN", value)]
     return create_filter_group(filter_list, u"AND")
 

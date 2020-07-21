@@ -59,7 +59,7 @@ def create_eq_filter_group(term, value):
 def create_not_eq_filter_group(term, value):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
     equals the given value. Useful for creating ``IS_NOT`` filters that are not yet supported
-    in py42  or programmatically crafting filter groups.
+    in py42 or programmatically crafting filter groups.
 
     Args:
         term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
@@ -128,7 +128,7 @@ def create_on_or_after_filter_group(term, value):
 def create_on_or_before_filter_group(term, value):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
     is on or before the given value. Examples include values describing dates. Useful for
-    creating ``ON_OR_BEFORE`` filters that are not yet supported in py42  or programmatically
+    creating ``ON_OR_BEFORE`` filters that are not yet supported in py42 or programmatically
     crafting filter groups.
 
     Args:
@@ -147,7 +147,7 @@ def create_in_range_filter_group(term, start_value, end_value):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
     is in the given range. Examples include values describing dates. Useful for creating
     a combination of ``ON_OR_AFTER`` and ``ON_OR_BEFORE`` filters that are not yet supported
-    in py42  or programmatically crafting filter groups.
+    in py42 or programmatically crafting filter groups.
 
     Args:
         term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
@@ -387,7 +387,7 @@ class QueryFilter(object):
             u"value": self._value,
         }
         for key in output_dict:
-            yield (key, output_dict[key])
+            yield key, output_dict[key]
 
 
 class FilterGroup(object):
@@ -447,4 +447,4 @@ class FilterGroup(object):
         filter_list = [dict(item) for item in self._filter_list]
         output_dict = {u"filterClause": self._filter_clause, u"filters": filter_list}
         for key in output_dict:
-            yield (key, output_dict[key])
+            yield key, output_dict[key]

@@ -52,4 +52,4 @@ class AlertQuery(BaseQuery):
             u"srtKey": self.sort_key,
         }
         for key in output_dict:
-            yield (key, output_dict[key])
+            yield key, output_dict[key]

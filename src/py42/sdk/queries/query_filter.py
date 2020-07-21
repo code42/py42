@@ -41,7 +41,7 @@ def create_filter_group(query_filter_list, filter_clause):
 
 def create_eq_filter_group(term, value):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
-    equals the given value. Useful for creating ``IS`` filters that not yet supported in py42
+    equals the given value. Useful for creating ``IS`` filters that are not yet supported in py42
     or programmatically crafting filter groups.
 
     Args:
@@ -58,7 +58,7 @@ def create_eq_filter_group(term, value):
 
 def create_not_eq_filter_group(term, value):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
-    equals the given value. Useful for creating ``IS_NOT`` filters that not yet supported
+    equals the given value. Useful for creating ``IS_NOT`` filters that are not yet supported
     in py42  or programmatically crafting filter groups.
 
     Args:
@@ -75,7 +75,7 @@ def create_not_eq_filter_group(term, value):
 
 def create_is_in_filter_group(term, value_list):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
-    is one of several values. Useful for creating ``IS_IN`` filters that not yet supported in
+    is one of several values. Useful for creating ``IS_IN`` filters that are not yet supported in
     py42 or programmatically crafting filter groups.
 
     Args:
@@ -92,8 +92,8 @@ def create_is_in_filter_group(term, value_list):
 
 def create_not_in_filter_group(term, value_list):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
-    is not one of several values. Useful for creating ``NOT_IN`` filters that not yet supported
-    in py42 or programmatically crafting filter groups.
+    is not one of several values. Useful for creating ``NOT_IN`` filters that are not yet
+    supported in py42 or programmatically crafting filter groups.
 
     Args:
         term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
@@ -110,7 +110,7 @@ def create_not_in_filter_group(term, value_list):
 def create_on_or_after_filter_group(term, value):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
     is on or after the given value. Examples include values describing dates. Useful for
-    creating ``ON_OR_AFTER`` filters that not yet supported in py42  or programmatically
+    creating ``ON_OR_AFTER`` filters that are not yet supported in py42  or programmatically
     crafting filter groups.
 
     Args:
@@ -128,7 +128,7 @@ def create_on_or_after_filter_group(term, value):
 def create_on_or_before_filter_group(term, value):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
     is on or before the given value. Examples include values describing dates. Useful for
-    creating ``ON_OR_BEFORE`` filters that not yet supported in py42  or programmatically
+    creating ``ON_OR_BEFORE`` filters that are not yet supported in py42  or programmatically
     crafting filter groups.
 
     Args:
@@ -146,7 +146,7 @@ def create_on_or_before_filter_group(term, value):
 def create_in_range_filter_group(term, start_value, end_value):
     """"Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
     is in the given range. Examples include values describing dates. Useful for creating
-    a combination of ``ON_OR_AFTER`` and ``ON_OR_BEFORE`` filters that not yet supported
+    a combination of ``ON_OR_AFTER`` and ``ON_OR_BEFORE`` filters that are not yet supported
     in py42  or programmatically crafting filter groups.
 
     Args:

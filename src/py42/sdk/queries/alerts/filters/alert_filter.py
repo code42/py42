@@ -6,8 +6,8 @@ from py42.sdk.queries.query_filter import QueryFilterTimestampField
 
 def create_contains_filter_group(term, value):
     """Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
-    contains the given value. Useful for creating ``CONTAINS`` filters that not yet supported
-    in py42 or programmatically crafting filter groups.
+    contains the given value. Useful for creating ``CONTAINS`` filters that are not yet
+    supported in py42 or programmatically crafting filter groups.
 
     Args:
         term: (str): The term of the filter, such as ``actor``.
@@ -43,7 +43,7 @@ class AlertQueryFilterStringField(QueryFilterStringField):
     def contains(cls, value):
         """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering
         results where the value with key ``self._term`` contains the given value. Useful
-        for creating ``CONTAINS`` filters that not yet supported in py42 or programmatically
+        for creating ``CONTAINS`` filters that are not yet supported in py42 or programmatically
         crafting filter groups.
 
         Args:
@@ -59,7 +59,7 @@ class AlertQueryFilterStringField(QueryFilterStringField):
     def not_contains(cls, value):
         """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering
         results where the value with key ``self._term`` does not contain the given value.
-        Useful for creating ``CONTAINS`` filters that not yet supported in py42 or programmatically
+        Useful for creating ``CONTAINS`` filters that are not yet supported in py42 or programmatically
         crafting filter groups.
 
         Args:

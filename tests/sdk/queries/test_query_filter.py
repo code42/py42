@@ -397,3 +397,20 @@ def test_filter_group_when_does_not_contain_expected_query_filter_returns_false(
     assert str(filter_class) not in group
     assert tuple(filter_class) not in group
     assert list(filter_class) not in group
+
+
+def test_filter_group_when_changed_filter_clause_has_correct_json_representation():
+    group = create_is_in_filter_group("term", ["value1", "value2", "value3"])
+    assert (
+        str(group) == '{"filterClause":"OR", "filters"'
+        ':[{"operator":"IS", "term":"term", "value":"value1"},'
+        '{"operator":"IS", "term":"term", "value":"value2"},'
+        '{"operator":"IS", "term":"term", "value":"value3"}]}'
+    )
+    group.filter_clause = "AND"
+    assert (
+        str(group) == '{"filterClause":"AND", "filters"'
+        ':[{"operator":"IS", "term":"term", "value":"value1"},'
+        '{"operator":"IS", "term":"term", "value":"value2"},'
+        '{"operator":"IS", "term":"term", "value":"value3"}]}'
+    )

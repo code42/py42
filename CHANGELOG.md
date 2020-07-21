@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- `__eq__` and `__hash__` methods to the `py42.sdk.queries.query_filter.QueryFilter` class to enable easier comparison of filters
+- `__eq__` and `__contains__` methods to the `py42.sdk.queries.query_filter.FilterGroup` class to enable easier comparison of and membership tests of filter groups
+
 ## 1.6.2 - 2020-07-10
 
 ### Added

@@ -28,6 +28,14 @@ exposure_filter = ExposureType.exists()
 ip_filter = PrivateIPAddress.eq("127.0.0.1")
 ```
 
+It is also possible to create `query_filter.FilterGroups` from raw JSON. For example:
+
+```python
+raw_json = """{"filterClause":"AND","filters":[{"display":null,"value":"P1D","operator":"WITHIN_THE_LAST","term":"eventTimestamp"}]}"""
+json_dict = json.loads(raw_json)
+filter_group = FilterGroup.from_dict(json_dict, "AND")
+```
+
 There are two operators when building `file_event_query.FileEventQuery` objects: `any()` and `all()`.
 
 `any()` gets results where at least one of the filters is true and `all()` gets results where all of the filters are true.

@@ -408,7 +408,7 @@ class FilterGroup(object):
         self._filter_clause = filter_clause
 
     @classmethod
-    def from_dict(cls, _dict, filter_clause=None):
+    def from_dict(cls, _dict, filter_clause=u"AND"):
         """Creates an instance of :class:`FilterGroup` from the values found in ``_dict``
         and the given clause. ``_dict`` must contain key ``filters`` and correctly represent
         :class:`QueryFilter` JSON objects.
@@ -421,7 +421,6 @@ class FilterGroup(object):
             :class:`FilterGroup`
         """
         filter_list = [QueryFilter.from_dict(item) for item in _dict[u"filters"]]
-        filter_clause = filter_clause or _dict.get(u"filterClause") or u"AND"
         return cls(filter_list, filter_clause=filter_clause)
 
     @property

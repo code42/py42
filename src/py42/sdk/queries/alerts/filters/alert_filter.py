@@ -5,11 +5,35 @@ from py42.sdk.queries.query_filter import QueryFilterTimestampField
 
 
 def create_contains_filter_group(term, value):
+    """Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
+    contains the given value. Useful for creating ``CONTAINS`` filters that not yet supported
+    in py42 or programmatically crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor``.
+        value (str): The value used to match on.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
     filter_list = [create_query_filter(term, u"CONTAINS", value)]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_not_contains_filter_group(term, value):
+    """Creates a :class:`FilterGroup` for filtering results where the value with key ``term``
+    does not contain the given value. Useful for creating ``DOES_NOT_CONTAIN`` filters that
+    not yet supported in py42 or programmatically crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor``.
+        value (str): The value used to match on.
+
+    Returns:
+        :class`FilterGroup`
+    """
+
     filter_list = [create_query_filter(term, u"DOES_NOT_CONTAIN", value)]
     return create_filter_group(filter_list, u"AND")
 
@@ -17,10 +41,32 @@ def create_not_contains_filter_group(term, value):
 class AlertQueryFilterStringField(QueryFilterStringField):
     @classmethod
     def contains(cls, value):
+        """Creates a :class:`FilterGroup` for filtering results where the value with key
+        ``self._term`` contains the given value. Useful for creating ``CONTAINS`` filters
+        that not yet supported in py42 or programmatically crafting filter groups.
+
+        Args:
+            value (str): The value used to match on.
+
+        Returns:
+            :class`FilterGroup`
+        """
+
         return create_contains_filter_group(cls._term, value)
 
     @classmethod
     def not_contains(cls, value):
+        """Creates a :class:`FilterGroup` for filtering results where the value with key
+        ``self._term`` does not contain the given value. Useful for creating ``CONTAINS``
+        filters that not yet supported in py42 or programmatically crafting filter groups.
+
+        Args:
+            value (str): The value used to match on.
+
+        Returns:
+            :class`FilterGroup`
+        """
+
         return create_not_contains_filter_group(cls._term, value)
 
 

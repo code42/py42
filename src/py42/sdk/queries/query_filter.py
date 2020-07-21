@@ -80,7 +80,7 @@ def create_is_in_filter_group(term, value_list):
 
     Args:
         term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
-        value_list (str): The list of values to match on.
+        value_list (list): The list of values to match on.
 
     Returns:
         :class`FilterGroup`
@@ -97,7 +97,7 @@ def create_not_in_filter_group(term, value_list):
 
     Args:
         term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.
-        value_list (str): The list of values to exclude on.
+        value_list (list): The list of values to exclude on.
 
     Returns:
         :class`FilterGroup`

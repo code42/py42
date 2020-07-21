@@ -126,7 +126,9 @@ class QueryFilterTimestampField(object):
         """
         formatted_start_time = convert_timestamp_to_str(start_value)
         formatted_end_time = convert_timestamp_to_str(end_value)
-        return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
+        return create_in_range_filter_group(
+            cls._term, formatted_start_time, formatted_end_time
+        )
 
     @classmethod
     def on_same_day(cls, value):
@@ -142,7 +144,9 @@ class QueryFilterTimestampField(object):
         )
         formatted_start_time = convert_datetime_to_timestamp_str(start_time)
         formatted_end_time = convert_datetime_to_timestamp_str(end_time)
-        return create_in_range_filter_group(cls._term, formatted_start_time, formatted_end_time)
+        return create_in_range_filter_group(
+            cls._term, formatted_start_time, formatted_end_time
+        )
 
 
 class QueryFilterBooleanField(object):
@@ -203,7 +207,11 @@ class QueryFilter(object):
         )
 
     def __iter__(self):
-        output_dict = {u"operator": self._operator, u"term": self._term, u"value": self._value}
+        output_dict = {
+            u"operator": self._operator,
+            u"term": self._term,
+            u"value": self._value,
+        }
         for key in output_dict:
             yield (key, output_dict[key])
 
@@ -215,6 +223,8 @@ class QueryFilter(object):
         else:
             return False
 
+    def __hash__(self):
+        return hash(tuple(self))
 
 
 class FilterGroup(object):
@@ -247,34 +257,34 @@ class FilterGroup(object):
     def filter_clause(self):
         return self._filter_clause
 
+    @property
+    def _filter_set(self):
+        return sorted(list(set(self.filter_list)), key=str)
+
     def __str__(self):
-        filters_string = u",".join(str(filter_item) for filter_item in self._filter_list)
+        filters_string = u",".join(str(filter_item) for filter_item in self._filter_set)
         return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(
             self._filter_clause, filters_string
         )
 
     def __iter__(self):
-        filter_list = [dict(item) for item in self._filter_list]
+        filter_list = [dict(item) for item in self._filter_set]
         output_dict = {u"filterClause": self._filter_clause, u"filters": filter_list}
         for key in output_dict:
             yield (key, output_dict[key])
 
     def __eq__(self, other):
         if isinstance(other, FilterGroup):
-            if not self.filter_clause == other.filter_clause:
-                return False
-            filter_tuples = [tuple(f) for f in self.filter_list]
-            other_filter_tuples = [tuple(f) for f in other.filter_list]
-            return set(filter_tuples) == set(other_filter_tuples)
+            return (
+                self.filter_clause == other.filter_clause
+                and self._filter_set == other._filter_set
+            )
+        elif isinstance(other, (tuple, list)):
+            return tuple(self) == tuple(other)
+        elif isinstance(other, str):
+            return str(self) == other
         else:
             return False
 
     def __contains__(self, item):
-        if isinstance(item, (QueryFilter, tuple, list)):
-            filter_tuples = [tuple(f) for f in self.filter_list]
-            return tuple(item) in filter_tuples
-        elif isinstance(item, str):
-            filter_strings = [str(f) for f in self.filter_list]
-            return item in filter_strings
-        else:
-            return False
+        return item in self._filter_set

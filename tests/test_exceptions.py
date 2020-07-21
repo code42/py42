@@ -1,14 +1,12 @@
 import pytest
 
-from py42.exceptions import (
-    Py42BadRequestError,
-    Py42ForbiddenError,
-    Py42HTTPError,
-    Py42InternalServerError,
-    Py42NotFoundError,
-    Py42UnauthorizedError,
-    raise_py42_error,
-)
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42ForbiddenError
+from py42.exceptions import Py42HTTPError
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42NotFoundError
+from py42.exceptions import Py42UnauthorizedError
+from py42.exceptions import raise_py42_error
 
 
 class TestPy42Errors(object):
@@ -37,31 +35,17 @@ class TestPy42Errors(object):
         with pytest.raises(Py42InternalServerError):
             raise_py42_error(error_response)
 
-        error_response.response.status_code = 501
-        with pytest.raises(Py42InternalServerError):
-            raise_py42_error(error_response)
-
-        error_response.response.status_code = 599
-        with pytest.raises(Py42InternalServerError):
-            raise_py42_error(error_response)
-
-        error_response.response.status_code = 550
-        with pytest.raises(Py42InternalServerError):
-            raise_py42_error(error_response)
-
     def test_raise_py42_error_raises_py42_http_error(self, error_response):
         error_response.response.status_code = 600
         with pytest.raises(Py42HTTPError):
             raise_py42_error(error_response)
 
-        error_response.response.status_code = 999
-        with pytest.raises(Py42HTTPError):
-            raise_py42_error(error_response)
-
     @pytest.mark.parametrize("status_code", [400, 401, 403, 404, 500, 600])
-    def test_raise_py42_http_error_has_correct_response_type(self, error_response, status_code):
+    def test_raise_py42_http_error_has_correct_response_type(
+        self, error_response, status_code
+    ):
         error_response.response.status_code = status_code
         try:
             raise_py42_error(error_response)
         except Exception as e:
-            assert type(e.response) == type(error_response.response)
+            assert isinstance(e.response, type(error_response.response))

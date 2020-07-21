@@ -8,7 +8,7 @@ class HighRiskEmployeeClient(BaseClient):
     """A client for interacting with High Risk Employee APIs."""
 
     _api_version = u"v2"
-    _uri_prefix = u"/svc/api/{0}".format(_api_version)
+    _uri_prefix = u"/svc/api/{}".format(_api_version)
     _resource = u"/highriskemployee"
 
     def __init__(self, session, user_context, detection_list_user_client):
@@ -17,7 +17,7 @@ class HighRiskEmployeeClient(BaseClient):
         self._detection_list_user_client = detection_list_user_client
 
     def _make_uri(self, action):
-        return u"{0}{1}{2}".format(self._uri_prefix, self._resource, action)
+        return u"{}{}{}".format(self._uri_prefix, self._resource, action)
 
     def _add_high_risk_employee(self, tenant_id, user_id):
 
@@ -52,7 +52,10 @@ class HighRiskEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"alertsEnabled": enabled}
+        data = {
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"alertsEnabled": enabled,
+        }
         uri = self._make_uri(u"/setalertstate")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -66,7 +69,10 @@ class HighRiskEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"userId": user_id}
+        data = {
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+        }
         uri = self._make_uri(u"/remove")
         return self._session.post(uri, data=json.dumps(data))
 
@@ -80,7 +86,10 @@ class HighRiskEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        data = {u"tenantId": self._user_context.get_current_tenant_id(), u"userId": user_id}
+        data = {
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+        }
         uri = self._make_uri(u"/get")
         return self._session.post(uri, data=json.dumps(data))
 

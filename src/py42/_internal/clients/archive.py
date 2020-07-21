@@ -24,7 +24,9 @@ class ArchiveClient(BaseClient):
             **kwargs
         )
 
-    def _get_restore_history_page(self, days, id_type, id_value, page_num, page_size, **kwargs):
+    def _get_restore_history_page(
+        self, days, id_type, id_value, page_num, page_size, **kwargs
+    ):
         uri = u"/api/RestoreHistory"
         params = dict(days=days, pgNum=page_num, pgSize=page_size, **kwargs)
         params[id_type] = id_value
@@ -57,7 +59,11 @@ class ArchiveClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_all_org_cold_storage_archives(
-        self, org_id, include_child_orgs=True, sort_key="archiveHoldExpireDate", sort_dir="asc"
+        self,
+        org_id,
+        include_child_orgs=True,
+        sort_key="archiveHoldExpireDate",
+        sort_dir="asc",
     ):
         return get_all_pages(
             self._get_cold_storage_archives_page,
@@ -69,7 +75,7 @@ class ArchiveClient(BaseClient):
         )
 
     def update_cold_storage_purge_date(self, archive_guid, purge_date):
-        uri = u"/api/coldStorage/{0}".format(archive_guid)
+        uri = u"/api/coldStorage/{}".format(archive_guid)
         params = {u"idType": u"guid"}
         data = {u"archiveHoldExpireDate": purge_date}
         return self._session.put(uri, params=params, data=json.dumps(data))

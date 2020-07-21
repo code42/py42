@@ -1,22 +1,19 @@
-from py42.sdk.queries.fileevents.filters.file_filter import (
-    FileCategory,
-    FileName,
-    FileOwner,
-    FilePath,
-    FileSize,
-    MD5,
-    SHA256,
-)
-from tests.sdk.queries.conftest import (
-    EXISTS,
-    GREATER_THAN,
-    IS,
-    IS_IN,
-    IS_NOT,
-    LESS_THAN,
-    NOT_EXISTS,
-    NOT_IN,
-)
+from tests.sdk.queries.conftest import EXISTS
+from tests.sdk.queries.conftest import GREATER_THAN
+from tests.sdk.queries.conftest import IS
+from tests.sdk.queries.conftest import IS_IN
+from tests.sdk.queries.conftest import IS_NOT
+from tests.sdk.queries.conftest import LESS_THAN
+from tests.sdk.queries.conftest import NOT_EXISTS
+from tests.sdk.queries.conftest import NOT_IN
+
+from py42.sdk.queries.fileevents.filters.file_filter import FileCategory
+from py42.sdk.queries.fileevents.filters.file_filter import FileName
+from py42.sdk.queries.fileevents.filters.file_filter import FileOwner
+from py42.sdk.queries.fileevents.filters.file_filter import FilePath
+from py42.sdk.queries.fileevents.filters.file_filter import FileSize
+from py42.sdk.queries.fileevents.filters.file_filter import MD5
+from py42.sdk.queries.fileevents.filters.file_filter import SHA256
 
 
 def test_file_category_eq_str_gives_correct_json_representation():

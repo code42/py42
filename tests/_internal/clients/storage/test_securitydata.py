@@ -76,7 +76,10 @@ def security_detection_event_summary_params(security_detection_events_params):
 
 class TestStorageSecurityClient(object):
     def test_get_plan_security_events_calls_get_with_correct_params(
-        self, storage_security_client, py42session, plan_security_detection_events_params
+        self,
+        storage_security_client,
+        py42session,
+        plan_security_detection_events_params,
     ):
         params = plan_security_detection_events_params
         storage_security_client.get_plan_security_events(
@@ -90,7 +93,10 @@ class TestStorageSecurityClient(object):
         py42session.get.assert_called_once_with(uri, params=params)
 
     def test_get_user_security_events_calls_get_with_correct_params(
-        self, storage_security_client, py42session, user_security_detection_events_params
+        self,
+        storage_security_client,
+        py42session,
+        user_security_detection_events_params,
     ):
         params = user_security_detection_events_params
         storage_security_client.get_user_security_events(
@@ -104,7 +110,10 @@ class TestStorageSecurityClient(object):
         py42session.get.assert_called_once_with(uri, params=params)
 
     def test_get_security_detection_event_summary_calls_get_with_correct_params(
-        self, storage_security_client, py42session, security_detection_event_summary_params
+        self,
+        storage_security_client,
+        py42session,
+        security_detection_event_summary_params,
     ):
         params = security_detection_event_summary_params
         storage_security_client.get_security_detection_event_summary(

@@ -1,25 +1,22 @@
 from datetime import datetime
 from time import time
 
-from py42.sdk.queries.fileevents.filters.event_filter import (
-    EventTimestamp,
-    EventType,
-    InsertionTimestamp,
-    Source,
-)
-from tests.sdk.queries.conftest import (
-    EXISTS,
-    IN_RANGE,
-    IS,
-    IS_IN,
-    IS_NOT,
-    NOT_EXISTS,
-    NOT_IN,
-    ON_OR_AFTER,
-    ON_OR_BEFORE,
-    format_datetime,
-    format_timestamp,
-)
+from tests.sdk.queries.conftest import EXISTS
+from tests.sdk.queries.conftest import format_datetime
+from tests.sdk.queries.conftest import format_timestamp
+from tests.sdk.queries.conftest import IN_RANGE
+from tests.sdk.queries.conftest import IS
+from tests.sdk.queries.conftest import IS_IN
+from tests.sdk.queries.conftest import IS_NOT
+from tests.sdk.queries.conftest import NOT_EXISTS
+from tests.sdk.queries.conftest import NOT_IN
+from tests.sdk.queries.conftest import ON_OR_AFTER
+from tests.sdk.queries.conftest import ON_OR_BEFORE
+
+from py42.sdk.queries.fileevents.filters.event_filter import EventTimestamp
+from py42.sdk.queries.fileevents.filters.event_filter import EventType
+from py42.sdk.queries.fileevents.filters.event_filter import InsertionTimestamp
+from py42.sdk.queries.fileevents.filters.event_filter import Source
 
 
 def test_event_timestamp_on_or_after_str_gives_correct_json_representation():

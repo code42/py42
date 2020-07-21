@@ -1,6 +1,7 @@
 import json
 
-from py42._internal.compat import reprlib, str
+from py42._internal.compat import reprlib
+from py42._internal.compat import str
 from py42.exceptions import Py42Error
 
 
@@ -12,9 +13,9 @@ class Py42Response(object):
     def __getitem__(self, key):
         try:
             return self._data_root[key]
-        except TypeError as e:
+        except TypeError:
             data_root_type = type(self._data_root)
-            message = u"The Py42Response root is of type {0}, but __getitem__ got a key of {1}, which is incompatible.".format(
+            message = u"The Py42Response root is of type {}, but __getitem__ got a key of {}, which is incompatible.".format(
                 data_root_type, key
             )
             raise Py42Error(message)
@@ -22,9 +23,9 @@ class Py42Response(object):
     def __setitem__(self, key, value):
         try:
             self._data_root[key] = value
-        except TypeError as e:
+        except TypeError:
             data_root_type = type(self._data_root)
-            message = u"The Py42Response root is of type {0}, but __setitem__ got a key of {1} and value of {2}, which is incompatible.".format(
+            message = u"The Py42Response root is of type {}, but __setitem__ got a key of {} and value of {}, which is incompatible.".format(
                 data_root_type, key, value
             )
             raise Py42Error(message)
@@ -56,7 +57,9 @@ class Py42Response(object):
             decode_unicode (bool, optional): If True, content will be decoded using the best
                 available encoding based on the response. Defaults to False.
         """
-        return self._response.iter_content(chunk_size=chunk_size, decode_unicode=decode_unicode)
+        return self._response.iter_content(
+            chunk_size=chunk_size, decode_unicode=decode_unicode
+        )
 
     @property
     def raw_text(self):
@@ -67,7 +70,11 @@ class Py42Response(object):
     @property
     def text(self):
         """The more useful parts of the HTTP response dumped into a dictionary."""
-        return json.dumps(self._data_root) if type(self._data_root) != str else self._data_root
+        return (
+            json.dumps(self._data_root)
+            if type(self._data_root) != str
+            else self._data_root
+        )
 
     @property
     def url(self):

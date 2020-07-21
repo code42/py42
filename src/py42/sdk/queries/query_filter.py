@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-
 from datetime import datetime
 
 from py42._internal.compat import str
-from py42.util import convert_datetime_to_timestamp_str, convert_timestamp_to_str
+from py42.util import convert_datetime_to_timestamp_str
+from py42.util import convert_timestamp_to_str
 
 
 def create_query_filter(term, operator, value=None):
@@ -201,7 +201,7 @@ class QueryFilter(object):
         return self._value
 
     def __str__(self):
-        value = u"null" if self._value is None else u'"{0}"'.format(self._value)
+        value = u"null" if self._value is None else u'"{}"'.format(self._value)
         return u'{{"operator":"{0}", "term":"{1}", "value":{2}}}'.format(
             self._operator, self._term, value
         )
@@ -262,7 +262,9 @@ class FilterGroup(object):
         return sorted(list(set(self.filter_list)), key=str)
 
     def __str__(self):
-        filters_string = u",".join(str(filter_item) for filter_item in self._filter_set)
+        filters_string = u",".join(
+            str(filter_item) for filter_item in self._filter_set
+        )
         return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(
             self._filter_clause, filters_string
         )

@@ -1,11 +1,13 @@
-from py42.sdk.queries.fileevents.filters.email_filter import (
-    EmailFrom,
-    EmailPolicyName,
-    EmailRecipients,
-    EmailSender,
-    EmailSubject,
-)
-from tests.sdk.queries.conftest import IS, IS_IN, IS_NOT, NOT_IN
+from tests.sdk.queries.conftest import IS
+from tests.sdk.queries.conftest import IS_IN
+from tests.sdk.queries.conftest import IS_NOT
+from tests.sdk.queries.conftest import NOT_IN
+
+from py42.sdk.queries.fileevents.filters.email_filter import EmailFrom
+from py42.sdk.queries.fileevents.filters.email_filter import EmailPolicyName
+from py42.sdk.queries.fileevents.filters.email_filter import EmailRecipients
+from py42.sdk.queries.fileevents.filters.email_filter import EmailSender
+from py42.sdk.queries.fileevents.filters.email_filter import EmailSubject
 
 
 def test_email_recipients_eq_str_gives_correct_json_representation():

@@ -7,9 +7,16 @@ class AdministrationClient(BaseClient):
         params = {u"incVolumes": include_volumes}
         return self._session.get(uri, params=params)
 
-    def get_alert_log(self, status=None, alert_type=None, page_num=None, page_size=None):
+    def get_alert_log(
+        self, status=None, alert_type=None, page_num=None, page_size=None
+    ):
         uri = u"/api/AlertLog"
-        params = {u"status": status, u"type": alert_type, u"pgNum": page_num, u"pgSize": page_size}
+        params = {
+            u"status": status,
+            u"type": alert_type,
+            u"pgNum": page_num,
+            u"pgSize": page_size,
+        }
         return self._session.get(uri, params=params)
 
     def get_current_tenant(self):

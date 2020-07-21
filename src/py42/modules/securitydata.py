@@ -3,20 +3,21 @@ from threading import Lock
 
 from requests.exceptions import HTTPError
 
-from py42.exceptions import (
-    Py42SecurityPlanConnectionError,
-    raise_py42_error,
-    Py42Error,
-    Py42HTTPError,
-    Py42ArchiveFileNotFoundError,
-)
-from py42.settings import debug
+from py42.exceptions import Py42ArchiveFileNotFoundError
+from py42.exceptions import Py42Error
+from py42.exceptions import Py42HTTPError
+from py42.exceptions import Py42SecurityPlanConnectionError
+from py42.exceptions import raise_py42_error
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
-from py42.sdk.queries.fileevents.filters.file_filter import MD5, SHA256
+from py42.sdk.queries.fileevents.filters.file_filter import MD5
+from py42.sdk.queries.fileevents.filters.file_filter import SHA256
+from py42.settings import debug
 
 
 class SecurityModule(object):
-    def __init__(self, security_client, storage_client_factory, microservices_client_factory):
+    def __init__(
+        self, security_client, storage_client_factory, microservices_client_factory
+    ):
         self._security_client = security_client
         self._storage_client_factory = storage_client_factory
         self._microservices_client_factory = microservices_client_factory
@@ -59,7 +60,7 @@ class SecurityModule(object):
             if not selected_plan_infos:
                 raise Py42SecurityPlanConnectionError(
                     u"Could not establish a connection to retrieve "
-                    u"security events for user {0}".format(user_uid)
+                    u"security events for user {}".format(user_uid)
                 )
 
             return selected_plan_infos
@@ -109,7 +110,12 @@ class SecurityModule(object):
             that each contain a page of events.
         """
         return self._get_security_detection_events(
-            plan_storage_info, cursor, include_files, event_types, min_timestamp, max_timestamp
+            plan_storage_info,
+            cursor,
+            include_files,
+            event_types,
+            min_timestamp,
+            max_timestamp,
         )
 
     def get_all_user_security_events(
@@ -185,24 +191,28 @@ class SecurityModule(object):
 
     def _find_file_versions(self, md5_hash, sha256_hash):
         file_event_client = self._microservices_client_factory.get_file_event_client()
-        pds_client = self._microservices_client_factory.get_preservation_data_service_client()
+        pds_client = (
+            self._microservices_client_factory.get_preservation_data_service_client()
+        )
         response = file_event_client.get_file_location_detail_by_sha256(sha256_hash)
 
         if u"locations" not in response and not len(response[u"locations"]):
             raise Py42Error(
                 u"PDS service can't find requested file "
-                u"with md5 hash {0} and sha256 hash {1}.".format(md5_hash, sha256_hash)
+                u"with md5 hash {} and sha256 hash {}.".format(md5_hash, sha256_hash)
             )
 
         for device_id, paths in _parse_file_location_response(response):
             try:
-                yield pds_client.find_file_versions(md5_hash, sha256_hash, device_id, paths)
+                yield pds_client.find_file_versions(
+                    md5_hash, sha256_hash, device_id, paths
+                )
             except Py42HTTPError as err:
                 # API searches multiple paths to find the file to be streamed, as returned by
                 # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
                 # to return
                 debug.logger.warning(
-                    u"Failed to find any file version for md5 hash {0} / sha256 hash {1}. "
+                    u"Failed to find any file version for md5 hash {} / sha256 hash {}. "
                     u"Error: ".format(md5_hash, sha256_hash),
                     err,
                 )
@@ -216,20 +226,24 @@ class SecurityModule(object):
                     response[u"storageNodeURL"]
                 )
                 token = storage_node_client.get_download_token(
-                    response[u"archiveGuid"], response[u"fileId"], response[u"versionTimestamp"]
+                    response[u"archiveGuid"],
+                    response[u"fileId"],
+                    response[u"versionTimestamp"],
                 )
                 return storage_node_client.get_file(str(token))
-            except Py42HTTPError as err:
+            except Py42HTTPError:
                 # API searches multiple paths to find the file to be streamed, as returned by
                 # 'get_file_location_detail_by_sha256', hence we keep looking until we find a stream
                 # to return
                 debug.logger.warning(
-                    u"Failed to stream file with hash {0}, info: {1}.".format(
+                    u"Failed to stream file with hash {}, info: {}.".format(
                         checksum, response.text
                     )
                 )
         raise Py42Error(
-            u"No file with hash {0} available for download on any storage node.".format(checksum)
+            u"No file with hash {} available for download on any storage node.".format(
+                checksum
+            )
         )
 
     def stream_file_by_sha256(self, checksum):
@@ -243,7 +257,9 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, SHA256)
         if not len(events):
-            message = u"File not found in archive with sha256 checksum {0}".format(checksum)
+            message = u"File not found in archive with sha256 checksum {}".format(
+                checksum
+            )
             raise Py42Error(message)
         md5_hash = events[0][u"md5Checksum"]
 
@@ -262,7 +278,9 @@ class SecurityModule(object):
         if not len(events):
             raise Py42ArchiveFileNotFoundError(checksum, "")
         sha256_hash = events[0][u"sha256Checksum"]
-        return self._stream_file(self._find_file_versions(checksum, sha256_hash), checksum)
+        return self._stream_file(
+            self._find_file_versions(checksum, sha256_hash), checksum
+        )
 
     def _get_plan_storage_infos(self, plan_destination_map):
         plan_infos = []
@@ -277,7 +295,9 @@ class SecurityModule(object):
     def _get_storage_info_for_plan(self, plan_uid, destinations):
         for destination in destinations:
             # try to connect to every storage node for this plan until one works
-            plan_storage_info = self._get_storage_info_for_plan_destination(plan_uid, destination)
+            plan_storage_info = self._get_storage_info_for_plan_destination(
+                plan_uid, destination
+            )
             if plan_storage_info:
                 return plan_storage_info
 
@@ -311,7 +331,13 @@ class SecurityModule(object):
         return client
 
     def _get_security_detection_events(
-        self, plan_storage_infos, cursor, include_files, event_types, min_timestamp, max_timestamp
+        self,
+        plan_storage_infos,
+        cursor,
+        include_files,
+        event_types,
+        min_timestamp,
+        max_timestamp,
     ):
         if not isinstance(plan_storage_infos, (list, tuple)):
             plan_storage_infos = [plan_storage_infos]
@@ -359,7 +385,10 @@ def _get_destinations_in_locations_list(locations_list):
 def _get_plans_in_node(destination, node):
     return {
         plan_uid: [
-            {u"destinationGuid": destination[u"destinationGuid"], u"nodeGuid": node[u"nodeGuid"]}
+            {
+                u"destinationGuid": destination[u"destinationGuid"],
+                u"nodeGuid": node[u"nodeGuid"],
+            }
         ]
         for plan_uid in node[u"securityPlanUids"]
     }
@@ -371,7 +400,7 @@ def _parse_file_location_response(response):
         paths = []
         file_name = location[u"fileName"]
         device_id = location[u"deviceUid"]
-        paths.append(u"{0}{1}".format(location[u"filePath"], file_name))
+        paths.append(u"{}{}".format(location[u"filePath"], file_name))
         yield device_id, paths
 
 

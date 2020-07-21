@@ -1,5 +1,3 @@
-import json
-
 import pytest
 
 from py42._internal.clients.storage import StorageArchiveClient
@@ -150,7 +148,9 @@ class TestStorageArchiveClient(object):
     ):
         storage_archive_client = StorageArchiveClient(session)
 
-        storage_archive_client.create_restore_session(DEVICE_GUID, data_key_token=DATA_KEY_TOKEN)
+        storage_archive_client.create_restore_session(
+            DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
+        )
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(DATA_KEY_TOKEN_KEY) == DATA_KEY_TOKEN
 
@@ -170,7 +170,9 @@ class TestStorageArchiveClient(object):
     ):
         storage_archive_client = StorageArchiveClient(session)
 
-        storage_archive_client.create_restore_session(DEVICE_GUID, encryption_key=ENCRYPTION_KEY)
+        storage_archive_client.create_restore_session(
+            DEVICE_GUID, encryption_key=ENCRYPTION_KEY
+        )
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(ENCRYPTION_KEY_KEY) == ENCRYPTION_KEY
 
@@ -182,7 +184,9 @@ class TestStorageArchiveClient(object):
         )
         assert session.post.call_args[ARGS_INDEX][ARGS_INDEX] == WEB_RESTORE_JOB_URL
 
-    def test_start_restore_with_required_args_calls_post_with_all_args_in_json(self, session):
+    def test_start_restore_with_required_args_calls_post_with_all_args_in_json(
+        self, session
+    ):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.start_restore(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES, NUM_DIRS, SIZE
@@ -340,7 +344,9 @@ class TestStorageArchiveClient(object):
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(RESTORE_FULL_PATH_KEY) is False
 
-    def test_start_restore_with_timestamp_calls_post_with_timestamp_in_data(self, session):
+    def test_start_restore_with_timestamp_calls_post_with_timestamp_in_data(
+        self, session
+    ):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -354,7 +360,9 @@ class TestStorageArchiveClient(object):
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(TIMESTAMP_KEY) == TIMESTAMP
 
-    def test_start_restore_with_exceptions_calls_post_with_exceptions_in_data(self, session):
+    def test_start_restore_with_exceptions_calls_post_with_exceptions_in_data(
+        self, session
+    ):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -368,7 +376,9 @@ class TestStorageArchiveClient(object):
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(EXCEPTIONS_KEY) == EXCEPTIONS
 
-    def test_start_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(self, session):
+    def test_start_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(
+        self, session
+    ):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -382,7 +392,9 @@ class TestStorageArchiveClient(object):
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(BACKUP_SET_ID_KEY) == BACKUP_SET_ID
 
-    def test_start_restore_with_all_args_calls_post_with_all_args_in_data(self, session):
+    def test_start_restore_with_all_args_calls_post_with_all_args_in_data(
+        self, session
+    ):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -435,14 +447,15 @@ class TestStorageArchiveClient(object):
     def test_cancel_restore_calls_delete_with_job_id_in_data(self, mocker, session):
         storage_archive_client = StorageArchiveClient(session)
         api_response = mocker.MagicMock(spec=Py42Response)
-        text = json.dumps({JOB_ID_KEY: WEB_RESTORE_JOB_ID})
         session.delete.return_value = api_response
         storage_archive_client.cancel_restore(WEB_RESTORE_JOB_ID)
         json_arg = session.delete.call_args[KWARGS_INDEX][JSON_KEYWORD]
         expected_data = {JOB_ID_KEY: WEB_RESTORE_JOB_ID}
         assert json_arg == expected_data
 
-    def test_stream_restore_result_status_calls_get_with_correct_url(self, mocker, session):
+    def test_stream_restore_result_status_calls_get_with_correct_url(
+        self, mocker, session
+    ):
         storage_archive_client = StorageArchiveClient(session)
         api_response = mocker.MagicMock(spec=Py42Response)
         session.get.return_value = api_response

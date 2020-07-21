@@ -14,9 +14,13 @@ class TestArchiveModule(object):
     _TEST_DAYS = 42
     _TEST_ID = 424242
 
-    def test_stream_from_backup_calls_get_archive_accessor_with_expected_params(self, mocker):
+    def test_stream_from_backup_calls_get_archive_accessor_with_expected_params(
+        self, mocker
+    ):
         archive = _get_module(mocker)
-        archive.stream_from_backup("path", "device_guid", "dest_guid", "password", "encryption_key")
+        archive.stream_from_backup(
+            "path", "device_guid", "dest_guid", "password", "encryption_key"
+        )
         archive._archive_accessor_manager.get_archive_accessor.assert_called_once_with(
             "device_guid",
             destination_guid="dest_guid",
@@ -29,7 +33,9 @@ class TestArchiveModule(object):
     ):
         archive = _get_module(mocker)
         archive.get_backup_sets("device_guid", "dest_guid")
-        archive._archive_client.get_backup_sets.assert_called_once_with("device_guid", "dest_guid")
+        archive._archive_client.get_backup_sets.assert_called_once_with(
+            "device_guid", "dest_guid"
+        )
 
     def test_get_all_org_restore_history_calls_get_all_restore_history_with_expected_id(
         self, mocker
@@ -67,7 +73,9 @@ class TestArchiveModule(object):
             u"123", u"2020-04-24"
         )
 
-    def test_get_all_org_cold_storage_archives_calls_client_with_expected_data(self, mocker):
+    def test_get_all_org_cold_storage_archives_calls_client_with_expected_data(
+        self, mocker
+    ):
         archive = _get_module(mocker)
         archive.get_all_org_cold_storage_archives("TEST ORG ID")
         archive._archive_client.get_all_org_cold_storage_archives.assert_called_once_with(

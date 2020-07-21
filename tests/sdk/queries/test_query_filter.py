@@ -1,20 +1,17 @@
 # -*- coding: utf-8 -*-
 import pytest
-
 from py42._internal.compat import str
-from py42.sdk.queries.query_filter import (
-    QueryFilter,
-    create_eq_filter_group,
-    create_filter_group,
-    create_in_range_filter_group,
-    create_is_in_filter_group,
-    create_not_eq_filter_group,
-    create_not_in_filter_group,
-    create_on_or_after_filter_group,
-    create_on_or_before_filter_group,
-    create_query_filter,
-    FilterGroup,
-)
+from py42.sdk.queries.query_filter import create_eq_filter_group
+from py42.sdk.queries.query_filter import create_filter_group
+from py42.sdk.queries.query_filter import create_in_range_filter_group
+from py42.sdk.queries.query_filter import create_is_in_filter_group
+from py42.sdk.queries.query_filter import create_not_eq_filter_group
+from py42.sdk.queries.query_filter import create_not_in_filter_group
+from py42.sdk.queries.query_filter import create_on_or_after_filter_group
+from py42.sdk.queries.query_filter import create_on_or_before_filter_group
+from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import FilterGroup
+from py42.sdk.queries.query_filter import QueryFilter
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
@@ -68,7 +65,7 @@ def test_query_filter_dict_gives_expected_dict_representation(event_filter_group
     assert alert_query_query_dict["value"] == "testval"
 
 
-def test_query_filter_operator_returns_expected_value():
+def test_query_filter_term_returns_expected_value():
     query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.term == "testterm"
 
@@ -78,7 +75,7 @@ def test_query_filter_operator_returns_expected_value():
     assert query_filter.operator == "IS"
 
 
-def test_query_filter_operator_returns_expected_value():
+def test_query_filter_value_returns_expected_value():
     query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.value == "testval"
 

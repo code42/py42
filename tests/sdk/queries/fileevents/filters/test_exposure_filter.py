@@ -1,18 +1,26 @@
+from tests.sdk.queries.conftest import EXISTS
+from tests.sdk.queries.conftest import IS
+from tests.sdk.queries.conftest import IS_IN
+from tests.sdk.queries.conftest import IS_NOT
+from tests.sdk.queries.conftest import NOT_EXISTS
+from tests.sdk.queries.conftest import NOT_IN
+
+from py42.sdk.queries.fileevents.filters.exposure_filter import ExposureType
+from py42.sdk.queries.fileevents.filters.exposure_filter import ProcessName
+from py42.sdk.queries.fileevents.filters.exposure_filter import ProcessOwner
+from py42.sdk.queries.fileevents.filters.exposure_filter import RemovableMediaMediaName
+from py42.sdk.queries.fileevents.filters.exposure_filter import RemovableMediaName
 from py42.sdk.queries.fileevents.filters.exposure_filter import (
-    ExposureType,
-    ProcessName,
-    ProcessOwner,
-    RemovableMediaMediaName,
-    RemovableMediaName,
     RemovableMediaPartitionID,
-    RemovableMediaSerialNumber,
-    RemovableMediaVendor,
-    RemovableMediaVolumeName,
-    SyncDestination,
-    TabURL,
-    WindowTitle,
 )
-from tests.sdk.queries.conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
+from py42.sdk.queries.fileevents.filters.exposure_filter import (
+    RemovableMediaSerialNumber,
+)
+from py42.sdk.queries.fileevents.filters.exposure_filter import RemovableMediaVendor
+from py42.sdk.queries.fileevents.filters.exposure_filter import RemovableMediaVolumeName
+from py42.sdk.queries.fileevents.filters.exposure_filter import SyncDestination
+from py42.sdk.queries.fileevents.filters.exposure_filter import TabURL
+from py42.sdk.queries.fileevents.filters.exposure_filter import WindowTitle
 
 
 def test_exposure_type_exists_str_gives_correct_json_representation():

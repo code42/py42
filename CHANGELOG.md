@@ -12,6 +12,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- Functions for managing role assignment:
+    - `sdk.users.get_available_roles()`
+    - `sdk.users.get_roles()`
+    - `sdk.users.add_role()`
+    - `sdk.users.remove_role()`
+
 - `__eq__` and `__hash__` methods to the `py42.sdk.queries.query_filter.QueryFilter` class to enable easier comparison of filters
 - `__eq__` and `__contains__` methods to the `py42.sdk.queries.query_filter.FilterGroup` class to enable easier comparison of and membership tests of filter groups
 

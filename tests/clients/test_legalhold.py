@@ -68,11 +68,14 @@ class TestLegalHoldClient(object):
         mock_session.get.return_value = successful_response
         client = LegalHoldClient(mock_session)
         client.get_matter_by_uid("LEGAL_HOLD_UID")
-        uri = "{0}/{1}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
+        uri = "{}/{}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
         mock_session.get.assert_called_once_with(uri)
 
     def test_get_all_matters_calls_get_expected_number_of_times(
-        self, mock_session, mock_get_all_matters_response, mock_get_all_matters_empty_response
+        self,
+        mock_session,
+        mock_get_all_matters_response,
+        mock_get_all_matters_empty_response,
     ):
         py42.settings.items_per_page = 1
         client = LegalHoldClient(mock_session)

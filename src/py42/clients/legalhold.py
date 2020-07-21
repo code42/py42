@@ -11,7 +11,7 @@ def _active_state_map(active):
         return _map[active]
     except KeyError:
         raise Py42Error(
-            "Invalid argument: '{0}'. active must be True, False, or None".format(active)
+            "Invalid argument: '{}'. active must be True, False, or None".format(active)
         )
 
 
@@ -41,7 +41,9 @@ class LegalHoldClient(BaseClient):
         data = {u"name": name, u"policy": policy}
         return self._session.post(uri, data=json.dumps(data))
 
-    def create_matter(self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None):
+    def create_matter(
+        self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None
+    ):
         """Creates a new, active Legal Hold Matter.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-post>`__
 
@@ -100,7 +102,7 @@ class LegalHoldClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the Matter.
         """
-        uri = u"/api/LegalHold/{0}".format(legal_hold_uid)
+        uri = u"/api/LegalHold/{}".format(legal_hold_uid)
         return self._session.get(uri)
 
     def _get_legal_holds_page(
@@ -124,7 +126,9 @@ class LegalHoldClient(BaseClient):
         }
         return self._session.get(uri, params=params)
 
-    def get_all_matters(self, creator_user_uid=None, active=True, name=None, hold_ext_ref=None):
+    def get_all_matters(
+        self, creator_user_uid=None, active=True, name=None, hold_ext_ref=None
+    ):
         """Gets all existing Legal Hold Matters.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-get>`__
 
@@ -175,7 +179,9 @@ class LegalHoldClient(BaseClient):
         uri = u"/api/LegalHoldMembership"
         return self._session.get(uri, params=params)
 
-    def get_all_matter_custodians(self, legal_hold_uid=None, user_uid=None, user=None, active=True):
+    def get_all_matter_custodians(
+        self, legal_hold_uid=None, user_uid=None, user=None, active=True
+    ):
         """Gets all Legal Hold memberships.
 
         Each user (Custodian) who has been added to a Legal Hold Matter is returned by the server as
@@ -263,5 +269,5 @@ class LegalHoldClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/LegalHoldReactivation/{0}".format(legal_hold_uid)
+        uri = u"/api/LegalHoldReactivation/{}".format(legal_hold_uid)
         return self._session.put(uri)

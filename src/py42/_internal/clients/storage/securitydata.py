@@ -21,7 +21,9 @@ class StorageSecurityClient(BaseClient):
         max_time_str = None
 
         def get_time_str_from_timestamp(timestamp):
-            return datetime.utcfromtimestamp(timestamp).strftime(u"%Y-%m-%dT%H:%M:%S.%fZ")
+            return datetime.utcfromtimestamp(timestamp).strftime(
+                u"%Y-%m-%dT%H:%M:%S.%fZ"
+            )
 
         if min_timestamp:
             min_time_str = get_time_str_from_timestamp(min_timestamp)

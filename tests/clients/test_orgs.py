@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-
 import pytest
 from requests import Response
 
-import py42
 import py42.settings
 from py42.clients.orgs import OrgClient
 from py42.response import Py42Response
 
 COMPUTER_URI = "/api/Org"
 
-MOCK_GET_ORG_RESPONSE = """{"totalCount": 3000, "orgs": [{"orgName": "foo", "orgUid": "123"}]}"""
+MOCK_GET_ORG_RESPONSE = (
+    """{"totalCount": 3000, "orgs": [{"orgName": "foo", "orgUid": "123"}]}"""
+)
 
 MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "orgs": []}"""
 
@@ -32,11 +32,13 @@ class TestOrgClient(object):
         response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
         return Py42Response(response)
 
-    def test_get_org_by_id_calls_get_with_uri_and_params(self, mock_session, successful_response):
+    def test_get_org_by_id_calls_get_with_uri_and_params(
+        self, mock_session, successful_response
+    ):
         mock_session.get.return_value = successful_response
         client = OrgClient(mock_session)
         client.get_by_id("ORG_ID")
-        uri = "{0}/{1}".format(COMPUTER_URI, "ORG_ID")
+        uri = "{}/{}".format(COMPUTER_URI, "ORG_ID")
         mock_session.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(

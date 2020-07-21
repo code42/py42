@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-
 import json
 
 import pytest
-from requests import HTTPError, Response, Session
+from requests import HTTPError
+from requests import Response
+from requests import Session
 
 from py42._internal.auth_handling import AuthHandler
 from py42.response import Py42Response

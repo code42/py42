@@ -30,6 +30,14 @@ JSON_FILTER_GROUP_AND = JSON_FILTER_GROUP_BASE.format("AND", JSON_QUERY_FILTER)
 JSON_FILTER_GROUP_OR = JSON_FILTER_GROUP_BASE.format("OR", JSON_QUERY_FILTER)
 
 
+def json_query_filter_with_suffix(suffix):
+    return '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+        OPERATOR_STRING + str(suffix),
+        EVENT_FILTER_FIELD_NAME + str(suffix),
+        VALUE_STRING + str(suffix),
+    )
+
+
 def test_query_filter_constructs_successfully():
     assert QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
 
@@ -126,7 +134,9 @@ def test_filter_group_filter_clause_returns_excepted_value(query_filter):
 def test_filter_group_with_multiple_filters_str_gives_correct_json_representation(
     query_filter_list,
 ):
-    filters_string = ",".join([JSON_QUERY_FILTER for _ in range(3)])
+    filters_string = ",".join(
+        [json_query_filter_with_suffix(suffix) for suffix in range(3)]
+    )
     json_multi_filter_group = JSON_FILTER_GROUP_BASE.format("AND", filters_string)
     assert str(create_filter_group(query_filter_list, "AND")) == json_multi_filter_group
 
@@ -134,17 +144,41 @@ def test_filter_group_with_multiple_filters_str_gives_correct_json_representatio
 def test_filter_group_with_multiple_filters_and_specified_str_gives_correct_json_representation(
     query_filter_list,
 ):
-    filters_string = ",".join([JSON_QUERY_FILTER for _ in range(3)])
+    filters_string = ",".join(
+        [json_query_filter_with_suffix(suffix) for suffix in range(3)]
+    )
     json_multi_filter_group = JSON_FILTER_GROUP_BASE.format("AND", filters_string)
     assert str(create_filter_group(query_filter_list, "AND")) == json_multi_filter_group
+
+
+def test_filter_group_with_duplicate_filters_and_specified_str_gives_correct_json_representation(
+    query_filter,
+):
+    json_single_filter_group = JSON_FILTER_GROUP_BASE.format("AND", JSON_QUERY_FILTER)
+    assert (
+        str(create_filter_group([query_filter, query_filter, query_filter], "AND"))
+        == json_single_filter_group
+    )
 
 
 def test_filter_group_with_multiple_filters_or_specified_str_gives_correct_json_representation(
     query_filter_list,
 ):
-    filters_string = ",".join([JSON_QUERY_FILTER for _ in range(3)])
+    filters_string = ",".join(
+        [json_query_filter_with_suffix(suffix) for suffix in range(3)]
+    )
     json_multi_filter_group = JSON_FILTER_GROUP_BASE.format("OR", filters_string)
     assert str(create_filter_group(query_filter_list, "OR")) == json_multi_filter_group
+
+
+def test_filter_group_with_duplicate_filters_or_specified_str_gives_correct_json_representation(
+    query_filter,
+):
+    json_single_filter_group = JSON_FILTER_GROUP_BASE.format("OR", JSON_QUERY_FILTER)
+    assert (
+        str(create_filter_group([query_filter, query_filter, query_filter], "OR"))
+        == json_single_filter_group
+    )
 
 
 def test_create_eq_filter_group_returns_obj_with_correct_json_representation():
@@ -325,6 +359,12 @@ def test_compare_filter_group_with_equivalent_multiple_args_in_different_order_r
     group1 = create_is_in_filter_group("term", ["value1", "value2", "value3"])
     group2 = create_is_in_filter_group("term", ["value3", "value1", "value2"])
     assert group1 == group2
+    assert str(group1) == group2
+    assert tuple(group1) == group2
+    assert list(group1) == group2
+    assert group1 == str(group2)
+    assert group1 == tuple(group2)
+    assert group1 == list(group2)
 
 
 @pytest.mark.parametrize(

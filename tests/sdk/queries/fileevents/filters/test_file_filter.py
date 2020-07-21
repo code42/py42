@@ -70,16 +70,16 @@ def test_file_name_not_eq_str_gives_correct_json_representation():
 
 
 def test_file_name_is_in_str_gives_correct_json_representation():
-    items = ["fileName", "fileName", "fileName"]
+    items = ["fileName1", "fileName2", "fileName3"]
     _filter = FileName.is_in(items)
-    expected = IS_IN.format("fileName", *items)
+    expected = IS_IN.format("fileName", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_file_name_not_in_str_gives_correct_json_representation():
     items = ["fileName1", "fileName2", "fileName3"]
     _filter = FileName.not_in(items)
-    expected = NOT_IN.format("fileName", *items)
+    expected = NOT_IN.format("fileName", *sorted(items))
     assert str(_filter) == expected
 
 
@@ -110,14 +110,14 @@ def test_file_owner_not_eq_str_gives_correct_json_representation():
 def test_file_owner_is_in_str_gives_correct_json_representation():
     items = ["fileOwner1", "fileOwner2", "fileOwner3"]
     _filter = FileOwner.is_in(items)
-    expected = IS_IN.format("fileOwner", *items)
+    expected = IS_IN.format("fileOwner", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_file_owner_not_in_str_gives_correct_json_representation():
     items = ["fileOwner1", "fileOwner2", "fileOwner3"]
     _filter = FileOwner.not_in(items)
-    expected = NOT_IN.format("fileOwner", *items)
+    expected = NOT_IN.format("fileOwner", *sorted(items))
     assert str(_filter) == expected
 
 
@@ -148,14 +148,14 @@ def test_file_path_not_eq_str_gives_correct_json_representation():
 def test_file_path_is_in_str_gives_correct_json_representation():
     items = ["filePath1", "filePath2", "filePath3"]
     _filter = FilePath.is_in(items)
-    expected = IS_IN.format("filePath", *items)
+    expected = IS_IN.format("filePath", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_file_path_not_in_str_gives_correct_json_representation():
     items = ["filePath1", "filePath2", "filePath3"]
     _filter = FilePath.not_in(items)
-    expected = NOT_IN.format("filePath", *items)
+    expected = NOT_IN.format("filePath", *sorted(items))
     assert str(_filter) == expected
 
 
@@ -222,14 +222,14 @@ def test_md5_not_eq_str_gives_correct_json_representation():
 def test_md5_is_in_str_gives_correct_json_representation():
     items = ["md51", "md52", "md53"]
     _filter = MD5.is_in(items)
-    expected = IS_IN.format("md5Checksum", *items)
+    expected = IS_IN.format("md5Checksum", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_md5_not_in_str_gives_correct_json_representation():
     items = ["md51", "md52", "md53"]
     _filter = MD5.not_in(items)
-    expected = NOT_IN.format("md5Checksum", *items)
+    expected = NOT_IN.format("md5Checksum", *sorted(items))
     assert str(_filter) == expected
 
 
@@ -260,12 +260,12 @@ def test_sha256_not_eq_str_gives_correct_json_representation():
 def test_sha256_is_in_str_gives_correct_json_representation():
     items = ["sha2561", "sha2562", "sha2563"]
     _filter = SHA256.is_in(items)
-    expected = IS_IN.format("sha256Checksum", *items)
+    expected = IS_IN.format("sha256Checksum", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_sha256_not_in_str_gives_correct_json_representation():
     items = ["sha2561", "sha2562", "sha2563"]
     _filter = SHA256.not_in(items)
-    expected = NOT_IN.format("sha256Checksum", *items)
+    expected = NOT_IN.format("sha256Checksum", *sorted(items))
     assert str(_filter) == expected

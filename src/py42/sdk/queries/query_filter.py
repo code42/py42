@@ -224,7 +224,7 @@ class QueryFilter(object):
             return False
 
     def __hash__(self):
-        return hash(tuple(self))
+        return hash(str(self))
 
 
 class FilterGroup(object):

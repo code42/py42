@@ -246,9 +246,9 @@ class FilterGroup(object):
         self._filter_clause = filter_clause
 
     @classmethod
-    def from_dict(cls, _dict, filter_clause=u"AND"):
+    def from_dict(cls, _dict):
         filter_list = [QueryFilter.from_dict(item) for item in _dict[u"filters"]]
-        return cls(filter_list, filter_clause=filter_clause)
+        return cls(filter_list, filter_clause=_dict[u"filterClause"])
 
     @property
     def filter_list(self):
@@ -257,6 +257,10 @@ class FilterGroup(object):
     @property
     def filter_clause(self):
         return self._filter_clause
+
+    @filter_clause.setter
+    def filter_clause(self, value):
+        self._filter_clause = value
 
     @property
     def _filter_set(self):

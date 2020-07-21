@@ -21,6 +21,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `__eq__` and `__hash__` methods to the `py42.sdk.queries.query_filter.QueryFilter` class to enable easier comparison of filters
 - `__eq__` and `__contains__` methods to the `py42.sdk.queries.query_filter.FilterGroup` class to enable easier comparison of and membership tests of filter groups
 
+### Changed
+
+- When calling `__str__` or `__iter__` on a `FilterGroup` instance, the filter results have `set()` called on them to remove duplicate filters (if they exist) as well
+    as sorts the results. This enables comparing two `FilterGroup`s that might have been constructed differently but ultimately return the exact same results in a query.
+
 ## 1.6.2 - 2020-07-10
 
 ### Added

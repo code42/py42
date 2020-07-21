@@ -33,7 +33,7 @@ It is also possible to create `query_filter.FilterGroups` from raw JSON. For exa
 ```python
 raw_json = """{"filterClause":"AND","filters":[{"display":null,"value":"P1D","operator":"WITHIN_THE_LAST","term":"eventTimestamp"}]}"""
 json_dict = json.loads(raw_json)
-filter_group = FilterGroup.from_dict(json_dict, "AND")
+filter_group = FilterGroup.from_dict(json_dict)
 ```
 
 There are two operators when building `file_event_query.FileEventQuery` objects: `any()` and `all()`.

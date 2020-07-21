@@ -1,5 +1,6 @@
 import json
 
+from py42._internal.compat import quote
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 
@@ -295,6 +296,8 @@ class UserClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        role_name = role_name.replace(" ", "%20")
+
+        # use quote instead of params here so that %20 is used instead of + for spaces.
+        role_name = quote(role_name)
         uri = u"/api/UserRole?userId={}&roleName={}".format(user_id, role_name)
         return self._session.delete(uri)

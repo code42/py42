@@ -248,7 +248,7 @@ class UserClient(BaseClient):
     def get_available_roles(self):
         """Report the list of roles that are available for the authenticated user to
         assign to other users.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserMoveProcess-post>`__
+        `V4 REST Documentation <https://console.us.code42.com/swagger/#/role/Role_View>`__
 
         Returns:
             :class:`py42.response.Py42Response`

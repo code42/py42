@@ -17,9 +17,13 @@ if is_py2:
     str = unicode
 
     import repr as reprlib
+
+    string_type = basestring
 else:
     from urllib.parse import urljoin, urlparse, quote
 
     str = str
 
     import reprlib
+
+    string_type = str

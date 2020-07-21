@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from collections import OrderedDict
 from datetime import datetime
 
 from py42._internal.compat import str
+from py42._internal.compat import string_type
 from py42.util import convert_datetime_to_timestamp_str
 from py42.util import convert_timestamp_to_str
 
@@ -207,13 +209,23 @@ class QueryFilter(object):
         )
 
     def __iter__(self):
-        output_dict = {
-            u"operator": self._operator,
-            u"term": self._term,
-            u"value": self._value,
-        }
+        output_dict = OrderedDict()
+        output_dict[u"operator"] = self._operator
+        output_dict[u"term"] = self._term
+        output_dict[u"value"] = self._value
         for key in output_dict:
             yield (key, output_dict[key])
+
+    def __eq__(self, other):
+        if isinstance(other, (QueryFilter, tuple, list)):
+            return tuple(self) == tuple(other)
+        elif isinstance(other, string_type):
+            return str(self) == other
+        else:
+            return False
+
+    def __hash__(self):
+        return hash(str(self))
 
 
 class FilterGroup(object):
@@ -234,9 +246,9 @@ class FilterGroup(object):
         self._filter_clause = filter_clause
 
     @classmethod
-    def from_dict(cls, _dict, filter_clause=u"AND"):
+    def from_dict(cls, _dict):
         filter_list = [QueryFilter.from_dict(item) for item in _dict[u"filters"]]
-        return cls(filter_list, filter_clause=filter_clause)
+        return cls(filter_list, filter_clause=_dict[u"filterClause"])
 
     @property
     def filter_list(self):
@@ -246,16 +258,38 @@ class FilterGroup(object):
     def filter_clause(self):
         return self._filter_clause
 
+    @filter_clause.setter
+    def filter_clause(self, value):
+        self._filter_clause = value
+
+    @property
+    def _filter_set(self):
+        return sorted(list(set(self.filter_list)), key=str)
+
     def __str__(self):
-        filters_string = u",".join(
-            str(filter_item) for filter_item in self._filter_list
-        )
+        filters_string = u",".join(str(filter_item) for filter_item in self._filter_set)
         return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(
             self._filter_clause, filters_string
         )
 
     def __iter__(self):
-        filter_list = [dict(item) for item in self._filter_list]
+        filter_list = [dict(item) for item in self._filter_set]
         output_dict = {u"filterClause": self._filter_clause, u"filters": filter_list}
         for key in output_dict:
             yield (key, output_dict[key])
+
+    def __eq__(self, other):
+        if isinstance(other, FilterGroup):
+            return (
+                self.filter_clause == other.filter_clause
+                and self._filter_set == other._filter_set
+            )
+        elif isinstance(other, (tuple, list)):
+            return tuple(self) == tuple(other)
+        elif isinstance(other, string_type):
+            return str(self) == other
+        else:
+            return False
+
+    def __contains__(self, item):
+        return item in self._filter_set

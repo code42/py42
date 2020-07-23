@@ -26,6 +26,7 @@ Explore the complete public documentation for `py42` below.
 * [Detection Lists](methoddocs/detectionlists.md)
 * [Alerts](methoddocs/alerts.md)
 * [Alert Rules](methoddocs/alertrules.md)
+* [Shared Query Filters](methoddocs/sharedqueryfilters.md)
 * [File Event Queries](methoddocs/filleeventqueries.md)
 * [Archive](methoddocs/archive.md)
 * [Response](methoddocs/response.md)

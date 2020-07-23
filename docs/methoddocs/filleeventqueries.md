@@ -41,6 +41,22 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 ### Event Filters
 
 ```eval_rst
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_exists_filter_group
+```
+
+```eval_rst
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_not_exists_filter_group
+```
+
+```eval_rst
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_greater_than_filter_group
+```
+
+```eval_rst
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_less_than_filter_group
+```
+
+```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.EventTimestamp
     :members:
     :inherited-members:

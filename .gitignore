@@ -9,6 +9,9 @@ __pycache__/
 # C extensions
 *.so
 
+# IDE files
+.idea/py42.iml
+
 # Distribution / packaging
 .Python
 build/

@@ -30,7 +30,7 @@ def create_filter_group(query_filter_list, filter_clause):
 
     Args:
         query_filter_list (list): a list of :class:`QueryFilter` objects.
-        filter_clause (str): The clauses joining the filters, such as ``AND`` or ``OR``.
+        filter_clause (str): The clause joining the filters, such as ``AND`` or ``OR``.
 
     Returns:
         :class`FilterGroup`
@@ -415,7 +415,7 @@ class FilterGroup(object):
 
         Args:
             _dict (dict): A dictionary containing keys ``term``, ``operator``, and ``value``.
-            filter_clause (str): The clauses joining the filters, such as ``AND`` or ``OR``.
+            filter_clause (str): The clause joining the filters, such as ``AND`` or ``OR``.
 
         Returns:
             :class:`FilterGroup`
@@ -425,13 +425,13 @@ class FilterGroup(object):
 
     @property
     def filter_list(self):
-        """The list of :class:`QueryFilter` in this group."""
+        """The list of :class:`QueryFilter` objects in this group."""
 
         return self._filter_list
 
     @property
     def filter_clause(self):
-        """The clauses joining the filters, such as ``AND`` or ``OR``."""
+        """The clause joining the filters, such as ``AND`` or ``OR``."""
 
         return self._filter_clause
 

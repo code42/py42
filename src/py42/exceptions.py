@@ -15,6 +15,16 @@ class Py42ArchiveFileNotFoundError(Py42Error):
         super(Py42ArchiveFileNotFoundError, self).__init__(message)
 
 
+class Py42ChecksumNotFoundError(Py42Error):
+    """An exception raised when a user-supplied hash could not successfully locate its corresponding resource."""
+
+    def __init__(self, checksum_name, checksum_value):
+        message = u"No files found with {} checksum {}".format(
+            checksum_name, checksum_value
+        )
+        super(Py42ChecksumNotFoundError, self).__init__(message)
+
+
 class Py42FeatureUnavailableError(Py42Error):
     """An exception raised when a requested feature is not supported in your Code42 environment."""
 

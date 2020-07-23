@@ -11,7 +11,7 @@ from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.clients.storage import StorageSecurityClient
 from py42._internal.clients.storage.storagenode import StoragePreservationDataClient
 from py42.clients.file_event import FileEventClient
-from py42.exceptions import Py42Error
+from py42.exceptions import Py42ChecksumNotFoundError, Py42Error
 from py42.exceptions import Py42HTTPError
 from py42.modules.securitydata import PlanStorageInfo
 from py42.modules.securitydata import SecurityModule
@@ -764,10 +764,10 @@ class TestSecurityModule(object):
         file_event_search.text = "{}"
         file_event_client = mocker.MagicMock(spec=FileEventClient)
         file_event_client.search.return_value = file_event_search
-        with pytest.raises(Py42Error) as e:
+        with pytest.raises(Py42ChecksumNotFoundError) as e:
             security_module.stream_file_by_sha256("shahash")
 
-        assert u"No files found with sha256 checksum" in e.value.args[0]
+        assert u"No files found with SHA256 checksum" in e.value.args[0]
 
     def test_stream_file_by_sha256_raises_file_not_found_error_when_file_location_returns_empty_response(
         self,
@@ -924,10 +924,10 @@ class TestSecurityModule(object):
         file_event_search.text = "{}"
         file_event_client = mocker.MagicMock(spec=FileEventClient)
         file_event_client.search.return_value = file_event_search
-        with pytest.raises(Py42Error) as e:
+        with pytest.raises(Py42ChecksumNotFoundError) as e:
             security_module.stream_file_by_md5("md5hash")
 
-        assert u"No files found with md5 checksum" in e.value.args[0]
+        assert u"No files found with MD5 checksum" in e.value.args[0]
 
     def test_stream_file_by_md5_raises_file_not_found_error_when_file_location_returns_empty_response(
         self,

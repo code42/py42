@@ -793,7 +793,7 @@ class TestSecurityModule(object):
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_sha256("shahash")
 
-        assert e.value.args[0].contains(u"PDS service can't find requested file")
+        assert u"PDS service can't find requested file" in e.value.args[0]
 
     def test_stream_file_by_sha256_raises_py42_error_when_find_file_versions_returns_204_status_code(
         self,
@@ -953,7 +953,7 @@ class TestSecurityModule(object):
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_md5("md5hash")
 
-        assert e.value.args[0].contains(u"PDS service can't find requested file")
+        assert u"PDS service can't find requested file" in e.value.args[0]
 
     def test_stream_file_by_md5_raises_py42_error_when_find_file_versions_returns_204_status_code(
         self,

@@ -3,7 +3,6 @@ from threading import Lock
 
 from requests.exceptions import HTTPError
 
-from py42.exceptions import Py42ArchiveFileNotFoundError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42SecurityPlanConnectionError
@@ -257,9 +256,7 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, SHA256)
         if not len(events):
-            message = u"No files found with sha256 checksum {}".format(
-                checksum
-            )
+            message = u"No files found with sha256 checksum {}".format(checksum)
             raise Py42Error(message)
         md5_hash = events[0][u"md5Checksum"]
 
@@ -276,9 +273,7 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, MD5)
         if not len(events):
-            message = u"No files found with md5 checksum {}".format(
-                checksum
-            )
+            message = u"No files found with md5 checksum {}".format(checksum)
             raise Py42Error(message)
         sha256_hash = events[0][u"sha256Checksum"]
         return self._stream_file(

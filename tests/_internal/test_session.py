@@ -201,4 +201,4 @@ class TestPy42Session(object):
         )
         with pytest.raises(Py42InternalServerError) as e:
             session.get(URL)
-            assert e.request.url == URL
+        assert e.request.url == URL

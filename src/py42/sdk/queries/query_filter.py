@@ -254,7 +254,7 @@ class QueryFilterTimestampField(object):
     def on_or_before(cls, value):
         """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
         for finding results where the value with key ``self._term`` is on or before the
-        provided `value`.
+        provided ``value``.
 
         Args:
             value (str or int): The value used to filter results.
@@ -288,7 +288,7 @@ class QueryFilterTimestampField(object):
     def on_same_day(cls, value):
         """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
         for finding results where the value with key ``self._term`` is within the same
-        calendar day as the provided `value`.
+        calendar day as the provided ``value``.
 
         Args:
             value (str or int): The value used to filter results.

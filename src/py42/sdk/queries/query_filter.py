@@ -26,8 +26,8 @@ def create_query_filter(term, operator, value=None):
 def create_filter_group(query_filter_list, filter_clause):
     """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` object. Useful for
     programmatically crafting query filters, such as filters not yet defined in py42.
-    Alternatively, if you want to create custom filter groups with previously defined
-    operators such as `IS` or `IS_IN`, see the other methods in this module, such as
+    Alternatively, if you want to create custom filter groups with already defined
+    operators (such as `IS` or `IS_IN`), see the other methods in this module, such as
     :meth:`create_eq_filter_group()`.
 
     Args:
@@ -61,8 +61,9 @@ def create_eq_filter_group(term, value):
 
 def create_not_eq_filter_group(term, value):
     """"Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering results
-    where the value with key ``term`` equals the given value. Useful for creating ``IS_NOT``
-    filters that are not yet supported in py42 or programmatically crafting filter groups.
+    where the value with key ``term`` does not equal the given value. Useful for creating
+    ``IS_NOT`` filters that are not yet supported in py42 or programmatically crafting filter
+    groups.
 
     Args:
         term: (str): The term of the filter, such as ``actor`` or ``sharedWith``.

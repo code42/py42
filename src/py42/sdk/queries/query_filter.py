@@ -28,7 +28,7 @@ def create_filter_group(query_filter_list, filter_clause):
     programmatically crafting query filters, such as filters not yet defined in py42.
     Alternatively, if you want to create custom filter groups with already defined
     operators (such as `IS` or `IS_IN`), see the other methods in this module, such as
-    :meth:`create_eq_filter_group()`.
+    :meth:`~py42.sdk.queries.query_filter.create_eq_filter_group()`.
 
     Args:
         query_filter_list (list): a list of :class:`~py42.sdk.queries.query_filter.QueryFilter`

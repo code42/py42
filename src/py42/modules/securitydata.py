@@ -257,7 +257,7 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, SHA256)
         if not len(events):
-            message = u"File not found in archive with sha256 checksum {}".format(
+            message = u"No files found with sha256 checksum {}".format(
                 checksum
             )
             raise Py42Error(message)
@@ -276,7 +276,10 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, MD5)
         if not len(events):
-            raise Py42ArchiveFileNotFoundError(checksum, "")
+            message = u"No files found with md5 checksum {}".format(
+                checksum
+            )
+            raise Py42Error(message)
         sha256_hash = events[0][u"sha256Checksum"]
         return self._stream_file(
             self._find_file_versions(checksum, sha256_hash), checksum

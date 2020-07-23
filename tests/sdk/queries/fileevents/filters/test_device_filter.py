@@ -7,6 +7,7 @@ from tests.sdk.queries.conftest import NOT_EXISTS
 from tests.sdk.queries.conftest import NOT_IN
 
 from py42._internal.compat import str
+from py42.sdk.queries.fileevents.filters.device_filter import DeviceSignedInUserName
 from py42.sdk.queries.fileevents.filters.device_filter import DeviceUsername
 from py42.sdk.queries.fileevents.filters.device_filter import OSHostname
 from py42.sdk.queries.fileevents.filters.device_filter import PrivateIPAddress
@@ -172,4 +173,10 @@ def test_public_ip_address_not_in_str_gives_correct_json_representation():
     items = ["publicIpAddress1", "publicIpAddress2", "publicIpAddress3"]
     _filter = PublicIPAddress.not_in(items)
     expected = NOT_IN.format("publicIpAddress", *items)
+    assert str(_filter) == expected
+
+
+def test_device_signed_in_username_gives_correct_json_representation():
+    _filter = DeviceSignedInUserName.eq("username")
+    expected = IS.format("operatingSystemUser", "username")
     assert str(_filter) == expected

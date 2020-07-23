@@ -162,3 +162,8 @@ def test_sharing_type_added_not_in_str_gives_correct_json_representation():
     _filter = SharingTypeAdded.not_in(items)
     expected = NOT_IN.format("sharingTypeAdded", *items)
     assert str(_filter) == expected
+
+
+def test_sharing_type_choices_returns_valid_attributes():
+    choices = SharingTypeAdded.choices()
+    assert set(choices) == {"SHARED_VIA_LINK", "IS_PUBLIC", "OUTSIDE_TRUSTED_DOMAIN"}

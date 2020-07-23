@@ -11,8 +11,10 @@ from py42.sdk.queries.query_filter import create_not_in_filter_group
 from py42.sdk.queries.query_filter import create_on_or_after_filter_group
 from py42.sdk.queries.query_filter import create_on_or_before_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import FilterGroup
 from py42.sdk.queries.query_filter import QueryFilter
+
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
@@ -414,3 +416,17 @@ def test_filter_group_when_changed_filter_clause_has_correct_json_representation
         '{"operator":"IS", "term":"term", "value":"value2"},'
         '{"operator":"IS", "term":"term", "value":"value3"}]}'
     )
+
+
+class FilterClassTest(object):
+    _private = "test"
+    CONSTANT1 = "value1"
+    CONSTANT2 = "value2"
+
+    def method(self):
+        pass
+
+
+def test_filter_attributes_returns_public_class_variables():
+    public_attributes = filter_attributes(FilterClassTest)
+    assert set(public_attributes) == {"CONSTANT1", "CONSTANT2"}

@@ -266,3 +266,22 @@ def test_sha256_not_in_str_gives_correct_json_representation():
     _filter = SHA256.not_in(items)
     expected = NOT_IN.format("sha256Checksum", *sorted(items))
     assert str(_filter) == expected
+
+
+def test_file_category_choices_returns_valid_attributes():
+    choices = FileCategory.choices()
+    valid_set = {
+        "AUDIO",
+        "DOCUMENT",
+        "EXECUTABLE",
+        "IMAGE",
+        "PDF",
+        "PRESENTATION",
+        "SCRIPT",
+        "SOURCE_CODE",
+        "SPREADSHEET",
+        "VIDEO",
+        "VIRTUAL_DISK_IMAGE",
+        "ZIP",
+    }
+    assert set(choices) == valid_set

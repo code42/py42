@@ -1,6 +1,6 @@
-from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterComparableField
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
+from py42.sdk.queries.query_filter import filter_attributes
 
 
 class FileCategory(FileEventFilterStringField):
@@ -79,25 +79,3 @@ class SHA256(FileEventFilterStringField):
     """Class that filters events by SHA256 hash of the file observed."""
 
     _term = u"sha256Checksum"
-
-
-class FileSizeUnits(FileEventFilterStringField):
-    """Class that filters events by file size.
-
-    Available event types are provided as class attributes:
-        - :attr:`FileSizeUnits.BYTES`
-        - :attr:`FileSizeUnits.KB`
-        - :attr:`FileSizeUnits.MB`
-        - :attr:`FileSizeUnits.GB`
-    """
-
-    _term = u"unit"
-    # TODO Event though the unit is passed the value is always passed in bytes.
-    BYTES = u"b"
-    KB = u"kb"
-    MB = u"mb"
-    GB = u"gb"
-
-    @staticmethod
-    def choices():
-        return filter_attributes(FileSizeUnits)

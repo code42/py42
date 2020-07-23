@@ -14,8 +14,9 @@ class FileEventClient(BaseClient):
         `REST Documentation <https://forensicsearch-east.us.code42.com/forensic-search/queryservice/swagger-ui.html#/file-event-controller/searchEventsUsingPOST>`__
 
         Args:
-            query (:class:`FileEventQuery` or str): A composed FileEventQuery object or the raw
-                query as a JSON formatted string.
+            query (:class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str):
+                A composed :class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery`
+                object or the raw query as a JSON formatted string.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the query results.

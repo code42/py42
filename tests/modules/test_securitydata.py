@@ -750,7 +750,7 @@ class TestSecurityModule(object):
         response = security_module.stream_file_by_sha256("shahash")
         assert response == b"stream"
 
-    def test_stream_file_by_sha256_raises_file_not_found_error_when_search_returns_empty_response(
+    def test_stream_file_by_sha256_raises_py42_error_when_search_returns_empty_response(
         self,
         mocker,
         security_client,
@@ -764,8 +764,10 @@ class TestSecurityModule(object):
         file_event_search.text = "{}"
         file_event_client = mocker.MagicMock(spec=FileEventClient)
         file_event_client.search.return_value = file_event_search
-        with pytest.raises(Py42Error):
+        with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_sha256("shahash")
+
+        assert u"No files found with sha256 checksum" in e.value.args[0]
 
     def test_stream_file_by_sha256_raises_file_not_found_error_when_file_location_returns_empty_response(
         self,
@@ -790,7 +792,8 @@ class TestSecurityModule(object):
         )
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_sha256("shahash")
-            assert e.value.args[0].contains(u"PDS service can't find requested file")
+
+        assert e.value.args[0].contains(u"PDS service can't find requested file")
 
     def test_stream_file_by_sha256_raises_py42_error_when_find_file_versions_returns_204_status_code(
         self,
@@ -823,7 +826,8 @@ class TestSecurityModule(object):
 
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_sha256("shahash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
+
+        assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
     def test_stream_file_by_sha256_raises_py42_error_when_file_download_returns_failure_response(
         self,
@@ -863,7 +867,8 @@ class TestSecurityModule(object):
 
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_sha256("shahash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
+
+        assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
     def test_stream_file_by_md5_returns_stream_of_file(
         self,
@@ -919,8 +924,10 @@ class TestSecurityModule(object):
         file_event_search.text = "{}"
         file_event_client = mocker.MagicMock(spec=FileEventClient)
         file_event_client.search.return_value = file_event_search
-        with pytest.raises(Py42Error):
+        with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_md5("md5hash")
+
+        assert u"No files found with md5 checksum" in e.value.args[0]
 
     def test_stream_file_by_md5_raises_file_not_found_error_when_file_location_returns_empty_response(
         self,
@@ -945,7 +952,8 @@ class TestSecurityModule(object):
         )
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_md5("md5hash")
-            assert e.value.args[0].contains(u"PDS service can't find requested file")
+
+        assert e.value.args[0].contains(u"PDS service can't find requested file")
 
     def test_stream_file_by_md5_raises_py42_error_when_find_file_versions_returns_204_status_code(
         self,
@@ -978,7 +986,8 @@ class TestSecurityModule(object):
 
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_md5("md5hash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")
+
+        assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")
 
     def test_stream_file_by_md5_raises_py42_error_when_file_download_returns_failure_response(
         self,
@@ -1018,4 +1027,5 @@ class TestSecurityModule(object):
 
         with pytest.raises(Py42Error) as e:
             security_module.stream_file_by_md5("md5hash")
-            assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")
+
+        assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")

@@ -4,3 +4,5 @@ from py42.sdk.queries.fileevents.filters.email_filter import *
 from py42.sdk.queries.fileevents.filters.event_filter import *
 from py42.sdk.queries.fileevents.filters.exposure_filter import *
 from py42.sdk.queries.fileevents.filters.file_filter import *
+from py42.sdk.queries.fileevents.filters.activity_filter import *
+from py42.sdk.queries.fileevents.filters.print_filter import *

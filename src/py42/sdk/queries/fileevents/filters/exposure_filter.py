@@ -1,3 +1,4 @@
+from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
 
 
@@ -22,6 +23,10 @@ class ExposureType(FileEventFilterStringField):
     REMOVABLE_MEDIA = u"RemovableMedia"
     IS_PUBLIC = u"IsPublic"
     OUTSIDE_TRUSTED_DOMAINS = u"OutsideTrustedDomains"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(ExposureType)
 
 
 class ProcessName(FileEventFilterStringField):
@@ -114,6 +119,10 @@ class SyncDestination(FileEventFilterStringField):
     DROPBOX = u"Dropbox"
     ONEDRIVE = u"OneDrive"
 
+    @staticmethod
+    def choices():
+        return filter_attributes(SyncDestination)
+
 
 class TabURL(FileEventFilterStringField):
     """Class that filters events based on the URL of the active browser tab at the time the file
@@ -130,3 +139,19 @@ class WindowTitle(FileEventFilterStringField):
     """
 
     _term = u"windowTitle"
+
+
+class RiskIndicatorMimeType(FileEventFilterStringField):
+    """Class that filters events if file type mismatch the file's mime type."""
+
+    _term = u"mimeTypeMismatch"
+
+    FILE_MISMATCH = "true"
+
+
+class RiskIndicatorActiveHours(FileEventFilterStringField):
+    """Class that filters events by events occurred outside active hours."""
+
+    _term = u"outsideActiveHours"
+
+    OUTSIDE_ACTIVE_HOURS = "true"

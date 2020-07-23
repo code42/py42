@@ -1,12 +1,45 @@
+from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterComparableField
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.query_filter import QueryFilterStringField
 
 
-class FileCategory(QueryFilterStringField):
-    """Class that filters events by category of the file observed."""
+class FileCategory(FileEventFilterStringField):
+    """Class that filters events by category of the file observed.
+
+    Available event types are provided as class attributes:
+        - :attr:`FileCategory.AUDIO`
+        - :attr:`FileCategory.DOCUMENT`
+        - :attr:`FileCategory.EXECUTABLE`
+        - :attr:`FileCategory.IMAGE`
+        - :attr:`FileCategory.PDF`
+        - :attr:`FileCategory.PRESENTATION`
+        - :attr:`FileCategory.SCRIPT`
+        - :attr:`FileCategory.SOURCE_CODE`
+        - :attr:`FileCategory.SPREADSHEET`
+        - :attr:`FileCategory.VIDEO`
+        - :attr:`FileCategory.VIRTUAL_DISK_IMAGE`
+        - :attr:`FileCategory.ZIP`
+
+    """
 
     _term = u"fileCategory"
+
+    AUDIO = u"AUDIO"
+    DOCUMENT = u"DOCUMENT"
+    EXECUTABLE = u"EXECUTABLE"
+    IMAGE = u"IMAGE"
+    PDF = u"PDF"
+    PRESENTATION = u"PRESENTATION"
+    SCRIPT = u"SCRIPT"
+    SOURCE_CODE = u"SOURCE_CODE"
+    SPREADSHEET = u"SPREADSHEET"
+    VIDEO = u"VIDEO"
+    VIRTUAL_DISK_IMAGE = u"VIRTUAL_DISK_IMAGE"
+    ZIP = u"ARCHIVE"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(FileCategory)
 
 
 class FileName(FileEventFilterStringField):
@@ -46,3 +79,25 @@ class SHA256(FileEventFilterStringField):
     """Class that filters events by SHA256 hash of the file observed."""
 
     _term = u"sha256Checksum"
+
+
+class FileSizeUnits(FileEventFilterStringField):
+    """Class that filters events by file size.
+
+    Available event types are provided as class attributes:
+        - :attr:`FileSizeUnits.BYTES`
+        - :attr:`FileSizeUnits.KB`
+        - :attr:`FileSizeUnits.MB`
+        - :attr:`FileSizeUnits.GB`
+    """
+
+    _term = u"unit"
+    # TODO Event though the unit is passed the value is always passed in bytes.
+    BYTES = u"b"
+    KB = u"kb"
+    MB = u"mb"
+    GB = u"gb"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(FileSizeUnits)

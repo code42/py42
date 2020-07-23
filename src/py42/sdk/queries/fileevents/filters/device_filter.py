@@ -23,3 +23,7 @@ class PublicIPAddress(FileEventFilterStringField):
     """Class that filters events by public (WAN) IP address of the device that observed the event."""
 
     _term = u"publicIpAddress"
+
+
+class DeviceSignedInUserName(FileEventFilterStringField):
+    _term = u"operatingSystemUser"

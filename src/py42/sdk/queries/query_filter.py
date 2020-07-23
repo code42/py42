@@ -170,6 +170,19 @@ def create_in_range_filter_group(term, start_value, end_value):
     return create_filter_group(filter_list, u"AND")
 
 
+def create_within_the_last_filter_group(term, value):
+    filter_list = [create_query_filter(term, "WITHIN_THE_LAST", value)]
+    return create_filter_group(filter_list, "AND")
+
+
+def filter_attributes(cls):
+    return [
+        attr
+        for attr in dir(cls)
+        if not callable(cls().__getattribute__(attr)) and not attr.startswith(u"_")
+    ]
+
+
 class QueryFilterStringField(object):
     """Helper class for creating filters where the search value is a string."""
 
@@ -309,6 +322,10 @@ class QueryFilterTimestampField(object):
         return create_in_range_filter_group(
             cls._term, formatted_start_time, formatted_end_time
         )
+
+    @classmethod
+    def within_the_period(cls, value):
+        return create_within_the_last_filter_group(cls._term, value)
 
 
 class QueryFilterBooleanField(object):

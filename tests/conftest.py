@@ -119,8 +119,15 @@ def exception():
 
 
 @pytest.fixture
-def query_filter_list(query_filter):
-    return [query_filter for _ in range(3)]
+def query_filter_list():
+    return [
+        QueryFilter(
+            EVENT_FILTER_FIELD_NAME + str(suffix),
+            OPERATOR_STRING + str(suffix),
+            VALUE_STRING + str(suffix),
+        )
+        for suffix in range(3)
+    ]
 
 
 @pytest.fixture

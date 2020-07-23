@@ -3,7 +3,8 @@ from threading import Lock
 
 from requests.exceptions import HTTPError
 
-from py42.exceptions import Py42Error, Py42ChecksumNotFoundError
+from py42.exceptions import Py42ChecksumNotFoundError
+from py42.exceptions import Py42Error
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42SecurityPlanConnectionError
 from py42.exceptions import raise_py42_error

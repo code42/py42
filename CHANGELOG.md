@@ -12,7 +12,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Fixed
 
-- `sdk.securitydata.stream_file_by_md5()` now correctly raises `Py42Error` when no matching md5 is found (previously was `Py42ArchiveFileNotFoundError`).
+- `sdk.securitydata.stream_file_by_md5()` now correctly raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42ArchiveFileNotFoundError`).
 
 ## 1.7.0 - 2020-07-21
 

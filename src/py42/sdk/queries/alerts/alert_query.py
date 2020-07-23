@@ -5,10 +5,11 @@ from py42.sdk.queries import BaseQuery
 class AlertQuery(BaseQuery):
     """Helper class for building Code42 Alert queries.
 
-    An AlertQuery instance's ``all()`` and ``any()`` take one or more :class:`FilterGroup`
-    objects to construct a query that can be passed to the :meth:`AlertClient.search()` method.
-    ``all()`` returns results that match all of the provided filter criteria, ``any()`` will return
-    results that match any of the filters.
+    An AlertQuery instance's ``all()`` and ``any()`` take one or more
+    :class:`~py42.sdk.queries.query_filter.FilterGroup` objects to construct a query that
+    can be passed to the :meth:`AlertClient.search()` method. ``all()`` returns results
+    that match all of the provided filter criteria, ``any()`` will return results that
+    match any of the filters.
 
     For convenience, the :class:`AlertQuery` constructor does the same as ``all()``.
 

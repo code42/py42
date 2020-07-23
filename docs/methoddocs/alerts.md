@@ -22,63 +22,7 @@ that match multiple filter rules.
 See [Executing Searches](../userguides/searches.md) for more on building search queries.
 
 ```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.DateObserved
-    :members:
-    :inherited-members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.Actor
-    :members:
-    :inherited-members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.RuleName
-    :members:
-    :inherited-members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.RuleId
-    :members:
-    :inherited-members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.RuleSource
-    :members:
-    :inherited-members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.RuleType
-    :members:
-    :inherited-members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.Description
-    :members:
-    :inherited-members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.Severity
-    :members:
-    :inherited-members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.filters.alert_filter.AlertState
+.. automodule:: py42.sdk.queries.alerts.filters.alert_filter
     :members:
     :inherited-members:
     :show-inheritance:

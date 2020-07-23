@@ -269,7 +269,7 @@ class QueryFilterTimestampField(object):
     def in_range(cls, start_value, end_value):
         """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
         for finding results where the value with key ``self._term`` is in range between
-        the provided `start_value` and `end_value``.
+        the provided ``start_value`` and ``end_value``.
 
         Args:
             start_value (str or int): The start value used to filter results.

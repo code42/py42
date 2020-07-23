@@ -24,8 +24,8 @@ def create_contains_filter_group(term, value):
 def create_not_contains_filter_group(term, value):
     """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering results
     where the value with key ``term`` does not contain the given value. Useful for creating
-    ``DOES_NOT_CONTAIN`` filters that not yet supported in py42 or programmatically crafting
-    filter groups.
+    ``DOES_NOT_CONTAIN`` filters that are not yet supported in py42 or programmatically
+    crafting filter groups.
 
     Args:
         term: (str): The term of the filter, such as ``actor``.

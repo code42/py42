@@ -25,7 +25,7 @@ class DepartingEmployeeClient(BaseClient):
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the departing \
                 employees list.
-            departure_date (str, optional): Date in YYYY-MM-DD format. Date is treated as UTC. Defaults to None.
+            departure_date (str, optional): Date in yyyy-MM-dd format. Date is treated as UTC. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -140,7 +140,7 @@ class DepartingEmployeeClient(BaseClient):
 
         Args:
             user_id (str): The Code42 userUid of the user.
-            departure_date (date): Date in YYYY-MM-DD format. Date is treated as UTC.
+            departure_date (date): Date in yyyy-MM-dd format. Date is treated as UTC.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`

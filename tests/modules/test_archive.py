@@ -77,7 +77,12 @@ class TestArchiveModule(object):
         self, mocker
     ):
         archive = _get_module(mocker)
-        archive.get_all_org_cold_storage_archives("TEST ORG ID")
+        archive.get_all_org_cold_storage_archives(
+            "TEST ORG ID", True, "sort_key", "sort_dir"
+        )
         archive._archive_client.get_all_org_cold_storage_archives.assert_called_once_with(
-            "TEST ORG ID"
+            org_id="TEST ORG ID",
+            include_child_orgs=True,
+            sort_key="sort_key",
+            sort_dir="sort_dir",
         )

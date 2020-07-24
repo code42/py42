@@ -8,6 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Fixed
+
+- functions now return `Py42Response` objects as expected:
+    - `sdk.detectionlists.update_user_notes()`
+    - `sdk.detectionlists.add_user_risk_tags()`
+    - `sdk.detectionlists.remove_user_risk_tags()`
+    - `sdk.detectionlists.add_user_cloud_alias()`
+    - `sdk.detectionlists.remove_user_cloud_alias()`
+- `sdk.archive.get_all_org_cold_storage_archives()` now actually uses parameters `include_child_orgs`, `sort_key` and `sort_dir`.
+
 ## 1.7.0 - 2020-07-21
 
 ### Added

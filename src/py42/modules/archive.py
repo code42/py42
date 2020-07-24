@@ -146,4 +146,9 @@ class ArchiveModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cold storage archive information.
         """
-        return self._archive_client.get_all_org_cold_storage_archives(org_id)
+        return self._archive_client.get_all_org_cold_storage_archives(
+            org_id=org_id,
+            include_child_orgs=include_child_orgs,
+            sort_key=sort_key,
+            sort_dir=sort_dir,
+        )

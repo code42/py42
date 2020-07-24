@@ -1,5 +1,6 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
 from py42.sdk.queries.query_filter import filter_attributes
+from py42.sdk.queries.query_filter import QueryFilterBooleanField
 
 
 class ExposureType(FileEventFilterStringField):
@@ -141,17 +142,13 @@ class WindowTitle(FileEventFilterStringField):
     _term = u"windowTitle"
 
 
-class RiskIndicatorMimeType(FileEventFilterStringField):
+class RiskIndicatorMimeType(QueryFilterBooleanField):
     """Class that filters events if file type mismatch the file's mime type."""
 
     _term = u"mimeTypeMismatch"
 
-    FILE_MISMATCH = "true"
 
-
-class RiskIndicatorActiveHours(FileEventFilterStringField):
+class RiskIndicatorActiveHours(QueryFilterBooleanField):
     """Class that filters events by events occurred outside active hours."""
 
     _term = u"outsideActiveHours"
-
-    OUTSIDE_ACTIVE_HOURS = "true"

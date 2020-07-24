@@ -12,6 +12,7 @@ from tests.sdk.queries.conftest import NOT_EXISTS
 from tests.sdk.queries.conftest import NOT_IN
 from tests.sdk.queries.conftest import ON_OR_AFTER
 from tests.sdk.queries.conftest import ON_OR_BEFORE
+from tests.sdk.queries.conftest import WITHIN_THE_LAST
 
 from py42.sdk.queries.fileevents.filters.event_filter import EventTimestamp
 from py42.sdk.queries.fileevents.filters.event_filter import EventType
@@ -213,3 +214,9 @@ def test_source_choices_returns_valid_attributes():
         "Office365",
     }
     assert set(choices) == valid_set
+
+
+def test_event_timestampt_gives_correct_json_representation():
+    _filter = EventTimestamp.within_the_last(EventTimestamp.ONE_HOUR)
+    expected = WITHIN_THE_LAST.format("eventTimestamp", "PT1H")
+    assert str(_filter) == expected

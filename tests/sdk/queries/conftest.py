@@ -27,6 +27,7 @@ NOT_CONTAINS = u'{{"filterClause":"AND", "filters":[{{"operator":"DOES_NOT_CONTA
 
 GREATER_THAN = u'{{"filterClause":"AND", "filters":[{{"operator":"GREATER_THAN", "term":"{0}", "value":"{1}"}}]}}'
 LESS_THAN = u'{{"filterClause":"AND", "filters":[{{"operator":"LESS_THAN", "term":"{0}", "value":"{1}"}}]}}'
+WITHIN_THE_LAST = u'{{"filterClause":"AND", "filters":[{{"operator":"WITHIN_THE_LAST", "term":"{0}", "value":"{1}"}}]}}'
 
 
 @pytest.fixture

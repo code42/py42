@@ -1,7 +1,7 @@
+from tests.sdk.queries.conftest import IS
+
 from py42.sdk.queries.fileevents.filters.activity_filter import RemoteActivity
 from py42.sdk.queries.fileevents.filters.activity_filter import TrustedActivity
-
-from tests.sdk.queries.conftest import IS
 
 
 def test_risk_indicator_mime_type_is_true_str_gives_correct_json_representation():

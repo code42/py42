@@ -10,7 +10,7 @@ __pycache__/
 *.so
 
 # IDE files
-.idea/py42.iml
+# .idea/py42.iml
 
 # Distribution / packaging
 .Python

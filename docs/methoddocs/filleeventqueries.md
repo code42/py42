@@ -84,6 +84,20 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
     :show-inheritance:
 ```
 
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.RiskIndicatorMimeType
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.RiskIndicatorActiveHours
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
 ### File Filters
 
 ```eval_rst
@@ -160,6 +174,13 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.device_filter.PublicIPAddress
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.device_filter.DeviceSignedInUserName
     :members:
     :inherited-members:
     :show-inheritance:
@@ -320,6 +341,38 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.email_filter.EmailFrom
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+### Activity Filters
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.activity_filter.TrustedActivity
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.activity_filter.RemoteActivity
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+### Printer Filters
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.print_filter.Printer
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.print_filter.PrintJobName
     :members:
     :inherited-members:
     :show-inheritance:

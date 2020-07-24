@@ -6,7 +6,7 @@ from py42.sdk.queries.query_filter import filter_attributes
 class FileCategory(FileEventFilterStringField):
     """Class that filters events by category of the file observed.
 
-    Available event types are provided as class attributes:
+    Available file categories are provided as class attributes:
         - :attr:`FileCategory.AUDIO`
         - :attr:`FileCategory.DOCUMENT`
         - :attr:`FileCategory.EXECUTABLE`

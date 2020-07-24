@@ -751,7 +751,7 @@ class TestSecurityModule(object):
         response = security_module.stream_file_by_sha256("shahash")
         assert response == b"stream"
 
-    def test_stream_file_by_sha256_raises_py42_error_when_search_returns_empty_response(
+    def test_stream_file_by_sha256_raises_py42_checksum_not_found_error_when_search_returns_empty_response(
         self,
         mocker,
         security_client,
@@ -911,7 +911,7 @@ class TestSecurityModule(object):
         response = security_module.stream_file_by_md5("md5hash")
         assert response == b"stream"
 
-    def test_stream_file_by_md5_raises_file_not_found_error_when_search_returns_empty_response(
+    def test_stream_file_by_md5_raises_py42_checksum_not_found_error_when_search_returns_empty_response(
         self,
         mocker,
         security_client,

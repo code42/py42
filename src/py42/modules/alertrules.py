@@ -70,7 +70,7 @@ class AlertRulesModule(object):
         rules_client = self.microservice_client_factory.get_alert_rules_client()
         return rules_client.remove_all_users(rule_id)
 
-    def get_all(self, sort_key="CreatedAt", sort_direction="DESC"):
+    def get_all(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
         """Fetch all available rules.
 
         Args:

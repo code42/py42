@@ -171,8 +171,8 @@ def create_in_range_filter_group(term, start_value, end_value):
 
 
 def create_within_the_last_filter_group(term, value):
-    filter_list = [create_query_filter(term, "WITHIN_THE_LAST", value)]
-    return create_filter_group(filter_list, "AND")
+    filter_list = [create_query_filter(term, u"WITHIN_THE_LAST", value)]
+    return create_filter_group(filter_list, u"AND")
 
 
 def filter_attributes(cls):
@@ -325,7 +325,7 @@ class QueryFilterTimestampField(object):
         )
 
     @classmethod
-    def within_the_period(cls, value):
+    def within_the_last(cls, value):
         return create_within_the_last_filter_group(cls._term, value)
 
 

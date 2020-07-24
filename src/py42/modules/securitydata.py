@@ -257,7 +257,7 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, SHA256)
         if not len(events):
-            raise Py42ChecksumNotFoundError("SHA256", checksum)
+            raise Py42ChecksumNotFoundError(u"SHA256", checksum)
         md5_hash = events[0][u"md5Checksum"]
 
         return self._stream_file(self._find_file_versions(md5_hash, checksum), checksum)
@@ -273,7 +273,7 @@ class SecurityModule(object):
         """
         events = self._search_by_hash(checksum, MD5)
         if not len(events):
-            raise Py42ChecksumNotFoundError("MD5", checksum)
+            raise Py42ChecksumNotFoundError(u"MD5", checksum)
         sha256_hash = events[0][u"sha256Checksum"]
         return self._stream_file(
             self._find_file_versions(checksum, sha256_hash), checksum

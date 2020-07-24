@@ -171,6 +171,16 @@ def create_in_range_filter_group(term, start_value, end_value):
 
 
 def create_within_the_last_filter_group(term, value):
+    """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
+    for finding results where the key ``term`` is an ``EventTimestamp._term``
+    and the value is one of the `EventTimestamp` attributes as `value`.
+
+    Args:
+        value (str): `EventTimestamp` attribute.
+
+    Returns:
+        :class:`~py42.sdk.queries.query_filter.FilterGroup`
+    """
     filter_list = [create_query_filter(term, u"WITHIN_THE_LAST", value)]
     return create_filter_group(filter_list, u"AND")
 
@@ -327,8 +337,8 @@ class QueryFilterTimestampField(object):
     @classmethod
     def within_the_last(cls, value):
         """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
-        for finding results where the key ``self._term`` is an EventTimestamp
-        `_term` and the value is one of the `EventTimestamp` attributes as `value`.
+        for finding results where the key ``self._term`` is an ``EventTimestamp._term``
+        and the value is one of the ``EventTimestamp`` attributes as ``value``.
 
         Args:
             value (str): `EventTimestamp` attribute.

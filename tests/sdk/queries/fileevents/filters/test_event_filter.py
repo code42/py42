@@ -1,6 +1,7 @@
 from datetime import datetime
 from time import time
 
+import pytest
 from tests.sdk.queries.conftest import EXISTS
 from tests.sdk.queries.conftest import format_datetime
 from tests.sdk.queries.conftest import format_timestamp
@@ -17,6 +18,8 @@ from tests.sdk.queries.conftest import WITHIN_THE_LAST
 from py42.sdk.queries.fileevents.filters.event_filter import EventTimestamp
 from py42.sdk.queries.fileevents.filters.event_filter import EventType
 from py42.sdk.queries.fileevents.filters.event_filter import InsertionTimestamp
+from py42.sdk.queries.fileevents.filters.event_filter import RiskIndicatorActiveHours
+from py42.sdk.queries.fileevents.filters.event_filter import RiskIndicatorMimeType
 from py42.sdk.queries.fileevents.filters.event_filter import Source
 
 
@@ -72,26 +75,26 @@ def test_event_type_not_exists_str_gives_correct_json_representation():
 
 
 def test_event_type_eq_str_gives_correct_json_representation():
-    _filter = EventType.eq("test_eventType")
-    expected = IS.format("eventType", "test_eventType")
+    _filter = EventType.eq(EventType.MODIFIED)
+    expected = IS.format("eventType", "UPDATED")
     assert str(_filter) == expected
 
 
 def test_event_type_not_eq_str_gives_correct_json_representation():
-    _filter = EventType.not_eq("test_eventType")
-    expected = IS_NOT.format("eventType", "test_eventType")
+    _filter = EventType.not_eq(EventType.CREATED)
+    expected = IS_NOT.format("eventType", "CREATED")
     assert str(_filter) == expected
 
 
 def test_event_type_is_in_str_gives_correct_json_representation():
-    items = ["eventType1", "eventType2", "eventType3"]
+    items = [EventType.DELETED, EventType.EMAILED, EventType.PRINTED]
     _filter = EventType.is_in(items)
     expected = IS_IN.format("eventType", *items)
     assert str(_filter) == expected
 
 
 def test_event_type_not_in_str_gives_correct_json_representation():
-    items = ["eventType1", "eventType2", "eventType3"]
+    items = [EventType.CREATED, EventType.DELETED, EventType.MODIFIED]
     _filter = EventType.not_in(items)
     expected = NOT_IN.format("eventType", *items)
     assert str(_filter) == expected
@@ -149,26 +152,26 @@ def test_source_not_exists_str_gives_correct_json_representation():
 
 
 def test_source_eq_str_gives_correct_json_representation():
-    _filter = Source.eq("test_source")
-    expected = IS.format("source", "test_source")
+    _filter = Source.eq(Source.ENDPOINT)
+    expected = IS.format("source", "Endpoint")
     assert str(_filter) == expected
 
 
 def test_source_not_eq_str_gives_correct_json_representation():
-    _filter = Source.not_eq("test_source")
-    expected = IS_NOT.format("source", "test_source")
+    _filter = Source.not_eq(Source.BOX)
+    expected = IS_NOT.format("source", "Box")
     assert str(_filter) == expected
 
 
 def test_source_is_in_str_gives_correct_json_representation():
-    items = ["source1", "source2", "source3"]
+    items = [Source.GMAIL, Source.GOOGLE_DRIVE, Source.OFFICE_365]
     _filter = Source.is_in(items)
     expected = IS_IN.format("source", *items)
     assert str(_filter) == expected
 
 
 def test_source_not_in_str_gives_correct_json_representation():
-    items = ["source1", "source2", "source3"]
+    items = [Source.GMAIL, Source.GOOGLE_DRIVE, Source.OFFICE_365]
     _filter = Source.not_in(items)
     expected = NOT_IN.format("source", *items)
     assert str(_filter) == expected
@@ -216,7 +219,52 @@ def test_source_choices_returns_valid_attributes():
     assert set(choices) == valid_set
 
 
-def test_event_timestampt_gives_correct_json_representation():
+def test_event_timestamp_gives_correct_json_representation():
     _filter = EventTimestamp.within_the_last(EventTimestamp.ONE_HOUR)
     expected = WITHIN_THE_LAST.format("eventTimestamp", "PT1H")
+    assert str(_filter) == expected
+
+
+@pytest.mark.parametrize(
+    "key, value",
+    [
+        (EventTimestamp.FIFTEEN_MINUTES, u"PT15M"),
+        (EventTimestamp.ONE_HOUR, u"PT1H"),
+        (EventTimestamp.THREE_HOURS, u"PT3H"),
+        (EventTimestamp.TWELVE_HOURS, u"PT12H"),
+        (EventTimestamp.ONE_DAY, u"P1D"),
+        (EventTimestamp.THREE_DAYS, u"P3D"),
+        (EventTimestamp.SEVEN_DAYS, u"P7D"),
+        (EventTimestamp.FOURTEEN_DAYS, u"P14D"),
+        (EventTimestamp.THIRTY_DAYS, u"P30D"),
+    ],
+)
+def test_all_event_timestamp_gives_correct_json_representation(key, value):
+
+    _filter = EventTimestamp.within_the_last(key)
+    expected = WITHIN_THE_LAST.format("eventTimestamp", value)
+    assert str(_filter) == expected
+
+
+def test_risk_indicator_mime_type_is_true_str_gives_correct_json_representation():
+    _filter = RiskIndicatorMimeType.is_true()
+    expected = IS.format("mimeTypeMismatch", "TRUE")
+    assert str(_filter) == expected
+
+
+def test_risk_indicator_mime_type_is_false_str_gives_correct_json_representation():
+    _filter = RiskIndicatorMimeType.is_false()
+    expected = IS.format("mimeTypeMismatch", "FALSE")
+    assert str(_filter) == expected
+
+
+def test_risk_indicator_active_hours_is_true_str_gives_correct_json_representation():
+    _filter = RiskIndicatorActiveHours.is_true()
+    expected = IS.format("outsideActiveHours", "TRUE")
+    assert str(_filter) == expected
+
+
+def test_risk_indicator_active_hours_is_false_str_gives_correct_json_representation():
+    _filter = RiskIndicatorActiveHours.is_false()
+    expected = IS.format("outsideActiveHours", "FALSE")
     assert str(_filter) == expected

@@ -17,26 +17,26 @@ from py42.sdk.queries.fileevents.filters.file_filter import SHA256
 
 
 def test_file_category_eq_str_gives_correct_json_representation():
-    _filter = FileCategory.eq("test_category")
-    expected = IS.format("fileCategory", "test_category")
+    _filter = FileCategory.eq(FileCategory.AUDIO)
+    expected = IS.format("fileCategory", "AUDIO")
     assert str(_filter) == expected
 
 
 def test_file_category_not_eq_str_gives_correct_json_representation():
-    _filter = FileCategory.not_eq("test_category")
-    expected = IS_NOT.format("fileCategory", "test_category")
+    _filter = FileCategory.not_eq(FileCategory.DOCUMENT)
+    expected = IS_NOT.format("fileCategory", "DOCUMENT")
     assert str(_filter) == expected
 
 
 def test_file_category_is_in_str_gives_correct_json_representation():
-    items = ["category1", "category2", "category3"]
+    items = [FileCategory.EXECUTABLE, FileCategory.IMAGE, FileCategory.PDF]
     _filter = FileCategory.is_in(items)
     expected = IS_IN.format("fileCategory", *items)
     assert str(_filter) == expected
 
 
 def test_file_category_not_in_str_gives_correct_json_representation():
-    items = ["category1", "category2", "category3"]
+    items = [FileCategory.EXECUTABLE, FileCategory.IMAGE, FileCategory.PDF]
     _filter = FileCategory.not_in(items)
     expected = NOT_IN.format("fileCategory", *items)
     assert str(_filter) == expected

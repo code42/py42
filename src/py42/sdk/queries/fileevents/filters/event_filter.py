@@ -6,8 +6,22 @@ from py42.sdk.queries.query_filter import QueryFilterTimestampField
 class EventTimestamp(QueryFilterTimestampField):
     """Class that filters events based on the timestamp of the event that occurred.
 
+    This class has to create instance only with class method `within_the_last`.
+
+    Available event types are provided as class attributes:
+
+        - :attr:`EventTimestamp.FIFTEEN_MINUTES`
+        - :attr:`EventTimestamp.ONE_HOUR`
+        - :attr:`EventTimestamp.THREE_HOURS`
+        - :attr:`EventTimestamp.TWELVE_HOURS`
+        - :attr:`EventTimestamp.ONE_DAY`
+        - :attr:`EventTimestamp.THREE_DAYS`
+        - :attr:`EventTimestamp.SEVEN_DAYS`
+        - :attr:`EventTimestamp.FOURTEEN_DAYS`
+        - :attr:`EventTimestamp.THIRTY_DAYS`
+
     Example::
-        filter = EventTimestamp.within_the_period(EventTimestamp.SEVEN_DAYS)
+        filter = EventTimestamp.within_the_last(EventTimestamp.SEVEN_DAYS)
     """
 
     _term = u"eventTimestamp"
@@ -80,6 +94,10 @@ class Source(FileEventFilterStringField):
         - :attr:`Source.BOX`
         - :attr:`Source.GMAIL`
         - :attr:`Source.OFFICE_365`
+
+    Example::
+
+        filter = Source.isin([Source.ENDPOINT, Source.BOX])
 
     """
 

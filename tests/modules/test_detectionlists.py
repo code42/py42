@@ -3,6 +3,7 @@ import pytest
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.modules.detectionlists import DetectionListsModule
+from py42.response import Py42Response
 
 
 @pytest.fixture
@@ -75,7 +76,17 @@ class TestDetectionListModule(object):
             TEST_USER_ID, "newnotes"
         )
 
-    def test_add_user_risk_tag_calls_user_client_with_expected_values(
+    def test_update_user_notes_returns_response(
+        self, mock_microservice_client_factory, mock_detection_list_user_client
+    ):
+        mock_microservice_client_factory.get_detection_list_user_client.return_value = (
+            mock_detection_list_user_client
+        )
+        module = DetectionListsModule(mock_microservice_client_factory)
+        response = module.update_user_notes(TEST_USER_ID, "newnotes")
+        assert response
+
+    def test_add_user_risk_tags_calls_user_client_with_expected_values(
         self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
@@ -87,7 +98,17 @@ class TestDetectionListModule(object):
             TEST_USER_ID, "newtag"
         )
 
-    def test_remove_user_risk_tag_calls_user_client_with_expected_values(
+    def test_add_user_risk_tags_returns_response(
+        self, mock_microservice_client_factory, mock_detection_list_user_client
+    ):
+        mock_microservice_client_factory.get_detection_list_user_client.return_value = (
+            mock_detection_list_user_client
+        )
+        module = DetectionListsModule(mock_microservice_client_factory)
+        response = module.add_user_risk_tags(TEST_USER_ID, "newtag")
+        assert response
+
+    def test_remove_user_risk_tags_calls_user_client_with_expected_values(
         self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
         mock_microservice_client_factory.get_detection_list_user_client.return_value = (
@@ -98,6 +119,16 @@ class TestDetectionListModule(object):
         mock_detection_list_user_client.remove_risk_tags.assert_called_once_with(
             TEST_USER_ID, "oldtag"
         )
+
+    def test_remove_user_risk_tags_returns_response(
+        self, mock_microservice_client_factory, mock_detection_list_user_client
+    ):
+        mock_microservice_client_factory.get_detection_list_user_client.return_value = (
+            mock_detection_list_user_client
+        )
+        module = DetectionListsModule(mock_microservice_client_factory)
+        response = module.remove_user_risk_tags(TEST_USER_ID, "oldtag")
+        assert response
 
     def test_add_user_cloud_alias_calls_user_client_with_expected_values(
         self, mock_microservice_client_factory, mock_detection_list_user_client
@@ -111,6 +142,16 @@ class TestDetectionListModule(object):
             TEST_USER_ID, "newalias"
         )
 
+    def test_add_user_cloud_alias_returns_response(
+        self, mock_microservice_client_factory, mock_detection_list_user_client
+    ):
+        mock_microservice_client_factory.get_detection_list_user_client.return_value = (
+            mock_detection_list_user_client
+        )
+        module = DetectionListsModule(mock_microservice_client_factory)
+        response = module.add_user_cloud_alias(TEST_USER_ID, "newalias")
+        assert response
+
     def test_remove_user_cloud_alias_calls_user_client_with_expected_values(
         self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
@@ -123,6 +164,16 @@ class TestDetectionListModule(object):
             TEST_USER_ID, "oldalias"
         )
 
+    def test_remove_user_cloud_alias_returns_response(
+        self, mock_microservice_client_factory, mock_detection_list_user_client
+    ):
+        mock_microservice_client_factory.get_detection_list_user_client.return_value = (
+            mock_detection_list_user_client
+        )
+        module = DetectionListsModule(mock_microservice_client_factory)
+        response = module.remove_user_cloud_alias(TEST_USER_ID, "oldalias")
+        assert response
+
     def test_refresh_user_scim_attributes_calls_user_client_with_expected_values(
         self, mock_microservice_client_factory, mock_detection_list_user_client
     ):
@@ -132,3 +183,13 @@ class TestDetectionListModule(object):
         module = DetectionListsModule(mock_microservice_client_factory)
         module.refresh_user_scim_attributes(TEST_USER_ID)
         mock_detection_list_user_client.refresh.assert_called_once_with(TEST_USER_ID)
+
+    def test_refresh_user_scim_attributes_returns_response(
+        self, mock_microservice_client_factory, mock_detection_list_user_client
+    ):
+        mock_microservice_client_factory.get_detection_list_user_client.return_value = (
+            mock_detection_list_user_client
+        )
+        module = DetectionListsModule(mock_microservice_client_factory)
+        response = module.refresh_user_scim_attributes(TEST_USER_ID)
+        assert response

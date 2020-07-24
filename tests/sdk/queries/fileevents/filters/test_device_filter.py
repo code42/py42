@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pytest
 from tests.sdk.queries.conftest import EXISTS
 from tests.sdk.queries.conftest import IS
@@ -12,8 +13,6 @@ from py42.sdk.queries.fileevents.filters.device_filter import DeviceUsername
 from py42.sdk.queries.fileevents.filters.device_filter import OSHostname
 from py42.sdk.queries.fileevents.filters.device_filter import PrivateIPAddress
 from py42.sdk.queries.fileevents.filters.device_filter import PublicIPAddress
-
-# -*- coding: utf-8 -*-
 
 
 def test_device_username_exists_str_gives_correct_json_representation():

@@ -482,13 +482,13 @@ def test_window_title_not_in_str_gives_correct_json_representation():
 def test_exposure_type_choices_returns_valid_attributes():
     choices = ExposureType.choices()
     valid_set = {
-        "SHARED_VIA_LINK",
-        "SHARED_TO_DOMAIN",
-        "APPLICATION_READ",
-        "CLOUD_STORAGE",
-        "REMOVABLE_MEDIA",
-        "IS_PUBLIC",
-        "OUTSIDE_TRUSTED_DOMAINS",
+        "SharedViaLink",
+        "SharedToDomain",
+        "ApplicationRead",
+        "CloudStorage",
+        "RemovableMedia",
+        "IsPublic",
+        "OutsideTrustedDomains",
     }
     assert set(choices) == valid_set
 
@@ -496,12 +496,12 @@ def test_exposure_type_choices_returns_valid_attributes():
 def test_sync_destination_choices_returns_valid_attributes():
     choices = SyncDestination.choices()
     valid_set = {
-        "ICLOUD",
-        "BOX",
-        "BOX_DRIVE",
-        "GOOGLE_DRIVE",
-        "GOOGLE_BACKUP_AND_SYNC",
-        "DROPBOX",
-        "ONEDRIVE",
+        "ICloud",
+        "Box",
+        "BoxDrive",
+        "GoogleDrive",
+        "GoogleBackupAndSync",
+        "Dropbox",
+        "OneDrive",
     }
     assert set(choices) == valid_set

@@ -176,8 +176,9 @@ def create_within_the_last_filter_group(term, value):
 
 
 def filter_attributes(cls):
+
     return [
-        attr
+        cls().__getattribute__(attr)
         for attr in dir(cls)
         if not callable(cls().__getattribute__(attr)) and not attr.startswith(u"_")
     ]

@@ -429,4 +429,4 @@ class FilterClassTest(object):
 
 def test_filter_attributes_returns_public_class_variables():
     public_attributes = filter_attributes(FilterClassTest)
-    assert set(public_attributes) == {"CONSTANT1", "CONSTANT2"}
+    assert set(public_attributes) == {"value1", "value2"}

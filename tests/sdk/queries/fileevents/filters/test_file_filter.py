@@ -282,6 +282,6 @@ def test_file_category_choices_returns_valid_attributes():
         "SPREADSHEET",
         "VIDEO",
         "VIRTUAL_DISK_IMAGE",
-        "ZIP",
+        "ARCHIVE",
     }
     assert set(choices) == valid_set

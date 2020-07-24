@@ -176,15 +176,15 @@ def test_source_not_in_str_gives_correct_json_representation():
 def test_event_timestamp_choices_returns_valid_attributes():
     choices = EventTimestamp.choices()
     valid_set = {
-        "FIFTEEN_MINUTES",
-        "ONE_HOUR",
-        "THREE_HOURS",
-        "TWELVE_HOURS",
-        "ONE_DAY",
-        "THREE_DAYS",
-        "SEVEN_DAYS",
-        "FOURTEEN_DAYS",
-        "THIRTY_DAYS",
+        "PT15M",
+        "PT1H",
+        "PT3H",
+        "PT12H",
+        "P1D",
+        "P3D",
+        "P7D",
+        "P14D",
+        "P30D",
     }
     assert set(choices) == valid_set
 
@@ -193,7 +193,7 @@ def test_event_type_choices_returns_valid_attributes():
     choices = EventType.choices()
     valid_set = {
         "CREATED",
-        "MODIFIED",
+        "UPDATED",
         "DELETED",
         "READ_BY_APP",
         "EMAILED",
@@ -205,11 +205,11 @@ def test_event_type_choices_returns_valid_attributes():
 def test_source_choices_returns_valid_attributes():
     choices = Source.choices()
     valid_set = {
-        "ENDPOINT",
-        "GOOGLE_DRIVE",
-        "ONE_DRIVE",
-        "BOX",
-        "GMAIL",
-        "OFFICE_365",
+        "Endpoint",
+        "GoogleDrive",
+        "OneDrive",
+        "Box",
+        "Gmail",
+        "Office365",
     }
     assert set(choices) == valid_set

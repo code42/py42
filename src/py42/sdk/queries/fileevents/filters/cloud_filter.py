@@ -1,4 +1,5 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
+from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import QueryFilterBooleanField
 
 
@@ -49,3 +50,7 @@ class SharingTypeAdded(FileEventFilterStringField):
     SHARED_VIA_LINK = u"SharedViaLink"
     IS_PUBLIC = u"IsPublic"
     OUTSIDE_TRUSTED_DOMAIN = u"OutsideTrustedDomains"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(SharingTypeAdded)

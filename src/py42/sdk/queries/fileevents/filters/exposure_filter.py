@@ -1,4 +1,5 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
+from py42.sdk.queries.query_filter import filter_attributes
 
 
 class ExposureType(FileEventFilterStringField):
@@ -22,6 +23,10 @@ class ExposureType(FileEventFilterStringField):
     REMOVABLE_MEDIA = u"RemovableMedia"
     IS_PUBLIC = u"IsPublic"
     OUTSIDE_TRUSTED_DOMAINS = u"OutsideTrustedDomains"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(ExposureType)
 
 
 class ProcessName(FileEventFilterStringField):
@@ -113,6 +118,10 @@ class SyncDestination(FileEventFilterStringField):
     GOOGLE_BACKUP_AND_SYNC = u"GoogleBackupAndSync"
     DROPBOX = u"Dropbox"
     ONEDRIVE = u"OneDrive"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(SyncDestination)
 
 
 class TabURL(FileEventFilterStringField):

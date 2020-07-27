@@ -7,9 +7,8 @@ from py42.sdk.queries.query_filter import QueryFilterTimestampField
 class EventTimestamp(QueryFilterTimestampField):
     """Class that filters events based on the timestamp of the event that occurred.
 
-    This class has to create instance only with class method `within_the_last`.
-
-    Available event types are provided as class attributes:
+    Available event timestamp constants are provided as class attributes, These
+    constants should be used only with class method `within_the_last`:
 
         - :attr:`EventTimestamp.FIFTEEN_MINUTES`
         - :attr:`EventTimestamp.ONE_HOUR`
@@ -88,7 +87,7 @@ class InsertionTimestamp(QueryFilterTimestampField):
 class Source(FileEventFilterStringField):
     """Class that filters events by event source.
 
-    Available event types are provided as class attributes:
+    Available source types are provided as class attributes:
         - :attr:`Source.ENDPOINT`
         - :attr:`Source.GOOGLE_DRIVE`
         - :attr:`Source.ONE_DRIVE`
@@ -98,7 +97,7 @@ class Source(FileEventFilterStringField):
 
     Example::
 
-        filter = Source.isin([Source.ENDPOINT, Source.BOX])
+        filter = Source.is_in([Source.ENDPOINT, Source.BOX])
 
     """
 
@@ -116,13 +115,13 @@ class Source(FileEventFilterStringField):
         return filter_attributes(Source)
 
 
-class RiskIndicatorMimeType(QueryFilterBooleanField):
-    """Class that filters events if file type mismatch the file's mime type."""
+class MimeTypeMismatch(QueryFilterBooleanField):
+    """Class that filters events by whether or not a file's mime type matches its extension type."""
 
     _term = u"mimeTypeMismatch"
 
 
-class RiskIndicatorActiveHours(QueryFilterBooleanField):
-    """Class that filters events by events occurred outside active hours."""
+class OutsideActiveHours(QueryFilterBooleanField):
+    """Class that filters events by whether or not they occurred outside a user's typical working hours"""
 
     _term = u"outsideActiveHours"

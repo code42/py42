@@ -85,14 +85,14 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 ```
 
 ```eval_rst
-.. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.RiskIndicatorMimeType
+.. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.MimeTypeMismatch
     :members:
     :inherited-members:
     :show-inheritance:
 ```
 
 ```eval_rst
-.. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.RiskIndicatorActiveHours
+.. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.OutsideActiveHours
     :members:
     :inherited-members:
     :show-inheritance:

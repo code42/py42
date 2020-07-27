@@ -8,6 +8,7 @@ class TrustedActivity(QueryFilterBooleanField):
 
 
 class RemoteActivity(QueryFilterBooleanField):
-    """Class that filters events based on whether the remote activity can be trusted."""
+    """Class that filters events based on whether the activity was remote
+    (took place outside of corporate IP range)."""
 
     _term = u"remoteActivity"

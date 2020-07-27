@@ -18,8 +18,8 @@ from tests.sdk.queries.conftest import WITHIN_THE_LAST
 from py42.sdk.queries.fileevents.filters.event_filter import EventTimestamp
 from py42.sdk.queries.fileevents.filters.event_filter import EventType
 from py42.sdk.queries.fileevents.filters.event_filter import InsertionTimestamp
-from py42.sdk.queries.fileevents.filters.event_filter import RiskIndicatorActiveHours
-from py42.sdk.queries.fileevents.filters.event_filter import RiskIndicatorMimeType
+from py42.sdk.queries.fileevents.filters.event_filter import MimeTypeMismatch
+from py42.sdk.queries.fileevents.filters.event_filter import OutsideActiveHours
 from py42.sdk.queries.fileevents.filters.event_filter import Source
 
 
@@ -247,24 +247,24 @@ def test_all_event_timestamp_gives_correct_json_representation(key, value):
 
 
 def test_risk_indicator_mime_type_is_true_str_gives_correct_json_representation():
-    _filter = RiskIndicatorMimeType.is_true()
+    _filter = MimeTypeMismatch.is_true()
     expected = IS.format("mimeTypeMismatch", "TRUE")
     assert str(_filter) == expected
 
 
 def test_risk_indicator_mime_type_is_false_str_gives_correct_json_representation():
-    _filter = RiskIndicatorMimeType.is_false()
+    _filter = MimeTypeMismatch.is_false()
     expected = IS.format("mimeTypeMismatch", "FALSE")
     assert str(_filter) == expected
 
 
 def test_risk_indicator_active_hours_is_true_str_gives_correct_json_representation():
-    _filter = RiskIndicatorActiveHours.is_true()
+    _filter = OutsideActiveHours.is_true()
     expected = IS.format("outsideActiveHours", "TRUE")
     assert str(_filter) == expected
 
 
 def test_risk_indicator_active_hours_is_false_str_gives_correct_json_representation():
-    _filter = RiskIndicatorActiveHours.is_false()
+    _filter = OutsideActiveHours.is_false()
     expected = IS.format("outsideActiveHours", "FALSE")
     assert str(_filter) == expected

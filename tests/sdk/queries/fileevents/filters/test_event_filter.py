@@ -76,7 +76,7 @@ def test_event_type_not_exists_str_gives_correct_json_representation():
 
 def test_event_type_eq_str_gives_correct_json_representation():
     _filter = EventType.eq(EventType.MODIFIED)
-    expected = IS.format("eventType", "UPDATED")
+    expected = IS.format("eventType", "MODIFIED")
     assert str(_filter) == expected
 
 
@@ -197,7 +197,7 @@ def test_event_type_choices_returns_valid_attributes():
     choices = EventType.choices()
     valid_set = {
         "CREATED",
-        "UPDATED",
+        "MODIFIED",
         "DELETED",
         "READ_BY_APP",
         "EMAILED",

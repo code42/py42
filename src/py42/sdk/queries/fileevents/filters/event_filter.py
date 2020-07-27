@@ -62,7 +62,7 @@ class EventType(FileEventFilterStringField):
     _term = u"eventType"
 
     CREATED = u"CREATED"
-    MODIFIED = u"UPDATED"
+    MODIFIED = u"MODIFIED"
     DELETED = u"DELETED"
     READ_BY_APP = u"READ_BY_APP"
     EMAILED = u"EMAILED"

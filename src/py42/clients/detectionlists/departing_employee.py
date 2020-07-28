@@ -2,6 +2,7 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.clients.detectionlists import _PAGE_NUM, _PAGE_SIZE
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -77,8 +78,8 @@ class DepartingEmployeeClient(BaseClient):
         filter_type=None,
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
-        page_num=1,
-        page_size=100,
+        page_num=_PAGE_NUM,
+        page_size=_PAGE_SIZE,
     ):
         """Get a single page of Departing Employees.
 
@@ -122,7 +123,7 @@ class DepartingEmployeeClient(BaseClient):
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
-            page_size=100,
+            page_size=_PAGE_SIZE,
         )
 
     def _get_page(
@@ -134,6 +135,9 @@ class DepartingEmployeeClient(BaseClient):
         page_num=None,
         page_size=None,
     ):
+        # This method is meant to called in `get_all()` and handles paging through
+        # `util.get_all_pages()`. It exists separately than `get_page()` because of
+        # the tenant ID parameter and trying to avoid it.
         uri = self._uri_prefix.format(u"search")
         data = {
             u"tenantId": tenant_id,

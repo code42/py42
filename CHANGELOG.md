@@ -19,6 +19,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.devices.get_page()`
     - `sdk.legalhold.get_matters_page()`
     - `sdk.legalhold.get_custodians_page()`
+    - `sdk.alerts.get_page()`
 
 ## 1.7.1 - 2020-07-24
 

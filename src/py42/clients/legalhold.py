@@ -115,7 +115,7 @@ class LegalHoldClient(BaseClient):
         page_num=1,
         page_size=None,
     ):
-        """Gets an existing Legal Hold Matter page.
+        """Gets a page of existing Legal Hold Matters.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-get>`__
 
         Args:

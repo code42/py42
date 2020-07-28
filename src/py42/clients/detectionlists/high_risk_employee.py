@@ -1,8 +1,9 @@
 import json
 
 from py42.clients import BaseClient
+from py42.clients.detectionlists import _PAGE_NUM
+from py42.clients.detectionlists import _PAGE_SIZE
 from py42.clients.util import get_all_pages
-from py42.clients.detectionlists import _PAGE_NUM, _PAGE_SIZE
 
 
 class HighRiskEmployeeClient(BaseClient):
@@ -167,6 +168,5 @@ class HighRiskEmployeeClient(BaseClient):
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,
         }
-
         uri = self._make_uri(u"/search")
         return self._session.post(uri, data=json.dumps(data))

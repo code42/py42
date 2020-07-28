@@ -70,12 +70,28 @@ class AlertRulesModule(object):
         rules_client = self.microservice_client_factory.get_alert_rules_client()
         return rules_client.remove_all_users(rule_id)
 
+    def get_page(
+        self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None
+    ):
+        """Gets a page of alerts.
+
+        sort_key (str, optional): Sort results based by field. Defaults to "CreatedAt".
+        sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to  "DESC".
+        page_num (int, optional): The page number to get. Defaults to 1.
+        page_size (int, optional): The number of items per page. Defaults to None.
+
+        Returns:
+             :class:`py42.response.Py42Response`
+        """
+        alerts_client = self.microservice_client_factory.get_alerts_client()
+        return alerts_client.get_page(sort_key=sort_key, sort_direction=sort_direction, page_num=page_num, page_size=page_size)
+
     def get_all(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
         """Fetch all available rules.
 
         Args:
-            sort_key (str): Sort results based by field. Defaults to 'CreatedAt'.
-            sort_direction (str): ``ASC`` or ``DESC``. Defaults to  "DESC"
+            sort_key (str, optional): Sort results based by field. Defaults to 'CreatedAt'.
+            sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to  "DESC"
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

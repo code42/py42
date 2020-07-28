@@ -1,11 +1,9 @@
 from requests import Session
 
 from py42._internal.initialization import SDKDependencies
-from py42._internal.session_factory import (
-    AuthHandlerFactory,
-    SessionFactory,
-    SessionModifierFactory,
-)
+from py42._internal.session_factory import AuthHandlerFactory
+from py42._internal.session_factory import SessionFactory
+from py42._internal.session_factory import SessionModifierFactory
 
 
 def from_local_account(host_address, username, password):
@@ -53,7 +51,9 @@ class SDKClient(object):
         basic_auth_session = session_factory.create_basic_auth_session(
             host_address, username, password
         )
-        sdk_dependencies = SDKDependencies(host_address, session_factory, basic_auth_session)
+        sdk_dependencies = SDKDependencies(
+            host_address, session_factory, basic_auth_session
+        )
         return cls(sdk_dependencies)
 
     @property

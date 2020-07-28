@@ -5,10 +5,11 @@ from py42.sdk.queries import BaseQuery
 class AlertQuery(BaseQuery):
     """Helper class for building Code42 Alert queries.
 
-    An AlertQuery instance's ``all()`` and ``any()`` take one or more :class:`FilterGroup`
-    objects to construct a query that can be passed to the :meth:`AlertClient.search()` method.
-    ``all()`` returns results that match all of the provided filter criteria, ``any()`` will return
-    results that match any of the filters.
+    An AlertQuery instance's ``all()`` and ``any()`` take one or more
+    :class:`~py42.sdk.queries.query_filter.FilterGroup` objects to construct a query that
+    can be passed to the :meth:`AlertClient.search()` method. ``all()`` returns results
+    that match all of the provided filter criteria, ``any()`` will return results that
+    match any of the filters.
 
     For convenience, the :class:`AlertQuery` constructor does the same as ``all()``.
 
@@ -27,7 +28,9 @@ class AlertQuery(BaseQuery):
         self.sort_direction = u"desc"
 
     def __str__(self):
-        groups_string = u",".join(str(group_item) for group_item in self._filter_group_list)
+        groups_string = u",".join(
+            str(group_item) for group_item in self._filter_group_list
+        )
         json = u'{{"tenantId": null, "groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDirection":"{4}", "srtKey":"{5}"}}'.format(
             self._group_clause,
             groups_string,
@@ -50,4 +53,4 @@ class AlertQuery(BaseQuery):
             u"srtKey": self.sort_key,
         }
         for key in output_dict:
-            yield (key, output_dict[key])
+            yield key, output_dict[key]

@@ -11,9 +11,105 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## Unreleased
 
 ### Added
+
+- Methods for getting individual response pages:
+    - `sdk.detectionlists.departing_employee.get_page()`
+    - `sdk.detectionlists.high_risk.get_page()`
+    - `sdk.users.get_page()`
+    - `sdk.devices.get_page()`
+
+## 1.7.1 - 2020-07-24
+
+### Changed
+
+- `sdk.securitydata.stream_file_by_md5()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42ArchiveFileNotFoundError`).
+- `sdk.securitydata.stream_file_by_sha256()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42Error`).
+
+### Fixed
+
+- functions now return `Py42Response` objects as expected:
+    - `sdk.detectionlists.update_user_notes()`
+    - `sdk.detectionlists.add_user_risk_tags()`
+    - `sdk.detectionlists.remove_user_risk_tags()`
+    - `sdk.detectionlists.add_user_cloud_alias()`
+    - `sdk.detectionlists.remove_user_cloud_alias()`
+- `sdk.archive.get_all_org_cold_storage_archives()` now actually uses parameters `include_child_orgs`, `sort_key` and `sort_dir`.
+
+### Added
+
+- Added below event filter support
+    - TrustedActivity
+    - RemoteActivity
+    - PrintJobName
+    - Printer
+    - DeviceSignedInUserName
+
+- Added attributes to below event filters and added `choices` method to return list of all available attributes
+    - FileCategory
+    - SyncDestination
+    - ExposureType
+    - Source
+    - EventTimestamp
+    - EventType
+    - SharingTypeAdded
+
+## 1.7.0 - 2020-07-21
+
+### Added
+
+- Functions for managing role assignment:
+    - `sdk.users.get_available_roles()`
+    - `sdk.users.get_roles()`
+    - `sdk.users.add_role()`
+    - `sdk.users.remove_role()`
+
+- `__eq__` and `__hash__` methods to the `py42.sdk.queries.query_filter.QueryFilter` class to enable easier comparison of filters
+- `__eq__` and `__contains__` methods to the `py42.sdk.queries.query_filter.FilterGroup` class to enable easier comparison of and membership tests of filter groups
+
+### Changed
+
+- When calling `__str__` or `__iter__` on a `FilterGroup` instance, the filter results have `set()` called on them to remove duplicate filters (if they exist) as well
+    as sorts the results. This enables comparing two `FilterGroup`s that might have been constructed differently but ultimately return the exact same results in a query.
+- `FilterGroup.filter_clause` property now has a setter, making it easy to change the clause on an existing filter group.
+
+### Removed
+
+- `filter_clause` arg on `FilterGroup.from_dict` method. The clause will automatically be derived from the dict itself.
+
+## 1.6.2 - 2020-07-10
+
+### Added
+
+- `data` to `Py42Response`. This allows a developer to retrieve the full dict of the response under the `data` json node, if present, enabling the use of typical dict functions such as `get()`.
+
+- `content` to `Py42Response`. This exposes the underlying `requests.Response.content`, which contains the fully body of the response as a byte array.
+
+## 1.6.1 - 2020-07-09
+
+### Fixed
+
+- An issue where `sdk.securitydata.stream_file_by_md5()` and `sdk.securitydata.stream_file_by_sha256()` would return streams containing an error message instead of properly failing.
+
+- An issue where streaming methods would load the stream completely into memory instead of retrieving it one chunk at a time.
+
+## 1.6.0 - 2020-06-30
+
+### Added
+
+### Added
 - Make `ExposureType.OUTSIDE_TRUSTED_DOMAINS` constant available.
-- Exposed methods `get_high_risk_employees_page()` and `get_departing_employees_page()` that accepts `pg_num` and
-    `pg_size` for getting individual pages.
+- `sdk.securitydata` methods
+    - `stream_file_by_sha256()`
+    - `stream_file_by_md5()`
+
+### Changed
+
+- `email` is now a required param on `py42.users.create_user()`.
+
+### Removed
+
+- Faulty `py42.orgs.get_by_name()` method. Use `py42.orgs.get_all()` and/or any of the other `get_by_()` methods.
+>>>>>>> master
 
 ## 1.5.1 - 2020-06-17
 

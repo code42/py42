@@ -6,5 +6,5 @@ class KeyValueStoreClient(BaseClient):
         super(KeyValueStoreClient, self).__init__(session)
 
     def get_stored_value(self, key):
-        uri = u"/v1/{0}".format(key)
+        uri = u"/v1/{}".format(key)
         return self._session.get(uri)

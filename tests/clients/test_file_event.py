@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import pytest
 
 from py42._internal.session import Py42Session
@@ -21,8 +20,21 @@ class TestFileEventClient(object):
         client.search(RAW_QUERY)
         session.post.assert_called_once_with(FILE_EVENT_URI, data=RAW_QUERY)
 
-    def test_unicode_query_search_calls_post_with_query(self, session, successful_response):
+    def test_unicode_query_search_calls_post_with_query(
+        self, session, successful_response
+    ):
         client = FileEventClient(session)
         session.post.return_value = successful_response
         client.search(RAW_UNICODE_QUERY)
         session.post.assert_called_once_with(FILE_EVENT_URI, data=RAW_UNICODE_QUERY)
+
+    def test_get_file_location_detail_by_sha256_calls_get_with_hash(
+        self, session, successful_response
+    ):
+        client = FileEventClient(session)
+        session.get.return_value = successful_response
+        client.get_file_location_detail_by_sha256("abc")
+        session.get.assert_called_once_with(
+            u"/forensic-search/queryservice/api/v1/filelocations",
+            params={"sha256": "abc"},
+        )

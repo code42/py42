@@ -15,17 +15,17 @@ class DepartingEmployeeClient(BaseClient):
         self._detection_list_user_client = detection_list_user_client
 
     def add(self, user_id, departure_date=None):
-        """Adds a user to the Departing Employees list. Creates a detection list user profile if one
-         didn't already exist.
+        """Adds a user to the Departing Employees list. Creates a detection list user profile if one \
+            didn't already exist.
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
 
-        Raises a :class:`Py42BadRequestError` when a user already exists in the Departing Employee
-        detection list.
+        Raises a :class:`Py42BadRequestError` when a user already exists in the Departing Employee \
+            detection list.
 
         Args:
-            user_id (str or int): The Code42 userUid of the user you want to add to the departing
+            user_id (str or int): The Code42 userUid of the user you want to add to the departing \
                 employees list.
-            departure_date (str, optional): Date in YYYY-MM-DD format. Date is treated as UTC. Defaults to None.
+            departure_date (str, optional): Date in yyyy-MM-dd format. Date is treated as UTC. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -33,7 +33,11 @@ class DepartingEmployeeClient(BaseClient):
         if self._detection_list_user_client.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
 
-            data = {u"tenantId": tenant_id, u"userId": user_id, u"departureDate": departure_date}
+            data = {
+                u"tenantId": tenant_id,
+                u"userId": user_id,
+                u"departureDate": departure_date,
+            }
             uri = self._uri_prefix.format(u"add")
             return self._session.post(uri, data=json.dumps(data))
 
@@ -68,7 +72,7 @@ class DepartingEmployeeClient(BaseClient):
         data = {u"userId": user_id, u"tenantId": tenant_id}
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_departing_employees_page(
+    def get_page(
         self,
         filter_type=None,
         sort_key=u"CREATED_AT",
@@ -88,7 +92,7 @@ class DepartingEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._get_departing_employees_page(
+        return self._get_page(
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
             sort_key=sort_key,
@@ -97,7 +101,9 @@ class DepartingEmployeeClient(BaseClient):
             page_size=page_size,
         )
 
-    def get_all(self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"):
+    def get_all(
+        self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"
+    ):
         """Gets all Departing Employees.
 
         Args:
@@ -110,7 +116,7 @@ class DepartingEmployeeClient(BaseClient):
             that each contain a page of departing employees.
         """
         return get_all_pages(
-            self._get_departing_employees_page,
+            self._get_page,
             u"items",
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
@@ -119,7 +125,7 @@ class DepartingEmployeeClient(BaseClient):
             page_size=100,
         )
 
-    def _get_departing_employees_page(
+    def _get_page(
         self,
         tenant_id=None,
         filter_type=None,
@@ -160,7 +166,7 @@ class DepartingEmployeeClient(BaseClient):
 
         Args:
             user_id (str): The Code42 userUid of the user.
-            departure_date (date): Date in YYYY-MM-DD format. Date is treated as UTC.
+            departure_date (date): Date in yyyy-MM-dd format. Date is treated as UTC.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
@@ -169,5 +175,9 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id = self._user_context.get_current_tenant_id()
 
         uri = self._uri_prefix.format(u"update")
-        data = {u"tenantId": tenant_id, u"userId": user_id, u"departureDate": departure_date}
+        data = {
+            u"tenantId": tenant_id,
+            u"userId": user_id,
+            u"departureDate": departure_date,
+        }
         return self._session.post(uri, data=json.dumps(data))

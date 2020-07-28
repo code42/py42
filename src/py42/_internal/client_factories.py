@@ -2,15 +2,25 @@ import json
 
 from requests import HTTPError
 
-from py42._internal.clients import alerts, archive, key_value_store, securitydata
+from py42._internal.clients import alerts
+from py42._internal.clients import archive
+from py42._internal.clients import key_value_store
+from py42._internal.clients import securitydata
 from py42._internal.clients.alertrules import AlertRulesClient
 from py42._internal.clients.detection_list_user import DetectionListUserClient
-from py42.clients import administration, devices, legalhold, orgs, users
+from py42._internal.clients.pds import PreservationDataServiceClient
+from py42._internal.clients.storage.storagenode import StoragePreservationDataClient
+from py42.clients import administration
+from py42.clients import devices
+from py42.clients import legalhold
+from py42.clients import orgs
+from py42.clients import users
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42.clients.file_event import FileEventClient
 from py42.clients.savedsearch import SavedSearchClient
-from py42.exceptions import Py42FeatureUnavailableError, Py42SessionInitializationError
+from py42.exceptions import Py42FeatureUnavailableError
+from py42.exceptions import Py42SessionInitializationError
 
 
 class AuthorityClientFactory(object):
@@ -65,6 +75,7 @@ class MicroserviceClientFactory(object):
         self._alert_rules_client = None
         self._saved_search_client = None
         self._file_event_session = None
+        self._pds_client = None
 
     def get_alerts_client(self):
         if not self._alerts_client:
@@ -75,7 +86,9 @@ class MicroserviceClientFactory(object):
     def get_departing_employee_client(self):
         if not self._departing_employee_client:
             self._departing_employee_client = DepartingEmployeeClient(
-                self._get_ecm_session(), self._user_context, self.get_detection_list_user_client()
+                self._get_ecm_session(),
+                self._user_context,
+                self.get_detection_list_user_client(),
             )
         return self._departing_employee_client
 
@@ -87,7 +100,9 @@ class MicroserviceClientFactory(object):
     def get_high_risk_employee_client(self):
         if not self._high_risk_employee_client:
             self._high_risk_employee_client = HighRiskEmployeeClient(
-                self._get_ecm_session(), self._user_context, self.get_detection_list_user_client()
+                self._get_ecm_session(),
+                self._user_context,
+                self.get_detection_list_user_client(),
             )
         return self._high_risk_employee_client
 
@@ -114,6 +129,19 @@ class MicroserviceClientFactory(object):
             )
         return self._saved_search_client
 
+    def get_preservation_data_service_client(self):
+        if not self._pds_client:
+            session = self._get_jwt_session(u"PRESERVATION-DATA-SERVICE_API-URL")
+            self._pds_client = PreservationDataServiceClient(session)
+        return self._pds_client
+
+    def create_storage_preservation_client(self, host_address):
+        main_session = self._session_factory.create_jwt_session(
+            host_address, self._root_session
+        )
+        streaming_session = self._session_factory.create_anonymous_session(host_address)
+        return StoragePreservationDataClient(main_session, streaming_session)
+
     def _get_jwt_session(self, key):
         url = self._get_stored_value(key)
         return self._session_factory.create_jwt_session(url, self._root_session)
@@ -130,7 +158,9 @@ class MicroserviceClientFactory(object):
 
     def _get_stored_value(self, key):
         if not self._key_value_store_client:
-            url = _hacky_get_microservice_url(self._root_session, u"simple-key-value-store")
+            url = _hacky_get_microservice_url(
+                self._root_session, u"simple-key-value-store"
+            )
             session = self._session_factory.create_anonymous_session(url)
             self._key_value_store_client = key_value_store.KeyValueStoreClient(session)
         return self._key_value_store_client.get_stored_value(key).text

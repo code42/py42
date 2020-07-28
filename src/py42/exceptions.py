@@ -9,10 +9,20 @@ class Py42ArchiveFileNotFoundError(Py42Error):
     """An exception raised when a resource file is not found or the path is invalid."""
 
     def __init__(self, device_guid, file_path):
-        message = u"File not found in archive " u"for device {0} at path {1}".format(
+        message = u"File not found in archive for device {} at path {}".format(
             device_guid, file_path
         )
         super(Py42ArchiveFileNotFoundError, self).__init__(message)
+
+
+class Py42ChecksumNotFoundError(Py42Error):
+    """An exception raised when a user-supplied hash could not successfully locate its corresponding resource."""
+
+    def __init__(self, checksum_name, checksum_value):
+        message = u"No files found with {} checksum {}".format(
+            checksum_name, checksum_value
+        )
+        super(Py42ChecksumNotFoundError, self).__init__(message)
 
 
 class Py42FeatureUnavailableError(Py42Error):
@@ -32,7 +42,7 @@ class Py42SessionInitializationError(Py42Error):
     def __init__(self, exception):
         error_message = (
             u"An error occurred while requesting "
-            u"server environment information, caused by {0}".format(str(exception))
+            u"server environment information, caused by {}".format(str(exception))
         )
         super(Py42SessionInitializationError, self).__init__(error_message)
 
@@ -57,7 +67,7 @@ class Py42HTTPError(Py42Error):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
     def __init__(self, exception):
-        message = u"Failure in HTTP call {0}".format(str(exception))
+        message = u"Failure in HTTP call {}".format(str(exception))
         super(Py42HTTPError, self).__init__(message)
         self._response = exception.response
 

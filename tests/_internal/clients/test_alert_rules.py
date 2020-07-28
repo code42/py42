@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42._internal.clients.alertrules import AlertRulesClient
+from py42._internal.clients.detection_list_user import DetectionListUserClient
 
 MOCK_DETECTION_LIST_GET_RESPONSE = """
 {"type$": "USER_V2", "tenantId": "1d71796f-af5b-4231-9d8e-df6434da4663",
@@ -42,7 +42,8 @@ class TestAlertRulesClient(object):
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["ruleId"] == u"rule-id"
             and posted_data["userList"][0]["userIdFromAuthority"] == u"user-id"
-            and posted_data["userList"][0]["userAliasList"] == [u"user.aliases@code42.com"]
+            and posted_data["userList"][0]["userAliasList"]
+            == [u"user.aliases@code42.com"]
         )
 
     def test_remove_user_posts_expected_data(

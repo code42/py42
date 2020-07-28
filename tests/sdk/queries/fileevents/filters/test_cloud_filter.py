@@ -1,11 +1,15 @@
-from py42.sdk.queries.fileevents.filters.cloud_filter import (
-    Actor,
-    DirectoryID,
-    Shared,
-    SharedWith,
-    SharingTypeAdded,
-)
-from tests.sdk.queries.conftest import EXISTS, IS, IS_IN, IS_NOT, NOT_EXISTS, NOT_IN
+from tests.sdk.queries.conftest import EXISTS
+from tests.sdk.queries.conftest import IS
+from tests.sdk.queries.conftest import IS_IN
+from tests.sdk.queries.conftest import IS_NOT
+from tests.sdk.queries.conftest import NOT_EXISTS
+from tests.sdk.queries.conftest import NOT_IN
+
+from py42.sdk.queries.fileevents.filters.cloud_filter import Actor
+from py42.sdk.queries.fileevents.filters.cloud_filter import DirectoryID
+from py42.sdk.queries.fileevents.filters.cloud_filter import Shared
+from py42.sdk.queries.fileevents.filters.cloud_filter import SharedWith
+from py42.sdk.queries.fileevents.filters.cloud_filter import SharingTypeAdded
 
 
 def test_actor_exists_str_gives_correct_json_representation():
@@ -158,3 +162,8 @@ def test_sharing_type_added_not_in_str_gives_correct_json_representation():
     _filter = SharingTypeAdded.not_in(items)
     expected = NOT_IN.format("sharingTypeAdded", *items)
     assert str(_filter) == expected
+
+
+def test_sharing_type_choices_returns_valid_attributes():
+    choices = SharingTypeAdded.choices()
+    assert set(choices) == {"SharedViaLink", "IsPublic", "OutsideTrustedDomains"}

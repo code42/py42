@@ -11,7 +11,7 @@ class AlertRulesClient(BaseClient):
 
     _version = u"v1"
     _resource = u"Rules/"
-    _api_prefix = u"/svc/api/{0}/{1}".format(_version, _resource)
+    _api_prefix = u"/svc/api/{}/{}".format(_version, _resource)
 
     def __init__(self, session, user_context, detection_list_user_client):
         super(AlertRulesClient, self).__init__(session)
@@ -37,7 +37,9 @@ class AlertRulesClient(BaseClient):
     @property
     def filetypemismatch(self):
         if not self._file_type_mismatch:
-            self._file_type_mismatch = FileTypeMismatchClient(self._session, self._tenant_id)
+            self._file_type_mismatch = FileTypeMismatchClient(
+                self._session, self._tenant_id
+            )
         return self._file_type_mismatch
 
     def add_user(self, rule_id, user_id):
@@ -47,20 +49,22 @@ class AlertRulesClient(BaseClient):
         data = {
             u"tenantId": tenant_id,
             u"ruleId": rule_id,
-            u"userList": [{u"userIdFromAuthority": user_id, u"userAliasList": user_aliases}],
+            u"userList": [
+                {u"userIdFromAuthority": user_id, u"userAliasList": user_aliases}
+            ],
         }
-        uri = u"{0}{1}".format(self._api_prefix, u"add-users")
+        uri = u"{}{}".format(self._api_prefix, u"add-users")
         return self._session.post(uri, data=json.dumps(data))
 
     def remove_user(self, rule_id, user_id):
         user_ids = [user_id]
         tenant_id = self._user_context.get_current_tenant_id()
         data = {u"tenantId": tenant_id, u"ruleId": rule_id, u"userIdList": user_ids}
-        uri = u"{0}{1}".format(self._api_prefix, u"remove-users")
+        uri = u"{}{}".format(self._api_prefix, u"remove-users")
         return self._session.post(uri, data=json.dumps(data))
 
     def remove_all_users(self, rule_id):
         tenant_id = self._user_context.get_current_tenant_id()
         data = {u"tenantId": tenant_id, u"ruleId": rule_id}
-        uri = u"{0}{1}".format(self._api_prefix, u"remove-all-users")
+        uri = u"{}{}".format(self._api_prefix, u"remove-all-users")
         return self._session.post(uri, data=json.dumps(data))

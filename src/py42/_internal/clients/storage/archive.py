@@ -24,7 +24,12 @@ class StorageArchiveClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_file_size(
-        self, device_guid, file_id, timestamp=None, show_deleted=None, backup_set_id=None
+        self,
+        device_guid,
+        file_id,
+        timestamp=None,
+        show_deleted=None,
+        backup_set_id=None,
     ):
         uri = u"/api/WebRestoreFileSize"
         params = {
@@ -64,7 +69,11 @@ class StorageArchiveClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def create_restore_session(
-        self, device_guid, data_key_token=None, private_password=None, encryption_key=None
+        self,
+        device_guid,
+        data_key_token=None,
+        private_password=None,
+        encryption_key=None,
     ):
         """Creates a web restore session.
         See https://console.us.code42.com/apidocviewer/#WebRestoreSession

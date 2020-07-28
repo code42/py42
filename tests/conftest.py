@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-
 import json
 
 import pytest
-from requests import HTTPError, Response, Session
+from requests import HTTPError
+from requests import Response
+from requests import Session
 
 from py42._internal.auth_handling import AuthHandler
 from py42.response import Py42Response
@@ -118,8 +119,15 @@ def exception():
 
 
 @pytest.fixture
-def query_filter_list(query_filter):
-    return [query_filter for _ in range(3)]
+def query_filter_list():
+    return [
+        QueryFilter(
+            EVENT_FILTER_FIELD_NAME + str(suffix),
+            OPERATOR_STRING + str(suffix),
+            VALUE_STRING + str(suffix),
+        )
+        for suffix in range(3)
+    ]
 
 
 @pytest.fixture
@@ -140,3 +148,9 @@ def mock_session(mocker):
     session.headers = {}
 
     return session
+
+
+@pytest.fixture
+def mock_successful_session(mock_session, successful_response):
+    mock_session.get.return_value = successful_response
+    return mock_session

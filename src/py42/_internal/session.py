@@ -6,10 +6,13 @@ from threading import Lock
 import requests.adapters
 
 import py42.settings as settings
-from py42.settings import debug
-from py42._internal.compat import str, urljoin, urlparse
+from py42._internal.compat import str
+from py42._internal.compat import urljoin
+from py42._internal.compat import urlparse
 from py42.exceptions import raise_py42_error
 from py42.response import Py42Response
+from py42.settings import debug
+from py42.util import format_dict
 
 
 class Py42Session(object):
@@ -19,8 +22,10 @@ class Py42Session(object):
         self._auth_lock = Lock()
         self._session = session
         adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
-        if not host_address.startswith(u"http://") and not host_address.startswith(u"https://"):
-            host_address = u"https://{0}".format(host_address)
+        if not host_address.startswith(u"http://") and not host_address.startswith(
+            u"https://"
+        ):
+            host_address = u"https://{}".format(host_address)
 
         self._host_address = host_address
         self._auth_handler = auth_handler
@@ -106,7 +111,9 @@ class Py42Session(object):
                     response.raise_for_status()
 
                 if not kwargs.get(u"stream"):
-                    response.encoding = u"utf-8"  # setting this manually speeds up read times
+                    response.encoding = (
+                        u"utf-8"  # setting this manually speeds up read times
+                    )
 
                 return Py42Response(response)
         except requests.HTTPError as err:
@@ -151,8 +158,9 @@ class Py42Session(object):
             cert=cert,
         )
 
-        unauthorized = self._auth_handler and self._auth_handler.response_indicates_unauthorized(
-            response
+        unauthorized = (
+            self._auth_handler
+            and self._auth_handler.response_indicates_unauthorized(response)
         )
 
         return response, unauthorized
@@ -175,19 +183,12 @@ class Py42Session(object):
         self._initialized = True
 
     def _print_request(self, method, url, params=None, data=None):
-        debug.logger.info(u"{0}{1}".format(str(method).ljust(8), url))
+        debug.logger.info(u"{}{}".format(str(method).ljust(8), url))
         if params:
-            debug.logger.debug(_format_dict(params, u"  params"))
+            debug.logger.debug(format_dict(params, u"  params"))
         if data:
-            debug.logger.debug(_format_dict(data, u"  data"))
+            debug.logger.debug(format_dict(data, u"  data"))
 
 
 def _filter_out_none(_dict):
     return {key: _dict[key] for key in _dict if _dict[key] is not None}
-
-
-def _format_dict(dict_, label=None):
-    indented_dict = json_lib.dumps(dict_, indent=4)
-    if label:
-        return u"{} {}".format(label, indented_dict)
-    return indented_dict

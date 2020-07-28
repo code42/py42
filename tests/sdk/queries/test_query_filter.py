@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
+import pytest
 
 from py42._internal.compat import str
-from py42.sdk.queries.query_filter import (
-    QueryFilter,
-    create_eq_filter_group,
-    create_filter_group,
-    create_in_range_filter_group,
-    create_is_in_filter_group,
-    create_not_eq_filter_group,
-    create_not_in_filter_group,
-    create_on_or_after_filter_group,
-    create_on_or_before_filter_group,
-    create_query_filter,
-    FilterGroup,
-)
+from py42.sdk.queries.query_filter import create_eq_filter_group
+from py42.sdk.queries.query_filter import create_filter_group
+from py42.sdk.queries.query_filter import create_in_range_filter_group
+from py42.sdk.queries.query_filter import create_is_in_filter_group
+from py42.sdk.queries.query_filter import create_not_eq_filter_group
+from py42.sdk.queries.query_filter import create_not_in_filter_group
+from py42.sdk.queries.query_filter import create_on_or_after_filter_group
+from py42.sdk.queries.query_filter import create_on_or_before_filter_group
+from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import filter_attributes
+from py42.sdk.queries.query_filter import FilterGroup
+from py42.sdk.queries.query_filter import QueryFilter
+
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
@@ -27,6 +28,14 @@ JSON_QUERY_FILTER = '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
 JSON_FILTER_GROUP_BASE = '{{"filterClause":"{0}", "filters":[{1}]}}'
 JSON_FILTER_GROUP_AND = JSON_FILTER_GROUP_BASE.format("AND", JSON_QUERY_FILTER)
 JSON_FILTER_GROUP_OR = JSON_FILTER_GROUP_BASE.format("OR", JSON_QUERY_FILTER)
+
+
+def json_query_filter_with_suffix(suffix):
+    return '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+        OPERATOR_STRING + str(suffix),
+        EVENT_FILTER_FIELD_NAME + str(suffix),
+        VALUE_STRING + str(suffix),
+    )
 
 
 def test_query_filter_constructs_successfully():
@@ -59,7 +68,7 @@ def test_query_filter_dict_gives_expected_dict_representation(event_filter_group
     assert alert_query_query_dict["value"] == "testval"
 
 
-def test_query_filter_operator_returns_expected_value():
+def test_query_filter_term_returns_expected_value():
     query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.term == "testterm"
 
@@ -69,7 +78,7 @@ def test_query_filter_operator_returns_expected_value():
     assert query_filter.operator == "IS"
 
 
-def test_query_filter_operator_returns_expected_value():
+def test_query_filter_value_returns_expected_value():
     query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.value == "testval"
 
@@ -82,11 +91,15 @@ def test_filter_group_str_gives_correct_json_representation(query_filter):
     assert str(create_filter_group([query_filter], "AND")) == JSON_FILTER_GROUP_AND
 
 
-def test_filter_group_with_and_specified_str_gives_correct_json_representation(query_filter):
+def test_filter_group_with_and_specified_str_gives_correct_json_representation(
+    query_filter,
+):
     assert str(create_filter_group([query_filter], "AND")) == JSON_FILTER_GROUP_AND
 
 
-def test_filter_group_with_or_specified_str_gives_correct_json_representation(query_filter):
+def test_filter_group_with_or_specified_str_gives_correct_json_representation(
+    query_filter,
+):
     assert str(create_filter_group([query_filter], "OR")) == JSON_FILTER_GROUP_OR
 
 
@@ -121,7 +134,9 @@ def test_filter_group_filter_clause_returns_excepted_value(query_filter):
 def test_filter_group_with_multiple_filters_str_gives_correct_json_representation(
     query_filter_list,
 ):
-    filters_string = ",".join([JSON_QUERY_FILTER for _ in range(3)])
+    filters_string = ",".join(
+        [json_query_filter_with_suffix(suffix) for suffix in range(3)]
+    )
     json_multi_filter_group = JSON_FILTER_GROUP_BASE.format("AND", filters_string)
     assert str(create_filter_group(query_filter_list, "AND")) == json_multi_filter_group
 
@@ -129,17 +144,41 @@ def test_filter_group_with_multiple_filters_str_gives_correct_json_representatio
 def test_filter_group_with_multiple_filters_and_specified_str_gives_correct_json_representation(
     query_filter_list,
 ):
-    filters_string = ",".join([JSON_QUERY_FILTER for _ in range(3)])
+    filters_string = ",".join(
+        [json_query_filter_with_suffix(suffix) for suffix in range(3)]
+    )
     json_multi_filter_group = JSON_FILTER_GROUP_BASE.format("AND", filters_string)
     assert str(create_filter_group(query_filter_list, "AND")) == json_multi_filter_group
+
+
+def test_filter_group_with_duplicate_filters_and_specified_str_gives_correct_json_representation(
+    query_filter,
+):
+    json_single_filter_group = JSON_FILTER_GROUP_BASE.format("AND", JSON_QUERY_FILTER)
+    assert (
+        str(create_filter_group([query_filter, query_filter, query_filter], "AND"))
+        == json_single_filter_group
+    )
 
 
 def test_filter_group_with_multiple_filters_or_specified_str_gives_correct_json_representation(
     query_filter_list,
 ):
-    filters_string = ",".join([JSON_QUERY_FILTER for _ in range(3)])
+    filters_string = ",".join(
+        [json_query_filter_with_suffix(suffix) for suffix in range(3)]
+    )
     json_multi_filter_group = JSON_FILTER_GROUP_BASE.format("OR", filters_string)
     assert str(create_filter_group(query_filter_list, "OR")) == json_multi_filter_group
+
+
+def test_filter_group_with_duplicate_filters_or_specified_str_gives_correct_json_representation(
+    query_filter,
+):
+    json_single_filter_group = JSON_FILTER_GROUP_BASE.format("OR", JSON_QUERY_FILTER)
+    assert (
+        str(create_filter_group([query_filter, query_filter, query_filter], "OR"))
+        == json_single_filter_group
+    )
 
 
 def test_create_eq_filter_group_returns_obj_with_correct_json_representation():
@@ -193,7 +232,9 @@ def test_create_on_or_before_filter_group_returns_obj_with_correct_json_represen
 
 
 def test_create_in_range_filter_group_returns_obj_with_correct_json_representation():
-    filter_group = create_in_range_filter_group("rangeterm", "beforevalue", "aftervalue")
+    filter_group = create_in_range_filter_group(
+        "rangeterm", "beforevalue", "aftervalue"
+    )
     assert (
         str(filter_group) == '{"filterClause":"AND",'
         ' "filters":[{"operator":"ON_OR_AFTER", "term":"rangeterm", "value":"beforevalue"},'
@@ -202,7 +243,190 @@ def test_create_in_range_filter_group_returns_obj_with_correct_json_representati
 
 
 def test_create_query_filter_returns_obj_with_correct_json_representation():
-    query_filter = create_query_filter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
-    assert str(query_filter) == '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+    query_filter = create_query_filter(
+        EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING
+    )
+    assert str(
+        query_filter
+    ) == '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
         OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
     )
+
+
+def test_compare_query_filters_with_equivalent_args_returns_true():
+    query_filter1 = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    query_filter2 = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    assert query_filter1 == query_filter2
+
+
+def test_compare_query_filters_with_different_values_returns_false():
+    query_filter1 = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, "TEST")
+    query_filter2 = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, "NOT_TEST")
+    assert query_filter1 != query_filter2
+
+
+def test_compare_query_filters_with_different_operators_returns_false():
+    query_filter1 = QueryFilter(EVENT_FILTER_FIELD_NAME, "IS", VALUE_STRING)
+    query_filter2 = QueryFilter(EVENT_FILTER_FIELD_NAME, "IS_NOT", VALUE_STRING)
+    assert query_filter1 != query_filter2
+
+
+def test_compare_query_filters_with_different_terms_returns_false():
+    query_filter1 = QueryFilter("TEST", OPERATOR_STRING, VALUE_STRING)
+    query_filter2 = QueryFilter("NOT_TEST", OPERATOR_STRING, VALUE_STRING)
+    assert query_filter1 != query_filter2
+
+
+@pytest.mark.parametrize(
+    "equivalent",
+    [
+        '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+            OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
+        ),
+        (
+            ("operator", OPERATOR_STRING),
+            ("term", EVENT_FILTER_FIELD_NAME),
+            ("value", VALUE_STRING),
+        ),
+        [
+            ("operator", OPERATOR_STRING),
+            ("term", EVENT_FILTER_FIELD_NAME),
+            ("value", VALUE_STRING),
+        ],
+    ],
+)
+def test_compare_query_filter_with_expected_equivalent_returns_true(equivalent):
+    query_filter = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    assert query_filter == equivalent
+
+
+@pytest.mark.parametrize(
+    "different",
+    [
+        '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+            "DIFFERENT_OPERATOR", EVENT_FILTER_FIELD_NAME, VALUE_STRING
+        ),
+        '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+            OPERATOR_STRING, "DIFFERENT_FIELD_NAME", VALUE_STRING
+        ),
+        '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
+            OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, "DIFFERENT_VALUE"
+        ),
+        (
+            ("operator", "DIFFERENT_OPERATOR"),
+            ("term", EVENT_FILTER_FIELD_NAME),
+            ("value", VALUE_STRING),
+        ),
+        (
+            ("operator", OPERATOR_STRING),
+            ("term", "DIFFERENT_FIELD_NAME"),
+            ("value", VALUE_STRING),
+        ),
+        (
+            ("operator", OPERATOR_STRING),
+            ("term", EVENT_FILTER_FIELD_NAME),
+            ("value", "DIFFERENT_VALUE"),
+        ),
+        [
+            ("operator", "DIFFERENT_OPERATOR"),
+            ("term", EVENT_FILTER_FIELD_NAME),
+            ("value", VALUE_STRING),
+        ],
+        [
+            ("operator", OPERATOR_STRING),
+            ("term", "DIFFERENT_FIELD_NAME"),
+            ("value", VALUE_STRING),
+        ],
+        [
+            ("operator", OPERATOR_STRING),
+            ("term", EVENT_FILTER_FIELD_NAME),
+            ("value", "DIFFERENT_VALUE"),
+        ],
+    ],
+)
+def test_compare_query_filter_with_expected_different_returns_false(different):
+    query_filter = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    assert query_filter != different
+
+
+def test_compare_filter_group_with_equivalent_single_args_return_true():
+    group1 = create_eq_filter_group("eqterm", "eqvalue")
+    group2 = create_eq_filter_group("eqterm", "eqvalue")
+    assert group1 == group2
+
+
+def test_compare_filter_group_with_equivalent_multiple_args_in_different_order_returns_true():
+    group1 = create_is_in_filter_group("term", ["value1", "value2", "value3"])
+    group2 = create_is_in_filter_group("term", ["value3", "value1", "value2"])
+    assert group1 == group2
+    assert str(group1) == group2
+    assert tuple(group1) == group2
+    assert list(group1) == group2
+    assert group1 == str(group2)
+    assert group1 == tuple(group2)
+    assert group1 == list(group2)
+
+
+@pytest.mark.parametrize(
+    "filter_class",
+    [
+        QueryFilter("term", "IS", "value1"),
+        QueryFilter("term", "IS", "value2"),
+        QueryFilter("term", "IS", "value3"),
+    ],
+)
+def test_filter_group_contains_expected_query_filter_returns_true(filter_class):
+    group = create_is_in_filter_group("term", ["value1", "value2", "value3"])
+    assert filter_class in group
+    assert str(filter_class) in group
+    assert tuple(filter_class) in group
+    assert list(filter_class) in group
+
+
+@pytest.mark.parametrize(
+    "filter_class",
+    [
+        QueryFilter("term", "IS", "value4"),
+        QueryFilter("different_term", "IS", "value2"),
+        QueryFilter("term", "DIFFERENT_OPERATOR", "value3"),
+    ],
+)
+def test_filter_group_when_does_not_contain_expected_query_filter_returns_false(
+    filter_class,
+):
+    group = create_is_in_filter_group("term", ["value1", "value2", "value3"])
+    assert filter_class not in group
+    assert str(filter_class) not in group
+    assert tuple(filter_class) not in group
+    assert list(filter_class) not in group
+
+
+def test_filter_group_when_changed_filter_clause_has_correct_json_representation():
+    group = create_is_in_filter_group("term", ["value1", "value2", "value3"])
+    assert (
+        str(group) == '{"filterClause":"OR", "filters"'
+        ':[{"operator":"IS", "term":"term", "value":"value1"},'
+        '{"operator":"IS", "term":"term", "value":"value2"},'
+        '{"operator":"IS", "term":"term", "value":"value3"}]}'
+    )
+    group.filter_clause = "AND"
+    assert (
+        str(group) == '{"filterClause":"AND", "filters"'
+        ':[{"operator":"IS", "term":"term", "value":"value1"},'
+        '{"operator":"IS", "term":"term", "value":"value2"},'
+        '{"operator":"IS", "term":"term", "value":"value3"}]}'
+    )
+
+
+class FilterClassTest(object):
+    _private = "test"
+    CONSTANT1 = "value1"
+    CONSTANT2 = "value2"
+
+    def method(self):
+        pass
+
+
+def test_filter_attributes_returns_public_class_variables():
+    public_attributes = filter_attributes(FilterClassTest)
+    assert set(public_attributes) == {"value1", "value2"}

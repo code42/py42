@@ -46,7 +46,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
-        uri = u"/api/Org/{0}".format(org_id)
+        uri = u"/api/Org/{}".format(org_id)
         return self._session.get(uri, params=kwargs)
 
     def get_by_uid(self, org_uid, **kwargs):
@@ -59,29 +59,9 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
-        uri = u"/api/Org/{0}".format(org_uid)
+        uri = u"/api/Org/{}".format(org_uid)
         params = dict(idType=u"orgUid", **kwargs)
         return self._session.get(uri, params=params)
-
-    def get_by_name(self, org_name, **kwargs):
-        """Gets the organization with the given name.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
-
-        Args:
-            org_name (str): A name of an organization.
-
-        Returns:
-            list: A list of :class:`py42.response.Py42Response` objects each containing an
-            organization that has the given name.
-        """
-        found_orgs = []
-        response = self.get_all(**kwargs)
-        for page in response:
-            org_list = page[u"orgs"]
-            for org in org_list:
-                if org[u"orgName"] == org_name:
-                    found_orgs.append(org)
-        return found_orgs
 
     def _get_page(self, page_num=None, page_size=None, **kwargs):
         uri = u"/api/Org"
@@ -111,7 +91,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/OrgBlock/{0}".format(org_id)
+        uri = u"/api/OrgBlock/{}".format(org_id)
         return self._session.put(uri)
 
     def unblock(self, org_id):
@@ -125,7 +105,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/OrgBlock/{0}".format(org_id)
+        uri = u"/api/OrgBlock/{}".format(org_id)
         return self._session.delete(uri)
 
     def deactivate(self, org_id):
@@ -139,7 +119,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/OrgDeactivation/{0}".format(org_id)
+        uri = u"/api/OrgDeactivation/{}".format(org_id)
         return self._session.put(uri)
 
     def reactivate(self, org_id):
@@ -153,7 +133,7 @@ class OrgClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/OrgDeactivation/{0}".format(org_id)
+        uri = u"/api/OrgDeactivation/{}".format(org_id)
         return self._session.delete(uri)
 
     def get_current(self, **kwargs):

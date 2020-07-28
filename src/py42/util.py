@@ -60,8 +60,15 @@ def convert_datetime_to_timestamp_str(date):
         '2020-03-25T15:29:04.465Z'.
     """
     prefix = date.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
-    return u"{0}Z".format(prefix)
+    return u"{}Z".format(prefix)
 
 
 def convert_datetime_to_epoch(date):
     return (date - datetime.utcfromtimestamp(0)).total_seconds()
+
+
+def format_dict(dict_, label=None):
+    indented_dict = json.dumps(dict_, indent=4)
+    if label:
+        return u"{} {}".format(label, indented_dict)
+    return indented_dict

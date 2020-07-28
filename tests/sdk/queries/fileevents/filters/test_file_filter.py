@@ -1,45 +1,42 @@
-from py42.sdk.queries.fileevents.filters.file_filter import (
-    FileCategory,
-    FileName,
-    FileOwner,
-    FilePath,
-    FileSize,
-    MD5,
-    SHA256,
-)
-from tests.sdk.queries.conftest import (
-    EXISTS,
-    GREATER_THAN,
-    IS,
-    IS_IN,
-    IS_NOT,
-    LESS_THAN,
-    NOT_EXISTS,
-    NOT_IN,
-)
+from tests.sdk.queries.conftest import EXISTS
+from tests.sdk.queries.conftest import GREATER_THAN
+from tests.sdk.queries.conftest import IS
+from tests.sdk.queries.conftest import IS_IN
+from tests.sdk.queries.conftest import IS_NOT
+from tests.sdk.queries.conftest import LESS_THAN
+from tests.sdk.queries.conftest import NOT_EXISTS
+from tests.sdk.queries.conftest import NOT_IN
+
+from py42.sdk.queries.fileevents.filters.file_filter import FileCategory
+from py42.sdk.queries.fileevents.filters.file_filter import FileName
+from py42.sdk.queries.fileevents.filters.file_filter import FileOwner
+from py42.sdk.queries.fileevents.filters.file_filter import FilePath
+from py42.sdk.queries.fileevents.filters.file_filter import FileSize
+from py42.sdk.queries.fileevents.filters.file_filter import MD5
+from py42.sdk.queries.fileevents.filters.file_filter import SHA256
 
 
 def test_file_category_eq_str_gives_correct_json_representation():
-    _filter = FileCategory.eq("test_category")
-    expected = IS.format("fileCategory", "test_category")
+    _filter = FileCategory.eq(FileCategory.AUDIO)
+    expected = IS.format("fileCategory", "AUDIO")
     assert str(_filter) == expected
 
 
 def test_file_category_not_eq_str_gives_correct_json_representation():
-    _filter = FileCategory.not_eq("test_category")
-    expected = IS_NOT.format("fileCategory", "test_category")
+    _filter = FileCategory.not_eq(FileCategory.DOCUMENT)
+    expected = IS_NOT.format("fileCategory", "DOCUMENT")
     assert str(_filter) == expected
 
 
 def test_file_category_is_in_str_gives_correct_json_representation():
-    items = ["category1", "category2", "category3"]
+    items = [FileCategory.EXECUTABLE, FileCategory.IMAGE, FileCategory.PDF]
     _filter = FileCategory.is_in(items)
     expected = IS_IN.format("fileCategory", *items)
     assert str(_filter) == expected
 
 
 def test_file_category_not_in_str_gives_correct_json_representation():
-    items = ["category1", "category2", "category3"]
+    items = [FileCategory.EXECUTABLE, FileCategory.IMAGE, FileCategory.PDF]
     _filter = FileCategory.not_in(items)
     expected = NOT_IN.format("fileCategory", *items)
     assert str(_filter) == expected
@@ -70,16 +67,16 @@ def test_file_name_not_eq_str_gives_correct_json_representation():
 
 
 def test_file_name_is_in_str_gives_correct_json_representation():
-    items = ["fileName", "fileName", "fileName"]
+    items = ["fileName1", "fileName2", "fileName3"]
     _filter = FileName.is_in(items)
-    expected = IS_IN.format("fileName", *items)
+    expected = IS_IN.format("fileName", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_file_name_not_in_str_gives_correct_json_representation():
     items = ["fileName1", "fileName2", "fileName3"]
     _filter = FileName.not_in(items)
-    expected = NOT_IN.format("fileName", *items)
+    expected = NOT_IN.format("fileName", *sorted(items))
     assert str(_filter) == expected
 
 
@@ -110,14 +107,14 @@ def test_file_owner_not_eq_str_gives_correct_json_representation():
 def test_file_owner_is_in_str_gives_correct_json_representation():
     items = ["fileOwner1", "fileOwner2", "fileOwner3"]
     _filter = FileOwner.is_in(items)
-    expected = IS_IN.format("fileOwner", *items)
+    expected = IS_IN.format("fileOwner", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_file_owner_not_in_str_gives_correct_json_representation():
     items = ["fileOwner1", "fileOwner2", "fileOwner3"]
     _filter = FileOwner.not_in(items)
-    expected = NOT_IN.format("fileOwner", *items)
+    expected = NOT_IN.format("fileOwner", *sorted(items))
     assert str(_filter) == expected
 
 
@@ -148,14 +145,14 @@ def test_file_path_not_eq_str_gives_correct_json_representation():
 def test_file_path_is_in_str_gives_correct_json_representation():
     items = ["filePath1", "filePath2", "filePath3"]
     _filter = FilePath.is_in(items)
-    expected = IS_IN.format("filePath", *items)
+    expected = IS_IN.format("filePath", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_file_path_not_in_str_gives_correct_json_representation():
     items = ["filePath1", "filePath2", "filePath3"]
     _filter = FilePath.not_in(items)
-    expected = NOT_IN.format("filePath", *items)
+    expected = NOT_IN.format("filePath", *sorted(items))
     assert str(_filter) == expected
 
 
@@ -222,14 +219,14 @@ def test_md5_not_eq_str_gives_correct_json_representation():
 def test_md5_is_in_str_gives_correct_json_representation():
     items = ["md51", "md52", "md53"]
     _filter = MD5.is_in(items)
-    expected = IS_IN.format("md5Checksum", *items)
+    expected = IS_IN.format("md5Checksum", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_md5_not_in_str_gives_correct_json_representation():
     items = ["md51", "md52", "md53"]
     _filter = MD5.not_in(items)
-    expected = NOT_IN.format("md5Checksum", *items)
+    expected = NOT_IN.format("md5Checksum", *sorted(items))
     assert str(_filter) == expected
 
 
@@ -260,12 +257,31 @@ def test_sha256_not_eq_str_gives_correct_json_representation():
 def test_sha256_is_in_str_gives_correct_json_representation():
     items = ["sha2561", "sha2562", "sha2563"]
     _filter = SHA256.is_in(items)
-    expected = IS_IN.format("sha256Checksum", *items)
+    expected = IS_IN.format("sha256Checksum", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_sha256_not_in_str_gives_correct_json_representation():
     items = ["sha2561", "sha2562", "sha2563"]
     _filter = SHA256.not_in(items)
-    expected = NOT_IN.format("sha256Checksum", *items)
+    expected = NOT_IN.format("sha256Checksum", *sorted(items))
     assert str(_filter) == expected
+
+
+def test_file_category_choices_returns_valid_attributes():
+    choices = FileCategory.choices()
+    valid_set = {
+        "AUDIO",
+        "DOCUMENT",
+        "EXECUTABLE",
+        "IMAGE",
+        "PDF",
+        "PRESENTATION",
+        "SCRIPT",
+        "SOURCE_CODE",
+        "SPREADSHEET",
+        "VIDEO",
+        "VIRTUAL_DISK_IMAGE",
+        "ARCHIVE",
+    }
+    assert set(choices) == valid_set

@@ -1,28 +1,21 @@
 import json
 
-from py42._internal.compat import reprlib, str
+from py42._internal.compat import reprlib
+from py42._internal.compat import str
 from py42.exceptions import Py42Error
 
 
 class Py42Response(object):
     def __init__(self, requests_response):
         self._response = requests_response
-        self._data_root = None
-        try:
-            response_dict = json.loads(self._response.text)
-            if type(response_dict) == dict:
-                self._data_root = response_dict.get(u"data") or response_dict
-            else:
-                self._data_root = response_dict
-        except ValueError:
-            self._data_root = self._response.text or u""
+        self._data = None
 
     def __getitem__(self, key):
         try:
             return self._data_root[key]
-        except TypeError as e:
+        except TypeError:
             data_root_type = type(self._data_root)
-            message = u"The Py42Response root is of type {0}, but __getitem__ got a key of {1}, which is incompatible.".format(
+            message = u"The Py42Response root is of type {}, but __getitem__ got a key of {}, which is incompatible.".format(
                 data_root_type, key
             )
             raise Py42Error(message)
@@ -30,9 +23,9 @@ class Py42Response(object):
     def __setitem__(self, key, value):
         try:
             self._data_root[key] = value
-        except TypeError as e:
+        except TypeError:
             data_root_type = type(self._data_root)
-            message = u"The Py42Response root is of type {0}, but __setitem__ got a key of {1} and value of {2}, which is incompatible.".format(
+            message = u"The Py42Response root is of type {}, but __setitem__ got a key of {} and value of {}, which is incompatible.".format(
                 data_root_type, key, value
             )
             raise Py42Error(message)
@@ -64,7 +57,9 @@ class Py42Response(object):
             decode_unicode (bool, optional): If True, content will be decoded using the best
                 available encoding based on the response. Defaults to False.
         """
-        return self._response.iter_content(chunk_size=chunk_size, decode_unicode=decode_unicode)
+        return self._response.iter_content(
+            chunk_size=chunk_size, decode_unicode=decode_unicode
+        )
 
     @property
     def raw_text(self):
@@ -75,7 +70,11 @@ class Py42Response(object):
     @property
     def text(self):
         """The more useful parts of the HTTP response dumped into a dictionary."""
-        return json.dumps(self._data_root) if type(self._data_root) != str else self._data_root
+        return (
+            json.dumps(self._data_root)
+            if type(self._data_root) != str
+            else self._data_root
+        )
 
     @property
     def url(self):
@@ -91,7 +90,32 @@ class Py42Response(object):
         return str(self._data_root)
 
     def __repr__(self):
-        data = self._data_root
+        if not self._response._content_consumed:
+            data = "<streamed>"
+        else:
+            data = self._data_root
         return u"<{} [status={}, data={}]>".format(
             self.__class__.__name__, self._response.status_code, reprlib.repr(data)
         )
+
+    @property
+    def content(self):
+        return self._response.content
+
+    @property
+    def data(self):
+        return self._data_root
+
+    @property
+    def _data_root(self):
+        try:
+            if not self._data:
+                response_dict = json.loads(self._response.text)
+                if type(response_dict) == dict:
+                    self._data = response_dict.get(u"data") or response_dict
+                else:
+                    self._data = response_dict
+        except ValueError:
+            self._data = self._response.text or u""
+
+        return self._data

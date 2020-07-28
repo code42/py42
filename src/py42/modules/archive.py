@@ -105,7 +105,9 @@ class ArchiveModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of restore history.
         """
-        return self._archive_client.get_all_restore_history(days, u"computerId", device_id)
+        return self._archive_client.get_all_restore_history(
+            days, u"computerId", device_id
+        )
 
     def update_cold_storage_purge_date(self, archive_guid, purge_date):
         """Updates the cold storage purge date for a specified archive.
@@ -118,10 +120,16 @@ class ArchiveModule(object):
         Returns:
             :class:`py42.response.Py42Response`: the response from the ColdStorage API.
         """
-        return self._archive_client.update_cold_storage_purge_date(archive_guid, purge_date)
+        return self._archive_client.update_cold_storage_purge_date(
+            archive_guid, purge_date
+        )
 
     def get_all_org_cold_storage_archives(
-        self, org_id, include_child_orgs=True, sort_key="archiveHoldExpireDate", sort_dir="asc"
+        self,
+        org_id,
+        include_child_orgs=True,
+        sort_key="archiveHoldExpireDate",
+        sort_dir="asc",
     ):
         """Returns a detailed list of cold storage archive information for a given org ID.
 
@@ -138,4 +146,9 @@ class ArchiveModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cold storage archive information.
         """
-        return self._archive_client.get_all_org_cold_storage_archives(org_id)
+        return self._archive_client.get_all_org_cold_storage_archives(
+            org_id=org_id,
+            include_child_orgs=include_child_orgs,
+            sort_key=sort_key,
+            sort_dir=sort_dir,
+        )

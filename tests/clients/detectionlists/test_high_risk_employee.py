@@ -33,7 +33,9 @@ class TestHighRiskEmployeeClient(object):
     def mock_detection_list_user_client(
         self, mock_session, user_context, py42_response, mock_user_client
     ):
-        user_client = DetectionListUserClient(mock_session, user_context, mock_user_client)
+        user_client = DetectionListUserClient(
+            mock_session, user_context, mock_user_client
+        )
         mock_session.post.return_value = py42_response
         return user_client
 
@@ -47,7 +49,10 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = json.loads(mock_session_post_success.post.call_args[1]["data"])
         assert mock_session_post_success.post.call_count == 2
-        assert mock_session_post_success.post.call_args[0][0] == "/svc/api/v2/highriskemployee/add"
+        assert (
+            mock_session_post_success.post.call_args[0][0]
+            == "/svc/api/v2/highriskemployee/add"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -63,7 +68,10 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/setalertstate"
+        assert (
+            mock_session.post.call_args[0][0]
+            == "/svc/api/v2/highriskemployee/setalertstate"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["alertsEnabled"] is True
@@ -79,7 +87,10 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/setalertstate"
+        assert (
+            mock_session.post.call_args[0][0]
+            == "/svc/api/v2/highriskemployee/setalertstate"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["alertsEnabled"] is False
@@ -96,12 +107,18 @@ class TestHighRiskEmployeeClient(object):
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
 
         assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/remove"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/remove"
+        )
         assert posted_data["tenantId"] == user_context.get_current_tenant_id()
         assert posted_data["userId"] == "942897397520289999"
 
     def test_get_posts_expected_data(
-        self, user_context, mock_session, mock_detection_list_user_client, mock_user_client
+        self,
+        user_context,
+        mock_session,
+        mock_detection_list_user_client,
+        mock_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
             mock_session, user_context, mock_detection_list_user_client
@@ -117,7 +134,11 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_get_all_posts_expected_data(
-        self, user_context, mock_session, mock_detection_list_user_client, mock_user_client
+        self,
+        user_context,
+        mock_session,
+        mock_detection_list_user_client,
+        mock_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeClient(
             mock_session, user_context, mock_detection_list_user_client
@@ -127,7 +148,9 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "OPEN"
@@ -150,7 +173,9 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
         assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "NEW_FILTER"
@@ -160,14 +185,13 @@ class TestHighRiskEmployeeClient(object):
             and posted_data["srtDirection"] == "DESC"
         )
 
-    def test_get_high_risk_employee_page(
+    def test_get_page_posts_data_to_expected_url(
         self, user_context, mock_session, mock_detection_list_user_client
     ):
-        tenant_id = user_context.get_current_tenant_id()
         high_risk_employee_client = HighRiskEmployeeClient(
             mock_session, user_context, mock_detection_list_user_client
         )
-        high_risk_employee_client.get_high_risk_employees_page(
+        high_risk_employee_client.get_page(
             filter_type="NEW_FILTER",
             page_num=3,
             page_size=10,

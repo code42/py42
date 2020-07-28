@@ -1,2 +1,1 @@
 _PAGE_SIZE = 100
-_PAGE_NUM = 1

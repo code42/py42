@@ -1,7 +1,6 @@
 import json
 
 from py42.clients import BaseClient
-from py42.clients.detectionlists import _PAGE_NUM
 from py42.clients.detectionlists import _PAGE_SIZE
 from py42.clients.util import get_all_pages
 
@@ -100,7 +99,7 @@ class HighRiskEmployeeClient(BaseClient):
         filter_type=None,
         sort_key=None,
         sort_direction=None,
-        page_num=_PAGE_NUM,
+        page_num=1,
         page_size=_PAGE_SIZE,
     ):
         """Gets a single page of High Risk Employees.

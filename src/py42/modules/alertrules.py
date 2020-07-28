@@ -84,7 +84,12 @@ class AlertRulesModule(object):
              :class:`py42.response.Py42Response`
         """
         alerts_client = self.microservice_client_factory.get_alerts_client()
-        return alerts_client.get_page(sort_key=sort_key, sort_direction=sort_direction, page_num=page_num, page_size=page_size)
+        return alerts_client.get_page(
+            sort_key=sort_key,
+            sort_direction=sort_direction,
+            page_num=page_num,
+            page_size=page_size,
+        )
 
     def get_all(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
         """Fetch all available rules.

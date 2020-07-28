@@ -339,3 +339,21 @@ class TestAlertClient(object):
             and posted_data["srtKey"] == "CreatedAt"
             and posted_data["srtDirection"] == "DESC"
         )
+
+    def test_get_rules_page_calls_post_with_expected_url_and_data(
+        self, mock_session, user_context, successful_post
+    ):
+        alert_client = AlertClient(mock_session, user_context)
+        alert_client.get_rules_page(groups=["groups"])
+        data = {
+            "tenantId": TENANT_ID_FROM_RESPONSE,
+            "groups": ["groups"],
+            "groupClause": "AND",
+            "pgNum": 0,
+            "pgSize": 500,
+            "srtKey": None,
+            "srtDirection": None,
+        }
+        mock_session.post.assert_called_once_with(
+            "/svc/api/v1/rules/query-rule-metadata", data=json.dumps(data)
+        )

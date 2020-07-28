@@ -88,7 +88,7 @@ class AlertRulesModule(object):
         """
         alerts_client = self.microservice_client_factory.get_alerts_client()
         page_size = page_size or settings.items_per_page
-        return alerts_client.get_page(
+        return alerts_client.get_rules_page(
             sort_key=sort_key,
             sort_direction=sort_direction,
             page_num=page_num,

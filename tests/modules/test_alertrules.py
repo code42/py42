@@ -91,3 +91,15 @@ class TestAlertRulesModules(object):
         alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
         alert_rules_module.get_by_observer_id(rule_id)
         mock_alerts_client.get_rule_by_observer_id.assert_called_once_with(rule_id)
+
+    def test_alert_rules_module_calls_post_rules_page_with_expected_params(
+        self, mock_microservice_client_factory, mock_alerts_client
+    ):
+        mock_microservice_client_factory.get_alerts_client.return_value = (
+            mock_alerts_client
+        )
+        alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
+        alert_rules_module.get_page("key", "dir", 70, 700)
+        mock_alerts_client.get_rules_page.assert_called_once_with(
+            sort_key="key", sort_direction="dir", page_num=70, page_size=700
+        )

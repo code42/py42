@@ -54,7 +54,7 @@ class AlertClient(BaseClient):
         else:
             return str(query)
 
-    def get_page(
+    def get_rules_page(
         self,
         tenant_id=None,
         groups=None,
@@ -65,7 +65,7 @@ class AlertClient(BaseClient):
     ):
         page_size = page_size or settings.items_per_page
         tenant_id = tenant_id or self._user_context.get_current_tenant_id()
-        return self._get_page(
+        return self._get_rules_page(
             tenant_id=tenant_id,
             groups=groups,
             sort_key=sort_key,
@@ -74,7 +74,7 @@ class AlertClient(BaseClient):
             page_size=page_size,
         )
 
-    def _get_page(
+    def _get_rules_page(
         self,
         tenant_id,
         groups=None,
@@ -104,7 +104,7 @@ class AlertClient(BaseClient):
     def get_all_rules(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
         tenant_id = self._user_context.get_current_tenant_id()
         return get_all_pages(
-            self._get_page,
+            self._get_rules_page,
             u"ruleMetadata",
             tenant_id=tenant_id,
             groups=None,
@@ -117,7 +117,7 @@ class AlertClient(BaseClient):
     ):
         tenant_id = self._user_context.get_current_tenant_id()
         return get_all_pages(
-            self._get_page,
+            self._get_rules_page,
             u"ruleMetadata",
             tenant_id=tenant_id,
             groups=[json.loads(str(create_eq_filter_group(u"Name", rule_name)))],
@@ -130,7 +130,7 @@ class AlertClient(BaseClient):
     ):
         tenant_id = self._user_context.get_current_tenant_id()
         results = get_all_pages(
-            self._get_page,
+            self._get_rules_page,
             u"ruleMetadata",
             tenant_id=tenant_id,
             groups=[

@@ -1,3 +1,6 @@
+from py42 import settings
+
+
 class AlertRulesModule(object):
     def __init__(self, microservice_client_factory):
         self.microservice_client_factory = microservice_client_factory
@@ -78,12 +81,13 @@ class AlertRulesModule(object):
         sort_key (str, optional): Sort results based by field. Defaults to "CreatedAt".
         sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to  "DESC".
         page_num (int, optional): The page number to get. Defaults to 1.
-        page_size (int, optional): The number of items per page. Defaults to None.
+        page_size (int, optional): The number of items per page. Defaults to `py42.settings.items_per_page`.
 
         Returns:
              :class:`py42.response.Py42Response`
         """
         alerts_client = self.microservice_client_factory.get_alerts_client()
+        page_size = page_size or settings.items_per_page
         return alerts_client.get_page(
             sort_key=sort_key,
             sort_direction=sort_direction,

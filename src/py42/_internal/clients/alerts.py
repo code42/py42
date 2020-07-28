@@ -63,8 +63,6 @@ class AlertClient(BaseClient):
         page_num=1,
         page_size=None,
     ):
-        # This API expects the first page to start with zero.
-        page_num = page_num - 1
         page_size = page_size or settings.items_per_page
         tenant_id = tenant_id or self._user_context.get_current_tenant_id()
         return self._get_page(

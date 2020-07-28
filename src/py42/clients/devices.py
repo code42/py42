@@ -7,7 +7,7 @@ from py42.clients.util import get_all_pages
 class DeviceClient(BaseClient):
     """A class to interact with Code42 device/computer APIs."""
 
-    def _get_page(
+    def get_page(
         self,
         active=None,
         blocked=None,
@@ -81,7 +81,7 @@ class DeviceClient(BaseClient):
         """
 
         return get_all_pages(
-            self._get_page,
+            self.get_page,
             u"computers",
             active=active,
             blocked=blocked,

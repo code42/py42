@@ -98,8 +98,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## 1.6.0 - 2020-06-30
 
 ### Added
-
-### Added
 - Make `ExposureType.OUTSIDE_TRUSTED_DOMAINS` constant available.
 - `sdk.securitydata` methods
     - `stream_file_by_sha256()`

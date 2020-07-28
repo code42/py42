@@ -197,7 +197,9 @@ class TestDepartingEmployeeClient(object):
             and posted_data["srtKey"] == "CREATED_AT"
             and posted_data["srtDirection"] == "DESC"
         )
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/search"
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v2/departingemployee/search"
+        )
         assert mock_session.post.call_count == 1
 
     def test_set_alerts_enabled_posts_expected_data(

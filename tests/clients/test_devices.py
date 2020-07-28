@@ -100,4 +100,18 @@ class TestDeviceClient(object):
     ):
         client = DeviceClient(mock_session)
         client.get_page(True, True, "org", "user", "dest", True, True, 20, 1000)
-        mock_session.get.assert_called_once_with()
+        mock_session.get.assert_called_once_with(
+            "/api/Computer",
+            params={
+                "active": True,
+                "blocked": True,
+                "orgUid": "org",
+                "userUid": "user",
+                "targetComputerGuid": "dest",
+                "incBackupUsage": True,
+                "incCounts": True,
+                "pgNum": 20,
+                "pgSize": 1000,
+                "q": None,
+            },
+        )

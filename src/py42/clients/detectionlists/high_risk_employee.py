@@ -157,9 +157,9 @@ class HighRiskEmployeeClient(BaseClient):
         page_num=None,
         page_size=None,
     ):
-        # This method is meant to called in `get_all()` and handles paging through
-        # `util.get_all_pages()`. It exists separately than `get_page()` because of
-        # the tenant ID parameter and trying to avoid it.
+        # This method exists separately from `get_page()` because
+        # of the tenant ID parameter - trying to avoid it and avoid duplicate calls
+        # to retrieve it.
         data = {
             u"tenantId": tenant_id,
             u"filterType": filter_type,

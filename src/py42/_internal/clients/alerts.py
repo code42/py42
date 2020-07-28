@@ -85,9 +85,9 @@ class AlertClient(BaseClient):
         page_num=None,
         page_size=None,
     ):
-        # This method is meant to called in the `get_all_()` methods and handles paging
-        # through `util.get_all_pages()`. It exists separately than `get_page()` because
-        # of the tenant ID parameter and trying to avoid it.
+        # This method exists separately from `get_page()` because
+        # of the tenant ID parameter - trying to avoid it and avoid duplicate calls
+        # to retrieve it.
 
         # This API expects the first page to start with zero.
         page_num = page_num - 1

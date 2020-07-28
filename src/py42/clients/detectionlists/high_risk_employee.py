@@ -45,7 +45,7 @@ class HighRiskEmployeeClient(BaseClient):
             return self._add_high_risk_employee(tenant_id, user_id)
 
     def set_alerts_enabled(self, enabled=True):
-        """Enable alerts.
+        """Enables alerts.
 
         Args:
             enabled (bool): Whether to enable alerts for all users.
@@ -61,7 +61,7 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def remove(self, user_id):
-        """Remove a user from the High Risk Employee detection list.
+        """Removes a user from the High Risk Employee detection list.
 
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the High Risk
@@ -78,7 +78,7 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get(self, user_id):
-        """Get user information.
+        """Gets user information.
 
         Args:
             user_id (str or int): The Code42 userUid of the user has been added to the High Risk
@@ -102,7 +102,7 @@ class HighRiskEmployeeClient(BaseClient):
         page_num=_PAGE_NUM,
         page_size=_PAGE_SIZE,
     ):
-        """Get a single page of High Risk Employees.
+        """Gets a single page of High Risk Employees.
 
         Args:
             filter_type (str, optional): Valid filter types. Defaults to None.
@@ -114,6 +114,7 @@ class HighRiskEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
+
         return self._get_page(
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
@@ -124,7 +125,7 @@ class HighRiskEmployeeClient(BaseClient):
         )
 
     def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
-        """Search High Risk Employee list. Filter results by filter_type.
+        """Searches High Risk Employee list. Filter results by filter_type.
 
         Args:
             filter_type (str, optional): Valid filter types. Defaults to "OPEN".

@@ -81,7 +81,7 @@ class DepartingEmployeeClient(BaseClient):
         page_num=_PAGE_NUM,
         page_size=_PAGE_SIZE,
     ):
-        """Get a single page of Departing Employees.
+        """Gets a single page of Departing Employees.
 
         Args:
             filter_type (str, optional): Valid filter types. Defaults to None.
@@ -93,6 +93,7 @@ class DepartingEmployeeClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
+
         return self._get_page(
             tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,

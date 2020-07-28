@@ -56,7 +56,6 @@ class AlertClient(BaseClient):
 
     def get_rules_page(
         self,
-        tenant_id=None,
         groups=None,
         sort_key=None,
         sort_direction=None,
@@ -64,7 +63,7 @@ class AlertClient(BaseClient):
         page_size=None,
     ):
         page_size = page_size or settings.items_per_page
-        tenant_id = tenant_id or self._user_context.get_current_tenant_id()
+        tenant_id = self._user_context.get_current_tenant_id()
         return self._get_rules_page(
             tenant_id=tenant_id,
             groups=groups,

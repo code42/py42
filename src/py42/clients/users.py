@@ -1,5 +1,6 @@
 import json
 
+from py42 import settings
 from py42._internal.compat import quote
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
@@ -101,18 +102,39 @@ class UserClient(BaseClient):
         uri = u"/api/User/my"
         return self._session.get(uri, params=kwargs)
 
-    def _get_page(
+    def get_page(
         self,
         active=None,
         email=None,
         org_uid=None,
         role_id=None,
-        page_num=None,
+        page_num=1,
         page_size=None,
         q=None,
         **kwargs
     ):
+        """Gets an individual page of users.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
+
+        Args:
+            active (bool, optional): True gets active users only,
+                and false gets deactivated users only. Defaults to None.
+            email (str, optional): Limits users to only those with this email. Defaults to None.
+            org_uid (str, optional): Limits users to only those in the organization with this org
+                UID. Defaults to None.
+            role_id (int, optional): Limits users to only those with a given role ID. Defaults to
+                None.
+            page_num (int, optional): The page number to request. Defaults to 0.
+            page_size (int, optional): The number of items on the page. Defaults to `py42.settings.items_per_page`.
+            q (str, optional): A generic query filter that searches across name, username, and
+                email. Defaults to None.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+
         uri = u"/api/User"
+        page_size = page_size or settings.items_per_page
         params = dict(
             active=active,
             email=email,
@@ -123,7 +145,6 @@ class UserClient(BaseClient):
             q=q,
             **kwargs
         )
-
         return self._session.get(uri, params=params)
 
     def get_all(
@@ -148,7 +169,7 @@ class UserClient(BaseClient):
             that each contain a page of users.
         """
         return get_all_pages(
-            self._get_page,
+            self.get_page,
             u"users",
             active=active,
             email=email,

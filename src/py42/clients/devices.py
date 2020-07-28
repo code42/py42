@@ -1,5 +1,6 @@
 import json
 
+from py42 import settings
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 
@@ -16,11 +17,39 @@ class DeviceClient(BaseClient):
         destination_guid=None,
         include_backup_usage=None,
         include_counts=True,
-        page_num=None,
+        page_num=1,
         page_size=None,
         q=None,
     ):
+        """Gets a page of devices.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
+
+        Args:
+            active (bool, optional): Filters results by device state. When set to True, gets all
+                active devices. When set to False, gets all deactivated devices. When set to None
+                or excluded, gets all devices regardless of state. Defaults to None.
+            blocked (bool, optional): Filters results by blocked status: True or False. Defaults
+                to None.
+            org_uid (int, optional): The identification number of an Organization. Defaults to None.
+            user_uid (int, optional): The identification number of a User. Defaults to None.
+            destination_guid (str or int, optional): The globally unique identifier of the storage
+                server that the device back up to. Defaults to None.
+            include_backup_usage (bool, optional): A flag to denote whether to include the
+                destination and its backup stats. Defaults to None.
+            include_counts (bool, optional): A flag to denote whether to include total, warning,
+                and critical counts. Defaults to True.
+            page_num (int, optional): The page number to request. Defaults to 0.
+            page_size (int, optional): The number of items on the page. Defaults to
+                `py42.settings.items_per_page`.
+            q (str, optional): Searches results flexibly by incomplete GUID, hostname,
+                computer name, etc. Defaults to None.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+
         uri = u"/api/Computer"
+        page_size = page_size or settings.items_per_page
         params = {
             u"active": active,
             u"blocked": blocked,

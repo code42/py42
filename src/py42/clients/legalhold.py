@@ -1,5 +1,6 @@
 import json
 
+from py42 import settings
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 from py42.exceptions import Py42Error
@@ -105,16 +106,37 @@ class LegalHoldClient(BaseClient):
         uri = u"/api/LegalHold/{}".format(legal_hold_uid)
         return self._session.get(uri)
 
-    def _get_legal_holds_page(
+    def get_matters_page(
         self,
         creator_user_uid=None,
         active=True,
         name=None,
         hold_ext_ref=None,
-        page_num=None,
+        page_num=1,
         page_size=None,
     ):
+        """Gets an existing Legal Hold Matter page.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-get>`__
+
+        Args:
+            creator_user_uid (str, optional): Find Matters by the identifier of the user who created
+                them. Defaults to None.
+            active (bool or None, optional): Find Matters by their active state. True returns
+                active Matters, False returns inactive Matters, None returns all Matters regardless
+                of state. Defaults to True.
+            name (str, optional): Find Matters with a 'name' that either equals or partially
+                contains this value. Defaults to None.
+            hold_ext_ref (str, optional): Find Matters having a matching external reference field.
+                Defaults to None.
+            page_num (int, optional): The page number to request. Defaults to 0.
+            page_size (int, optional): The size of the page. Defaults to `py42.settings.items_per_page`.
+
+        Returns:
+            :class:`py42.response.Py42Response`:
+        """
+
         active_state = _active_state_map(active)
+        page_size = page_size or settings.items_per_page
         uri = u"/api/LegalHold"
         params = {
             u"creatorUserUid": creator_user_uid,
@@ -148,7 +170,7 @@ class LegalHoldClient(BaseClient):
             that each contain a page of Legal Hold Matters.
         """
         return get_all_pages(
-            self._get_legal_holds_page,
+            self.get_matters_page,
             u"legalHolds",
             creator_user_uid=creator_user_uid,
             active=active,
@@ -156,17 +178,39 @@ class LegalHoldClient(BaseClient):
             hold_ext_ref=hold_ext_ref,
         )
 
-    def _get_legal_hold_memberships_page(
+    def get_custodians_page(
         self,
         legal_hold_membership_uid=None,
         legal_hold_uid=None,
         user_uid=None,
         user=None,
         active=True,
-        page_num=None,
+        page_num=1,
         page_size=None,
     ):
+        """Gets an individual page of Legal Hold memberships.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-get>`__
+
+        Args:
+            legal_hold_membership_uid (str, optional): Find LegalHoldMemberships with a
+                specific membership UID. Defaults to None.
+            legal_hold_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter
+                with this unique identifier. Defaults to None.
+            user_uid (str, optional): Find LegalHoldMemberships for the user with this identifier.
+                Defaults to None.
+            user (str, optional): Find LegalHoldMemberships by flexibly searching on username,
+                email, extUserRef, or last name. Will find partial matches. Defaults to None.
+            active (bool or None, optional): Find LegalHoldMemberships by their active state. True
+                returns active LegalHoldMemberships, False returns inactive LegalHoldMemberships,
+                None returns all LegalHoldMemberships regardless of state. Defaults to True.
+            page_num (int, optional): The page number to request. Defaults to None.
+            page_size (int, optional): The size of the page. Defaults to `py42.settings.items_per_page`.
+
+        Returns:
+            :class:`py42.response.Py42Response`:
+        """
         active_state = _active_state_map(active)
+        page_size = page_size or settings.items_per_page
         params = {
             u"legalHoldMembershipUid": legal_hold_membership_uid,
             u"legalHoldUid": legal_hold_uid,
@@ -207,7 +251,7 @@ class LegalHoldClient(BaseClient):
             that each contain a page of LegalHoldMembership objects.
         """
         return get_all_pages(
-            self._get_legal_hold_memberships_page,
+            self.get_custodians_page,
             u"legalHoldMemberships",
             legal_hold_uid=legal_hold_uid,
             user_uid=user_uid,

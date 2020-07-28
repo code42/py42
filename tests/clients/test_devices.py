@@ -95,9 +95,7 @@ class TestDeviceClient(object):
         py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
 
-    def test_get_page_calls_get_with_expected_url_and_data(
-        self, mock_session, mock_get_all_response, mock_get_all_empty_response
-    ):
+    def test_get_page_calls_get_with_expected_url_and_params(self, mock_session):
         client = DeviceClient(mock_session)
         client.get_page(True, True, "org", "user", "dest", True, True, 20, 1000)
         mock_session.get.assert_called_once_with(

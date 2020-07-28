@@ -101,8 +101,8 @@ class TestUserClient(object):
     ):
         mock_session.get.return_value = successful_response
         client = UserClient(mock_session)
-        client.get_by_id("USER_ID")
-        uri = "{}/{}".format(USER_URI, "USER_ID")
+        client.get_by_id(123456)
+        uri = "{}/{}".format(USER_URI, 123456)
         mock_session.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
@@ -150,6 +150,22 @@ class TestUserClient(object):
 
     def test_delete_role_calls_delete_with_expected_uri_and_params(self, mock_session):
         client = UserClient(mock_session)
-        client.remove_role("12345", "Test Role Name")
+        client.remove_role(12345, "Test Role Name")
         uri = "/api/UserRole?userId=12345&roleName=Test%20Role%20Name"
         mock_session.delete.assert_called_once_with(uri)
+
+    def test_get_page_calls_get_with_expected_url_and_params(self, mock_session):
+        client = UserClient(mock_session)
+        client.get_page(True, "email", "org", "role", 10, 100, "q")
+        mock_session.get.assert_called_once_with(
+            "/api/User",
+            params={
+                "active": True,
+                "email": "email",
+                "orgUid": "org",
+                "roleId": "role",
+                "pgNum": 10,
+                "pgSize": 100,
+                "q": "q",
+            },
+        )

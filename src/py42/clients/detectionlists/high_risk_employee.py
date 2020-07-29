@@ -1,6 +1,7 @@
 import json
 
 from py42.clients import BaseClient
+from py42.clients.detectionlists import _PAGE_SIZE
 from py42.clients.util import get_all_pages
 
 
@@ -44,7 +45,7 @@ class HighRiskEmployeeClient(BaseClient):
             return self._add_high_risk_employee(tenant_id, user_id)
 
     def set_alerts_enabled(self, enabled=True):
-        """Enable alerts.
+        """Enables alerts.
 
         Args:
             enabled (bool): Whether to enable alerts for all users.
@@ -60,7 +61,7 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def remove(self, user_id):
-        """Remove a user from the High Risk Employee detection list.
+        """Removes a user from the High Risk Employee detection list.
 
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the High Risk
@@ -77,7 +78,7 @@ class HighRiskEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get(self, user_id):
-        """Get user information.
+        """Gets user information.
 
         Args:
             user_id (str or int): The Code42 userUid of the user has been added to the High Risk
@@ -93,36 +94,14 @@ class HighRiskEmployeeClient(BaseClient):
         uri = self._make_uri(u"/get")
         return self._session.post(uri, data=json.dumps(data))
 
-    def _get_high_risk_employees_page(
-        self,
-        tenant_id,
-        filter_type=None,
-        sort_key=None,
-        sort_direction=None,
-        page_num=None,
-        page_size=None,
-    ):
-        # Overwriting page_size since default value 1000 returns error
-        page_size = 100
-        data = {
-            u"tenantId": tenant_id,
-            u"filterType": filter_type,
-            u"pgNum": page_num,
-            u"pgSize": page_size,
-            u"srtKey": sort_key,
-            u"srtDirection": sort_direction,
-        }
-
-        uri = self._make_uri(u"/search")
-        return self._session.post(uri, data=json.dumps(data))
-
     def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
-        """Search High Risk Employee list. Filter results by filter_type.
+        """Searches High Risk Employee list. Filter results by filter_type.
 
         Args:
-            filter_type (str): Valid filter types.
-            sort_key (str): Sort results based by field.
-            sort_direction (str): ``ASC`` or ``DESC``
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                or ``OPEN``. Defaults to "OPEN".
+            sort_key (str, optional): Sort results based by field. Defaults to None.
+            sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -130,10 +109,44 @@ class HighRiskEmployeeClient(BaseClient):
         """
 
         return get_all_pages(
-            self._get_high_risk_employees_page,
+            self.get_page,
             u"items",
-            tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
+            page_size=_PAGE_SIZE,
         )
+
+    def get_page(
+        self,
+        page_num,
+        filter_type=u"OPEN",
+        sort_key=None,
+        sort_direction=None,
+        page_size=_PAGE_SIZE,
+    ):
+        """Gets a single page of High Risk Employees.
+
+        Args:
+            page_num (int): The page number to request.
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                or ``OPEN``. Defaults to "OPEN".
+            sort_key (str, optional): Sort results based by field. Defaults to None.
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
+            page_size (int, optional): The number of high risk employees to return
+                per page. Defaults to 100.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+
+        data = {
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"filterType": filter_type,
+            u"pgNum": page_num,
+            u"pgSize": page_size,
+            u"srtKey": sort_key,
+            u"srtDirection": sort_direction,
+        }
+        uri = self._make_uri(u"/search")
+        return self._session.post(uri, data=json.dumps(data))

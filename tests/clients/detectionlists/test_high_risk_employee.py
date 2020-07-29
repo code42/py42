@@ -184,3 +184,30 @@ class TestHighRiskEmployeeClient(object):
             and posted_data["srtKey"] == "DISPLAY_NAME"
             and posted_data["srtDirection"] == "DESC"
         )
+
+    def test_get_page_posts_data_to_expected_url(
+        self, user_context, mock_session, mock_detection_list_user_client
+    ):
+        high_risk_employee_client = HighRiskEmployeeClient(
+            mock_session, user_context, mock_detection_list_user_client
+        )
+        high_risk_employee_client.get_page(
+            filter_type="NEW_FILTER",
+            page_num=3,
+            page_size=10,
+            sort_direction="DESC",
+            sort_key="DISPLAY_NAME",
+        )
+        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        assert mock_session.post.call_count == 1
+        assert (
+            mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
+        )
+        assert (
+            posted_data["tenantId"] == user_context.get_current_tenant_id()
+            and posted_data["filterType"] == "NEW_FILTER"
+            and posted_data["pgNum"] == 3
+            and posted_data["pgSize"] == 10
+            and posted_data["srtKey"] == "DISPLAY_NAME"
+            and posted_data["srtDirection"] == "DESC"
+        )

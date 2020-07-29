@@ -138,10 +138,10 @@ class TestAlertClient(object):
         mock_session.post.return_value = py42_response
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.get_details(alert_ids, "some-tenant-id")
+        alert_client.get_details(alert_ids)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            post_data["tenantId"] == "some-tenant-id"
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
@@ -209,15 +209,15 @@ class TestAlertClient(object):
             and post_data["alertIds"][0] == "ALERT_ID_1"
         )
 
-    def test_resolve_when_given_tenant_id_posts_expected_data(
+    def test_resolve_posts_expected_data(
         self, mock_session, user_context, successful_post
     ):
         alert_client = AlertClient(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.resolve(alert_ids, "some-tenant-id")
+        alert_client.resolve(alert_ids,)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
-            post_data["tenantId"] == "some-tenant-id"
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
         )
@@ -230,7 +230,7 @@ class TestAlertClient(object):
         alert_client.resolve(alert_ids, "some-tenant-id")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/resolve-alert"
 
-    def test_reopen_when_not_given_tenant_id_posts_expected_data(
+    def test_reopen_posts_expected_data(
         self, mock_session, user_context, successful_post
     ):
         alert_client = AlertClient(mock_session, user_context)
@@ -255,19 +255,6 @@ class TestAlertClient(object):
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
-        )
-
-    def test_reopen_when_given_tenant_id_posts_expected_data(
-        self, mock_session, user_context, successful_post
-    ):
-        alert_client = AlertClient(mock_session, user_context)
-        alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.reopen(alert_ids, "some-tenant-id")
-        post_data = json.loads(mock_session.post.call_args[1]["data"])
-        assert (
-            post_data["tenantId"] == "some-tenant-id"
-            and post_data["alertIds"][0] == "ALERT_ID_1"
-            and post_data["alertIds"][1] == "ALERT_ID_2"
         )
 
     def test_reopen_posts_to_expected_url(
@@ -351,4 +338,29 @@ class TestAlertClient(object):
             and posted_data["pgSize"] == 500
             and posted_data["srtKey"] == "CreatedAt"
             and posted_data["srtDirection"] == "DESC"
+        )
+
+    def test_get_rules_page_calls_post_with_expected_url_and_data(
+        self, mock_session, user_context, successful_post
+    ):
+        alert_client = AlertClient(mock_session, user_context)
+        alert_client.get_rules_page(
+            groups=["groups"],
+            page_num=1,
+            page_size=100,
+            sort_key="sort key",
+            sort_direction="direction",
+        )
+        # Note that pgNum is -1 from what is given because of that API
+        data = {
+            "tenantId": TENANT_ID_FROM_RESPONSE,
+            "groups": ["groups"],
+            "groupClause": "AND",
+            "pgNum": 0,
+            "pgSize": 100,
+            "srtKey": "sort key",
+            "srtDirection": "direction",
+        }
+        mock_session.post.assert_called_once_with(
+            "/svc/api/v1/rules/query-rule-metadata", data=json.dumps(data)
         )

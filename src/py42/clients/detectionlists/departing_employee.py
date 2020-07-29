@@ -1,6 +1,7 @@
 import json
 
 from py42.clients import BaseClient
+from py42.clients.detectionlists import _PAGE_SIZE
 from py42.clients.util import get_all_pages
 
 
@@ -72,52 +73,63 @@ class DepartingEmployeeClient(BaseClient):
         data = {u"userId": user_id, u"tenantId": tenant_id}
         return self._session.post(uri, data=json.dumps(data))
 
-    def _get_departing_employees_page(
-        self,
-        tenant_id=None,
-        filter_type=None,
-        sort_key=u"CREATED_AT",
-        sort_direction=u"DESC",
-        page_num=None,
-        page_size=None,
-    ):
-
-        uri = self._uri_prefix.format(u"search")
-        data = {
-            u"tenantId": tenant_id,
-            u"pgSize": 100,
-            u"pgNum": page_num,
-            u"filterType": filter_type,
-            u"srtKey": sort_key,
-            u"srtDirection": sort_direction,
-        }
-        return self._session.post(uri, data=json.dumps(data))
-
     def get_all(
         self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"
     ):
         """Gets all Departing Employees.
 
         Args:
-            filter_type (str, optional): Filter results by status. Defaults to "OPEN".
-            sort_key (str, optional): Key to sort results on. Options: (``CREATED_AT``,
-                ``DEPARTURE_DATE``, ``DISPLAY_NAME``, ``NUM_EVENTS``, ``TOTAL_BYTES``). Defaults to
-                ``CREATED_AT``.
-            sort_direction (str, optional): Sort direction. Options: (``ASC``, ``DESC``). Defaults
-                to ``DESC``.
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                ``OPEN``, or ``LEAVING_TODAY``. Defaults to None.
+            sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of departing employees.
         """
         return get_all_pages(
-            self._get_departing_employees_page,
+            self.get_page,
             u"items",
-            tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
+            page_size=_PAGE_SIZE,
         )
+
+    def get_page(
+        self,
+        page_num,
+        filter_type=u"OPEN",
+        sort_key=u"CREATED_AT",
+        sort_direction=u"DESC",
+        page_size=_PAGE_SIZE,
+    ):
+        """Gets a single page of Departing Employees.
+
+        Args:
+            page_num (int): The page number to request.
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                ``OPEN``, or ``LEAVING_TODAY``. Defaults to "OPEN".
+            sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
+            page_size (int, optional): The number of departing employees to return
+                per page. Defaults to 100.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+
+        uri = self._uri_prefix.format(u"search")
+        data = {
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"pgSize": page_size,
+            u"pgNum": page_num,
+            u"filterType": filter_type,
+            u"srtKey": sort_key,
+            u"srtDirection": sort_direction,
+        }
+        return self._session.post(uri, data=json.dumps(data))
 
     def set_alerts_enabled(self, alerts_enabled=True):
         """Enable or disable email alerting on Departing Employee exposure events.

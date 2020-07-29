@@ -38,41 +38,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.detectionlists.remove_user_cloud_alias()`
 - `sdk.archive.get_all_org_cold_storage_archives()` now actually uses parameters `include_child_orgs`, `sort_key` and `sort_dir`.
 
-### Added
-
-- Added below event filter support
-    - TrustedActivity
-    - RemoteActivity
-    - PrintJobName
-    - Printer
-    - DeviceSignedInUserName
-
-- Added attributes to below event filters and added `choices` method to return list of all available attributes
-    - FileCategory
-    - SyncDestination
-    - ExposureType
-    - Source
-    - EventTimestamp
-    - EventType
-    - SharingTypeAdded
-
-## 1.7.1 - 2020-07-24
-
-### Changed
-
-- `sdk.securitydata.stream_file_by_md5()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42ArchiveFileNotFoundError`).
-- `sdk.securitydata.stream_file_by_sha256()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42Error`).
-
-### Fixed
-
-- functions now return `Py42Response` objects as expected:
-    - `sdk.detectionlists.update_user_notes()`
-    - `sdk.detectionlists.add_user_risk_tags()`
-    - `sdk.detectionlists.remove_user_risk_tags()`
-    - `sdk.detectionlists.add_user_cloud_alias()`
-    - `sdk.detectionlists.remove_user_cloud_alias()`
-- `sdk.archive.get_all_org_cold_storage_archives()` now actually uses parameters `include_child_orgs`, `sort_key` and `sort_dir`.
-
 ## 1.7.0 - 2020-07-21
 
 ### Added

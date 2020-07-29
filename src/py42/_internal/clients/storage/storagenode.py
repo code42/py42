@@ -27,7 +27,7 @@ class StoragePreservationDataClient(BaseClient):
         }
         resource = u"FileDownloadToken"
         uri = "{}{}".format(self._base_uri, resource)
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_file(self, token):
         """Streams a file.
@@ -39,7 +39,7 @@ class StoragePreservationDataClient(BaseClient):
             Returns a stream of the requested token.
         """
         resource = u"GetFile"
-        uri = u"{}/{}{}".format(self._session.host_address, self._base_uri, resource)
+        uri = u"{}/{}{}".format(self._connection.host_address, self._base_uri, resource)
         if u"PDSDownloadToken=" in token:
             replaced_token = token.replace(u"PDSDownloadToken=", "")
         else:

@@ -13,8 +13,8 @@ class AlertRulesClient(BaseClient):
     _resource = u"Rules/"
     _api_prefix = u"/svc/api/{}/{}".format(_version, _resource)
 
-    def __init__(self, session, user_context, detection_list_user_client):
-        super(AlertRulesClient, self).__init__(session)
+    def __init__(self, connection, user_context, detection_list_user_client):
+        super(AlertRulesClient, self).__init__(connection)
         self._user_context = user_context
         self._tenant_id = self._user_context.get_current_tenant_id()
         self._detection_list_user_client = detection_list_user_client
@@ -25,20 +25,20 @@ class AlertRulesClient(BaseClient):
     @property
     def exfiltration(self):
         if not self._exfiltration:
-            self._exfiltration = ExfiltrationClient(self._session, self._tenant_id)
+            self._exfiltration = ExfiltrationClient(self._connection, self._tenant_id)
         return self._exfiltration
 
     @property
     def cloudshare(self):
         if not self._cloud_share:
-            self._cloud_share = CloudShareClient(self._session, self._tenant_id)
+            self._cloud_share = CloudShareClient(self._connection, self._tenant_id)
         return self._cloud_share
 
     @property
     def filetypemismatch(self):
         if not self._file_type_mismatch:
             self._file_type_mismatch = FileTypeMismatchClient(
-                self._session, self._tenant_id
+                self._connection, self._tenant_id
             )
         return self._file_type_mismatch
 
@@ -54,17 +54,17 @@ class AlertRulesClient(BaseClient):
             ],
         }
         uri = u"{}{}".format(self._api_prefix, u"add-users")
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def remove_user(self, rule_id, user_id):
         user_ids = [user_id]
         tenant_id = self._user_context.get_current_tenant_id()
         data = {u"tenantId": tenant_id, u"ruleId": rule_id, u"userIdList": user_ids}
         uri = u"{}{}".format(self._api_prefix, u"remove-users")
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def remove_all_users(self, rule_id):
         tenant_id = self._user_context.get_current_tenant_id()
         data = {u"tenantId": tenant_id, u"ruleId": rule_id}
         uri = u"{}{}".format(self._api_prefix, u"remove-all-users")
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))

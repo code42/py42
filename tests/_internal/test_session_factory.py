@@ -1,7 +1,7 @@
 import pytest
 from requests import Session
 
-from py42._internal.auth_handling import HeaderModifier
+from py42._auth import HeaderModifier
 from py42._internal.session_factory import AuthHandlerFactory
 from py42._internal.session_factory import SessionFactory
 from py42._internal.session_factory import SessionModifierFactory

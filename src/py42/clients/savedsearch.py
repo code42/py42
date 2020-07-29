@@ -8,8 +8,8 @@ class SavedSearchClient(BaseClient):
     _version = u"v1"
     _resource = u"/forensic-search/queryservice/api/{}/saved".format(_version)
 
-    def __init__(self, session, file_event_client):
-        super(SavedSearchClient, self).__init__(session)
+    def __init__(self, connection, file_event_client):
+        super(SavedSearchClient, self).__init__(connection)
         self._file_event_client = file_event_client
 
     def get(self):
@@ -19,7 +19,7 @@ class SavedSearchClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"{}".format(self._resource)
-        return self._session.get(uri)
+        return self._connection.get(uri)
 
     def get_by_id(self, search_id):
         """Fetch the details of a saved search by its given search Id.
@@ -30,7 +30,7 @@ class SavedSearchClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"{}/{}".format(self._resource, search_id)
-        return self._session.get(uri)
+        return self._connection.get(uri)
 
     def get_query(self, search_id):
         """Get the saved search in form of a query(`py42.sdk.queries.fileevents.file_event_query`).

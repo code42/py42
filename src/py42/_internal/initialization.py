@@ -21,7 +21,7 @@ class SDKDependencies(object):
         self._set_v3_session(host_address, session_factory, root_session)
 
         # authority clients
-        authority_client_factory = AuthorityClientFactory(self.session)
+        authority_client_factory = AuthorityClientFactory(self.connection)
         self.administration_client = (
             authority_client_factory.create_administration_client()
         )
@@ -34,7 +34,7 @@ class SDKDependencies(object):
         self.user_context = UserContext(self.administration_client)
 
         archive_locator_factory = StorageTokenProviderFactory(
-            self.session, self.security_client, self.device_client
+            self.connection, self.security_client, self.device_client
         )
 
         self.storage_client_factory = _get_storage_client_factory(
@@ -70,10 +70,10 @@ class SDKDependencies(object):
 
     def _set_v3_session(self, host_address, session_factory, root_session):
         self.root_session = root_session
-        self.session = session_factory.create_jwt_session(host_address, root_session)
-        self._test_session(self.session, u"/api/User/my")
+        self.connection = session_factory.create_jwt_session(host_address, root_session)
+        self._test_session(self.connection, u"/api/User/my")
 
     @staticmethod
-    def _test_session(session, test_uri):
-        response = session.get(test_uri)
+    def _test_session(connection, test_uri):
+        response = connection.get(test_uri)
         return 200 <= response.status_code < 300

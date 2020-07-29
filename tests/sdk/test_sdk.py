@@ -1,7 +1,7 @@
 import pytest
 
+from py42._connection import Py42Session
 from py42._internal.initialization import SDKDependencies
-from py42._internal.session import Py42Session
 from py42._internal.session_factory import SessionFactory
 from py42.clients import administration
 from py42.clients import devices

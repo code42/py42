@@ -11,8 +11,8 @@ class HighRiskEmployeeClient(BaseClient):
     _uri_prefix = u"/svc/api/{}".format(_api_version)
     _resource = u"/highriskemployee"
 
-    def __init__(self, session, user_context, detection_list_user_client):
-        super(HighRiskEmployeeClient, self).__init__(session)
+    def __init__(self, connection, user_context, detection_list_user_client):
+        super(HighRiskEmployeeClient, self).__init__(connection)
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
 
@@ -23,7 +23,7 @@ class HighRiskEmployeeClient(BaseClient):
 
         data = {u"tenantId": tenant_id, u"userId": user_id}
         uri = self._make_uri(u"/add")
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def add(self, user_id):
         """Adds a user to the High Risk Employee detection list. Creates a detection list user
@@ -57,7 +57,7 @@ class HighRiskEmployeeClient(BaseClient):
             u"alertsEnabled": enabled,
         }
         uri = self._make_uri(u"/setalertstate")
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def remove(self, user_id):
         """Remove a user from the High Risk Employee detection list.
@@ -74,7 +74,7 @@ class HighRiskEmployeeClient(BaseClient):
             u"userId": user_id,
         }
         uri = self._make_uri(u"/remove")
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def get(self, user_id):
         """Get user information.
@@ -91,7 +91,7 @@ class HighRiskEmployeeClient(BaseClient):
             u"userId": user_id,
         }
         uri = self._make_uri(u"/get")
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def _get_high_risk_employees_page(
         self,
@@ -114,7 +114,7 @@ class HighRiskEmployeeClient(BaseClient):
         }
 
         uri = self._make_uri(u"/search")
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
         """Search High Risk Employee list. Filter results by filter_type.

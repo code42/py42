@@ -24,29 +24,29 @@ from py42.exceptions import Py42SessionInitializationError
 
 
 class AuthorityClientFactory(object):
-    def __init__(self, session):
-        self.session = session
+    def __init__(self, connection):
+        self._connection = connection
 
     def create_administration_client(self):
-        return administration.AdministrationClient(self.session)
+        return administration.AdministrationClient(self._connection)
 
     def create_user_client(self):
-        return users.UserClient(self.session)
+        return users.UserClient(self._connection)
 
     def create_device_client(self):
-        return devices.DeviceClient(self.session)
+        return devices.DeviceClient(self._connection)
 
     def create_org_client(self):
-        return orgs.OrgClient(self.session)
+        return orgs.OrgClient(self._connection)
 
     def create_legal_hold_client(self):
-        return legalhold.LegalHoldClient(self.session)
+        return legalhold.LegalHoldClient(self._connection)
 
     def create_archive_client(self):
-        return archive.ArchiveClient(self.session)
+        return archive.ArchiveClient(self._connection)
 
     def create_security_client(self):
-        return securitydata.SecurityClient(self.session)
+        return securitydata.SecurityClient(self._connection)
 
 
 class MicroserviceClientFactory(object):
@@ -79,8 +79,8 @@ class MicroserviceClientFactory(object):
 
     def get_alerts_client(self):
         if not self._alerts_client:
-            session = self._get_jwt_session(u"AlertService-API_URL")
-            self._alerts_client = alerts.AlertClient(session, self._user_context)
+            connection = self._get_jwt_session(u"AlertService-API_URL")
+            self._alerts_client = alerts.AlertClient(connection, self._user_context)
         return self._alerts_client
 
     def get_departing_employee_client(self):
@@ -116,9 +116,9 @@ class MicroserviceClientFactory(object):
 
     def get_alert_rules_client(self):
         if not self._alert_rules_client:
-            session = self._get_jwt_session(u"FedObserver-API_URL")
+            connection = self._get_jwt_session(u"FedObserver-API_URL")
             self._alert_rules_client = AlertRulesClient(
-                session, self._user_context, self.get_detection_list_user_client()
+                connection, self._user_context, self.get_detection_list_user_client()
             )
         return self._alert_rules_client
 
@@ -131,8 +131,8 @@ class MicroserviceClientFactory(object):
 
     def get_preservation_data_service_client(self):
         if not self._pds_client:
-            session = self._get_jwt_session(u"PRESERVATION-DATA-SERVICE_API-URL")
-            self._pds_client = PreservationDataServiceClient(session)
+            connection = self._get_jwt_session(u"PRESERVATION-DATA-SERVICE_API-URL")
+            self._pds_client = PreservationDataServiceClient(connection)
         return self._pds_client
 
     def create_storage_preservation_client(self, host_address):
@@ -161,20 +161,22 @@ class MicroserviceClientFactory(object):
             url = _hacky_get_microservice_url(
                 self._root_session, u"simple-key-value-store"
             )
-            session = self._session_factory.create_anonymous_session(url)
-            self._key_value_store_client = key_value_store.KeyValueStoreClient(session)
+            connection = self._session_factory.create_anonymous_session(url)
+            self._key_value_store_client = key_value_store.KeyValueStoreClient(
+                connection
+            )
         return self._key_value_store_client.get_stored_value(key).text
 
 
-def _hacky_get_microservice_url(session, microservice_base_name):
-    sts_url = _get_sts_base_url(session)
+def _hacky_get_microservice_url(connection, microservice_base_name):
+    sts_url = _get_sts_base_url(connection)
     return sts_url.replace(u"sts", microservice_base_name)
 
 
-def _get_sts_base_url(session):
+def _get_sts_base_url(connection):
     uri = u"/api/ServerEnv"
     try:
-        response = session.get(uri)
+        response = connection.get(uri)
     except HTTPError as ex:
         raise Py42SessionInitializationError(ex)
 

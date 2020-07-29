@@ -11,7 +11,7 @@ class StorageArchiveClient(BaseClient):
         timestamp=None,
         show_deleted=None,
     ):
-        # session_id is a web restore session ID (see create_restore_session)
+        # session_id is a web restore connection ID (see create_restore_session)
         uri = u"/api/WebRestoreSearch"
         params = {
             u"webRestoreSessionId": session_id,
@@ -21,7 +21,7 @@ class StorageArchiveClient(BaseClient):
             u"timestamp": timestamp,
             u"showDeleted": show_deleted,
         }
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_file_size(
         self,
@@ -39,7 +39,7 @@ class StorageArchiveClient(BaseClient):
             u"showDeleted": show_deleted,
             u"backupSetId": backup_set_id,
         }
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_file_path_metadata(
         self,
@@ -53,7 +53,7 @@ class StorageArchiveClient(BaseClient):
         backup_set_id=None,
         include_os_metadata=None,
     ):
-        # session_id is a web restore session ID (see create_restore_session)
+        # session_id is a web restore connection ID (see create_restore_session)
         uri = u"/api/WebRestoreTreeNode"
         params = {
             u"webRestoreSessionId": session_id,
@@ -66,7 +66,7 @@ class StorageArchiveClient(BaseClient):
             u"backupSetId": backup_set_id,
             u"includeOsMetadata": include_os_metadata,
         }
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def create_restore_session(
         self,
@@ -75,7 +75,7 @@ class StorageArchiveClient(BaseClient):
         private_password=None,
         encryption_key=None,
     ):
-        """Creates a web restore session.
+        """Creates a web restore connection.
         See https://console.us.code42.com/apidocviewer/#WebRestoreSession
         """
         uri = u"/api/WebRestoreSession"
@@ -85,7 +85,7 @@ class StorageArchiveClient(BaseClient):
             u"privatePassword": private_password,
             u"encryptionKey": encryption_key,
         }
-        return self._session.post(uri, json=json_dict)
+        return self._connection.post(uri, json=json_dict)
 
     def start_restore(
         self,
@@ -123,17 +123,17 @@ class StorageArchiveClient(BaseClient):
             u"backupSetId": backup_set_id,
         }
 
-        return self._session.post(uri, json=json_dict)
+        return self._connection.post(uri, json=json_dict)
 
     def get_restore_status(self, job_id):
         uri = u"/api/WebRestoreJob/{}".format(job_id)
-        return self._session.get(uri)
+        return self._connection.get(uri)
 
     def cancel_restore(self, job_id):
         uri = u"/api/WebRestoreJob"
         json_dict = {u"jobId": job_id}
-        return self._session.delete(uri, json=json_dict)
+        return self._connection.delete(uri, json=json_dict)
 
     def stream_restore_result(self, job_id):
         uri = u"/api/WebRestoreJobResult/{}".format(job_id)
-        return self._session.get(uri, stream=True)
+        return self._connection.get(uri, stream=True)

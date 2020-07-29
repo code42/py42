@@ -1,6 +1,6 @@
 import json
 
-from py42._internal.compat import quote
+from py42._compat import quote
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 
@@ -48,7 +48,7 @@ class UserClient(BaseClient):
             u"lastName": last_name,
             u"notes": notes,
         }
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def get_by_id(self, user_id, **kwargs):
         """Gets the user with the given ID.
@@ -61,7 +61,7 @@ class UserClient(BaseClient):
             :class:`py42.response.Py42Response`: A response containing the user.
         """
         uri = u"/api/User/{}".format(user_id)
-        return self._session.get(uri, params=kwargs)
+        return self._connection.get(uri, params=kwargs)
 
     def get_by_uid(self, user_uid, **kwargs):
         """Gets the user with the given UID.
@@ -75,7 +75,7 @@ class UserClient(BaseClient):
         """
         uri = u"/api/User/{}".format(user_uid)
         params = dict(idType=u"uid", **kwargs)
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_by_username(self, username, **kwargs):
         """Gets the user with the given username.
@@ -89,7 +89,7 @@ class UserClient(BaseClient):
         """
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_current(self, **kwargs):
         """Gets the currently signed in user.
@@ -99,7 +99,7 @@ class UserClient(BaseClient):
             :class:`py42.response.Py42Response`: A response containing the user.
         """
         uri = u"/api/User/my"
-        return self._session.get(uri, params=kwargs)
+        return self._connection.get(uri, params=kwargs)
 
     def _get_page(
         self,
@@ -124,7 +124,7 @@ class UserClient(BaseClient):
             **kwargs
         )
 
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_all(
         self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs
@@ -170,7 +170,7 @@ class UserClient(BaseClient):
         """
         uri = u"/api/v7/scim-user-data/collated-view"
         params = dict(userId=user_uid)
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def block(self, user_id):
         """Blocks the user with the given ID. A blocked user is not allowed to log in or restore
@@ -184,7 +184,7 @@ class UserClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/UserBlock/{}".format(user_id)
-        return self._session.put(uri)
+        return self._connection.put(uri)
 
     def unblock(self, user_id):
         """Removes a block, if one exists, on the user with the given user ID. Unblocked users are
@@ -198,7 +198,7 @@ class UserClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/UserBlock/{}".format(user_id)
-        return self._session.delete(uri)
+        return self._connection.delete(uri)
 
     def deactivate(self, user_id, block_user=None):
         """Deactivates the user with the given user ID.
@@ -214,7 +214,7 @@ class UserClient(BaseClient):
         """
         uri = u"/api/UserDeactivation/{}".format(user_id)
         data = {u"blockUser": block_user}
-        return self._session.put(uri, data=json.dumps(data))
+        return self._connection.put(uri, data=json.dumps(data))
 
     def reactivate(self, user_id, unblock_user=None):
         """Reactivates the user with the given ID.
@@ -229,7 +229,7 @@ class UserClient(BaseClient):
         """
         uri = u"/api/UserDeactivation/{}".format(user_id)
         params = {u"unblockUser": unblock_user}
-        return self._session.delete(uri, params=params)
+        return self._connection.delete(uri, params=params)
 
     def change_org_assignment(self, user_id, org_id):
         """Assigns a user to a different organization.
@@ -244,7 +244,7 @@ class UserClient(BaseClient):
         """
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def get_available_roles(self):
         """Report the list of roles that are available for the authenticated user to
@@ -255,7 +255,7 @@ class UserClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/v4/role/view"
-        return self._session.get(uri)
+        return self._connection.get(uri)
 
     def get_roles(self, user_id):
         """Return the list of roles that are currently assigned to the given user.
@@ -268,7 +268,7 @@ class UserClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/UserRole/{}".format(user_id)
-        return self._session.get(uri)
+        return self._connection.get(uri)
 
     def add_role(self, user_id, role_name):
         """Adds a role to a user.
@@ -283,7 +283,7 @@ class UserClient(BaseClient):
         """
         uri = u"/api/UserRole"
         data = {u"userId": user_id, u"roleName": role_name}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def remove_role(self, user_id, role_name):
         """Removes a role from a user.
@@ -300,4 +300,4 @@ class UserClient(BaseClient):
         # use quote instead of params here so that %20 is used instead of + for spaces.
         role_name = quote(role_name)
         uri = u"/api/UserRole?userId={}&roleName={}".format(user_id, role_name)
-        return self._session.delete(uri)
+        return self._connection.delete(uri)

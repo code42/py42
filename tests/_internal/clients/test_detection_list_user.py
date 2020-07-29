@@ -217,9 +217,9 @@ class TestDetectionListUserClient(object):
             and posted_data["userName"] == "username"
         )
         assert mock_get_by_id_fails.post.call_count == 2
-        assert mock_user_client._session.get.call_count == 1
+        assert mock_user_client._connection.get.call_count == 1
         assert (
-            mock_user_client._session.get.call_args[0][0]
+            mock_user_client._connection.get.call_args[0][0]
             == "/api/User/942897397520289999"
         )
 

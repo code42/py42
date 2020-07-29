@@ -1,4 +1,4 @@
-from py42._internal.compat import str
+from py42._compat import str
 from py42.clients import BaseClient
 
 
@@ -23,7 +23,7 @@ class FileEventClient(BaseClient):
         """
         query = str(query)
         uri = u"/forensic-search/queryservice/api/v1/fileevent"
-        return self._session.post(uri, data=query)
+        return self._connection.post(uri, data=query)
 
     def get_file_location_detail_by_sha256(self, hash):
         """Get file location details based on SHA256 hash.
@@ -35,4 +35,4 @@ class FileEventClient(BaseClient):
             :class:`py42.response.Py42Response`: A response containing file details.
         """
         uri = u"/forensic-search/queryservice/api/v1/filelocations"
-        return self._session.get(uri, params={u"sha256": hash})
+        return self._connection.get(uri, params={u"sha256": hash})

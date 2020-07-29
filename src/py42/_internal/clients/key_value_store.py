@@ -2,9 +2,9 @@ from py42.clients import BaseClient
 
 
 class KeyValueStoreClient(BaseClient):
-    def __init__(self, session):
-        super(KeyValueStoreClient, self).__init__(session)
+    def __init__(self, connection):
+        super(KeyValueStoreClient, self).__init__(connection)
 
     def get_stored_value(self, key):
         uri = u"/v1/{}".format(key)
-        return self._session.get(uri)
+        return self._connection.get(uri)

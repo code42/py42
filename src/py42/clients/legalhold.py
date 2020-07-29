@@ -39,7 +39,7 @@ class LegalHoldClient(BaseClient):
         """
         uri = u"/api/v4/legal-hold-policy/create"
         data = {u"name": name, u"policy": policy}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def create_matter(
         self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None
@@ -66,7 +66,7 @@ class LegalHoldClient(BaseClient):
             u"notes": notes,
             u"holdExtRef": hold_ext_ref,
         }
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def get_policy_by_uid(self, legal_hold_policy_uid):
         """Gets a single Preservation Policy.
@@ -80,7 +80,7 @@ class LegalHoldClient(BaseClient):
         """
         uri = u"/api/v4/legal-hold-policy/view"
         params = {u"legalHoldPolicyUid": legal_hold_policy_uid}
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_policy_list(self):
         """Gets a list of existing Preservation Policies.
@@ -90,7 +90,7 @@ class LegalHoldClient(BaseClient):
             :class:`py42.response.Py42Response`: A response containing the list of Policies.
         """
         uri = u"/api/v4/legal-hold-policy/list"
-        return self._session.get(uri)
+        return self._connection.get(uri)
 
     def get_matter_by_uid(self, legal_hold_uid):
         """Gets a single Legal Hold Matter.
@@ -103,7 +103,7 @@ class LegalHoldClient(BaseClient):
             :class:`py42.response.Py42Response`: A response containing the Matter.
         """
         uri = u"/api/LegalHold/{}".format(legal_hold_uid)
-        return self._session.get(uri)
+        return self._connection.get(uri)
 
     def _get_legal_holds_page(
         self,
@@ -124,7 +124,7 @@ class LegalHoldClient(BaseClient):
             u"pgNum": page_num,
             u"pgSize": page_size,
         }
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_all_matters(
         self, creator_user_uid=None, active=True, name=None, hold_ext_ref=None
@@ -177,7 +177,7 @@ class LegalHoldClient(BaseClient):
             u"pgSize": page_size,
         }
         uri = u"/api/LegalHoldMembership"
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_all_matter_custodians(
         self, legal_hold_uid=None, user_uid=None, user=None, active=True
@@ -228,7 +228,7 @@ class LegalHoldClient(BaseClient):
         """
         uri = u"/api/LegalHoldMembership"
         data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def remove_from_matter(self, legal_hold_membership_uid):
         """Remove a user (Custodian) from a Legal Hold Matter.
@@ -243,7 +243,7 @@ class LegalHoldClient(BaseClient):
         """
         uri = u"/api/LegalHoldMembershipDeactivation"
         data = {u"legalHoldMembershipUid": legal_hold_membership_uid}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def deactivate_matter(self, legal_hold_uid):
         """Deactivates and closes a Legal Hold Matter.
@@ -257,7 +257,7 @@ class LegalHoldClient(BaseClient):
         """
         uri = u"/api/v4/legal-hold-deactivation/update"
         data = {u"legalHoldUid": legal_hold_uid}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def reactivate_matter(self, legal_hold_uid):
         """Reactivates and re-opens a closed Matter.
@@ -270,4 +270,4 @@ class LegalHoldClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/LegalHoldReactivation/{}".format(legal_hold_uid)
-        return self._session.put(uri)
+        return self._connection.put(uri)

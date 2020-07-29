@@ -6,9 +6,9 @@ from threading import Lock
 import requests.adapters
 
 import py42.settings as settings
-from py42._internal.compat import str
-from py42._internal.compat import urljoin
-from py42._internal.compat import urlparse
+from py42._compat import str
+from py42._compat import urljoin
+from py42._compat import urlparse
 from py42.exceptions import raise_py42_error
 from py42.response import Py42Response
 from py42.settings import debug
@@ -16,11 +16,11 @@ from py42.util import format_dict
 
 
 class Py42Session(object):
-    def __init__(self, session, host_address, auth_handler=None):
+    def __init__(self, connection, host_address, auth_handler=None):
         self._initialized = False
         self._needs_auth_renewal_check = False
         self._auth_lock = Lock()
-        self._session = session
+        self._connection = connection
         adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
         if not host_address.startswith(u"http://") and not host_address.startswith(
             u"https://"
@@ -30,16 +30,16 @@ class Py42Session(object):
         self._host_address = host_address
         self._auth_handler = auth_handler
 
-        self._session.proxies = settings.proxies
-        self._session.verify = settings.verify_ssl_certs
-        self._session.mount(u"https://", adapter)
-        self._session.mount(u"http://", adapter)
+        self._connection.proxies = settings.proxies
+        self._connection.verify = settings.verify_ssl_certs
+        self._connection.mount(u"https://", adapter)
+        self._connection.mount(u"http://", adapter)
 
         self._host_address = host_address
         parsed_host = urlparse(self._host_address)
         host = parsed_host.netloc
 
-        self._session.headers = {
+        self._connection.headers = {
             u"Accept": u"application/json",
             u"Content-Type": u"application/json",
             u"Host": host,
@@ -54,15 +54,15 @@ class Py42Session(object):
 
     @property
     def headers(self):
-        return self._session.headers
+        return self._connection.headers
 
     @property
     def cookies(self):
-        return self._session.cookies
+        return self._connection.cookies
 
     @property
     def proxies(self):
-        return self._session.proxies
+        return self._connection.proxies
 
     def get(self, url, **kwargs):
         return self.request(u"GET", url, **kwargs)
@@ -140,7 +140,7 @@ class Py42Session(object):
 
         self._print_request(method, url, params=params, data=data)
 
-        response = self._session.request(
+        response = self._connection.request(
             method,
             url,
             params=params,

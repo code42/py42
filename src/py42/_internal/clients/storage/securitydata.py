@@ -42,7 +42,7 @@ class StorageSecurityClient(BaseClient):
             u"summarize": summarize,
         }
 
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_plan_security_events(
         self,

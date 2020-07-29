@@ -4,10 +4,10 @@ from py42.clients import BaseClient
 
 
 class StorageClient(BaseClient):
-    def __init__(self, session):
-        super(StorageClient, self).__init__(session)
-        self._archive_client = StorageArchiveClient(session)
-        self._security_client = StorageSecurityClient(session)
+    def __init__(self, connection):
+        super(StorageClient, self).__init__(connection)
+        self._archive_client = StorageArchiveClient(connection)
+        self._security_client = StorageSecurityClient(connection)
 
     @property
     def archive(self):
@@ -27,12 +27,12 @@ class StorageClientFactory(object):
         token_provider = self._token_provider_factory.create_backup_archive_locator(
             device_guid, destination_guid
         )
-        session = self._storage_session_manager.get_storage_session(token_provider)
-        return StorageClient(session)
+        connection = self._storage_session_manager.get_storage_session(token_provider)
+        return StorageClient(connection)
 
     def from_plan_info(self, plan_uid, destination_guid):
         token_provider = self._token_provider_factory.create_security_archive_locator(
             plan_uid, destination_guid
         )
-        session = self._storage_session_manager.get_storage_session(token_provider)
-        return StorageClient(session)
+        connection = self._storage_session_manager.get_storage_session(token_provider)
+        return StorageClient(connection)

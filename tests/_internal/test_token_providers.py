@@ -4,7 +4,7 @@ import json
 import pytest
 from requests import Response
 
-from py42._internal.session import Py42Session
+from py42._connection import Py42Session
 from py42._internal.token_providers import BasicAuthProvider
 from py42._internal.token_providers import C42APILoginTokenProvider
 from py42._internal.token_providers import C42APIStorageAuthTokenProvider

@@ -8,9 +8,9 @@ class AuthHandler(object):
         self._token_provider = token_provider
         self._session_modifier = session_modifier
 
-    def renew_authentication(self, session, use_cache=False):
+    def renew_authentication(self, connection, use_cache=False):
         secret = self._token_provider.get_secret_value(force_refresh=not use_cache)
-        self._session_modifier.modify_session(session, secret)
+        self._session_modifier.modify_session(connection, secret)
 
     @staticmethod
     def response_indicates_unauthorized(response):
@@ -22,5 +22,5 @@ class HeaderModifier(object):
         self._header_name = header_name
         self._value_format = value_format
 
-    def modify_session(self, session, value):
-        session.headers.update({self._header_name: self._value_format.format(value)})
+    def modify_session(self, connection, value):
+        connection.headers.update({self._header_name: self._value_format.format(value)})

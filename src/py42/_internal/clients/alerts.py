@@ -1,6 +1,6 @@
 import json
 
-from py42._internal.compat import str
+from py42._compat import str
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 from py42.sdk.queries.query_filter import create_eq_filter_group
@@ -9,14 +9,14 @@ from py42.sdk.queries.query_filter import create_eq_filter_group
 class AlertClient(BaseClient):
     _uri_prefix = u"/svc/api/v1/{0}"
 
-    def __init__(self, session, user_context):
-        super(AlertClient, self).__init__(session)
+    def __init__(self, connection, user_context):
+        super(AlertClient, self).__init__(connection)
         self._user_context = user_context
 
     def search(self, query):
         query = self._add_tenant_id_if_missing(query)
         uri = self._uri_prefix.format(u"query-alerts")
-        return self._session.post(uri, data=query)
+        return self._connection.post(uri, data=query)
 
     def get_details(self, alert_ids, tenant_id=None):
         if not isinstance(alert_ids, (list, tuple)):
@@ -26,7 +26,7 @@ class AlertClient(BaseClient):
         )
         uri = self._uri_prefix.format(u"query-details")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
-        results = self._session.post(uri, data=json.dumps(data))
+        results = self._connection.post(uri, data=json.dumps(data))
         return _convert_observation_json_strings_to_objects(results)
 
     def resolve(self, alert_ids, tenant_id=None, reason=None):
@@ -38,7 +38,7 @@ class AlertClient(BaseClient):
         reason = reason if reason else u""
         uri = self._uri_prefix.format(u"resolve-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def reopen(self, alert_ids, tenant_id=None, reason=None):
         if not isinstance(alert_ids, (list, tuple)):
@@ -48,7 +48,7 @@ class AlertClient(BaseClient):
         )
         uri = self._uri_prefix.format(u"reopen-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def _add_tenant_id_if_missing(self, query):
         query_dict = json.loads(str(query))
@@ -79,7 +79,7 @@ class AlertClient(BaseClient):
             u"srtDirection": sort_direction,
         }
         uri = self._uri_prefix.format(u"rules/query-rule-metadata")
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def get_all_rules(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
         tenant_id = self._user_context.get_current_tenant_id()

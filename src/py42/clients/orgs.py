@@ -34,7 +34,7 @@ class OrgClient(BaseClient):
             u"notes": notes,
             u"parentOrgUid": parent_org_uid,
         }
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def get_by_id(self, org_id, **kwargs):
         """Gets the organization with the given ID.
@@ -47,7 +47,7 @@ class OrgClient(BaseClient):
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
         uri = u"/api/Org/{}".format(org_id)
-        return self._session.get(uri, params=kwargs)
+        return self._connection.get(uri, params=kwargs)
 
     def get_by_uid(self, org_uid, **kwargs):
         """Gets the organization with the given UID.
@@ -61,12 +61,12 @@ class OrgClient(BaseClient):
         """
         uri = u"/api/Org/{}".format(org_uid)
         params = dict(idType=u"orgUid", **kwargs)
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def _get_page(self, page_num=None, page_size=None, **kwargs):
         uri = u"/api/Org"
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_all(self, **kwargs):
         """Gets all organizations.
@@ -92,7 +92,7 @@ class OrgClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/OrgBlock/{}".format(org_id)
-        return self._session.put(uri)
+        return self._connection.put(uri)
 
     def unblock(self, org_id):
         """Removes a block, if one exists, on an organization and its descendants with the given
@@ -106,7 +106,7 @@ class OrgClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/OrgBlock/{}".format(org_id)
-        return self._session.delete(uri)
+        return self._connection.delete(uri)
 
     def deactivate(self, org_id):
         """Deactivates the organization with the given ID, including all users, plans, and
@@ -120,7 +120,7 @@ class OrgClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/OrgDeactivation/{}".format(org_id)
-        return self._session.put(uri)
+        return self._connection.put(uri)
 
     def reactivate(self, org_id):
         """Reactivates the organization with the given ID. Backups are *not* restarted
@@ -134,7 +134,7 @@ class OrgClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/OrgDeactivation/{}".format(org_id)
-        return self._session.delete(uri)
+        return self._connection.delete(uri)
 
     def get_current(self, **kwargs):
         """Gets the organization for the currently signed-in user.
@@ -145,4 +145,4 @@ class OrgClient(BaseClient):
             currently signed-in user.
         """
         uri = u"/api/Org/my"
-        return self._session.get(uri, params=kwargs)
+        return self._connection.get(uri, params=kwargs)

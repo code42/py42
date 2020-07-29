@@ -34,7 +34,7 @@ class DeviceClient(BaseClient):
             u"q": q,
         }
 
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_all(
         self,
@@ -108,7 +108,7 @@ class DeviceClient(BaseClient):
         """
         uri = u"/api/Computer/{}".format(device_id)
         params = dict(incBackupUsage=include_backup_usage, **kwargs)
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
         """Gets device information by GUID.
@@ -124,7 +124,7 @@ class DeviceClient(BaseClient):
         """
         uri = u"/api/Computer/{}".format(guid)
         params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def block(self, device_id):
         """Blocks a device causing the user not to be able to log in to or restore from Code42 on
@@ -138,7 +138,7 @@ class DeviceClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/ComputerBlock/{}".format(device_id)
-        return self._session.put(uri)
+        return self._connection.put(uri)
 
     def unblock(self, device_id):
         """Unblocks a device, permitting a user to be able to login and restore again.
@@ -151,7 +151,7 @@ class DeviceClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/ComputerBlock/{}".format(device_id)
-        return self._session.delete(uri)
+        return self._connection.delete(uri)
 
     def deactivate(self, device_id):
         """Deactivates a device, causing backups to stop and archives to go to cold storage.
@@ -165,7 +165,7 @@ class DeviceClient(BaseClient):
         """
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": device_id}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def reactivate(self, device_id):
         """Activates a previously deactivated device.
@@ -179,7 +179,7 @@ class DeviceClient(BaseClient):
         """
         uri = u"/api/v4/computer-deactivation/remove"
         data = {u"id": device_id}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def deauthorize(self, device_id):
         """Deauthorizes the device with the given ID. If used on a cloud connector device, it will
@@ -193,7 +193,7 @@ class DeviceClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         uri = u"/api/ComputerDeauthorization/{}".format(device_id)
-        return self._session.put(uri)
+        return self._connection.put(uri)
 
     def get_settings(self, guid, keys=None):
         """Gets settings of the device.
@@ -208,4 +208,4 @@ class DeviceClient(BaseClient):
         """
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)

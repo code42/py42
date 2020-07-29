@@ -8,11 +8,11 @@ class ArchiveClient(BaseClient):
     def get_data_key_token(self, device_guid):
         uri = u"/api/DataKeyToken"
         data = {u"computerGuid": device_guid}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def get_backup_sets(self, device_guid, destination_guid):
         uri = u"/c42api/v3/BackupSets/{}/{}".format(device_guid, destination_guid)
-        return self._session.get(uri)
+        return self._connection.get(uri)
 
     def get_all_restore_history(self, days, id_type, id_value, **kwargs):
         return get_all_pages(
@@ -30,12 +30,12 @@ class ArchiveClient(BaseClient):
         uri = u"/api/RestoreHistory"
         params = dict(days=days, pgNum=page_num, pgSize=page_size, **kwargs)
         params[id_type] = id_value
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_web_restore_info(self, src_guid, dest_guid):
         uri = u"/api/WebRestoreInfo"
         params = {u"srcGuid": src_guid, u"destGuid": dest_guid}
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def _get_cold_storage_archives_page(
         self,
@@ -56,7 +56,7 @@ class ArchiveClient(BaseClient):
             u"pgNum": page_num,
         }
 
-        return self._session.get(uri, params=params)
+        return self._connection.get(uri, params=params)
 
     def get_all_org_cold_storage_archives(
         self,
@@ -78,4 +78,4 @@ class ArchiveClient(BaseClient):
         uri = u"/api/coldStorage/{}".format(archive_guid)
         params = {u"idType": u"guid"}
         data = {u"archiveHoldExpireDate": purge_date}
-        return self._session.put(uri, params=params, data=json.dumps(data))
+        return self._connection.put(uri, params=params, data=json.dumps(data))

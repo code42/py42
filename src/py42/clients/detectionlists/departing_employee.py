@@ -9,8 +9,8 @@ class DepartingEmployeeClient(BaseClient):
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
 
-    def __init__(self, session, user_context, detection_list_user_client):
-        super(DepartingEmployeeClient, self).__init__(session)
+    def __init__(self, connection, user_context, detection_list_user_client):
+        super(DepartingEmployeeClient, self).__init__(connection)
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
 
@@ -39,7 +39,7 @@ class DepartingEmployeeClient(BaseClient):
                 u"departureDate": departure_date,
             }
             uri = self._uri_prefix.format(u"add")
-            return self._session.post(uri, data=json.dumps(data))
+            return self._connection.post(uri, data=json.dumps(data))
 
     def get(self, user_id):
         """Gets departing employee data of a user.
@@ -54,7 +54,7 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"get")
         data = {u"userId": user_id, u"tenantId": tenant_id}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def remove(self, user_id):
         """Removes a user from the Departing Employees list.
@@ -70,7 +70,7 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"remove")
         data = {u"userId": user_id, u"tenantId": tenant_id}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def _get_departing_employees_page(
         self,
@@ -91,7 +91,7 @@ class DepartingEmployeeClient(BaseClient):
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,
         }
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def get_all(
         self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"
@@ -132,7 +132,7 @@ class DepartingEmployeeClient(BaseClient):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"setalertstate")
         data = {u"tenantId": tenant_id, u"alertsEnabled": alerts_enabled}
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))
 
     def update_departure_date(self, user_id, departure_date):
         """Add or modify details of an existing Departing Employee case.
@@ -154,4 +154,4 @@ class DepartingEmployeeClient(BaseClient):
             u"userId": user_id,
             u"departureDate": departure_date,
         }
-        return self._session.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, data=json.dumps(data))

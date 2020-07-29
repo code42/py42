@@ -9,8 +9,8 @@ class ExfiltrationClient(BaseClient):
     _resource = u"query-endpoint-exfiltration-rule"
     _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
 
-    def __init__(self, session, tenant_id):
-        super(ExfiltrationClient, self).__init__(session)
+    def __init__(self, connection, tenant_id):
+        super(ExfiltrationClient, self).__init__(connection)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):
@@ -23,4 +23,4 @@ class ExfiltrationClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
-        return self._session.post(self._api_prefix, data=json.dumps(data))
+        return self._connection.post(self._api_prefix, data=json.dumps(data))

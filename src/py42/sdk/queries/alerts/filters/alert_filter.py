@@ -1,5 +1,6 @@
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import QueryFilterStringField
 from py42.sdk.queries.query_filter import QueryFilterTimestampField
 
@@ -113,6 +114,10 @@ class RuleSource(QueryFilterStringField):
     DEPARTING_EMPLOYEE = u"Departing Employee"
     HIGH_RISK_EMPLOYEE = u"High Risk Employee"
 
+    @staticmethod
+    def choices():
+        return filter_attributes(RuleSource)
+
 
 class RuleType(QueryFilterStringField):
     """Class that filters alerts based on rule type.
@@ -128,6 +133,10 @@ class RuleType(QueryFilterStringField):
     ENDPOINT_EXFILTRATION = u"FedEndpointExfiltration"
     CLOUD_SHARE_PERMISSIONS = u"FedCloudSharePermissions"
     FILE_TYPE_MISMATCH = u"FedFileTypeMismatch"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(RuleType)
 
 
 class Description(AlertQueryFilterStringField):
@@ -151,6 +160,10 @@ class Severity(QueryFilterStringField):
     MEDIUM = u"MEDIUM"
     LOW = u"LOW"
 
+    @staticmethod
+    def choices():
+        return filter_attributes(Severity)
+
 
 class AlertState(QueryFilterStringField):
     """Class that filters alerts based on alert state.
@@ -164,3 +177,7 @@ class AlertState(QueryFilterStringField):
 
     OPEN = u"OPEN"
     DISMISSED = u"RESOLVED"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(AlertState)

@@ -19,7 +19,6 @@ def mock_detection_list_user_client(mocker):
 TEST_USER_ID = "12345"
 
 
-
 class TestRiskTags(object):
     def test_choices_returns_expected_set(self):
         choices = RiskTags.choices()

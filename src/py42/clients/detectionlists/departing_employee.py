@@ -99,21 +99,21 @@ class DepartingEmployeeClient(BaseClient):
 
     def get_page(
         self,
+        page_num,
         filter_type=u"OPEN",
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
-        page_num=1,
         page_size=_PAGE_SIZE,
     ):
         """Gets a single page of Departing Employees.
 
         Args:
+            page_num (int): The page number to request.
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
                 ``OPEN``, or ``LEAVING_TODAY``. Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
-            page_num (str or int, optional): The page number to request. Defaults to 1.
-            page_size (str or int, optional): The number of departing employees to return
+            page_size (int, optional): The number of departing employees to return
                 per page. Defaults to 100.
 
         Returns:

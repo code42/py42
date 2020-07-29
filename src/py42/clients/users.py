@@ -104,11 +104,11 @@ class UserClient(BaseClient):
 
     def get_page(
         self,
+        page_num,
         active=None,
         email=None,
         org_uid=None,
         role_id=None,
-        page_num=1,
         page_size=None,
         q=None,
         **kwargs
@@ -117,6 +117,7 @@ class UserClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
+            page_num (int): The page number to request.
             active (bool, optional): True gets active users only,
                 and false gets deactivated users only. Defaults to None.
             email (str, optional): Limits users to only those with this email. Defaults to None.
@@ -124,7 +125,6 @@ class UserClient(BaseClient):
                 UID. Defaults to None.
             role_id (int, optional): Limits users to only those with a given role ID. Defaults to
                 None.
-            page_num (int, optional): The page number to request. Defaults to 0.
             page_size (int, optional): The number of items on the page. Defaults to `py42.settings.items_per_page`.
             q (str, optional): A generic query filter that searches across name, username, and
                 email. Defaults to None.

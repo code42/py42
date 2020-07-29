@@ -111,7 +111,7 @@ class TestLegalHoldClient(object):
         self, mock_session
     ):
         client = LegalHoldClient(mock_session)
-        client.get_matters_page("creator", True, "name", "ref", 10, 100)
+        client.get_matters_page(10, "creator", True, "name", "ref", 100)
         mock_session.get.assert_called_once_with(
             "/api/LegalHold",
             params={
@@ -129,7 +129,7 @@ class TestLegalHoldClient(object):
     ):
         client = LegalHoldClient(mock_session)
         client.get_custodians_page(
-            "membership", "legalhold", "user ID", "username", True, 20, 200
+            20, "membership", "legalhold", "user ID", "username", True, 200
         )
         mock_session.get.assert_called_once_with(
             "/api/LegalHoldMembership",

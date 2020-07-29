@@ -97,7 +97,7 @@ class TestDeviceClient(object):
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_session):
         client = DeviceClient(mock_session)
-        client.get_page(True, True, "org", "user", "dest", True, True, 20, 1000)
+        client.get_page(20, True, True, "org", "user", "dest", True, True, 1000)
         mock_session.get.assert_called_once_with(
             "/api/Computer",
             params={

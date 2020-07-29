@@ -156,7 +156,7 @@ class TestUserClient(object):
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_session):
         client = UserClient(mock_session)
-        client.get_page(True, "email", "org", "role", 10, 100, "q")
+        client.get_page(10, True, "email", "org", "role", 100, "q")
         mock_session.get.assert_called_once_with(
             "/api/User",
             params={

@@ -108,17 +108,18 @@ class LegalHoldClient(BaseClient):
 
     def get_matters_page(
         self,
+        page_num,
         creator_user_uid=None,
         active=True,
         name=None,
         hold_ext_ref=None,
-        page_num=1,
         page_size=None,
     ):
         """Gets a page of existing Legal Hold Matters.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-get>`__
 
         Args:
+            page_num (int): The page number to request.
             creator_user_uid (str, optional): Find Matters by the identifier of the user who created
                 them. Defaults to None.
             active (bool or None, optional): Find Matters by their active state. True returns
@@ -128,7 +129,6 @@ class LegalHoldClient(BaseClient):
                 this value. Defaults to None.
             hold_ext_ref (str, optional): Find Matters having a matching external reference field.
                 Defaults to None.
-            page_num (int, optional): The page number to request. Defaults to 1.
             page_size (int, optional): The number of legal hold items to return per page.
                 Defaults to `py42.settings.items_per_page`.
 
@@ -181,18 +181,19 @@ class LegalHoldClient(BaseClient):
 
     def get_custodians_page(
         self,
+        page_num,
         legal_hold_membership_uid=None,
         legal_hold_uid=None,
         user_uid=None,
         user=None,
         active=True,
-        page_num=1,
         page_size=None,
     ):
         """Gets an individual page of Legal Hold memberships.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-get>`__
 
         Args:
+            page_num (int): The page number to request.
             legal_hold_membership_uid (str, optional): Find LegalHoldMemberships with a
                 specific membership UID. Defaults to None.
             legal_hold_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter
@@ -204,7 +205,6 @@ class LegalHoldClient(BaseClient):
             active (bool or None, optional): Find LegalHoldMemberships by their active state. True
                 returns active LegalHoldMemberships, False returns inactive LegalHoldMemberships,
                 None returns all LegalHoldMemberships regardless of state. Defaults to True.
-            page_num (int, optional): The page number to request. Defaults to None.
             page_size (int, optional): The size of the page. Defaults to `py42.settings.items_per_page`.
 
         Returns:

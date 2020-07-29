@@ -10,6 +10,7 @@ class DeviceClient(BaseClient):
 
     def get_page(
         self,
+        page_num,
         active=None,
         blocked=None,
         org_uid=None,
@@ -17,7 +18,6 @@ class DeviceClient(BaseClient):
         destination_guid=None,
         include_backup_usage=None,
         include_counts=True,
-        page_num=1,
         page_size=None,
         q=None,
     ):
@@ -25,6 +25,7 @@ class DeviceClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
         Args:
+            page_num (int): The page number to request.
             active (bool, optional): Filters results by device state. When set to True, gets all
                 active devices. When set to False, gets all deactivated devices. When set to None
                 or excluded, gets all devices regardless of state. Defaults to None.
@@ -38,7 +39,6 @@ class DeviceClient(BaseClient):
                 destination and its backup stats. Defaults to None.
             include_counts (bool, optional): A flag to denote whether to include total, warning,
                 and critical counts. Defaults to True.
-            page_num (int, optional): The page number to request. Defaults to 0.
             page_size (int, optional): The number of devices to return per page. Defaults to
                 `py42.settings.items_per_page`.
             q (str, optional): Searches results flexibly by incomplete GUID, hostname,

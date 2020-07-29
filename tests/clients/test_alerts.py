@@ -344,15 +344,22 @@ class TestAlertClient(object):
         self, mock_session, user_context, successful_post
     ):
         alert_client = AlertClient(mock_session, user_context)
-        alert_client.get_rules_page(groups=["groups"])
+        alert_client.get_rules_page(
+            groups=["groups"],
+            page_num=1,
+            page_size=100,
+            sort_key="sort key",
+            sort_direction="direction",
+        )
+        # Note that pgNum is -1 from what is given because of that API
         data = {
             "tenantId": TENANT_ID_FROM_RESPONSE,
             "groups": ["groups"],
             "groupClause": "AND",
             "pgNum": 0,
-            "pgSize": 500,
-            "srtKey": None,
-            "srtDirection": None,
+            "pgSize": 100,
+            "srtKey": "sort key",
+            "srtDirection": "direction",
         }
         mock_session.post.assert_called_once_with(
             "/svc/api/v1/rules/query-rule-metadata", data=json.dumps(data)

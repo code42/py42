@@ -23,6 +23,26 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## 1.7.1 - 2020-07-24
 
+### Added
+
+- Added below event filter support
+    - TrustedActivity
+    - RemoteActivity
+    - PrintJobName
+    - Printer
+    - DeviceSignedInUserName
+
+- Added attributes to below event filters and added `choices` method to return list of all available attributes
+    - FileCategory
+    - SyncDestination
+    - ExposureType
+    - Source
+    - EventTimestamp
+    - EventType
+    - SharingTypeAdded
+
+## 1.7.1 - 2020-07-24
+
 ### Changed
 
 - `sdk.securitydata.stream_file_by_md5()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42ArchiveFileNotFoundError`).

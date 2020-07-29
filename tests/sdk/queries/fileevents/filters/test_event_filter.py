@@ -177,7 +177,7 @@ def test_source_not_in_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
-def test_event_timestamp_choices_returns_valid_attributes():
+def test_event_timestamp_choices_returns_valid_set():
     choices = EventTimestamp.choices()
     valid_set = {
         "PT15M",
@@ -193,7 +193,7 @@ def test_event_timestamp_choices_returns_valid_attributes():
     assert set(choices) == valid_set
 
 
-def test_event_type_choices_returns_valid_attributes():
+def test_event_type_choices_returns_valid_set():
     choices = EventType.choices()
     valid_set = {
         "CREATED",
@@ -206,7 +206,7 @@ def test_event_type_choices_returns_valid_attributes():
     assert set(choices) == valid_set
 
 
-def test_source_choices_returns_valid_attributes():
+def test_source_choices_returns_valid_set():
     choices = Source.choices()
     valid_set = {
         "Endpoint",

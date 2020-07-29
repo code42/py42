@@ -1,8 +1,8 @@
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import QueryFilterStringField
 from py42.sdk.queries.query_filter import QueryFilterTimestampField
-from py42.sdk.queries.query_filter import filter_attributes
 
 
 def create_contains_filter_group(term, value):

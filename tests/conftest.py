@@ -85,17 +85,17 @@ def traceback(mocker):
 
 @pytest.fixture
 def success_requests_session(mocker, successful_response):
-    connection = mocker.MagicMock(spec=Session)
-    connection.get.return_value = successful_response
-    connection.request.return_value = successful_response
-    return connection
+    session = mocker.MagicMock(spec=Session)
+    session.get.return_value = successful_response
+    session.request.return_value = successful_response
+    return session
 
 
 @pytest.fixture
 def error_requests_session(mocker, error_response):
-    connection = mocker.MagicMock(spec=Session)
-    connection.request.return_value = error_response.response
-    return connection
+    session = mocker.MagicMock(spec=Session)
+    session.request.return_value = error_response.response
+    return session
 
 
 @pytest.fixture

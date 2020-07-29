@@ -3,8 +3,8 @@ import json
 import pytest
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
-from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
-from py42.clients.users import UserClient
+from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeClient
+from py42.services.users import UserClient
 
 CREATE_USER_SAMPLE_RESPONSE = """
     {"type$":"USER_V2","tenantId":"1d71796f-af5b-4231-9d8e-df6434da4663",

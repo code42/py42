@@ -1,4 +1,4 @@
-from py42.clients import BaseClient
+from py42.services import BaseClient
 
 
 class StoragePreservationDataClient(BaseClient):

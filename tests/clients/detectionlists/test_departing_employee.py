@@ -5,8 +5,8 @@ import pytest
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
-from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
-from py42.clients.users import UserClient
+from py42.services.detectionlists.departing_employee import DepartingEmployeeClient
+from py42.services.users import UserClient
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
 _USER_ID = "890973079883949999"

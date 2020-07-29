@@ -6,7 +6,7 @@ from py42._compat import str
 from py42.exceptions import Py42StorageSessionInitializationError
 
 
-class StorageSessionManager(object):
+class ConnectionManager(object):
     def __init__(self, session_factory, session_cache=None):
         self._session_factory = session_factory
         self._session_cache = session_cache or {}

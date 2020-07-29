@@ -5,11 +5,8 @@ import pytest
 from requests import Response
 
 from py42._connection import Py42Session
-from py42._internal.token_providers import BasicAuthProvider
-from py42._internal.token_providers import C42APILoginTokenProvider
-from py42._internal.token_providers import C42APIStorageAuthTokenProvider
-from py42._internal.token_providers import C42ApiV1TokenProvider
-from py42._internal.token_providers import C42ApiV3TokenProvider
+from py42._auth import BasicAuthProvider, C42ApiV3TokenProvider, C42ApiV1TokenProvider, \
+    C42APILoginTokenProvider, C42APIStorageAuthTokenProvider
 from py42.response import Py42Response
 
 USERNAME = "username"

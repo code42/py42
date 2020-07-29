@@ -1,9 +1,9 @@
 import json
 
-from py42.clients import BaseClient
-from py42.clients.alertrules.cloud_share import CloudShareClient
-from py42.clients.alertrules.exfiltration import ExfiltrationClient
-from py42.clients.alertrules.file_type_mismatch import FileTypeMismatchClient
+from py42.services import BaseClient
+from py42.services.alertrules.cloud_share import CloudShareClient
+from py42.services.alertrules.exfiltration import ExfiltrationClient
+from py42.services.alertrules.file_type_mismatch import FileTypeMismatchClient
 
 
 class AlertRulesClient(BaseClient):

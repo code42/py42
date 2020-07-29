@@ -10,12 +10,12 @@ from py42._internal.clients.storage import StorageClient
 from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.clients.storage import StorageSecurityClient
 from py42._internal.clients.storage.storagenode import StoragePreservationDataClient
-from py42.clients.file_event import FileEventClient
+from py42.services.file_event import FileEventClient
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42HTTPError
-from py42.modules.securitydata import PlanStorageInfo
-from py42.modules.securitydata import SecurityModule
+from py42.clients.securitydata import PlanStorageInfo
+from py42.clients.securitydata import SecurityModule
 from py42.response import Py42Response
 
 RAW_QUERY = "RAW JSON QUERY"

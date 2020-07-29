@@ -5,7 +5,7 @@ import pytest
 from requests import Response
 
 import py42.settings
-from py42.clients.users import UserClient
+from py42.services.users import UserClient
 from py42.response import Py42Response
 
 USER_URI = "/api/User"

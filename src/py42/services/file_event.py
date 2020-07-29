@@ -1,5 +1,5 @@
 from py42._compat import str
-from py42.clients import BaseClient
+from py42.services import BaseClient
 
 
 class FileEventClient(BaseClient):

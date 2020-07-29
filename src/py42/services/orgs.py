@@ -1,7 +1,7 @@
 import json
 
-from py42.clients import BaseClient
-from py42.clients.util import get_all_pages
+from py42.services import BaseClient
+from py42.services.util import get_all_pages
 
 
 class OrgClient(BaseClient):
@@ -81,7 +81,7 @@ class OrgClient(BaseClient):
     def block(self, org_id):
         """Blocks the organization with the given org ID as well as its child organizations. A
         blocked organization will not allow any of its users or devices to log in. New
-        registrations will be rejected and all currently logged in clients will be logged out.
+        registrations will be rejected and all currently logged in services will be logged out.
         Backups continue for any devices that are still active.
         `Rest Documentation <https://console.us.code42.com/apidocviewer/#OrgBlock-put>`__
 

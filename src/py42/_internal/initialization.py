@@ -2,17 +2,17 @@ from py42._internal.archive_access import ArchiveAccessorManager
 from py42._internal.client_factories import AuthorityClientFactory
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.storage import StorageClientFactory
-from py42._internal.storage_session_manager import StorageSessionManager
-from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.modules import alerts
-from py42.modules import archive as archive_module
-from py42.modules import detectionlists
-from py42.modules import securitydata as sec_module
+from py42._connection_manager import ConnectionManager
+from py42._auth import StorageTokenProviderFactory
+from py42.clients import alerts
+from py42.clients import archive as archive_module
+from py42.clients import detectionlists
+from py42.clients import securitydata as sec_module
 from py42.usercontext import UserContext
 
 
 def _get_storage_client_factory(session_factory, archive_locator_factory):
-    storage_session_manager = StorageSessionManager(session_factory)
+    storage_session_manager = ConnectionManager(session_factory)
     return StorageClientFactory(storage_session_manager, archive_locator_factory)
 
 
@@ -20,7 +20,7 @@ class SDKDependencies(object):
     def __init__(self, host_address, session_factory, root_session):
         self._set_v3_session(host_address, session_factory, root_session)
 
-        # authority clients
+        # authority services
         authority_client_factory = AuthorityClientFactory(self.connection)
         self.administration_client = (
             authority_client_factory.create_administration_client()
@@ -53,7 +53,7 @@ class SDKDependencies(object):
             self.user_client,
         )
 
-        # modules (feature sets that combine info from multiple clients)
+        # clients (feature sets that combine info from multiple services)
         self.archive_module = archive_module.ArchiveModule(
             archive_accessor_manager, self.archive_client
         )

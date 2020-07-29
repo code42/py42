@@ -9,16 +9,16 @@ from py42._internal.clients import securitydata
 from py42._internal.clients.storage import StorageClient
 from py42._internal.clients.storage import StorageClientFactory
 from py42._internal.session_factory import SessionFactory
-from py42._internal.storage_session_manager import StorageSessionManager
-from py42._internal.token_providers import StorageTokenProviderFactory
-from py42.clients import administration
-from py42.clients import detectionlists
-from py42.clients import devices
-from py42.clients import file_event
-from py42.clients import legalhold
-from py42.clients import orgs
-from py42.clients import users
-from py42.clients.users import UserClient
+from py42._connection_manager import ConnectionManager
+from py42._auth import StorageTokenProviderFactory
+from py42.services import administration
+from py42.services import detectionlists
+from py42.services import devices
+from py42.services import file_event
+from py42.services import legalhold
+from py42.services import orgs
+from py42.services import users
+from py42.services.users import UserClient
 from py42.usercontext import UserContext
 
 TEST_ROOT_URL = "https://example.com"
@@ -34,7 +34,7 @@ def token_provider_factory(mocker):
 
 @pytest.fixture
 def storage_session_manager(mocker):
-    return mocker.MagicMock(spec=StorageSessionManager)
+    return mocker.MagicMock(spec=ConnectionManager)
 
 
 @pytest.fixture

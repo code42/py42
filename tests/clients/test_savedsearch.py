@@ -1,7 +1,7 @@
 import json
 
-from py42.clients.file_event import FileEventClient
-from py42.clients.savedsearch import SavedSearchClient
+from py42.services.file_event import FileEventClient
+from py42.services.savedsearch import SavedSearchClient
 
 SAVED_SEARCH_GET_RESPONSE = """
     {"searches": [{"groups": [] }]}

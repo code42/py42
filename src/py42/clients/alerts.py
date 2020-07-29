@@ -1,4 +1,4 @@
-from py42.modules.alertrules import AlertRulesModule
+from py42.clients.alertrules import AlertRulesModule
 
 
 class AlertsModule(object):
@@ -13,7 +13,7 @@ class AlertsModule(object):
         """A collection of methods for managing alert rules.
 
         Returns:
-            :class:`py42.modules.alertrules.AlertRulesModule`
+            :class:`py42.clients.alertrules.AlertRulesModule`
         """
         return self._alert_rules_module
 

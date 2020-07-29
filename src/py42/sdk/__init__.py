@@ -62,7 +62,7 @@ class SDKClient(object):
         and tenant information for cloud environments.
 
         Returns:
-            :class:`py42.clients.administration.AdministrationClient`
+            :class:`py42.services.administration.AdministrationClient`
         """
         return self._sdk_dependencies.administration_client
 
@@ -72,7 +72,7 @@ class SDKClient(object):
         web-restores or finding a file on an archive.
 
         Returns:
-            :class:`py42.modules.archive.ArchiveModule`
+            :class:`py42.clients.archive.ArchiveModule`
         """
         return self._sdk_dependencies.archive_module
 
@@ -82,7 +82,7 @@ class SDKClient(object):
         environment.
 
         Returns:
-            :class:`py42.clients.users.UserClient`
+            :class:`py42.services.users.UserClient`
         """
         return self._sdk_dependencies.user_client
 
@@ -92,7 +92,7 @@ class SDKClient(object):
         environment.
 
         Returns:
-            :class:`py42.clients.devices.DeviceClient`
+            :class:`py42.services.devices.DeviceClient`
         """
         return self._sdk_dependencies.device_client
 
@@ -102,7 +102,7 @@ class SDKClient(object):
         Code42 environment.
 
         Returns:
-            :class:`py42.clients.orgs.OrgClient`
+            :class:`py42.services.orgs.OrgClient`
         """
         return self._sdk_dependencies.org_client
 
@@ -112,7 +112,7 @@ class SDKClient(object):
         custodians.
 
         Returns:
-            :class:`py42.clients.legalhold.LegalHoldClient`
+            :class:`py42.services.legalhold.LegalHoldClient`
         """
         return self._sdk_dependencies.legal_hold_client
 
@@ -134,7 +134,7 @@ class SDKClient(object):
             * Security plan information
 
         Returns:
-            :class:`py42.modules.securitydata.SecurityModule`
+            :class:`py42.clients.securitydata.SecurityModule`
         """
         return self._sdk_dependencies.security_module
 
@@ -144,7 +144,7 @@ class SDKClient(object):
         lists, such as departing employees.
 
         Returns:
-            :class:`py42.modules.detectionlists.DetectionListsModule`
+            :class:`py42.clients.detectionlists.DetectionListsModule`
         """
         return self._sdk_dependencies.detection_lists_module
 
@@ -153,6 +153,6 @@ class SDKClient(object):
         """A collection of methods related to retrieving and updating alerts rules.
 
         Returns:
-            :class:`py42.modules.alertrules.AlertRulesModule`
+            :class:`py42.clients.alertrules.AlertRulesModule`
         """
         return self._sdk_dependencies.alerts_module

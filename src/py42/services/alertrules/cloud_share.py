@@ -1,20 +1,20 @@
 import json
 
-from py42.clients import BaseClient
+from py42.services import BaseClient
 
 
-class ExfiltrationClient(BaseClient):
+class CloudShareClient(BaseClient):
 
     _version = u"v1"
-    _resource = u"query-endpoint-exfiltration-rule"
+    _resource = u"query-cloud-share-permissions-rule"
     _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
 
     def __init__(self, connection, tenant_id):
-        super(ExfiltrationClient, self).__init__(connection)
+        super(CloudShareClient, self).__init__(connection)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):
-        """Fetch exfiltration alert rule by rule id.
+        """Fetch cloud share alert rule by rule id.
 
         Args:
             rule_id (str): Observer rule Id of a rule to be fetched.

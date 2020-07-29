@@ -5,7 +5,7 @@ from requests import Response
 from requests.exceptions import HTTPError
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
-from py42.clients.users import UserClient
+from py42.services.users import UserClient
 from py42.exceptions import Py42BadRequestError
 
 

@@ -1,8 +1,8 @@
 import json
 
 from py42._compat import quote
-from py42.clients import BaseClient
-from py42.clients.util import get_all_pages
+from py42.services import BaseClient
+from py42.services.util import get_all_pages
 
 
 class UserClient(BaseClient):

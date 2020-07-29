@@ -29,7 +29,7 @@ class SecurityModule(object):
         """A collection of methods related to retrieving forensic search data.
 
         Returns:
-            :class: `py42._internal.clients.securitydata.SavedSearchClient`
+            :class: `py42._internal.services.securitydata.SavedSearchClient`
         """
         return self._microservices_client_factory.get_saved_search_client()
 
@@ -42,7 +42,7 @@ class SecurityModule(object):
             user_uid (str): The UID of the user to get plan storage information for.
 
         Returns:
-            list[:class:`py42.modules.securitydata.PlanStorageInfo`]
+            list[:class:`py42.clients.securitydata.PlanStorageInfo`]
         """
         locations = None
         try:
@@ -79,7 +79,7 @@ class SecurityModule(object):
         `Support Article <https://support.code42.com/Administrator/6/Configuring/Endpoint_monitoring>`__
 
         Args:
-            plan_storage_info (:class:`py42.sdk.modules.securitydata.PlanStorageInfo`):
+            plan_storage_info (:class:`py42.sdk.clients.securitydata.PlanStorageInfo`):
                 Information about storage nodes for a plan to get file event activity for.
             cursor (str, optional): A cursor position for only getting file events you did not
                 previously get. Defaults to None.

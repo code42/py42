@@ -1,6 +1,6 @@
 from py42._internal.clients.storage.archive import StorageArchiveClient
 from py42._internal.clients.storage.securitydata import StorageSecurityClient
-from py42.clients import BaseClient
+from py42.services import BaseClient
 
 
 class StorageClient(BaseClient):

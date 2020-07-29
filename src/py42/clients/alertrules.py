@@ -7,7 +7,7 @@ class AlertRulesModule(object):
         """A collection of methods for managing exfiltration alert rules.
 
         Returns:
-            :class:`py42.clients.alertrules.exfiltration.ExfiltrationClient`
+            :class:`py42.services.alertrules.exfiltration.ExfiltrationClient`
         """
         rules_client = self.microservice_client_factory.get_alert_rules_client()
         return rules_client.exfiltration
@@ -17,7 +17,7 @@ class AlertRulesModule(object):
         """A collection of methods for managing cloud sharing alert rules.
 
         Returns:
-            :class:`py42.clients.alertrules.cloud_share.CloudShareClient`
+            :class:`py42.services.alertrules.cloud_share.CloudShareClient`
         """
         rules_client = self.microservice_client_factory.get_alert_rules_client()
         return rules_client.cloudshare
@@ -27,7 +27,7 @@ class AlertRulesModule(object):
         """A collection of methods for managing file type mismatch alert rules.
 
         Returns:
-            :class:`py42.clients.alertrules.file_type_mismatch.FileTypeMismatchClient`
+            :class:`py42.services.alertrules.file_type_mismatch.FileTypeMismatchClient`
         """
         rules_client = self.microservice_client_factory.get_alert_rules_client()
         return rules_client.filetypemismatch

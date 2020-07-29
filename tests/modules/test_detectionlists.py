@@ -2,7 +2,7 @@ import pytest
 
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.detection_list_user import DetectionListUserClient
-from py42.modules.detectionlists import DetectionListsModule
+from py42.clients.detectionlists import DetectionListsModule
 
 
 @pytest.fixture

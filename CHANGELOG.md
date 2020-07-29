@@ -27,6 +27,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - EventTimestamp
     - EventType
     - SharingTypeAdded
+    - RuleSource
+    - RuleType
+    - AlertState
+    - Severity
 
 ## 1.7.1 - 2020-07-24
 

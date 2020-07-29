@@ -17,6 +17,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.detectionlists.high_risk.get_page()`
     - `sdk.users.get_page()`
     - `sdk.devices.get_page()`
+    - `sdk.orgs.get_page()`
     - `sdk.legalhold.get_matters_page()`
     - `sdk.legalhold.get_custodians_page()`
     - `sdk.alerts.get_rules_page()`

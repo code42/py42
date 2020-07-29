@@ -39,7 +39,7 @@ class DeviceClient(BaseClient):
             include_counts (bool, optional): A flag to denote whether to include total, warning,
                 and critical counts. Defaults to True.
             page_num (int, optional): The page number to request. Defaults to 0.
-            page_size (int, optional): The number of items on the page. Defaults to
+            page_size (int, optional): The number of devices to return per page. Defaults to
                 `py42.settings.items_per_page`.
             q (str, optional): Searches results flexibly by incomplete GUID, hostname,
                 computer name, etc. Defaults to None.

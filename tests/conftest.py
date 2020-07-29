@@ -142,9 +142,9 @@ def unicode_query_filter():
 
 @pytest.fixture
 def mock_session(mocker):
-    from py42._connection import Py42Session
+    from py42._connection import Py42Connection
 
-    connection = mocker.MagicMock(spec=Py42Session)
+    connection = mocker.MagicMock(spec=Py42Connection)
     connection.headers = {}
 
     return connection

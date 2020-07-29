@@ -2,16 +2,12 @@ import pytest
 
 from py42._internal.client_factories import AuthorityClientFactory
 from py42._internal.client_factories import MicroserviceClientFactory
-from py42._internal.clients import alerts
-from py42._internal.clients import archive
-from py42._internal.clients import key_value_store
-from py42._internal.clients import securitydata
-from py42._internal.clients.storage import StorageClient
-from py42._internal.clients.storage import StorageClientFactory
+from py42.services.storage import StorageClient
+from py42.services.storage import StorageClientFactory
 from py42._internal.session_factory import SessionFactory
 from py42._connection_manager import ConnectionManager
 from py42._auth import StorageTokenProviderFactory
-from py42.services import administration
+from py42.services import administration, archive, alerts, securitydata, _key_value_store
 from py42.services import detectionlists
 from py42.services import devices
 from py42.services import file_event
@@ -58,7 +54,7 @@ def user_client(mocker):
 
 @pytest.fixture
 def key_value_store_client(mocker):
-    return mocker.MagicMock(spec=key_value_store.KeyValueStoreClient)
+    return mocker.MagicMock(spec=_key_value_store.KeyValueStoreClient)
 
 
 class TestAuthorityClientFactory(object):

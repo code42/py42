@@ -1,6 +1,6 @@
 import pytest
 
-from py42._connection import Py42Session
+from py42._connection import Py42Connection
 from py42._internal.initialization import SDKDependencies
 from py42._internal.session_factory import SessionFactory
 from py42.services import administration
@@ -23,7 +23,7 @@ TEST_PASSWORD = "test-password"
 class TestSDK(object):
     @pytest.fixture
     def py42_session(self, mocker, successful_response):
-        mock_session = mocker.MagicMock(spec=Py42Session)
+        mock_session = mocker.MagicMock(spec=Py42Connection)
         mock_session.get.return_value = successful_response
         return mock_session
 

@@ -4,7 +4,7 @@ import pytest
 from requests import Response
 
 import py42.settings
-from py42._internal.clients.archive import ArchiveClient
+from py42.services.archive import ArchiveClient
 from py42.response import Py42Response
 
 MOCK_GET_ORG_RESTORE_HISTORY_RESPONSE = """{"totalCount": 3000, "restoreEvents": [{"eventName": "foo", "eventUid": "123"}]}"""

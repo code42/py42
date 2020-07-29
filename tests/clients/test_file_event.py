@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from py42._connection import Py42Session
+from py42._connection import Py42Connection
 from py42.services.file_event import FileEventClient
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
@@ -12,7 +12,7 @@ RAW_UNICODE_QUERY = u"RAW UNICODE JSON QUERY 我能吞"
 class TestFileEventClient(object):
     @pytest.fixture
     def connection(self, mocker):
-        return mocker.MagicMock(spec=Py42Session)
+        return mocker.MagicMock(spec=Py42Connection)
 
     def test_search_calls_post_with_uri_and_query(
         self, connection, successful_response

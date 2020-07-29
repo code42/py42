@@ -1,9 +1,6 @@
 import json
 
 from py42.services import BaseClient
-from py42.services.alertrules.cloud_share import CloudShareClient
-from py42.services.alertrules.exfiltration import ExfiltrationClient
-from py42.services.alertrules.file_type_mismatch import FileTypeMismatchClient
 
 
 class AlertRulesClient(BaseClient):
@@ -68,3 +65,72 @@ class AlertRulesClient(BaseClient):
         data = {u"tenantId": tenant_id, u"ruleId": rule_id}
         uri = u"{}{}".format(self._api_prefix, u"remove-all-users")
         return self._connection.post(uri, data=json.dumps(data))
+
+
+class CloudShareClient(BaseClient):
+
+    _version = u"v1"
+    _resource = u"query-cloud-share-permissions-rule"
+    _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
+
+    def __init__(self, connection, tenant_id):
+        super(CloudShareClient, self).__init__(connection)
+        self._tenant_id = tenant_id
+
+    def get(self, rule_id):
+        """Fetch cloud share alert rule by rule id.
+
+        Args:
+            rule_id (str): Observer rule Id of a rule to be fetched.
+
+        Returns
+            :class:`py42.response.Py42Response`
+        """
+        data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
+        return self._connection.post(self._api_prefix, data=json.dumps(data))
+
+
+class ExfiltrationClient(BaseClient):
+
+    _version = u"v1"
+    _resource = u"query-endpoint-exfiltration-rule"
+    _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
+
+    def __init__(self, connection, tenant_id):
+        super(ExfiltrationClient, self).__init__(connection)
+        self._tenant_id = tenant_id
+
+    def get(self, rule_id):
+        """Fetch exfiltration alert rule by rule id.
+
+        Args:
+            rule_id (str): Observer rule Id of a rule to be fetched.
+
+        Returns
+            :class:`py42.response.Py42Response`
+        """
+        data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
+        return self._connection.post(self._api_prefix, data=json.dumps(data))
+
+
+class FileTypeMismatchClient(BaseClient):
+
+    _version = u"v1"
+    _resource = u"query-file-type-mismatch-rule"
+    _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
+
+    def __init__(self, connection, tenant_id):
+        super(FileTypeMismatchClient, self).__init__(connection)
+        self._tenant_id = tenant_id
+
+    def get(self, rule_id):
+        """Fetch File type mismatch alert rules by rule id.
+
+        Args:
+            rule_id (str): Observer rule Id of a rule to be fetched.
+
+        Returns
+            :class:`py42.response.Py42Response`
+        """
+        data = {"tenantId": self._tenant_id, "ruleIds": [rule_id]}
+        return self._connection.post(self._api_prefix, data=json.dumps(data))

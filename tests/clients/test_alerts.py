@@ -4,8 +4,8 @@ import pytest
 from requests import Response
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
-from py42._connection import Py42Session
-from py42._internal.clients.alerts import AlertClient
+from py42._connection import Py42Connection
+from py42.services.alerts import AlertClient
 from py42.response import Py42Response
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import AlertState
@@ -60,7 +60,7 @@ TEST_NON_PARSEABLE_ALERT_DETAIL_RESPONSE = """
 @pytest.fixture
 def mock_get_all_session(mocker, py42_response):
     py42_response.text = TEST_RESPONSE
-    connection = mocker.MagicMock(spec=Py42Session)
+    connection = mocker.MagicMock(spec=Py42Connection)
     connection.post.return_value = py42_response
     return connection
 

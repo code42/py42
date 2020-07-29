@@ -1,6 +1,6 @@
 import pytest
 
-from py42._internal.clients.pds import PreservationDataServiceClient
+from py42.services.pds import PreservationDataServiceClient
 
 
 class TestPreservationDataServiceClient(object):

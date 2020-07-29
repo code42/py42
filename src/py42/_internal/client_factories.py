@@ -2,15 +2,11 @@ import json
 
 from requests import HTTPError
 
-from py42._internal.clients import alerts
-from py42._internal.clients import archive
-from py42._internal.clients import key_value_store
-from py42._internal.clients import securitydata
-from py42._internal.clients.alertrules import AlertRulesClient
-from py42._internal.clients.detection_list_user import DetectionListUserClient
-from py42._internal.clients.pds import PreservationDataServiceClient
-from py42._internal.clients.storage.storagenode import StoragePreservationDataClient
-from py42.services import administration
+from py42.services._alertrules import AlertRulesClient
+from py42.services.detectionlists._profile import DetectionListUserClient
+from py42.services.pds import PreservationDataServiceClient
+from py42.services.storage.storagenode import StoragePreservationDataClient
+from py42.services import administration, archive, alerts, securitydata, _key_value_store
 from py42.services import devices
 from py42.services import legalhold
 from py42.services import orgs
@@ -162,7 +158,7 @@ class MicroserviceClientFactory(object):
                 self._root_session, u"simple-key-value-store"
             )
             connection = self._session_factory.create_anonymous_session(url)
-            self._key_value_store_client = key_value_store.KeyValueStoreClient(
+            self._key_value_store_client = _key_value_store.KeyValueStoreClient(
                 connection
             )
         return self._key_value_store_client.get_stored_value(key).text

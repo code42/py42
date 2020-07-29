@@ -2,7 +2,7 @@ import json
 
 import pytest
 
-from py42._internal.clients.detection_list_user import DetectionListUserClient
+from py42.services.detectionlists._profile import DetectionListUserClient
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42.services.users import UserClient
 

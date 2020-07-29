@@ -1,6 +1,6 @@
 import json
 
-from py42.services.alertrules.file_type_mismatch import FileTypeMismatchClient
+from py42.services._alertrules import FileTypeMismatchClient
 
 
 class TestFileTypeMisMatchClient(object):

@@ -1,5 +1,5 @@
 from py42._internal.archive_access import ArchiveAccessorManager
-from py42._internal.clients.archive import ArchiveClient
+from py42.services.archive import ArchiveClient
 from py42.clients.archive import ArchiveModule
 
 

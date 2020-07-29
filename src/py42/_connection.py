@@ -15,7 +15,7 @@ from py42.settings import debug
 from py42.util import format_dict
 
 
-class Py42Session(object):
+class Py42Connection(object):
     def __init__(self, connection, host_address, auth_handler=None):
         self._initialized = False
         self._needs_auth_renewal_check = False

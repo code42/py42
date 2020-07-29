@@ -1,7 +1,7 @@
 from py42._auth import AuthHandler, BasicAuthProvider, C42ApiV3TokenProvider, \
     C42ApiV1TokenProvider
 from py42._auth import HeaderModifier
-from py42._connection import Py42Session
+from py42._connection import Py42Connection
 
 
 class SessionFactory(object):
@@ -57,7 +57,7 @@ class SessionFactory(object):
             handler = self._auth_handler_factory.create_auth_handler(
                 token_provider, modifier
             )
-        return Py42Session(session_impl(), host_address, auth_handler=handler)
+        return Py42Connection(session_impl(), host_address, auth_handler=handler)
 
 
 class SessionModifierFactory(object):

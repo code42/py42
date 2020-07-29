@@ -1,7 +1,7 @@
 import pytest
 
 from py42._internal.client_factories import MicroserviceClientFactory
-from py42._internal.clients.alerts import AlertClient
+from py42.services.alerts import AlertClient
 from py42.clients.alertrules import AlertRulesModule
 from py42.clients.alerts import AlertsModule
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery

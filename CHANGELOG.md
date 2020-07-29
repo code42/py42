@@ -22,6 +22,15 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.legalhold.get_custodians_page()`
     - `sdk.alerts.get_rules_page()`
 
+- Added enum object `py42.modules.detectionlists.RiskTags` with constants:
+    - `FLIGHT_RISK`
+    - `HIGH_IMPACT_EMPLOYEE`
+    - `ELEVATED_ACCESS_PRIVILEGES`
+    - `PERFORMANCE_CONCERNS`
+    - `SUSPICIOUS_SYSTEM_ACTIVITY`
+    - `POOR_SECURITY_PRACTICES`
+    - `CONTRACT_EMPLOYEE`
+
 - Added below event filter support
     - TrustedActivity
     - RemoteActivity

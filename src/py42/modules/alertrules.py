@@ -76,7 +76,11 @@ class AlertRulesModule(object):
     def get_page(
         self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None
     ):
-        """Gets a page of alert rules.
+        """Gets a page of alert rules. Note that you can use page_size here the same
+        way as other methods that have a `page_size` parameter in py42. However, under
+        the hood, it subtracts one from the given page size in the implementation as
+        the Code42 alerts API expected the start page to be zero while the rest of the
+        Code42 APIs expect the start page to be one.
 
         sort_key (str, optional): Sort results based by field. Defaults to "CreatedAt".
         sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to  "DESC".

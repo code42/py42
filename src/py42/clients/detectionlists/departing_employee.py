@@ -73,43 +73,14 @@ class DepartingEmployeeClient(BaseClient):
         data = {u"userId": user_id, u"tenantId": tenant_id}
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_page(
-        self,
-        filter_type=None,
-        sort_key=u"CREATED_AT",
-        sort_direction=u"DESC",
-        page_num=1,
-        page_size=_PAGE_SIZE,
-    ):
-        """Gets a single page of Departing Employees.
-
-        Args:
-            filter_type (str, optional): Valid filter types. Defaults to None.
-            sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
-            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
-            page_num (str or int, optional): The page number to request. Defaults to 1.
-            page_size (str or int, optional): The items to have per page. Defaults to 100.
-
-        Returns:
-            :class:`py42.response.Py42Response`
-        """
-
-        return self._get_page(
-            tenant_id=self._user_context.get_current_tenant_id(),
-            filter_type=filter_type,
-            sort_key=sort_key,
-            sort_direction=sort_direction,
-            page_num=page_num,
-            page_size=page_size,
-        )
-
     def get_all(
         self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"
     ):
         """Gets all Departing Employees.
 
         Args:
-            filter_type (str, optional): Valid filter types. Defaults to None.
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                ``OPEN``, or ``LEAVING_TODAY``. Defaults to None.
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
 
@@ -118,30 +89,42 @@ class DepartingEmployeeClient(BaseClient):
             that each contain a page of departing employees.
         """
         return get_all_pages(
-            self._get_page,
+            self.get_page,
             u"items",
-            tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
             page_size=_PAGE_SIZE,
         )
 
-    def _get_page(
+    def get_page(
         self,
-        tenant_id=None,
         filter_type=None,
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
         page_num=None,
         page_size=None,
     ):
-        # This method exists separately from `get_page()` because
-        # of the tenant ID parameter - trying to avoid it and avoid duplicate calls
-        # to retrieve it.
+        """Gets a single page of Departing Employees.
+
+        Args:
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                ``OPEN``, or ``LEAVING_TODAY``. Defaults to None.
+            sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
+            page_num (str or int, optional): The page number to request. Defaults to 1.
+            page_size (str or int, optional): The number of departing employees to return
+                per page. Defaults to 100.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+
+        page_num = page_num or 1
+        page_size = page_size or _PAGE_SIZE
         uri = self._uri_prefix.format(u"search")
         data = {
-            u"tenantId": tenant_id,
+            u"tenantId": self._user_context.get_current_tenant_id(),
             u"pgSize": page_size,
             u"pgNum": page_num,
             u"filterType": filter_type,

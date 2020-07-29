@@ -94,41 +94,12 @@ class HighRiskEmployeeClient(BaseClient):
         uri = self._make_uri(u"/get")
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_page(
-        self,
-        filter_type=None,
-        sort_key=None,
-        sort_direction=None,
-        page_num=1,
-        page_size=_PAGE_SIZE,
-    ):
-        """Gets a single page of High Risk Employees.
-
-        Args:
-            filter_type (str, optional): Valid filter types. Defaults to None.
-            sort_key (str, optional): Sort results based by field. Defaults to None.
-            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
-            page_num (str or int, optional): The page number to request. Defaults to 1.
-            page_size (str or int, optional): The items to have per page. Defaults to 100.
-
-        Returns:
-            :class:`py42.response.Py42Response`
-        """
-
-        return self._get_page(
-            tenant_id=self._user_context.get_current_tenant_id(),
-            filter_type=filter_type,
-            sort_key=sort_key,
-            sort_direction=sort_direction,
-            page_num=page_num,
-            page_size=page_size,
-        )
-
     def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
         """Searches High Risk Employee list. Filter results by filter_type.
 
         Args:
-            filter_type (str, optional): Valid filter types. Defaults to "OPEN".
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                or ``OPEN``. Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to None.
 
@@ -138,29 +109,39 @@ class HighRiskEmployeeClient(BaseClient):
         """
 
         return get_all_pages(
-            self._get_page,
+            self.get_page,
             u"items",
-            tenant_id=self._user_context.get_current_tenant_id(),
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
             page_size=_PAGE_SIZE,
         )
 
-    def _get_page(
+    def get_page(
         self,
-        tenant_id,
         filter_type=None,
         sort_key=None,
         sort_direction=None,
         page_num=None,
         page_size=None,
     ):
-        # This method exists separately from `get_page()` because
-        # of the tenant ID parameter - trying to avoid it and avoid duplicate calls
-        # to retrieve it.
+        """Gets a single page of High Risk Employees.
+
+        Args:
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                or ``OPEN``. Defaults to "OPEN".
+            sort_key (str, optional): Sort results based by field. Defaults to None.
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
+            page_num (str or int, optional): The page number to request. Defaults to 1.
+            page_size (str or int, optional): The number of high risk employees to return
+                per page. Defaults to 100.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+
         data = {
-            u"tenantId": tenant_id,
+            u"tenantId": self._user_context.get_current_tenant_id(),
             u"filterType": filter_type,
             u"pgNum": page_num,
             u"pgSize": page_size,

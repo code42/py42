@@ -124,12 +124,13 @@ class LegalHoldClient(BaseClient):
             active (bool or None, optional): Find Matters by their active state. True returns
                 active Matters, False returns inactive Matters, None returns all Matters regardless
                 of state. Defaults to True.
-            name (str, optional): Find Matters with a 'name' that either equals or partially
-                contains this value. Defaults to None.
+            name (str, optional): Find Matters with a 'name' that either equals or contains
+                this value. Defaults to None.
             hold_ext_ref (str, optional): Find Matters having a matching external reference field.
                 Defaults to None.
-            page_num (int, optional): The page number to request. Defaults to 0.
-            page_size (int, optional): The size of the page. Defaults to `py42.settings.items_per_page`.
+            page_num (int, optional): The page number to request. Defaults to 1.
+            page_size (int, optional): The number of legal hold items to return per page.
+                Defaults to `py42.settings.items_per_page`.
 
         Returns:
             :class:`py42.response.Py42Response`:
@@ -160,8 +161,8 @@ class LegalHoldClient(BaseClient):
             active (bool or None, optional): Find Matters by their active state. True returns
                 active Matters, False returns inactive Matters, None returns all Matters regardless
                 of state. Defaults to True.
-            name (str, optional): Find Matters with a 'name' that either equals or partially
-                contains this value. Defaults to None.
+            name (str, optional): Find Matters with a 'name' that either equals or contains
+                this value. Defaults to None.
             hold_ext_ref (str, optional): Find Matters having a matching external reference field.
                 Defaults to None.
 

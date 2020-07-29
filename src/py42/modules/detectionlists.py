@@ -2,6 +2,9 @@ from py42.sdk.queries.query_filter import filter_attributes
 
 
 class RiskTags(object):
+    """The available RiskTags for :meth:`~py42.modules.detectionlists.DetectionListsModule.add_user_risk_tags()`
+    and :meth:`~py42.modules.detectionlists.DetectionListsModule.remove_user_risk_tags()`"""
+
     FLIGHT_RISK = u"FLIGHT_RISK"
     HIGH_IMPACT_EMPLOYEE = u"HIGH_IMPACT_EMPLOYEE"
     ELEVATED_ACCESS_PRIVILEGES = u"ELEVATED_ACCESS_PRIVILEGES"

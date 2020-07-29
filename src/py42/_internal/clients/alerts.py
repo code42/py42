@@ -1,5 +1,6 @@
 import json
 
+from py42 import settings
 from py42._compat import str
 from py42.services import BaseClient
 from py42.services.util import get_all_pages
@@ -18,34 +19,28 @@ class AlertClient(BaseClient):
         uri = self._uri_prefix.format(u"query-alerts")
         return self._connection.post(uri, data=query)
 
-    def get_details(self, alert_ids, tenant_id=None):
+    def get_details(self, alert_ids):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
-        tenant_id = (
-            tenant_id if tenant_id else self._user_context.get_current_tenant_id()
-        )
+        tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"query-details")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
         results = self._connection.post(uri, data=json.dumps(data))
         return _convert_observation_json_strings_to_objects(results)
 
-    def resolve(self, alert_ids, tenant_id=None, reason=None):
+    def resolve(self, alert_ids, reason=None):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
-        tenant_id = (
-            tenant_id if tenant_id else self._user_context.get_current_tenant_id()
-        )
-        reason = reason if reason else u""
+        tenant_id = self._user_context.get_current_tenant_id()
+        reason = reason or u""
         uri = self._uri_prefix.format(u"resolve-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
         return self._connection.post(uri, data=json.dumps(data))
 
-    def reopen(self, alert_ids, tenant_id=None, reason=None):
+    def reopen(self, alert_ids, reason=None):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
-        tenant_id = (
-            tenant_id if tenant_id else self._user_context.get_current_tenant_id()
-        )
+        tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"reopen-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
         return self._connection.post(uri, data=json.dumps(data))
@@ -59,21 +54,17 @@ class AlertClient(BaseClient):
         else:
             return str(query)
 
-    def _get_alert_rules(
-        self,
-        tenant_id,
-        groups=None,
-        sort_key=None,
-        sort_direction=None,
-        page_num=None,
-        page_size=None,
+    def get_rules_page(
+        self, page_num, groups=None, sort_key=None, sort_direction=None, page_size=None,
     ):
+        # This API expects the first page to start with zero.
+        page_num = page_num - 1
+        page_size = page_size or settings.items_per_page
         data = {
-            u"tenantId": tenant_id,
+            u"tenantId": self._user_context.get_current_tenant_id(),
             u"groups": groups or [],
             u"groupClause": u"AND",
-            u"pgNum": page_num
-            - 1,  # Minus 1, as this API expects first page to start with zero.
+            u"pgNum": page_num,
             u"pgSize": page_size,
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,
@@ -82,11 +73,9 @@ class AlertClient(BaseClient):
         return self._connection.post(uri, data=json.dumps(data))
 
     def get_all_rules(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
-        tenant_id = self._user_context.get_current_tenant_id()
         return get_all_pages(
-            self._get_alert_rules,
+            self.get_rules_page,
             u"ruleMetadata",
-            tenant_id=tenant_id,
             groups=None,
             sort_key=sort_key,
             sort_direction=sort_direction,
@@ -95,11 +84,9 @@ class AlertClient(BaseClient):
     def get_all_rules_by_name(
         self, rule_name, sort_key=u"CreatedAt", sort_direction=u"DESC"
     ):
-        tenant_id = self._user_context.get_current_tenant_id()
         return get_all_pages(
-            self._get_alert_rules,
+            self.get_rules_page,
             u"ruleMetadata",
-            tenant_id=tenant_id,
             groups=[json.loads(str(create_eq_filter_group(u"Name", rule_name)))],
             sort_key=sort_key,
             sort_direction=sort_direction,
@@ -108,11 +95,9 @@ class AlertClient(BaseClient):
     def get_rule_by_observer_id(
         self, observer_id, sort_key=u"CreatedAt", sort_direction=u"DESC"
     ):
-        tenant_id = self._user_context.get_current_tenant_id()
         results = get_all_pages(
-            self._get_alert_rules,
+            self.get_rules_page,
             u"ruleMetadata",
-            tenant_id=tenant_id,
             groups=[
                 json.loads(str(create_eq_filter_group(u"ObserverRuleId", observer_id)))
             ],

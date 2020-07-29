@@ -12,6 +12,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- Methods for getting individual response pages:
+    - `sdk.detectionlists.departing_employee.get_page()`
+    - `sdk.detectionlists.high_risk.get_page()`
+    - `sdk.users.get_page()`
+    - `sdk.devices.get_page()`
+    - `sdk.orgs.get_page()`
+    - `sdk.legalhold.get_matters_page()`
+    - `sdk.legalhold.get_custodians_page()`
+    - `sdk.alerts.get_rules_page()`
+
 - Added below event filter support
     - TrustedActivity
     - RemoteActivity
@@ -27,6 +37,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - EventTimestamp
     - EventType
     - SharingTypeAdded
+    - RuleSource
+    - RuleType
+    - AlertState
+    - Severity
 
 ## 1.7.1 - 2020-07-24
 

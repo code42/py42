@@ -454,3 +454,31 @@ def test_alert_state_not_in_str_gives_correct_json_representation():
     _filter = AlertState.not_in(items)
     expected = NOT_IN.format("state", *sorted(items))
     assert str(_filter) == expected
+
+
+def test_rule_source_choices_returns_set():
+    choices = RuleSource.choices()
+    valid_set = {"Alerting", "Departing Employee", "High Risk Employee"}
+    assert set(choices) == valid_set
+
+
+def test_rule_type_choices_returns_set():
+    choices = RuleType.choices()
+    valid_set = {
+        "FedEndpointExfiltration",
+        "FedCloudSharePermissions",
+        "FedFileTypeMismatch",
+    }
+    assert set(choices) == valid_set
+
+
+def test_severity_choices_returns_set():
+    choices = Severity.choices()
+    valid_set = {"HIGH", "MEDIUM", "LOW"}
+    assert set(choices) == valid_set
+
+
+def test_alert_state_choices_returns_set():
+    choices = AlertState.choices()
+    valid_set = {"OPEN", "RESOLVED"}
+    assert set(choices) == valid_set

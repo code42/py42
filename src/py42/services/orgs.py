@@ -1,5 +1,6 @@
 import json
 
+from py42 import settings
 from py42.services import BaseClient
 from py42.services.util import get_all_pages
 
@@ -63,7 +64,20 @@ class OrgClient(BaseClient):
         params = dict(idType=u"orgUid", **kwargs)
         return self._connection.get(uri, params=params)
 
-    def _get_page(self, page_num=None, page_size=None, **kwargs):
+    def get_page(self, page_num, page_size=None, **kwargs):
+        """Gets an individual page of organizations.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
+
+        Args:
+            page_num (int): The page number to request.
+            page_size (int, optional): The number of organizations to return per page.
+                Defaults to `py42.settings.items_per_page`.
+            kwargs (dict, optional): Additional advanced-user arguments. Defaults to None.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        page_size = page_size or settings.items_per_page
         uri = u"/api/Org"
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
         return self._connection.get(uri, params=params)
@@ -76,7 +90,7 @@ class OrgClient(BaseClient):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of organizations.
         """
-        return get_all_pages(self._get_page, u"orgs", **kwargs)
+        return get_all_pages(self.get_page, u"orgs", **kwargs)
 
     def block(self, org_id):
         """Blocks the organization with the given org ID as well as its child organizations. A

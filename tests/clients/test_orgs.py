@@ -37,8 +37,8 @@ class TestOrgClient(object):
     ):
         mock_session.get.return_value = successful_response
         client = OrgClient(mock_session)
-        client.get_by_id("ORG_ID")
-        uri = "{}/{}".format(COMPUTER_URI, "ORG_ID")
+        client.get_by_id(12345)
+        uri = "{}/{}".format(COMPUTER_URI, 12345)
         mock_session.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
@@ -55,3 +55,10 @@ class TestOrgClient(object):
             pass
         py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
+
+    def test_get_page_calls_get_with_expected_url_and_params(self, mock_session):
+        client = OrgClient(mock_session)
+        client.get_page(3, 25)
+        mock_session.get.assert_called_once_with(
+            "/api/Org", params={"pgNum": 3, "pgSize": 25}
+        )

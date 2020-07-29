@@ -119,11 +119,11 @@ class HighRiskEmployeeClient(BaseClient):
 
     def get_page(
         self,
-        filter_type=None,
+        filter_type=u"OPEN",
         sort_key=None,
         sort_direction=None,
-        page_num=None,
-        page_size=None,
+        page_num=1,
+        page_size=_PAGE_SIZE,
     ):
         """Gets a single page of High Risk Employees.
 

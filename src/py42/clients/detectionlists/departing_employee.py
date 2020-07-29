@@ -99,17 +99,17 @@ class DepartingEmployeeClient(BaseClient):
 
     def get_page(
         self,
-        filter_type=None,
+        filter_type=u"OPEN",
         sort_key=u"CREATED_AT",
         sort_direction=u"DESC",
-        page_num=None,
-        page_size=None,
+        page_num=1,
+        page_size=_PAGE_SIZE,
     ):
         """Gets a single page of Departing Employees.
 
         Args:
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                ``OPEN``, or ``LEAVING_TODAY``. Defaults to None.
+                ``OPEN``, or ``LEAVING_TODAY``. Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
             page_num (str or int, optional): The page number to request. Defaults to 1.
@@ -120,8 +120,6 @@ class DepartingEmployeeClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
 
-        page_num = page_num or 1
-        page_size = page_size or _PAGE_SIZE
         uri = self._uri_prefix.format(u"search")
         data = {
             u"tenantId": self._user_context.get_current_tenant_id(),

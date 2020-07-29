@@ -68,9 +68,11 @@ class OrgClient(BaseClient):
         """Gets an individual page of organizations.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
-        page_num (int, optional: The page number to request. Defaults to 1.
-        page_size (int, optional): The number of organizations to return per page.
-            Defaults to `py42.settings.items_per_page`.
+        Args:
+            page_num (int, optional: The page number to request. Defaults to 1.
+            page_size (int, optional): The number of organizations to return per page.
+                Defaults to `py42.settings.items_per_page`.
+            kwargs (dict, optional): Additional advanced-user arguments. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`

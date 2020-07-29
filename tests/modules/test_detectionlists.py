@@ -3,6 +3,7 @@ import pytest
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.modules.detectionlists import DetectionListsModule
+from py42.modules.detectionlists import RiskTags
 
 
 @pytest.fixture
@@ -16,6 +17,22 @@ def mock_detection_list_user_client(mocker):
 
 
 TEST_USER_ID = "12345"
+
+
+
+class TestRiskTags(object):
+    def test_choices_returns_expected_set(self):
+        choices = RiskTags.choices()
+        valid_set = {
+            "FLIGHT_RISK",
+            "HIGH_IMPACT_EMPLOYEE",
+            "ELEVATED_ACCESS_PRIVILEGES",
+            "PERFORMANCE_CONCERNS",
+            "SUSPICIOUS_SYSTEM_ACTIVITY",
+            "POOR_SECURITY_PRACTICES",
+            "CONTRACT_EMPLOYEE",
+        }
+        assert set(choices) == valid_set
 
 
 class TestDetectionListModule(object):

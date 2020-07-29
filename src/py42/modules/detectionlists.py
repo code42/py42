@@ -1,3 +1,20 @@
+from py42.sdk.queries.query_filter import filter_attributes
+
+
+class RiskTags(object):
+    FLIGHT_RISK = u"FLIGHT_RISK"
+    HIGH_IMPACT_EMPLOYEE = u"HIGH_IMPACT_EMPLOYEE"
+    ELEVATED_ACCESS_PRIVILEGES = u"ELEVATED_ACCESS_PRIVILEGES"
+    PERFORMANCE_CONCERNS = u"PERFORMANCE_CONCERNS"
+    SUSPICIOUS_SYSTEM_ACTIVITY = u"SUSPICIOUS_SYSTEM_ACTIVITY"
+    POOR_SECURITY_PRACTICES = u"POOR_SECURITY_PRACTICES"
+    CONTRACT_EMPLOYEE = u"CONTRACT_EMPLOYEE"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(RiskTags)
+
+
 class DetectionListsModule(object):
     def __init__(self, microservice_client_factory):
         self._microservice_client_factory = microservice_client_factory

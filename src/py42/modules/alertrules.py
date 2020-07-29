@@ -76,7 +76,7 @@ class AlertRulesModule(object):
     def get_page(
         self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None
     ):
-        """Gets a page of alerts.
+        """Gets a page of alert rules.
 
         sort_key (str, optional): Sort results based by field. Defaults to "CreatedAt".
         sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to  "DESC".

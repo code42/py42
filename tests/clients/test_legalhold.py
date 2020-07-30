@@ -1,8 +1,13 @@
+import json
+
 import pytest
+from requests import HTTPError
 from requests import Response
 
 import py42
 from py42.clients.legalhold import LegalHoldClient
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UserAlreadyAddedError
 from py42.response import Py42Response
 
 LEGAL_HOLD_URI = "/api/LegalHold"
@@ -143,3 +148,31 @@ class TestLegalHoldClient(object):
                 "pgSize": 200,
             },
         )
+
+    def test_add_to_matter_calls_post_with_expected_url_and_params(self, mock_session):
+        client = LegalHoldClient(mock_session)
+        client.add_to_matter("user", "legal")
+        expected_data = json.dumps({"legalHoldUid": "legal", "userUid": "user"})
+        mock_session.post.assert_called_once_with(
+            "/api/LegalHoldMembership", data=expected_data
+        )
+
+    def test_add_to_matter_when_post_raises_bad_request_error_indicating_user_already_added_raises_user_already_added(
+        self, mocker, mock_session
+    ):
+        def side_effect(*args, **kwargs):
+            base_err = mocker.MagicMock(spec=HTTPError)
+            base_err.response = mocker.MagicMock(spec=Response)
+            base_err.response.text = "USER_ALREADY_IN_HOLD"
+            raise Py42BadRequestError(base_err)
+
+        mock_session.post.side_effect = side_effect
+        mock_session.get.return_value = {"name": "NAME"}
+        client = LegalHoldClient(mock_session)
+        with pytest.raises(Py42UserAlreadyAddedError) as err:
+            client.add_to_matter("user", "legal")
+
+        expected = (
+            "User with ID user is already on the legal hold matter id=legal, name=NAME."
+        )
+        assert str(err.value) == expected

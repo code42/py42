@@ -63,6 +63,29 @@ class Py42StorageSessionInitializationError(Py42Error):
         super(Py42StorageSessionInitializationError, self).__init__(error_message)
 
 
+class Py42UserAlreadyAddedError(Py42Error):
+    def __init__(self, username, list_name):
+        msg = "{} is already on the {}.".format(username, list_name)
+        super().__init__(msg)
+
+
+class Py42UserNotInLegalHoldError(Py42Error):
+    def __init__(self, username, matter_id):
+        super().__init__(
+            "{} is not an active member of legal hold matter '{}'".format(
+                username, matter_id
+            )
+        )
+
+
+class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42Error):
+    def __init__(self, matter_id):
+        super().__init__(
+            "Matter with id={} either does not exist or your profile does not have permission to "
+            "view it.".format(matter_id)
+        )
+
+
 class Py42HTTPError(Py42Error):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 

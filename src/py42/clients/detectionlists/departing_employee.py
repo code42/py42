@@ -2,7 +2,9 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.detectionlists import _PAGE_SIZE
+from py42.clients.detectionlists import handle_user_already_added_error
 from py42.clients.util import get_all_pages
+from py42.exceptions import Py42BadRequestError
 
 
 class DepartingEmployeeClient(BaseClient):
@@ -33,14 +35,20 @@ class DepartingEmployeeClient(BaseClient):
         """
         if self._detection_list_user_client.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
-
             data = {
                 u"tenantId": tenant_id,
                 u"userId": user_id,
                 u"departureDate": departure_date,
             }
             uri = self._uri_prefix.format(u"add")
-            return self._session.post(uri, data=json.dumps(data))
+            try:
+                return self._session.post(uri, data=json.dumps(data))
+            except Py42BadRequestError as err:
+                user_text = u"User with ID {}".format(user_id)
+                handle_user_already_added_error(
+                    err, user_text, u"departing-employee list"
+                )
+                raise
 
     def get(self, user_id):
         """Gets departing employee data of a user.

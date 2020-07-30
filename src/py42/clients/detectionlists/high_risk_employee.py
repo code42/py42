@@ -2,7 +2,9 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.detectionlists import _PAGE_SIZE
+from py42.clients.detectionlists import handle_user_already_added_error
 from py42.clients.util import get_all_pages
+from py42.exceptions import Py42BadRequestError
 
 
 class HighRiskEmployeeClient(BaseClient):
@@ -42,7 +44,14 @@ class HighRiskEmployeeClient(BaseClient):
         """
         if self._detection_list_user_client.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
-            return self._add_high_risk_employee(tenant_id, user_id)
+            try:
+                return self._add_high_risk_employee(tenant_id, user_id)
+            except Py42BadRequestError as err:
+                user_text = u"User with ID {}".format(user_id)
+                handle_user_already_added_error(
+                    err, user_text, u"high-risk-employee list"
+                )
+                raise
 
     def set_alerts_enabled(self, enabled=True):
         """Enables alerts.

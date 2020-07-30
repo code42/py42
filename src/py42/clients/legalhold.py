@@ -3,7 +3,11 @@ import json
 from py42 import settings
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
+from py42.exceptions import Py42ForbiddenError
+from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
+from py42.exceptions import Py42UserAlreadyAddedError
 
 
 def _active_state_map(active):
@@ -101,10 +105,13 @@ class LegalHoldClient(BaseClient):
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the Matter.
+            :class:`py 42.response.Py42Response`: A response containing the Matter.
         """
         uri = u"/api/LegalHold/{}".format(legal_hold_uid)
-        return self._session.get(uri)
+        try:
+            return self._session.get(uri)
+        except (Py42BadRequestError, Py42ForbiddenError):
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(legal_hold_uid)
 
     def get_matters_page(
         self,
@@ -273,7 +280,17 @@ class LegalHoldClient(BaseClient):
         """
         uri = u"/api/LegalHoldMembership"
         data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
-        return self._session.post(uri, data=json.dumps(data))
+        try:
+            return self._session.post(uri, data=json.dumps(data))
+        except Py42BadRequestError as e:
+            if u"USER_ALREADY_IN_HOLD" in e.response.text:
+                matter = self.get_matter_by_uid(legal_hold_uid)
+                matter_id_and_name_text = u"legal hold matter id={}, name={}".format(
+                    legal_hold_uid, matter[u"name"]
+                )
+                user_text = u"User with ID {}".format(user_uid)
+                raise Py42UserAlreadyAddedError(user_text, matter_id_and_name_text)
+            raise
 
     def remove_from_matter(self, legal_hold_membership_uid):
         """Remove a user (Custodian) from a Legal Hold Matter.

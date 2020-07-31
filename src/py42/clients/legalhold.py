@@ -105,7 +105,7 @@ class LegalHoldClient(BaseClient):
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class:`py 42.response.Py42Response`: A response containing the Matter.
+            :class:`py42.response.Py42Response`: A response containing the Matter.
         """
         uri = u"/api/LegalHold/{}".format(legal_hold_uid)
         try:

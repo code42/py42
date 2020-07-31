@@ -64,24 +64,20 @@ class Py42StorageSessionInitializationError(Py42Error):
 
 
 class Py42UserAlreadyAddedError(Py42Error):
+    """An exception raised when the user is already added to group or list, such as the
+    Departing Employee list."""
+
     def __init__(self, user_id, list_name):
         msg = u"User with ID {} is already on the {}.".format(user_id, list_name)
         super().__init__(msg)
 
 
-class Py42UserNotInLegalHoldError(Py42Error):
-    def __init__(self, username, matter_id):
-        super().__init__(
-            u"{} is not an active member of legal hold matter '{}'".format(
-                username, matter_id
-            )
-        )
-
-
 class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42Error):
+    """An exception raised when a legal hold matter is inaccessible from your account."""
+
     def __init__(self, matter_id):
         super().__init__(
-            u"Matter with id={} either does not exist or your profile does not have permission to "
+            u"Matter with id={} either does not exist or your account does not have permission to "
             u"view it.".format(matter_id)
         )
 

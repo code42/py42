@@ -91,7 +91,7 @@ class TestLegalHoldClient(object):
         with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
             client.get_matter_by_uid("matter")
 
-        expected = "Matter with id=matter either does not exist or your profile does not have permission to view it."
+        expected = "Matter with id=matter either does not exist or your account does not have permission to view it."
         assert str(err.value) == expected
 
     def test_get_matter_by_uid_when_bad_request_raises_legal_hold_not_found_or_permissions_denied(
@@ -107,7 +107,7 @@ class TestLegalHoldClient(object):
         with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
             client.get_matter_by_uid("matter")
 
-        expected = "Matter with id=matter either does not exist or your profile does not have permission to view it."
+        expected = "Matter with id=matter either does not exist or your account does not have permission to view it."
         assert str(err.value) == expected
 
     def test_get_all_matters_calls_get_expected_number_of_times(

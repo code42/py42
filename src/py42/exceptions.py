@@ -77,8 +77,9 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42Error):
 
     def __init__(self, matter_id):
         super().__init__(
-            u"Matter with id={} either does not exist or your account does not have permission to "
-            u"view it.".format(matter_id)
+            u"Matter with id={} either does not exist or your account does not have permission to view it.".format(
+                matter_id
+            )
         )
 
 

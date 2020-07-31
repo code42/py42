@@ -11,6 +11,32 @@ from py42.modules.alertrules import AlertRulesModule
 from py42.response import Py42Response
 
 
+TEST_RULE_ID = "rule-id"
+
+
+TEST_SYSTEM_RULE_RESPONSE = {
+    "ruleMetadata": [
+        {
+            "observerRuleId": TEST_RULE_ID,
+            "type": "FED_FILE_TYPE_MISMATCH",
+            "isSystem": True,
+            "ruleSource": "NOTVALID",
+        }
+    ]
+}
+
+TEST_USER_RULE_RESPONSE = {
+    "ruleMetadata": [
+        {
+            "observerRuleId": TEST_RULE_ID,
+            "type": "FED_FILE_TYPE_MISMATCH",
+            "isSystem": False,
+            "ruleSource": "Testing",
+        }
+    ]
+}
+
+
 @pytest.fixture
 def mock_microservice_client_factory(mocker):
     return mocker.MagicMock(spec=MicroserviceClientFactory)
@@ -29,7 +55,7 @@ def mock_alerts_client(mocker):
 @pytest.fixture
 def mock_alerts_client_system_rule(mocker, mock_alerts_client):
     response = mocker.MagicMock(spec=Py42Response)
-    response.text = """{ruleMetadata: [{"isSystem": "true", "observerRuleId": "OBS_ID", "ruleSource": "RULE_SRC"}]}"""
+    response.text = TEST_SYSTEM_RULE_RESPONSE
     mock_alerts_client.get_rule_by_observer_id.return_value = response
     return mock_alerts_client
 

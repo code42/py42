@@ -58,6 +58,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - AlertState
     - Severity
 
+### Changed
+
+- `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when user already present on list.
+- `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when user already present on list.
+- `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when use already on matter.
+- `py42.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when matter unavailable.
+- `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError`
+- `py42.alerts.rules.add_user()` now raises `Py42InvalidRuleTypeError` when trying to add a user to a system rule.
+- `py42.alerts.rules.remove_user()` now raises `Py42InvalidRuleTypeError` when trying to remove a user from a system rule.
+
 ## 1.7.1 - 2020-07-24
 
 ### Changed
@@ -74,14 +84,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.detectionlists.add_user_cloud_alias()`
     - `sdk.detectionlists.remove_user_cloud_alias()`
 - `sdk.archive.get_all_org_cold_storage_archives()` now actually uses parameters `include_child_orgs`, `sort_key` and `sort_dir`.
-
-### Changed
-
-- `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when user already present on list.
-- `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when user already present on list.
-- `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when use already on matter.
-- `py42.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when matter unavailable.
-- `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError`
 
 ## 1.7.0 - 2020-07-21
 

@@ -84,15 +84,15 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42Error):
 
 
 class Py42UserDoesNotExistError(Py42Error):
-    """An error to represent a username that is not in our system. The CLI shows this error when
-    the user tries to add or remove a user that does not exist. This error is not shown during
-    bulk add or remove."""
+    """An exception raised when a username is not in our system."""
 
     def __init__(self, username):
         super().__init__(u"User '{}' does not exist.".format(username))
 
 
 class Py42InvalidRuleTypeError(Py42Error):
+    """An exception raised when trying to add or remove users to a system rule."""
+
     def __init__(self, rule_id, source):
         msg = u"Only alert rules with a source of 'Alerting' can be targeted by this command. "
         msg += u"Rule {0} has a source of '{1}'."

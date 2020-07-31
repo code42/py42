@@ -25,17 +25,6 @@ TEST_SYSTEM_RULE_RESPONSE = {
     ]
 }
 
-TEST_USER_RULE_RESPONSE = {
-    "ruleMetadata": [
-        {
-            "observerRuleId": TEST_RULE_ID,
-            "type": "FED_FILE_TYPE_MISMATCH",
-            "isSystem": False,
-            "ruleSource": "Testing",
-        }
-    ]
-}
-
 
 @pytest.fixture
 def mock_microservice_client_factory(mocker):

@@ -93,7 +93,7 @@ class UserClient(BaseClient):
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
         users = self._session.get(uri, params=params)
-        if not users["users"]:
+        if not users[u"users"]:
             raise Py42UserDoesNotExistError(username)
         return users
 

@@ -44,9 +44,8 @@ class DepartingEmployeeClient(BaseClient):
             try:
                 return self._session.post(uri, data=json.dumps(data))
             except Py42BadRequestError as err:
-                user_text = u"User with ID {}".format(user_id)
                 handle_user_already_added_error(
-                    err, user_text, u"departing-employee list"
+                    err, user_id, u"departing-employee list"
                 )
                 raise
 

@@ -47,9 +47,8 @@ class HighRiskEmployeeClient(BaseClient):
             try:
                 return self._add_high_risk_employee(tenant_id, user_id)
             except Py42BadRequestError as err:
-                user_text = u"User with ID {}".format(user_id)
                 handle_user_already_added_error(
-                    err, user_text, u"high-risk-employee list"
+                    err, user_id, u"high-risk-employee list"
                 )
                 raise
 

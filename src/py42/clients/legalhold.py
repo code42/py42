@@ -288,8 +288,7 @@ class LegalHoldClient(BaseClient):
                 matter_id_and_name_text = u"legal hold matter id={}, name={}".format(
                     legal_hold_uid, matter[u"name"]
                 )
-                user_text = u"User with ID {}".format(user_uid)
-                raise Py42UserAlreadyAddedError(user_text, matter_id_and_name_text)
+                raise Py42UserAlreadyAddedError(user_uid, matter_id_and_name_text)
             raise
 
     def remove_from_matter(self, legal_hold_membership_uid):

@@ -64,8 +64,8 @@ class Py42StorageSessionInitializationError(Py42Error):
 
 
 class Py42UserAlreadyAddedError(Py42Error):
-    def __init__(self, username, list_name):
-        msg = u"{} is already on the {}.".format(username, list_name)
+    def __init__(self, user_id, list_name):
+        msg = u"User with ID {} is already on the {}.".format(user_id, list_name)
         super().__init__(msg)
 
 

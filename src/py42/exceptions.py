@@ -95,6 +95,13 @@ class Py42UserDoesNotExistError(Py42Error):
         super().__init__(u"User '{}' does not exist.".format(username))
 
 
+class Py42InvalidRuleTypeError(Py42Error):
+    def __init__(self, rule_id, source):
+        msg = u"Only alert rules with a source of 'Alerting' can be targeted by this command. "
+        msg += u"Rule {0} has a source of '{1}'."
+        super().__init__(msg.format(rule_id, source))
+
+
 class Py42HTTPError(Py42Error):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 

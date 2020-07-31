@@ -1,9 +1,14 @@
 import pytest
+from requests import HTTPError
+from requests import Response
 
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.alertrules import AlertRulesClient
 from py42._internal.clients.alerts import AlertClient
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidRuleTypeError
 from py42.modules.alertrules import AlertRulesModule
+from py42.response import Py42Response
 
 
 @pytest.fixture
@@ -21,6 +26,14 @@ def mock_alerts_client(mocker):
     return mocker.MagicMock(spec=AlertClient)
 
 
+@pytest.fixture
+def mock_alerts_client_system_rule(mocker, mock_alerts_client):
+    response = mocker.MagicMock(spec=Py42Response)
+    response.text = """{ruleMetadata: [{"isSystem": "true", "observerRuleId": "OBS_ID", "ruleSource": "RULE_SRC"}]}"""
+    mock_alerts_client.get_rule_by_observer_id.return_value = response
+    return mock_alerts_client
+
+
 class TestAlertRulesModules(object):
 
     _rule_id = u"test-rule-id"
@@ -36,6 +49,34 @@ class TestAlertRulesModules(object):
         alert_rules_module.add_user(self._rule_id, self._rule_id)
         mock_alert_rules_client.add_user.assert_called_once_with(
             self._rule_id, self._rule_id
+        )
+
+    def test_alert_rules_modules_raises_invalid_rule_type_error_when_adding_to_system_rule(
+        self,
+        mocker,
+        mock_microservice_client_factory,
+        mock_alert_rules_client,
+        mock_alerts_client_system_rule,
+    ):
+        def add(*args, **kwargs):
+            base_err = mocker.MagicMock(spec=HTTPError)
+            base_err.response = mocker.MagicMock(spec=Response)
+            raise Py42InternalServerError(base_err)
+
+        mock_alert_rules_client.add_user.side_effect = add
+        mock_microservice_client_factory.get_alert_rules_client.return_value = (
+            mock_alert_rules_client
+        )
+        mock_microservice_client_factory.get_alerts_client.return_value = (
+            mock_alerts_client_system_rule
+        )
+        alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
+        with pytest.raises(Py42InvalidRuleTypeError) as err:
+            alert_rules_module.add_user(self._rule_id, self._rule_id)
+
+        assert (
+            "Only alert rules with a source of 'Alerting' can be targeted by this command."
+            in str(err.value)
         )
 
     def test_alert_rules_module_calls_remove_user_with_expected_value(

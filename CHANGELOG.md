@@ -12,6 +12,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- Exception classes (`py42.execeptions`)
+    - `Py42UserAlreadyAddedError`
+    - `Py42UserNotInLegalHoldError`
+    - `Py42LegalHoldNotFoundOrPermissionDeniedError`
+
 - Methods for getting individual response pages:
     - `sdk.detectionlists.departing_employee.get_page()`
     - `sdk.detectionlists.high_risk.get_page()`
@@ -67,6 +72,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.detectionlists.add_user_cloud_alias()`
     - `sdk.detectionlists.remove_user_cloud_alias()`
 - `sdk.archive.get_all_org_cold_storage_archives()` now actually uses parameters `include_child_orgs`, `sort_key` and `sort_dir`.
+
+### Changed
+
+- `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when user already present on list.
+- `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when user already present on list.
+- `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when use already on matter.
+- `py42.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when matter unavailable.
 
 ## 1.7.0 - 2020-07-21
 

@@ -129,7 +129,6 @@ class UserClient(BaseClient):
             org_uid (str, optional): Limits users to only those in the organization with this org
                 UID. Defaults to None.
             role_id (int, optional): Limits users to only those with a given role ID. Defaults to
-            role_id (int, optional): Limits users to only those with a given role ID. Defaults to
                 None.
             page_size (int, optional): The number of items on the page. Defaults to `py42.settings.items_per_page`.
             q (str, optional): A generic query filter that searches across name, username, and

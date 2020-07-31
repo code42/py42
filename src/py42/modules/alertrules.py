@@ -155,7 +155,7 @@ class AlertRulesModule(object):
 
 def _check_if_system_rule(rules):
     """You cannot add or remove users from system rules this way."""
-    if rules and rules[0]["isSystem"]:
+    if rules and rules[0][u"isSystem"]:
         raise Py42InvalidRuleTypeError(
-            rules[0]["observerRuleId"], rules[0]["ruleSource"]
+            rules[0][u"observerRuleId"], rules[0][u"ruleSource"]
         )

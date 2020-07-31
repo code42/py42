@@ -65,14 +65,14 @@ class Py42StorageSessionInitializationError(Py42Error):
 
 class Py42UserAlreadyAddedError(Py42Error):
     def __init__(self, username, list_name):
-        msg = "{} is already on the {}.".format(username, list_name)
+        msg = u"{} is already on the {}.".format(username, list_name)
         super().__init__(msg)
 
 
 class Py42UserNotInLegalHoldError(Py42Error):
     def __init__(self, username, matter_id):
         super().__init__(
-            "{} is not an active member of legal hold matter '{}'".format(
+            u"{} is not an active member of legal hold matter '{}'".format(
                 username, matter_id
             )
         )
@@ -81,9 +81,18 @@ class Py42UserNotInLegalHoldError(Py42Error):
 class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42Error):
     def __init__(self, matter_id):
         super().__init__(
-            "Matter with id={} either does not exist or your profile does not have permission to "
-            "view it.".format(matter_id)
+            u"Matter with id={} either does not exist or your profile does not have permission to "
+            u"view it.".format(matter_id)
         )
+
+
+class Py42UserDoesNotExistError(Py42Error):
+    """An error to represent a username that is not in our system. The CLI shows this error when
+    the user tries to add or remove a user that does not exist. This error is not shown during
+    bulk add or remove."""
+
+    def __init__(self, username):
+        super().__init__(u"User '{}' does not exist.".format(username))
 
 
 class Py42HTTPError(Py42Error):

@@ -4,6 +4,7 @@ from py42 import settings
 from py42._internal.compat import quote
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.exceptions import Py42UserDoesNotExistError
 
 
 class UserClient(BaseClient):
@@ -79,7 +80,8 @@ class UserClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_by_username(self, username, **kwargs):
-        """Gets the user with the given username.
+        """Gets the user with the given username. Raises :class:`~py42.exceptions.Py42UserDoesNotExistError`
+        when no user is found.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
@@ -90,7 +92,10 @@ class UserClient(BaseClient):
         """
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
-        return self._session.get(uri, params=params)
+        users = self._session.get(uri, params=params)
+        if not users["users"]:
+            raise Py42UserDoesNotExistError(username)
+        return users
 
     def get_current(self, **kwargs):
         """Gets the currently signed in user.
@@ -123,6 +128,7 @@ class UserClient(BaseClient):
             email (str, optional): Limits users to only those with this email. Defaults to None.
             org_uid (str, optional): Limits users to only those in the organization with this org
                 UID. Defaults to None.
+            role_id (int, optional): Limits users to only those with a given role ID. Defaults to
             role_id (int, optional): Limits users to only those with a given role ID. Defaults to
                 None.
             page_size (int, optional): The number of items on the page. Defaults to `py42.settings.items_per_page`.

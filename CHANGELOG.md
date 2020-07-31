@@ -16,6 +16,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42UserAlreadyAddedError`
     - `Py42UserNotInLegalHoldError`
     - `Py42LegalHoldNotFoundOrPermissionDeniedError`
+    - `Py42UserDoesNotExistError`
 
 - Methods for getting individual response pages:
     - `sdk.detectionlists.departing_employee.get_page()`
@@ -79,6 +80,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when user already present on list.
 - `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when use already on matter.
 - `py42.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when matter unavailable.
+- `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError`
 
 ## 1.7.0 - 2020-07-21
 

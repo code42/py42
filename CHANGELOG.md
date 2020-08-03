@@ -10,7 +10,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
-- Methods for calling the agent-state APIs"
+- Methods for calling the agent-state APIs:
     - `sdk.devices.get_agent_state()`
     - `sdk.devices.get_agent_full_disk_access_state()`
     - `sdk.orgs.get_agent_state()`

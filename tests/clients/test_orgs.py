@@ -68,7 +68,7 @@ class TestOrgClient(object):
     ):
         mock_session.get.return_value = successful_response
         client = OrgClient(mock_session)
-        client.get_agent_state("ORG_ID", propertyName="KEY")
+        client.get_agent_state("ORG_ID", property_name="KEY")
         expected_params = {"orgId": "ORG_ID", "propertyName": "KEY"}
         uri = u"/api/v14/agent-state/view-by-organization-id"
         mock_session.get.assert_called_once_with(uri, params=expected_params)
@@ -80,5 +80,4 @@ class TestOrgClient(object):
         client = OrgClient(mock_session)
         client.get_agent_state = mocker.Mock()
         client.get_agent_full_disk_access_states("ORG_ID")
-        expected_propertyName = "fullDiskAccess"
-        client.get_agent_state.assert_called_once_with("ORG_ID", expected_propertyName)
+        client.get_agent_state.assert_called_once_with("ORG_ID", "fullDiskAccess")

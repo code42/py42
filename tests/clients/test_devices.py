@@ -119,7 +119,7 @@ class TestDeviceClient(object):
     ):
         mock_session.get.return_value = successful_response
         client = DeviceClient(mock_session)
-        client.get_agent_state("DEVICE_ID", propertyName="KEY")
+        client.get_agent_state("DEVICE_ID", property_name="KEY")
         expected_params = {"deviceGuid": "DEVICE_ID", "propertyName": "KEY"}
         uri = u"/api/v14/agent-state/view-by-device-guid"
         mock_session.get.assert_called_once_with(uri, params=expected_params)
@@ -131,7 +131,4 @@ class TestDeviceClient(object):
         client = DeviceClient(mock_session)
         client.get_agent_state = mocker.Mock()
         client.get_agent_full_disk_access_state("DEVICE_ID")
-        expected_propertyName = "fullDiskAccess"
-        client.get_agent_state.assert_called_once_with(
-            "DEVICE_ID", expected_propertyName
-        )
+        client.get_agent_state.assert_called_once_with("DEVICE_ID", "fullDiskAccess")

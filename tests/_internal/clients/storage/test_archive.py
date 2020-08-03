@@ -1,8 +1,8 @@
 import pytest
+from services._connection import Connection
 
-from py42._connection import Py42Connection
-from py42.services.storage import StorageArchiveClient
 from py42.response import Py42Response
+from py42.services.storage import StorageArchiveClient
 
 DATA_KEYWORD = "data"
 JSON_KEYWORD = "json"
@@ -55,7 +55,7 @@ WEB_RESTORE_JOB_ID = "46289723"
 
 @pytest.fixture
 def connection(mocker, py42_response):
-    py_session = mocker.MagicMock(spec=Py42Connection)
+    py_session = mocker.MagicMock(spec=Connection)
     py42_response.text = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
 
     py_session.post.return_value = py42_response

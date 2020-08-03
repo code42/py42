@@ -2,8 +2,8 @@ import pytest
 from requests import Response
 
 import py42
-from py42.services.legalhold import LegalHoldClient
 from py42.response import Py42Response
+from py42.services.legalhold import LegalHoldClient
 
 LEGAL_HOLD_URI = "/api/LegalHold"
 

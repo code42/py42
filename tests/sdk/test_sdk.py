@@ -1,18 +1,18 @@
 import pytest
+from services._connection import Connection
 
-from py42._connection import Py42Connection
 from py42._internal.initialization import SDKDependencies
 from py42._internal.session_factory import SessionFactory
-from py42.services import administration
-from py42.services import devices
-from py42.services import legalhold
-from py42.services import orgs
-from py42.services import users
 from py42.clients import alerts
 from py42.clients import archive as arch_mod
 from py42.clients import detectionlists
 from py42.clients import securitydata as sec_mod
 from py42.sdk import SDKClient
+from py42.services import administration
+from py42.services import devices
+from py42.services import legalhold
+from py42.services import orgs
+from py42.services import users
 from py42.usercontext import UserContext
 
 HOST_ADDRESS = "https://example.com"
@@ -23,7 +23,7 @@ TEST_PASSWORD = "test-password"
 class TestSDK(object):
     @pytest.fixture
     def py42_session(self, mocker, successful_response):
-        mock_session = mocker.MagicMock(spec=Py42Connection)
+        mock_session = mocker.MagicMock(spec=Connection)
         mock_session.get.return_value = successful_response
         return mock_session
 

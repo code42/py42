@@ -1,6 +1,6 @@
 import json
 
-from py42.services._alertrules import CloudShareClient
+from py42.services.alertrules import CloudShareClient
 
 
 class TestCloudShareClient(object):

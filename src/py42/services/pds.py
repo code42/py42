@@ -1,3 +1,5 @@
+import json
+
 from py42.services import BaseClient
 
 
@@ -21,4 +23,4 @@ class PreservationDataServiceClient(BaseClient):
             u"devicePaths": [{u"deviceGuid": device_id, u"paths": paths}],
         }
         uri = u"/api/v1/FindAvailableVersion"
-        return self._connection.post(uri, json=data)
+        return self._connection.post(uri, data=json.dumps(data))

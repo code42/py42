@@ -7,8 +7,7 @@ from py42.exceptions import Py42StorageSessionInitializationError
 
 
 class ConnectionManager(object):
-    def __init__(self, session_factory, session_cache=None):
-        self._session_factory = session_factory
+    def __init__(self, session_cache=None):
         self._session_cache = session_cache or {}
         self._list_update_lock = Lock()
 

@@ -1,9 +1,9 @@
 import pytest
 
 from py42._internal.session_factory import SessionFactory
-from py42._connection_manager import ConnectionManager
-from py42._auth import C42APITmpAuthProvider
 from py42.exceptions import Py42StorageSessionInitializationError
+from py42.services._auth import StorageTmpAuth
+from py42.services._connection_manager import ConnectionManager
 
 
 def get_session_managers(session_factory):
@@ -17,7 +17,7 @@ def session_factory(mocker):
 
 @pytest.fixture
 def token_provider(mocker):
-    return mocker.MagicMock(spec=C42APITmpAuthProvider)
+    return mocker.MagicMock(spec=StorageTmpAuth)
 
 
 class TestStorageSessionManager(object):

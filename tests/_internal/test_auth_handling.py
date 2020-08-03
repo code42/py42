@@ -1,9 +1,9 @@
 import pytest
 from requests import Response
 
-from py42._auth import AuthHandler
-from py42._auth import HeaderModifier
-from py42._auth import TokenProvider
+from py42.services._auth import AuthHandler
+from py42.services._auth import HeaderModifier
+from py42.services._auth import TokenProvider
 
 ORIGINAL_VALUE = "test-original-value"
 UPDATED_VALUE = "test-updated-value"

@@ -6,9 +6,9 @@ from requests import HTTPError
 from requests import Response
 from requests import Session
 
-from py42._auth import AuthHandler
 from py42.response import Py42Response
 from py42.sdk.queries.query_filter import QueryFilter
+from py42.services._auth import AuthHandler
 from py42.usercontext import UserContext
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"
@@ -142,9 +142,9 @@ def unicode_query_filter():
 
 @pytest.fixture
 def mock_session(mocker):
-    from py42._connection import Py42Connection
+    from services._connection import Connection
 
-    connection = mocker.MagicMock(spec=Py42Connection)
+    connection = mocker.MagicMock(spec=Connection)
     connection.headers = {}
 
     return connection

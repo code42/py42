@@ -1,19 +1,23 @@
 import pytest
 
-from py42._internal.client_factories import AuthorityClientFactory
+from py42._internal.client_factories import AuthorityClient
 from py42._internal.client_factories import MicroserviceClientFactory
-from py42.services.storage import StorageClient
-from py42.services.storage import StorageClientFactory
 from py42._internal.session_factory import SessionFactory
-from py42._connection_manager import ConnectionManager
-from py42._auth import StorageTokenProviderFactory
-from py42.services import administration, archive, alerts, securitydata, _key_value_store
+from py42.services import _key_value_store
+from py42.services import administration
+from py42.services import alerts
+from py42.services import archive
 from py42.services import detectionlists
 from py42.services import devices
 from py42.services import file_event
 from py42.services import legalhold
 from py42.services import orgs
+from py42.services import securitydata
 from py42.services import users
+from py42.services._auth import StorageTokenProviderFactory
+from py42.services._connection_manager import ConnectionManager
+from py42.services.storage import StorageClient
+from py42.services.storage import StorageClientFactory
 from py42.services.users import UserClient
 from py42.usercontext import UserContext
 
@@ -59,37 +63,37 @@ def key_value_store_client(mocker):
 
 class TestAuthorityClientFactory(object):
     def test_create_adminstration_client(self, mock_session):
-        factory = AuthorityClientFactory(mock_session)
+        factory = AuthorityClient(mock_session)
         client = factory.create_administration_client()
         assert type(client) == administration.AdministrationClient
 
     def test_create_archive_client(self, mock_session):
-        factory = AuthorityClientFactory(mock_session)
+        factory = AuthorityClient(mock_session)
         client = factory.create_archive_client()
         assert type(client) == archive.ArchiveClient
 
     def test_create_device_client(self, mock_session):
-        factory = AuthorityClientFactory(mock_session)
+        factory = AuthorityClient(mock_session)
         client = factory.create_device_client()
         assert type(client) == devices.DeviceClient
 
     def test_create_legal_hold_client(self, mock_session):
-        factory = AuthorityClientFactory(mock_session)
+        factory = AuthorityClient(mock_session)
         client = factory.create_legal_hold_client()
         assert type(client) == legalhold.LegalHoldClient
 
     def test_create_org_client(self, mock_session):
-        factory = AuthorityClientFactory(mock_session)
+        factory = AuthorityClient(mock_session)
         client = factory.create_org_client()
         assert type(client) == orgs.OrgClient
 
     def test_create_security_client(self, mock_session):
-        factory = AuthorityClientFactory(mock_session)
+        factory = AuthorityClient(mock_session)
         client = factory.create_security_client()
         assert type(client) == securitydata.SecurityClient
 
     def test_create_user_client(self, mock_session):
-        factory = AuthorityClientFactory(mock_session)
+        factory = AuthorityClient(mock_session)
         client = factory.create_user_client()
         assert type(client) == users.UserClient
 

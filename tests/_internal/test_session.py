@@ -1,8 +1,8 @@
 from json import dumps
 
 import pytest
+from services._connection import Connection
 
-from py42._connection import Py42Connection
 from py42.exceptions import Py42InternalServerError
 
 default_kwargs = {
@@ -35,35 +35,35 @@ TEST_RESPONSE_CONTENT = '{"key": "test_response_content"}'
 
 class TestPy42Session(object):
     def test_session_get_calls_requests_with_get(self, success_requests_session):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.get(TEST_URL)
         success_requests_session.request.assert_called_once_with(
             "GET", TEST_URL, **default_kwargs
         )
 
     def test_session_put_calls_requests_with_put(self, success_requests_session):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.put(TEST_URL)
         success_requests_session.request.assert_called_once_with(
             "PUT", TEST_URL, **default_kwargs
         )
 
     def test_session_post_calls_requests_with_post(self, success_requests_session):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.post(TEST_URL)
         success_requests_session.request.assert_called_once_with(
             "POST", TEST_URL, **default_kwargs
         )
 
     def test_session_patch_calls_requests_with_patch(self, success_requests_session):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.patch(TEST_URL)
         success_requests_session.request.assert_called_once_with(
             "PATCH", TEST_URL, **default_kwargs
         )
 
     def test_session_delete_calls_requests_with_delete(self, success_requests_session):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.delete(TEST_URL)
         success_requests_session.request.assert_called_once_with(
             "DELETE", TEST_URL, **default_kwargs
@@ -72,14 +72,14 @@ class TestPy42Session(object):
     def test_session_options_calls_requests_with_options(
         self, success_requests_session
     ):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.options(TEST_URL)
         success_requests_session.request.assert_called_once_with(
             "OPTIONS", TEST_URL, **default_kwargs
         )
 
     def test_session_head_calls_requests_with_head(self, success_requests_session):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.head(TEST_URL)
         success_requests_session.request.assert_called_once_with(
             "HEAD", TEST_URL, **default_kwargs
@@ -88,7 +88,7 @@ class TestPy42Session(object):
     def test_session_request_calls_requests_with_timeout_param(
         self, success_requests_session
     ):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.request("GET", URL)
 
         assert success_requests_session.request.call_args[1]["timeout"] == 60
@@ -96,7 +96,7 @@ class TestPy42Session(object):
     def test_session_post_with_json_calls_request_with_data_param_with_string_encoded_json(
         self, success_requests_session
     ):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.post(URL, json=JSON_VALUE)
         assert success_requests_session.request.call_args[KWARGS_INDEX][
             DATA_KEY
@@ -105,7 +105,7 @@ class TestPy42Session(object):
     def test_session_post_with_data_and_json_params_overwrites_data_with_json(
         self, success_requests_session
     ):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.post(URL, data=DATA_VALUE, json=JSON_VALUE)
         assert success_requests_session.request.call_args[KWARGS_INDEX][
             DATA_KEY
@@ -114,7 +114,7 @@ class TestPy42Session(object):
     def test_session_post_with_data_and_json_params_does_not_pass_json_param_to_request(
         self, success_requests_session
     ):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         connection.post(URL, data=DATA_VALUE, json=JSON_VALUE)
         assert (
             success_requests_session.request.call_args[KWARGS_INDEX].get(JSON_KEY)
@@ -122,14 +122,14 @@ class TestPy42Session(object):
         )
 
     def test_session_request_returns_utf8_response(self, success_requests_session):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         response = connection.request("GET", URL, data=DATA_VALUE, json=JSON_VALUE)
         assert response.encoding == "utf-8"
 
     def test_session_request_when_streamed_doesnt_not_set_encoding_on_response(
         self, success_requests_session
     ):
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         response = connection.request("GET", URL, data=DATA_VALUE, stream=True)
         assert response.encoding is None
 
@@ -137,21 +137,21 @@ class TestPy42Session(object):
         self, success_requests_session
     ):
 
-        connection = Py42Connection(success_requests_session, HOST_ADDRESS)
+        connection = Connection(success_requests_session, HOST_ADDRESS)
         response = connection.get(URL)
         assert response.text == TEST_RESPONSE_CONTENT
 
     def test_session_request_with_error_status_code_raises_http_error(
         self, error_requests_session
     ):
-        connection = Py42Connection(error_requests_session, HOST_ADDRESS)
+        connection = Connection(error_requests_session, HOST_ADDRESS)
         with pytest.raises(Py42InternalServerError):
             connection.get(URL)
 
     def test_session_request_calls_auth_handler_renew_authentication_with_correct_params_when_making_first_request(
         self, success_requests_session, valid_auth_handler
     ):
-        connection = Py42Connection(
+        connection = Connection(
             success_requests_session, HOST_ADDRESS, valid_auth_handler
         )
         connection.get(URL)
@@ -162,7 +162,7 @@ class TestPy42Session(object):
     def test_session_request_calls_auth_handler_renew_authentication_only_once_while_auth_is_valid(
         self, success_requests_session, valid_auth_handler
     ):
-        connection = Py42Connection(
+        connection = Connection(
             success_requests_session, HOST_ADDRESS, valid_auth_handler
         )
         connection.get(URL)
@@ -172,7 +172,7 @@ class TestPy42Session(object):
     def test_session_request_calls_auth_handler_renew_authentication_twice_when_response_unauthorized(
         self, success_requests_session, renewing_auth_handler
     ):
-        connection = Py42Connection(
+        connection = Connection(
             success_requests_session, HOST_ADDRESS, renewing_auth_handler
         )
         connection.get(URL)  # initialize
@@ -185,7 +185,7 @@ class TestPy42Session(object):
     def test_session_request_called_again_twice_when_response_unauthorized(
         self, success_requests_session, renewing_auth_handler
     ):
-        connection = Py42Connection(
+        connection = Connection(
             success_requests_session, HOST_ADDRESS, renewing_auth_handler
         )
         connection.get(URL)  # initialize

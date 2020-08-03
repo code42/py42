@@ -1,8 +1,8 @@
 from datetime import datetime
 
 import pytest
+from services._connection import Connection
 
-from py42._connection import Py42Connection
 from py42.services.storage import StorageSecurityClient
 
 uri = u"/api/SecurityDetectionEvent"
@@ -12,7 +12,7 @@ mock_max_ts = 2000000
 
 @pytest.fixture
 def py42session(mocker):
-    return mocker.MagicMock(spec=Py42Connection)
+    return mocker.MagicMock(spec=Connection)
 
 
 @pytest.fixture

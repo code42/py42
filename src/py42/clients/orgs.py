@@ -186,4 +186,4 @@ class OrgClient(BaseClient):
             Returns:
                 :class:`py42.response.Py42Response`: A response containing settings information.
             """
-        return self.get_agent_state(guid, "fullDiskAccess")
+        return self.get_agent_state(guid, u"fullDiskAccess")

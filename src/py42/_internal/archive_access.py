@@ -160,13 +160,17 @@ class RestoreJobManager(object):
         return self._get_completion_status(response)
 
     def _start_restore(self, file_selection):
+        zip_result = (
+            str(file_selection.path_set[0][u"type"]).lower() == u"directory" or None
+        )
         return self._storage_archive_client.start_restore(
-            self._device_guid,
-            self._archive_session_id,
-            file_selection.path_set,
-            file_selection.num_files,
-            file_selection.num_dirs,
-            file_selection.size,
+            guid=self._device_guid,
+            web_restore_session_id=self._archive_session_id,
+            path_set=file_selection.path_set,
+            num_files=file_selection.num_files,
+            num_dirs=file_selection.num_dirs,
+            size=file_selection.size,
+            zip_result=zip_result,
             show_deleted=True,
         )
 

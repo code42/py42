@@ -69,14 +69,14 @@ class Py42UserAlreadyAddedError(Py42Error):
 
     def __init__(self, user_id, list_name):
         msg = u"User with ID {} is already on the {}.".format(user_id, list_name)
-        super().__init__(msg)
+        super(Py42UserAlreadyAddedError, self).__init__(msg)
 
 
 class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42Error):
     """An exception raised when a legal hold matter is inaccessible from your account."""
 
     def __init__(self, matter_id):
-        super().__init__(
+        super(Py42LegalHoldNotFoundOrPermissionDeniedError, self).__init__(
             u"Matter with id={} either does not exist or your account does not have permission to view it.".format(
                 matter_id
             )
@@ -87,7 +87,7 @@ class Py42UserDoesNotExistError(Py42Error):
     """An exception raised when a username is not in our system."""
 
     def __init__(self, username):
-        super().__init__(u"User '{}' does not exist.".format(username))
+        super(Py42UserDoesNotExistError, self).__init__(u"User '{}' does not exist.".format(username))
 
 
 class Py42InvalidRuleTypeError(Py42Error):
@@ -96,7 +96,7 @@ class Py42InvalidRuleTypeError(Py42Error):
     def __init__(self, rule_id, source):
         msg = u"Only alert rules with a source of 'Alerting' can be targeted by this command. "
         msg += u"Rule {0} has a source of '{1}'."
-        super().__init__(msg.format(rule_id, source))
+        super(Py42InvalidRuleTypeError, self).__init__(msg.format(rule_id, source))
 
 
 class Py42HTTPError(Py42Error):

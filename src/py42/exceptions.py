@@ -87,7 +87,9 @@ class Py42UserDoesNotExistError(Py42Error):
     """An exception raised when a username is not in our system."""
 
     def __init__(self, username):
-        super(Py42UserDoesNotExistError, self).__init__(u"User '{}' does not exist.".format(username))
+        super(Py42UserDoesNotExistError, self).__init__(
+            u"User '{}' does not exist.".format(username)
+        )
 
 
 class Py42InvalidRuleTypeError(Py42Error):

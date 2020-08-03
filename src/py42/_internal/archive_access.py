@@ -43,16 +43,16 @@ class ArchiveAccessorManager(object):
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):
         decryption_keys = {}
         if encryption_key:
-            decryption_keys["encryption_key"] = encryption_key
+            decryption_keys[u"encryption_key"] = encryption_key
         else:
             data_key_token = (
                 self._get_data_key_token(device_guid) if not encryption_key else None
             )
             if data_key_token:
-                decryption_keys["data_key_token"] = data_key_token
+                decryption_keys[u"data_key_token"] = data_key_token
 
             if private_password:
-                decryption_keys["private_password"] = private_password
+                decryption_keys[u"private_password"] = private_password
         return decryption_keys
 
     def _get_data_key_token(self, device_guid):
@@ -148,7 +148,7 @@ class RestoreJobManager(object):
 
     def get_stream(self, file_selection):
         response = self._start_restore(file_selection)
-        job_id = response["jobId"]
+        job_id = response[u"jobId"]
 
         while not self.is_job_complete(job_id):
             time.sleep(self._job_polling_interval)

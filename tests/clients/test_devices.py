@@ -113,3 +113,25 @@ class TestDeviceClient(object):
                 "q": None,
             },
         )
+
+    def test_get_agent_state_calls_get_with_uri_and_params(
+        self, mock_session, successful_response
+    ):
+        mock_session.get.return_value = successful_response
+        client = DeviceClient(mock_session)
+        client.get_agent_state("DEVICE_ID", propertyName="KEY")
+        expected_params = {"deviceGuid": "DEVICE_ID", "propertyName": "KEY"}
+        uri = u"/api/v14/agent-state/view-by-device-guid"
+        mock_session.get.assert_called_once_with(uri, params=expected_params)
+
+    def test_get_agent_full_disk_access_state_calls_get_agent_state_with_arguments(
+        self, mock_session, successful_response, mocker
+    ):
+        mock_session.get.return_value = successful_response
+        client = DeviceClient(mock_session)
+        client.get_agent_state = mocker.Mock()
+        client.get_agent_full_disk_access_state("DEVICE_ID")
+        expected_propertyName = "fullDiskAccess"
+        client.get_agent_state.assert_called_once_with(
+            "DEVICE_ID", expected_propertyName
+        )

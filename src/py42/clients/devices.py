@@ -238,3 +238,31 @@ class DeviceClient(BaseClient):
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
         return self._session.get(uri, params=params)
+
+    def get_agent_state(self, guid, propertyName):
+        """Gets the agent state of the device.
+            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
+
+            Args:
+                guid (str): The globally unique identifier of the device.
+                propertyName (str): The name of the property to retrieve.
+
+            Returns:
+                :class:`py42.response.Py42Response`: A response containing settings information.
+            """
+        uri = u"/api/v14/agent-state/view-by-device-guid"
+        params = {u"deviceGuid": guid, u"propertyName": propertyName}
+        return self._session.get(uri, params=params)
+
+    def get_agent_full_disk_access_state(self, guid):
+        """Gets the full disk access status of a device.
+            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
+
+            Args:
+                guid (str): The globally unique identifier of the device.
+
+            Returns:
+                :class:`py42.response.Py42Response`: A response containing settings information.
+            """
+        FULLDISKACCESS = "fullDiskAccess"
+        return self.get_agent_state(guid, FULLDISKACCESS)

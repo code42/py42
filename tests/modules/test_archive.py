@@ -1,10 +1,10 @@
 from py42._internal.archive_access import ArchiveAccessorManager
 from py42.clients.archive import ArchiveModule
-from py42.services.archive import ArchiveClient
+from py42.services.archive import ArchiveService
 
 
 def _get_module(mocker):
-    client = mocker.MagicMock(spec=ArchiveClient)
+    client = mocker.MagicMock(spec=ArchiveService)
     accessor = mocker.MagicMock(spec=ArchiveAccessorManager)
     return ArchiveModule(accessor, client)
 

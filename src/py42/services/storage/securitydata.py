@@ -3,7 +3,7 @@ from datetime import datetime
 from py42.services import BaseClient
 
 
-class StorageSecurityClient(BaseClient):
+class StorageSecurityService(BaseClient):
     def _get_security_detection_events(
         self,
         user_uid=None,

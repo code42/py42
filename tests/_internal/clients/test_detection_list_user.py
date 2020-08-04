@@ -5,7 +5,7 @@ from requests import Response
 from requests.exceptions import HTTPError
 
 from py42.exceptions import Py42BadRequestError
-from py42.services.detectionlists._profile import DetectionListUserClient
+from py42.services.detectionlists._profile import DetectionListUserService
 from py42.services.users import UserClient
 
 
@@ -41,7 +41,7 @@ class TestDetectionListUserClient(object):
     def test_create_posts_expected_data(
         self, mock_session, user_context, mock_user_client
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.create("942897397520289999")
@@ -60,7 +60,7 @@ class TestDetectionListUserClient(object):
     def test_get_posts_expected_data(
         self, mock_session, user_context, mock_user_client
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.get("942897397520289999")
@@ -76,7 +76,7 @@ class TestDetectionListUserClient(object):
     def test_get_by_id_posts_expected_data(
         self, mock_session, user_context, mock_user_client
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.get_by_id("942897397520289999")
@@ -92,7 +92,7 @@ class TestDetectionListUserClient(object):
     def test_update_notes_posts_expected_data(
         self, mock_session, user_context, mock_user_client
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.update_notes("942897397520289999", "Test")
@@ -110,7 +110,7 @@ class TestDetectionListUserClient(object):
     def test_add_risk_tag_posts_expected_data(
         self, mock_session, user_context, mock_user_client, tags
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.add_risk_tags("942897397520289999", tags)
@@ -127,7 +127,7 @@ class TestDetectionListUserClient(object):
     def test_remove_risk_tag_posts_expected_data(
         self, mock_session, user_context, mock_user_client
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.remove_risk_tags("942897397520289999", u"Test")
@@ -144,7 +144,7 @@ class TestDetectionListUserClient(object):
     def test_add_cloud_alias_posts_expected_data(
         self, mock_session, user_context, mock_user_client
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.add_cloud_alias("942897397520289999", u"Test")
@@ -161,7 +161,7 @@ class TestDetectionListUserClient(object):
     def test_remove_cloud_alias_posts_expected_data(
         self, mock_session, user_context, mock_user_client
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.remove_cloud_alias("942897397520289999", u"Test")
@@ -180,7 +180,7 @@ class TestDetectionListUserClient(object):
     def test_create_if_not_exists_posts_expected_data_when_user_exists(
         self, mock_session, user_context, mock_user_client
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         assert (
@@ -204,7 +204,7 @@ class TestDetectionListUserClient(object):
         # 'mock_get_by_id_fails' will be called for get & create and its going to return failure.
         # We verified create is being called and two times post method is called, also we
         # verified user_client.get_by_uid is successfully called.
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_get_by_id_fails, user_context, mock_user_client
         )
         with pytest.raises(Py42BadRequestError):
@@ -226,7 +226,7 @@ class TestDetectionListUserClient(object):
     def test_refresh_posts_expected_data(
         self, mock_session, user_context, mock_user_client
     ):
-        detection_list_user_client = DetectionListUserClient(
+        detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.refresh("942897397520289999")

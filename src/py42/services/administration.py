@@ -1,7 +1,7 @@
 from py42.services import BaseClient
 
 
-class AdministrationClient(BaseClient):
+class AdministrationService(BaseClient):
     def get_diagnostics(self, include_volumes=None):
         uri = u"/api/Diagnostic"
         params = {u"incVolumes": include_volumes}

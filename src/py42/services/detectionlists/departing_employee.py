@@ -5,13 +5,13 @@ from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.util import get_all_pages
 
 
-class DepartingEmployeeClient(BaseClient):
+class DepartingEmployeeService(BaseClient):
     """A client for interacting with Code42 Departing Employee APIs."""
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
 
     def __init__(self, connection, user_context, detection_list_user_client):
-        super(DepartingEmployeeClient, self).__init__(connection)
+        super(DepartingEmployeeService, self).__init__(connection)
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
 

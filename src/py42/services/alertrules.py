@@ -3,7 +3,7 @@ import json
 from py42.services import BaseClient
 
 
-class AlertRulesClient(BaseClient):
+class AlertRulesService(BaseClient):
     """A client to manage Alert Rules."""
 
     _version = u"v1"
@@ -11,7 +11,7 @@ class AlertRulesClient(BaseClient):
     _api_prefix = u"/svc/api/{}/{}".format(_version, _resource)
 
     def __init__(self, connection, user_context, detection_list_user_client):
-        super(AlertRulesClient, self).__init__(connection)
+        super(AlertRulesService, self).__init__(connection)
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
         self._exfiltration = None

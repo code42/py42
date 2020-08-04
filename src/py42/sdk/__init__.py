@@ -11,14 +11,14 @@ from py42.services._connection import KeyValueStoreConnection
 from py42.services._connection import KnownUrlConnection
 from py42.services._connection import MicroserviceConnection
 from py42.services._key_value_store import KeyValueStoreClient
-from py42.services.administration import AdministrationClient
-from py42.services.alertrules import AlertRulesClient
-from py42.services.alerts import AlertClient
-from py42.services.archive import ArchiveClient
-from py42.services.detectionlists._profile import DetectionListUserClient
-from py42.services.detectionlists.departing_employee import DepartingEmployeeClient
-from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeClient
-from py42.services.devices import DeviceClient
+from py42.services.administration import AdministrationService
+from py42.services.alertrules import AlertRulesService
+from py42.services.alerts import AlertService
+from py42.services.archive import ArchiveService
+from py42.services.detectionlists._profile import DetectionListUserService
+from py42.services.detectionlists.departing_employee import DepartingEmployeeService
+from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
+from py42.services.devices import DeviceService
 from py42.services.file_event import FileEventClient
 from py42.services.legalhold import LegalHoldClient
 from py42.services.orgs import OrgClient
@@ -81,7 +81,7 @@ class SDKClient(object):
         and tenant information for cloud environments.
 
         Returns:
-            :class:`py42.services.administration.AdministrationClient`
+            :class:`py42.services.administration.AdministrationService`
         """
         return self._clients.authority.administration
 
@@ -112,7 +112,7 @@ class SDKClient(object):
         environment.
 
         Returns:
-            :class:`py42.services.devices.DeviceClient`
+            :class:`py42.services.devices.DeviceService`
         """
         return self._clients.authority.devices
 
@@ -180,11 +180,11 @@ class SDKClient(object):
 
 
 def _init_services(root_connection, host_address):
-    ALERT_RULES_KEY = u"FedObserver-API_URL"
-    ALERTS_KEY = u"AlertService-API_URL"
-    FILE_EVENTS_KEY = u"FORENSIC_SEARCH-API_URL"
-    PRESERVATION_DATA_KEY = u"PRESERVATION-DATA-SERVICE_API-URL"
-    EMPLOYEE_CASE_MGMT_KEY = u"employeecasemanagement-API_URL"
+    alert_rules_key = u"FedObserver-API_URL"
+    alerts_key = u"AlertService-API_URL"
+    file_events_key = u"FORENSIC_SEARCH-API_URL"
+    preservation_data_key = u"PRESERVATION-DATA-SERVICE_API-URL"
+    employee_case_mgmt_key = u"employeecasemanagement-API_URL"
 
     main_auth = V3Auth(root_connection)
     kv_connection = KeyValueStoreClient(KeyValueStoreConnection())
@@ -193,34 +193,34 @@ def _init_services(root_connection, host_address):
         return MicroserviceConnection(kv_connection, key, auth=main_auth)
 
     authority_connection = KnownUrlConnection(host_address, auth=main_auth)
-    alert_rules_connection = create_microservice_connection(ALERT_RULES_KEY)
-    alerts_connection = create_microservice_connection(ALERTS_KEY)
-    file_events_connection = create_microservice_connection(FILE_EVENTS_KEY)
-    pds_connection = create_microservice_connection(PRESERVATION_DATA_KEY)
-    ecm_connection = create_microservice_connection(EMPLOYEE_CASE_MGMT_KEY)
+    alert_rules_connection = create_microservice_connection(alert_rules_key)
+    alerts_connection = create_microservice_connection(alerts_key)
+    file_events_connection = create_microservice_connection(file_events_key)
+    pds_connection = create_microservice_connection(preservation_data_key)
+    ecm_connection = create_microservice_connection(employee_case_mgmt_key)
     user_svc = UserClient(authority_connection)
-    administration_svc = AdministrationClient(authority_connection)
+    administration_svc = AdministrationService(authority_connection)
     file_events_service = FileEventClient(file_events_connection)
     user_ctx = UserContext(administration_svc)
-    user_profile_svc = DetectionListUserClient(ecm_connection, user_ctx, user_svc)
+    user_profile_svc = DetectionListUserService(ecm_connection, user_ctx, user_svc)
 
     services = Services(
         administration=administration_svc,
-        archive=ArchiveClient(authority_connection),
-        devices=DeviceClient(authority_connection),
+        archive=ArchiveService(authority_connection),
+        devices=DeviceService(authority_connection),
         legalhold=LegalHoldClient(authority_connection),
         orgs=OrgClient(authority_connection),
         securitydata=SecurityClient(authority_connection),
         users=UserClient(authority_connection),
-        alertrules=AlertRulesClient(alert_rules_connection, user_ctx, user_profile_svc),
-        alerts=AlertClient(alerts_connection, user_ctx),
+        alertrules=AlertRulesService(alert_rules_connection, user_ctx, user_profile_svc),
+        alerts=AlertService(alerts_connection, user_ctx),
         filevents=file_events_service,
         savedsearch=SavedSearchClient(file_events_connection, file_events_service),
         preservationdata=PreservationDataServiceClient(pds_connection),
-        departingemployee=DepartingEmployeeClient(
+        departingemployee=DepartingEmployeeService(
             ecm_connection, user_ctx, user_profile_svc
         ),
-        highriskemployee=HighRiskEmployeeClient(
+        highriskemployee=HighRiskEmployeeService(
             ecm_connection, user_ctx, user_profile_svc
         ),
         userprofile=user_profile_svc,
@@ -239,7 +239,6 @@ def _init_clients(services):
         securitydata=services.securitydata,
         users=services.users,
     )
-    # securitydata = SecurityModule()
     detectionlists = DetectionListsModule(
         services.userprofile, services.departingemployee, services.highriskemployee
     )

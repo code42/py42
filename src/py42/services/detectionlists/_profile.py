@@ -5,7 +5,7 @@ from py42.exceptions import Py42NotFoundError
 from py42.services import BaseClient
 
 
-class DetectionListUserClient(BaseClient):
+class DetectionListUserService(BaseClient):
     """Administrator utility to manage High Risk employees information.
 
     `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
@@ -16,7 +16,7 @@ class DetectionListUserClient(BaseClient):
     _resource = u"/user"
 
     def __init__(self, connection, user_context, user_client):
-        super(DetectionListUserClient, self).__init__(connection)
+        super(DetectionListUserService, self).__init__(connection)
         self._user_context = user_context
         self._user_client = user_client
 

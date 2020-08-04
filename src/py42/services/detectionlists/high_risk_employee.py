@@ -5,7 +5,7 @@ from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.util import get_all_pages
 
 
-class HighRiskEmployeeClient(BaseClient):
+class HighRiskEmployeeService(BaseClient):
     """A client for interacting with High Risk Employee APIs."""
 
     _api_version = u"v2"
@@ -13,7 +13,7 @@ class HighRiskEmployeeClient(BaseClient):
     _resource = u"/highriskemployee"
 
     def __init__(self, connection, user_context, detection_list_user_client):
-        super(HighRiskEmployeeClient, self).__init__(connection)
+        super(HighRiskEmployeeService, self).__init__(connection)
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
 

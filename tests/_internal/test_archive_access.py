@@ -13,8 +13,8 @@ from py42._internal.archive_access import FileType
 from py42._internal.archive_access import RestoreJobManager
 from py42.exceptions import Py42ArchiveFileNotFoundError
 from py42.response import Py42Response
-from py42.services.archive import ArchiveClient
-from py42.services.storage import StorageArchiveClient
+from py42.services.archive import ArchiveService
+from py42.services.storage import StorageArchiveService
 from py42.services.storage import StorageClient
 from py42.services.storage import StorageClientFactory
 
@@ -268,7 +268,7 @@ class GetWebRestoreJobResponses(object):
 
 @pytest.fixture
 def archive_client(mocker):
-    client = mocker.MagicMock(spec=ArchiveClient)
+    client = mocker.MagicMock(spec=ArchiveService)
     py42_response = mocker.MagicMock(spec=Py42Response)
     py42_response.text = '{{"dataKeyToken": "{0}"}}'.format(DATA_KEY_TOKEN)
     py42_response.status_code = 200
@@ -280,7 +280,7 @@ def archive_client(mocker):
 
 @pytest.fixture
 def storage_archive_client(mocker):
-    client = mocker.MagicMock(spec=StorageArchiveClient)
+    client = mocker.MagicMock(spec=StorageArchiveService)
     py42_response = mocker.MagicMock(spec=Py42Response)
     py42_response.text = '{{"webRestoreSessionId": "{0}"}}'.format(
         WEB_RESTORE_SESSION_ID
@@ -364,7 +364,7 @@ def stream_restore_result_response_mock(mocker, storage_archive_client, chunks):
 
 
 def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
-    """Mock responses to StorageArchiveClient.get_file_path_metadata(). Responses are returned in the same order as
+    """Mock responses to StorageArchiveService.get_file_path_metadata(). Responses are returned in the same order as
     they are in the given `responses` list"""
 
     file_id_responses = {}

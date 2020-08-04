@@ -2,7 +2,7 @@ import pytest
 from services._connection import Connection
 
 from py42.response import Py42Response
-from py42.services.storage import StorageArchiveClient
+from py42.services.storage import StorageArchiveService
 
 DATA_KEYWORD = "data"
 JSON_KEYWORD = "json"
@@ -64,12 +64,12 @@ def connection(mocker, py42_response):
 
 @pytest.fixture
 def storage_archive_client(mocker):
-    return mocker.MagicMock(spec=StorageArchiveClient)
+    return mocker.MagicMock(spec=StorageArchiveService)
 
 
 class TestStorageArchiveClient(object):
     def test_search_paths_calls_get_with_expected_params(self, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.search_paths(
             "session_id", "device_id", "regex", 1000, "timestamp", True
         )
@@ -86,7 +86,7 @@ class TestStorageArchiveClient(object):
         )
 
     def test_get_file_size_calls_get_with_expected_params(self, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.get_file_size(
             "device_guid", "file_id", "timestamp", True, "backupset_id"
         )
@@ -102,7 +102,7 @@ class TestStorageArchiveClient(object):
         )
 
     def test_get_file_path_metadata_calls_get_with_expected_params(self, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.get_file_path_metadata(
             "connection",
             "guid",
@@ -132,7 +132,7 @@ class TestStorageArchiveClient(object):
     def test_create_restore_session_calls_post_with_correct_url(
         self, mocker, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.create_restore_session(DEVICE_GUID)
         connection.post.assert_called_once_with(
             WEB_RESTORE_SESSION_URL, json=mocker.ANY
@@ -141,7 +141,7 @@ class TestStorageArchiveClient(object):
     def test_create_restore_session_with_device_guid_calls_post_with_device_guid_in_json(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
 
         storage_archive_client.create_restore_session(DEVICE_GUID)
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
@@ -150,7 +150,7 @@ class TestStorageArchiveClient(object):
     def test_create_restore_session_with_data_key_token_calls_post_with_data_key_token_in_json(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
 
         storage_archive_client.create_restore_session(
             DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
@@ -161,7 +161,7 @@ class TestStorageArchiveClient(object):
     def test_create_restore_session_with_private_password_calls_post_with_private_password_in_json(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
 
         storage_archive_client.create_restore_session(
             DEVICE_GUID, private_password=PRIVATE_PASSWORD
@@ -172,7 +172,7 @@ class TestStorageArchiveClient(object):
     def test_create_restore_session_with_encryption_key_calls_post_with_encryption_key_in_json(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
 
         storage_archive_client.create_restore_session(
             DEVICE_GUID, encryption_key=ENCRYPTION_KEY
@@ -181,7 +181,7 @@ class TestStorageArchiveClient(object):
         assert json_arg.get(ENCRYPTION_KEY_KEY) == ENCRYPTION_KEY
 
     def test_start_restore_calls_post_with_correct_url(self, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
 
         storage_archive_client.start_restore(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES, NUM_DIRS, SIZE
@@ -191,7 +191,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_required_args_calls_post_with_all_args_in_json(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.start_restore(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES, NUM_DIRS, SIZE
         )
@@ -219,7 +219,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_opt_zip_result_as_false_calls_post_with_zip_result_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
 
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -236,7 +236,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_opt_zip_result_as_true_calls_post_with_zip_result_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
 
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -253,7 +253,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_expire_job_as_true_calls_post_with_expire_job_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
 
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -270,7 +270,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_expire_job_as_false_calls_post_with_expire_job_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
 
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -287,7 +287,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_show_deleted_true_calls_post_with_show_deleted_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -303,7 +303,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_show_deleted_false_calls_post_with_show_deleted_false_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -319,7 +319,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_restore_full_path_true_calls_post_with_restore_full_path_true_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -335,7 +335,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_restore_full_path_false_calls_post_with_restore_full_path_true_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -351,7 +351,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_timestamp_calls_post_with_timestamp_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -367,7 +367,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_exceptions_calls_post_with_exceptions_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -383,7 +383,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -399,7 +399,7 @@ class TestStorageArchiveClient(object):
     def test_start_restore_with_all_args_calls_post_with_all_args_in_data(
         self, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -434,7 +434,7 @@ class TestStorageArchiveClient(object):
         assert json_arg == expected_data
 
     def test_get_restore_status_calls_get_with_correct_url(self, mocker, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         api_response = mocker.MagicMock(spec=Py42Response)
         connection.get.return_value = api_response
         storage_archive_client.get_restore_status(WEB_RESTORE_JOB_ID)
@@ -442,14 +442,14 @@ class TestStorageArchiveClient(object):
         connection.get.assert_called_once_with(expected_url)
 
     def test_cancel_restore_calls_delete_with_correct_url(self, mocker, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         api_response = mocker.MagicMock(spec=Py42Response)
         connection.delete.return_value = api_response
         storage_archive_client.cancel_restore(WEB_RESTORE_JOB_ID)
         connection.delete.assert_called_once_with(WEB_RESTORE_JOB_URL, json=mocker.ANY)
 
     def test_cancel_restore_calls_delete_with_job_id_in_data(self, mocker, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         api_response = mocker.MagicMock(spec=Py42Response)
         connection.delete.return_value = api_response
         storage_archive_client.cancel_restore(WEB_RESTORE_JOB_ID)
@@ -460,7 +460,7 @@ class TestStorageArchiveClient(object):
     def test_stream_restore_result_status_calls_get_with_correct_url(
         self, mocker, connection
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveService(connection)
         api_response = mocker.MagicMock(spec=Py42Response)
         connection.get.return_value = api_response
         storage_archive_client.stream_restore_result(WEB_RESTORE_JOB_ID)

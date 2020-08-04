@@ -5,7 +5,7 @@ from py42.services import BaseClient
 from py42.services.util import get_all_pages
 
 
-class DeviceClient(BaseClient):
+class DeviceService(BaseClient):
     """A class to interact with Code42 device/computer APIs."""
 
     def get_page(

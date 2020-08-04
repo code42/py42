@@ -1,12 +1,12 @@
 from py42.services import BaseClient
 
 
-class StoragePreservationDataClient(BaseClient):
+class StoragePreservationDataService(BaseClient):
 
     _base_uri = u"c42api/v3/"
 
     def __init__(self, main_session, streaming_session):
-        super(StoragePreservationDataClient, self).__init__(main_session)
+        super(StoragePreservationDataService, self).__init__(main_session)
         self._streaming_session = streaming_session
 
     def get_download_token(self, archive_guid, file_id, timestamp):

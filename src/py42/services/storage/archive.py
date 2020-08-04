@@ -3,7 +3,7 @@ import json
 from py42.services import BaseClient
 
 
-class StorageArchiveClient(BaseClient):
+class StorageArchiveService(BaseClient):
     def search_paths(
         self,
         session_id,

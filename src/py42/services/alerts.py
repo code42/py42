@@ -7,11 +7,11 @@ from py42.services import BaseClient
 from py42.services.util import get_all_pages
 
 
-class AlertClient(BaseClient):
+class AlertService(BaseClient):
     _uri_prefix = u"/svc/api/v1/{0}"
 
     def __init__(self, connection, user_context):
-        super(AlertClient, self).__init__(connection)
+        super(AlertService, self).__init__(connection)
         self._user_context = user_context
 
     def search(self, query):

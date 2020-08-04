@@ -4,8 +4,8 @@ import json
 import pytest
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
-from py42.services.detectionlists._profile import DetectionListUserClient
-from py42.services.detectionlists.departing_employee import DepartingEmployeeClient
+from py42.services.detectionlists._profile import DetectionListUserService
+from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.users import UserClient
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
@@ -78,7 +78,7 @@ class TestDepartingEmployeeClient(object):
     def mock_detection_list_user_client(
         self, mock_session, user_context, py42_response, mock_user_client
     ):
-        user_client = DetectionListUserClient(
+        user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         mock_session.post.return_value = py42_response
@@ -97,7 +97,7 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response,
         mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         user_context.get_current_tenant_id.return_value = _TENANT_ID_PARAM
@@ -124,7 +124,7 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response_empty,
         mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         mock_session.post.return_value = mock_get_all_cases_response_empty
@@ -148,7 +148,7 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response,
         mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         mock_session.post.return_value = mock_get_all_cases_response
@@ -176,7 +176,7 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response,
         mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         client.get_page(
@@ -209,7 +209,7 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response_empty,
         mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         mock_session.post.return_value = mock_get_all_cases_response_empty
@@ -228,7 +228,7 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response_empty,
         mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         mock_session.post.return_value = mock_get_all_cases_response_empty
@@ -245,7 +245,7 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response_empty,
         mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         mock_session.post.return_value = mock_get_all_cases_response_empty
@@ -264,7 +264,7 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response_empty,
         mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         mock_session.post.return_value = mock_get_all_cases_response_empty
@@ -278,7 +278,7 @@ class TestDepartingEmployeeClient(object):
         mock_get_all_cases_response,
         mock_detection_list_user_client,
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         mock_session.post.return_value = mock_get_all_cases_response
@@ -296,7 +296,7 @@ class TestDepartingEmployeeClient(object):
     def test_update_posts_to_expected_url(
         self, mock_session, user_context, mock_detection_list_user_client
     ):
-        client = DepartingEmployeeClient(
+        client = DepartingEmployeeService(
             mock_session, user_context, mock_detection_list_user_client
         )
         client.update_departure_date(_USER_ID, "2022-12-20")

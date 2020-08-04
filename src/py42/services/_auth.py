@@ -33,7 +33,7 @@ class V3Auth(C42AuthBase):
         uri = u"/c42api/v3/auth/jwt"
         params = {u"useBody": True}
         response = self._auth_connection.get(uri, params=params)
-        return "{} {}".format("v3_user_token", response["v3_user_token"])
+        return u"{} {}".format("v3_user_token", response["v3_user_token"])
 
 
 class V1Auth(C42AuthBase):

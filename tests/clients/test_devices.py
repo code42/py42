@@ -4,7 +4,7 @@ from requests import Response
 
 import py42
 from py42.response import Py42Response
-from py42.services.devices import DeviceClient
+from py42.services.devices import DeviceService
 
 COMPUTER_URI = "/api/Computer"
 
@@ -46,7 +46,7 @@ class TestDeviceClient(object):
     def test_get_all_calls_get_with_uri_and_params(
         self, mock_session, mock_get_all_response
     ):
-        client = DeviceClient(mock_session)
+        client = DeviceService(mock_session)
         mock_session.get.return_value = mock_get_all_response
         for _ in client.get_all(q="TEST-HOSTNAME"):
             break
@@ -60,7 +60,7 @@ class TestDeviceClient(object):
         self, mock_session, mock_get_all_response
     ):
         unicode_hostname = u"您已经发现了秘密信息"
-        client = DeviceClient(mock_session)
+        client = DeviceService(mock_session)
         mock_session.get.return_value = mock_get_all_response
         for _ in client.get_all(q=unicode_hostname):
             break
@@ -74,7 +74,7 @@ class TestDeviceClient(object):
         self, mock_session, successful_response
     ):
         mock_session.get.return_value = successful_response
-        client = DeviceClient(mock_session)
+        client = DeviceService(mock_session)
         client.get_by_id("DEVICE_ID", include_backup_usage=True)
         expected_params = {"incBackupUsage": True}
         uri = "{}/{}".format(COMPUTER_URI, "DEVICE_ID")
@@ -84,7 +84,7 @@ class TestDeviceClient(object):
         self, mock_session, mock_get_all_response, mock_get_all_empty_response
     ):
         py42.settings.items_per_page = 1
-        client = DeviceClient(mock_session)
+        client = DeviceService(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_response,
             mock_get_all_response,
@@ -96,7 +96,7 @@ class TestDeviceClient(object):
         assert mock_session.get.call_count == 3
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_session):
-        client = DeviceClient(mock_session)
+        client = DeviceService(mock_session)
         client.get_page(20, True, True, "org", "user", "dest", True, True, 1000)
         mock_session.get.assert_called_once_with(
             "/api/Computer",

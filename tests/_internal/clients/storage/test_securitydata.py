@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 from services._connection import Connection
 
-from py42.services.storage import StorageSecurityClient
+from py42.services.storage import StorageSecurityService
 
 uri = u"/api/SecurityDetectionEvent"
 mock_min_ts = 1000000
@@ -17,7 +17,7 @@ def py42session(mocker):
 
 @pytest.fixture
 def storage_security_client(py42session):
-    return StorageSecurityClient(py42session)
+    return StorageSecurityService(py42session)
 
 
 @pytest.fixture

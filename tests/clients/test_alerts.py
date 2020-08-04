@@ -8,7 +8,7 @@ from tests.conftest import TENANT_ID_FROM_RESPONSE
 from py42.response import Py42Response
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import AlertState
-from py42.services.alerts import AlertClient
+from py42.services.alerts import AlertService
 
 TEST_RESPONSE = """
 {"type$": "RULE_METADATA_SEARCH_RESPONSE",
@@ -73,7 +73,7 @@ class TestAlertClient(object):
     def test_search_posts_expected_data(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)
         alert_client.search(query)
@@ -94,7 +94,7 @@ class TestAlertClient(object):
     def test_search_posts_to_expected_url(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)
         alert_client.search(query)
@@ -105,7 +105,7 @@ class TestAlertClient(object):
     ):
         py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         mock_session.post.return_value = py42_response
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_details(alert_ids)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -123,7 +123,7 @@ class TestAlertClient(object):
     ):
         py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         mock_session.post.return_value = py42_response
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_client.get_details(alert_id)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
@@ -136,7 +136,7 @@ class TestAlertClient(object):
     ):
         py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         mock_session.post.return_value = py42_response
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_details(alert_ids)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -151,7 +151,7 @@ class TestAlertClient(object):
     ):
         py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         mock_session.post.return_value = py42_response
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_details(alert_ids)
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/query-details"
@@ -163,7 +163,7 @@ class TestAlertClient(object):
         requests_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         py42_response = Py42Response(requests_response)
         mock_session.post.return_value = py42_response
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         response = alert_client.get_details("alert_id")
         observation_data = response["alerts"][0]["observations"][0]["data"]
         assert observation_data["example_key"] == "example_string_value"
@@ -176,7 +176,7 @@ class TestAlertClient(object):
         requests_response.text = TEST_NON_PARSEABLE_ALERT_DETAIL_RESPONSE
         py42_response = Py42Response(requests_response)
         mock_session.post.return_value = py42_response
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         response = alert_client.get_details("alert_id")
         observation_data = response["alerts"][0]["observations"][0]["data"]
         expected_observation_data = '{"invalid_json": ][ }'
@@ -185,7 +185,7 @@ class TestAlertClient(object):
     def test_resolve_when_not_given_tenant_id_posts_expected_data(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.resolve(alert_ids)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -201,7 +201,7 @@ class TestAlertClient(object):
     def test_resolve_when_given_single_alert_id_posts_expected_data(
         self, mock_session, user_context, successful_post, alert_id
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_client.resolve(alert_id)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
@@ -212,7 +212,7 @@ class TestAlertClient(object):
     def test_resolve_posts_expected_data(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.resolve(alert_ids,)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -225,7 +225,7 @@ class TestAlertClient(object):
     def test_resolve_posts_to_expected_url(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.resolve(alert_ids, "some-tenant-id")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/resolve-alert"
@@ -233,7 +233,7 @@ class TestAlertClient(object):
     def test_reopen_posts_expected_data(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.reopen(alert_ids)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -249,7 +249,7 @@ class TestAlertClient(object):
     def test_reopen_when_given_single_alert_id_posts_expected_data(
         self, mock_session, user_context, successful_post, alert_id
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_client.reopen(alert_id)
         post_data = json.loads(mock_session.post.call_args[1]["data"])
         assert (
@@ -260,13 +260,13 @@ class TestAlertClient(object):
     def test_reopen_posts_to_expected_url(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.reopen(alert_ids, "some-tenant-id")
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/reopen-alert"
 
     def test_get_all_rules_posts_expected_data(self, mock_session, user_context):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
 
         for _ in alert_client.get_all_rules(sort_key="key", sort_direction="ASC"):
             break
@@ -289,7 +289,7 @@ class TestAlertClient(object):
     def test_get_all_rules_by_name_posts_expected_data(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         for _ in alert_client.get_all_rules_by_name(
             "testname", sort_key="key", sort_direction="ASC"
         ):
@@ -317,7 +317,7 @@ class TestAlertClient(object):
     def test_get_rule_by_observer_id_posts_expected_data(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         for _ in alert_client.get_rule_by_observer_id("testid"):
             break
 
@@ -343,7 +343,7 @@ class TestAlertClient(object):
     def test_get_rules_page_calls_post_with_expected_url_and_data(
         self, mock_session, user_context, successful_post
     ):
-        alert_client = AlertClient(mock_session, user_context)
+        alert_client = AlertService(mock_session, user_context)
         alert_client.get_rules_page(
             groups=["groups"],
             page_num=1,

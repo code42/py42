@@ -15,8 +15,8 @@ from py42.services.pds import PreservationDataServiceClient
 from py42.services.securitydata import SecurityClient
 from py42.services.storage import StorageClient
 from py42.services.storage import StorageClientFactory
-from py42.services.storage import StorageSecurityClient
-from py42.services.storage.storagenode import StoragePreservationDataClient
+from py42.services.storage import StorageSecurityService
+from py42.services.storage.storagenode import StoragePreservationDataService
 
 RAW_QUERY = "RAW JSON QUERY"
 
@@ -425,7 +425,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
         mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
@@ -455,7 +455,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
         mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
@@ -483,7 +483,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
         mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
@@ -506,7 +506,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
         mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
@@ -545,7 +545,7 @@ class TestSecurityModule(object):
         plan_storage_info,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
         mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
@@ -573,7 +573,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
         mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
@@ -601,7 +601,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
         mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
@@ -626,7 +626,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityClient)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
         mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
@@ -741,7 +741,7 @@ class TestSecurityModule(object):
             pds_client
         )
 
-        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
+        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
         storage_node_client.get_download_token.return_value = file_download
         storage_node_client.get_file.return_value = b"stream"
         microservice_client_factory.create_storage_preservation_client.return_value = (
@@ -859,7 +859,7 @@ class TestSecurityModule(object):
             pds_client
         )
 
-        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
+        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
         storage_node_client.get_download_token.return_value = file_download
         storage_node_client.get_file.side_effect = Py42HTTPError(HTTPError())
         microservice_client_factory.create_storage_preservation_client.return_value = (
@@ -901,7 +901,7 @@ class TestSecurityModule(object):
             pds_client
         )
 
-        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
+        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
         storage_node_client.get_download_token.return_value = file_download
         storage_node_client.get_file.return_value = b"stream"
         microservice_client_factory.create_storage_preservation_client.return_value = (
@@ -1019,7 +1019,7 @@ class TestSecurityModule(object):
             pds_client
         )
 
-        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataClient)
+        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
         storage_node_client.get_download_token.return_value = file_download
         storage_node_client.get_file.side_effect = Py42HTTPError(HTTPError())
         microservice_client_factory.create_storage_preservation_client.return_value = (

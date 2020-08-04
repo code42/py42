@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from py42.services.storage.storagenode import StoragePreservationDataClient
+from py42.services.storage.storagenode import StoragePreservationDataService
 
 
 class TestStoragePreservationDataClient(object):
@@ -14,7 +14,7 @@ class TestStoragePreservationDataClient(object):
     def test_get_download_token_calls_get_with_valid_params(
         self, mock_successful_session
     ):
-        client = StoragePreservationDataClient(
+        client = StoragePreservationDataService(
             mock_successful_session, mock_successful_session
         )
         client.get_download_token("abc", "fabc", 1223)
@@ -33,7 +33,7 @@ class TestStoragePreservationDataClient(object):
     ):
         mock_successful_session.host_address = "https://host.com"
 
-        client = StoragePreservationDataClient(
+        client = StoragePreservationDataService(
             mock_successful_session, mock_successful_session
         )
         client.get_file("token")
@@ -48,7 +48,7 @@ class TestStoragePreservationDataClient(object):
         self, mock_successful_session, mock_request
     ):
         mock_successful_session.host_address = "https://host.com"
-        client = StoragePreservationDataClient(
+        client = StoragePreservationDataService(
             mock_successful_session, mock_successful_session
         )
         client.get_file("PDSDownloadToken=token")

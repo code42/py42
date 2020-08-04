@@ -18,7 +18,7 @@
 # from py42.services._connection_manager import ConnectionManager
 # from py42.services.storage import StorageClient
 # from py42.services.storage import StorageClientFactory
-# from py42.services.users import UserClient
+# from py42.services.users import UserService
 # from py42.usercontext import UserContext
 
 # TEST_ROOT_URL = "https://example.com"
@@ -53,7 +53,7 @@
 
 # @pytest.fixture
 # def user_client(mocker):
-#     return mocker.MagicMock(spec=UserClient)
+#     return mocker.MagicMock(spec=UserService)
 
 
 # @pytest.fixture
@@ -80,22 +80,22 @@
 #     def test_create_legal_hold_client(self, mock_session):
 #         factory = AuthorityClient(mock_session)
 #         client = factory.create_legal_hold_client()
-#         assert type(client) == legalhold.LegalHoldClient
+#         assert type(client) == legalhold.LegalHoldService
 
 #     def test_create_org_client(self, mock_session):
 #         factory = AuthorityClient(mock_session)
 #         client = factory.create_org_client()
-#         assert type(client) == orgs.OrgClient
+#         assert type(client) == orgs.OrgService
 
 #     def test_create_security_client(self, mock_session):
 #         factory = AuthorityClient(mock_session)
 #         client = factory.create_security_client()
-#         assert type(client) == securitydata.SecurityClient
+#         assert type(client) == securitydata.SecurityDataService
 
 #     def test_create_user_client(self, mock_session):
 #         factory = AuthorityClient(mock_session)
 #         client = factory.create_user_client()
-#         assert type(client) == users.UserClient
+#         assert type(client) == users.UserService
 
 
 # class TestStorageClientFactory(object):
@@ -249,7 +249,7 @@
 #             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
 #         )
 #         client = factory.get_file_event_client()
-#         assert type(client) == file_event.FileEventClient
+#         assert type(client) == file_event.FileEventService
 
 #     def test_get_file_event_client_calls_get_stored_value_with_expected_key(
 #         self,

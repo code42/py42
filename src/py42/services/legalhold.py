@@ -16,10 +16,10 @@ def _active_state_map(active):
         )
 
 
-class LegalHoldClient(BaseClient):
+class LegalHoldService(BaseClient):
     """A client for interacting with Code42 Legal Hold APIs.
 
-    The LegalHoldClient provides the ability to manage Code42 Legal Hold Policies and Matters.
+    The LegalHoldService provides the ability to manage Code42 Legal Hold Policies and Matters.
     It can:
     - Create, view, and list all existing Policies.
     - Create, view, deactivate, reactivate, and list all existing Matters.

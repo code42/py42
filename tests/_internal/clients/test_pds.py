@@ -1,6 +1,6 @@
 import pytest
 
-from py42.services.pds import PreservationDataServiceClient
+from py42.services.pds import PreservationDataService
 
 
 class TestPreservationDataServiceClient(object):
@@ -10,7 +10,7 @@ class TestPreservationDataServiceClient(object):
         return mock_session
 
     def test_find_file_versions_posts_expected_data(self, mock_session):
-        pds = PreservationDataServiceClient(mock_session)
+        pds = PreservationDataService(mock_session)
         pds.find_file_versions("abc", "adfadf", "test", "path/path")
 
         assert mock_session.post.call_count == 1

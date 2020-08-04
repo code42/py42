@@ -10,9 +10,9 @@ from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42HTTPError
 from py42.response import Py42Response
-from py42.services.file_event import FileEventClient
-from py42.services.pds import PreservationDataServiceClient
-from py42.services.securitydata import SecurityClient
+from py42.services.file_event import FileEventService
+from py42.services.pds import PreservationDataService
+from py42.services.securitydata import SecurityDataService
 from py42.services.storage import StorageClient
 from py42.services.storage import StorageClientFactory
 from py42.services.storage import StorageSecurityService
@@ -214,7 +214,7 @@ PDS_FILE_VERSIONS = """{
 class TestSecurityModule(object):
     @pytest.fixture
     def security_client(self, mocker):
-        return mocker.MagicMock(spec=SecurityClient)
+        return mocker.MagicMock(spec=SecurityDataService)
 
     @pytest.fixture
     def security_client_one_location(self, security_client, py42_response):
@@ -280,7 +280,7 @@ class TestSecurityModule(object):
 
     @pytest.fixture
     def file_event_client(self, mocker):
-        return mocker.MagicMock(spec=FileEventClient)
+        return mocker.MagicMock(spec=FileEventService)
 
     @staticmethod
     def return_file_event_client(file_event_client):
@@ -726,7 +726,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         file_event_client.get_file_location_detail_by_sha256.return_value = (
             file_location
@@ -735,7 +735,7 @@ class TestSecurityModule(object):
             file_event_client
         )
 
-        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client = mocker.MagicMock(spec=PreservationDataService)
         pds_client.find_file_versions.return_value = find_file_version
         microservice_client_factory.get_preservation_data_service_client.return_value = (
             pds_client
@@ -763,7 +763,7 @@ class TestSecurityModule(object):
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_search.text = "{}"
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         with pytest.raises(Py42ChecksumNotFoundError) as e:
             security_module.stream_file_by_sha256("shahash")
@@ -782,7 +782,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         file_location.text = """{"locations": []}"""
         file_event_client.get_file_location_detail_by_sha256.return_value = (
@@ -809,7 +809,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         file_event_client.get_file_location_detail_by_sha256.return_value = (
             file_location
@@ -818,7 +818,7 @@ class TestSecurityModule(object):
             file_event_client
         )
 
-        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client = mocker.MagicMock(spec=PreservationDataService)
         find_file_version.status_code = 204
         pds_client.find_file_versions.return_value = find_file_version
         microservice_client_factory.get_preservation_data_service_client.return_value = (
@@ -844,7 +844,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         file_event_client.get_file_location_detail_by_sha256.return_value = (
             file_location
@@ -853,7 +853,7 @@ class TestSecurityModule(object):
             file_event_client
         )
 
-        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client = mocker.MagicMock(spec=PreservationDataService)
         pds_client.find_file_versions.return_value = find_file_version
         microservice_client_factory.get_preservation_data_service_client.return_value = (
             pds_client
@@ -886,7 +886,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         file_event_client.get_file_location_detail_by_sha256.return_value = (
             file_location
@@ -895,7 +895,7 @@ class TestSecurityModule(object):
             file_event_client
         )
 
-        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client = mocker.MagicMock(spec=PreservationDataService)
         pds_client.find_file_versions.return_value = find_file_version
         microservice_client_factory.get_preservation_data_service_client.return_value = (
             pds_client
@@ -923,7 +923,7 @@ class TestSecurityModule(object):
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_search.text = "{}"
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         with pytest.raises(Py42ChecksumNotFoundError) as e:
             security_module.stream_file_by_md5("md5hash")
@@ -942,7 +942,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         file_location.text = """{"locations": []}"""
         file_event_client.get_file_location_detail_by_sha256.return_value = (
@@ -969,7 +969,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         file_event_client.get_file_location_detail_by_sha256.return_value = (
             file_location
@@ -978,7 +978,7 @@ class TestSecurityModule(object):
             file_event_client
         )
 
-        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client = mocker.MagicMock(spec=PreservationDataService)
         find_file_version.status_code = 204
         pds_client.find_file_versions.return_value = find_file_version
         microservice_client_factory.get_preservation_data_service_client.return_value = (
@@ -1004,7 +1004,7 @@ class TestSecurityModule(object):
         security_module = SecurityModule(
             security_client, storage_client_factory, microservice_client_factory
         )
-        file_event_client = mocker.MagicMock(spec=FileEventClient)
+        file_event_client = mocker.MagicMock(spec=FileEventService)
         file_event_client.search.return_value = file_event_search
         file_event_client.get_file_location_detail_by_sha256.return_value = (
             file_location
@@ -1013,7 +1013,7 @@ class TestSecurityModule(object):
             file_event_client
         )
 
-        pds_client = mocker.MagicMock(spec=PreservationDataServiceClient)
+        pds_client = mocker.MagicMock(spec=PreservationDataService)
         pds_client.find_file_versions.return_value = find_file_version
         microservice_client_factory.get_preservation_data_service_client.return_value = (
             pds_client

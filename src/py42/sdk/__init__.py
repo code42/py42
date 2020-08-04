@@ -1,9 +1,10 @@
 from requests.auth import HTTPBasicAuth
 
 from py42.clients import Clients
-from py42.clients.alerts import AlertsModule
+from py42.clients.alerts import AlertsClient
+from py42.clients.alertrules import AlertRulesClient
 from py42.clients.authority import AuthorityClient
-from py42.clients.detectionlists import DetectionListsModule
+from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityModule
 from py42.services import Services
 from py42.services._auth import V3Auth
@@ -19,13 +20,13 @@ from py42.services.detectionlists._profile import DetectionListUserService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.devices import DeviceService
-from py42.services.file_event import FileEventClient
-from py42.services.legalhold import LegalHoldClient
-from py42.services.orgs import OrgClient
-from py42.services.pds import PreservationDataServiceClient
-from py42.services.savedsearch import SavedSearchClient
-from py42.services.securitydata import SecurityClient
-from py42.services.users import UserClient
+from py42.services.file_event import FileEventService
+from py42.services.legalhold import LegalHoldService
+from py42.services.orgs import OrgService
+from py42.services.pds import PreservationDataService
+from py42.services.savedsearch import SavedSearchService
+from py42.services.securitydata import SecurityDataService
+from py42.services.users import UserService
 from py42.usercontext import UserContext
 
 
@@ -72,7 +73,6 @@ class SDKClient(object):
         basic_auth_connection = KnownUrlConnection(host_address, auth=basic_auth)
         services, user_ctx = _init_services(basic_auth_connection, host_address)
         clients = _init_clients(services)
-
         return cls(clients, user_ctx)
 
     @property
@@ -91,7 +91,7 @@ class SDKClient(object):
         web-restores or finding a file on an archive.
 
         Returns:
-            :class:`py42.clients.archive.ArchiveModule`
+            :class:`py42.clients.archive.ArchiveClient`
         """
         pass
         # return self._clients.archive
@@ -102,7 +102,7 @@ class SDKClient(object):
         environment.
 
         Returns:
-            :class:`py42.services.users.UserClient`
+            :class:`py42.services.users.UserService`
         """
         return self._clients.authority.users
 
@@ -122,7 +122,7 @@ class SDKClient(object):
         Code42 environment.
 
         Returns:
-            :class:`py42.services.orgs.OrgClient`
+            :class:`py42.services.orgs.OrgService`
         """
         return self._clients.authority.orgs
 
@@ -132,7 +132,7 @@ class SDKClient(object):
         custodians.
 
         Returns:
-            :class:`py42.services.legalhold.LegalHoldClient`
+            :class:`py42.services.legalhold.LegalHoldService`
         """
         return self._clients.authority.legalhold
 
@@ -165,7 +165,7 @@ class SDKClient(object):
         lists, such as departing employees.
 
         Returns:
-            :class:`py42.clients.detectionlists.DetectionListsModule`
+            :class:`py42.clients.detectionlists.DetectionListsClient`
         """
         return self._clients.detectionlists
 
@@ -174,7 +174,7 @@ class SDKClient(object):
         """A collection of methods related to retrieving and updating alerts rules.
 
         Returns:
-            :class:`py42.clients.alertrules.AlertRulesModule`
+            :class:`py42.clients.alertrules.AlertRulesClient`
         """
         return self._clients.alerts
 
@@ -198,9 +198,9 @@ def _init_services(root_connection, host_address):
     file_events_connection = create_microservice_connection(file_events_key)
     pds_connection = create_microservice_connection(preservation_data_key)
     ecm_connection = create_microservice_connection(employee_case_mgmt_key)
-    user_svc = UserClient(authority_connection)
+    user_svc = UserService(authority_connection)
     administration_svc = AdministrationService(authority_connection)
-    file_events_service = FileEventClient(file_events_connection)
+    file_events_service = FileEventService(file_events_connection)
     user_ctx = UserContext(administration_svc)
     user_profile_svc = DetectionListUserService(ecm_connection, user_ctx, user_svc)
 
@@ -208,15 +208,15 @@ def _init_services(root_connection, host_address):
         administration=administration_svc,
         archive=ArchiveService(authority_connection),
         devices=DeviceService(authority_connection),
-        legalhold=LegalHoldClient(authority_connection),
-        orgs=OrgClient(authority_connection),
-        securitydata=SecurityClient(authority_connection),
-        users=UserClient(authority_connection),
+        legalhold=LegalHoldService(authority_connection),
+        orgs=OrgService(authority_connection),
+        securitydata=SecurityDataService(authority_connection),
+        users=UserService(authority_connection),
         alertrules=AlertRulesService(alert_rules_connection, user_ctx, user_profile_svc),
         alerts=AlertService(alerts_connection, user_ctx),
         filevents=file_events_service,
-        savedsearch=SavedSearchClient(file_events_connection, file_events_service),
-        preservationdata=PreservationDataServiceClient(pds_connection),
+        savedsearch=SavedSearchService(file_events_connection, file_events_service),
+        preservationdata=PreservationDataService(pds_connection),
         departingemployee=DepartingEmployeeService(
             ecm_connection, user_ctx, user_profile_svc
         ),
@@ -239,12 +239,13 @@ def _init_clients(services):
         securitydata=services.securitydata,
         users=services.users,
     )
-    detectionlists = DetectionListsModule(
+    detectionlists = DetectionListsClient(
         services.userprofile, services.departingemployee, services.highriskemployee
     )
 
+    alertrules = AlertRulesClient(services.alerts, services.alertrules)
     securitydata = SecurityModule(services.securitydata, None)
-    alerts = AlertsModule(services.alerts, services.alertrules)
+    alerts = AlertsClient(services.alerts, alertrules)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,

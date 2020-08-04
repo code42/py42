@@ -26,7 +26,7 @@ class SecurityModule(object):
         """A collection of methods related to retrieving forensic search data.
 
         Returns:
-            :class: `py42._internal.clients.securitydata.SavedSearchClient`
+            :class: `py42._internal.clients.securitydata.SavedSearchService`
         """
         return self._microservices_client_factory.get_saved_search_client()
 

@@ -6,7 +6,7 @@ from requests import Response
 
 import py42.settings
 from py42.response import Py42Response
-from py42.services.users import UserClient
+from py42.services.users import UserService
 
 USER_URI = "/api/User"
 
@@ -53,7 +53,7 @@ class TestUserClient(object):
         return Py42Response(response)
 
     def test_post_create_user_is_successful(self, mock_session, post_api_mock_response):
-        user_client = UserClient(mock_session)
+        user_client = UserService(mock_session)
         mock_session.post.return_value = post_api_mock_response
         org_uid = "TEST_ORG_ID"
         username = "TEST_ORG@TEST.COM"
@@ -79,7 +79,7 @@ class TestUserClient(object):
         self, mock_session, mock_get_all_response
     ):
         mock_session.get.side_effect = [mock_get_all_response]
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         for _ in client.get_all():
             break
         first_call = mock_session.get.call_args_list[0]
@@ -91,7 +91,7 @@ class TestUserClient(object):
     ):
         username = u"您已经发现了秘密信息"
         mock_session.get.return_value = successful_response
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         client.get_by_username(username)
         expected_params = {u"username": username}
         mock_session.get.assert_called_once_with(USER_URI, params=expected_params)
@@ -100,7 +100,7 @@ class TestUserClient(object):
         self, mock_session, successful_response
     ):
         mock_session.get.return_value = successful_response
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         client.get_by_id(123456)
         uri = "{}/{}".format(USER_URI, 123456)
         mock_session.get.assert_called_once_with(uri, params={})
@@ -109,7 +109,7 @@ class TestUserClient(object):
         self, mock_session, mock_get_all_response, mock_get_all_empty_response
     ):
         py42.settings.items_per_page = 1
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_response,
             mock_get_all_response,
@@ -123,25 +123,25 @@ class TestUserClient(object):
     def test_get_scim_data_by_uid_calls_get_with_expected_uri_and_params(
         self, mock_session
     ):
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         client.get_scim_data_by_uid("USER_ID")
         uri = "/api/v7/scim-user-data/collated-view"
         mock_session.get.assert_called_once_with(uri, params={"userId": "USER_ID"})
 
     def test_get_available_roles_calls_get_with_expected_uri(self, mock_session):
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         client.get_available_roles()
         uri = "/api/v4/role/view"
         mock_session.get.assert_called_once_with(uri)
 
     def test_get_roles_calls_get_with_expected_uri(self, mock_session):
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         client.get_roles(12345)
         uri = "/api/UserRole/12345"
         mock_session.get.assert_called_once_with(uri)
 
     def test_add_role_calls_post_with_expected_uri_and_data(self, mock_session):
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         client.add_role(12345, "Test Role Name")
         uri = "/api/UserRole"
         assert mock_session.post.call_args[0][0] == uri
@@ -149,13 +149,13 @@ class TestUserClient(object):
         assert '"userId": 12345' in mock_session.post.call_args[1]["data"]
 
     def test_delete_role_calls_delete_with_expected_uri_and_params(self, mock_session):
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         client.remove_role(12345, "Test Role Name")
         uri = "/api/UserRole?userId=12345&roleName=Test%20Role%20Name"
         mock_session.delete.assert_called_once_with(uri)
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_session):
-        client = UserClient(mock_session)
+        client = UserService(mock_session)
         client.get_page(10, True, "email", "org", "role", 100, "q")
         mock_session.get.assert_called_once_with(
             "/api/User",

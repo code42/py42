@@ -10,7 +10,7 @@ class FileEventQuery(BaseQuery):
 
     A FileEventQuery instance's ``all()`` and ``any()`` take one or more
     :class:`~py42.sdk.queries.query_filter.FilterGroup` objects to construct a query that
-    can be passed to the :meth:`FileEventClient.search()` method. ``all()`` returns results
+    can be passed to the :meth:`FileEventService.search()` method. ``all()`` returns results
     that match all of the provided filter criteria, ``any()`` will return results that
     match any of the filters.
 

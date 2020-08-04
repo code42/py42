@@ -6,7 +6,7 @@ from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.services.detectionlists._profile import DetectionListUserService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
-from py42.services.users import UserClient
+from py42.services.users import UserService
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
 _USER_ID = "890973079883949999"
@@ -70,7 +70,7 @@ class TestDepartingEmployeeClient(object):
 
     @pytest.fixture
     def mock_user_client(self, mock_session, user_context, py42_response):
-        user_client = UserClient(mock_session)
+        user_client = UserService(mock_session)
         mock_session.post.return_value = py42_response
         return user_client
 

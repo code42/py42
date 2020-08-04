@@ -49,7 +49,7 @@ class TestSDK(object):
             HOST_ADDRESS, mock_session_factory, success_requests_session
         )
         sdk = SDKClient(deps)
-        assert type(sdk.archive) == arch_mod.ArchiveModule
+        assert type(sdk.archive) == arch_mod.ArchiveClient
 
     def test_has_device_client_set(
         self, mock_session_factory, success_requests_session
@@ -65,7 +65,7 @@ class TestSDK(object):
             HOST_ADDRESS, mock_session_factory, success_requests_session
         )
         sdk = SDKClient(deps)
-        assert type(sdk.alerts) == alerts.AlertsModule
+        assert type(sdk.alerts) == alerts.AlertsClient
 
     def test_has_detection_lists_module_set(
         self, mock_session_factory, success_requests_session
@@ -74,7 +74,7 @@ class TestSDK(object):
             HOST_ADDRESS, mock_session_factory, success_requests_session
         )
         sdk = SDKClient(deps)
-        assert type(sdk.detectionlists) == detectionlists.DetectionListsModule
+        assert type(sdk.detectionlists) == detectionlists.DetectionListsClient
 
     def test_has_legal_hold_client_set(
         self, mock_session_factory, success_requests_session
@@ -83,14 +83,14 @@ class TestSDK(object):
             HOST_ADDRESS, mock_session_factory, success_requests_session
         )
         sdk = SDKClient(deps)
-        assert type(sdk.legalhold) == legalhold.LegalHoldClient
+        assert type(sdk.legalhold) == legalhold.LegalHoldService
 
     def test_has_org_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(
             HOST_ADDRESS, mock_session_factory, success_requests_session
         )
         sdk = SDKClient(deps)
-        assert type(sdk.orgs) == orgs.OrgClient
+        assert type(sdk.orgs) == orgs.OrgService
 
     def test_has_security_module_set(
         self, mock_session_factory, success_requests_session
@@ -106,7 +106,7 @@ class TestSDK(object):
             HOST_ADDRESS, mock_session_factory, success_requests_session
         )
         sdk = SDKClient(deps)
-        assert type(sdk.users) == users.UserClient
+        assert type(sdk.users) == users.UserService
 
     def test_has_user_context_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(

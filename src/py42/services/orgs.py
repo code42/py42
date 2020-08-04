@@ -5,10 +5,10 @@ from py42.services import BaseClient
 from py42.services.util import get_all_pages
 
 
-class OrgClient(BaseClient):
+class OrgService(BaseClient):
     """A client for interacting with Code42 organization APIs.
 
-    Use the OrgClient to create and retrieve organizations. You can also use it to block and
+    Use the OrgService to create and retrieve organizations. You can also use it to block and
     deactivate organizations.
     """
 

@@ -1,7 +1,7 @@
 from py42.services import BaseClient
 
 
-class SecurityClient(BaseClient):
+class SecurityDataService(BaseClient):
     def get_security_event_locations(self, user_uid):
         uri = u"/c42api/v3/SecurityEventsLocation"
         params = {u"userUid": user_uid}

@@ -1,4 +1,4 @@
-class AlertsModule(object):
+class AlertsClient(object):
     def __init__(self, alert_service, alert_rules_client):
         self._alert_service = alert_service
         self._alert_rules_client = alert_rules_client
@@ -8,7 +8,7 @@ class AlertsModule(object):
         """A collection of methods for managing alert rules.
 
         Returns:
-            :class:`py42.clients.alertrules.AlertRulesModule`
+            :class:`py42.clients.alertrules.AlertRulesClient`
         """
         return self._alert_rules_client
 

@@ -2,14 +2,14 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.services import BaseClient
 
 
-class SavedSearchClient(BaseClient):
+class SavedSearchService(BaseClient):
     """A client to interact with saved search APIs."""
 
     _version = u"v1"
     _resource = u"/forensic-search/queryservice/api/{}/saved".format(_version)
 
     def __init__(self, connection, file_event_client):
-        super(SavedSearchClient, self).__init__(connection)
+        super(SavedSearchService, self).__init__(connection)
         self._file_event_client = file_event_client
 
     def get(self):

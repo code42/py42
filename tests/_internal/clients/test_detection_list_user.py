@@ -6,13 +6,13 @@ from requests.exceptions import HTTPError
 
 from py42.exceptions import Py42BadRequestError
 from py42.services.detectionlists._profile import DetectionListUserService
-from py42.services.users import UserClient
+from py42.services.users import UserService
 
 
 class TestDetectionListUserClient(object):
     @pytest.fixture
     def mock_user_client(self, mock_session, user_context, py42_response):
-        user_client = UserClient(mock_session)
+        user_client = UserService(mock_session)
         py42_response.text = '{"username":"username"}'
         mock_session.get.return_value = py42_response
         return user_client
@@ -30,7 +30,7 @@ class TestDetectionListUserClient(object):
     def mock_user_client_raises_exception(
         self, mocker, mock_session, user_context, py42_response
     ):
-        user_client = UserClient(mock_session)
+        user_client = UserService(mock_session)
         response = mocker.MagicMock(spec=Response)
         response.status_code = 400
         exception = mocker.MagicMock(spec=HTTPError)

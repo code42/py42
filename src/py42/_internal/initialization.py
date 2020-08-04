@@ -42,7 +42,7 @@
 #             host_address, root_session, self.user_context, self.user_client,
 #         )
 #         # clients (feature sets that combine info from multiple services)
-#         self.archive_module = archive_module.ArchiveModule(
+#         self.archive_module = archive_module.ArchiveClient(
 #             archive_accessor_manager, self.archive_client
 #         )
 #         self.security_module = sec_module.SecurityModule(
@@ -50,10 +50,10 @@
 #             self.storage_client_factory,
 #             microservice_client_factory,
 #         )
-#         self.detection_lists_module = detectionlists.DetectionListsModule(
+#         self.detection_lists_module = detectionlists.DetectionListsClient(
 #             microservice_client_factory
 #         )
-#         self.alerts_module = alerts.AlertsModule(microservice_client_factory)
+#         self.alerts_module = alerts.AlertsClient(microservice_client_factory)
 #     def _set_v3_session(self, host_address, root_session):
 #         self.connection = create_jwt_session(host_address, root_session)
 #         self.connection.get(u"/api/User/my")

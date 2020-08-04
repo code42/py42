@@ -1,7 +1,7 @@
 from py42 import settings
 
 
-class AlertRulesModule(object):
+class AlertRulesClient(object):
     def __init__(self, alerts_service, alert_rules_service):
         self._alerts_service = alerts_service
         self._alert_rules_service = alert_rules_service

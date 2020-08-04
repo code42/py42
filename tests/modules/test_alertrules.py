@@ -1,7 +1,7 @@
 import pytest
 
 from py42._internal.client_factories import MicroserviceClientFactory
-from py42.clients.alertrules import AlertRulesModule
+from py42.clients.alertrules import AlertRulesClient
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
 
@@ -32,7 +32,7 @@ class TestAlertRulesModules(object):
         mock_microservice_client_factory.get_alert_rules_client.return_value = (
             mock_alert_rules_client
         )
-        alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
+        alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
         alert_rules_module.add_user(self._rule_id, self._rule_id)
         mock_alert_rules_client.add_user.assert_called_once_with(
             self._rule_id, self._rule_id
@@ -44,7 +44,7 @@ class TestAlertRulesModules(object):
         mock_microservice_client_factory.get_alert_rules_client.return_value = (
             mock_alert_rules_client
         )
-        alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
+        alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
         alert_rules_module.remove_user(self._rule_id, self._rule_id)
         mock_alert_rules_client.remove_user.assert_called_once_with(
             self._rule_id, self._rule_id
@@ -56,7 +56,7 @@ class TestAlertRulesModules(object):
         mock_microservice_client_factory.get_alert_rules_client.return_value = (
             mock_alert_rules_client
         )
-        alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
+        alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
         alert_rules_module.remove_all_users(self._rule_id)
         mock_alert_rules_client.remove_all_users.assert_called_once_with(self._rule_id)
 
@@ -66,7 +66,7 @@ class TestAlertRulesModules(object):
         mock_microservice_client_factory.get_alerts_client.return_value = (
             mock_alerts_client
         )
-        alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
+        alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
         alert_rules_module.get_all()
         assert mock_alerts_client.get_all_rules.call_count == 1
 
@@ -77,7 +77,7 @@ class TestAlertRulesModules(object):
         mock_microservice_client_factory.get_alerts_client.return_value = (
             mock_alerts_client
         )
-        alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
+        alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
         alert_rules_module.get_all_by_name(rule_name)
         mock_alerts_client.get_all_rules_by_name.assert_called_once_with(rule_name)
 
@@ -88,7 +88,7 @@ class TestAlertRulesModules(object):
         mock_microservice_client_factory.get_alerts_client.return_value = (
             mock_alerts_client
         )
-        alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
+        alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
         alert_rules_module.get_by_observer_id(rule_id)
         mock_alerts_client.get_rule_by_observer_id.assert_called_once_with(rule_id)
 
@@ -98,7 +98,7 @@ class TestAlertRulesModules(object):
         mock_microservice_client_factory.get_alerts_client.return_value = (
             mock_alerts_client
         )
-        alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
+        alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
         alert_rules_module.get_page("key", "dir", 70, 700)
         mock_alerts_client.get_rules_page.assert_called_once_with(
             sort_key="key", sort_direction="dir", page_num=70, page_size=700

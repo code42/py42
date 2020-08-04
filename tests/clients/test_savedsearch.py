@@ -1,7 +1,7 @@
 import json
 
-from py42.services.file_event import FileEventClient
-from py42.services.savedsearch import SavedSearchClient
+from py42.services.file_event import FileEventService
+from py42.services.savedsearch import SavedSearchService
 
 SAVED_SEARCH_GET_RESPONSE = """
     {"searches": [{"groups": [] }]}
@@ -11,8 +11,8 @@ SAVED_SEARCH_GET_RESPONSE = """
 class TestSavedSearchClient(object):
     def test_get_calls_get_with_expected_uri(self, mock_session, py42_response):
         mock_session.get.return_value = py42_response
-        file_event_client = FileEventClient(mock_session)
-        saved_search_client = SavedSearchClient(mock_session, file_event_client)
+        file_event_client = FileEventService(mock_session)
+        saved_search_client = SavedSearchService(mock_session, file_event_client)
         saved_search_client.get()
         assert mock_session.get.call_count == 1
         assert (
@@ -22,8 +22,8 @@ class TestSavedSearchClient(object):
 
     def test_get_by_id_calls_get_with_expected_uri(self, mock_session, py42_response):
         mock_session.get.return_value = py42_response
-        file_event_client = FileEventClient(mock_session)
-        saved_search_client = SavedSearchClient(mock_session, file_event_client)
+        file_event_client = FileEventService(mock_session)
+        saved_search_client = SavedSearchService(mock_session, file_event_client)
         saved_search_client.get_by_id(u"TEst-id")
         assert (
             mock_session.get.call_args[0][0]
@@ -33,8 +33,8 @@ class TestSavedSearchClient(object):
     def test_execute_calls_post_with_expected_uri(self, mock_session, py42_response):
         py42_response.text = '{u"searches": [{u"groups": []}]}'
         mock_session.post.return_value = py42_response
-        file_event_client = FileEventClient(mock_session)
-        saved_search_client = SavedSearchClient(mock_session, file_event_client)
+        file_event_client = FileEventService(mock_session)
+        saved_search_client = SavedSearchService(mock_session, file_event_client)
         saved_search_client.execute(u"test-id")
         assert (
             mock_session.post.call_args[0][0]
@@ -44,8 +44,8 @@ class TestSavedSearchClient(object):
     def test_execute_calls_post_with_expected_query(self, mock_session, py42_response):
         py42_response.text = SAVED_SEARCH_GET_RESPONSE
         mock_session.get.return_value = py42_response
-        file_event_client = FileEventClient(mock_session)
-        saved_search_client = SavedSearchClient(mock_session, file_event_client)
+        file_event_client = FileEventService(mock_session)
+        saved_search_client = SavedSearchService(mock_session, file_event_client)
         saved_search_client.execute(u"test-id")
         assert mock_session.post.call_count == 1
         posted_data = json.loads(mock_session.post.call_args[1]["data"])
@@ -58,8 +58,8 @@ class TestSavedSearchClient(object):
     def test_get_query_calls_get_with_expected_uri(self, mock_session, py42_response):
         py42_response.text = '{u"searches": [{u"groups": []}]}'
         mock_session.post.return_value = py42_response
-        file_event_client = FileEventClient(mock_session)
-        saved_search_client = SavedSearchClient(mock_session, file_event_client)
+        file_event_client = FileEventService(mock_session)
+        saved_search_client = SavedSearchService(mock_session, file_event_client)
         saved_search_client.get_query(u"test-id")
         assert (
             mock_session.get.call_args[0][0]

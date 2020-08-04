@@ -4,7 +4,7 @@ import pytest
 
 from py42.services.detectionlists._profile import DetectionListUserService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
-from py42.services.users import UserClient
+from py42.services.users import UserService
 
 CREATE_USER_SAMPLE_RESPONSE = """
     {"type$":"USER_V2","tenantId":"1d71796f-af5b-4231-9d8e-df6434da4663",
@@ -25,7 +25,7 @@ class TestHighRiskEmployeeClient(object):
 
     @pytest.fixture
     def mock_user_client(self, mock_session, user_context, py42_response):
-        user_client = UserClient(mock_session)
+        user_client = UserService(mock_session)
         mock_session.post.return_value = py42_response
         return user_client
 

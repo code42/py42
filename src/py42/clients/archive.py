@@ -1,4 +1,4 @@
-class ArchiveModule(object):
+class ArchiveClient(object):
     """A module for getting information about backup archives on storage nodes along with
     functionality for streaming a file from backup.
     """

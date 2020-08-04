@@ -3,7 +3,7 @@ from requests import Response
 
 import py42
 from py42.response import Py42Response
-from py42.services.legalhold import LegalHoldClient
+from py42.services.legalhold import LegalHoldService
 
 LEGAL_HOLD_URI = "/api/LegalHold"
 
@@ -66,7 +66,7 @@ class TestLegalHoldClient(object):
         self, mock_session, successful_response
     ):
         mock_session.get.return_value = successful_response
-        client = LegalHoldClient(mock_session)
+        client = LegalHoldService(mock_session)
         client.get_matter_by_uid("LEGAL_HOLD_UID")
         uri = "{}/{}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
         mock_session.get.assert_called_once_with(uri)
@@ -78,7 +78,7 @@ class TestLegalHoldClient(object):
         mock_get_all_matters_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldClient(mock_session)
+        client = LegalHoldService(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_matters_response,
             mock_get_all_matters_response,
@@ -96,7 +96,7 @@ class TestLegalHoldClient(object):
         mock_get_all_matter_custodians_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldClient(mock_session)
+        client = LegalHoldService(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_matter_custodians_response,
             mock_get_all_matter_custodians_response,
@@ -110,7 +110,7 @@ class TestLegalHoldClient(object):
     def test_get_matters_page_calls_get_with_expected_url_and_params(
         self, mock_session
     ):
-        client = LegalHoldClient(mock_session)
+        client = LegalHoldService(mock_session)
         client.get_matters_page(10, "creator", True, "name", "ref", 100)
         mock_session.get.assert_called_once_with(
             "/api/LegalHold",
@@ -127,7 +127,7 @@ class TestLegalHoldClient(object):
     def test_get_custodians_page_calls_get_with_expected_url_and_params(
         self, mock_session
     ):
-        client = LegalHoldClient(mock_session)
+        client = LegalHoldService(mock_session)
         client.get_custodians_page(
             20, "membership", "legalhold", "user ID", "username", True, 200
         )

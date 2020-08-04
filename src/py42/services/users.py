@@ -6,8 +6,8 @@ from py42.services import BaseClient
 from py42.services.util import get_all_pages
 
 
-class UserClient(BaseClient):
-    """A client for interacting with Code42 user APIs. Use the UserClient to create and retrieve
+class UserService(BaseClient):
+    """A client for interacting with Code42 user APIs. Use the UserService to create and retrieve
     users. You can also use it to block and deactivate users.
     """
 

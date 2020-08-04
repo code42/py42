@@ -4,7 +4,7 @@ from requests import Response
 
 import py42.settings
 from py42.response import Py42Response
-from py42.services.orgs import OrgClient
+from py42.services.orgs import OrgService
 
 COMPUTER_URI = "/api/Org"
 
@@ -36,7 +36,7 @@ class TestOrgClient(object):
         self, mock_session, successful_response
     ):
         mock_session.get.return_value = successful_response
-        client = OrgClient(mock_session)
+        client = OrgService(mock_session)
         client.get_by_id(12345)
         uri = "{}/{}".format(COMPUTER_URI, 12345)
         mock_session.get.assert_called_once_with(uri, params={})
@@ -45,7 +45,7 @@ class TestOrgClient(object):
         self, mock_session, mock_get_all_response, mock_get_all_empty_response
     ):
         py42.settings.items_per_page = 1
-        client = OrgClient(mock_session)
+        client = OrgService(mock_session)
         mock_session.get.side_effect = [
             mock_get_all_response,
             mock_get_all_response,
@@ -57,7 +57,7 @@ class TestOrgClient(object):
         assert mock_session.get.call_count == 3
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_session):
-        client = OrgClient(mock_session)
+        client = OrgService(mock_session)
         client.get_page(3, 25)
         mock_session.get.assert_called_once_with(
             "/api/Org", params={"pgNum": 3, "pgSize": 25}
@@ -67,7 +67,7 @@ class TestOrgClient(object):
         self, mock_session, successful_response
     ):
         mock_session.get.return_value = successful_response
-        client = OrgClient(mock_session)
+        client = OrgService(mock_session)
         client.get_agent_state("ORG_ID", property_name="KEY")
         expected_params = {"orgId": "ORG_ID", "propertyName": "KEY"}
         uri = u"/api/v14/agent-state/view-by-organization-id"
@@ -77,7 +77,7 @@ class TestOrgClient(object):
         self, mock_session, successful_response, mocker
     ):
         mock_session.get.return_value = successful_response
-        client = OrgClient(mock_session)
+        client = OrgService(mock_session)
         client.get_agent_state = mocker.Mock()
         client.get_agent_full_disk_access_states("ORG_ID")
         client.get_agent_state.assert_called_once_with("ORG_ID", "fullDiskAccess")

@@ -2,7 +2,7 @@ from py42._compat import str
 from py42.services import BaseClient
 
 
-class FileEventClient(BaseClient):
+class FileEventService(BaseClient):
     """A client for searching file events.
 
     See the :ref:`Executing Searches User Guide <anchor_search_file_events>` to learn more about how

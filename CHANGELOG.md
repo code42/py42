@@ -67,6 +67,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError` when the user is not found.
 - `py42.alerts.rules.add_user()` now raises `Py42InvalidRuleTypeError` when trying to add a user to a system rule.
 - `py42.alerts.rules.remove_user()` now raises `Py42InvalidRuleTypeError` when trying to a remove user from a system rule.
+- `Py42ArchiveFileNotFoundError` now includes the response.
+- `Py42ChecksumNotFoundError` now includes the response.
+- `Py42FeatureUnavailableError` now includes the response.
+- `Py42UserDoesNotExistError` now includes the response.
+- `Py42StorageSessionInitializationError` now includes the response.
 
 ## 1.7.1 - 2020-07-24
 

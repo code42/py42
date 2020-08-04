@@ -5,36 +5,85 @@ class Py42Error(Exception):
     """A generic, Py42 custom base exception."""
 
 
-class Py42ArchiveFileNotFoundError(Py42Error):
+class Py42ResponseError(Py42Error):
+    """A generic, Py42 custom base exception from a HTTP response."""
+
+    def __init__(self, response, message):
+        super(Py42ResponseError, self).__init__(message)
+        self._response = response
+
+    @property
+    def response(self):
+        """The response prior to the error."""
+        return self._response
+
+
+class Py42ArchiveFileNotFoundError(Py42ResponseError):
     """An exception raised when a resource file is not found or the path is invalid."""
 
-    def __init__(self, device_guid, file_path):
+    def __init__(self, response, device_guid, file_path):
         message = u"File not found in archive for device {} at path {}".format(
             device_guid, file_path
         )
-        super(Py42ArchiveFileNotFoundError, self).__init__(message)
+        super(Py42ArchiveFileNotFoundError, self).__init__(response, message)
 
 
-class Py42ChecksumNotFoundError(Py42Error):
+class Py42ChecksumNotFoundError(Py42ResponseError):
     """An exception raised when a user-supplied hash could not successfully locate its corresponding resource."""
 
-    def __init__(self, checksum_name, checksum_value):
+    def __init__(self, response, checksum_name, checksum_value):
         message = u"No files found with {} checksum {}".format(
             checksum_name, checksum_value
         )
-        super(Py42ChecksumNotFoundError, self).__init__(message)
+        super(Py42ChecksumNotFoundError, self).__init__(response, message)
 
 
-class Py42FeatureUnavailableError(Py42Error):
+class Py42FeatureUnavailableError(Py42ResponseError):
     """An exception raised when a requested feature is not supported in your Code42 environment."""
 
-    def __init__(self):
+    def __init__(self, response):
         super(Py42FeatureUnavailableError, self).__init__(
-            u"You may be trying to use a feature that is unavailable in your environment."
+            response,
+            u"You may be trying to use a feature that is unavailable in your environment.",
         )
 
 
-class Py42SessionInitializationError(Py42Error):
+class Py42UserDoesNotExistError(Py42ResponseError):
+    """An exception raised when a username is not in our system."""
+
+    def __init__(self, username, response):
+        super(Py42UserDoesNotExistError, self).__init__(
+            response, message=u"User '{}' does not exist.".format(username),
+        )
+
+
+class Py42HTTPError(Py42ResponseError):
+    """A base custom class to manage all HTTP errors raised by an API endpoint."""
+
+    def __init__(self, exception, message=None):
+        message = message or u"Failure in HTTP call {}".format(str(exception))
+        super(Py42HTTPError, self).__init__(exception.response, message)
+
+
+class Py42SecurityPlanConnectionError(Py42HTTPError):
+    """An exception raised when the user is not authorized to access the requested resource."""
+
+    def __init__(self, exception, error_message):
+        super(Py42SecurityPlanConnectionError, self).__init__(exception, error_message)
+
+
+class Py42StorageSessionInitializationError(Py42HTTPError):
+    """An exception raised when the user is not authorized to initialize a storage session. This
+    may occur when trying to restore a file or trying to get events for file activity on removable
+    media, in cloud sync folders, and browser uploads."""
+
+    def __init__(self, exception, error_message):
+        super(Py42StorageSessionInitializationError, self).__init__(
+            exception, error_message
+        )
+
+
+class Py42SessionInitializationError(Py42HTTPError):
     """An exception raised when a user session is invalid. A session might be invalid due to
     session timeout, invalid token, etc.
     """
@@ -44,46 +93,7 @@ class Py42SessionInitializationError(Py42Error):
             u"An error occurred while requesting "
             u"server environment information, caused by {}".format(str(exception))
         )
-        super(Py42SessionInitializationError, self).__init__(error_message)
-
-
-class Py42SecurityPlanConnectionError(Py42Error):
-    """An exception raised when the user is not authorized to access the requested resource."""
-
-    def __init__(self, error_message):
-        super(Py42SecurityPlanConnectionError, self).__init__(error_message)
-
-
-class Py42StorageSessionInitializationError(Py42Error):
-    """An exception raised when the user is not authorized to initialize a storage session. This
-    may occur when trying to restore a file or trying to get events for file activity on removable
-    media, in cloud sync folders, and browser uploads."""
-
-    def __init__(self, error_message):
-        super(Py42StorageSessionInitializationError, self).__init__(error_message)
-
-
-class Py42HTTPError(Py42Error):
-    """A base custom class to manage all HTTP errors raised by an API endpoint."""
-
-    def __init__(self, exception=None, message=None, response=None):
-        message = message or u"Failure in HTTP call {}".format(str(exception))
-        super(Py42HTTPError, self).__init__(message)
-        self._response = response or exception.response
-
-    @property
-    def response(self):
-        """The response object containing the HTTP error details."""
-        return self._response
-
-
-class Py42UserDoesNotExistError(Py42HTTPError):
-    """An exception raised when a username is not in our system."""
-
-    def __init__(self, username, response):
-        super(Py42UserDoesNotExistError, self).__init__(
-            message=u"User '{}' does not exist.".format(username), response=response,
-        )
+        super(Py42SessionInitializationError, self).__init__(exception, error_message)
 
 
 class Py42UserAlreadyAddedError(Py42HTTPError):

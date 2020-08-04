@@ -95,11 +95,11 @@ class ArchiveAccessor(object):
         response = self._get_children(node_id=None)
         for root in response:
             if root[u"path"].lower() == path_root.lower():
-                return self._walk_tree(root, path_parts[1:])
+                return self._walk_tree(response, root, path_parts[1:])
 
-        raise Py42ArchiveFileNotFoundError(self._device_guid, file_path)
+        raise Py42ArchiveFileNotFoundError(response, self._device_guid, file_path)
 
-    def _walk_tree(self, current_node, remaining_path_components):
+    def _walk_tree(self, response, current_node, remaining_path_components):
         if not remaining_path_components or not remaining_path_components[0]:
             return current_node
 
@@ -111,9 +111,9 @@ class ArchiveAccessor(object):
 
         for child in children:
             if child[u"path"].lower() == target_child_path.lower():
-                return self._walk_tree(child, remaining_path_components[1:])
+                return self._walk_tree(response, child, remaining_path_components[1:])
 
-        raise Py42ArchiveFileNotFoundError(self._device_guid, target_child_path)
+        raise Py42ArchiveFileNotFoundError(response, self._device_guid, target_child_path)
 
     def _get_children(self, node_id=None):
         return self._storage_archive_client.get_file_path_metadata(

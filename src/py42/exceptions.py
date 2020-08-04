@@ -82,8 +82,7 @@ class Py42UserDoesNotExistError(Py42HTTPError):
 
     def __init__(self, username, response):
         super(Py42UserDoesNotExistError, self).__init__(
-            message=u"User '{}' does not exist.".format(username),
-            response=response,
+            message=u"User '{}' does not exist.".format(username), response=response,
         )
 
 

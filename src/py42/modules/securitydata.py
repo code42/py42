@@ -5,8 +5,8 @@ from requests.exceptions import HTTPError
 
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
-from py42.exceptions import Py42ResponseError
 from py42.exceptions import Py42HTTPError
+from py42.exceptions import Py42ResponseError
 from py42.exceptions import Py42SecurityPlanConnectionError
 from py42.exceptions import raise_py42_error
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
@@ -63,7 +63,7 @@ class SecurityModule(object):
                 raise Py42SecurityPlanConnectionError(
                     response,
                     u"Could not establish a connection to retrieve "
-                    u"security events for user {}".format(user_uid)
+                    u"security events for user {}".format(user_uid),
                 )
 
             return selected_plan_infos
@@ -203,7 +203,7 @@ class SecurityModule(object):
             raise Py42ResponseError(
                 response,
                 u"PDS service can't find requested file "
-                u"with md5 hash {} and sha256 hash {}.".format(md5_hash, sha256_hash)
+                u"with md5 hash {} and sha256 hash {}.".format(md5_hash, sha256_hash),
             )
 
         for device_id, paths in _parse_file_location_response(response):

@@ -37,8 +37,8 @@ class TestOrgClient(object):
     ):
         mock_session.get.return_value = successful_response
         client = OrgClient(mock_session)
-        client.get_by_id("ORG_ID")
-        uri = "{}/{}".format(COMPUTER_URI, "ORG_ID")
+        client.get_by_id(12345)
+        uri = "{}/{}".format(COMPUTER_URI, 12345)
         mock_session.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
@@ -55,3 +55,29 @@ class TestOrgClient(object):
             pass
         py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
+
+    def test_get_page_calls_get_with_expected_url_and_params(self, mock_session):
+        client = OrgClient(mock_session)
+        client.get_page(3, 25)
+        mock_session.get.assert_called_once_with(
+            "/api/Org", params={"pgNum": 3, "pgSize": 25}
+        )
+
+    def test_get_agent_state_calls_get_with_uri_and_params(
+        self, mock_session, successful_response
+    ):
+        mock_session.get.return_value = successful_response
+        client = OrgClient(mock_session)
+        client.get_agent_state("ORG_ID", property_name="KEY")
+        expected_params = {"orgId": "ORG_ID", "propertyName": "KEY"}
+        uri = u"/api/v14/agent-state/view-by-organization-id"
+        mock_session.get.assert_called_once_with(uri, params=expected_params)
+
+    def test_get_agent_full_disk_access_states_calls_get_agent_state_with_arguments(
+        self, mock_session, successful_response, mocker
+    ):
+        mock_session.get.return_value = successful_response
+        client = OrgClient(mock_session)
+        client.get_agent_state = mocker.Mock()
+        client.get_agent_full_disk_access_states("ORG_ID")
+        client.get_agent_state.assert_called_once_with("ORG_ID", "fullDiskAccess")

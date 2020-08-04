@@ -36,26 +36,34 @@ def test_exposure_type_not_exists_str_gives_correct_json_representation():
 
 
 def test_exposure_type_eq_str_gives_correct_json_representation():
-    _filter = ExposureType.eq("test_exposure")
-    expected = IS.format("exposure", "test_exposure")
+    _filter = ExposureType.eq(ExposureType.APPLICATION_READ)
+    expected = IS.format("exposure", "ApplicationRead")
     assert str(_filter) == expected
 
 
 def test_exposure_type_not_eq_str_gives_correct_json_representation():
-    _filter = ExposureType.not_eq("test_exposure")
-    expected = IS_NOT.format("exposure", "test_exposure")
+    _filter = ExposureType.not_eq(ExposureType.IS_PUBLIC)
+    expected = IS_NOT.format("exposure", "IsPublic")
     assert str(_filter) == expected
 
 
 def test_exposure_type_is_in_str_gives_correct_json_representation():
-    items = ["exposure1", "exposure2", "exposure3"]
+    items = [
+        ExposureType.CLOUD_STORAGE,
+        ExposureType.OUTSIDE_TRUSTED_DOMAINS,
+        ExposureType.SHARED_TO_DOMAIN,
+    ]
     _filter = ExposureType.is_in(items)
     expected = IS_IN.format("exposure", *items)
     assert str(_filter) == expected
 
 
 def test_exposure_type_not_in_str_gives_correct_json_representation():
-    items = ["exposure1", "exposure2", "exposure3"]
+    items = [
+        ExposureType.CLOUD_STORAGE,
+        ExposureType.OUTSIDE_TRUSTED_DOMAINS,
+        ExposureType.SHARED_TO_DOMAIN,
+    ]
     _filter = ExposureType.not_in(items)
     expected = NOT_IN.format("exposure", *items)
     assert str(_filter) == expected
@@ -477,3 +485,31 @@ def test_window_title_not_in_str_gives_correct_json_representation():
     _filter = WindowTitle.not_in(items)
     expected = NOT_IN.format("windowTitle", *items)
     assert str(_filter) == expected
+
+
+def test_exposure_type_choices_returns_valid_attributes():
+    choices = ExposureType.choices()
+    valid_set = {
+        "SharedViaLink",
+        "SharedToDomain",
+        "ApplicationRead",
+        "CloudStorage",
+        "RemovableMedia",
+        "IsPublic",
+        "OutsideTrustedDomains",
+    }
+    assert set(choices) == valid_set
+
+
+def test_sync_destination_choices_returns_valid_attributes():
+    choices = SyncDestination.choices()
+    valid_set = {
+        "ICloud",
+        "Box",
+        "BoxDrive",
+        "GoogleDrive",
+        "GoogleBackupAndSync",
+        "Dropbox",
+        "OneDrive",
+    }
+    assert set(choices) == valid_set

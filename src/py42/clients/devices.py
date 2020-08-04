@@ -1,5 +1,6 @@
 import json
 
+from py42 import settings
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
 
@@ -7,8 +8,9 @@ from py42.clients.util import get_all_pages
 class DeviceClient(BaseClient):
     """A class to interact with Code42 device/computer APIs."""
 
-    def _get_page(
+    def get_page(
         self,
+        page_num,
         active=None,
         blocked=None,
         org_uid=None,
@@ -16,11 +18,38 @@ class DeviceClient(BaseClient):
         destination_guid=None,
         include_backup_usage=None,
         include_counts=True,
-        page_num=None,
         page_size=None,
         q=None,
     ):
+        """Gets a page of devices.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
+
+        Args:
+            page_num (int): The page number to request.
+            active (bool, optional): Filters results by device state. When set to True, gets all
+                active devices. When set to False, gets all deactivated devices. When set to None
+                or excluded, gets all devices regardless of state. Defaults to None.
+            blocked (bool, optional): Filters results by blocked status: True or False. Defaults
+                to None.
+            org_uid (int, optional): The identification number of an Organization. Defaults to None.
+            user_uid (int, optional): The identification number of a User. Defaults to None.
+            destination_guid (str or int, optional): The globally unique identifier of the storage
+                server that the device back up to. Defaults to None.
+            include_backup_usage (bool, optional): A flag to denote whether to include the
+                destination and its backup stats. Defaults to None.
+            include_counts (bool, optional): A flag to denote whether to include total, warning,
+                and critical counts. Defaults to True.
+            page_size (int, optional): The number of devices to return per page. Defaults to
+                `py42.settings.items_per_page`.
+            q (str, optional): Searches results flexibly by incomplete GUID, hostname,
+                computer name, etc. Defaults to None.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+
         uri = u"/api/Computer"
+        page_size = page_size or settings.items_per_page
         params = {
             u"active": active,
             u"blocked": blocked,
@@ -81,7 +110,7 @@ class DeviceClient(BaseClient):
         """
 
         return get_all_pages(
-            self._get_page,
+            self.get_page,
             u"computers",
             active=active,
             blocked=blocked,
@@ -209,3 +238,30 @@ class DeviceClient(BaseClient):
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
         return self._session.get(uri, params=params)
+
+    def get_agent_state(self, guid, property_name):
+        """Gets the agent state of the device.
+            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
+
+            Args:
+                guid (str): The globally unique identifier of the device.
+                property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
+
+            Returns:
+                :class:`py42.response.Py42Response`: A response containing settings information.
+            """
+        uri = u"/api/v14/agent-state/view-by-device-guid"
+        params = {u"deviceGuid": guid, u"propertyName": property_name}
+        return self._session.get(uri, params=params)
+
+    def get_agent_full_disk_access_state(self, guid):
+        """Gets the full disk access status of a device.
+            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
+
+            Args:
+                guid (str): The globally unique identifier of the device.
+
+            Returns:
+                :class:`py42.response.Py42Response`: A response containing settings information.
+            """
+        return self.get_agent_state(guid, u"fullDiskAccess")

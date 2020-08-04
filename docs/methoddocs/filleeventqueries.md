@@ -41,6 +41,22 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 ### Event Filters
 
 ```eval_rst
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_exists_filter_group
+```
+
+```eval_rst
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_not_exists_filter_group
+```
+
+```eval_rst
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_greater_than_filter_group
+```
+
+```eval_rst
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_less_than_filter_group
+```
+
+```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.EventTimestamp
     :members:
     :inherited-members:
@@ -63,6 +79,20 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.Source
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.MimeTypeMismatch
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.event_filter.OutsideActiveHours
     :members:
     :inherited-members:
     :show-inheritance:
@@ -144,6 +174,13 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.device_filter.PublicIPAddress
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.device_filter.DeviceSignedInUserName
     :members:
     :inherited-members:
     :show-inheritance:
@@ -304,6 +341,38 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 
 ```eval_rst
 .. autoclass:: py42.sdk.queries.fileevents.filters.email_filter.EmailFrom
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+### Activity Filters
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.activity_filter.TrustedActivity
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.activity_filter.RemoteActivity
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+### Printer Filters
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.print_filter.Printer
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.print_filter.PrintJobName
     :members:
     :inherited-members:
     :show-inheritance:

@@ -10,6 +10,72 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+- Methods for calling the agent-state APIs:
+    - `sdk.devices.get_agent_state()`
+    - `sdk.devices.get_agent_full_disk_access_state()`
+    - `sdk.orgs.get_agent_state()`
+    - `sdk.orgs.get_agent_full_disk_access_states()`
+
+### Added
+
+- Methods for getting individual response pages:
+    - `sdk.detectionlists.departing_employee.get_page()`
+    - `sdk.detectionlists.high_risk.get_page()`
+    - `sdk.users.get_page()`
+    - `sdk.devices.get_page()`
+    - `sdk.orgs.get_page()`
+    - `sdk.legalhold.get_matters_page()`
+    - `sdk.legalhold.get_custodians_page()`
+    - `sdk.alerts.get_rules_page()`
+
+- Added enum object `py42.modules.detectionlists.RiskTags` with constants:
+    - `FLIGHT_RISK`
+    - `HIGH_IMPACT_EMPLOYEE`
+    - `ELEVATED_ACCESS_PRIVILEGES`
+    - `PERFORMANCE_CONCERNS`
+    - `SUSPICIOUS_SYSTEM_ACTIVITY`
+    - `POOR_SECURITY_PRACTICES`
+    - `CONTRACT_EMPLOYEE`
+
+- Added below event filter support
+    - TrustedActivity
+    - RemoteActivity
+    - PrintJobName
+    - Printer
+    - DeviceSignedInUserName
+
+- Added attributes to below event filters and added `choices` method to return list of all available attributes
+    - FileCategory
+    - SyncDestination
+    - ExposureType
+    - Source
+    - EventTimestamp
+    - EventType
+    - SharingTypeAdded
+    - RuleSource
+    - RuleType
+    - AlertState
+    - Severity
+
+## 1.7.1 - 2020-07-24
+
+### Changed
+
+- `sdk.securitydata.stream_file_by_md5()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42ArchiveFileNotFoundError`).
+- `sdk.securitydata.stream_file_by_sha256()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42Error`).
+
+### Fixed
+
+- functions now return `Py42Response` objects as expected:
+    - `sdk.detectionlists.update_user_notes()`
+    - `sdk.detectionlists.add_user_risk_tags()`
+    - `sdk.detectionlists.remove_user_risk_tags()`
+    - `sdk.detectionlists.add_user_cloud_alias()`
+    - `sdk.detectionlists.remove_user_cloud_alias()`
+- `sdk.archive.get_all_org_cold_storage_archives()` now actually uses parameters `include_child_orgs`, `sort_key` and `sort_dir`.
+
+## 1.7.0 - 2020-07-21
+
 ### Added
 
 - Functions for managing role assignment:

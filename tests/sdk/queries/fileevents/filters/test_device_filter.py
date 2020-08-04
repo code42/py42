@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pytest
 from tests.sdk.queries.conftest import EXISTS
 from tests.sdk.queries.conftest import IS
 from tests.sdk.queries.conftest import IS_IN
@@ -7,6 +8,7 @@ from tests.sdk.queries.conftest import NOT_EXISTS
 from tests.sdk.queries.conftest import NOT_IN
 
 from py42._internal.compat import str
+from py42.sdk.queries.fileevents.filters.device_filter import DeviceSignedInUserName
 from py42.sdk.queries.fileevents.filters.device_filter import DeviceUsername
 from py42.sdk.queries.fileevents.filters.device_filter import OSHostname
 from py42.sdk.queries.fileevents.filters.device_filter import PrivateIPAddress
@@ -172,4 +174,29 @@ def test_public_ip_address_not_in_str_gives_correct_json_representation():
     items = ["publicIpAddress1", "publicIpAddress2", "publicIpAddress3"]
     _filter = PublicIPAddress.not_in(items)
     expected = NOT_IN.format("publicIpAddress", *items)
+    assert str(_filter) == expected
+
+
+@pytest.mark.parametrize(
+    "filter_criteria, test_filter",
+    [(DeviceSignedInUserName.eq, IS), (DeviceSignedInUserName.not_eq, IS_NOT)],
+)
+def test_equality_device_signed_in_username_gives_correct_json_representation(
+    filter_criteria, test_filter
+):
+    _filter = filter_criteria("username")
+    expected = test_filter.format("operatingSystemUser", "username")
+    assert str(_filter) == expected
+
+
+@pytest.mark.parametrize(
+    "filter_criteria, test_filter",
+    [(DeviceSignedInUserName.is_in, IS_IN), (DeviceSignedInUserName.not_in, NOT_IN)],
+)
+def test_multi_vlaue_device_signed_in_username_gives_correct_json_representation(
+    filter_criteria, test_filter
+):
+    usernames = ["username1", "username2", "username3"]
+    _filter = filter_criteria(usernames)
+    expected = test_filter.format("operatingSystemUser", *usernames)
     assert str(_filter) == expected

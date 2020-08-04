@@ -192,13 +192,3 @@ class TestPy42Session(object):
         assert success_requests_session.request.call_count == 1
         session.get(URL)  # second request will be unauthorized and call request again
         assert success_requests_session.request.call_count == 3
-
-    def test_request_upon_exception_url_included_in_message(
-        self, error_requests_session, renewing_auth_handler
-    ):
-        session = Py42Session(
-            error_requests_session, HOST_ADDRESS, renewing_auth_handler
-        )
-        with pytest.raises(Py42InternalServerError) as e:
-            session.get(URL)
-            assert e.request.url == URL

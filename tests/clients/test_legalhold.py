@@ -106,3 +106,40 @@ class TestLegalHoldClient(object):
             pass
         py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
+
+    def test_get_matters_page_calls_get_with_expected_url_and_params(
+        self, mock_session
+    ):
+        client = LegalHoldClient(mock_session)
+        client.get_matters_page(10, "creator", True, "name", "ref", 100)
+        mock_session.get.assert_called_once_with(
+            "/api/LegalHold",
+            params={
+                "creatorUserUid": "creator",
+                "activeState": "ACTIVE",
+                "name": "name",
+                "holdExtRef": "ref",
+                "pgNum": 10,
+                "pgSize": 100,
+            },
+        )
+
+    def test_get_custodians_page_calls_get_with_expected_url_and_params(
+        self, mock_session
+    ):
+        client = LegalHoldClient(mock_session)
+        client.get_custodians_page(
+            20, "membership", "legalhold", "user ID", "username", True, 200
+        )
+        mock_session.get.assert_called_once_with(
+            "/api/LegalHoldMembership",
+            params={
+                "legalHoldMembershipUid": "membership",
+                "legalHoldUid": "legalhold",
+                "userUid": "user ID",
+                "user": "username",
+                "activeState": "ACTIVE",
+                "pgNum": 20,
+                "pgSize": 200,
+            },
+        )

@@ -1,15 +1,41 @@
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import QueryFilterStringField
 from py42.sdk.queries.query_filter import QueryFilterTimestampField
 
 
 def create_contains_filter_group(term, value):
+    """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering results
+    where the value with key ``term`` contains the given value. Useful for creating ``CONTAINS``
+    filters that are not yet supported in py42 or programmatically crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor``.
+        value (str): The value used to match on.
+
+    Returns:
+        :class:`~py42.sdk.queries.query_filter.FilterGroup`
+    """
+
     filter_list = [create_query_filter(term, u"CONTAINS", value)]
     return create_filter_group(filter_list, u"AND")
 
 
 def create_not_contains_filter_group(term, value):
+    """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering results
+    where the value with key ``term`` does not contain the given value. Useful for creating
+    ``DOES_NOT_CONTAIN`` filters that are not yet supported in py42 or programmatically
+    crafting filter groups.
+
+    Args:
+        term: (str): The term of the filter, such as ``actor``.
+        value (str): The value used to exclude on.
+
+    Returns:
+        :class:`~py42.sdk.queries.query_filter.FilterGroup`
+    """
+
     filter_list = [create_query_filter(term, u"DOES_NOT_CONTAIN", value)]
     return create_filter_group(filter_list, u"AND")
 
@@ -17,10 +43,34 @@ def create_not_contains_filter_group(term, value):
 class AlertQueryFilterStringField(QueryFilterStringField):
     @classmethod
     def contains(cls, value):
+        """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering
+        results where the value with key ``self._term`` contains the given value. Useful
+        for creating ``CONTAINS`` filters that are not yet supported in py42 or programmatically
+        crafting filter groups.
+
+        Args:
+            value (str): The value used to match on.
+
+        Returns:
+            :class:`~py42.sdk.queries.query_filter.FilterGroup`
+        """
+
         return create_contains_filter_group(cls._term, value)
 
     @classmethod
     def not_contains(cls, value):
+        """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering
+        results where the value with key ``self._term`` does not contain the given value.
+        Useful for creating ``DOES_NOT_CONTAIN`` filters that are not yet supported in py42
+        or programmatically crafting filter groups.
+
+        Args:
+            value (str): The value used to exclude on.
+
+        Returns:
+            :class:`~py42.sdk.queries.query_filter.FilterGroup`
+        """
+
         return create_not_contains_filter_group(cls._term, value)
 
 
@@ -64,6 +114,10 @@ class RuleSource(QueryFilterStringField):
     DEPARTING_EMPLOYEE = u"Departing Employee"
     HIGH_RISK_EMPLOYEE = u"High Risk Employee"
 
+    @staticmethod
+    def choices():
+        return filter_attributes(RuleSource)
+
 
 class RuleType(QueryFilterStringField):
     """Class that filters alerts based on rule type.
@@ -79,6 +133,10 @@ class RuleType(QueryFilterStringField):
     ENDPOINT_EXFILTRATION = u"FedEndpointExfiltration"
     CLOUD_SHARE_PERMISSIONS = u"FedCloudSharePermissions"
     FILE_TYPE_MISMATCH = u"FedFileTypeMismatch"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(RuleType)
 
 
 class Description(AlertQueryFilterStringField):
@@ -102,6 +160,10 @@ class Severity(QueryFilterStringField):
     MEDIUM = u"MEDIUM"
     LOW = u"LOW"
 
+    @staticmethod
+    def choices():
+        return filter_attributes(Severity)
+
 
 class AlertState(QueryFilterStringField):
     """Class that filters alerts based on alert state.
@@ -115,3 +177,7 @@ class AlertState(QueryFilterStringField):
 
     OPEN = u"OPEN"
     DISMISSED = u"RESOLVED"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(AlertState)

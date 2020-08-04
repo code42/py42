@@ -110,8 +110,8 @@ class LegalHoldClient(BaseClient):
         uri = u"/api/LegalHold/{}".format(legal_hold_uid)
         try:
             return self._session.get(uri)
-        except (Py42BadRequestError, Py42ForbiddenError):
-            raise Py42LegalHoldNotFoundOrPermissionDeniedError(legal_hold_uid)
+        except (Py42BadRequestError, Py42ForbiddenError) as err:
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
 
     def get_matters_page(
         self,
@@ -282,13 +282,13 @@ class LegalHoldClient(BaseClient):
         data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
         try:
             return self._session.post(uri, data=json.dumps(data))
-        except Py42BadRequestError as e:
-            if u"USER_ALREADY_IN_HOLD" in e.response.text:
+        except Py42BadRequestError as err:
+            if u"USER_ALREADY_IN_HOLD" in err.response.text:
                 matter = self.get_matter_by_uid(legal_hold_uid)
                 matter_id_and_name_text = u"legal hold matter id={}, name={}".format(
                     legal_hold_uid, matter[u"name"]
                 )
-                raise Py42UserAlreadyAddedError(user_uid, matter_id_and_name_text)
+                raise Py42UserAlreadyAddedError(err, user_uid, matter_id_and_name_text)
             raise
 
     def remove_from_matter(self, legal_hold_membership_uid):

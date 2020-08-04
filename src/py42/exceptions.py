@@ -63,26 +63,6 @@ class Py42StorageSessionInitializationError(Py42Error):
         super(Py42StorageSessionInitializationError, self).__init__(error_message)
 
 
-class Py42UserAlreadyAddedError(Py42Error):
-    """An exception raised when the user is already added to group or list, such as the
-    Departing Employee list."""
-
-    def __init__(self, user_id, list_name):
-        msg = u"User with ID {} is already on the {}.".format(user_id, list_name)
-        super(Py42UserAlreadyAddedError, self).__init__(msg)
-
-
-class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42Error):
-    """An exception raised when a legal hold matter is inaccessible from your account."""
-
-    def __init__(self, matter_id):
-        super(Py42LegalHoldNotFoundOrPermissionDeniedError, self).__init__(
-            u"Matter with id={} either does not exist or your account does not have permission to view it.".format(
-                matter_id
-            )
-        )
-
-
 class Py42UserDoesNotExistError(Py42Error):
     """An exception raised when a username is not in our system."""
 
@@ -92,20 +72,11 @@ class Py42UserDoesNotExistError(Py42Error):
         )
 
 
-class Py42InvalidRuleTypeError(Py42Error):
-    """An exception raised when trying to add or remove users to a system rule."""
-
-    def __init__(self, rule_id, source):
-        msg = u"Only alert rules with a source of 'Alerting' can be targeted by this command. "
-        msg += u"Rule {0} has a source of '{1}'."
-        super(Py42InvalidRuleTypeError, self).__init__(msg.format(rule_id, source))
-
-
 class Py42HTTPError(Py42Error):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
-    def __init__(self, exception):
-        message = u"Failure in HTTP call {}".format(str(exception))
+    def __init__(self, exception, message=None):
+        message = message or u"Failure in HTTP call {}".format(str(exception))
         super(Py42HTTPError, self).__init__(message)
         self._response = exception.response
 
@@ -113,6 +84,38 @@ class Py42HTTPError(Py42Error):
     def response(self):
         """The response object containing the HTTP error details."""
         return self._response
+
+
+class Py42UserAlreadyAddedError(Py42HTTPError):
+    """An exception raised when the user is already added to group or list, such as the
+    Departing Employee list."""
+
+    def __init__(self, exception, user_id, list_name):
+        msg = u"User with ID {} is already on the {}.".format(user_id, list_name)
+        super(Py42UserAlreadyAddedError, self).__init__(exception, msg)
+
+
+class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42HTTPError):
+    """An exception raised when a legal hold matter is inaccessible from your account."""
+
+    def __init__(self, exception, matter_id):
+        super(Py42LegalHoldNotFoundOrPermissionDeniedError, self).__init__(
+            exception,
+            u"Matter with id={} either does not exist or your account does not have permission to view it.".format(
+                matter_id
+            ),
+        )
+
+
+class Py42InvalidRuleTypeError(Py42HTTPError):
+    """An exception raised when trying to add or remove users to a system rule."""
+
+    def __init__(self, exception, rule_id, source):
+        msg = u"Only alert rules with a source of 'Alerting' can be targeted by this command. "
+        msg += u"Rule {0} has a source of '{1}'."
+        super(Py42InvalidRuleTypeError, self).__init__(
+            exception, msg.format(rule_id, source)
+        )
 
 
 class Py42BadRequestError(Py42HTTPError):

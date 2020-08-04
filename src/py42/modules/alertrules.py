@@ -50,9 +50,9 @@ class AlertRulesModule(object):
         rules_client = self.microservice_client_factory.get_alert_rules_client()
         try:
             return rules_client.add_user(rule_id, user_id)
-        except Py42InternalServerError:
+        except Py42InternalServerError as err:
             rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
-            _check_if_system_rule(rules)
+            _check_if_system_rule(err, rules)
             raise
 
     def remove_user(self, rule_id, user_id):
@@ -68,9 +68,9 @@ class AlertRulesModule(object):
         rules_client = self.microservice_client_factory.get_alert_rules_client()
         try:
             return rules_client.remove_user(rule_id, user_id)
-        except Py42InternalServerError:
+        except Py42InternalServerError as err:
             rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
-            _check_if_system_rule(rules)
+            _check_if_system_rule(err, rules)
             raise
 
     def remove_all_users(self, rule_id):
@@ -153,9 +153,9 @@ class AlertRulesModule(object):
         return alerts_client.get_rule_by_observer_id(observer_id)
 
 
-def _check_if_system_rule(rules):
+def _check_if_system_rule(base_err, rules):
     """You cannot add or remove users from system rules this way."""
     if rules and rules[0][u"isSystem"]:
         raise Py42InvalidRuleTypeError(
-            rules[0][u"observerRuleId"], rules[0][u"ruleSource"]
+            base_err, rules[0][u"observerRuleId"], rules[0][u"ruleSource"]
         )

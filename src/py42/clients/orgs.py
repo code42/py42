@@ -167,7 +167,7 @@ class OrgClient(BaseClient):
 
             Args:
                 orgId (str): The org's identifier.
-                propertyName (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
+                property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
 
             Returns:
                 :class:`py42.response.Py42Response`: A response containing settings information.

@@ -64,7 +64,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
 - `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.
 - `py42.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when the matter is unavailable.
-- `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError`.
+- `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError` when the user is not found.
 - `py42.alerts.rules.add_user()` now raises `Py42InvalidRuleTypeError` when trying to add a user to a system rule.
 - `py42.alerts.rules.remove_user()` now raises `Py42InvalidRuleTypeError` when trying to a remove user from a system rule.
 

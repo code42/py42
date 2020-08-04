@@ -63,27 +63,28 @@ class Py42StorageSessionInitializationError(Py42Error):
         super(Py42StorageSessionInitializationError, self).__init__(error_message)
 
 
-class Py42UserDoesNotExistError(Py42Error):
-    """An exception raised when a username is not in our system."""
-
-    def __init__(self, username):
-        super(Py42UserDoesNotExistError, self).__init__(
-            u"User '{}' does not exist.".format(username)
-        )
-
-
 class Py42HTTPError(Py42Error):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
-    def __init__(self, exception, message=None):
+    def __init__(self, exception=None, message=None, response=None):
         message = message or u"Failure in HTTP call {}".format(str(exception))
         super(Py42HTTPError, self).__init__(message)
-        self._response = exception.response
+        self._response = response or exception.response
 
     @property
     def response(self):
         """The response object containing the HTTP error details."""
         return self._response
+
+
+class Py42UserDoesNotExistError(Py42HTTPError):
+    """An exception raised when a username is not in our system."""
+
+    def __init__(self, username, response):
+        super(Py42UserDoesNotExistError, self).__init__(
+            message=u"User '{}' does not exist.".format(username),
+            response=response,
+        )
 
 
 class Py42UserAlreadyAddedError(Py42HTTPError):
@@ -121,36 +122,21 @@ class Py42InvalidRuleTypeError(Py42HTTPError):
 class Py42BadRequestError(Py42HTTPError):
     """A wrapper to represent an HTTP 400 error."""
 
-    def __init__(self, exception):
-        super(Py42BadRequestError, self).__init__(exception)
-
 
 class Py42UnauthorizedError(Py42HTTPError):
     """A wrapper to represent an HTTP 401 error."""
-
-    def __init__(self, exception):
-        super(Py42UnauthorizedError, self).__init__(exception)
 
 
 class Py42ForbiddenError(Py42HTTPError):
     """A wrapper to represent an HTTP 403 error."""
 
-    def __init__(self, exception):
-        super(Py42ForbiddenError, self).__init__(exception)
-
 
 class Py42NotFoundError(Py42HTTPError):
     """A wrapper to represent an HTTP 404 error."""
 
-    def __init__(self, exception):
-        super(Py42NotFoundError, self).__init__(exception)
-
 
 class Py42InternalServerError(Py42HTTPError):
     """A wrapper to represent an HTTP 500 error."""
-
-    def __init__(self, exception):
-        super(Py42InternalServerError, self).__init__(exception)
 
 
 def raise_py42_error(raised_error):

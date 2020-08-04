@@ -92,10 +92,10 @@ class UserClient(BaseClient):
         """
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
-        users = self._session.get(uri, params=params)
-        if not users[u"users"]:
-            raise Py42UserDoesNotExistError(username)
-        return users
+        response = self._session.get(uri, params=params)
+        if not response[u"users"]:
+            raise Py42UserDoesNotExistError(username, response)
+        return response
 
     def get_current(self, **kwargs):
         """Gets the currently signed in user.

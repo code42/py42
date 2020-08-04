@@ -19,16 +19,16 @@ class ArchiveModule(object):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
-            file_path (str): The path to the file in your archive.
+            file_path (str or list): The path to the file in your archive.
             device_guid (str): The GUID of the device the file belongs to.
             destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your
                 destinations or if you want to optimize performance. Defaults to None.
-            archive_password (str, None): The password for archives that are protected with an
+            archive_password (str or None): The password for archives that are protected with an
                 additional password. This is only relevant to users with archive key password
                 security. Defaults to None.
-            encryption_key (str, None): A custom encryption key for decryption an archive's file
+            encryption_key (str or None): A custom encryption key for decryption an archive's file
                 contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
         Returns:

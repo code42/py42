@@ -82,11 +82,18 @@ class ArchiveAccessor(object):
         self._restore_job_manager = restore_job_manager
 
     def stream_from_backup(self, file_path):
-        metadata = self._get_file_via_walking_tree(file_path)
-        file_selection = self._build_file_selection(
-            metadata[u"path"], metadata[u"type"]
-        )
-        return self._restore_job_manager.get_stream(file_selection)
+        if not isinstance(file_path, (list, tuple)):
+            file_path = [file_path]
+
+        selections = []
+        for path in file_path:
+            metadata = self._get_file_via_walking_tree(path)
+            file_selection = self._build_file_selection(
+                metadata[u"path"], metadata[u"type"]
+            )
+            selections.append(file_selection)
+
+        return self._restore_job_manager.get_stream(selections)
 
     def _get_file_via_walking_tree(self, file_path):
         path_parts = file_path.split(u"/")
@@ -125,7 +132,7 @@ class ArchiveAccessor(object):
 
     @staticmethod
     def _build_file_selection(file_path, file_type):
-        path_set = [{u"type": file_type, u"path": file_path, u"selected": True}]
+        path_set = {u"type": file_type, u"path": file_path, u"selected": True}
         # pass in dummy values; only used with progress indication, which we don't currently use
         num_files = num_dirs = size = 1
         return FileSelection(path_set, num_files, num_dirs, size)
@@ -146,8 +153,8 @@ class RestoreJobManager(object):
         self._archive_session_id = archive_session_id
         self._job_polling_interval = job_polling_interval
 
-    def get_stream(self, file_selection):
-        response = self._start_restore(file_selection)
+    def get_stream(self, file_selections):
+        response = self._start_restore(file_selections)
         job_id = response["jobId"]
 
         while not self.is_job_complete(job_id):
@@ -159,14 +166,18 @@ class RestoreJobManager(object):
         response = self._storage_archive_client.get_restore_status(job_id)
         return self._get_completion_status(response)
 
-    def _start_restore(self, file_selection):
+    def _start_restore(self, file_selections):
+        num_files = sum([fs.num_files for fs in file_selections])
+        num_dirs = sum([fs.num_dirs for fs in file_selections])
+        size = sum([fs.size for fs in file_selections])
         return self._storage_archive_client.start_restore(
             self._device_guid,
             self._archive_session_id,
-            file_selection.path_set,
-            file_selection.num_files,
-            file_selection.num_dirs,
-            file_selection.size,
+            [fs.path_set for fs in file_selections],
+            num_files,
+            num_dirs,
+            size,
+            zip_result=len(file_selections) > 1,
             show_deleted=True,
         )
 

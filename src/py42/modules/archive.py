@@ -14,6 +14,7 @@ class ArchiveModule(object):
         destination_guid=None,
         archive_password=None,
         encryption_key=None,
+        exceptions=None,
     ):
         """Streams a file from a backup archive to memory.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
@@ -25,12 +26,14 @@ class ArchiveModule(object):
                 of the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your
                 destinations or if you want to optimize performance. Defaults to None.
-            archive_password (str or None): The password for archives that are protected with an
+            archive_password (str or None, optional): The password for archives that are protected with an
                 additional password. This is only relevant to users with archive key password
                 security. Defaults to None.
-            encryption_key (str or None): A custom encryption key for decryption an archive's file
+            encryption_key (str or None, optional): A custom encryption key for decryption an archive's file
                 contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
+            exceptions (list, optional): A list of file paths that to exclude from the restore. Only
+                relevant when restoring more than one file. Defaults to None.
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.
 
@@ -48,7 +51,7 @@ class ArchiveModule(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        return archive_accessor.stream_from_backup(file_path)
+        return archive_accessor.stream_from_backup(file_path, exceptions)
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific

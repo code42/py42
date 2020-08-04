@@ -81,7 +81,7 @@ class ArchiveAccessor(object):
         self._storage_archive_client = storage_archive_client
         self._restore_job_manager = restore_job_manager
 
-    def stream_from_backup(self, file_path):
+    def stream_from_backup(self, file_path, exceptions):
         if not isinstance(file_path, (list, tuple)):
             file_path = [file_path]
 
@@ -93,7 +93,7 @@ class ArchiveAccessor(object):
             )
             selections.append(file_selection)
 
-        return self._restore_job_manager.get_stream(selections)
+        return self._restore_job_manager.get_stream(selections, exceptions)
 
     def _get_file_via_walking_tree(self, file_path):
         path_parts = file_path.split(u"/")
@@ -153,8 +153,8 @@ class RestoreJobManager(object):
         self._archive_session_id = archive_session_id
         self._job_polling_interval = job_polling_interval
 
-    def get_stream(self, file_selections):
-        response = self._start_restore(file_selections)
+    def get_stream(self, file_selections, exceptions):
+        response = self._start_restore(file_selections, exceptions)
         job_id = response["jobId"]
 
         while not self.is_job_complete(job_id):
@@ -166,7 +166,7 @@ class RestoreJobManager(object):
         response = self._storage_archive_client.get_restore_status(job_id)
         return self._get_completion_status(response)
 
-    def _start_restore(self, file_selections):
+    def _start_restore(self, file_selections, exceptions):
         num_files = sum([fs.num_files for fs in file_selections])
         num_dirs = sum([fs.num_dirs for fs in file_selections])
         size = sum([fs.size for fs in file_selections])
@@ -179,6 +179,7 @@ class RestoreJobManager(object):
             size,
             zip_result=len(file_selections) > 1,
             show_deleted=True,
+            exceptions=exceptions,
         )
 
     @staticmethod

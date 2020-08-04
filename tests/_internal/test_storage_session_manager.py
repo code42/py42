@@ -1,6 +1,5 @@
-from urllib.error import HTTPError
-
 import pytest
+from requests import HTTPError
 from requests import Response
 
 from py42._internal.session_factory import SessionFactory

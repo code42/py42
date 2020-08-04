@@ -12,7 +12,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- Exception classes (`py42.execeptions`)
+- Exception classes (`py42.execeptions`
+    - `Py42ResponseError`
     - `Py42UserAlreadyAddedError`
     - `Py42UserNotInLegalHoldError`
     - `Py42LegalHoldNotFoundOrPermissionDeniedError`

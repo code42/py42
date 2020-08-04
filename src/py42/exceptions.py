@@ -6,7 +6,7 @@ class Py42Error(Exception):
 
 
 class Py42ResponseError(Py42Error):
-    """A generic, Py42 custom base exception from a HTTP response."""
+    """A generic, Py42 custom base exception from an HTTP response."""
 
     def __init__(self, response, message):
         super(Py42ResponseError, self).__init__(message)

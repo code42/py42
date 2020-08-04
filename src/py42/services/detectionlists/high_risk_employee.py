@@ -12,8 +12,8 @@ class HighRiskEmployeeClient(BaseClient):
     _uri_prefix = u"/svc/api/{}".format(_api_version)
     _resource = u"/highriskemployee"
 
-    def __init__(self, connection, user_context, detection_list_user_client):
-        super(HighRiskEmployeeClient, self).__init__(connection)
+    def __init__(self, cnxn, user_context, detection_list_user_client):
+        super(HighRiskEmployeeClient, self).__init__(cnxn)
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
 

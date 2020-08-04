@@ -17,19 +17,19 @@ class ConnectionManager(object):
     def get_storage_session(self, token_provider):
         try:
             url = token_provider.get_login_info()[u"serverUrl"]
-            connection = self.get_saved_session_for_url(url)
-            if connection is None:
+            cnxn = self.get_saved_session_for_url(url)
+            if cnxn is None:
                 with self._list_update_lock:
-                    connection = self.get_saved_session_for_url(url)
-                    if connection is None:
-                        connection = self.create_storage_session(url, token_provider)
-                        self._session_cache.update({url.lower(): connection})
+                    cnxn = self.get_saved_session_for_url(url)
+                    if cnxn is None:
+                        cnxn = self.create_storage_session(url, token_provider)
+                        self._session_cache.update({url.lower(): cnxn})
         except HTTPError as ex:
-            message = u"Failed to create or retrieve connection, caused by: {}".format(
+            message = u"Failed to create or retrieve cnxn, caused by: {}".format(
                 str(ex)
             )
             raise Py42StorageSessionInitializationError(message)
-        return connection
+        return cnxn
 
     def create_storage_session(self, url, token_provider):
         return self._session_factory.create_storage_session(url, token_provider)

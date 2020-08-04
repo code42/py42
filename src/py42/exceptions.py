@@ -35,8 +35,8 @@ class Py42FeatureUnavailableError(Py42Error):
 
 
 class Py42SessionInitializationError(Py42Error):
-    """An exception raised when a user connection is invalid. A connection might be invalid due to
-    connection timeout, invalid token, etc.
+    """An exception raised when a user cnxn is invalid. A cnxn might be invalid due to
+    cnxn timeout, invalid token, etc.
     """
 
     def __init__(self, exception):
@@ -55,7 +55,7 @@ class Py42SecurityPlanConnectionError(Py42Error):
 
 
 class Py42StorageSessionInitializationError(Py42Error):
-    """An exception raised when the user is not authorized to initialize a storage connection. This
+    """An exception raised when the user is not authorized to initialize a storage cnxn. This
     may occur when trying to restore a file or trying to get events for file activity on removable
     media, in cloud sync folders, and browser uploads."""
 

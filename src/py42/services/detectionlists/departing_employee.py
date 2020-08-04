@@ -10,8 +10,8 @@ class DepartingEmployeeClient(BaseClient):
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
 
-    def __init__(self, connection, user_context, detection_list_user_client):
-        super(DepartingEmployeeClient, self).__init__(connection)
+    def __init__(self, cnxn, user_context, detection_list_user_client):
+        super(DepartingEmployeeClient, self).__init__(cnxn)
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
 

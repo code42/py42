@@ -1,15 +1,16 @@
 class DetectionListsModule(object):
-    def __init__(self, microservice_client_factory):
-        self._microservice_client_factory = microservice_client_factory
-        self._detection_list_user_client = None
+    def __init__(self, user_profile_service, departing_employee_service, high_risk_employee_service):
+        self._user_profile_service = user_profile_service
+        self._departing_employee_service = departing_employee_service
+        self._high_risk_employee_service = high_risk_employee_service
 
     @property
     def departing_employee(self):
-        return self._microservice_client_factory.get_departing_employee_client()
+        return self._departing_employee_service
 
     @property
     def high_risk_employee(self):
-        return self._microservice_client_factory.get_high_risk_employee_client()
+        return self._high_risk_employee_service
 
     def create_user(self, username):
         """Create a detection list profile for a user.
@@ -20,9 +21,7 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        factory = self._microservice_client_factory
-        self._detection_list_user_client = factory.get_detection_list_user_client()
-        return self._detection_list_user_client.create(username)
+        return self._user_profile_service.create(username)
 
     def get_user(self, username):
         """Get user details by username.
@@ -33,9 +32,7 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        factory = self._microservice_client_factory
-        self._detection_list_user_client = factory.get_detection_list_user_client()
-        return self._detection_list_user_client.get(username)
+        return self._user_profile_service.get(username)
 
     def get_user_by_id(self, user_id):
         """Get user details by user_id.
@@ -46,9 +43,7 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        factory = self._microservice_client_factory
-        self._detection_list_user_client = factory.get_detection_list_user_client()
-        return self._detection_list_user_client.get_by_id(user_id)
+        return self._user_profile_service.get_by_id(user_id)
 
     def update_user_notes(self, user_id, notes):
         """Add or update notes related to the user.
@@ -60,9 +55,7 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        factory = self._microservice_client_factory
-        self._detection_list_user_client = factory.get_detection_list_user_client()
-        return self._detection_list_user_client.update_notes(user_id, notes)
+        return self._user_profile_service.update_notes(user_id, notes)
 
     def add_user_risk_tags(self, user_id, tags):
         """Add one or more risk factor tags.
@@ -76,9 +69,7 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        factory = self._microservice_client_factory
-        self._detection_list_user_client = factory.get_detection_list_user_client()
-        return self._detection_list_user_client.add_risk_tags(user_id, tags)
+        return self._user_profile_service.add_risk_tags(user_id, tags)
 
     def remove_user_risk_tags(self, user_id, tags):
         """Remove one or more risk factor tags.
@@ -92,9 +83,7 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        factory = self._microservice_client_factory
-        self._detection_list_user_client = factory.get_detection_list_user_client()
-        return self._detection_list_user_client.remove_risk_tags(user_id, tags)
+        return self._user_profile_service.remove_risk_tags(user_id, tags)
 
     def add_user_cloud_alias(self, user_id, alias):
         """Add a cloud alias to a user.
@@ -106,9 +95,7 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        factory = self._microservice_client_factory
-        self._detection_list_user_client = factory.get_detection_list_user_client()
-        return self._detection_list_user_client.add_cloud_alias(user_id, alias)
+        return self._user_profile_service.add_cloud_alias(user_id, alias)
 
     def remove_user_cloud_alias(self, user_id, alias):
         """Remove a cloud alias from a user.
@@ -120,9 +107,7 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        factory = self._microservice_client_factory
-        self._detection_list_user_client = factory.get_detection_list_user_client()
-        return self._detection_list_user_client.remove_cloud_alias(user_id, alias)
+        return self._user_profile_service.remove_cloud_alias(user_id, alias)
 
     def refresh_user_scim_attributes(self, user_id):
         """Refresh SCIM attributes of a user.
@@ -134,6 +119,4 @@ class DetectionListsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        factory = self._microservice_client_factory
-        self._detection_list_user_client = factory.get_detection_list_user_client()
-        return self._detection_list_user_client.refresh(user_id)
+        return self._user_profile_service.refresh(user_id)

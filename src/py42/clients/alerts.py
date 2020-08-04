@@ -1,12 +1,9 @@
-from py42.clients.alertrules import AlertRulesModule
 
 
 class AlertsModule(object):
-    def __init__(self, microservice_client_factory, alert_rules_module=None):
-        self._microservice_client_factory = microservice_client_factory
-        self._alert_rules_module = alert_rules_module or AlertRulesModule(
-            self._microservice_client_factory
-        )
+    def __init__(self, alert_service, alert_rules_client):
+        self._alert_service = alert_service
+        self._alert_rules_client = alert_rules_client
 
     @property
     def rules(self):
@@ -15,7 +12,7 @@ class AlertsModule(object):
         Returns:
             :class:`py42.clients.alertrules.AlertRulesModule`
         """
-        return self._alert_rules_module
+        return self._alert_rules_client
 
     def search(self, query):
         """Searches alerts using the given :class:`py42.sdk.queries.alerts.alert_query.AlertQuery`.
@@ -29,8 +26,7 @@ class AlertsModule(object):
             :class:`py42.response.Py42Response`: A response containing the alerts that match the given
             query.
         """
-        alert_client = self._microservice_client_factory.get_alerts_client()
-        return alert_client.search(query)
+        return self._alert_service.search(query)
 
     def get_details(self, alert_ids, tenant_id=None):
         """Gets the details for the alerts with the given IDs, including the file event query that,
@@ -46,8 +42,7 @@ class AlertsModule(object):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the alert details.
         """
-        alert_client = self._microservice_client_factory.get_alerts_client()
-        return alert_client.get_details(alert_ids, tenant_id=tenant_id)
+        return self._alert_service.get_details(alert_ids, tenant_id=tenant_id)
 
     def resolve(self, alert_ids, tenant_id=None, reason=None):
         """Resolves the alerts with the given IDs.
@@ -62,8 +57,7 @@ class AlertsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        alert_client = self._microservice_client_factory.get_alerts_client()
-        return alert_client.resolve(alert_ids, tenant_id=tenant_id, reason=reason)
+        return self._alert_service.resolve(alert_ids, tenant_id=tenant_id, reason=reason)
 
     def reopen(self, alert_ids, tenant_id=None, reason=None):
         """Reopens the resolved alerts with the given IDs.
@@ -78,5 +72,4 @@ class AlertsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        alert_client = self._microservice_client_factory.get_alerts_client()
-        return alert_client.reopen(alert_ids, tenant_id=tenant_id, reason=reason)
+        return self._alert_service.reopen(alert_ids, tenant_id=tenant_id, reason=reason)

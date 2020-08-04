@@ -157,6 +157,9 @@ class Connection(object):
             cookies=cookies,
             hooks=hooks,
         )
+
+        _print_request(method, url, params=params, data=data)
+
         return request.prepare()
 
     def _get_host_address(self):

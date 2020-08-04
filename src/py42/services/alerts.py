@@ -10,8 +10,8 @@ from py42.services.util import get_all_pages
 class AlertClient(BaseClient):
     _uri_prefix = u"/svc/api/v1/{0}"
 
-    def __init__(self, connection, user_context):
-        super(AlertClient, self).__init__(connection)
+    def __init__(self, cnxn, user_context):
+        super(AlertClient, self).__init__(cnxn)
         self._user_context = user_context
 
     def search(self, query):

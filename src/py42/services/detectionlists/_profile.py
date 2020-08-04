@@ -15,8 +15,8 @@ class DetectionListUserClient(BaseClient):
     _uri_prefix = u"/svc/api/{}".format(_api_version)
     _resource = u"/user"
 
-    def __init__(self, connection, user_context, user_client):
-        super(DetectionListUserClient, self).__init__(connection)
+    def __init__(self, cnxn, user_context, user_client):
+        super(DetectionListUserClient, self).__init__(cnxn)
         self._user_context = user_context
         self._user_client = user_client
 

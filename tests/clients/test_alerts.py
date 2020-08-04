@@ -60,9 +60,9 @@ TEST_NON_PARSEABLE_ALERT_DETAIL_RESPONSE = """
 @pytest.fixture
 def mock_get_all_session(mocker, py42_response):
     py42_response.text = TEST_RESPONSE
-    connection = mocker.MagicMock(spec=Connection)
-    connection.post.return_value = py42_response
-    return connection
+    cnxn = mocker.MagicMock(spec=Connection)
+    cnxn.post.return_value = py42_response
+    return cnxn
 
 
 class TestAlertClient(object):

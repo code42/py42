@@ -12,7 +12,7 @@ class C42AuthBase(AuthBase):
     def __call__(self, r):
         with self._auth_lock:
             self._credentials = self._credentials or self._get_credentials()
-            r[u"Authorization"] = self._credentials
+            r.headers[u"Authorization"] = self._credentials
         return r
 
     def clear_credentials(self):
@@ -26,7 +26,7 @@ class C42AuthBase(AuthBase):
 
 class V3Auth(C42AuthBase):
     def __init__(self, auth_connection):
-        super(V3Auth).__init__()
+        super(V3Auth, self).__init__()
         self._auth_connection = auth_connection
 
     def _get_credentials(self):

@@ -54,7 +54,7 @@ WEB_RESTORE_JOB_ID = "46289723"
 
 
 @pytest.fixture
-def connection(mocker, py42_response):
+def cnxn(mocker, py42_response):
     py_session = mocker.MagicMock(spec=Connection)
     py42_response.text = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
 
@@ -68,12 +68,12 @@ def storage_archive_client(mocker):
 
 
 class TestStorageArchiveClient(object):
-    def test_search_paths_calls_get_with_expected_params(self, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+    def test_search_paths_calls_get_with_expected_params(self, cnxn):
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.search_paths(
             "session_id", "device_id", "regex", 1000, "timestamp", True
         )
-        connection.get.assert_called_once_with(
+        cnxn.get.assert_called_once_with(
             "/api/WebRestoreSearch",
             params={
                 "webRestoreSessionId": "session_id",
@@ -85,12 +85,12 @@ class TestStorageArchiveClient(object):
             },
         )
 
-    def test_get_file_size_calls_get_with_expected_params(self, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+    def test_get_file_size_calls_get_with_expected_params(self, cnxn):
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.get_file_size(
             "device_guid", "file_id", "timestamp", True, "backupset_id"
         )
-        connection.get.assert_called_once_with(
+        cnxn.get.assert_called_once_with(
             u"/api/WebRestoreFileSize",
             params={
                 "guid": "device_guid",
@@ -101,10 +101,10 @@ class TestStorageArchiveClient(object):
             },
         )
 
-    def test_get_file_path_metadata_calls_get_with_expected_params(self, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+    def test_get_file_path_metadata_calls_get_with_expected_params(self, cnxn):
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.get_file_path_metadata(
-            "connection",
+            "cnxn",
             "guid",
             "file_id",
             "timestamp",
@@ -114,10 +114,10 @@ class TestStorageArchiveClient(object):
             "backupset_id",
             True,
         )
-        connection.get.assert_called_once_with(
+        cnxn.get.assert_called_once_with(
             u"/api/WebRestoreTreeNode",
             params={
-                "webRestoreSessionId": "connection",
+                "webRestoreSessionId": "cnxn",
                 "guid": "guid",
                 "fileId": "file_id",
                 "timestamp": "timestamp",
@@ -130,73 +130,73 @@ class TestStorageArchiveClient(object):
         )
 
     def test_create_restore_session_calls_post_with_correct_url(
-        self, mocker, connection
+        self, mocker, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.create_restore_session(DEVICE_GUID)
-        connection.post.assert_called_once_with(
+        cnxn.post.assert_called_once_with(
             WEB_RESTORE_SESSION_URL, json=mocker.ANY
         )
 
     def test_create_restore_session_with_device_guid_calls_post_with_device_guid_in_json(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
 
         storage_archive_client.create_restore_session(DEVICE_GUID)
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(COMPUTER_GUID_KEY) == DEVICE_GUID
 
     def test_create_restore_session_with_data_key_token_calls_post_with_data_key_token_in_json(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
 
         storage_archive_client.create_restore_session(
             DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(DATA_KEY_TOKEN_KEY) == DATA_KEY_TOKEN
 
     def test_create_restore_session_with_private_password_calls_post_with_private_password_in_json(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
 
         storage_archive_client.create_restore_session(
             DEVICE_GUID, private_password=PRIVATE_PASSWORD
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(PRIVATE_PASSWORD_KEY) == PRIVATE_PASSWORD
 
     def test_create_restore_session_with_encryption_key_calls_post_with_encryption_key_in_json(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
 
         storage_archive_client.create_restore_session(
             DEVICE_GUID, encryption_key=ENCRYPTION_KEY
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(ENCRYPTION_KEY_KEY) == ENCRYPTION_KEY
 
-    def test_start_restore_calls_post_with_correct_url(self, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+    def test_start_restore_calls_post_with_correct_url(self, cnxn):
+        storage_archive_client = StorageArchiveClient(cnxn)
 
         storage_archive_client.start_restore(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES, NUM_DIRS, SIZE
         )
-        assert connection.post.call_args[ARGS_INDEX][ARGS_INDEX] == WEB_RESTORE_JOB_URL
+        assert cnxn.post.call_args[ARGS_INDEX][ARGS_INDEX] == WEB_RESTORE_JOB_URL
 
     def test_start_restore_with_required_args_calls_post_with_all_args_in_json(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.start_restore(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES, NUM_DIRS, SIZE
         )
 
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
 
         keys = [
             GUID_KEY,
@@ -217,9 +217,9 @@ class TestStorageArchiveClient(object):
         assert sorted(json_arg.keys()) == sorted(keys)
 
     def test_start_restore_with_opt_zip_result_as_false_calls_post_with_zip_result_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
 
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -230,13 +230,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             zip_result=False,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(ZIP_RESULT_KEY) is False
 
     def test_start_restore_with_opt_zip_result_as_true_calls_post_with_zip_result_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
 
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -247,13 +247,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             zip_result=True,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(ZIP_RESULT_KEY) is True
 
     def test_start_restore_with_expire_job_as_true_calls_post_with_expire_job_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
 
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -264,13 +264,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             expire_job=True,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(EXPIRE_JOB_KEY) is True
 
     def test_start_restore_with_expire_job_as_false_calls_post_with_expire_job_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
 
         storage_archive_client.start_restore(
             DEVICE_GUID,
@@ -281,13 +281,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             expire_job=False,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(EXPIRE_JOB_KEY) is False
 
     def test_start_restore_with_show_deleted_true_calls_post_with_show_deleted_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -297,13 +297,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             show_deleted=True,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(SHOW_DELETED_KEY) is True
 
     def test_start_restore_with_show_deleted_false_calls_post_with_show_deleted_false_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -313,13 +313,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             show_deleted=False,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(SHOW_DELETED_KEY) is False
 
     def test_start_restore_with_restore_full_path_true_calls_post_with_restore_full_path_true_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -329,13 +329,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             restore_full_path=True,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(RESTORE_FULL_PATH_KEY) is True
 
     def test_start_restore_with_restore_full_path_false_calls_post_with_restore_full_path_true_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -345,13 +345,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             restore_full_path=False,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(RESTORE_FULL_PATH_KEY) is False
 
     def test_start_restore_with_timestamp_calls_post_with_timestamp_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -361,13 +361,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             timestamp=TIMESTAMP,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(TIMESTAMP_KEY) == TIMESTAMP
 
     def test_start_restore_with_exceptions_calls_post_with_exceptions_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -377,13 +377,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             exceptions=EXCEPTIONS,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(EXCEPTIONS_KEY) == EXCEPTIONS
 
     def test_start_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -393,13 +393,13 @@ class TestStorageArchiveClient(object):
             SIZE,
             backup_set_id=BACKUP_SET_ID,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(BACKUP_SET_ID_KEY) == BACKUP_SET_ID
 
     def test_start_restore_with_all_args_calls_post_with_all_args_in_data(
-        self, connection
+        self, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         storage_archive_client.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
@@ -415,7 +415,7 @@ class TestStorageArchiveClient(object):
             exceptions=EXCEPTIONS,
             backup_set_id=BACKUP_SET_ID,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         expected_data = {
             GUID_KEY: DEVICE_GUID,
             WEB_RESTORE_SESSION_ID_KEY: WEB_RESTORE_SESSION_ID,
@@ -433,36 +433,36 @@ class TestStorageArchiveClient(object):
         }
         assert json_arg == expected_data
 
-    def test_get_restore_status_calls_get_with_correct_url(self, mocker, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+    def test_get_restore_status_calls_get_with_correct_url(self, mocker, cnxn):
+        storage_archive_client = StorageArchiveClient(cnxn)
         api_response = mocker.MagicMock(spec=Py42Response)
-        connection.get.return_value = api_response
+        cnxn.get.return_value = api_response
         storage_archive_client.get_restore_status(WEB_RESTORE_JOB_ID)
         expected_url = WEB_RESTORE_JOB_URL + "/" + WEB_RESTORE_JOB_ID
-        connection.get.assert_called_once_with(expected_url)
+        cnxn.get.assert_called_once_with(expected_url)
 
-    def test_cancel_restore_calls_delete_with_correct_url(self, mocker, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+    def test_cancel_restore_calls_delete_with_correct_url(self, mocker, cnxn):
+        storage_archive_client = StorageArchiveClient(cnxn)
         api_response = mocker.MagicMock(spec=Py42Response)
-        connection.delete.return_value = api_response
+        cnxn.delete.return_value = api_response
         storage_archive_client.cancel_restore(WEB_RESTORE_JOB_ID)
-        connection.delete.assert_called_once_with(WEB_RESTORE_JOB_URL, json=mocker.ANY)
+        cnxn.delete.assert_called_once_with(WEB_RESTORE_JOB_URL, json=mocker.ANY)
 
-    def test_cancel_restore_calls_delete_with_job_id_in_data(self, mocker, connection):
-        storage_archive_client = StorageArchiveClient(connection)
+    def test_cancel_restore_calls_delete_with_job_id_in_data(self, mocker, cnxn):
+        storage_archive_client = StorageArchiveClient(cnxn)
         api_response = mocker.MagicMock(spec=Py42Response)
-        connection.delete.return_value = api_response
+        cnxn.delete.return_value = api_response
         storage_archive_client.cancel_restore(WEB_RESTORE_JOB_ID)
-        json_arg = connection.delete.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        json_arg = cnxn.delete.call_args[KWARGS_INDEX][JSON_KEYWORD]
         expected_data = {JOB_ID_KEY: WEB_RESTORE_JOB_ID}
         assert json_arg == expected_data
 
     def test_stream_restore_result_status_calls_get_with_correct_url(
-        self, mocker, connection
+        self, mocker, cnxn
     ):
-        storage_archive_client = StorageArchiveClient(connection)
+        storage_archive_client = StorageArchiveClient(cnxn)
         api_response = mocker.MagicMock(spec=Py42Response)
-        connection.get.return_value = api_response
+        cnxn.get.return_value = api_response
         storage_archive_client.stream_restore_result(WEB_RESTORE_JOB_ID)
         expected_url = WEB_RESTORE_JOB_RESULT_URL + "/" + WEB_RESTORE_JOB_ID
-        connection.get.assert_called_once_with(expected_url, stream=True)
+        cnxn.get.assert_called_once_with(expected_url, stream=True)

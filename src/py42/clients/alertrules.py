@@ -2,8 +2,9 @@ from py42 import settings
 
 
 class AlertRulesModule(object):
-    def __init__(self, microservice_client_factory):
-        self.microservice_client_factory = microservice_client_factory
+    def __init__(self, alerts_service, alert_rules_service):
+        self._alerts_service = alerts_service
+        self._alert_rules_service = alert_rules_service
 
     @property
     def exfiltration(self):
@@ -12,8 +13,7 @@ class AlertRulesModule(object):
         Returns:
             :class:`py42.services.alertrules.exfiltration.ExfiltrationClient`
         """
-        rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return rules_client.exfiltration
+        return self._alert_rules_service.exfiltration
 
     @property
     def cloudshare(self):
@@ -22,8 +22,7 @@ class AlertRulesModule(object):
         Returns:
             :class:`py42.services.alertrules.cloud_share.CloudShareClient`
         """
-        rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return rules_client.cloudshare
+        return self._alert_rules_service.cloudshare
 
     @property
     def filetypemismatch(self):
@@ -32,8 +31,7 @@ class AlertRulesModule(object):
         Returns:
             :class:`py42.services.alertrules.file_type_mismatch.FileTypeMismatchClient`
         """
-        rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return rules_client.filetypemismatch
+        return self._alert_rules_service.filetypemismatch
 
     def add_user(self, rule_id, user_id):
         """Update alert rule to monitor user aliases against the Uid for the given rule id.
@@ -45,8 +43,7 @@ class AlertRulesModule(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return rules_client.add_user(rule_id, user_id)
+        return self._alert_rules_service.add_user(rule_id, user_id)
 
     def remove_user(self, rule_id, user_id):
         """Update alert rule criteria to remove a user and all its aliases from a rule.
@@ -58,8 +55,7 @@ class AlertRulesModule(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return rules_client.remove_user(rule_id, user_id)
+        return self._alert_rules_service.remove_user(rule_id, user_id)
 
     def remove_all_users(self, rule_id):
         """Update alert rule criteria to remove all users the from the alert rule.
@@ -90,9 +86,8 @@ class AlertRulesModule(object):
         Returns:
              :class:`py42.response.Py42Response`
         """
-        alerts_client = self.microservice_client_factory.get_alerts_client()
         page_size = page_size or settings.items_per_page
-        return alerts_client.get_rules_page(
+        return self._alerts_service.get_rules_page(
             sort_key=sort_key,
             sort_direction=sort_direction,
             page_num=page_num,
@@ -110,8 +105,7 @@ class AlertRulesModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of rules.
         """
-        alerts_client = self.microservice_client_factory.get_alerts_client()
-        return alerts_client.get_all_rules(
+        return self._alerts_service.get_all_rules(
             sort_key=sort_key, sort_direction=sort_direction
         )
 
@@ -125,8 +119,7 @@ class AlertRulesModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of rules with the given name.
         """
-        alerts_client = self.microservice_client_factory.get_alerts_client()
-        return alerts_client.get_all_rules_by_name(rule_name)
+        return self._alerts_service.get_all_rules_by_name(rule_name)
 
     def get_by_observer_id(self, observer_id):
         """Get the rule with the matching observer ID.
@@ -137,5 +130,4 @@ class AlertRulesModule(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        alerts_client = self.microservice_client_factory.get_alerts_client()
-        return alerts_client.get_rule_by_observer_id(observer_id)
+        return self._alerts_service.get_rule_by_observer_id(observer_id)

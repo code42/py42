@@ -8,8 +8,8 @@ class SavedSearchClient(BaseClient):
     _version = u"v1"
     _resource = u"/forensic-search/queryservice/api/{}/saved".format(_version)
 
-    def __init__(self, connection, file_event_client):
-        super(SavedSearchClient, self).__init__(connection)
+    def __init__(self, cnxn, file_event_client):
+        super(SavedSearchClient, self).__init__(cnxn)
         self._file_event_client = file_event_client
 
     def get(self):

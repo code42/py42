@@ -13,7 +13,6 @@ class AlertRulesClient(BaseClient):
     def __init__(self, cnxn, user_context, detection_list_user_client):
         super(AlertRulesClient, self).__init__(cnxn)
         self._user_context = user_context
-        self._tenant_id = self._user_context.get_current_tenant_id()
         self._detection_list_user_client = detection_list_user_client
         self._exfiltration = None
         self._cloud_share = None
@@ -22,13 +21,15 @@ class AlertRulesClient(BaseClient):
     @property
     def exfiltration(self):
         if not self._exfiltration:
-            self._exfiltration = ExfiltrationClient(self._connection, self._tenant_id)
+            tenant_id = self._user_context.get_current_tenant_id()
+            self._exfiltration = ExfiltrationClient(self._connection, tenant_id)
         return self._exfiltration
 
     @property
     def cloudshare(self):
         if not self._cloud_share:
-            self._cloud_share = CloudShareClient(self._connection, self._tenant_id)
+            tenant_id = self._user_context.get_current_tenant_id()
+            self._cloud_share = CloudShareClient(self._connection, tenant_id)
         return self._cloud_share
 
     @property

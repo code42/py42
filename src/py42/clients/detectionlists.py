@@ -1,5 +1,10 @@
 class DetectionListsModule(object):
-    def __init__(self, user_profile_service, departing_employee_service, high_risk_employee_service):
+    def __init__(
+        self,
+        user_profile_service,
+        departing_employee_service,
+        high_risk_employee_service,
+    ):
         self._user_profile_service = user_profile_service
         self._departing_employee_service = departing_employee_service
         self._high_risk_employee_service = high_risk_employee_service

@@ -144,10 +144,10 @@ def unicode_query_filter():
 def mock_session(mocker):
     from services._connection import Connection
 
-    cnxn = mocker.MagicMock(spec=Connection)
-    cnxn.headers = {}
+    connection = mocker.MagicMock(spec=Connection)
+    connection.headers = {}
 
-    return cnxn
+    return connection
 
 
 @pytest.fixture

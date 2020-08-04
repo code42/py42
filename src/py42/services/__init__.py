@@ -2,8 +2,8 @@ from collections import namedtuple
 
 
 class BaseClient(object):
-    def __init__(self, cnxn):
-        self._connection = cnxn
+    def __init__(self, connection):
+        self._connection = connection
 
 
 Services = namedtuple(

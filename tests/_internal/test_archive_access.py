@@ -382,7 +382,7 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
     def mock_get_file_path_metadata(*args, **kwargs):
 
         if not args[0] == session_id:
-            raise Exception("Unexpected archive cnxn ID")
+            raise Exception("Unexpected archive connection ID")
 
         if not args[1] == device_guid:
             raise Exception("Unexpected device GUID")

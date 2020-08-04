@@ -1,5 +1,3 @@
-
-
 class AlertsModule(object):
     def __init__(self, alert_service, alert_rules_client):
         self._alert_service = alert_service
@@ -57,7 +55,9 @@ class AlertsModule(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.resolve(alert_ids, tenant_id=tenant_id, reason=reason)
+        return self._alert_service.resolve(
+            alert_ids, tenant_id=tenant_id, reason=reason
+        )
 
     def reopen(self, alert_ids, tenant_id=None, reason=None):
         """Reopens the resolved alerts with the given IDs.

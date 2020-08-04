@@ -13,7 +13,7 @@ class StorageArchiveClient(BaseClient):
         timestamp=None,
         show_deleted=None,
     ):
-        # session_id is a web restore cnxn ID (see create_restore_session)
+        # session_id is a web restore connection ID (see create_restore_session)
         uri = u"/api/WebRestoreSearch"
         params = {
             u"webRestoreSessionId": session_id,
@@ -55,7 +55,7 @@ class StorageArchiveClient(BaseClient):
         backup_set_id=None,
         include_os_metadata=None,
     ):
-        # session_id is a web restore cnxn ID (see create_restore_session)
+        # session_id is a web restore connection ID (see create_restore_session)
         uri = u"/api/WebRestoreTreeNode"
         params = {
             u"webRestoreSessionId": session_id,
@@ -77,7 +77,7 @@ class StorageArchiveClient(BaseClient):
         private_password=None,
         encryption_key=None,
     ):
-        """Creates a web restore cnxn.
+        """Creates a web restore connection.
         See https://console.us.code42.com/apidocviewer/#WebRestoreSession
         """
         uri = u"/api/WebRestoreSession"

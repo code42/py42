@@ -217,8 +217,12 @@ def _init_services(root_connection, host_address):
         filevents=file_events_service,
         savedsearch=SavedSearchClient(file_events_connection, file_events_service),
         preservationdata=PreservationDataServiceClient(pds_connection),
-        departingemployee=DepartingEmployeeClient(ecm_connection, user_ctx, user_profile_svc),
-        highriskemployee=HighRiskEmployeeClient(ecm_connection, user_ctx, user_profile_svc),
+        departingemployee=DepartingEmployeeClient(
+            ecm_connection, user_ctx, user_profile_svc
+        ),
+        highriskemployee=HighRiskEmployeeClient(
+            ecm_connection, user_ctx, user_profile_svc
+        ),
         userprofile=user_profile_svc,
     )
 
@@ -226,20 +230,27 @@ def _init_services(root_connection, host_address):
 
 
 def _init_clients(services):
-    authority = AuthorityClient(administration=services.administration,
-                                archive=services.archive,
-                                devices=services.devices,
-                                legalhold=services.legalhold,
-                                orgs=services.orgs,
-                                securitydata=services.securitydata,
-                                users=services.users
-                                )
+    authority = AuthorityClient(
+        administration=services.administration,
+        archive=services.archive,
+        devices=services.devices,
+        legalhold=services.legalhold,
+        orgs=services.orgs,
+        securitydata=services.securitydata,
+        users=services.users,
+    )
     # securitydata = SecurityModule()
-    detectionlists = DetectionListsModule(services.userprofile,
-                                          services.departingemployee,
-                                          services.highriskemployee)
+    detectionlists = DetectionListsModule(
+        services.userprofile, services.departingemployee, services.highriskemployee
+    )
 
     securitydata = SecurityModule(services.securitydata, None)
     alerts = AlertsModule(services.alerts, services.alertrules)
-    clients = Clients(authority=authority, detectionlists=detectionlists, alerts=alerts, securitydata=None, archive=None)
+    clients = Clients(
+        authority=authority,
+        detectionlists=detectionlists,
+        alerts=alerts,
+        securitydata=None,
+        archive=None,
+    )
     return clients

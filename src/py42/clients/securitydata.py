@@ -15,9 +15,7 @@ from py42.settings import debug
 
 
 class SecurityModule(object):
-    def __init__(
-        self, security_client, storage_client_factory
-    ):
+    def __init__(self, security_client, storage_client_factory):
         self._security_client = security_client
         self._storage_client_factory = storage_client_factory
         self._client_cache = {}
@@ -58,7 +56,7 @@ class SecurityModule(object):
             selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
             if not selected_plan_infos:
                 raise Py42SecurityPlanConnectionError(
-                    u"Could not establish a cnxn to retrieve "
+                    u"Could not establish a connection to retrieve "
                     u"security events for user {}".format(user_uid)
                 )
 

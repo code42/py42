@@ -10,8 +10,8 @@ class AlertRulesClient(BaseClient):
     _resource = u"Rules/"
     _api_prefix = u"/svc/api/{}/{}".format(_version, _resource)
 
-    def __init__(self, cnxn, user_context, detection_list_user_client):
-        super(AlertRulesClient, self).__init__(cnxn)
+    def __init__(self, connection, user_context, detection_list_user_client):
+        super(AlertRulesClient, self).__init__(connection)
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
         self._exfiltration = None
@@ -74,8 +74,8 @@ class CloudShareClient(BaseClient):
     _resource = u"query-cloud-share-permissions-rule"
     _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
 
-    def __init__(self, cnxn, tenant_id):
-        super(CloudShareClient, self).__init__(cnxn)
+    def __init__(self, connection, tenant_id):
+        super(CloudShareClient, self).__init__(connection)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):
@@ -97,8 +97,8 @@ class ExfiltrationClient(BaseClient):
     _resource = u"query-endpoint-exfiltration-rule"
     _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
 
-    def __init__(self, cnxn, tenant_id):
-        super(ExfiltrationClient, self).__init__(cnxn)
+    def __init__(self, connection, tenant_id):
+        super(ExfiltrationClient, self).__init__(connection)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):
@@ -120,8 +120,8 @@ class FileTypeMismatchClient(BaseClient):
     _resource = u"query-file-type-mismatch-rule"
     _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
 
-    def __init__(self, cnxn, tenant_id):
-        super(FileTypeMismatchClient, self).__init__(cnxn)
+    def __init__(self, connection, tenant_id):
+        super(FileTypeMismatchClient, self).__init__(connection)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):

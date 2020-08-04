@@ -15,7 +15,7 @@ from py42.exceptions import Py42FeatureUnavailableError
 from py42.exceptions import Py42SessionInitializationError
 from py42.exceptions import raise_py42_error
 from py42.response import Py42Response
-from py42.services._auth import C42AuthBase
+from py42.services._auth import C42RenewableAuth
 from py42.settings import debug
 from py42.util import format_dict
 
@@ -120,11 +120,11 @@ class Connection(object):
             if 200 <= response.status_code <= 299:
                 return Py42Response(response)
 
-            if isinstance(C42AuthBase, self._auth):
+            if isinstance(self._auth, C42RenewableAuth):
                 self._auth.clear_credentials()
 
         # if nothing has been returned after two attempts, something went wrong
-        _handle_error(response)
+        _handle_error(method, url, response)
 
     def _prepare_request(
         self,
@@ -218,7 +218,7 @@ class MicroserviceConnection(Connection):
 
 
 def _handle_error(method, url, response):
-    if not response:
+    if response is None:
         msg = u"No response was returned for {} request to {}.".format(method, url)
         raise Py42Error(msg)
 

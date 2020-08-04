@@ -4,7 +4,7 @@ from threading import Lock
 from requests.auth import AuthBase
 
 
-class C42AuthBase(AuthBase):
+class C42RenewableAuth(AuthBase):
     def __init__(self):
         self._auth_lock = Lock()
         self._credentials = None
@@ -24,7 +24,7 @@ class C42AuthBase(AuthBase):
         raise NotImplementedError()
 
 
-class V3Auth(C42AuthBase):
+class V3Auth(C42RenewableAuth):
     def __init__(self, auth_connection):
         super(V3Auth, self).__init__()
         self._auth_connection = auth_connection
@@ -36,7 +36,7 @@ class V3Auth(C42AuthBase):
         return u"{} {}".format("v3_user_token", response["v3_user_token"])
 
 
-class V1Auth(C42AuthBase):
+class V1Auth(C42RenewableAuth):
     def __init__(self, storage_tmp_session):
         super(V1Auth, self).__init__()
         self._auth_session = storage_tmp_session
@@ -47,7 +47,7 @@ class V1Auth(C42AuthBase):
         return u"{} {}-{}".format(u"token", response[0], response[1])
 
 
-class StorageTmpAuth(C42AuthBase):
+class StorageTmpAuth(C42RenewableAuth):
     def __init__(self):
         super(StorageTmpAuth, self).__init__()
         self._cached_info = None

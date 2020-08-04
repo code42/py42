@@ -73,6 +73,10 @@ class SDKClient(object):
         basic_auth_connection = KnownUrlConnection(host_address, auth=basic_auth)
         services, user_ctx = _init_services(basic_auth_connection, host_address)
         clients = _init_clients(services)
+
+        # test credentials
+        clients.authority.users.get_current()
+
         return cls(clients, user_ctx)
 
     @property

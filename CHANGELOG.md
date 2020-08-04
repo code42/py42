@@ -10,6 +10,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+- Methods for calling the agent-state APIs:
+    - `sdk.devices.get_agent_state()`
+    - `sdk.devices.get_agent_full_disk_access_state()`
+    - `sdk.orgs.get_agent_state()`
+    - `sdk.orgs.get_agent_full_disk_access_states()`
+
 ### Added
 
 - Methods for getting individual response pages:
@@ -21,6 +27,15 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.legalhold.get_matters_page()`
     - `sdk.legalhold.get_custodians_page()`
     - `sdk.alerts.get_rules_page()`
+
+- Added enum object `py42.modules.detectionlists.RiskTags` with constants:
+    - `FLIGHT_RISK`
+    - `HIGH_IMPACT_EMPLOYEE`
+    - `ELEVATED_ACCESS_PRIVILEGES`
+    - `PERFORMANCE_CONCERNS`
+    - `SUSPICIOUS_SYSTEM_ACTIVITY`
+    - `POOR_SECURITY_PRACTICES`
+    - `CONTRACT_EMPLOYEE`
 
 - Added below event filter support
     - TrustedActivity

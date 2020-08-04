@@ -160,3 +160,30 @@ class OrgClient(BaseClient):
         """
         uri = u"/api/Org/my"
         return self._connection.get(uri, params=kwargs)
+
+    def get_agent_state(self, orgId, property_name):
+        """Gets the agent state of the devices in the org.
+            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
+
+            Args:
+                orgId (str): The org's identifier.
+                property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
+
+            Returns:
+                :class:`py42.response.Py42Response`: A response containing settings information.
+            """
+        uri = u"/api/v14/agent-state/view-by-organization-id"
+        params = {u"orgId": orgId, u"propertyName": property_name}
+        return self._connection.get(uri, params=params)
+
+    def get_agent_full_disk_access_states(self, guid):
+        """Gets the full disk access status for devices in an org.
+            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
+
+            Args:
+                orgId (str): The org's identifier.
+
+            Returns:
+                :class:`py42.response.Py42Response`: A response containing settings information.
+            """
+        return self.get_agent_state(guid, u"fullDiskAccess")

@@ -20,7 +20,7 @@ class ArchiveModule(object):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
-            file_path (str or list): The path to the file in your archive.
+            file_path (str or list): The path or list of paths to the files or directories in your archive.
             device_guid (str): The GUID of the device the file belongs to.
             destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your

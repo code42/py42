@@ -18,7 +18,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.orgs.get_agent_state()`
     - `sdk.orgs.get_agent_full_disk_access_states()`
 
-- Exception classes (`py42.execeptions`
+- Exception classes (`py42.execeptions`)
     - `Py42ResponseError`
     - `Py42UserAlreadyAddedError`
     - `Py42UserNotInLegalHoldError`

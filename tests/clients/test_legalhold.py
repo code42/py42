@@ -62,7 +62,7 @@ class TestLegalHoldClient(object):
         response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
         return Py42Response(response)
 
-    def test_get_legal_hold_by_uid_calls_get_with_uri_and_params(
+    def test_get_matter_by_uid_calls_get_with_uri_and_params(
         self, mock_session, successful_response
     ):
         mock_session.get.return_value = successful_response

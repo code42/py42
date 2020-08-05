@@ -312,8 +312,8 @@ def restore_job_manager(mocker):
 
 
 @pytest.fixture
-def file_selection():
-    return get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+def single_file_selection():
+    return [get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)]
 
 
 @pytest.fixture
@@ -404,7 +404,7 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
 
 def get_file_selection(file_type, file_path):
     return FileSelection(
-        [{"type": file_type, "path": file_path, "selected": True}], 1, 1, 1
+        {"type": file_type, "path": file_path, "selected": True}, 1, 1, 1
     )
 
 
@@ -602,11 +602,13 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        archive_accessor.stream_from_backup("/")
-        expected_file_selection = get_file_selection(FileType.DIRECTORY, "/")
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        exceptions = ["/dont/include/me"]
+        archive_accessor.stream_from_backup("/", exceptions)
+        expected_file_selection = [get_file_selection(FileType.DIRECTORY, "/")]
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection, exceptions)
 
-    def test_stream_from_backup_with_root_level_folder_calls_get_stream(
+    def \
+        test_stream_from_backup_with_root_level_folder_calls_get_stream(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_get_file_path_metadata_responses(
@@ -620,9 +622,9 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        archive_accessor.stream_from_backup(USERS_DIR)
-        expected_file_selection = get_file_selection(FileType.DIRECTORY, USERS_DIR)
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        archive_accessor.stream_from_backup(USERS_DIR, ["exclude/file"])
+        expected_file_selection = [get_file_selection(FileType.DIRECTORY, USERS_DIR)]
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection, ["exclude/file"])
 
     def test_stream_from_backup_with_file_path_calls_get_stream(
         self, mocker, storage_archive_client, restore_job_manager
@@ -634,11 +636,11 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
-        expected_file_selection = get_file_selection(
+        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER, ["exclude/file"])
+        expected_file_selection = [get_file_selection(
             FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER
-        )
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        )]
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection, ["exclude/file"])
 
     def test_stream_from_backup_with_file_not_in_archive_raises_exception(
         self, mocker, storage_archive_client, restore_job_manager
@@ -652,7 +654,7 @@ class TestArchiveAccessor(object):
         )
         invalid_path_in_downloads_folder = "/Users/qa/Downloads/file-not-in-archive.txt"
         with pytest.raises(Exception) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder, [])
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
@@ -672,7 +674,7 @@ class TestArchiveAccessor(object):
         invalid_path_in_downloads_folder = u"/Users/qa/Downloads/吞"
 
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder, [])
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
@@ -693,7 +695,7 @@ class TestArchiveAccessor(object):
             "C:/Users/qa/Downloads/file-not-in-archive.txt"
         )
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder, [])
 
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
@@ -715,7 +717,7 @@ class TestArchiveAccessor(object):
             "c:/Users/qa/Downloads/file-not-in-archive.txt"
         )
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder, [])
 
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
@@ -733,7 +735,7 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER, [])
         storage_archive_client.get_file_path_metadata.assert_called_with(
             WEB_RESTORE_SESSION_ID, DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
         )
@@ -770,7 +772,7 @@ class TestRestoreJobManager(object):
         assert restore_job_manager.is_job_complete(job_id) is True
 
     def test_get_stream_calls_start_restore_with_correct_args(
-        self, mocker, storage_archive_client, file_selection
+        self, mocker, storage_archive_client, single_file_selection
     ):
         mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
@@ -783,19 +785,21 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
-        restore_job_manager.get_stream(file_selection)
+        restore_job_manager.get_stream(single_file_selection, ["exclude/file"])
         storage_archive_client.start_restore.assert_called_once_with(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
-            file_selection.path_set,
-            file_selection.num_files,
-            file_selection.num_dirs,
-            file_selection.size,
+            [single_file_selection[0].path_set],
+            1,
+            1,
+            1,
+            exceptions=["exclude/file"],
             show_deleted=True,
+            zip_result=None,
         )
 
     def test_get_stream_polls_job_status_until_job_is_complete(
-        self, mocker, storage_archive_client, file_selection
+        self, mocker, storage_archive_client, single_file_selection
     ):
         mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
@@ -816,7 +820,7 @@ class TestRestoreJobManager(object):
             WEB_RESTORE_SESSION_ID,
             job_polling_interval=0.000001,
         )
-        restore_job_manager.get_stream(file_selection)
+        restore_job_manager.get_stream(single_file_selection, [])
         job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
         expected_call = mocker.call(job_id)
         storage_archive_client.get_restore_status.assert_has_calls(
@@ -825,7 +829,7 @@ class TestRestoreJobManager(object):
         assert storage_archive_client.get_restore_status.call_count == 3
 
     def test_get_stream_when_successful_returns_response(
-        self, mocker, storage_archive_client, file_selection, file_content_chunks
+        self, mocker, storage_archive_client, single_file_selection, file_content_chunks
     ):
         mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
@@ -839,4 +843,4 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
-        assert restore_job_manager.get_stream(file_selection)
+        assert restore_job_manager.get_stream(single_file_selection, [])

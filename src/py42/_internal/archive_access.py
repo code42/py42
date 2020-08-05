@@ -177,7 +177,7 @@ class RestoreJobManager(object):
             num_files,
             num_dirs,
             size,
-            zip_result=len(file_selections) > 1,
+            zip_result=len(file_selections) > 1 or None,
             show_deleted=True,
             exceptions=exceptions,
         )

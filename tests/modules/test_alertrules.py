@@ -6,7 +6,7 @@ from py42._internal.client_factories import MicroserviceClientFactory
 from py42._internal.clients.alertrules import AlertRulesClient
 from py42._internal.clients.alerts import AlertClient
 from py42.exceptions import Py42InternalServerError
-from py42.exceptions import Py42InvalidRuleTypeError
+from py42.exceptions import Py42InvalidRuleOperationError
 from py42.modules.alertrules import AlertRulesModule
 from py42.response import Py42Response
 
@@ -86,7 +86,7 @@ class TestAlertRulesModules(object):
             mock_alerts_client_system_rule
         )
         alert_rules_module = AlertRulesModule(mock_microservice_client_factory)
-        with pytest.raises(Py42InvalidRuleTypeError) as err:
+        with pytest.raises(Py42InvalidRuleOperationError) as err:
             alert_rules_module.add_user(self._rule_id, self._rule_id)
 
         assert (

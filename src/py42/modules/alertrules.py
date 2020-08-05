@@ -1,6 +1,6 @@
 from py42 import settings
 from py42.exceptions import Py42InternalServerError
-from py42.exceptions import Py42InvalidRuleTypeError
+from py42.exceptions import Py42InvalidRuleOperationError
 
 
 class AlertRulesModule(object):
@@ -157,6 +157,6 @@ def _check_if_system_rule(base_err, rules):
     """You cannot add or remove users from system rules this way; use the specific
     feature behind the rule, such as the Departing Employee list."""
     if rules and rules[0][u"isSystem"]:
-        raise Py42InvalidRuleTypeError(
+        raise Py42InvalidRuleOperationError(
             base_err, rules[0][u"observerRuleId"], rules[0][u"ruleSource"]
         )

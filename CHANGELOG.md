@@ -25,7 +25,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42LegalHoldNotFoundError`
     - `Py42PermissionDeniedError`
     - `Py42UserDoesNotExistError`
-    - `Py42InvalidRuleTypeError`
+    - `Py42InvalidRuleOperationError`
 
 - Methods for getting individual response pages:
     - `sdk.detectionlists.departing_employee.get_page()`

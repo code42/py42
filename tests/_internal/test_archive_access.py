@@ -842,7 +842,10 @@ class TestRestoreJobManager(object):
         storage_archive_client.start_restore.assert_called_once_with(
             guid=DEVICE_GUID,
             web_restore_session_id=WEB_RESTORE_SESSION_ID,
-            path_set=[double_file_selection[0].path_set, double_file_selection[1].path_set],
+            path_set=[
+                double_file_selection[0].path_set,
+                double_file_selection[1].path_set,
+            ],
             num_files=2,
             num_dirs=2,
             size=2,
@@ -936,4 +939,3 @@ class TestRestoreJobManager(object):
         restore_job_manager.get_stream(single_dir_selection, [])
         actual = storage_archive_client.start_restore.call_args[1]["zip_result"]
         assert actual is True
-

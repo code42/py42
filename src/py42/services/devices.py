@@ -1,11 +1,11 @@
 import json
 
 from py42 import settings
-from py42.services import BaseClient
+from py42.services import BaseService
 from py42.services.util import get_all_pages
 
 
-class DeviceService(BaseClient):
+class DeviceService(BaseService):
     """A class to interact with Code42 device/computer APIs."""
 
     def get_page(

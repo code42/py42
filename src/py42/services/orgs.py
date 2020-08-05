@@ -1,11 +1,11 @@
 import json
 
 from py42 import settings
-from py42.services import BaseClient
+from py42.services import BaseService
 from py42.services.util import get_all_pages
 
 
-class OrgService(BaseClient):
+class OrgService(BaseService):
     """A client for interacting with Code42 organization APIs.
 
     Use the OrgService to create and retrieve organizations. You can also use it to block and

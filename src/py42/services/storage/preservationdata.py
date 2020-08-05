@@ -1,7 +1,7 @@
-from py42.services import BaseClient
+from py42.services import BaseService
 
 
-class StoragePreservationDataService(BaseClient):
+class StoragePreservationDataService(BaseService):
 
     _base_uri = u"c42api/v3/"
 

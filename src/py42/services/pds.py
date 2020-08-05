@@ -1,9 +1,9 @@
 import json
 
-from py42.services import BaseClient
+from py42.services import BaseService
 
 
-class PreservationDataService(BaseClient):
+class PreservationDataService(BaseService):
     def find_file_versions(self, file_md5, file_sha256, device_id, paths):
         """Fetch file version details.
 

@@ -3,15 +3,18 @@ from requests.auth import HTTPBasicAuth
 from py42.clients import Clients
 from py42.clients.alerts import AlertsClient
 from py42.clients.alertrules import AlertRulesClient
+from py42.clients.archive import ArchiveClient
 from py42.clients.authority import AuthorityClient
 from py42.clients.detectionlists import DetectionListsClient
-from py42.clients.securitydata import SecurityModule
+from py42.clients.securitydata import SecurityDataClient
+from py42.clients._storage import StorageClientFactory
+from py42.clients._archive_access import ArchiveAccessorManager
 from py42.services import Services
 from py42.services._auth import V3Auth
 from py42.services._connection import KeyValueStoreConnection
 from py42.services._connection import KnownUrlConnection
 from py42.services._connection import MicroserviceConnection
-from py42.services._key_value_store import KeyValueStoreClient
+from py42.services._keyvaluestore import KeyValueStoreClient
 from py42.services.administration import AdministrationService
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
@@ -20,9 +23,11 @@ from py42.services.detectionlists._profile import DetectionListUserService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.devices import DeviceService
-from py42.services.file_event import FileEventService
+from py42.services.fileevent import FileEventService
 from py42.services.legalhold import LegalHoldService
 from py42.services.orgs import OrgService
+from py42.services.storage._connection_manager import ConnectionManager
+from py42.services.storage._auth import StorageTokenProviderFactory
 from py42.services.pds import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.securitydata import SecurityDataService
@@ -71,8 +76,10 @@ class SDKClient(object):
         """
         basic_auth = HTTPBasicAuth(username, password)
         basic_auth_connection = KnownUrlConnection(host_address, auth=basic_auth)
-        services, user_ctx = _init_services(basic_auth_connection, host_address)
-        clients = _init_clients(services)
+        auth = V3Auth(basic_auth_connection)
+        authority_connection = KnownUrlConnection(host_address, auth=auth)
+        services, user_ctx = _init_services(authority_connection, auth)
+        clients = _init_clients(services, auth)
 
         # test credentials
         clients.authority.users.get_current()
@@ -97,8 +104,7 @@ class SDKClient(object):
         Returns:
             :class:`py42.clients.archive.ArchiveClient`
         """
-        pass
-        # return self._clients.archive
+        return self._clients.archive
 
     @property
     def users(self):
@@ -158,10 +164,9 @@ class SDKClient(object):
             * Security plan information
 
         Returns:
-            :class:`py42.clients.securitydata.SecurityModule`
+            :class:`py42.clients.securitydata.SecurityDataClient`
         """
-        pass
-        # return self._clients.securitydata
+        return self._clients.securitydata
 
     @property
     def detectionlists(self):
@@ -183,20 +188,18 @@ class SDKClient(object):
         return self._clients.alerts
 
 
-def _init_services(root_connection, host_address):
+def _init_services(authority_connection, main_auth):
     alert_rules_key = u"FedObserver-API_URL"
     alerts_key = u"AlertService-API_URL"
     file_events_key = u"FORENSIC_SEARCH-API_URL"
     preservation_data_key = u"PRESERVATION-DATA-SERVICE_API-URL"
     employee_case_mgmt_key = u"employeecasemanagement-API_URL"
 
-    main_auth = V3Auth(root_connection)
     kv_connection = KeyValueStoreClient(KeyValueStoreConnection())
 
     def create_microservice_connection(key):
         return MicroserviceConnection(kv_connection, key, auth=main_auth)
 
-    authority_connection = KnownUrlConnection(host_address, auth=main_auth)
     alert_rules_connection = create_microservice_connection(alert_rules_key)
     alerts_connection = create_microservice_connection(alerts_key)
     file_events_connection = create_microservice_connection(file_events_key)
@@ -233,7 +236,7 @@ def _init_services(root_connection, host_address):
     return services, user_ctx
 
 
-def _init_clients(services):
+def _init_clients(services, connection):
     authority = AuthorityClient(
         administration=services.administration,
         archive=services.archive,
@@ -247,14 +250,18 @@ def _init_clients(services):
         services.userprofile, services.departingemployee, services.highriskemployee
     )
 
+    storage_auth_factory = StorageTokenProviderFactory(connection, services.devices)
+    storage_client_factory = StorageClientFactory(ConnectionManager(), storage_auth_factory)
     alertrules = AlertRulesClient(services.alerts, services.alertrules)
-    securitydata = SecurityModule(services.securitydata, None)
+    securitydata = SecurityDataClient(services.securitydata, services.savedsearch, storage_client_factory)
     alerts = AlertsClient(services.alerts, alertrules)
+    archive_accessor_mgr = ArchiveAccessorManager(services.archive, storage_client_factory)
+    archive = ArchiveClient(archive_accessor_mgr, services.archive)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
         alerts=alerts,
-        securitydata=None,
-        archive=None,
+        securitydata=securitydata,
+        archive=archive,
     )
     return clients

@@ -6,17 +6,16 @@ import pytest
 from requests import Response
 
 import py42.util
-from py42._internal.archive_access import ArchiveAccessor
-from py42._internal.archive_access import ArchiveAccessorManager
-from py42._internal.archive_access import FileSelection
-from py42._internal.archive_access import FileType
-from py42._internal.archive_access import RestoreJobManager
+from py42.clients._archive_access import ArchiveAccessor
+from py42.clients._archive_access import ArchiveAccessorManager
+from py42.clients._archive_access import FileSelection
+from py42.clients._archive_access import FileType
+from py42.clients._archive_access import RestoreJobManager
 from py42.exceptions import Py42ArchiveFileNotFoundError
 from py42.response import Py42Response
 from py42.services.archive import ArchiveService
 from py42.services.storage import StorageArchiveService
-from py42.services.storage import StorageClient
-from py42.services.storage import StorageClientFactory
+from py42.clients._storage import StorageClient, StorageClientFactory
 
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"
@@ -551,7 +550,7 @@ class TestArchiveAccessManager(object):
         storage_archive_client,
         storage_client,
     ):
-        spy = mocker.spy(py42._internal.archive_access, "create_restore_job_manager")
+        spy = mocker.spy(py42.clients._archive_access, "create_restore_job_manager")
         storage_client.archive = storage_archive_client
 
         storage_client_factory.from_device_guid.return_value = storage_client

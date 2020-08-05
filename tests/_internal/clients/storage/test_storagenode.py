@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from py42.services.storage.storagenode import StoragePreservationDataService
+from py42.services.storage.preservationdata import StoragePreservationDataService
 
 
 class TestStoragePreservationDataClient(object):

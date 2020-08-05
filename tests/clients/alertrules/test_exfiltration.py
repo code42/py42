@@ -1,11 +1,11 @@
 import json
 
-from py42.services.alertrules import ExfiltrationClient
+from py42.services.alertrules import ExfiltrationService
 
 
 class TestExfiltrationClient(object):
     def test_get_by_id_posts_expected_data_for_exfiltration_type(self, mock_session):
-        alert_rule_client = ExfiltrationClient(mock_session, u"tenant-id")
+        alert_rule_client = ExfiltrationService(mock_session, u"tenant-id")
         alert_rule_client.get(u"rule-id")
 
         assert mock_session.post.call_count == 1

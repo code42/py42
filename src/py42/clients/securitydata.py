@@ -14,9 +14,10 @@ from py42.sdk.queries.fileevents.filters.file_filter import SHA256
 from py42.settings import debug
 
 
-class SecurityModule(object):
-    def __init__(self, security_client, storage_client_factory):
+class SecurityDataClient(object):
+    def __init__(self, security_client, saved_search_service, storage_client_factory):
         self._security_client = security_client
+        self._saved_search_service = saved_search_service
         self._storage_client_factory = storage_client_factory
         self._client_cache = {}
         self._client_cache_lock = Lock()
@@ -28,7 +29,7 @@ class SecurityModule(object):
         Returns:
             :class: `py42._internal.clients.securitydata.SavedSearchService`
         """
-        return self._microservices_client_factory.get_saved_search_client()
+        return self._saved_search_service
 
     def get_security_plan_storage_info_list(self, user_uid):
         """Gets IDs (plan UID, node GUID, and destination GUID) for the storage nodes containing

@@ -1,10 +1,10 @@
 import json
 
-from py42.services import BaseClient
+from py42.services import BaseService
 from py42.services.util import get_all_pages
 
 
-class ArchiveService(BaseClient):
+class ArchiveService(BaseService):
     def get_data_key_token(self, device_guid):
         uri = u"/api/DataKeyToken"
         data = {u"computerGuid": device_guid}

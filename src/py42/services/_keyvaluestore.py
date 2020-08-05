@@ -1,7 +1,7 @@
-from py42.services import BaseClient
+from py42.services import BaseService
 
 
-class KeyValueStoreClient(BaseClient):
+class KeyValueStoreClient(BaseService):
     def __init__(self, connection):
         super(KeyValueStoreClient, self).__init__(connection)
 

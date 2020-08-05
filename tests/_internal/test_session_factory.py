@@ -5,7 +5,7 @@ from py42._internal.session_factory import AuthHandlerFactory
 from py42._internal.session_factory import SessionFactory
 from py42._internal.session_factory import SessionModifierFactory
 from py42.services._auth import BasicAuthProvider
-from py42.services._auth import FileArchiveTmpAuth
+from py42.services.storage._auth import FileArchiveTmpAuth
 from py42.services._auth import HeaderModifier
 from py42.services._auth import V1Auth
 from py42.services._auth import V3Auth
@@ -104,7 +104,7 @@ class TestSessionFactory(object):
         factory = SessionFactory(
             Session, session_modifier_factory, auth_handler_factory
         )
-        session = factory.create_storage_session(
+        session = factory.create_storage_connection(
             TARGET_HOST_ADDRESS, login_token_provider
         )
         assert session.host_address == TARGET_HOST_ADDRESS
@@ -121,7 +121,7 @@ class TestSessionFactory(object):
         factory = SessionFactory(
             Session, session_modifier_factory, auth_handler_factory
         )
-        factory.create_storage_session(TARGET_HOST_ADDRESS, login_token_provider)
+        factory.create_storage_connection(TARGET_HOST_ADDRESS, login_token_provider)
         provider = auth_handler_factory.create_auth_handler.call_args[0][0]
         called_modifier = auth_handler_factory.create_auth_handler.call_args[0][1]
         assert type(provider) == V1Auth

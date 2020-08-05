@@ -2,11 +2,11 @@ import json
 
 from py42 import settings
 from py42._compat import quote
-from py42.services import BaseClient
+from py42.services import BaseService
 from py42.services.util import get_all_pages
 
 
-class UserService(BaseClient):
+class UserService(BaseService):
     """A client for interacting with Code42 user APIs. Use the UserService to create and retrieve
     users. You can also use it to block and deactivate users.
     """

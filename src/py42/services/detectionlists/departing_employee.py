@@ -1,11 +1,11 @@
 import json
 
-from py42.services import BaseClient
+from py42.services import BaseService
 from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.util import get_all_pages
 
 
-class DepartingEmployeeService(BaseClient):
+class DepartingEmployeeService(BaseService):
     """A client for interacting with Code42 Departing Employee APIs."""
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"

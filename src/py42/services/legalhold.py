@@ -2,7 +2,7 @@ import json
 
 from py42 import settings
 from py42.exceptions import Py42Error
-from py42.services import BaseClient
+from py42.services import BaseService
 from py42.services.util import get_all_pages
 
 
@@ -16,7 +16,7 @@ def _active_state_map(active):
         )
 
 
-class LegalHoldService(BaseClient):
+class LegalHoldService(BaseService):
     """A client for interacting with Code42 Legal Hold APIs.
 
     The LegalHoldService provides the ability to manage Code42 Legal Hold Policies and Matters.

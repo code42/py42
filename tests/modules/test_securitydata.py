@@ -5,18 +5,17 @@ from requests.exceptions import HTTPError
 
 from py42._internal.client_factories import MicroserviceClientFactory
 from py42.clients.securitydata import PlanStorageInfo
-from py42.clients.securitydata import SecurityModule
+from py42.clients.securitydata import SecurityDataClient
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42HTTPError
 from py42.response import Py42Response
-from py42.services.file_event import FileEventService
+from py42.services.fileevent import FileEventService
 from py42.services.pds import PreservationDataService
 from py42.services.securitydata import SecurityDataService
-from py42.services.storage import StorageClient
-from py42.services.storage import StorageClientFactory
-from py42.services.storage import StorageSecurityService
-from py42.services.storage.storagenode import StoragePreservationDataService
+from py42.clients._storage import StorageClient, StorageClientFactory
+from py42.services.storage import StorageSecurityDataService
+from py42.services.storage.preservationdata import StoragePreservationDataService
 
 RAW_QUERY = "RAW JSON QUERY"
 
@@ -299,7 +298,7 @@ class TestSecurityModule(object):
         microservice_client_factory.get_file_event_client.side_effect = self.return_file_event_client(
             file_event_client
         )
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         security_module.search_file_events(RAW_QUERY)
@@ -311,7 +310,7 @@ class TestSecurityModule(object):
         storage_client_factory,
         microservice_client_factory,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_one_location,
             storage_client_factory,
             microservice_client_factory,
@@ -328,7 +327,7 @@ class TestSecurityModule(object):
         storage_client_factory,
         microservice_client_factory,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_two_plans_one_node,
             storage_client_factory,
             microservice_client_factory,
@@ -348,7 +347,7 @@ class TestSecurityModule(object):
         storage_client_factory,
         microservice_client_factory,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_two_plans_two_nodes,
             storage_client_factory,
             microservice_client_factory,
@@ -367,7 +366,7 @@ class TestSecurityModule(object):
         storage_client_factory,
         microservice_client_factory,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_one_plan_two_destinations,
             storage_client_factory,
             microservice_client_factory,
@@ -384,7 +383,7 @@ class TestSecurityModule(object):
         storage_client_factory,
         microservice_client_factory,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_two_plans_two_destinations,
             storage_client_factory,
             microservice_client_factory,
@@ -404,7 +403,7 @@ class TestSecurityModule(object):
         storage_client_factory,
         microservice_client_factory,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_two_plans_two_destinations_three_nodes,
             storage_client_factory,
             microservice_client_factory,
@@ -425,13 +424,13 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityDataService)
         mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
         storage_client_factory.from_plan_info.return_value = mock_storage_client
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_one_location,
             storage_client_factory,
             microservice_client_factory,
@@ -455,7 +454,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityDataService)
         mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
@@ -466,7 +465,7 @@ class TestSecurityModule(object):
             response2,
         ]
         storage_client_factory.from_plan_info.return_value = mock_storage_client
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_one_location,
             storage_client_factory,
             microservice_client_factory,
@@ -483,13 +482,13 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityDataService)
         mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
         storage_client_factory.from_plan_info.return_value = mock_storage_client
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_two_plans_one_node,
             storage_client_factory,
             microservice_client_factory,
@@ -506,7 +505,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityDataService)
         mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
@@ -519,7 +518,7 @@ class TestSecurityModule(object):
             response2,
         ]
         storage_client_factory.from_plan_info.return_value = mock_storage_client
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client_two_plans_one_node,
             storage_client_factory,
             microservice_client_factory,
@@ -545,13 +544,13 @@ class TestSecurityModule(object):
         plan_storage_info,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityDataService)
         mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
         storage_client_factory.from_plan_info.return_value = mock_storage_client
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         for _, _ in security_module.get_all_plan_security_events(plan_storage_info):
@@ -573,7 +572,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityDataService)
         mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
@@ -584,7 +583,7 @@ class TestSecurityModule(object):
             response2,
         ]
         storage_client_factory.from_plan_info.return_value = mock_storage_client
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         for _, _ in security_module.get_all_plan_security_events(
@@ -601,13 +600,13 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityDataService)
         mock_storage_client.securitydata = mock_storage_security_client
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
         mock_storage_security_client.get_plan_security_events.return_value = response
         storage_client_factory.from_plan_info.return_value = mock_storage_client
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         plans = [
@@ -626,7 +625,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
     ):
         mock_storage_client = mocker.MagicMock(spec=StorageClient)
-        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityService)
+        mock_storage_security_client = mocker.MagicMock(spec=StorageSecurityDataService)
         mock_storage_client.securitydata = mock_storage_security_client
         response1 = mocker.MagicMock(spec=Py42Response)
         response1.text = '{"cursor": "1:1"}'
@@ -639,7 +638,7 @@ class TestSecurityModule(object):
             response2,
         ]
         storage_client_factory.from_plan_info.return_value = mock_storage_client
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         plans = [
@@ -665,7 +664,7 @@ class TestSecurityModule(object):
     def test_saved_searches_returns_saved_search_client(
         self, security_client, storage_client_factory, microservice_client_factory
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         _ = security_module.savedsearches
@@ -723,7 +722,7 @@ class TestSecurityModule(object):
         file_download,
     ):
 
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_client = mocker.MagicMock(spec=FileEventService)
@@ -759,7 +758,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
         file_event_search,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_search.text = "{}"
@@ -779,7 +778,7 @@ class TestSecurityModule(object):
         file_event_search,
         file_location,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_client = mocker.MagicMock(spec=FileEventService)
@@ -806,7 +805,7 @@ class TestSecurityModule(object):
         file_location,
         find_file_version,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_client = mocker.MagicMock(spec=FileEventService)
@@ -841,7 +840,7 @@ class TestSecurityModule(object):
         find_file_version,
         file_download,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_client = mocker.MagicMock(spec=FileEventService)
@@ -883,7 +882,7 @@ class TestSecurityModule(object):
         file_download,
     ):
 
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_client = mocker.MagicMock(spec=FileEventService)
@@ -919,7 +918,7 @@ class TestSecurityModule(object):
         microservice_client_factory,
         file_event_search,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_search.text = "{}"
@@ -939,7 +938,7 @@ class TestSecurityModule(object):
         file_event_search,
         file_location,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_client = mocker.MagicMock(spec=FileEventService)
@@ -966,7 +965,7 @@ class TestSecurityModule(object):
         file_location,
         find_file_version,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_client = mocker.MagicMock(spec=FileEventService)
@@ -1001,7 +1000,7 @@ class TestSecurityModule(object):
         find_file_version,
         file_download,
     ):
-        security_module = SecurityModule(
+        security_module = SecurityDataClient(
             security_client, storage_client_factory, microservice_client_factory
         )
         file_event_client = mocker.MagicMock(spec=FileEventService)

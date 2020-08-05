@@ -1,9 +1,9 @@
 import json
 
-from py42.services import BaseClient
+from py42.services import BaseService
 
 
-class AlertRulesService(BaseClient):
+class AlertRulesService(BaseService):
     """A client to manage Alert Rules."""
 
     _version = u"v1"
@@ -22,21 +22,22 @@ class AlertRulesService(BaseClient):
     def exfiltration(self):
         if not self._exfiltration:
             tenant_id = self._user_context.get_current_tenant_id()
-            self._exfiltration = ExfiltrationClient(self._connection, tenant_id)
+            self._exfiltration = ExfiltrationService(self._connection, tenant_id)
         return self._exfiltration
 
     @property
     def cloudshare(self):
         if not self._cloud_share:
             tenant_id = self._user_context.get_current_tenant_id()
-            self._cloud_share = CloudShareClient(self._connection, tenant_id)
+            self._cloud_share = CloudShareService(self._connection, tenant_id)
         return self._cloud_share
 
     @property
     def filetypemismatch(self):
         if not self._file_type_mismatch:
-            self._file_type_mismatch = FileTypeMismatchClient(
-                self._connection, self._tenant_id
+            tenant_id = self._user_context.get_current_tenant_id()
+            self._file_type_mismatch = FileTypeMismatchService(
+                self._connection, tenant_id
             )
         return self._file_type_mismatch
 
@@ -68,14 +69,14 @@ class AlertRulesService(BaseClient):
         return self._connection.post(uri, data=json.dumps(data))
 
 
-class CloudShareClient(BaseClient):
+class CloudShareService(BaseService):
 
     _version = u"v1"
     _resource = u"query-cloud-share-permissions-rule"
     _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
 
     def __init__(self, connection, tenant_id):
-        super(CloudShareClient, self).__init__(connection)
+        super(CloudShareService, self).__init__(connection)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):
@@ -91,14 +92,14 @@ class CloudShareClient(BaseClient):
         return self._connection.post(self._api_prefix, data=json.dumps(data))
 
 
-class ExfiltrationClient(BaseClient):
+class ExfiltrationService(BaseService):
 
     _version = u"v1"
     _resource = u"query-endpoint-exfiltration-rule"
     _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
 
     def __init__(self, connection, tenant_id):
-        super(ExfiltrationClient, self).__init__(connection)
+        super(ExfiltrationService, self).__init__(connection)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):
@@ -114,14 +115,14 @@ class ExfiltrationClient(BaseClient):
         return self._connection.post(self._api_prefix, data=json.dumps(data))
 
 
-class FileTypeMismatchClient(BaseClient):
+class FileTypeMismatchService(BaseService):
 
     _version = u"v1"
     _resource = u"query-file-type-mismatch-rule"
     _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
 
     def __init__(self, connection, tenant_id):
-        super(FileTypeMismatchClient, self).__init__(connection)
+        super(FileTypeMismatchService, self).__init__(connection)
         self._tenant_id = tenant_id
 
     def get(self, rule_id):

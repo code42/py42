@@ -7,8 +7,7 @@ from services._connection import Connection
 
 from py42.response import Py42Response
 from py42.services._auth import BasicAuthProvider
-from py42.services._auth import FileArchiveTmpAuth
-from py42.services._auth import SecurityArchiveTmpAuth
+from py42.services.storage._auth import FileArchiveTmpAuth, SecurityArchiveTmpAuth
 from py42.services._auth import V1Auth
 from py42.services._auth import V3Auth
 

@@ -2,10 +2,10 @@ import json
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError
-from py42.services import BaseClient
+from py42.services import BaseService
 
 
-class DetectionListUserService(BaseClient):
+class DetectionListUserService(BaseService):
     """Administrator utility to manage High Risk employees information.
 
     `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__

@@ -1,13 +1,13 @@
 import json
 
-from py42.services.alertrules import FileTypeMismatchClient
+from py42.services.alertrules import FileTypeMismatchService
 
 
 class TestFileTypeMisMatchClient(object):
     def test_get_by_id_posts_to_correct_endpoint_for_type_mismatch_rule_type(
         self, mock_session
     ):
-        alert_rule_client = FileTypeMismatchClient(mock_session, u"tenant-id")
+        alert_rule_client = FileTypeMismatchService(mock_session, u"tenant-id")
         alert_rule_client.get(u"rule-id")
         url = mock_session.post.call_args[0][0]
         assert url == "/svc/api/v1/Rules/query-file-type-mismatch-rule"

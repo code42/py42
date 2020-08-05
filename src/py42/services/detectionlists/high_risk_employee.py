@@ -1,11 +1,11 @@
 import json
 
-from py42.services import BaseClient
+from py42.services import BaseService
 from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.util import get_all_pages
 
 
-class HighRiskEmployeeService(BaseClient):
+class HighRiskEmployeeService(BaseService):
     """A client for interacting with High Risk Employee APIs."""
 
     _api_version = u"v2"

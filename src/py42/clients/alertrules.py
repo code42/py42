@@ -11,7 +11,7 @@ class AlertRulesClient(object):
         """A collection of methods for managing exfiltration alert rules.
 
         Returns:
-            :class:`py42.services.alertrules.exfiltration.ExfiltrationClient`
+            :class:`py42.services.alertrules.exfiltration.ExfiltrationService`
         """
         return self._alert_rules_service.exfiltration
 
@@ -20,7 +20,7 @@ class AlertRulesClient(object):
         """A collection of methods for managing cloud sharing alert rules.
 
         Returns:
-            :class:`py42.services.alertrules.cloud_share.CloudShareClient`
+            :class:`py42.services.alertrules.cloud_share.CloudShareService`
         """
         return self._alert_rules_service.cloudshare
 
@@ -29,7 +29,7 @@ class AlertRulesClient(object):
         """A collection of methods for managing file type mismatch alert rules.
 
         Returns:
-            :class:`py42.services.alertrules.file_type_mismatch.FileTypeMismatchClient`
+            :class:`py42.services.alertrules.file_type_mismatch.FileTypeMismatchService`
         """
         return self._alert_rules_service.filetypemismatch
 
@@ -66,8 +66,7 @@ class AlertRulesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return rules_client.remove_all_users(rule_id)
+        return self._alert_rules_service.remove_all_users(rule_id)
 
     def get_page(
         self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None

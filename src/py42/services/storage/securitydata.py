@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from py42.services import BaseClient
+from py42.services import BaseService
 
 
-class StorageSecurityService(BaseClient):
+class StorageSecurityDataService(BaseService):
     def _get_security_detection_events(
         self,
         user_uid=None,

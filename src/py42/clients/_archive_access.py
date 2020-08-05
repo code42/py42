@@ -13,8 +13,8 @@ class FileType(object):
 
 
 class ArchiveAccessorManager(object):
-    def __init__(self, archive_client, storage_client_factory):
-        self._archive_client = archive_client
+    def __init__(self, archive_service, storage_client_factory):
+        self._archive_service = archive_service
         self._storage_client_factory = storage_client_factory
 
     def get_archive_accessor(
@@ -56,11 +56,11 @@ class ArchiveAccessorManager(object):
         return decryption_keys
 
     def _get_data_key_token(self, device_guid):
-        return self._archive_client.get_data_key_token(device_guid)[u"dataKeyToken"]
+        return self._archive_service.get_data_key_token(device_guid)[u"dataKeyToken"]
 
     @staticmethod
-    def _create_restore_session(storage_archive_client, device_guid, **kwargs):
-        response = storage_archive_client.create_restore_session(device_guid, **kwargs)
+    def _create_restore_session(storage_archive_service, device_guid, **kwargs):
+        response = storage_archive_service.create_restore_session(device_guid, **kwargs)
         return response[u"webRestoreSessionId"]
 
 

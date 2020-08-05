@@ -1,6 +1,6 @@
 import json
 
-from py42.services.file_event import FileEventService
+from py42.services.fileevent import FileEventService
 from py42.services.savedsearch import SavedSearchService
 
 SAVED_SEARCH_GET_RESPONSE = """

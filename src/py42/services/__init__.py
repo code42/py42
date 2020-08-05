@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 
-class BaseClient(object):
+class BaseService(object):
     def __init__(self, connection):
         self._connection = connection
 

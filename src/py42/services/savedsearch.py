@@ -1,8 +1,8 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
-from py42.services import BaseClient
+from py42.services import BaseService
 
 
-class SavedSearchService(BaseClient):
+class SavedSearchService(BaseService):
     """A client to interact with saved search APIs."""
 
     _version = u"v1"

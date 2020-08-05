@@ -99,7 +99,7 @@ class TestSDK(object):
             HOST_ADDRESS, mock_session_factory, success_requests_session
         )
         sdk = SDKClient(deps)
-        assert type(sdk.securitydata) == sec_mod.SecurityModule
+        assert type(sdk.securitydata) == sec_mod.SecurityDataClient
 
     def test_has_user_client_set(self, mock_session_factory, success_requests_session):
         deps = SDKDependencies(

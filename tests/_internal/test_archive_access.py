@@ -46,6 +46,7 @@ SAVE_AS_FILENAME = "save-as-filename.txt"
 USERS_DIR = "/Users"
 PATH_TO_FILE_IN_DOWNLOADS_FOLDER = "/Users/qa/Downloads/terminator-genisys.jpg"
 PATH_TO_FILE_IN_DESKTOP = "/Users/qa/Desktop"
+PATH_TO_DOWNLOADS_FOLDER = "/Users/qa/Downloads"
 
 
 class GetFilePathMetadataResponses(object):
@@ -235,8 +236,8 @@ class GetFilePathMetadataResponses(object):
 class GetWebRestoreJobResponses(object):
 
     NOT_DONE = """{
-                "status": "compressing",
-                "zipResult": true,
+                "status": "preparing",
+                "zipResult": false,
                 "name": "WebRestore_13",
                 "sourceId": "896477098509532085",
                 "userId": 202011,
@@ -251,8 +252,8 @@ class GetWebRestoreJobResponses(object):
         """
 
     DONE = """{
-                "status": "compressing",
-                "zipResult": true,
+                "status": "preparing",
+                "zipResult": false,
                 "name": "WebRestore_13",
                 "sourceId": "896477098509532085",
                 "userId": 202011,
@@ -326,6 +327,11 @@ def double_file_selection():
 
 
 @pytest.fixture
+def single_dir_selection():
+    return [get_file_selection(FileType.DIRECTORY, PATH_TO_DOWNLOADS_FOLDER)]
+
+
+@pytest.fixture
 def save_as_path():
     return posixpath.join(SAVE_AS_DIR, SAVE_AS_FILENAME)
 
@@ -337,7 +343,14 @@ def file_content_chunks():
 
 def mock_start_restore_response(mocker, storage_archive_client, response):
     def mock_start_restore(
-        device_guid, session_id, path_set, num_files, num_dires, size, **kwargs
+        guid,
+        web_restore_session_id,
+        path_set,
+        num_files,
+        num_dirs,
+        size,
+        zip_result,
+        **kwargs
     ):
         start_restore_response = mocker.MagicMock(spec=Response)
         start_restore_response.text = response
@@ -796,18 +809,17 @@ class TestRestoreJobManager(object):
         mock_get_restore_status_responses(
             mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
         )
-
         restore_job_manager = RestoreJobManager(
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.get_stream(single_file_selection, ["exclude/file"])
         storage_archive_client.start_restore.assert_called_once_with(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            [single_file_selection[0].path_set],
-            1,
-            1,
-            1,
+            guid=DEVICE_GUID,
+            web_restore_session_id=WEB_RESTORE_SESSION_ID,
+            path_set=[single_file_selection[0].path_set],
+            num_files=1,
+            num_dirs=1,
+            size=1,
             exceptions=["exclude/file"],
             show_deleted=True,
             zip_result=None,
@@ -828,15 +840,15 @@ class TestRestoreJobManager(object):
         )
         restore_job_manager.get_stream(double_file_selection, ["exclude/file"])
         storage_archive_client.start_restore.assert_called_once_with(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            [double_file_selection[0].path_set, double_file_selection[1].path_set],
-            2,
-            2,
-            2,
-            exceptions=["exclude/file"],
+            guid=DEVICE_GUID,
+            web_restore_session_id=WEB_RESTORE_SESSION_ID,
+            path_set=[double_file_selection[0].path_set, double_file_selection[1].path_set],
+            num_files=2,
+            num_dirs=2,
+            size=2,
             show_deleted=True,
             zip_result=True,
+            exceptions=["exclude/file"],
         )
 
     def test_get_stream_polls_job_status_until_job_is_complete(
@@ -884,4 +896,44 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
+
         assert restore_job_manager.get_stream(single_file_selection, [])
+
+    def test_get_stream_when_is_file_type_does_not_set_zip_result(
+        self, mocker, storage_archive_client, single_file_selection, file_content_chunks
+    ):
+        mock_start_restore_response(
+            mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
+        )
+        mock_get_restore_status_responses(
+            mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
+        )
+        stream_restore_result_response_mock(
+            mocker, storage_archive_client, file_content_chunks
+        )
+        restore_job_manager = RestoreJobManager(
+            storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
+        )
+        restore_job_manager.get_stream(single_file_selection, [])
+        actual = storage_archive_client.start_restore.call_args[1]["zip_result"]
+        assert actual is None
+
+    def test_get_stream_when_is_directory_type_sets_zip_result_to_true(
+        self, mocker, storage_archive_client, single_dir_selection, file_content_chunks
+    ):
+        mock_start_restore_response(
+            mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
+        )
+        mock_get_restore_status_responses(
+            mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
+        )
+        stream_restore_result_response_mock(
+            mocker, storage_archive_client, file_content_chunks
+        )
+        restore_job_manager = RestoreJobManager(
+            storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
+        )
+        restore_job_manager.get_stream(single_dir_selection, [])
+        actual = storage_archive_client.start_restore.call_args[1]["zip_result"]
+        assert actual is True
+

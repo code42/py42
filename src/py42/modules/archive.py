@@ -16,7 +16,8 @@ class ArchiveModule(object):
         encryption_key=None,
         exceptions=None,
     ):
-        """Streams a file from a backup archive to memory.
+        """Streams a file from a backup archive to memory. If streaming a directory, the
+        results will be zipped.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
@@ -40,10 +41,16 @@ class ArchiveModule(object):
         Usage example::
 
             stream_response = sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
-            with open("/path/to/my/file", 'wb') as f:
+            with open("/path/to/my/file", "wb") as f:
                 for chunk in stream_response.iter_content(chunk_size=128):
                     if chunk:
                         f.write(chunk)
+
+        If downloading a directory, you will need to unzip the results::
+
+            import zipfile
+            with zipfile.ZipFile("downloaded_directory.zip", "r") as zf:
+                zf.extractall(".")
         """
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
             device_guid,

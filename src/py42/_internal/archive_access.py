@@ -43,16 +43,16 @@ class ArchiveAccessorManager(object):
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):
         decryption_keys = {}
         if encryption_key:
-            decryption_keys["encryption_key"] = encryption_key
+            decryption_keys[u"encryption_key"] = encryption_key
         else:
             data_key_token = (
                 self._get_data_key_token(device_guid) if not encryption_key else None
             )
             if data_key_token:
-                decryption_keys["data_key_token"] = data_key_token
+                decryption_keys[u"data_key_token"] = data_key_token
 
             if private_password:
-                decryption_keys["private_password"] = private_password
+                decryption_keys[u"private_password"] = private_password
         return decryption_keys
 
     def _get_data_key_token(self, device_guid):
@@ -166,18 +166,19 @@ class RestoreJobManager(object):
         response = self._storage_archive_client.get_restore_status(job_id)
         return self._get_completion_status(response)
 
-    def _start_restore(self, file_selections, exceptions):
-        num_files = sum([fs.num_files for fs in file_selections])
-        num_dirs = sum([fs.num_dirs for fs in file_selections])
-        size = sum([fs.size for fs in file_selections])
+    def _start_restore(self, file_selection, exceptions):
+        num_files = sum([fs.num_files for fs in file_selection])
+        num_dirs = sum([fs.num_dirs for fs in file_selection])
+        size = sum([fs.size for fs in file_selection])
+        zip_result = _check_for_multiple_files(file_selection) or None
         return self._storage_archive_client.start_restore(
-            self._device_guid,
-            self._archive_session_id,
-            [fs.path_set for fs in file_selections],
-            num_files,
-            num_dirs,
-            size,
-            zip_result=len(file_selections) > 1 or None,
+            guid=self._device_guid,
+            web_restore_session_id=self._archive_session_id,
+            path_set=[fs.path_set for fs in file_selection],
+            num_files=num_files,
+            num_dirs=num_dirs,
+            size=size,
+            zip_result=zip_result,
             show_deleted=True,
             exceptions=exceptions,
         )
@@ -193,3 +194,14 @@ class RestoreJobManager(object):
 
 def create_restore_job_manager(storage_archive_client, device_guid, archive_session_id):
     return RestoreJobManager(storage_archive_client, device_guid, archive_session_id)
+
+
+def _check_for_multiple_files(file_selection):
+    if not file_selection:
+        return False
+    if len(file_selection) > 1:
+        return True
+
+    # Only one file selected
+    selection = file_selection[0]
+    return selection.path_set[u"type"].lower() == u"directory"

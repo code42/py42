@@ -85,15 +85,15 @@ class ArchiveAccessor(object):
         if not isinstance(file_path, (list, tuple)):
             file_path = [file_path]
 
-        selections = []
+        file_selections = []
         for path in file_path:
             metadata = self._get_file_via_walking_tree(path)
-            file_selection = self._build_file_selection(
+            fs = self._build_file_selection(
                 metadata[u"path"], metadata[u"type"]
             )
-            selections.append(file_selection)
+            file_selections.append(fs)
 
-        return self._restore_job_manager.get_stream(selections, exceptions)
+        return self._restore_job_manager.get_stream(file_selections, exceptions)
 
     def _get_file_via_walking_tree(self, file_path):
         path_parts = file_path.split(u"/")

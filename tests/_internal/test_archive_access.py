@@ -321,7 +321,7 @@ def single_file_selection():
 def double_file_selection():
     return [
         get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER),
-        get_file_selection(FileType.DIRECTORY, PATH_TO_FILE_IN_DESKTOP)
+        get_file_selection(FileType.DIRECTORY, PATH_TO_FILE_IN_DESKTOP),
     ]
 
 

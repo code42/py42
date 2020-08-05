@@ -92,7 +92,9 @@ class TestLegalHoldClient(object):
         with pytest.raises(Py42LegalHoldPermissionDeniedError) as err:
             client.get_matter_by_uid("matter")
 
-        expected = "Your account does not have permission to view matter with ID=matter."
+        expected = (
+            "Your account does not have permission to view matter with ID=matter."
+        )
         assert str(err.value) == expected
 
     def test_get_matter_by_uid_when_bad_request_raises_legal_hold_not_found_error(

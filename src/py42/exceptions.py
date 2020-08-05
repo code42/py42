@@ -110,10 +110,7 @@ class Py42LegalHoldNotFoundError(Py42HTTPError):
 
     def __init__(self, exception, matter_id):
         super(Py42LegalHoldNotFoundError, self).__init__(
-            exception,
-            u"Matter with ID={} can not be found.".format(
-                matter_id
-            ),
+            exception, u"Matter with ID={} can not be found.".format(matter_id),
         )
 
 

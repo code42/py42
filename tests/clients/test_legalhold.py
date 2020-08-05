@@ -8,8 +8,7 @@ import py42
 from py42.clients.legalhold import LegalHoldClient
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42ForbiddenError
-from py42.exceptions import Py42LegalHoldNotFoundError
-from py42.exceptions import Py42LegalHoldPermissionDeniedError
+from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.response import Py42Response
 
@@ -89,28 +88,10 @@ class TestLegalHoldClient(object):
 
         mock_session.get.side_effect = side_effect
         client = LegalHoldClient(mock_session)
-        with pytest.raises(Py42LegalHoldPermissionDeniedError) as err:
+        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
             client.get_matter_by_uid("matter")
 
-        expected = (
-            "Your account does not have permission to view matter with ID=matter."
-        )
-        assert str(err.value) == expected
-
-    def test_get_matter_by_uid_when_bad_request_raises_legal_hold_not_found_error(
-        self, mocker, mock_session, successful_response
-    ):
-        def side_effect(*args, **kwargs):
-            base_err = mocker.MagicMock(spec=HTTPError)
-            base_err.response = mocker.MagicMock(spec=Response)
-            raise Py42BadRequestError(base_err)
-
-        mock_session.get.side_effect = side_effect
-        client = LegalHoldClient(mock_session)
-        with pytest.raises(Py42LegalHoldNotFoundError) as err:
-            client.get_matter_by_uid("matter")
-
-        expected = "Matter with ID=matter can not be found."
+        expected = "Matter with ID=matter can not be found. Your account may not have permission to view the matter."
         assert str(err.value) == expected
 
     def test_get_all_matters_calls_get_expected_number_of_times(

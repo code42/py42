@@ -8,7 +8,8 @@ import py42
 from py42.clients.legalhold import LegalHoldClient
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42ForbiddenError
-from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
+from py42.exceptions import Py42LegalHoldNotFoundError
+from py42.exceptions import Py42LegalHoldPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.response import Py42Response
 
@@ -78,7 +79,7 @@ class TestLegalHoldClient(object):
         uri = "{}/{}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
         mock_session.get.assert_called_once_with(uri)
 
-    def test_get_matter_by_uid_when_forbidden_raises_legal_hold_not_found_or_permissions_denied(
+    def test_get_matter_by_uid_when_forbidden_raises_legal_hold_permission_denied_error(
         self, mocker, mock_session, successful_response
     ):
         def side_effect(*args, **kwargs):
@@ -88,13 +89,13 @@ class TestLegalHoldClient(object):
 
         mock_session.get.side_effect = side_effect
         client = LegalHoldClient(mock_session)
-        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+        with pytest.raises(Py42LegalHoldPermissionDeniedError) as err:
             client.get_matter_by_uid("matter")
 
-        expected = "Matter with id=matter either does not exist or your account does not have permission to view it."
+        expected = "Your account does not have permission to view matter with ID=matter."
         assert str(err.value) == expected
 
-    def test_get_matter_by_uid_when_bad_request_raises_legal_hold_not_found_or_permissions_denied(
+    def test_get_matter_by_uid_when_bad_request_raises_legal_hold_not_found_error(
         self, mocker, mock_session, successful_response
     ):
         def side_effect(*args, **kwargs):
@@ -104,10 +105,10 @@ class TestLegalHoldClient(object):
 
         mock_session.get.side_effect = side_effect
         client = LegalHoldClient(mock_session)
-        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+        with pytest.raises(Py42LegalHoldNotFoundError) as err:
             client.get_matter_by_uid("matter")
 
-        expected = "Matter with id=matter either does not exist or your account does not have permission to view it."
+        expected = "Matter with ID=matter can not be found."
         assert str(err.value) == expected
 
     def test_get_all_matters_calls_get_expected_number_of_times(

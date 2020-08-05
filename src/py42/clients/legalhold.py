@@ -6,7 +6,8 @@ from py42.clients.util import get_all_pages
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42ForbiddenError
-from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
+from py42.exceptions import Py42LegalHoldNotFoundError
+from py42.exceptions import Py42LegalHoldPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
 
 
@@ -110,8 +111,10 @@ class LegalHoldClient(BaseClient):
         uri = u"/api/LegalHold/{}".format(legal_hold_uid)
         try:
             return self._session.get(uri)
-        except (Py42BadRequestError, Py42ForbiddenError) as err:
-            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
+        except Py42BadRequestError as err:
+            raise Py42LegalHoldNotFoundError(err, legal_hold_uid)
+        except Py42ForbiddenError as err:
+            raise Py42LegalHoldPermissionDeniedError(err, legal_hold_uid)
 
     def get_matters_page(
         self,

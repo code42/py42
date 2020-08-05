@@ -105,13 +105,26 @@ class Py42UserAlreadyAddedError(Py42HTTPError):
         super(Py42UserAlreadyAddedError, self).__init__(exception, msg)
 
 
-class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42HTTPError):
+class Py42LegalHoldNotFoundError(Py42HTTPError):
     """An exception raised when a legal hold matter is inaccessible from your account."""
 
     def __init__(self, exception, matter_id):
-        super(Py42LegalHoldNotFoundOrPermissionDeniedError, self).__init__(
+        super(Py42LegalHoldNotFoundError, self).__init__(
             exception,
-            u"Matter with id={} either does not exist or your account does not have permission to view it.".format(
+            u"Matter with ID={} can not be found.".format(
+                matter_id
+            ),
+        )
+
+
+class Py42LegalHoldPermissionDeniedError(Py42HTTPError):
+    """An exception raised when a legal hold matter is inaccessible from your account
+    due to permission constraints."""
+
+    def __init__(self, exception, matter_id):
+        super(Py42LegalHoldPermissionDeniedError, self).__init__(
+            exception,
+            u"Your account does not have permission to view matter with ID={}.".format(
                 matter_id
             ),
         )

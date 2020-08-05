@@ -45,6 +45,7 @@ SAVE_AS_FILENAME = "save-as-filename.txt"
 
 USERS_DIR = "/Users"
 PATH_TO_FILE_IN_DOWNLOADS_FOLDER = "/Users/qa/Downloads/terminator-genisys.jpg"
+PATH_TO_FILE_IN_DESKTOP = "/Users/qa/Desktop"
 
 
 class GetFilePathMetadataResponses(object):
@@ -314,6 +315,14 @@ def restore_job_manager(mocker):
 @pytest.fixture
 def single_file_selection():
     return [get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)]
+
+
+@pytest.fixture
+def double_file_selection():
+    return [
+        get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER),
+        get_file_selection(FileType.DIRECTORY, PATH_TO_FILE_IN_DESKTOP)
+    ]
 
 
 @pytest.fixture
@@ -605,10 +614,11 @@ class TestArchiveAccessor(object):
         exceptions = ["/dont/include/me"]
         archive_accessor.stream_from_backup("/", exceptions)
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "/")]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection, exceptions)
+        restore_job_manager.get_stream.assert_called_once_with(
+            expected_file_selection, exceptions
+        )
 
-    def \
-        test_stream_from_backup_with_root_level_folder_calls_get_stream(
+    def test_stream_from_backup_with_root_level_folder_calls_get_stream(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_get_file_path_metadata_responses(
@@ -624,7 +634,9 @@ class TestArchiveAccessor(object):
         )
         archive_accessor.stream_from_backup(USERS_DIR, ["exclude/file"])
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, USERS_DIR)]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection, ["exclude/file"])
+        restore_job_manager.get_stream.assert_called_once_with(
+            expected_file_selection, ["exclude/file"]
+        )
 
     def test_stream_from_backup_with_file_path_calls_get_stream(
         self, mocker, storage_archive_client, restore_job_manager
@@ -636,11 +648,15 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER, ["exclude/file"])
-        expected_file_selection = [get_file_selection(
-            FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER
-        )]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection, ["exclude/file"])
+        archive_accessor.stream_from_backup(
+            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, ["exclude/file"]
+        )
+        expected_file_selection = [
+            get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+        ]
+        restore_job_manager.get_stream.assert_called_once_with(
+            expected_file_selection, ["exclude/file"]
+        )
 
     def test_stream_from_backup_with_file_not_in_archive_raises_exception(
         self, mocker, storage_archive_client, restore_job_manager
@@ -777,7 +793,6 @@ class TestRestoreJobManager(object):
         mock_start_restore_response(
             mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
         )
-
         mock_get_restore_status_responses(
             mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
         )
@@ -796,6 +811,32 @@ class TestRestoreJobManager(object):
             exceptions=["exclude/file"],
             show_deleted=True,
             zip_result=None,
+        )
+
+    def test_get_stream_when_multiple_files_selected_calls_start_restore_with_correct_Args(
+        self, mocker, storage_archive_client, double_file_selection
+    ):
+        mock_start_restore_response(
+            mocker, storage_archive_client, GetWebRestoreJobResponses.NOT_DONE
+        )
+        mock_get_restore_status_responses(
+            mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
+        )
+
+        restore_job_manager = RestoreJobManager(
+            storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
+        )
+        restore_job_manager.get_stream(double_file_selection, ["exclude/file"])
+        storage_archive_client.start_restore.assert_called_once_with(
+            DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID,
+            [double_file_selection[0].path_set, double_file_selection[1].path_set],
+            2,
+            2,
+            2,
+            exceptions=["exclude/file"],
+            show_deleted=True,
+            zip_result=True,
         )
 
     def test_get_stream_polls_job_status_until_job_is_complete(

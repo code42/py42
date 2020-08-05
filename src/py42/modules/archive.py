@@ -29,10 +29,10 @@ class ArchiveModule(object):
             archive_password (str or None, optional): The password for archives that are protected with an
                 additional password. This is only relevant to users with archive key password
                 security. Defaults to None.
-            encryption_key (str or None, optional): A custom encryption key for decryption an archive's file
-                contents, necessary for restoring files. This is only relevant to users with custom
+            encryption_key (str or None, optional): A custom encryption key for decryption an archive's
+                file contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
-            exceptions (list, optional): A list of file paths that to exclude from the restore. Only
+            exceptions (list, optional): A list of file paths to exclude from the restore. Only
                 relevant when restoring more than one file. Defaults to None.
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.

@@ -59,8 +59,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## 1.7.1 - 2020-07-24
 
+### Added
+
+- `sdk.archive.stream_from_backup()` parameter `exceptions` for excluding files during a restore.
+
 ### Changed
 
+- `sdk.archive.stream_from_backup()` can now take a list of file paths to restore.
 - `sdk.securitydata.stream_file_by_md5()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42ArchiveFileNotFoundError`).
 - `sdk.securitydata.stream_file_by_sha256()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42Error`).
 

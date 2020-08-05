@@ -26,10 +26,10 @@ class ArchiveModule(object):
                 of the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your
                 destinations or if you want to optimize performance. Defaults to None.
-            archive_password (str or None, optional): The password for archives that are protected with an
-                additional password. This is only relevant to users with archive key password
-                security. Defaults to None.
-            encryption_key (str or None, optional): A custom encryption key for decryption an archive's
+            archive_password (str or None, optional): The password for the archive, if password-
+                protected. This is only relevant to users with archive key password security. Defaults
+                to None.
+            encryption_key (str or None, optional): A custom encryption key for decrypting an archive's
                 file contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
             exceptions (list, optional): A list of file paths to exclude from the restore. Only

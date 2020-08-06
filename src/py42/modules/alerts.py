@@ -46,34 +46,28 @@ class AlertsModule(object):
         alert_client = self._microservice_client_factory.get_alerts_client()
         return alert_client.get_details(alert_ids)
 
-    def resolve(self, alert_ids, tenant_id=None, reason=None):
+    def resolve(self, alert_ids, reason=None):
         """Resolves the alerts with the given IDs.
 
         Args:
             alert_ids (iter[str]): The identification numbers for the alerts to resolve.
-            tenant_id (str, optional): The unique identifier for the tenant that the alerts belong
-                to. When given None, it uses the currently logged in user's tenant ID. Defaults to
-                None.
             reason (str, optional): The reason the alerts are now resolved. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
         alert_client = self._microservice_client_factory.get_alerts_client()
-        return alert_client.resolve(alert_ids, tenant_id=tenant_id, reason=reason)
+        return alert_client.resolve(alert_ids, reason=reason)
 
-    def reopen(self, alert_ids, tenant_id=None, reason=None):
+    def reopen(self, alert_ids, reason=None):
         """Reopens the resolved alerts with the given IDs.
 
         Args:
             alert_ids (iter[str]): The identification numbers for the alerts to reopen.
-            tenant_id (str, optional): The unique identifier for the tenant that the alerts belong
-                to. When given None, it uses the currently logged in user's tenant ID. Defaults to
-                None.
             reason (str, optional): The reason the alerts are reopened. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
         alert_client = self._microservice_client_factory.get_alerts_client()
-        return alert_client.reopen(alert_ids, tenant_id=tenant_id, reason=reason)
+        return alert_client.reopen(alert_ids, reason=reason)

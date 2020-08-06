@@ -12,7 +12,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Removed
 
-- `tenant_id` parameter from `sdk.alerts.get_details()` method. It is now populated automatically.
+- Removed `tenant_id` parameter from methods:
+    - `sdk.alerts.get_details()`
+    - `sdk.alerts.resolve()`
+    - `sdk.alerts.reopen()`
 
 ### Added
 

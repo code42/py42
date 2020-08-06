@@ -6,6 +6,7 @@ from requests import Response
 
 import py42.settings
 from py42.clients.users import UserClient
+from py42.exceptions import Py42UserDoesNotExistError
 from py42.response import Py42Response
 
 USER_URI = "/api/User"
@@ -29,7 +30,7 @@ MOCK_text = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
 
 class TestUserClient(object):
     @pytest.fixture
-    def mock_get_all_response(self, mocker):
+    def mock_get_users_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 200
         response.encoding = "utf-8"
@@ -37,7 +38,7 @@ class TestUserClient(object):
         return Py42Response(response)
 
     @pytest.fixture
-    def mock_get_all_empty_response(self, mocker):
+    def mock_get_users_empty_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 200
         response.encoding = "utf-8"
@@ -52,7 +53,9 @@ class TestUserClient(object):
         response.text = MOCK_text
         return Py42Response(response)
 
-    def test_post_create_user_is_successful(self, mock_session, post_api_mock_response):
+    def test_create_user_calls_post_with_expected_url_and_params(
+        self, mock_session, post_api_mock_response
+    ):
         user_client = UserClient(mock_session)
         mock_session.post.return_value = post_api_mock_response
         org_uid = "TEST_ORG_ID"
@@ -76,9 +79,9 @@ class TestUserClient(object):
         )
 
     def test_get_all_calls_get_with_uri_and_params(
-        self, mock_session, mock_get_all_response
+        self, mock_session, mock_get_users_response
     ):
-        mock_session.get.side_effect = [mock_get_all_response]
+        mock_session.get.side_effect = [mock_get_users_response]
         client = UserClient(mock_session)
         for _ in client.get_all():
             break
@@ -86,15 +89,25 @@ class TestUserClient(object):
         assert first_call[0][0] == USER_URI
         assert first_call[1]["params"] == DEFAULT_GET_ALL_PARAMS
 
-    def test_unicode_username_get_user_by_username_calls_get_with_username(
-        self, mock_session, successful_response
+    def test_get_user_by_username_when_given_unicode_calls_get_with_username(
+        self, mock_session, mock_get_users_response
     ):
         username = u"您已经发现了秘密信息"
-        mock_session.get.return_value = successful_response
+        mock_session.get.return_value = mock_get_users_response
         client = UserClient(mock_session)
         client.get_by_username(username)
         expected_params = {u"username": username}
         mock_session.get.assert_called_once_with(USER_URI, params=expected_params)
+
+    def test_get_by_username_when_empty_list_returns_raises_user_not_exists(
+        self, mock_session, mock_get_users_empty_response
+    ):
+        mock_session.get.return_value = mock_get_users_empty_response
+        client = UserClient(mock_session)
+        with pytest.raises(Py42UserDoesNotExistError) as err:
+            client.get_by_username("username")
+
+        assert str(err.value) == "User 'username' does not exist."
 
     def test_get_user_by_id_calls_get_with_uri_and_params(
         self, mock_session, successful_response
@@ -106,14 +119,14 @@ class TestUserClient(object):
         mock_session.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
-        self, mock_session, mock_get_all_response, mock_get_all_empty_response
+        self, mock_session, mock_get_users_response, mock_get_users_empty_response
     ):
         py42.settings.items_per_page = 1
         client = UserClient(mock_session)
         mock_session.get.side_effect = [
-            mock_get_all_response,
-            mock_get_all_response,
-            mock_get_all_empty_response,
+            mock_get_users_response,
+            mock_get_users_response,
+            mock_get_users_empty_response,
         ]
         for _ in client.get_all():
             pass

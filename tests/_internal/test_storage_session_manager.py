@@ -1,4 +1,6 @@
 import pytest
+from requests import HTTPError
+from requests import Response
 
 from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
@@ -45,10 +47,13 @@ class TestStorageSessionManager(object):
         assert session1 is session2
 
     def test_get_storage_session_raises_exception_when_factory_raises_exception(
-        self, session_factory, token_provider
+        self, mocker, session_factory, token_provider
     ):
         def mock_get_session(host_address, provider, **kwargs):
-            raise Py42StorageSessionInitializationError("Mock error!")
+            exception = mocker.MagicMock(spec=HTTPError)
+            response = mocker.MagicMock(spec=Response)
+            exception.response = response
+            raise Py42StorageSessionInitializationError(exception, "Mock error!")
 
         storage_session_manager = StorageSessionManager(session_factory)
         session_factory.create_storage_session.side_effect = mock_get_session

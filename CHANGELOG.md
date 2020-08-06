@@ -18,6 +18,14 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.orgs.get_agent_state()`
     - `sdk.orgs.get_agent_full_disk_access_states()`
 
+- Exception classes (`py42.execeptions`)
+    - `Py42ResponseError`
+    - `Py42UserAlreadyAddedError`
+    - `Py42UserNotInLegalHoldError`
+    - `Py42LegalHoldNotFoundOrPermissionDeniedError`
+    - `Py42UserDoesNotExistError`
+    - `Py42InvalidRuleOperationError`
+
 - Methods for getting individual response pages:
     - `sdk.detectionlists.departing_employee.get_page()`
     - `sdk.detectionlists.high_risk.get_page()`
@@ -56,6 +64,22 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - RuleType
     - AlertState
     - Severity
+
+### Changed
+
+- `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
+- `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
+- `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.
+- `py42.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when the user does not have
+    access or the ID does not exist.
+- `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError` when the user is not found.
+- `py42.alerts.rules.add_user()` now raises `Py42InvalidRuleTypeError` when trying to add a user to a system rule.
+- `py42.alerts.rules.remove_user()` now raises `Py42InvalidRuleTypeError` when trying to remove user from a system rule.
+- `Py42ArchiveFileNotFoundError` now includes the response.
+- `Py42ChecksumNotFoundError` now includes the response.
+- `Py42FeatureUnavailableError` now includes the response.
+- `Py42UserDoesNotExistError` now includes the response.
+- `Py42StorageSessionInitializationError` now includes the response.
 
 ## 1.7.1 - 2020-07-24
 

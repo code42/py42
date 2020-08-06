@@ -4,6 +4,7 @@ from py42 import settings
 from py42._internal.compat import quote
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.exceptions import Py42UserDoesNotExistError
 
 
 class UserClient(BaseClient):
@@ -79,7 +80,8 @@ class UserClient(BaseClient):
         return self._session.get(uri, params=params)
 
     def get_by_username(self, username, **kwargs):
-        """Gets the user with the given username.
+        """Gets the user with the given username. Raises :class:`~py42.exceptions.Py42UserDoesNotExistError`
+        when no user is found.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
@@ -90,7 +92,10 @@ class UserClient(BaseClient):
         """
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
-        return self._session.get(uri, params=params)
+        response = self._session.get(uri, params=params)
+        if not response[u"users"]:
+            raise Py42UserDoesNotExistError(response, username)
+        return response
 
     def get_current(self, **kwargs):
         """Gets the currently signed in user.

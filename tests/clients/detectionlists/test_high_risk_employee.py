@@ -1,10 +1,14 @@
 import json
 
 import pytest
+from requests import HTTPError
+from requests import Response
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
 from py42.clients.users import UserClient
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UserAlreadyAddedError
 
 CREATE_USER_SAMPLE_RESPONSE = """
     {"type$":"USER_V2","tenantId":"1d71796f-af5b-4231-9d8e-df6434da4663",
@@ -57,6 +61,26 @@ class TestHighRiskEmployeeClient(object):
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
         )
+
+    def test_add_when_user_already_on_list_raises_user_already_added_error(
+        self, mocker, mock_session, user_context, mock_detection_list_user_client
+    ):
+        def side_effect(url, data):
+            if "add" in url:
+                base_err = mocker.MagicMock(spec=HTTPError)
+                base_err.response = mocker.MagicMock(spec=Response)
+                base_err.response.text = "User already on list"
+                raise Py42BadRequestError(base_err)
+
+        mock_session.post.side_effect = side_effect
+        client = HighRiskEmployeeClient(
+            mock_session, user_context, mock_detection_list_user_client
+        )
+        with pytest.raises(Py42UserAlreadyAddedError) as err:
+            client.add("user_id")
+
+        expected = "User with ID user_id is already on the high-risk-employee list."
+        assert str(err.value) == expected
 
     def test_set_alerts_enabled_posts_expected_data_with_default_value(
         self, user_context, mock_session, mock_detection_list_user_client

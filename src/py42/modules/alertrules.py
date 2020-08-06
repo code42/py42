@@ -1,4 +1,6 @@
 from py42 import settings
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidRuleOperationError
 
 
 class AlertRulesModule(object):
@@ -46,7 +48,12 @@ class AlertRulesModule(object):
             :class:`py42.response.Py42Response`
         """
         rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return rules_client.add_user(rule_id, user_id)
+        try:
+            return rules_client.add_user(rule_id, user_id)
+        except Py42InternalServerError as err:
+            rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
+            _check_if_system_rule(err, rules)
+            raise
 
     def remove_user(self, rule_id, user_id):
         """Update alert rule criteria to remove a user and all its aliases from a rule.
@@ -59,7 +66,12 @@ class AlertRulesModule(object):
             :class:`py42.response.Py42Response`
         """
         rules_client = self.microservice_client_factory.get_alert_rules_client()
-        return rules_client.remove_user(rule_id, user_id)
+        try:
+            return rules_client.remove_user(rule_id, user_id)
+        except Py42InternalServerError as err:
+            rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
+            _check_if_system_rule(err, rules)
+            raise
 
     def remove_all_users(self, rule_id):
         """Update alert rule criteria to remove all users the from the alert rule.
@@ -139,3 +151,12 @@ class AlertRulesModule(object):
         """
         alerts_client = self.microservice_client_factory.get_alerts_client()
         return alerts_client.get_rule_by_observer_id(observer_id)
+
+
+def _check_if_system_rule(base_err, rules):
+    """You cannot add or remove users from system rules this way; use the specific
+    feature behind the rule, such as the Departing Employee list."""
+    if rules and rules[0][u"isSystem"]:
+        raise Py42InvalidRuleOperationError(
+            base_err, rules[0][u"observerRuleId"], rules[0][u"ruleSource"]
+        )

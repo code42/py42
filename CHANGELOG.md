@@ -59,10 +59,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## 1.7.1 - 2020-07-24
 
-### Added
-
-- `sdk.archive.stream_from_backup()` parameter `exclusions` for excluding files during a restore.
-
 ### Changed
 
 - Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths`.

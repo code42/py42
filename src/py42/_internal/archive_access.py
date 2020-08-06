@@ -1,6 +1,5 @@
 import posixpath
 import time
-import sys
 from collections import namedtuple
 
 from py42.exceptions import Py42ArchiveFileNotFoundError
@@ -152,8 +151,8 @@ class RestoreJobManager(object):
         self._archive_session_id = archive_session_id
         self._job_polling_interval = job_polling_interval
 
-    def get_stream(self, file_selections, exclusions):
-        response = self._start_restore(file_selections, exclusions)
+    def get_stream(self, file_selections):
+        response = self._start_restore(file_selections)
         job_id = response["jobId"]
 
         while not self.is_job_complete(job_id):
@@ -165,16 +164,11 @@ class RestoreJobManager(object):
         response = self._storage_archive_client.get_restore_status(job_id)
         return self._get_completion_status(response)
 
-    def _start_restore(self, file_selection, exclusions):
+    def _start_restore(self, file_selection):
         num_files = sum([fs.num_files for fs in file_selection])
         num_dirs = sum([fs.num_dirs for fs in file_selection])
         size = sum([fs.size for fs in file_selection])
         zip_result = _check_for_multiple_files(file_selection) or None
-
-        exclusions_objects = []
-        for ex in exclusions:
-            ex_obj = {u"path": ex, u"timestamp": 0}
-            exclusions_objects.append(ex_obj)
         return self._storage_archive_client.start_restore(
             guid=self._device_guid,
             web_restore_session_id=self._archive_session_id,
@@ -184,7 +178,6 @@ class RestoreJobManager(object):
             size=size,
             zip_result=zip_result,
             show_deleted=True,
-            exclusions=exclusions_objects,
         )
 
     @staticmethod

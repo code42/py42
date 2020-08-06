@@ -51,10 +51,9 @@ class TestArchiveModule(object):
             "dest_guid",
             "password",
             "encryption_key",
-            ["exclude/this/file"],
         )
         archive_accessor.stream_from_backup.assert_called_once_with(
-            ["path/to/first/file", "path/to/second/file"], ["exclude/this/file"]
+            ["path/to/first/file", "path/to/second/file"]
         )
 
     def test_get_backup_sets_calls_archive_client_get_backup_sets_with_expected_params(

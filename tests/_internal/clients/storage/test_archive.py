@@ -371,7 +371,7 @@ class TestStorageArchiveClient(object):
             NUM_FILES,
             NUM_DIRS,
             SIZE,
-            exceptions=EXCEPTIONS,
+            exclusions=EXCEPTIONS,
         )
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(EXCEPTIONS_KEY) == EXCEPTIONS
@@ -408,7 +408,7 @@ class TestStorageArchiveClient(object):
             show_deleted=True,
             restore_full_path=True,
             timestamp=TIMESTAMP,
-            exceptions=EXCEPTIONS,
+            exclusions=EXCEPTIONS,
             backup_set_id=BACKUP_SET_ID,
         )
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]

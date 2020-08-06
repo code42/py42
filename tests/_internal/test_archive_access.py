@@ -624,12 +624,9 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        exceptions = ["/dont/include/me"]
         archive_accessor.stream_from_backup("/")
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "/")]
-        restore_job_manager.get_stream.assert_called_once_with(
-            expected_file_selection
-        )
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
     def test_stream_from_backup_with_root_level_folder_calls_get_stream(
         self, mocker, storage_archive_client, restore_job_manager
@@ -647,9 +644,7 @@ class TestArchiveAccessor(object):
         )
         archive_accessor.stream_from_backup(USERS_DIR)
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, USERS_DIR)]
-        restore_job_manager.get_stream.assert_called_once_with(
-            expected_file_selection
-        )
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
     def test_stream_from_backup_with_file_path_calls_get_stream(
         self, mocker, storage_archive_client, restore_job_manager
@@ -661,15 +656,11 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        archive_accessor.stream_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER
-        )
+        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
         expected_file_selection = [
             get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
         ]
-        restore_job_manager.get_stream.assert_called_once_with(
-            expected_file_selection
-        )
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
     def test_stream_from_backup_with_file_not_in_archive_raises_exception(
         self, mocker, storage_archive_client, restore_job_manager

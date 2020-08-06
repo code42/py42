@@ -10,6 +10,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Removed
+
+- `tenant_id` parameter from `sdk.alerts.get_details()` method. It is now populated automatically.
+
 ### Added
 
 - Methods for calling the agent-state APIs:

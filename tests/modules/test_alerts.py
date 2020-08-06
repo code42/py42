@@ -56,9 +56,7 @@ class TestAlertsModule(object):
         )
         alert_module = AlertsModule(mock_microservice_client_factory)
         alert_module.get_details(self._alert_ids)
-        mock_alerts_client.get_details.assert_called_once_with(
-            self._alert_ids, tenant_id=None
-        )
+        mock_alerts_client.get_details.assert_called_once_with(self._alert_ids)
 
     def test_alerts_module_calls_resolve_with_expected_value(
         self,

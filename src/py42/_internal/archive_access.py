@@ -81,7 +81,7 @@ class ArchiveAccessor(object):
         self._storage_archive_client = storage_archive_client
         self._restore_job_manager = restore_job_manager
 
-    def stream_from_backup(self, file_path, exceptions):
+    def stream_from_backup(self, file_path, exclusions):
         if not isinstance(file_path, (list, tuple)):
             file_path = [file_path]
 
@@ -91,7 +91,7 @@ class ArchiveAccessor(object):
             fs = self._build_file_selection(metadata[u"path"], metadata[u"type"])
             file_selections.append(fs)
 
-        return self._restore_job_manager.get_stream(file_selections, exceptions)
+        return self._restore_job_manager.get_stream(file_selections, exclusions)
 
     def _get_file_via_walking_tree(self, file_path):
         path_parts = file_path.split(u"/")
@@ -151,8 +151,8 @@ class RestoreJobManager(object):
         self._archive_session_id = archive_session_id
         self._job_polling_interval = job_polling_interval
 
-    def get_stream(self, file_selections, exceptions):
-        response = self._start_restore(file_selections, exceptions)
+    def get_stream(self, file_selections, exclusions):
+        response = self._start_restore(file_selections, exclusions)
         job_id = response["jobId"]
 
         while not self.is_job_complete(job_id):
@@ -164,7 +164,7 @@ class RestoreJobManager(object):
         response = self._storage_archive_client.get_restore_status(job_id)
         return self._get_completion_status(response)
 
-    def _start_restore(self, file_selection, exceptions):
+    def _start_restore(self, file_selection, exclusions):
         num_files = sum([fs.num_files for fs in file_selection])
         num_dirs = sum([fs.num_dirs for fs in file_selection])
         size = sum([fs.size for fs in file_selection])
@@ -178,7 +178,7 @@ class RestoreJobManager(object):
             size=size,
             zip_result=zip_result,
             show_deleted=True,
-            exceptions=exceptions,
+            exceptions=exclusions,
         )
 
     @staticmethod

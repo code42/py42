@@ -61,7 +61,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- `sdk.archive.stream_from_backup()` parameter `exceptions` for excluding files during a restore.
+- `sdk.archive.stream_from_backup()` parameter `exclusions` for excluding files during a restore.
 
 ### Changed
 

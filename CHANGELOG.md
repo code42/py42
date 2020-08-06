@@ -67,8 +67,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths`.
-- `sdk.archive.stream_from_backup()` can now take a list of file paths to restore.
+- Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths` and can now take a list of file paths to restore.
 - `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
 - `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
 - `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.

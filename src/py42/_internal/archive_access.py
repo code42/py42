@@ -81,12 +81,12 @@ class ArchiveAccessor(object):
         self._storage_archive_client = storage_archive_client
         self._restore_job_manager = restore_job_manager
 
-    def stream_from_backup(self, file_path):
-        if not isinstance(file_path, (list, tuple)):
-            file_path = [file_path]
+    def stream_from_backup(self, file_paths):
+        if not isinstance(file_paths, (list, tuple)):
+            file_paths = [file_paths]
 
         file_selections = []
-        for path in file_path:
+        for path in file_paths:
             metadata = self._get_file_via_walking_tree(path)
             fs = self._build_file_selection(metadata[u"path"], metadata[u"type"])
             file_selections.append(fs)

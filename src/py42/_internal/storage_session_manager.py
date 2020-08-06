@@ -29,7 +29,7 @@ class StorageSessionManager(object):
             message = u"Failed to create or retrieve session, caused by: {}".format(
                 str(ex)
             )
-            raise Py42StorageSessionInitializationError(message)
+            raise Py42StorageSessionInitializationError(ex, message)
         return session
 
     def create_storage_session(self, url, token_provider):

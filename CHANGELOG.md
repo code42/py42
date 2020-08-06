@@ -10,6 +10,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Removed
+
+- Removed `tenant_id` parameter from methods:
+    - `sdk.alerts.get_details()`
+    - `sdk.alerts.resolve()`
+    - `sdk.alerts.reopen()`
+
 ### Added
 
 - Methods for calling the agent-state APIs:

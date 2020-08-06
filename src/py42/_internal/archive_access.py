@@ -169,6 +169,8 @@ class RestoreJobManager(object):
         num_dirs = sum([fs.num_dirs for fs in file_selection])
         size = sum([fs.size for fs in file_selection])
         zip_result = _check_for_multiple_files(file_selection) or None
+        exclusions = [{u"path": ex for ex in exclusions}]
+        exclusions[0]["timestamp"] = 0
         return self._storage_archive_client.start_restore(
             guid=self._device_guid,
             web_restore_session_id=self._archive_session_id,
@@ -178,7 +180,7 @@ class RestoreJobManager(object):
             size=size,
             zip_result=zip_result,
             show_deleted=True,
-            exceptions=exclusions,
+            exclusions=exclusions,
         )
 
     @staticmethod

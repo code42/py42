@@ -9,7 +9,7 @@ class ArchiveModule(object):
 
     def stream_from_backup(
         self,
-        file_path,
+        file_paths,
         device_guid,
         destination_guid=None,
         archive_password=None,
@@ -21,7 +21,8 @@ class ArchiveModule(object):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
-            file_path (str or list): The path or list of paths to the files or directories in your archive.
+            file_paths (str or list of str): The path or list of paths to the files or directories in
+                your archive.
             device_guid (str): The GUID of the device the file belongs to.
             destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your
@@ -58,7 +59,7 @@ class ArchiveModule(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        return archive_accessor.stream_from_backup(file_path, exceptions)
+        return archive_accessor.stream_from_backup(file_paths, exceptions)
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific

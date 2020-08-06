@@ -65,6 +65,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
+- Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths`.
 - `sdk.archive.stream_from_backup()` can now take a list of file paths to restore.
 - `sdk.securitydata.stream_file_by_md5()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42ArchiveFileNotFoundError`).
 - `sdk.securitydata.stream_file_by_sha256()` now raises `Py42ChecksumNotFoundError` when no matching md5 is found (previously was `Py42Error`).

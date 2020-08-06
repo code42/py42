@@ -15,7 +15,14 @@ from py42.settings import debug
 
 
 class SecurityDataClient(object):
-    def __init__(self, security_service, file_event_service, preservation_data_service, saved_search_service, storage_client_factory):
+    def __init__(
+        self,
+        security_service,
+        file_event_service,
+        preservation_data_service,
+        saved_search_service,
+        storage_client_factory,
+    ):
         self._security_client = security_service
         self._file_event_service = file_event_service
         self._preservation_data_service = preservation_data_service

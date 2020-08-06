@@ -2,12 +2,12 @@ import json
 
 import pytest
 from requests import Response
-from py42.services._connection import Connection
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.response import Py42Response
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import AlertState
+from py42.services._connection import Connection
 from py42.services.alerts import AlertService
 
 TEST_RESPONSE = """

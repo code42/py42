@@ -71,9 +71,7 @@ class TestUserClient(object):
             u"notes": note,
         }
 
-        mock_session.post.assert_called_once_with(
-            USER_URI, json=expected_params
-        )
+        mock_session.post.assert_called_once_with(USER_URI, json=expected_params)
 
     def test_get_all_calls_get_with_uri_and_params(
         self, mock_session, mock_get_all_response

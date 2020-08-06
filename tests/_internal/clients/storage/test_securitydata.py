@@ -1,8 +1,8 @@
 from datetime import datetime
 
 import pytest
-from py42.services._connection import Connection
 
+from py42.services._connection import Connection
 from py42.services.storage import StorageSecurityDataService
 
 uri = u"/api/SecurityDetectionEvent"

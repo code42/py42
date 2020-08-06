@@ -1,31 +1,20 @@
 # import pytest
-
 # from py42._internal.client_factories import MicroserviceClientFactory
 # from py42.clients.alertrules import AlertRulesClient
 # from py42.services.alertrules import AlertRulesService
 # from py42.services.alerts import AlertService
-
-
 # @pytest.fixture
 # def mock_microservice_client_factory(mocker):
 #     return mocker.MagicMock(spec=MicroserviceClientFactory)
-
-
 # @pytest.fixture
 # def mock_alert_rules_client(mocker):
 #     return mocker.MagicMock(spec=AlertRulesService)
-
-
 # @pytest.fixture
 # def mock_alerts_client(mocker):
 #     return mocker.MagicMock(spec=AlertService)
-
-
 # class TestAlertRulesModules(object):
-
 #     _rule_id = u"test-rule-id"
 #     _user_id = u"test-user-uid"
-
 #     def test_alert_rules_module_calls_add_user_with_expected_value(
 #         self, mock_microservice_client_factory, mock_alert_rules_client
 #     ):
@@ -37,7 +26,6 @@
 #         mock_alert_rules_client.add_user.assert_called_once_with(
 #             self._rule_id, self._rule_id
 #         )
-
 #     def test_alert_rules_module_calls_remove_user_with_expected_value(
 #         self, mock_microservice_client_factory, mock_alert_rules_client
 #     ):
@@ -49,7 +37,6 @@
 #         mock_alert_rules_client.remove_user.assert_called_once_with(
 #             self._rule_id, self._rule_id
 #         )
-
 #     def test_alert_rules_module_calls_remove_all_users_with_expected_value(
 #         self, mock_microservice_client_factory, mock_alert_rules_client
 #     ):
@@ -59,7 +46,6 @@
 #         alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
 #         alert_rules_module.remove_all_users(self._rule_id)
 #         mock_alert_rules_client.remove_all_users.assert_called_once_with(self._rule_id)
-
 #     def test_alert_rules_module_calls_get_all_with_expected_value(
 #         self, mock_microservice_client_factory, mock_alerts_client
 #     ):
@@ -69,7 +55,6 @@
 #         alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
 #         alert_rules_module.get_all()
 #         assert mock_alerts_client.get_all_rules.call_count == 1
-
 #     def test_alert_rules_module_calls_get_all_by_name_with_expected_value(
 #         self, mock_microservice_client_factory, mock_alerts_client
 #     ):
@@ -80,7 +65,6 @@
 #         alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
 #         alert_rules_module.get_all_by_name(rule_name)
 #         mock_alerts_client.get_all_rules_by_name.assert_called_once_with(rule_name)
-
 #     def test_alert_rules_module_calls_get_rules_by_observer_id_with_expected_value(
 #         self, mock_microservice_client_factory, mock_alerts_client
 #     ):
@@ -91,7 +75,6 @@
 #         alert_rules_module = AlertRulesClient(mock_microservice_client_factory)
 #         alert_rules_module.get_by_observer_id(rule_id)
 #         mock_alerts_client.get_rule_by_observer_id.assert_called_once_with(rule_id)
-
 #     def test_alert_rules_module_calls_get_rules_page_with_expected_params(
 #         self, mock_microservice_client_factory, mock_alerts_client
 #     ):

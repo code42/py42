@@ -1,14 +1,14 @@
 from requests.auth import HTTPBasicAuth
 
 from py42.clients import Clients
-from py42.clients.alerts import AlertsClient
+from py42.clients._archive_access import ArchiveAccessorManager
+from py42.clients._storage import StorageClientFactory
 from py42.clients.alertrules import AlertRulesClient
+from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
 from py42.clients.authority import AuthorityClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
-from py42.clients._storage import StorageClientFactory
-from py42.clients._archive_access import ArchiveAccessorManager
 from py42.services import Services
 from py42.services._auth import V3Auth
 from py42.services._connection import KeyValueStoreConnection
@@ -26,10 +26,10 @@ from py42.services.devices import DeviceService
 from py42.services.fileevent import FileEventService
 from py42.services.legalhold import LegalHoldService
 from py42.services.orgs import OrgService
-from py42.services.storage._connection_manager import ConnectionManager
 from py42.services.pds import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.securitydata import SecurityDataService
+from py42.services.storage._connection_manager import ConnectionManager
 from py42.services.users import UserService
 from py42.usercontext import UserContext
 
@@ -218,7 +218,9 @@ def _init_services(authority_connection, main_auth):
         orgs=OrgService(authority_connection),
         securitydata=SecurityDataService(authority_connection),
         users=UserService(authority_connection),
-        alertrules=AlertRulesService(alert_rules_connection, user_ctx, user_profile_svc),
+        alertrules=AlertRulesService(
+            alert_rules_connection, user_ctx, user_profile_svc
+        ),
         alerts=AlertService(alerts_connection, user_ctx),
         filevents=file_events_service,
         savedsearch=SavedSearchService(file_events_connection, file_events_service),
@@ -249,11 +251,17 @@ def _init_clients(services, connection):
         services.userprofile, services.departingemployee, services.highriskemployee
     )
 
-    storage_client_factory = StorageClientFactory(connection, services.devices, ConnectionManager())
+    storage_client_factory = StorageClientFactory(
+        connection, services.devices, ConnectionManager()
+    )
     alertrules = AlertRulesClient(services.alerts, services.alertrules)
-    securitydata = SecurityDataClient(services.securitydata, services.savedsearch, storage_client_factory)
+    securitydata = SecurityDataClient(
+        services.securitydata, services.savedsearch, storage_client_factory
+    )
     alerts = AlertsClient(services.alerts, alertrules)
-    archive_accessor_mgr = ArchiveAccessorManager(services.archive, storage_client_factory)
+    archive_accessor_mgr = ArchiveAccessorManager(
+        services.archive, storage_client_factory
+    )
     archive = ArchiveClient(archive_accessor_mgr, services.archive)
     clients = Clients(
         authority=authority,

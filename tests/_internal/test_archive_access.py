@@ -11,11 +11,12 @@ from py42.clients._archive_access import ArchiveAccessorManager
 from py42.clients._archive_access import FileSelection
 from py42.clients._archive_access import FileType
 from py42.clients._archive_access import RestoreJobManager
+from py42.clients._storage import StorageClient
+from py42.clients._storage import StorageClientFactory
 from py42.exceptions import Py42ArchiveFileNotFoundError
 from py42.response import Py42Response
 from py42.services.archive import ArchiveService
 from py42.services.storage import StorageArchiveService
-from py42.clients._storage import StorageClient, StorageClientFactory
 
 DEVICE_GUID = "device-guid"
 INVALID_DEVICE_GUID = "invalid-device-guid"

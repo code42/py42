@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
-from py42.services._connection import Connection
 
+from py42.services._connection import Connection
 from py42.services.fileevent import FileEventService
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"

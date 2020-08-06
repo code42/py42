@@ -1,6 +1,8 @@
 from py42.services import BaseService
-from py42.services.storage._auth import FileArchiveTmpAuth, SecurityArchiveTmpAuth
-from py42.services.storage import StorageArchiveService, StorageSecurityDataService
+from py42.services.storage import StorageArchiveService
+from py42.services.storage import StorageSecurityDataService
+from py42.services.storage._auth import FileArchiveTmpAuth
+from py42.services.storage._auth import SecurityArchiveTmpAuth
 
 
 class StorageClient(BaseService):
@@ -28,7 +30,9 @@ class StorageClientFactory(object):
         if destination_guid is None:
             destination_guid = self._auto_select_destination_guid(device_guid)
 
-        auth = FileArchiveTmpAuth(self._connection, u"my", device_guid, destination_guid)
+        auth = FileArchiveTmpAuth(
+            self._connection, u"my", device_guid, destination_guid
+        )
         connection = self._connection_manager.get_storage_connection(auth)
         return StorageClient(connection)
 

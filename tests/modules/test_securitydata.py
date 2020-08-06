@@ -1,8 +1,6 @@
 # import json
-
 # import pytest
 # from requests.exceptions import HTTPError
-
 # from py42._internal.client_factories import MicroserviceClientFactory
 # from py42.clients.securitydata import PlanStorageInfo
 # from py42.clients.securitydata import SecurityDataClient
@@ -16,15 +14,11 @@
 # from py42.clients._storage import StorageClient, StorageClientFactory
 # from py42.services.storage import StorageSecurityDataService
 # from py42.services.storage.preservationdata import StoragePreservationDataService
-
 # RAW_QUERY = "RAW JSON QUERY"
-
 # USER_UID = "user-uid"
-
 # PDS_EXCEPTION_MESSAGE = (
 #     u"No file with hash {0} available for download on any storage node."
 # )
-
 # GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION = """{
 #         "securityPlanLocationsByDestination": [
 #             {
@@ -41,8 +35,6 @@
 #         ],
 #         "userUid": "917354657784339860"
 #     }"""
-
-
 # GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE = """{
 #         "securityPlanLocationsByDestination": [
 #             {
@@ -60,7 +52,6 @@
 #         ],
 #         "userUid": "917354657784339860"
 # }"""
-
 # GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES = """{
 #         "securityPlanLocationsByDestination": [
 #             {
@@ -83,7 +74,6 @@
 #         ],
 #         "userUid": "917354657784339860"
 # }"""
-
 # GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS = """{
 #         "securityPlanLocationsByDestination": [
 #             {
@@ -111,7 +101,6 @@
 #         ],
 #         "userUid": "917354657784339860"
 # }"""
-
 # GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS = """{
 #         "securityPlanLocationsByDestination": [
 #             {
@@ -141,7 +130,6 @@
 #         ],
 #         "userUid": "917354657784339860"
 # }"""
-
 # GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES = """{
 #         "securityPlanLocationsByDestination": [
 #             {
@@ -176,8 +164,6 @@
 #         ],
 #         "userUid": "917354657784339860"
 # }"""
-
-
 # FILE_EVENTS_RESPONSE = """{
 #     "fileEvents":[
 #         {
@@ -186,7 +172,6 @@
 #         }
 #     ]
 # }"""
-
 # FILE_LOCATION_RESPONSE = """{
 #     "locations": [
 #         {
@@ -201,54 +186,42 @@
 #         }
 #     ]
 # }"""
-
 # PDS_FILE_VERSIONS = """{
 #     "storageNodeURL": "https://host.com",
 #     "archiveGuid": "archiveid",
 #     "fileId": "fileid",
 #     "versionTimestamp": 12345
 # }"""
-
-
 # class TestSecurityModule(object):
 #     @pytest.fixture
 #     def security_client(self, mocker):
 #         return mocker.MagicMock(spec=SecurityDataService)
-
 #     @pytest.fixture
 #     def security_client_one_location(self, security_client, py42_response):
 #         py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
-
 #         security_client.get_security_event_locations.return_value = py42_response
 #         return security_client
-
 #     @pytest.fixture
 #     def security_client_two_plans_one_node(self, security_client, py42_response):
 #         py42_response.text = (
 #             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
 #         )
-
 #         security_client.get_security_event_locations.return_value = py42_response
 #         return security_client
-
 #     @pytest.fixture
 #     def security_client_two_plans_two_nodes(self, security_client, py42_response):
 #         py42_response.text = (
 #             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
 #         )
-
 #         security_client.get_security_event_locations.return_value = py42_response
 #         return security_client
-
 #     @pytest.fixture
 #     def security_client_one_plan_two_destinations(self, security_client, py42_response):
 #         py42_response.text = (
 #             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
 #         )
-
 #         security_client.get_security_event_locations.return_value = py42_response
 #         return security_client
-
 #     @pytest.fixture
 #     def security_client_two_plans_two_destinations(
 #         self, security_client, py42_response
@@ -256,38 +229,29 @@
 #         py42_response.text = (
 #             GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
 #         )
-
 #         security_client.get_security_event_locations.return_value = py42_response
 #         return security_client
-
 #     @pytest.fixture
 #     def security_client_two_plans_two_destinations_three_nodes(
 #         self, security_client, py42_response
 #     ):
 #         py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
-
 #         security_client.get_security_event_locations.return_value = py42_response
 #         return security_client
-
 #     @pytest.fixture
 #     def storage_client_factory(self, mocker):
 #         return mocker.MagicMock(spec=StorageClientFactory)
-
 #     @pytest.fixture
 #     def microservice_client_factory(self, mocker):
 #         return mocker.MagicMock(spec=MicroserviceClientFactory)
-
 #     @pytest.fixture
 #     def file_event_client(self, mocker):
 #         return mocker.MagicMock(spec=FileEventService)
-
 #     @staticmethod
 #     def return_file_event_client(file_event_client):
 #         def mock_get_file_event_client():
 #             return file_event_client
-
 #         return mock_get_file_event_client
-
 #     def test_search_with_only_query_calls_through_to_client(
 #         self,
 #         security_client,
@@ -303,7 +267,6 @@
 #         )
 #         security_module.search_file_events(RAW_QUERY)
 #         file_event_client.search.assert_called_once_with(RAW_QUERY)
-
 #     def test_get_security_plan_storage_info_one_location_returns_location_info(
 #         self,
 #         security_client_one_location,
@@ -320,7 +283,6 @@
 #         assert self._storage_info_contains(
 #             storage_infos, "111111111111111111", "4", "41"
 #         )
-
 #     def test_get_security_plan_storage_info_two_plans_one_node_returns_both_location_info(
 #         self,
 #         security_client_two_plans_one_node,
@@ -340,7 +302,6 @@
 #         assert self._storage_info_contains(
 #             storage_infos, "222222222222222222", "4", "41"
 #         )
-
 #     def test_get_security_plan_storage_info_two_plans_two_nodes_returns_both_location_info(
 #         self,
 #         security_client_two_plans_two_nodes,
@@ -359,7 +320,6 @@
 #         assert self._storage_info_contains(
 #             storage_infos, "222222222222222222", "4", "42"
 #         )
-
 #     def test_get_security_plan_storage_info_one_plan_two_destinations_returns_one_location(
 #         self,
 #         security_client_one_plan_two_destinations,
@@ -376,7 +336,6 @@
 #         assert self._storage_info_contains(
 #             storage_infos, "111111111111111111", "4", "41"
 #         ) or self._storage_info_contains(storage_infos, "111111111111111111", "5", "51")
-
 #     def test_get_security_plan_storage_info_two_plans_two_destinations_returns_one_location_per_plan(
 #         self,
 #         security_client_two_plans_two_destinations,
@@ -396,7 +355,6 @@
 #         assert self._storage_info_contains(
 #             storage_infos, "222222222222222222", "4", "41"
 #         ) or self._storage_info_contains(storage_infos, "222222222222222222", "5", "51")
-
 #     def test_get_security_plan_storage_info_two_plans_two_destinations_three_nodes_returns_one_location_per_plan(
 #         self,
 #         security_client_two_plans_two_destinations_three_nodes,
@@ -415,7 +373,6 @@
 #         assert self._storage_info_contains(
 #             storage_infos, "222222222222222222", "4", "41"
 #         ) or self._storage_info_contains(storage_infos, "222222222222222222", "5", "52")
-
 #     def test_get_all_user_security_events_calls_security_client_with_expected_params(
 #         self,
 #         mocker,
@@ -445,7 +402,6 @@
 #             max_timestamp=None,
 #             min_timestamp=None,
 #         )
-
 #     def test_get_all_user_security_events_when_cursors_returned_calls_security_client_expected_number_of_times(
 #         self,
 #         mocker,
@@ -473,7 +429,6 @@
 #         for _, _ in security_module.get_all_user_security_events("foo"):
 #             pass
 #         assert mock_storage_security_client.get_plan_security_events.call_count == 2
-
 #     def test_get_all_user_security_events_when_multiple_plans_returned_calls_security_client_expected_number_of_times(
 #         self,
 #         mocker,
@@ -496,7 +451,6 @@
 #         for _, _ in security_module.get_all_user_security_events("foo"):
 #             pass
 #         assert mock_storage_security_client.get_plan_security_events.call_count == 2
-
 #     def test_get_all_user_security_events_when_multiple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
 #         self,
 #         mocker,
@@ -526,7 +480,6 @@
 #         for _, _ in security_module.get_all_user_security_events("foo"):
 #             pass
 #         assert mock_storage_security_client.get_plan_security_events.call_count == 4
-
 #     @pytest.mark.parametrize(
 #         "plan_storage_info",
 #         [
@@ -563,7 +516,6 @@
 #             max_timestamp=None,
 #             min_timestamp=None,
 #         )
-
 #     def test_get_all_plan_security_events_when_cursors_returned_calls_security_client_expected_number_of_times(
 #         self,
 #         mocker,
@@ -591,7 +543,6 @@
 #         ):
 #             pass
 #         assert mock_storage_security_client.get_plan_security_events.call_count == 2
-
 #     def test_get_all_plan_security_events_when_multiple_plans_returned_calls_security_client_expected_number_of_times(
 #         self,
 #         mocker,
@@ -616,7 +567,6 @@
 #         for _, _ in security_module.get_all_plan_security_events(plans):
 #             pass
 #         assert mock_storage_security_client.get_plan_security_events.call_count == 2
-
 #     def test_get_all_plan_security_events_when_multiple_plans_with_cursors_returned_calls_security_client_expected_number_of_times(
 #         self,
 #         mocker,
@@ -648,7 +598,6 @@
 #         for _, _ in security_module.get_all_plan_security_events(plans):
 #             pass
 #         assert mock_storage_security_client.get_plan_security_events.call_count == 4
-
 #     # the order the items are iterated through is not deterministic in some versions of python,
 #     # so we simply test that the value returned is one of the _possible_ values.
 #     def _storage_info_contains(
@@ -660,7 +609,6 @@
 #             and item.node_guid == node_guid
 #             for item in storage_info_list
 #         )
-
 #     def test_saved_searches_returns_saved_search_client(
 #         self, security_client, storage_client_factory, microservice_client_factory
 #     ):
@@ -669,7 +617,6 @@
 #         )
 #         _ = security_module.savedsearches
 #         assert microservice_client_factory.get_saved_search_client.call_count
-
 #     @pytest.fixture
 #     def file_event_search(self, mocker):
 #         response = mocker.MagicMock(spec=Py42Response)
@@ -679,7 +626,6 @@
 #         file_event_response = response
 #         file_event_response.text = FILE_EVENTS_RESPONSE
 #         return file_event_response
-
 #     @pytest.fixture
 #     def file_location(self, mocker):
 #         response = mocker.MagicMock(spec=Py42Response)
@@ -689,7 +635,6 @@
 #         file_location_response = response
 #         file_location_response.text = FILE_LOCATION_RESPONSE
 #         return file_location_response
-
 #     @pytest.fixture
 #     def find_file_version(self, mocker):
 #         response = mocker.MagicMock(spec=Py42Response)
@@ -699,7 +644,6 @@
 #         pds_file_version_response = response
 #         pds_file_version_response.text = PDS_FILE_VERSIONS
 #         return pds_file_version_response
-
 #     @pytest.fixture
 #     def file_download(self, mocker):
 #         response = mocker.MagicMock(spec=Py42Response)
@@ -709,7 +653,6 @@
 #         download_token_response = response
 #         download_token_response.text = "PDSDownloadToken=token"
 #         return download_token_response
-
 #     def test_stream_file_by_sha256_returns_stream_of_file(
 #         self,
 #         mocker,
@@ -721,7 +664,6 @@
 #         find_file_version,
 #         file_download,
 #     ):
-
 #         security_module = SecurityDataClient(
 #             security_client, storage_client_factory, microservice_client_factory
 #         )
@@ -733,23 +675,19 @@
 #         microservice_client_factory.get_file_event_client.return_value = (
 #             file_event_client
 #         )
-
 #         pds_client = mocker.MagicMock(spec=PreservationDataService)
 #         pds_client.find_file_versions.return_value = find_file_version
 #         microservice_client_factory.get_preservation_data_service_client.return_value = (
 #             pds_client
 #         )
-
 #         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
 #         storage_node_client.get_download_token.return_value = file_download
 #         storage_node_client.get_file.return_value = b"stream"
 #         microservice_client_factory.create_storage_preservation_client.return_value = (
 #             storage_node_client
 #         )
-
 #         response = security_module.stream_file_by_sha256("shahash")
 #         assert response == b"stream"
-
 #     def test_stream_file_by_sha256_raises_py42_checksum_not_found_error_when_search_returns_empty_response(
 #         self,
 #         mocker,
@@ -766,9 +704,7 @@
 #         file_event_client.search.return_value = file_event_search
 #         with pytest.raises(Py42ChecksumNotFoundError) as e:
 #             security_module.stream_file_by_sha256("shahash")
-
 #         assert u"No files found with SHA256 checksum" in e.value.args[0]
-
 #     def test_stream_file_by_sha256_raises_file_not_found_error_when_file_location_returns_empty_response(
 #         self,
 #         mocker,
@@ -792,9 +728,7 @@
 #         )
 #         with pytest.raises(Py42Error) as e:
 #             security_module.stream_file_by_sha256("shahash")
-
 #         assert u"PDS service can't find requested file" in e.value.args[0]
-
 #     def test_stream_file_by_sha256_raises_py42_error_when_find_file_versions_returns_204_status_code(
 #         self,
 #         mocker,
@@ -816,19 +750,15 @@
 #         microservice_client_factory.get_file_event_client.return_value = (
 #             file_event_client
 #         )
-
 #         pds_client = mocker.MagicMock(spec=PreservationDataService)
 #         find_file_version.status_code = 204
 #         pds_client.find_file_versions.return_value = find_file_version
 #         microservice_client_factory.get_preservation_data_service_client.return_value = (
 #             pds_client
 #         )
-
 #         with pytest.raises(Py42Error) as e:
 #             security_module.stream_file_by_sha256("shahash")
-
 #         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
-
 #     def test_stream_file_by_sha256_raises_py42_error_when_file_download_returns_failure_response(
 #         self,
 #         mocker,
@@ -851,25 +781,20 @@
 #         microservice_client_factory.get_file_event_client.return_value = (
 #             file_event_client
 #         )
-
 #         pds_client = mocker.MagicMock(spec=PreservationDataService)
 #         pds_client.find_file_versions.return_value = find_file_version
 #         microservice_client_factory.get_preservation_data_service_client.return_value = (
 #             pds_client
 #         )
-
 #         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
 #         storage_node_client.get_download_token.return_value = file_download
 #         storage_node_client.get_file.side_effect = Py42HTTPError(HTTPError())
 #         microservice_client_factory.create_storage_preservation_client.return_value = (
 #             storage_node_client
 #         )
-
 #         with pytest.raises(Py42Error) as e:
 #             security_module.stream_file_by_sha256("shahash")
-
 #         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
-
 #     def test_stream_file_by_md5_returns_stream_of_file(
 #         self,
 #         mocker,
@@ -881,7 +806,6 @@
 #         find_file_version,
 #         file_download,
 #     ):
-
 #         security_module = SecurityDataClient(
 #             security_client, storage_client_factory, microservice_client_factory
 #         )
@@ -893,23 +817,19 @@
 #         microservice_client_factory.get_file_event_client.return_value = (
 #             file_event_client
 #         )
-
 #         pds_client = mocker.MagicMock(spec=PreservationDataService)
 #         pds_client.find_file_versions.return_value = find_file_version
 #         microservice_client_factory.get_preservation_data_service_client.return_value = (
 #             pds_client
 #         )
-
 #         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
 #         storage_node_client.get_download_token.return_value = file_download
 #         storage_node_client.get_file.return_value = b"stream"
 #         microservice_client_factory.create_storage_preservation_client.return_value = (
 #             storage_node_client
 #         )
-
 #         response = security_module.stream_file_by_md5("md5hash")
 #         assert response == b"stream"
-
 #     def test_stream_file_by_md5_raises_py42_checksum_not_found_error_when_search_returns_empty_response(
 #         self,
 #         mocker,
@@ -926,9 +846,7 @@
 #         file_event_client.search.return_value = file_event_search
 #         with pytest.raises(Py42ChecksumNotFoundError) as e:
 #             security_module.stream_file_by_md5("md5hash")
-
 #         assert u"No files found with MD5 checksum" in e.value.args[0]
-
 #     def test_stream_file_by_md5_raises_file_not_found_error_when_file_location_returns_empty_response(
 #         self,
 #         mocker,
@@ -952,9 +870,7 @@
 #         )
 #         with pytest.raises(Py42Error) as e:
 #             security_module.stream_file_by_md5("md5hash")
-
 #         assert u"PDS service can't find requested file" in e.value.args[0]
-
 #     def test_stream_file_by_md5_raises_py42_error_when_find_file_versions_returns_204_status_code(
 #         self,
 #         mocker,
@@ -976,19 +892,15 @@
 #         microservice_client_factory.get_file_event_client.return_value = (
 #             file_event_client
 #         )
-
 #         pds_client = mocker.MagicMock(spec=PreservationDataService)
 #         find_file_version.status_code = 204
 #         pds_client.find_file_versions.return_value = find_file_version
 #         microservice_client_factory.get_preservation_data_service_client.return_value = (
 #             pds_client
 #         )
-
 #         with pytest.raises(Py42Error) as e:
 #             security_module.stream_file_by_md5("md5hash")
-
 #         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")
-
 #     def test_stream_file_by_md5_raises_py42_error_when_file_download_returns_failure_response(
 #         self,
 #         mocker,
@@ -1011,21 +923,17 @@
 #         microservice_client_factory.get_file_event_client.return_value = (
 #             file_event_client
 #         )
-
 #         pds_client = mocker.MagicMock(spec=PreservationDataService)
 #         pds_client.find_file_versions.return_value = find_file_version
 #         microservice_client_factory.get_preservation_data_service_client.return_value = (
 #             pds_client
 #         )
-
 #         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
 #         storage_node_client.get_download_token.return_value = file_download
 #         storage_node_client.get_file.side_effect = Py42HTTPError(HTTPError())
 #         microservice_client_factory.create_storage_preservation_client.return_value = (
 #             storage_node_client
 #         )
-
 #         with pytest.raises(Py42Error) as e:
 #             security_module.stream_file_by_md5("md5hash")
-
 #         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")

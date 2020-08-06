@@ -6,9 +6,9 @@ from requests import HTTPError
 from requests import Response
 from requests import Session
 
-from py42.services._auth import C42RenewableAuth
 from py42.response import Py42Response
 from py42.sdk.queries.query_filter import QueryFilter
+from py42.services._auth import C42RenewableAuth
 from py42.usercontext import UserContext
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"

@@ -44,7 +44,7 @@ class ArchiveModule(object):
                     if chunk:
                         f.write(chunk)
 
-        If downloading a directory, you will need to unzip the results::
+        If downloading multiple files, you will need to unzip the results::
 
             import zipfile
             with zipfile.ZipFile("downloaded_directory.zip", "r") as zf:

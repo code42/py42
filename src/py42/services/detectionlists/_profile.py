@@ -60,7 +60,7 @@ class DetectionListUserService(BaseService):
             u"cloudUsernames": [],
         }
         uri = self._make_uri(u"/create")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get_by_id(self, user_id):
         """Get user details by user id.
@@ -76,7 +76,7 @@ class DetectionListUserService(BaseService):
             u"userId": user_id,
         }
         uri = self._make_uri(u"/getbyid")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get(self, username):
         """Get user details by username.
@@ -92,7 +92,7 @@ class DetectionListUserService(BaseService):
             u"username": username,
         }
         uri = self._make_uri(u"/getbyusername")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def update_notes(self, user_id, notes):
         """Add or update notes related to the user.
@@ -110,7 +110,7 @@ class DetectionListUserService(BaseService):
             u"notes": notes,
         }
         uri = self._make_uri(u"/updatenotes")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def add_risk_tags(self, user_id, tags):
         """Add one or more tags.
@@ -133,7 +133,7 @@ class DetectionListUserService(BaseService):
             u"riskFactors": tags,
         }
         uri = self._make_uri(u"/addriskfactors")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def remove_risk_tags(self, user_id, tags):
         """Remove one or more tags.Args:
@@ -155,7 +155,7 @@ class DetectionListUserService(BaseService):
             u"riskFactors": tags,
         }
         uri = self._make_uri(u"/removeriskfactors")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def add_cloud_alias(self, user_id, alias):
         """Add a cloud alias.
@@ -173,7 +173,7 @@ class DetectionListUserService(BaseService):
             u"cloudUsernames": [alias],
         }
         uri = self._make_uri(u"/addcloudusernames")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def remove_cloud_alias(self, user_id, alias):
         """Remove one or more cloud alias.
@@ -191,7 +191,7 @@ class DetectionListUserService(BaseService):
             u"cloudUsernames": [alias],
         }
         uri = self._make_uri(u"/removecloudusernames")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def refresh(self, user_id):
         """Refresh SCIM attributes of a user.
@@ -207,4 +207,4 @@ class DetectionListUserService(BaseService):
             u"userId": user_id,
         }
         uri = self._make_uri(u"/refresh")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)

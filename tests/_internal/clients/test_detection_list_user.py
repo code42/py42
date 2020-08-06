@@ -46,7 +46,7 @@ class TestDetectionListUserClient(object):
         )
         detection_list_user_client.create("942897397520289999")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/create"
         assert (
@@ -65,7 +65,7 @@ class TestDetectionListUserClient(object):
         )
         detection_list_user_client.get("942897397520289999")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyusername"
         assert (
@@ -81,7 +81,7 @@ class TestDetectionListUserClient(object):
         )
         detection_list_user_client.get_by_id("942897397520289999")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
         assert (
@@ -97,7 +97,7 @@ class TestDetectionListUserClient(object):
         )
         detection_list_user_client.update_notes("942897397520289999", "Test")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/updatenotes"
         assert (
@@ -106,7 +106,7 @@ class TestDetectionListUserClient(object):
             and posted_data["notes"] == "Test"
         )
 
-    @pytest.mark.parametrize("tags", ["test_tag", ("test_tag",), ["test_tag"]])
+    @pytest.mark.parametrize("tags", ["test_tag", ["test_tag"]])
     def test_add_risk_tag_posts_expected_data(
         self, mock_session, user_context, mock_user_client, tags
     ):
@@ -115,7 +115,7 @@ class TestDetectionListUserClient(object):
         )
         detection_list_user_client.add_risk_tags("942897397520289999", tags)
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/addriskfactors"
         assert (
@@ -124,15 +124,16 @@ class TestDetectionListUserClient(object):
             and posted_data["riskFactors"] == ["test_tag"]
         )
 
+    @pytest.mark.parametrize("tags", ["test_tag", ["test_tag"]])
     def test_remove_risk_tag_posts_expected_data(
-        self, mock_session, user_context, mock_user_client
+        self, mock_session, user_context, mock_user_client, tags
     ):
         detection_list_user_client = DetectionListUserService(
             mock_session, user_context, mock_user_client
         )
         detection_list_user_client.remove_risk_tags("942897397520289999", u"Test")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/removeriskfactors"
         assert (
@@ -149,7 +150,7 @@ class TestDetectionListUserClient(object):
         )
         detection_list_user_client.add_cloud_alias("942897397520289999", u"Test")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/addcloudusernames"
         assert (
@@ -166,7 +167,7 @@ class TestDetectionListUserClient(object):
         )
         detection_list_user_client.remove_cloud_alias("942897397520289999", u"Test")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert (
             mock_session.post.call_args[0][0] == "/svc/api/v2/user/removecloudusernames"
@@ -188,7 +189,7 @@ class TestDetectionListUserClient(object):
             is True
         )
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -210,7 +211,7 @@ class TestDetectionListUserClient(object):
         with pytest.raises(Py42BadRequestError):
             detection_list_user_client.create_if_not_exists("942897397520289999")
 
-        posted_data = json.loads(mock_get_by_id_fails.post.call_args[1]["data"])
+        posted_data = mock_get_by_id_fails.post.call_args[1]["json"]
         assert mock_get_by_id_fails.post.call_args[0][0] == "/svc/api/v2/user/create"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -231,7 +232,7 @@ class TestDetectionListUserClient(object):
         )
         detection_list_user_client.refresh("942897397520289999")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/refresh"
         assert (

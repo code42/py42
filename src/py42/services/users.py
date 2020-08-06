@@ -49,7 +49,7 @@ class UserService(BaseService):
             u"lastName": last_name,
             u"notes": notes,
         }
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get_by_id(self, user_id, **kwargs):
         """Gets the user with the given ID.
@@ -236,7 +236,7 @@ class UserService(BaseService):
         """
         uri = u"/api/UserDeactivation/{}".format(user_id)
         data = {u"blockUser": block_user}
-        return self._connection.put(uri, data=json.dumps(data))
+        return self._connection.put(uri, json=data)
 
     def reactivate(self, user_id, unblock_user=None):
         """Reactivates the user with the given ID.
@@ -266,7 +266,7 @@ class UserService(BaseService):
         """
         uri = u"/api/UserMoveProcess"
         data = {u"userId": user_id, u"parentOrgId": org_id}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get_available_roles(self):
         """Report the list of roles that are available for the authenticated user to
@@ -305,7 +305,7 @@ class UserService(BaseService):
         """
         uri = u"/api/UserRole"
         data = {u"userId": user_id, u"roleName": role_name}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def remove_role(self, user_id, role_name):
         """Removes a role from a user.

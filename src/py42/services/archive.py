@@ -8,7 +8,7 @@ class ArchiveService(BaseService):
     def get_data_key_token(self, device_guid):
         uri = u"/api/DataKeyToken"
         data = {u"computerGuid": device_guid}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get_backup_sets(self, device_guid, destination_guid):
         uri = u"/c42api/v3/BackupSets/{}/{}".format(device_guid, destination_guid)
@@ -78,4 +78,4 @@ class ArchiveService(BaseService):
         uri = u"/api/coldStorage/{}".format(archive_guid)
         params = {u"idType": u"guid"}
         data = {u"archiveHoldExpireDate": purge_date}
-        return self._connection.put(uri, params=params, data=json.dumps(data))
+        return self._connection.put(uri, params=params, json=data)

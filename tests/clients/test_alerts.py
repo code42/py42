@@ -2,7 +2,7 @@ import json
 
 import pytest
 from requests import Response
-from services._connection import Connection
+from py42.services._connection import Connection
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.response import Py42Response
@@ -108,7 +108,7 @@ class TestAlertClient(object):
         alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_details(alert_ids)
-        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        post_data = mock_session.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
@@ -125,7 +125,7 @@ class TestAlertClient(object):
         mock_session.post.return_value = py42_response
         alert_client = AlertService(mock_session, user_context)
         alert_client.get_details(alert_id)
-        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        post_data = mock_session.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
@@ -139,7 +139,7 @@ class TestAlertClient(object):
         alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.get_details(alert_ids)
-        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        post_data = mock_session.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
@@ -188,7 +188,7 @@ class TestAlertClient(object):
         alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.resolve(alert_ids)
-        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        post_data = mock_session.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
@@ -203,7 +203,7 @@ class TestAlertClient(object):
     ):
         alert_client = AlertService(mock_session, user_context)
         alert_client.resolve(alert_id)
-        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        post_data = mock_session.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
@@ -215,7 +215,7 @@ class TestAlertClient(object):
         alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.resolve(alert_ids,)
-        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        post_data = mock_session.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
@@ -236,7 +236,7 @@ class TestAlertClient(object):
         alert_client = AlertService(mock_session, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_client.reopen(alert_ids)
-        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        post_data = mock_session.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
@@ -251,7 +251,7 @@ class TestAlertClient(object):
     ):
         alert_client = AlertService(mock_session, user_context)
         alert_client.reopen(alert_id)
-        post_data = json.loads(mock_session.post.call_args[1]["data"])
+        post_data = mock_session.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
@@ -272,7 +272,7 @@ class TestAlertClient(object):
             break
 
         assert mock_session.post.call_count == 1
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert (
             mock_session.post.call_args[0][0] == "/svc/api/v1/rules/query-rule-metadata"
         )
@@ -296,7 +296,7 @@ class TestAlertClient(object):
             break
 
         assert mock_session.post.call_count == 1
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         filter_group = posted_data["groups"][0]["filters"][0]
 
         assert filter_group["term"] == "Name"
@@ -322,7 +322,7 @@ class TestAlertClient(object):
             break
 
         assert mock_session.post.call_count == 1
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         filter_group = posted_data["groups"][0]["filters"][0]
 
         assert filter_group["term"] == "ObserverRuleId"
@@ -362,5 +362,5 @@ class TestAlertClient(object):
             "srtDirection": "direction",
         }
         mock_session.post.assert_called_once_with(
-            "/svc/api/v1/rules/query-rule-metadata", data=json.dumps(data)
+            "/svc/api/v1/rules/query-rule-metadata", json=data
         )

@@ -25,7 +25,7 @@ class AlertService(BaseService):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"query-details")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids}
-        results = self._connection.post(uri, data=json.dumps(data))
+        results = self._connection.post(uri, json=data)
         return _convert_observation_json_strings_to_objects(results)
 
     def resolve(self, alert_ids, reason=None):
@@ -35,7 +35,7 @@ class AlertService(BaseService):
         reason = reason or u""
         uri = self._uri_prefix.format(u"resolve-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def reopen(self, alert_ids, reason=None):
         if not isinstance(alert_ids, (list, tuple)):
@@ -43,7 +43,7 @@ class AlertService(BaseService):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"reopen-alert")
         data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def _add_tenant_id_if_missing(self, query):
         query_dict = json.loads(str(query))
@@ -70,7 +70,7 @@ class AlertService(BaseService):
             u"srtDirection": sort_direction,
         }
         uri = self._uri_prefix.format(u"rules/query-rule-metadata")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get_all_rules(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
         return get_all_pages(

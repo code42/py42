@@ -43,7 +43,7 @@ class FileArchiveTmpAuth(StorageTmpAuth):
             u"sourceGuid": self._device_guid,
             u"destinationGuid": self._destination_guid,
         }
-        response = self._connection.post(uri, data=json.dumps(data))
+        response = self._connection.post(uri, json=data)
         return response
 
 
@@ -57,32 +57,16 @@ class SecurityArchiveTmpAuth(StorageTmpAuth):
     def get_tmp_auth_token(self):
         uri = u"/api/StorageAuthToken"
         data = {u"planUid": self._plan_uid, u"destinationGuid": self._destination_guid}
-        response = self._connection.post(uri, data=json.dumps(data))
+        response = self._connection.post(uri, json=data)
         return response
 
 
-class StorageTokenProviderFactory(object):
-    def __init__(self, connection, device_client):
-        self._connection = connection
-        self._device_client = device_client
+class V1Auth(C42RenewableAuth):
+    def __init__(self, storage_tmp_session):
+        super(V1Auth, self).__init__()
+        self._auth_session = storage_tmp_session
 
-    def create_security_archive_locator(self, plan_uid, destination_guid):
-        return SecurityArchiveTmpAuth(self._connection, plan_uid, destination_guid)
-
-    def create_backup_archive_locator(self, device_guid, destination_guid=None):
-        if destination_guid is None:
-            response = self._device_client.get_by_guid(
-                device_guid, include_backup_usage=True
-            )
-            if destination_guid is None:
-                # take the first destination guid we find
-                destination_list = response["backupUsage"]
-                if not destination_list:
-                    raise Exception(
-                        u"No destinations found for device guid: {}".format(device_guid)
-                    )
-                destination_guid = destination_list[0][u"targetComputerGuid"]
-
-        return FileArchiveTmpAuth(
-            self._connection, u"my", device_guid, destination_guid
-        )
+    def _get_credentials(self):
+        uri = u"/api/AuthToken"
+        response = self._auth_session.post(uri, data=None)
+        return u"{} {}-{}".format(u"token", response[0], response[1])

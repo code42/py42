@@ -87,7 +87,7 @@ class StorageArchiveService(BaseService):
             u"privatePassword": private_password,
             u"encryptionKey": encryption_key,
         }
-        return self._connection.post(uri, data=json.dumps(json_dict))
+        return self._connection.post(uri, json=json_dict)
 
     def start_restore(
         self,
@@ -125,7 +125,7 @@ class StorageArchiveService(BaseService):
             u"backupSetId": backup_set_id,
         }
 
-        return self._connection.post(uri, data=json.dumps(json_dict))
+        return self._connection.post(uri, json=json_dict)
 
     def get_restore_status(self, job_id):
         uri = u"/api/WebRestoreJob/{}".format(job_id)
@@ -134,7 +134,7 @@ class StorageArchiveService(BaseService):
     def cancel_restore(self, job_id):
         uri = u"/api/WebRestoreJob"
         json_dict = {u"jobId": job_id}
-        return self._connection.delete(uri, data=json.dumps(json_dict))
+        return self._connection.delete(uri, json=json_dict)
 
     def stream_restore_result(self, job_id):
         uri = u"/api/WebRestoreJobResult/{}".format(job_id)

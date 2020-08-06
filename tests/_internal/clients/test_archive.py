@@ -79,7 +79,7 @@ class TestArchiveClient(object):
         mock_session.put.assert_called_once_with(
             u"/api/coldStorage/123",
             params={u"idType": u"guid"},
-            data=json.dumps({u"archiveHoldExpireDate": u"2020-04-24"}),
+            json={u"archiveHoldExpireDate": u"2020-04-24"},
         )
 
     def test_get_all_org_cold_storage_archives_calls_get_expected_number_of_times(

@@ -53,20 +53,20 @@ class AlertRulesService(BaseService):
             ],
         }
         uri = u"{}{}".format(self._api_prefix, u"add-users")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def remove_user(self, rule_id, user_id):
         user_ids = [user_id]
         tenant_id = self._user_context.get_current_tenant_id()
         data = {u"tenantId": tenant_id, u"ruleId": rule_id, u"userIdList": user_ids}
         uri = u"{}{}".format(self._api_prefix, u"remove-users")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def remove_all_users(self, rule_id):
         tenant_id = self._user_context.get_current_tenant_id()
         data = {u"tenantId": tenant_id, u"ruleId": rule_id}
         uri = u"{}{}".format(self._api_prefix, u"remove-all-users")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
 
 class CloudShareService(BaseService):
@@ -89,7 +89,7 @@ class CloudShareService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
-        return self._connection.post(self._api_prefix, data=json.dumps(data))
+        return self._connection.post(self._api_prefix, json=data)
 
 
 class ExfiltrationService(BaseService):
@@ -112,7 +112,7 @@ class ExfiltrationService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
-        return self._connection.post(self._api_prefix, data=json.dumps(data))
+        return self._connection.post(self._api_prefix, json=data)
 
 
 class FileTypeMismatchService(BaseService):
@@ -135,4 +135,4 @@ class FileTypeMismatchService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {"tenantId": self._tenant_id, "ruleIds": [rule_id]}
-        return self._connection.post(self._api_prefix, data=json.dumps(data))
+        return self._connection.post(self._api_prefix, json=data)

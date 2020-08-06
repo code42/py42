@@ -11,7 +11,7 @@ class TestExfiltrationClient(object):
         assert mock_session.post.call_count == 1
         url = mock_session.post.call_args[0][0]
         assert url == "/svc/api/v1/Rules/query-endpoint-exfiltration-rule"
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert posted_data["tenantId"] == u"tenant-id" and posted_data["ruleIds"] == [
             u"rule-id"
         ]

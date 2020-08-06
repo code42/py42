@@ -24,7 +24,7 @@ class HighRiskEmployeeService(BaseService):
 
         data = {u"tenantId": tenant_id, u"userId": user_id}
         uri = self._make_uri(u"/add")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def add(self, user_id):
         """Adds a user to the High Risk Employee detection list. Creates a detection list user
@@ -58,7 +58,7 @@ class HighRiskEmployeeService(BaseService):
             u"alertsEnabled": enabled,
         }
         uri = self._make_uri(u"/setalertstate")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def remove(self, user_id):
         """Removes a user from the High Risk Employee detection list.
@@ -75,7 +75,7 @@ class HighRiskEmployeeService(BaseService):
             u"userId": user_id,
         }
         uri = self._make_uri(u"/remove")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get(self, user_id):
         """Gets user information.
@@ -92,7 +92,7 @@ class HighRiskEmployeeService(BaseService):
             u"userId": user_id,
         }
         uri = self._make_uri(u"/get")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
         """Searches High Risk Employee list. Filter results by filter_type.
@@ -149,4 +149,4 @@ class HighRiskEmployeeService(BaseService):
             u"srtDirection": sort_direction,
         }
         uri = self._make_uri(u"/search")
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)

@@ -33,16 +33,3 @@ class V3Auth(C42RenewableAuth):
         params = {u"useBody": True}
         response = self._auth_connection.get(uri, params=params)
         return u"{} {}".format("v3_user_token", response["v3_user_token"])
-
-
-class V1Auth(C42RenewableAuth):
-    def __init__(self, storage_tmp_session):
-        super(V1Auth, self).__init__()
-        self._auth_session = storage_tmp_session
-
-    def _get_credentials(self):
-        uri = u"/api/AuthToken"
-        response = self._auth_session.post(uri, data=None)
-        return u"{} {}-{}".format(u"token", response[0], response[1])
-
-

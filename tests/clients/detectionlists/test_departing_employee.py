@@ -108,7 +108,7 @@ class TestDepartingEmployeeClient(object):
 
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert (
             posted_data["userId"] == _USER_ID
             and posted_data["tenantId"] == _TENANT_ID_PARAM
@@ -132,7 +132,7 @@ class TestDepartingEmployeeClient(object):
 
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert (
             posted_data["userId"] == "999"
             and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -155,7 +155,7 @@ class TestDepartingEmployeeClient(object):
         for _ in client.get_all():
             break
         first_call = mock_session.post.call_args_list[0]
-        posted_data = json.loads(first_call[1]["data"])
+        posted_data = first_call[1]["json"]
         assert (
             posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["pgSize"] == 100
@@ -188,7 +188,7 @@ class TestDepartingEmployeeClient(object):
         )
         mock_session.post.return_value = mock_get_all_cases_response
         first_call = mock_session.post.call_args_list[0]
-        posted_data = json.loads(first_call[1]["data"])
+        posted_data = first_call[1]["json"]
         assert (
             posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["pgSize"] == 100
@@ -215,7 +215,7 @@ class TestDepartingEmployeeClient(object):
         mock_session.post.return_value = mock_get_all_cases_response_empty
         client.set_alerts_enabled()
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert (
             posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["alertsEnabled"] is True
@@ -251,7 +251,7 @@ class TestDepartingEmployeeClient(object):
         mock_session.post.return_value = mock_get_all_cases_response_empty
         client.get("999")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert (
             posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["userId"] == "999"
@@ -286,7 +286,7 @@ class TestDepartingEmployeeClient(object):
 
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert (
             posted_data["userId"] == _USER_ID
             and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE

@@ -40,7 +40,7 @@ class LegalHoldService(BaseService):
         """
         uri = u"/api/v4/legal-hold-policy/create"
         data = {u"name": name, u"policy": policy}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def create_matter(
         self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None
@@ -67,7 +67,7 @@ class LegalHoldService(BaseService):
             u"notes": notes,
             u"holdExtRef": hold_ext_ref,
         }
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get_policy_by_uid(self, legal_hold_policy_uid):
         """Gets a single Preservation Policy.
@@ -273,7 +273,7 @@ class LegalHoldService(BaseService):
         """
         uri = u"/api/LegalHoldMembership"
         data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def remove_from_matter(self, legal_hold_membership_uid):
         """Remove a user (Custodian) from a Legal Hold Matter.
@@ -288,7 +288,7 @@ class LegalHoldService(BaseService):
         """
         uri = u"/api/LegalHoldMembershipDeactivation"
         data = {u"legalHoldMembershipUid": legal_hold_membership_uid}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def deactivate_matter(self, legal_hold_uid):
         """Deactivates and closes a Legal Hold Matter.
@@ -302,7 +302,7 @@ class LegalHoldService(BaseService):
         """
         uri = u"/api/v4/legal-hold-deactivation/update"
         data = {u"legalHoldUid": legal_hold_uid}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def reactivate_matter(self, legal_hold_uid):
         """Reactivates and re-opens a closed Matter.

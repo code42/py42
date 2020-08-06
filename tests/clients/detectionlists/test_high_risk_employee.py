@@ -47,7 +47,7 @@ class TestHighRiskEmployeeClient(object):
         )
         high_risk_employee_client.add("942897397520289999")
 
-        posted_data = json.loads(mock_session_post_success.post.call_args[1]["data"])
+        posted_data = mock_session_post_success.post.call_args[1]["json"]
         assert mock_session_post_success.post.call_count == 2
         assert (
             mock_session_post_success.post.call_args[0][0]
@@ -66,7 +66,7 @@ class TestHighRiskEmployeeClient(object):
         )
         high_risk_employee_client.set_alerts_enabled()
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert (
             mock_session.post.call_args[0][0]
@@ -85,7 +85,7 @@ class TestHighRiskEmployeeClient(object):
         )
         high_risk_employee_client.set_alerts_enabled(False)
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert (
             mock_session.post.call_args[0][0]
@@ -104,7 +104,7 @@ class TestHighRiskEmployeeClient(object):
         )
         high_risk_employee_client.remove("942897397520289999")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
 
         assert mock_session.post.call_count == 1
         assert (
@@ -125,7 +125,7 @@ class TestHighRiskEmployeeClient(object):
         )
         high_risk_employee_client.get("942897397520289999")
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/get"
         assert (
@@ -146,7 +146,7 @@ class TestHighRiskEmployeeClient(object):
         for _ in high_risk_employee_client.get_all():
             break
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert (
             mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
@@ -171,7 +171,7 @@ class TestHighRiskEmployeeClient(object):
         ):
             break
 
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert (
             mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
@@ -198,7 +198,7 @@ class TestHighRiskEmployeeClient(object):
             sort_direction="DESC",
             sort_key="DISPLAY_NAME",
         )
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_count == 1
         assert (
             mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"

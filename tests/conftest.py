@@ -6,9 +6,9 @@ from requests import HTTPError
 from requests import Response
 from requests import Session
 
+from py42.services._auth import C42RenewableAuth
 from py42.response import Py42Response
 from py42.sdk.queries.query_filter import QueryFilter
-from py42.services._auth import AuthHandler
 from py42.usercontext import UserContext
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"
@@ -100,16 +100,15 @@ def error_requests_session(mocker, error_response):
 
 @pytest.fixture
 def valid_auth_handler(mocker):
-    auth_handler = mocker.MagicMock(spec=AuthHandler)
-    auth_handler.response_indicates_unauthorized.return_value = False
+    auth_handler = mocker.MagicMock(spec=C42RenewableAuth)
     return auth_handler
 
 
 @pytest.fixture
 def renewing_auth_handler(mocker):
-    auth_handler = mocker.MagicMock(spec=AuthHandler)
+    auth_handler = mocker.MagicMock(spec=C42RenewableAuth)
     # initialized, unauthorized, corrected
-    auth_handler.response_indicates_unauthorized.side_effect = [False, True, False]
+    auth_handler.return_value.status_code.side_effect = [False, True, False]
     return auth_handler
 
 
@@ -142,7 +141,7 @@ def unicode_query_filter():
 
 @pytest.fixture
 def mock_session(mocker):
-    from services._connection import Connection
+    from py42.services._connection import Connection
 
     connection = mocker.MagicMock(spec=Connection)
     connection.headers = {}

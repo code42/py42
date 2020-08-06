@@ -40,7 +40,7 @@ class DepartingEmployeeService(BaseService):
                 u"departureDate": departure_date,
             }
             uri = self._uri_prefix.format(u"add")
-            return self._connection.post(uri, data=json.dumps(data))
+            return self._connection.post(uri, json=data)
 
     def get(self, user_id):
         """Gets departing employee data of a user.
@@ -55,7 +55,7 @@ class DepartingEmployeeService(BaseService):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"get")
         data = {u"userId": user_id, u"tenantId": tenant_id}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def remove(self, user_id):
         """Removes a user from the Departing Employees list.
@@ -71,7 +71,7 @@ class DepartingEmployeeService(BaseService):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"remove")
         data = {u"userId": user_id, u"tenantId": tenant_id}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get_all(
         self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"
@@ -129,7 +129,7 @@ class DepartingEmployeeService(BaseService):
             u"srtKey": sort_key,
             u"srtDirection": sort_direction,
         }
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def set_alerts_enabled(self, alerts_enabled=True):
         """Enable or disable email alerting on Departing Employee exposure events.
@@ -144,7 +144,7 @@ class DepartingEmployeeService(BaseService):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"setalertstate")
         data = {u"tenantId": tenant_id, u"alertsEnabled": alerts_enabled}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def update_departure_date(self, user_id, departure_date):
         """Add or modify details of an existing Departing Employee case.
@@ -166,4 +166,4 @@ class DepartingEmployeeService(BaseService):
             u"userId": user_id,
             u"departureDate": departure_date,
         }
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)

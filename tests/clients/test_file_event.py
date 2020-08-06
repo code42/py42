@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
-from services._connection import Connection
+from py42.services._connection import Connection
 
 from py42.services.fileevent import FileEventService
 

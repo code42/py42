@@ -35,7 +35,7 @@ class OrgService(BaseService):
             u"notes": notes,
             u"parentOrgUid": parent_org_uid,
         }
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def get_by_id(self, org_id, **kwargs):
         """Gets the organization with the given ID.

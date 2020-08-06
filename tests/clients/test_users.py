@@ -72,7 +72,7 @@ class TestUserClient(object):
         }
 
         mock_session.post.assert_called_once_with(
-            USER_URI, data=json.dumps(expected_params)
+            USER_URI, json=expected_params
         )
 
     def test_get_all_calls_get_with_uri_and_params(
@@ -145,8 +145,8 @@ class TestUserClient(object):
         client.add_role(12345, "Test Role Name")
         uri = "/api/UserRole"
         assert mock_session.post.call_args[0][0] == uri
-        assert '"roleName": "Test Role Name"' in mock_session.post.call_args[1]["data"]
-        assert '"userId": 12345' in mock_session.post.call_args[1]["data"]
+        assert mock_session.post.call_args[1]["json"]["roleName"] == "Test Role Name"
+        assert mock_session.post.call_args[1]["json"]["userId"] == 12345
 
     def test_delete_role_calls_delete_with_expected_uri_and_params(self, mock_session):
         client = UserService(mock_session)

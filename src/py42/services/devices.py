@@ -194,7 +194,7 @@ class DeviceService(BaseService):
         """
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": device_id}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def reactivate(self, device_id):
         """Activates a previously deactivated device.
@@ -208,7 +208,7 @@ class DeviceService(BaseService):
         """
         uri = u"/api/v4/computer-deactivation/remove"
         data = {u"id": device_id}
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)
 
     def deauthorize(self, device_id):
         """Deauthorizes the device with the given ID. If used on a cloud connector device, it will

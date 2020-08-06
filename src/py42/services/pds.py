@@ -23,4 +23,4 @@ class PreservationDataService(BaseService):
             u"devicePaths": [{u"deviceGuid": device_id, u"paths": paths}],
         }
         uri = u"/api/v1/FindAvailableVersion"
-        return self._connection.post(uri, data=json.dumps(data))
+        return self._connection.post(uri, json=data)

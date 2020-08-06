@@ -36,7 +36,7 @@ class TestAlertRulesClient(object):
         alert_rule_client.add_user(u"rule-id", u"user-id")
 
         assert mock_session.post.call_count == 1
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/Rules/add-users"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -55,7 +55,7 @@ class TestAlertRulesClient(object):
         alert_rule_client.remove_user(u"rule-id", u"user-id")
 
         assert mock_session.post.call_count == 1
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/Rules/remove-users"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -72,7 +72,7 @@ class TestAlertRulesClient(object):
         alert_rule_client.remove_all_users(u"rule-id")
 
         assert mock_session.post.call_count == 1
-        posted_data = json.loads(mock_session.post.call_args[1]["data"])
+        posted_data = mock_session.post.call_args[1]["json"]
         assert mock_session.post.call_args[0][0] == "/svc/api/v1/Rules/remove-all-users"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()

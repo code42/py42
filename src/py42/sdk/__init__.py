@@ -27,7 +27,6 @@ from py42.services.fileevent import FileEventService
 from py42.services.legalhold import LegalHoldService
 from py42.services.orgs import OrgService
 from py42.services.storage._connection_manager import ConnectionManager
-from py42.services.storage._auth import StorageTokenProviderFactory
 from py42.services.pds import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.securitydata import SecurityDataService
@@ -250,8 +249,7 @@ def _init_clients(services, connection):
         services.userprofile, services.departingemployee, services.highriskemployee
     )
 
-    storage_auth_factory = StorageTokenProviderFactory(connection, services.devices)
-    storage_client_factory = StorageClientFactory(ConnectionManager(), storage_auth_factory)
+    storage_client_factory = StorageClientFactory(connection, services.devices, ConnectionManager())
     alertrules = AlertRulesClient(services.alerts, services.alertrules)
     securitydata = SecurityDataClient(services.securitydata, services.savedsearch, storage_client_factory)
     alerts = AlertsClient(services.alerts, alertrules)

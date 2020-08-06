@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-import json
+import json as json_lib
 
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
@@ -79,6 +79,7 @@ class Connection(object):
         url,
         params=None,
         data=None,
+        json=None,
         headers=None,
         cookies=None,
         files=None,
@@ -96,6 +97,7 @@ class Connection(object):
             url,
             params=params,
             data=data,
+            json=json,
             headers=headers,
             cookies=cookies,
             files=files,
@@ -132,6 +134,7 @@ class Connection(object):
         url,
         params=None,
         data=None,
+        json=None,
         headers=None,
         cookies=None,
         files=None,
@@ -141,6 +144,9 @@ class Connection(object):
         url = urljoin(self.host_address, url)
         self._session.proxies = settings.proxies
         self._session.verify = settings.verify_ssl_certs
+
+        if json:
+            data = json_lib.loads(json)
 
         additional_headers = {u"User-Agent": settings.get_user_agent_string()}
         if headers:

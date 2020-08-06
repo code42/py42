@@ -100,7 +100,6 @@ class StorageArchiveClient(BaseClient):
         show_deleted=None,
         restore_full_path=None,
         timestamp=None,
-        exclusions=None,
         backup_set_id=None,
     ):
         """Submits a web restore job.
@@ -119,7 +118,6 @@ class StorageArchiveClient(BaseClient):
             u"showDeleted": show_deleted,
             u"restoreFullPath": restore_full_path,
             u"timestamp": timestamp,
-            u"exceptions": exclusions,
             u"backupSetId": backup_set_id,
         }
         return self._session.post(uri, json=json_dict)

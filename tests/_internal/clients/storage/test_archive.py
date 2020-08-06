@@ -29,7 +29,6 @@ EXPIRE_JOB_KEY = "expireJob"
 SHOW_DELETED_KEY = "showDeleted"
 RESTORE_FULL_PATH_KEY = "restoreFullPath"
 TIMESTAMP_KEY = "timestamp"
-EXCEPTIONS_KEY = "exceptions"
 BACKUP_SET_ID_KEY = "backupSetId"
 JOB_ID_KEY = "jobId"
 
@@ -45,10 +44,6 @@ NUM_DIRS = 0
 SIZE = 3
 ZIP_RESULT = True
 TIMESTAMP = 1557139716
-EXCEPTIONS = [
-    {"path": "/dir/file.ext", TIMESTAMP_KEY: TIMESTAMP},
-    {"path": "/dir2/file2.ext", TIMESTAMP_KEY: TIMESTAMP},
-]
 BACKUP_SET_ID = "12345"
 WEB_RESTORE_JOB_ID = "46289723"
 
@@ -206,7 +201,6 @@ class TestStorageArchiveClient(object):
             SHOW_DELETED_KEY,
             RESTORE_FULL_PATH_KEY,
             TIMESTAMP_KEY,
-            EXCEPTIONS_KEY,
             BACKUP_SET_ID_KEY,
         ]
 
@@ -360,22 +354,6 @@ class TestStorageArchiveClient(object):
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(TIMESTAMP_KEY) == TIMESTAMP
 
-    def test_start_restore_with_exceptions_calls_post_with_exceptions_in_data(
-        self, session
-    ):
-        storage_archive_client = StorageArchiveClient(session)
-        storage_archive_client.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            exclusions=EXCEPTIONS,
-        )
-        json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(EXCEPTIONS_KEY) == EXCEPTIONS
-
     def test_start_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(
         self, session
     ):
@@ -408,7 +386,6 @@ class TestStorageArchiveClient(object):
             show_deleted=True,
             restore_full_path=True,
             timestamp=TIMESTAMP,
-            exclusions=EXCEPTIONS,
             backup_set_id=BACKUP_SET_ID,
         )
         json_arg = session.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
@@ -424,7 +401,6 @@ class TestStorageArchiveClient(object):
             SHOW_DELETED_KEY: True,
             RESTORE_FULL_PATH_KEY: True,
             TIMESTAMP_KEY: TIMESTAMP,
-            EXCEPTIONS_KEY: EXCEPTIONS,
             BACKUP_SET_ID_KEY: BACKUP_SET_ID,
         }
         assert json_arg == expected_data

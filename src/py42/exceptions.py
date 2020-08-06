@@ -51,7 +51,7 @@ class Py42FeatureUnavailableError(Py42ResponseError):
 class Py42UserDoesNotExistError(Py42ResponseError):
     """An exception raised when a username is not in our system."""
 
-    def __init__(self, username, response):
+    def __init__(self, response, username):
         super(Py42UserDoesNotExistError, self).__init__(
             response, message=u"User '{}' does not exist.".format(username),
         )

@@ -94,7 +94,7 @@ class UserClient(BaseClient):
         params = dict(username=username, **kwargs)
         response = self._session.get(uri, params=params)
         if not response[u"users"]:
-            raise Py42UserDoesNotExistError(username, response)
+            raise Py42UserDoesNotExistError(response, username)
         return response
 
     def get_current(self, **kwargs):

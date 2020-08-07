@@ -10,7 +10,7 @@ from py42.sdk.queries.query_filter import filter_attributes
 
 
 class HighRiskEmployeeFilters(_DetectionListFilters):
-    """Constants available for filtering Departing Employee search results."""
+    """Constants available for filtering High Risk Employee search results."""
 
     @staticmethod
     def choices():

@@ -64,6 +64,24 @@ class ArchiveAccessorManager(object):
         return response[u"webRestoreSessionId"]
 
 
+def _create_file_selections(file_paths, metadata_list, file_sizes):
+    file_selections = []
+    for i in range(0, len(file_paths)):
+        metadata = metadata_list[i]
+        size_info = file_sizes[i]
+        path_set = {
+            u"type": metadata[u"type"],
+            u"path": metadata[u"path"],
+            u"selected": True,
+        }
+        selection = FileSelection(
+            path_set, size_info[u"numFiles"], size_info[u"numDirs"], size_info[u"size"],
+        )
+        file_selections.append(selection)
+
+    return file_selections
+
+
 class ArchiveAccessor(object):
 
     DEFAULT_DIRECTORY_DOWNLOAD_NAME = u"download"
@@ -88,9 +106,7 @@ class ArchiveAccessor(object):
         metadata_list = self._get_restore_metadata(file_paths)
         file_ids = [md[u"id"] for md in metadata_list]
         file_sizes = self._get_file_size_info(file_ids)
-        file_selections = self._create_file_selections(
-            file_paths, metadata_list, file_sizes
-        )
+        file_selections = _create_file_selections(file_paths, metadata_list, file_sizes)
         return self._restore_job_manager.get_stream(file_selections)
 
     def _get_restore_metadata(self, file_paths):
@@ -155,26 +171,6 @@ class ArchiveAccessor(object):
             }
             file_sizes.append(file_size_entry)
         return file_sizes
-
-    def _create_file_selections(self, file_paths, metadata_list, file_sizes):
-        file_selections = []
-        for i in range(0, len(file_paths)):
-            metadata = metadata_list[i]
-            size_info = file_sizes[i]
-            path_set = {
-                u"type": metadata[u"type"],
-                u"path": metadata[u"path"],
-                u"selected": True,
-            }
-            selection = FileSelection(
-                path_set,
-                size_info[u"numFiles"],
-                size_info[u"numDirs"],
-                size_info[u"size"],
-            )
-            file_selections.append(selection)
-
-        return file_selections
 
 
 class RestoreJobManager(object):

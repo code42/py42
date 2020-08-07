@@ -85,13 +85,25 @@ class ArchiveAccessor(object):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
 
-        file_selections = []
+        metadata_list = self._get_restore_metadata(file_paths)
+        file_ids = [md[u"id"] for md in metadata_list]
+        file_sizes = self._get_file_size_info(file_ids)
+        file_selections = self._create_file_selections(
+            file_paths, metadata_list, file_sizes
+        )
+        return self._restore_job_manager.get_stream(file_selections)
+
+    def _get_restore_metadata(self, file_paths):
+        metadata_list = []
         for path in file_paths:
             metadata = self._get_file_via_walking_tree(path)
-            fs = self._build_file_selection(metadata[u"path"], metadata[u"type"])
-            file_selections.append(fs)
-
-        return self._restore_job_manager.get_stream(file_selections)
+            metadata_list_entry = {
+                u"id": metadata[u"id"],
+                u"path": metadata[u"path"],
+                u"type": metadata[u"type"],
+            }
+            metadata_list.append(metadata_list_entry)
+        return metadata_list
 
     def _get_file_via_walking_tree(self, file_path):
         path_parts = file_path.split(u"/")
@@ -130,12 +142,39 @@ class ArchiveAccessor(object):
             show_deleted=True,
         )
 
-    @staticmethod
-    def _build_file_selection(file_path, file_type):
-        path_set = {u"type": file_type, u"path": file_path, u"selected": True}
-        # pass in dummy values; only used with progress indication, which we don't currently use
-        num_files = num_dirs = size = 1
-        return FileSelection(path_set, num_files, num_dirs, size)
+    def _get_file_size_info(self, file_ids):
+        file_sizes = []
+        for file_id in file_ids:
+            size_data = self._storage_archive_client.get_file_size(
+                self._device_guid, file_id
+            )
+            file_size_entry = {
+                u"numFiles": size_data[u"numFiles"],
+                u"numDirs": size_data[u"numDirs"],
+                u"size": size_data[u"size"],
+            }
+            file_sizes.append(file_size_entry)
+        return file_sizes
+
+    def _create_file_selections(self, file_paths, metadata_list, file_sizes):
+        file_selections = []
+        for i in range(0, len(file_paths)):
+            metadata = metadata_list[i]
+            size_info = file_sizes[i]
+            path_set = {
+                u"type": metadata[u"type"],
+                u"path": metadata[u"path"],
+                u"selected": True,
+            }
+            selection = FileSelection(
+                path_set,
+                size_info[u"numFiles"],
+                size_info[u"numDirs"],
+                size_info[u"size"],
+            )
+            file_selections.append(selection)
+
+        return file_selections
 
 
 class RestoreJobManager(object):

@@ -78,16 +78,16 @@ def bool_to_str(value):
     if isinstance(value, bool):
         return "true" if value else "false"
     else:
-        raise KeyError("Value must be True or False")
+        raise TypeError("Value must be True or False")
 
 
 def str_to_bool(value):
-    if value == "true":
+    if value == u"true":
         return True
-    if value == "false":
+    if value == u"false":
         return False
     else:
-        return value
+        raise ValueError(u'Expecting either "true" or "false", got {}.'.format(value))
 
 
 def bool_required(f):
@@ -96,6 +96,6 @@ def bool_required(f):
     def wrapper(self, value):
         if isinstance(value, bool):
             return f(self, value)
-        raise AttributeError("Value must be a boolean.")
+        raise TypeError(u"Value must be True or False.")
 
     return wrapper

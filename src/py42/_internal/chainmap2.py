@@ -1,5 +1,6 @@
 from collections import MutableMapping
 
+
 # copied from python3 src, modified slightly to work with python2
 class ChainMap(MutableMapping):
     """ A ChainMap groups multiple dicts (or other mappings) together

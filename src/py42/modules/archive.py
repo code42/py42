@@ -15,7 +15,7 @@ class ArchiveModule(object):
         archive_password=None,
         encryption_key=None,
     ):
-        """Streams a file from a backup archive to memory. If streaming a multiple files, the
+        """Streams a file from a backup archive to memory. If streaming multiple files, the
         results will be zipped.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 

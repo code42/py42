@@ -1,8 +1,66 @@
 import json
 
 from py42 import settings
+from py42._internal.compat import ChainMap
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+
+
+class DeviceConfig(object):
+    def __init__(self, config_json):
+        pass
+
+
+class DeviceSettingsManager(object):
+    def __init__(self, device_client, guid):
+        device_response = device_client.get_by_guid(guid, incSettings=True)
+        uri = u"/api/DeviceSetting/{}".format(guid)
+        device_settings_response = device_client._session.get(uri)
+
+        device_dict = device_response.data
+        settings_dict = device_dict.pop("settings")
+        config_dict = settings_dict.pop("serviceBackupConfig")
+
+        self._device = ChainMap({}, device_dict)
+        self._settings = ChainMap({}, settings_dict)
+        self._config = ChainMap({}, config_dict)
+        self._device_settings = ChainMap({}, device_settings_response.data)
+        self._device_client = device_client
+        self._errored = None
+        self.settings_response = None
+        self.device_settings_response = None
+
+    @property
+    def name(self):
+        return self._device["name"]
+
+    @name.setter
+    def name(self, value):
+        self._device["name"] = value
+
+    @property
+    def external_reference(self):
+        return self._device["computerExtRef"]
+
+    @external_reference.setter
+    def external_reference(self, value):
+        self._device["computerExtRef"] = value
+
+    @property
+    def notes(self):
+        return self._device["notes"]
+
+    @notes.setter
+    def notes(self, value):
+        self._device["notes"] = value
+
+    def update(self):
+        updates, original = self._device.maps
+        payload = original
+        payload.update(updates)
+        self._device_client.put_to_computer_endpoint(
+            self._device["computerId"], payload
+        )
 
 
 class DeviceClient(BaseClient):
@@ -238,6 +296,10 @@ class DeviceClient(BaseClient):
         uri = u"/api/v4/device-setting/view"
         params = {u"guid": guid, u"keys": keys}
         return self._session.get(uri, params=params)
+
+    def put_to_computer_endpoint(self, device_id, data):
+        uri = "/api/Computer/{}".format(device_id)
+        self._session.put(uri, data=json.dumps(data))
 
     def get_agent_state(self, guid, property_name):
         """Gets the agent state of the device.

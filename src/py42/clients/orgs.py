@@ -1,14 +1,20 @@
 import json
+from collections import namedtuple
 
 from py42 import settings
 from py42._internal.compat import ChainMap
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42.exceptions import Py42Error
+from py42.exceptions import Py42HTTPError
 from py42.settings import debug
 from py42.util import bool_required
 from py42.util import bool_to_str
 from py42.util import str_to_bool
+
+
+SettingsManagerResponse = namedtuple(
+    "SettingsManagerResponse", ["error", "settings_response", "org_settings_response"]
+)
 
 
 class OrgSettingsManager(object):
@@ -19,9 +25,6 @@ class OrgSettingsManager(object):
         self._settings = ChainMap({}, settings_dict)
         self._t_settings = ChainMap({}, org_settings_dict)
         self._org_client = org_client
-        self.errored = None
-        self.org_response = None
-        self.org_settings_response = None
 
     @property
     def changes(self):
@@ -173,11 +176,11 @@ class OrgSettingsManager(object):
         )
         debug.logger.debug(msg)
         if self.changes[u"settings"]:
-            self._update_settings()
+            org_error, org_response = self._update_settings()
         if self.changes[u"t_settings"]:
-            self._update_org_settings()
-
-        return u"Success" if not self.errored else u"Error(s) occurred."
+            org_settings_error, org_settings_response = self._update_org_settings()
+        errored = org_error or org_settings_error
+        return SettingsManagerResponse(errored, org_response, org_settings_response)
 
     def _diff_chainmap(self, cm):
         updates, orig = cm.maps
@@ -199,23 +202,23 @@ class OrgSettingsManager(object):
     def _update_settings(self):
         settings_payload = self._prepare_settings_payload()
         try:
-            self.org_response = self._org_client.put_to_org_endpoint(
+            org_response = self._org_client.put_to_org_endpoint(
                 self.org_id, data=settings_payload
             )
-        except Py42Error as e:
-            self.errored = True
-            self.org_response = e
+            return False, org_response
+        except Py42HTTPError as e:
+            return True, e.response
 
     def _update_org_settings(self):
         packet_list = list(self._t_settings.maps[0].values())
         org_settings_payload = {u"packets": packet_list}
         try:
-            self.org_settings_response = self._org_client.put_to_org_setting_endpoint(
+            org_settings_response = self._org_client.put_to_org_setting_endpoint(
                 self.org_id, data=org_settings_payload
             )
-        except Py42Error as e:
-            self.errored = True
-            self.org_settings_response = e
+            return False, org_settings_response
+        except Py42HTTPError as e:
+            return True, e.response
 
 
 class OrgClient(BaseClient):

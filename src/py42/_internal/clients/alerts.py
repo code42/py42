@@ -4,7 +4,6 @@ from py42 import settings
 from py42._internal.compat import str
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42.constants import SortDirection
 from py42.sdk.queries.query_filter import create_eq_filter_group
 
 
@@ -76,7 +75,7 @@ class AlertClient(BaseClient):
         uri = self._uri_prefix.format(u"rules/query-rule-metadata")
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_all_rules(self, sort_key=_CREATED_AT, sort_direction=SortDirection.DESC):
+    def get_all_rules(self, sort_key=_CREATED_AT, sort_direction=u"DESC"):
         return get_all_pages(
             self.get_rules_page,
             self._RULE_METADATA,
@@ -86,7 +85,7 @@ class AlertClient(BaseClient):
         )
 
     def get_all_rules_by_name(
-        self, rule_name, sort_key=_CREATED_AT, sort_direction=SortDirection.DESC
+        self, rule_name, sort_key=_CREATED_AT, sort_direction=u"DESC"
     ):
         return get_all_pages(
             self.get_rules_page,
@@ -97,7 +96,7 @@ class AlertClient(BaseClient):
         )
 
     def get_rule_by_observer_id(
-        self, observer_id, sort_key=_CREATED_AT, sort_direction=SortDirection.DESC
+        self, observer_id, sort_key=_CREATED_AT, sort_direction=u"DESC"
     ):
         results = get_all_pages(
             self.get_rules_page,

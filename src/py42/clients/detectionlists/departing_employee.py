@@ -5,7 +5,6 @@ from py42.clients.detectionlists import _DetectionListFilters
 from py42.clients.detectionlists import _PAGE_SIZE
 from py42.clients.detectionlists import handle_user_already_added_error
 from py42.clients.util import get_all_pages
-from py42.constants import SortDirection
 from py42.exceptions import Py42BadRequestError
 from py42.sdk.queries.query_filter import filter_attributes
 
@@ -99,7 +98,7 @@ class DepartingEmployeeClient(BaseClient):
         self,
         filter_type=DepartingEmployeeFilters.OPEN,
         sort_key=CREATED_AT,
-        sort_direction=SortDirection.DESC,
+        sort_direction=u"DESC",
     ):
         """Gets all Departing Employees.
 
@@ -129,7 +128,7 @@ class DepartingEmployeeClient(BaseClient):
         page_num,
         filter_type=DepartingEmployeeFilters.OPEN,
         sort_key=CREATED_AT,
-        sort_direction=SortDirection.DESC,
+        sort_direction=u"DESC",
         page_size=_PAGE_SIZE,
     ):
         """Gets a single page of Departing Employees.

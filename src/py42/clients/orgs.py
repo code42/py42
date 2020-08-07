@@ -23,14 +23,15 @@ class OrgSettingsManager(object):
         self._settings = ChainMap({}, settings_dict)
         self._t_settings = ChainMap({}, org_settings_response.data)
         self._org_client = org_client
-        self._errored = None
+        self.errored = None
         self.org_response = None
         self.org_settings_response = None
 
     @property
     def changes(self):
-        changes_dict = self._diff_chainmap(self._org) or {}
-        changes_dict["settings"] = self._diff_chainmap(self._settings) or None
+        changes_dict = {}
+        changes_dict["settings"] = self._diff_chainmap(self._org) or {}
+        changes_dict["settings"].update(self._diff_chainmap(self._settings))
         t_settings_diff = list(self._diff_chainmap(self._t_settings).values())
         changes_dict["t_settings"] = t_settings_diff or None
         return changes_dict
@@ -175,12 +176,12 @@ class OrgSettingsManager(object):
             self.org_id, self._org.maps[1]["orgName"], self.changes
         )
         debug.logger.debug(msg)
-        if len(self.changes) > 2 or self.changes["settings"]:
+        if self.changes["settings"]:
             self._update_settings()
         if self.changes["t_settings"]:
             self._update_org_settings()
 
-        return "Success" if not self._errored else "Error(s) occurred."
+        return "Success" if not self.errored else "Error(s) occurred."
 
     def _diff_chainmap(self, cm):
         updates, orig = cm.maps
@@ -206,7 +207,7 @@ class OrgSettingsManager(object):
                 self.org_id, data=settings_payload
             )
         except Py42Error as e:
-            self._errored = True
+            self.errored = True
             self.org_response = e
 
     def _update_org_settings(self):
@@ -217,7 +218,7 @@ class OrgSettingsManager(object):
                 self.org_id, data=org_settings_payload
             )
         except Py42Error as e:
-            self._errored = True
+            self.errored = True
             self.org_settings_response = e
 
 

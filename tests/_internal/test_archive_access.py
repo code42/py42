@@ -45,8 +45,11 @@ SAVE_AS_FILENAME = "save-as-filename.txt"
 
 USERS_DIR = "/Users"
 PATH_TO_FILE_IN_DOWNLOADS_FOLDER = "/Users/qa/Downloads/terminator-genisys.jpg"
-PATH_TO_FILE_IN_DESKTOP = "/Users/qa/Desktop"
+PATH_TO_DESKTOP_FOLDER = "/Users/qa/Desktop"
 PATH_TO_DOWNLOADS_FOLDER = "/Users/qa/Downloads"
+
+DESKTOP_ID = "97c6bd9bff714bd45665130f7f381781"
+DOWNLOADS_ID = "69e930e774cbc1ee6d0c0ff2ba5804ee"
 
 
 class GetFilePathMetadataResponses(object):
@@ -321,8 +324,8 @@ def single_file_selection():
 @pytest.fixture
 def double_file_selection():
     return [
-        get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER),
-        get_file_selection(FileType.DIRECTORY, PATH_TO_FILE_IN_DESKTOP),
+        get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER, 1, 2, 3),
+        get_file_selection(FileType.DIRECTORY, PATH_TO_DESKTOP_FOLDER, 4, 5, 6),
     ]
 
 
@@ -667,7 +670,7 @@ class TestArchiveAccessor(object):
         ]
         restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
-    def test_stream_from_backup_when_not_ignoring_file_size_calc_returns_sizes_from_response(
+    def test_stream_from_backup_when_not_ignoring_file_size_calc_returns_size_sums_from_response(
         self, mocker, storage_archive_client, restore_job_manager
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_client)
@@ -677,25 +680,31 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        num_files = 12
-        num_dirs = 13
-        size = 14
-        storage_archive_client.get_file_size.return_value = {
-            "numFiles": num_files,
-            "numDirs": num_dirs,
-            "size": size,
-        }
+
+        def get_file_size(device_id, file_id):
+            if file_id == DOWNLOADS_ID:
+                return {
+                    "numFiles": 1,
+                    "numDirs": 2,
+                    "size": 3,
+                }
+            elif file_id == DESKTOP_ID:
+                return {
+                    "numFiles": 4,
+                    "numDirs": 5,
+                    "size": 6,
+                }
+
+        storage_archive_client.get_file_size.side_effect = get_file_size
         archive_accessor.stream_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, ignore_size_calc=False
+            [PATH_TO_FILE_IN_DOWNLOADS_FOLDER, PATH_TO_DESKTOP_FOLDER],
+            ignore_size_calc=False,
         )
         expected_file_selection = [
             get_file_selection(
-                FileType.FILE,
-                PATH_TO_FILE_IN_DOWNLOADS_FOLDER,
-                num_files,
-                num_dirs,
-                size,
-            )
+                FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER, 1, 2, 3,
+            ),
+            get_file_selection(FileType.DIRECTORY, PATH_TO_DESKTOP_FOLDER, 4, 5, 6,),
         ]
         restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
@@ -852,7 +861,7 @@ class TestRestoreJobManager(object):
             zip_result=None,
         )
 
-    def test_get_stream_when_multiple_files_selected_calls_start_restore_with_correct_Args(
+    def test_get_stream_when_multiple_files_selected_calls_start_restore_with_correct_args(
         self, mocker, storage_archive_client, double_file_selection
     ):
         mock_start_restore_response(
@@ -873,9 +882,9 @@ class TestRestoreJobManager(object):
                 double_file_selection[0].path_set,
                 double_file_selection[1].path_set,
             ],
-            num_files=2,
-            num_dirs=2,
-            size=2,
+            num_files=1 + 4,
+            num_dirs=2 + 5,
+            size=3 + 6,
             show_deleted=True,
             zip_result=True,
         )

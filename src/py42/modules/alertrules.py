@@ -1,4 +1,5 @@
 from py42 import settings
+from py42.constants import SortDirection
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidRuleOperationError
 
@@ -86,7 +87,11 @@ class AlertRulesModule(object):
         return rules_client.remove_all_users(rule_id)
 
     def get_page(
-        self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None
+        self,
+        sort_key=u"CreatedAt",
+        sort_direction=SortDirection.DESC,
+        page_num=1,
+        page_size=None,
     ):
         """Gets a page of alert rules. Note that you can use page_size here the same
         way as other methods that have a `page_size` parameter in py42. However, under
@@ -95,7 +100,8 @@ class AlertRulesModule(object):
         Code42 APIs expect the start page to be one.
 
         sort_key (str, optional): Sort results based by field. Defaults to "CreatedAt".
-        sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to  "DESC".
+        sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
+            :class:`py42.constants.SortDirection`. Defaults to  "DESC".
         page_num (int, optional): The page number to get. Defaults to 1.
         page_size (int, optional): The number of items per page. Defaults to `py42.settings.items_per_page`.
 
@@ -111,12 +117,13 @@ class AlertRulesModule(object):
             page_size=page_size,
         )
 
-    def get_all(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
+    def get_all(self, sort_key=u"CreatedAt", sort_direction=SortDirection.DESC):
         """Fetch all available rules.
 
         Args:
             sort_key (str, optional): Sort results based by field. Defaults to 'CreatedAt'.
-            sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to  "DESC"
+            sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
+                :class:`py42.constants.SortDirection`. Defaults to  "DESC"
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

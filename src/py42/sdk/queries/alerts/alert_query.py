@@ -1,4 +1,5 @@
 from py42._internal.compat import str
+from py42.constants import SortDirection
 from py42.sdk.queries import BaseQuery
 
 
@@ -25,7 +26,7 @@ class AlertQuery(BaseQuery):
         self.sort_key = u"CreatedAt"
         self.page_number = 0
         self.page_size = 500
-        self.sort_direction = u"desc"
+        self.sort_direction = SortDirection.DESC.lower()
 
     def __str__(self):
         groups_string = u",".join(

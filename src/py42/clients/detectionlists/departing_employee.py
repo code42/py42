@@ -7,12 +7,17 @@ from py42.clients.detectionlists import handle_user_already_added_error
 from py42.clients.util import get_all_pages
 from py42.constants import SortDirection
 from py42.exceptions import Py42BadRequestError
+from py42.sdk.queries.query_filter import filter_attributes
 
 
 class DepartingEmployeeFilters(_DetectionListFilters):
     """Constants available for filtering Departing Employee search results."""
 
     LEAVING_TODAY = u"LEAVING_TODAY"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(DepartingEmployeeFilters)
 
 
 class DepartingEmployeeClient(BaseClient):

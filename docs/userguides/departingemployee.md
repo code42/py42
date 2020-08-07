@@ -14,14 +14,18 @@ uid = user["users"][0]["userUid"]
 `user_id` below refers to the user UID.
 
 ```python
+from py42.exceptions import Py42UserAlreadyAddedError
+
 # Add the departing employee
-response = sdk.detectionlists.departing_employee.add(user_id, departure_date)
+try:
+    response = sdk.detectionlists.departing_employee.add(user_id, departure_date)
+except Py42UserAlreadyAddedError:
+    print("The user is already on the Departing Employee list.")
 ```
 
 ```eval_rst
 .. important::
-    If the user is already in the Departing Employees list, you will get a response indicating that it is a
-    bad request.
+    If the user is already in the Departing Employees list, you will get an `py42.exceptions.Py42UserAlreadyAddedError`.
 
     If a detection list user profile doesn't exist yet for this user, one will automatically be created before adding the user to the Departing Employees list.
 ```

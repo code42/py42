@@ -19,6 +19,10 @@ if is_py2:
     import repr as reprlib
 
     string_type = basestring
+
+    from py42._internal.chainmap2 import ChainMap
+
+
 else:
     from urllib.parse import urljoin, urlparse, quote
 
@@ -27,3 +31,5 @@ else:
     import reprlib
 
     string_type = str
+
+    from collections import ChainMap

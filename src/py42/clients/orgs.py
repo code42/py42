@@ -1,9 +1,9 @@
 import json
 
 from py42 import settings
+from py42._internal.compat import ChainMap
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
-from py42._internal.compat import ChainMap
 from py42.exceptions import Py42Error
 from py42.settings import debug
 from py42.util import bool_required

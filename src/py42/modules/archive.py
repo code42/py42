@@ -14,6 +14,7 @@ class ArchiveModule(object):
         destination_guid=None,
         archive_password=None,
         encryption_key=None,
+        ignore_size_calc=False,
     ):
         """Streams a file from a backup archive to memory. If streaming multiple files, the
         results will be zipped.
@@ -33,6 +34,10 @@ class ArchiveModule(object):
             encryption_key (str or None, optional): A custom encryption key for decrypting an archive's
                 file contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
+            ignore_size_calc (bool, optional): When True, ignores figuring our accurate file counts and
+                sizes. Recommended to set to True for large restores. File count and sizes are used
+                for indicating progress.
+
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.
 
@@ -56,7 +61,7 @@ class ArchiveModule(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        return archive_accessor.stream_from_backup(file_paths)
+        return archive_accessor.stream_from_backup(file_paths, ignore_size_calc)
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific

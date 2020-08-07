@@ -424,9 +424,12 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
     return mock_get_file_path_metadata
 
 
-def get_file_selection(file_type, file_path):
+def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, size=1):
     return FileSelection(
-        {"type": file_type, "path": file_path, "selected": True}, 1, 1, 1
+        {"type": file_type, "path": file_path, "selected": True},
+        num_files,
+        num_dirs,
+        size,
     )
 
 
@@ -624,7 +627,7 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        archive_accessor.stream_from_backup("/")
+        archive_accessor.stream_from_backup("/", ignore_size_calc=True)
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "/")]
         restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
@@ -642,7 +645,7 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        archive_accessor.stream_from_backup(USERS_DIR)
+        archive_accessor.stream_from_backup(USERS_DIR, ignore_size_calc=True)
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, USERS_DIR)]
         restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
@@ -656,9 +659,43 @@ class TestArchiveAccessor(object):
             storage_archive_client,
             restore_job_manager,
         )
-        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+        archive_accessor.stream_from_backup(
+            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, ignore_size_calc=True
+        )
         expected_file_selection = [
             get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+        ]
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+
+    def test_stream_from_backup_when_not_ignoring_file_size_calc_returns_sizes_from_response(
+        self, mocker, storage_archive_client, restore_job_manager
+    ):
+        mock_walking_to_downloads_folder(mocker, storage_archive_client)
+        archive_accessor = ArchiveAccessor(
+            DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID,
+            storage_archive_client,
+            restore_job_manager,
+        )
+        num_files = 12
+        num_dirs = 13
+        size = 14
+        storage_archive_client.get_file_size.return_value = {
+            "numFiles": num_files,
+            "numDirs": num_dirs,
+            "size": size,
+        }
+        archive_accessor.stream_from_backup(
+            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, ignore_size_calc=False
+        )
+        expected_file_selection = [
+            get_file_selection(
+                FileType.FILE,
+                PATH_TO_FILE_IN_DOWNLOADS_FOLDER,
+                num_files,
+                num_dirs,
+                size,
+            )
         ]
         restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 

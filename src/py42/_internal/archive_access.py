@@ -4,6 +4,7 @@ from collections import namedtuple
 
 from py42.exceptions import Py42ArchiveFileNotFoundError
 
+
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
 
 
@@ -82,6 +83,10 @@ def _create_file_selections(file_paths, metadata_list, file_sizes):
     return file_selections
 
 
+def _get_default_file_size_info(file_ids):
+    return [{u"numFiles": 1, u"numDirs": 1, u"size": 1} for _ in file_ids]
+
+
 class ArchiveAccessor(object):
 
     DEFAULT_DIRECTORY_DOWNLOAD_NAME = u"download"
@@ -99,13 +104,17 @@ class ArchiveAccessor(object):
         self._storage_archive_client = storage_archive_client
         self._restore_job_manager = restore_job_manager
 
-    def stream_from_backup(self, file_paths):
+    def stream_from_backup(self, file_paths, ignore_size_calc=False):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
 
         metadata_list = self._get_restore_metadata(file_paths)
         file_ids = [md[u"id"] for md in metadata_list]
-        file_sizes = self._get_file_size_info(file_ids)
+        file_sizes = (
+            self._get_file_size_info(file_ids)
+            if not ignore_size_calc
+            else _get_default_file_size_info(file_ids)
+        )
         file_selections = _create_file_selections(file_paths, metadata_list, file_sizes)
         return self._restore_job_manager.get_stream(file_selections)
 

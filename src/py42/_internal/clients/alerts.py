@@ -10,6 +10,9 @@ from py42.sdk.queries.query_filter import create_eq_filter_group
 class AlertClient(BaseClient):
     _uri_prefix = u"/svc/api/v1/{0}"
 
+    _CREATED_AT = u"CreatedAt"
+    _RULE_METADATA = u"ruleMetadata"
+
     def __init__(self, session, user_context):
         super(AlertClient, self).__init__(session)
         self._user_context = user_context
@@ -72,32 +75,32 @@ class AlertClient(BaseClient):
         uri = self._uri_prefix.format(u"rules/query-rule-metadata")
         return self._session.post(uri, data=json.dumps(data))
 
-    def get_all_rules(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
+    def get_all_rules(self, sort_key=_CREATED_AT, sort_direction=u"DESC"):
         return get_all_pages(
             self.get_rules_page,
-            u"ruleMetadata",
+            self._RULE_METADATA,
             groups=None,
             sort_key=sort_key,
             sort_direction=sort_direction,
         )
 
     def get_all_rules_by_name(
-        self, rule_name, sort_key=u"CreatedAt", sort_direction=u"DESC"
+        self, rule_name, sort_key=_CREATED_AT, sort_direction=u"DESC"
     ):
         return get_all_pages(
             self.get_rules_page,
-            u"ruleMetadata",
+            self._RULE_METADATA,
             groups=[json.loads(str(create_eq_filter_group(u"Name", rule_name)))],
             sort_key=sort_key,
             sort_direction=sort_direction,
         )
 
     def get_rule_by_observer_id(
-        self, observer_id, sort_key=u"CreatedAt", sort_direction=u"DESC"
+        self, observer_id, sort_key=_CREATED_AT, sort_direction=u"DESC"
     ):
         results = get_all_pages(
             self.get_rules_page,
-            u"ruleMetadata",
+            self._RULE_METADATA,
             groups=[
                 json.loads(str(create_eq_filter_group(u"ObserverRuleId", observer_id)))
             ],

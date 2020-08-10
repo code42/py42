@@ -10,7 +10,22 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Removed
+
+- Removed `tenant_id` parameter from methods:
+    - `sdk.alerts.get_details()`
+    - `sdk.alerts.resolve()`
+    - `sdk.alerts.reopen()`
+
 ### Added
+
+- `py42.constants.SortDirection` constants `DESC` and `ASC`.
+
+- `sdk.detectionlists.departing_employee.DepartingEmployeeFilters` constants `OPEN`,
+    `EXFILTRATION_30_DAYS`, `EXFILTRATION_24_HOURS`, and `LEAVING_TODAY`.
+
+- `sdk.detectionlists.high_risk_employee.HighRiskEmployeeFilters` constants `OPEN`,
+    `EXFILTRATION_30_DAYS`, and `EXFILTRATION_24_HOURS`.
 
 - Methods for calling the agent-state APIs:
     - `sdk.devices.get_agent_state()`

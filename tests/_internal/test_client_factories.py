@@ -1,4 +1,5 @@
 import pytest
+from requests import Response
 
 from py42._internal.client_factories import AuthorityClientFactory
 from py42._internal.client_factories import MicroserviceClientFactory
@@ -12,13 +13,14 @@ from py42._internal.session_factory import SessionFactory
 from py42._internal.storage_session_manager import StorageSessionManager
 from py42._internal.token_providers import StorageTokenProviderFactory
 from py42.clients import administration
-from py42.clients import detectionlists
 from py42.clients import devices
 from py42.clients import file_event
 from py42.clients import legalhold
 from py42.clients import orgs
 from py42.clients import users
+from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
 from py42.clients.users import UserClient
+from py42.exceptions import Py42FeatureUnavailableError
 from py42.usercontext import UserContext
 
 TEST_ROOT_URL = "https://example.com"
@@ -163,7 +165,7 @@ class TestMicroserviceClientFactory(object):
             ALERTS_URL, mock_session
         )
 
-    def test_get_alerts_client_returns_same_intance_on_multiple_calls(
+    def test_get_alerts_client_returns_same_instance_on_multiple_calls(
         self, mock_session, session_factory, user_context, user_client
     ):
         factory = MicroserviceClientFactory(
@@ -181,7 +183,7 @@ class TestMicroserviceClientFactory(object):
             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
         )
         client = factory.get_departing_employee_client()
-        assert type(client) == detectionlists.departing_employee.DepartingEmployeeClient
+        assert type(client) == DepartingEmployeeClient
 
     def test_get_departing_employee_client_calls_get_stored_value_with_expected_key(
         self,
@@ -231,7 +233,7 @@ class TestMicroserviceClientFactory(object):
         )
         assert session_factory.create_jwt_session.call_count == 1
 
-    def test_get_departing_employee_client_returns_same_intance_on_multiple_calls(
+    def test_get_departing_employee_client_returns_same_instance_on_multiple_calls(
         self, mock_session, session_factory, user_context, user_client
     ):
         factory = MicroserviceClientFactory(
@@ -294,7 +296,7 @@ class TestMicroserviceClientFactory(object):
             FILE_EVENTS_URL, mock_session
         )
 
-    def test_get_file_event_client_returns_same_intance_on_multiple_calls(
+    def test_get_file_event_client_returns_same_instance_on_multiple_calls(
         self, mock_session, session_factory, user_context, user_client
     ):
         factory = MicroserviceClientFactory(
@@ -304,6 +306,53 @@ class TestMicroserviceClientFactory(object):
         client2 = factory.get_file_event_client()
 
         assert client1 is client2
+
+    def test_get_file_event_client_when_no_sts_base_url_raises(
+        self, mocker, mock_session, session_factory, user_context, user_client
+    ):
+        def get(uri, *args, **kwargs):
+            if uri == "/api/ServerEnv":
+                mock_response = mocker.MagicMock(spec=Response)
+                mock_response.text = "{}"
+                return mock_response
+
+        mock_session.get.side_effect = get
+        factory = MicroserviceClientFactory(
+            TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+        )
+        with pytest.raises(Py42FeatureUnavailableError) as err:
+            factory.get_file_event_client()
+
+        assert err.value.response
+
+    def test_get_alert_rules_client_returns_same_instance_on_multiple_calls(
+        self, mock_session, session_factory, user_context, user_client
+    ):
+        factory = MicroserviceClientFactory(
+            TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+        )
+        client1 = factory.get_alert_rules_client()
+        client2 = factory.get_alert_rules_client()
+
+        assert client1 is client2
+
+    def test_get_alert_rules_client_when_no_sts_base_url_raises_Py42FeatureUnavailableError(
+        self, mocker, mock_session, session_factory, user_context, user_client
+    ):
+        def get(uri, *args, **kwargs):
+            if uri == "/api/ServerEnv":
+                mock_response = mocker.MagicMock(spec=Response)
+                mock_response.text = "{}"
+                return mock_response
+
+        mock_session.get.side_effect = get
+        factory = MicroserviceClientFactory(
+            TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+        )
+        with pytest.raises(Py42FeatureUnavailableError) as err:
+            factory.get_alert_rules_client()
+
+        assert err.value.response
 
     def test_get_saved_search_client_calls_creates_client_with_expected_url(
         self,

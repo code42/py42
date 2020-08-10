@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import json
-import posixpath
 
 import pytest
 from requests import Response
@@ -25,24 +24,6 @@ DATA_KEY_TOKEN = "FAKE_DATA_KEY_TOKEN"
 WEB_RESTORE_SESSION_ID = "FAKE_SESSION_ID"
 FILE_ID = "file-id"
 
-UNIX_FILE_PATH = "/Users/the.terminiator/Documents/file.txt"
-UNIX_FILE_PATH_WITHOUT_EXTENSION = "/Users/the.terminiator/Documents/file"
-UNIX_DIR_PATH = "/Users/the.terminiator/Documents"
-UNIX_DIR_PATH_WITH_TRAILING_SLASH = "/Users/the.terminiator/Documents/"
-WINDOWS_FILE_PATH = "C:/Users/The Terminator/Documents/file.txt"
-WINDOWS_FILE_PATH_WITHOUT_EXTENSION = "C:/Users/The Terminator/Documents/file"
-NON_NORMALIZED_WINDOWS_FILE_PATH = "C:\\Users\\The Terminator\\Documents\\file.txt"
-WINDOWS_DIR_PATH = "C:/Users/The Terminator/Documents"
-WINDOWS_DIR_PATH_WITH_TRAILING_SLASH = posixpath.join(WINDOWS_DIR_PATH, "/")
-DEFAULT_DIRECTORY_FILENAME = "download.zip"
-ZIP_EXTENSION = ".zip"
-
-DIRECTORY_FILE_TYPE = "directory"
-FILE_FILE_TYPE = "file"
-
-SAVE_AS_DIR = "/save-as-dir"
-SAVE_AS_FILENAME = "save-as-filename.txt"
-
 USERS_DIR = "/Users"
 PATH_TO_FILE_IN_DOWNLOADS_FOLDER = "/Users/qa/Downloads/terminator-genisys.jpg"
 PATH_TO_DESKTOP_FOLDER = "/Users/qa/Desktop"
@@ -56,6 +37,26 @@ class GetFilePathMetadataResponses(object):
     @staticmethod
     def get_file_id_from_request(response):
         return response[1]
+
+    WINDOWS_NULL_ID = (
+        """[
+                {
+                    "deleted": false,
+                    "lastModified": "2018-06-22T10:08:37.000-05:00",
+                    "filename": "/",
+                    "lastBackup": "2019-04-12T12:56:55.023-05:00",
+                    "lastBackupMs": 1555091815023,
+                    "date": "04/12/19 12:56 PM",
+                    "path": "C:/",
+                    "hidden": false,
+                    "lastModifiedMs": 1529680117000,
+                    "type": "directory",
+                    "id": null
+                }
+            ]
+        """,
+        None,
+    )
 
     NULL_ID = (
         """[
@@ -235,6 +236,26 @@ class GetFilePathMetadataResponses(object):
         "f939cfc4d476ec5535ccb0f6c0377ef4",
     )
 
+    WINDOWS = (
+        """[
+                {
+                    "deleted": true,
+                    "lastModified": "2019-04-12T12:57:43.000-05:00",
+                    "filename": "terminator-genisys.jpg",
+                    "lastBackup": "2019-04-12T13:05:10.087-05:00",
+                    "lastBackupMs": 1555092310087,
+                    "date": "04/12/19 01:05 PM",
+                    "path": "C:/Users/The Terminator/Documents/file.txt",
+                    "hidden": false,
+                    "lastModifiedMs": 1555091863000,
+                    "type": "file",
+                    "id": "1234cfc4d467895535abcdf6c00000f4"
+                }
+            ]
+        """,
+        "1234cfc4d467895535abcdf6c00000f4",
+    )
+
 
 class GetWebRestoreJobResponses(object):
 
@@ -335,11 +356,6 @@ def single_dir_selection():
 
 
 @pytest.fixture
-def save_as_path():
-    return posixpath.join(SAVE_AS_DIR, SAVE_AS_FILENAME)
-
-
-@pytest.fixture
 def file_content_chunks():
     return list("file contents")
 
@@ -405,7 +421,6 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
             file_id_responses[None] = response[0]
 
     def mock_get_file_path_metadata(*args, **kwargs):
-
         if not args[0] == session_id:
             raise Exception("Unexpected archive session ID")
 
@@ -451,6 +466,11 @@ def mock_walking_to_downloads_folder(mocker, storage_archive_client):
         GetFilePathMetadataResponses.USERS_QA,
         GetFilePathMetadataResponses.USERS_QA_DOWNLOADS,
     ]
+    mock_get_file_path_metadata_responses(mocker, storage_archive_client, responses)
+
+
+def mock_walking_tree_for_windows_path(mocker, storage_archive_client):
+    responses = [GetFilePathMetadataResponses.WINDOWS_NULL_ID]
     mock_get_file_path_metadata_responses(mocker, storage_archive_client, responses)
 
 
@@ -668,6 +688,20 @@ class TestArchiveAccessor(object):
         expected_file_selection = [
             get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
         ]
+        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+
+    def test_stream_from_backup_normalizes_windows_paths(
+        self, mocker, storage_archive_client, restore_job_manager
+    ):
+        mock_walking_tree_for_windows_path(mocker, storage_archive_client)
+        archive_accessor = ArchiveAccessor(
+            DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID,
+            storage_archive_client,
+            restore_job_manager,
+        )
+        archive_accessor.stream_from_backup("C:\\", ignore_size_calc=True)
+        expected_file_selection = [get_file_selection(FileType.DIRECTORY, "C:/")]
         restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
     def test_stream_from_backup_when_not_ignoring_file_size_calc_returns_size_sums_from_response(

@@ -37,8 +37,13 @@ class ArchiveAccessorManager(object):
         restore_job_manager = create_restore_job_manager(
             client.archive, device_guid, session_id
         )
+        file_size_poller = create_file_size_poller(client.archive, device_guid)
         return ArchiveAccessor(
-            device_guid, session_id, client.archive, restore_job_manager
+            device_guid,
+            session_id,
+            client.archive,
+            restore_job_manager,
+            file_size_poller,
         )
 
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):
@@ -83,10 +88,6 @@ def _create_file_selections(file_paths, metadata_list, file_sizes):
     return file_selections
 
 
-def _get_default_file_size_info(file_ids):
-    return [{u"numFiles": 1, u"numDirs": 1, u"size": 1} for _ in file_ids]
-
-
 class ArchiveAccessor(object):
 
     DEFAULT_DIRECTORY_DOWNLOAD_NAME = u"download"
@@ -98,22 +99,22 @@ class ArchiveAccessor(object):
         archive_session_id,
         storage_archive_client,
         restore_job_manager,
+        file_size_poller,
     ):
         self._device_guid = device_guid
         self._archive_session_id = archive_session_id
         self._storage_archive_client = storage_archive_client
         self._restore_job_manager = restore_job_manager
+        self._file_size_poller = file_size_poller
 
-    def stream_from_backup(self, file_paths, ignore_size_calc=False):
+    def stream_from_backup(self, file_paths, file_size_calc_timeout=None):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
         file_paths = [fp.replace(u"\\", u"/") for fp in file_paths]
         metadata_list = self._get_restore_metadata(file_paths)
         file_ids = [md[u"id"] for md in metadata_list]
-        file_sizes = (
-            self._get_file_size_info(file_ids)
-            if not ignore_size_calc
-            else _get_default_file_size_info(file_ids)
+        file_sizes = self._file_size_poller.get_file_sizes(
+            file_ids, file_size_calc_timeout
         )
         file_selections = _create_file_selections(file_paths, metadata_list, file_sizes)
         return self._restore_job_manager.get_stream(file_selections)
@@ -167,43 +168,101 @@ class ArchiveAccessor(object):
             show_deleted=True,
         )
 
-    def _get_file_size_info(self, file_ids):
-        file_sizes = []
-        for file_id in file_ids:
-            size_data = self._storage_archive_client.get_file_size(
-                self._device_guid, file_id
-            )
-            file_size_entry = {
-                u"numFiles": size_data[u"numFiles"],
-                u"numDirs": size_data[u"numDirs"],
-                u"size": size_data[u"size"],
-            }
-            file_sizes.append(file_size_entry)
-        return file_sizes
+
+def _get_default_file_sizes():
+    return [{u"numFiles": 1, u"numDirs": 1, u"size": 1}]
 
 
-class RestoreJobManager(object):
+class _RestorePoller(object):
     JOB_POLLING_INTERVAL_SECONDS = 1
 
+    def __init__(self, storage_archive_client, device_guid, job_polling_interval=None):
+        self._storage_archive_client = storage_archive_client
+        self._device_guid = device_guid
+        self._job_polling_interval = (
+            job_polling_interval or self.JOB_POLLING_INTERVAL_SECONDS
+        )
+
+
+class FileSizePoller(_RestorePoller):
+    JOB_POLLING_TIMEOUT = 10
+
+    def __init__(
+        self, storage_archive_client, device_guid, job_polling_interval=None,
+    ):
+        super(FileSizePoller, self).__init__(
+            storage_archive_client, device_guid, job_polling_interval
+        )
+
+    def get_file_sizes(self, file_ids, timestamp=None, show_deleted=None, timeout=None):
+        timeout = timeout or self.JOB_POLLING_TIMEOUT
+
+        if not timeout:
+            return _get_default_file_sizes()
+
+        sizes = []
+        t0 = time.time()
+        for file_id in file_ids:
+            job_id = self.create_job(file_id, timestamp, show_deleted)
+            response = self.wait_for_job(job_id)
+            sizes.append(
+                {
+                    u"numFiles": response[u"numFiles"],
+                    u"numDirs": response[u"numDirs"],
+                    u"size": response[u"size"],
+                }
+            )
+            # File size calculation is taking too long.
+            if time.time() - t0 > timeout:
+                return _get_default_file_sizes()
+
+        return sizes
+
+    def create_job(self, file_id, timestamp, show_deleted):
+        response = self._storage_archive_client.create_file_size_job(
+            self._device_guid, file_id, timestamp, show_deleted
+        )
+        return response["jobId"]
+
+    def wait_for_job(self, job_id):
+        status = None
+        response = None
+        while status != u"DONE":
+            response = self._storage_archive_client.get_file_size_job(
+                job_id, self._device_guid
+            )
+            status = response[u"status"]
+        return response
+
+    def is_job_complete(self, job_id):
+        response = self._storage_archive_client.get_file_size_job(
+            job_id, self._device_guid
+        )
+        return self._get_completion_status(response) == u"DONE"
+
+    @staticmethod
+    def _get_completion_status(response):
+        return response[u"status"]
+
+
+class RestoreJobManager(_RestorePoller):
     def __init__(
         self,
         storage_archive_client,
         device_guid,
         archive_session_id,
-        job_polling_interval=JOB_POLLING_INTERVAL_SECONDS,
+        job_polling_interval=None,
     ):
-        self._storage_archive_client = storage_archive_client
-        self._device_guid = device_guid
+        super(RestoreJobManager, self).__init__(
+            storage_archive_client, device_guid, job_polling_interval
+        )
         self._archive_session_id = archive_session_id
-        self._job_polling_interval = job_polling_interval
 
     def get_stream(self, file_selections):
         response = self._start_restore(file_selections)
         job_id = response["jobId"]
-
         while not self.is_job_complete(job_id):
             time.sleep(self._job_polling_interval)
-
         return self._get_stream(job_id)
 
     def is_job_complete(self, job_id):
@@ -237,6 +296,10 @@ class RestoreJobManager(object):
 
 def create_restore_job_manager(storage_archive_client, device_guid, archive_session_id):
     return RestoreJobManager(storage_archive_client, device_guid, archive_session_id)
+
+
+def create_file_size_poller(storage_archive_client, device_guid):
+    return FileSizePoller(storage_archive_client, device_guid)
 
 
 def _check_for_multiple_files(file_selection):

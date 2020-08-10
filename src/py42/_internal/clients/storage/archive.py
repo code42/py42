@@ -41,6 +41,26 @@ class StorageArchiveClient(BaseClient):
         }
         return self._session.get(uri, params=params)
 
+    def create_file_size_job(
+        self, device_guid, file_id, timestamp=None, show_deleted=None,
+    ):
+        uri = u"/api/WebRestoreFileSizePolling"
+        json_dict = {
+            u"guid": device_guid,
+            u"fileId": file_id,
+            u"timestamp": timestamp,
+            u"showDeleted": show_deleted,
+        }
+        return self._session.post(uri, json=json_dict)
+
+    def get_file_size_job(self, job_id, device_guid):
+        uri = u"/api/WebRestoreFileSizePolling"
+        params = {
+            u"jobId": job_id,
+            u"guid": device_guid,
+        }
+        return self._session.get(uri, params=params)
+
     def get_file_path_metadata(
         self,
         session_id,

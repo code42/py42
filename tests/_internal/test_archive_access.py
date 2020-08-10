@@ -883,9 +883,12 @@ class TestFileSizePoller(object):
                 resp.text = json.dumps({"jobId": self.DOWNLOADS_SIZE_JOB})
 
             return Py42Response(resp)
+
         return create_job
 
-    def get_file_sizes_polling_status_side_effect(self, mocker, ):
+    def get_file_sizes_polling_status_side_effect(
+        self, mocker,
+    ):
         def get_status(job_id, device_guid):
             resp = mocker.MagicMock(spec=Response)
             if job_id == self.DESKTOP_SIZE_JOB:
@@ -895,13 +898,18 @@ class TestFileSizePoller(object):
                 self.DOWNLOADS_SIZES["status"] = "DONE"
                 resp.text = json.dumps(self.DOWNLOADS_SIZES)
             return Py42Response(resp)
+
         return get_status
 
     def test_get_file_sizes_returns_sizes_for_each_id(
         self, mocker, storage_archive_client
     ):
-        storage_archive_client.create_file_size_job.side_effect = self.get_create_job_side_effect(mocker)
-        storage_archive_client.get_file_size_job.side_effect = self.get_file_sizes_polling_status_side_effect(mocker)
+        storage_archive_client.create_file_size_job.side_effect = self.get_create_job_side_effect(
+            mocker
+        )
+        storage_archive_client.get_file_size_job.side_effect = self.get_file_sizes_polling_status_side_effect(
+            mocker
+        )
         poller = FileSizePoller(storage_archive_client, DEVICE_GUID)
         actual = poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=5000)
         assert actual[0]["numDirs"] == 1
@@ -911,10 +919,15 @@ class TestFileSizePoller(object):
         assert actual[1]["numFiles"] == 5
         assert actual[1]["size"] == 6
 
-    def test_get_file_sizes_waits_for_size_calculation(self, mocker, storage_archive_client):
-        storage_archive_client.create_file_size_job.side_effect = self.get_create_job_side_effect(mocker)
+    def test_get_file_sizes_waits_for_size_calculation(
+        self, mocker, storage_archive_client
+    ):
+        storage_archive_client.create_file_size_job.side_effect = self.get_create_job_side_effect(
+            mocker
+        )
 
         desktop_statuses = ["DONE", "PENDING", "PENDING"]
+
         def get_file_sizes(job_id, device_id):
             resp = mocker.MagicMock(spec=Response)
             if job_id == self.DESKTOP_SIZE_JOB:
@@ -932,7 +945,6 @@ class TestFileSizePoller(object):
         poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=5000)
         # Called 3 times for the DESKTOP and once for DOWNLOADS
         assert storage_archive_client.get_file_size_job.call_count == 4
-
 
 
 class TestRestoreJobManager(object):

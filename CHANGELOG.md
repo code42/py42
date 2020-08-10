@@ -82,6 +82,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
+- `py42.archive.stream_from_backup()` now calculates file sizes and accepts a `file_size_calc_timeout` parameter for timing out and
+    defaulting back to the original implementation.
 - Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths` and can now take a list of file paths to restore.
 - `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
 - `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.

@@ -169,8 +169,8 @@ class ArchiveAccessor(object):
         )
 
 
-def _get_default_file_sizes():
-    return [{u"numFiles": 1, u"numDirs": 1, u"size": 1}]
+def _get_default_file_sizes(count):
+    return [{u"numFiles": 1, u"numDirs": 1, u"size": 1} for _ in range(0, count)]
 
 
 class _RestorePoller(object):
@@ -201,7 +201,7 @@ class FileSizePoller(_RestorePoller):
         # Allows a timeout of 0 to ignore file size calculation altogether
         # Uses 1 for numFiles, numDirs, and size when default.
         if not timeout:
-            return _get_default_file_sizes()
+            return _get_default_file_sizes(len(file_ids))
 
         sizes = []
         t0 = time.time()
@@ -217,7 +217,7 @@ class FileSizePoller(_RestorePoller):
             )
             # File size calculation is taking too long.
             if time.time() - t0 > timeout:
-                return _get_default_file_sizes()
+                return _get_default_file_sizes(len(file_ids))
 
         return sizes
 

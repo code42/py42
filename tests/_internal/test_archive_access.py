@@ -869,7 +869,9 @@ class TestArchiveAccessor(object):
 
 
 class TestFileSizePoller(object):
-    def test_get_file_sizes_returns_sizes_for_each_id(self, mocker, storage_archive_client):
+    def test_get_file_sizes_returns_sizes_for_each_id(
+        self, mocker, storage_archive_client
+    ):
 
         DESKTOP_SIZE_JOB = "DESKTOP_SIZE_JOB"
         DOWNLOADS_SIZE_JOB = "DOWNLOAD_SIZE_JOB"
@@ -914,6 +916,7 @@ class TestFileSizePoller(object):
         assert actual[1]["numDirs"] == 4
         assert actual[1]["numFiles"] == 5
         assert actual[1]["size"] == 6
+
 
 class TestRestoreJobManager(object):
     def test_restore_job_manager_constructs_successfully(self, storage_archive_client):

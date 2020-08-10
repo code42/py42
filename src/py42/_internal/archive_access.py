@@ -114,7 +114,7 @@ class ArchiveAccessor(object):
         metadata_list = self._get_restore_metadata(file_paths)
         file_ids = [md[u"id"] for md in metadata_list]
         file_sizes = self._file_size_poller.get_file_sizes(
-            file_ids, file_size_calc_timeout
+            file_ids, timeout=file_size_calc_timeout
         )
         file_selections = _create_file_selections(file_paths, metadata_list, file_sizes)
         return self._restore_job_manager.get_stream(file_selections)
@@ -194,16 +194,19 @@ class FileSizePoller(_RestorePoller):
             storage_archive_client, device_guid, job_polling_interval
         )
 
-    def get_file_sizes(self, file_ids, timestamp=None, show_deleted=None, timeout=None):
-        timeout = timeout or self.JOB_POLLING_TIMEOUT
+    def get_file_sizes(self, file_ids, timeout=None):
+        if timeout is None:
+            timeout = self.JOB_POLLING_TIMEOUT
 
+        # Allows a timeout of 0 to ignore file size calculation altogether
+        # Uses 1 for numFiles, numDirs, and size when default.
         if not timeout:
             return _get_default_file_sizes()
 
         sizes = []
         t0 = time.time()
         for file_id in file_ids:
-            job_id = self.create_job(file_id, timestamp, show_deleted)
+            job_id = self.create_job(file_id)
             response = self.wait_for_job(job_id)
             sizes.append(
                 {
@@ -218,7 +221,7 @@ class FileSizePoller(_RestorePoller):
 
         return sizes
 
-    def create_job(self, file_id, timestamp, show_deleted):
+    def create_job(self, file_id, timestamp=None, show_deleted=False):
         response = self._storage_archive_client.create_file_size_job(
             self._device_guid, file_id, timestamp, show_deleted
         )

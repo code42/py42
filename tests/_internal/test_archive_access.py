@@ -716,6 +716,24 @@ class TestArchiveAccessor(object):
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "C:/")]
         restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
+    def test_stream_from_backup_calls_get_file_size_with_expected_params(
+        self, mocker, storage_archive_client, restore_job_manager, file_size_poller,
+    ):
+        mock_walking_to_downloads_folder(mocker, storage_archive_client)
+        archive_accessor = ArchiveAccessor(
+            DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID,
+            storage_archive_client,
+            restore_job_manager,
+            file_size_poller,
+        )
+        archive_accessor.stream_from_backup(
+            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, file_size_calc_timeout=10
+        )
+        file_size_poller.get_file_sizes.assert_called_once_with(
+            [DOWNLOADS_ID], timeout=10
+        )
+
     def test_stream_from_backup_when_not_ignoring_file_size_calc_returns_size_sums_from_response(
         self, mocker, storage_archive_client, restore_job_manager, file_size_poller
     ):
@@ -729,15 +747,10 @@ class TestArchiveAccessor(object):
         )
 
         def get_file_sizes(*args, **kwargs):
-            return [{
-                "numFiles": 1,
-                "numDirs": 2,
-                "size": 3,
-            }, {
-                "numFiles": 4,
-                "numDirs": 5,
-                "size": 6,
-            }]
+            return [
+                {"numFiles": 1, "numDirs": 2, "size": 3},
+                {"numFiles": 4, "numDirs": 5, "size": 6},
+            ]
 
         file_size_poller.get_file_sizes.side_effect = get_file_sizes
         archive_accessor.stream_from_backup(

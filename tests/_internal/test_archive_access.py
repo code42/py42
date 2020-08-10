@@ -900,9 +900,11 @@ class TestFileSizePoller(object):
             resp = mocker.MagicMock(spec=Response)
             base_obj = {"status": "DONE"}
             if job_id == DESKTOP_SIZE_JOB:
-                resp.text = json.dumps({**base_obj, **DESKTOP_SIZES})
+                DESKTOP_SIZES["status"] = "DONE"
+                resp.text = json.dumps(DESKTOP_SIZES)
             elif job_id == DOWNLOADS_SIZE_JOB:
-                resp.text = json.dumps({**base_obj, **DOWNLOADS_SIZES})
+                DOWNLOADS_SIZES["status"] = "DONE"
+                resp.text = json.dumps(DOWNLOADS_SIZES)
             return Py42Response(resp)
 
         storage_archive_client.create_file_size_job.side_effect = create_job

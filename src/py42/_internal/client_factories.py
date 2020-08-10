@@ -183,5 +183,5 @@ def _get_sts_base_url(session):
         response_json = json.loads(response.text)
         sts_base_url = response_json.get(u"stsBaseUrl")
     if not sts_base_url:
-        raise Py42FeatureUnavailableError()
+        raise Py42FeatureUnavailableError(response)
     return sts_base_url

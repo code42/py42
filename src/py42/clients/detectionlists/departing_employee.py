@@ -24,7 +24,7 @@ class DepartingEmployeeClient(BaseClient):
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
 
-    CREATED_AT = u"CREATED_AT"
+    _CREATED_AT = u"CREATED_AT"
 
     def __init__(self, session, user_context, detection_list_user_client):
         super(DepartingEmployeeClient, self).__init__(session)
@@ -97,7 +97,7 @@ class DepartingEmployeeClient(BaseClient):
     def get_all(
         self,
         filter_type=DepartingEmployeeFilters.OPEN,
-        sort_key=CREATED_AT,
+        sort_key=_CREATED_AT,
         sort_direction=u"DESC",
     ):
         """Gets all Departing Employees.
@@ -127,7 +127,7 @@ class DepartingEmployeeClient(BaseClient):
         self,
         page_num,
         filter_type=DepartingEmployeeFilters.OPEN,
-        sort_key=CREATED_AT,
+        sort_key=_CREATED_AT,
         sort_direction=u"DESC",
         page_size=_PAGE_SIZE,
     ):

@@ -1,16 +1,30 @@
 import json
 
 from py42.clients import BaseClient
+from py42.clients.detectionlists import _DetectionListFilters
 from py42.clients.detectionlists import _PAGE_SIZE
 from py42.clients.detectionlists import handle_user_already_added_error
 from py42.clients.util import get_all_pages
 from py42.exceptions import Py42BadRequestError
+from py42.sdk.queries.query_filter import filter_attributes
+
+
+class DepartingEmployeeFilters(_DetectionListFilters):
+    """Constants available for filtering Departing Employee search results."""
+
+    LEAVING_TODAY = u"LEAVING_TODAY"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(DepartingEmployeeFilters)
 
 
 class DepartingEmployeeClient(BaseClient):
     """A client for interacting with Code42 Departing Employee APIs."""
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
+
+    _CREATED_AT = u"CREATED_AT"
 
     def __init__(self, session, user_context, detection_list_user_client):
         super(DepartingEmployeeClient, self).__init__(session)
@@ -81,13 +95,18 @@ class DepartingEmployeeClient(BaseClient):
         return self._session.post(uri, data=json.dumps(data))
 
     def get_all(
-        self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"
+        self,
+        filter_type=DepartingEmployeeFilters.OPEN,
+        sort_key=_CREATED_AT,
+        sort_direction=u"DESC",
     ):
         """Gets all Departing Employees.
 
         Args:
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                ``OPEN``, or ``LEAVING_TODAY``. Defaults to None.
+                ``OPEN``, or ``LEAVING_TODAY``. Constants are available at
+                :class:`py42.clients.detectionlists.departing_employee.DepartingEmployeeFilters`.
+                Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
 
@@ -107,8 +126,8 @@ class DepartingEmployeeClient(BaseClient):
     def get_page(
         self,
         page_num,
-        filter_type=u"OPEN",
-        sort_key=u"CREATED_AT",
+        filter_type=DepartingEmployeeFilters.OPEN,
+        sort_key=_CREATED_AT,
         sort_direction=u"DESC",
         page_size=_PAGE_SIZE,
     ):
@@ -117,7 +136,9 @@ class DepartingEmployeeClient(BaseClient):
         Args:
             page_num (int): The page number to request.
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                ``OPEN``, or ``LEAVING_TODAY``. Defaults to "OPEN".
+                ``OPEN``, or ``LEAVING_TODAY``. Constants are available at
+                :class:`py42.clients.detectionlists.departing_employee.DepartingEmployeeFilters`.
+                Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
             page_size (int, optional): The number of departing employees to return

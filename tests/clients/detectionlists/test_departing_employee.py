@@ -8,6 +8,7 @@ from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients.detectionlists.departing_employee import DepartingEmployeeClient
+from py42.clients.detectionlists.departing_employee import DepartingEmployeeFilters
 from py42.clients.users import UserClient
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UserAlreadyAddedError
@@ -58,6 +59,18 @@ _GET_ALL_CASES_RESPONSE = """
 _GET_ALL_CASES_EMPTY_RESPONSE = """
 {"type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE","cases":[],"totalCount":0}
 """
+
+
+class TestDepartingEmployeeFilters(object):
+    def test_choices_are_correct(self):
+        actual = DepartingEmployeeFilters.choices()
+        expected = [
+            "OPEN",
+            "LEAVING_TODAY",
+            "EXFILTRATION_24_HOURS",
+            "EXFILTRATION_30_DAYS",
+        ]
+        assert set(actual) == set(expected)
 
 
 class TestDepartingEmployeeClient(object):

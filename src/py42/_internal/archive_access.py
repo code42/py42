@@ -107,7 +107,7 @@ class ArchiveAccessor(object):
     def stream_from_backup(self, file_paths, ignore_size_calc=False):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
-        file_paths = [fp.replace("\\", "/") for fp in file_paths]
+        file_paths = [fp.replace(u"\\", u"/") for fp in file_paths]
         metadata_list = self._get_restore_metadata(file_paths)
         file_ids = [md[u"id"] for md in metadata_list]
         file_sizes = (

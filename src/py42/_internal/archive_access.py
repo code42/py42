@@ -70,11 +70,11 @@ class ArchiveAccessorManager(object):
         return response[u"webRestoreSessionId"]
 
 
-def _create_file_selections(file_paths, metadata_list, file_sizes):
+def _create_file_selections(file_paths, metadata_list, file_sizes=None):
     file_selections = []
     for i in range(0, len(file_paths)):
         metadata = metadata_list[i]
-        size_info = file_sizes[i]
+        size_info = file_sizes[i] if file_sizes else _get_default_file_size()
         path_set = {
             u"type": metadata[u"type"],
             u"path": metadata[u"path"],
@@ -169,8 +169,8 @@ class ArchiveAccessor(object):
         )
 
 
-def _get_default_file_sizes(count):
-    return [{u"numFiles": 1, u"numDirs": 1, u"size": 1} for _ in range(0, count)]
+def _get_default_file_size():
+    return {u"numFiles": 1, u"numDirs": 1, u"size": 1}
 
 
 class _RestorePoller(object):
@@ -199,9 +199,8 @@ class FileSizePoller(_RestorePoller):
             timeout = self.JOB_POLLING_TIMEOUT
 
         # Allows a timeout of 0 to ignore file size calculation altogether
-        # Uses 1 for numFiles, numDirs, and size when default.
         if not timeout:
-            return _get_default_file_sizes(len(file_ids))
+            return None
 
         sizes = []
         t0 = time.time()
@@ -217,7 +216,7 @@ class FileSizePoller(_RestorePoller):
             )
             # File size calculation is taking too long.
             if time.time() - t0 > timeout:
-                return _get_default_file_sizes(len(file_ids))
+                return None
 
         return sizes
 

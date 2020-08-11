@@ -193,8 +193,6 @@ def _create_size_dict(size_response):
 
 
 class FileSizePoller(_RestorePoller):
-    JOB_POLLING_TIMEOUT = 10
-
     def __init__(
         self, storage_archive_client, device_guid, job_polling_interval=None,
     ):
@@ -202,12 +200,9 @@ class FileSizePoller(_RestorePoller):
             storage_archive_client, device_guid, job_polling_interval
         )
 
-    def get_file_sizes(self, file_ids, timeout=None):
-        if timeout is None:
-            timeout = self.JOB_POLLING_TIMEOUT
-
-        # Allows a timeout of 0 to ignore file size calculation altogether
+    def get_file_sizes(self, file_ids, timeout):
         if not timeout:
+            # Skips file size calculation
             return None
 
         job_ids = self._start_poll(file_ids)

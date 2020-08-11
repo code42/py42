@@ -1,3 +1,6 @@
+_FILE_SIZE_CALC_TIMEOUT = 10
+
+
 class ArchiveModule(object):
     """A module for getting information about backup archives on storage nodes along with
     functionality for streaming a file from backup.
@@ -14,7 +17,7 @@ class ArchiveModule(object):
         destination_guid=None,
         archive_password=None,
         encryption_key=None,
-        file_size_calc_timeout=None,
+        file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         """Streams a file from a backup archive to memory. If streaming multiple files, the
         results will be zipped.
@@ -35,8 +38,8 @@ class ArchiveModule(object):
                 file contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
-                file sizes when crafting the request. Set to 0 to ignore file sizes altogether. Defaults
-                to None.
+                file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
+                Defaults to 10.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.

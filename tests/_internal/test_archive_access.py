@@ -969,30 +969,6 @@ class TestRestoreJobManager(object):
             storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
 
-    def test_is_job_complete_with_incomplete_job_returns_false(
-        self, mocker, storage_archive_client
-    ):
-        job_id = get_response_job_id(GetWebRestoreJobResponses.NOT_DONE)
-        mock_get_restore_status_responses(
-            mocker, storage_archive_client, [GetWebRestoreJobResponses.NOT_DONE]
-        )
-        restore_job_manager = RestoreJobManager(
-            storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
-        )
-        assert restore_job_manager.is_job_complete(job_id) is False
-
-    def test_is_job_complete_with_complete_job_returns_complete(
-        self, mocker, storage_archive_client
-    ):
-        job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
-        mock_get_restore_status_responses(
-            mocker, storage_archive_client, [GetWebRestoreJobResponses.DONE]
-        )
-        restore_job_manager = RestoreJobManager(
-            storage_archive_client, DEVICE_GUID, WEB_RESTORE_SESSION_ID
-        )
-        assert restore_job_manager.is_job_complete(job_id) is True
-
     def test_get_stream_calls_start_restore_with_correct_args(
         self, mocker, storage_archive_client, single_file_selection
     ):

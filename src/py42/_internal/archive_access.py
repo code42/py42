@@ -205,8 +205,8 @@ class FileSizePoller(_RestorePoller):
         sizes = []
         t0 = time.time()
         for file_id in file_ids:
-            job_id = self.create_job(file_id)
-            response = self.wait_for_job(job_id)
+            job_id = self._start_poll(file_id)
+            response = self._wait_for_job(job_id)
             sizes.append(
                 {
                     u"numFiles": response[u"numFiles"],
@@ -220,13 +220,13 @@ class FileSizePoller(_RestorePoller):
 
         return sizes
 
-    def create_job(self, file_id, timestamp=None, show_deleted=False):
+    def _start_poll(self, file_id, timestamp=None, show_deleted=False):
         response = self._storage_archive_client.create_file_size_job(
             self._device_guid, file_id, timestamp, show_deleted
         )
         return response["jobId"]
 
-    def wait_for_job(self, job_id):
+    def _wait_for_job(self, job_id):
         status = None
         response = None
         while status != u"DONE":
@@ -236,15 +236,11 @@ class FileSizePoller(_RestorePoller):
             status = response[u"status"]
         return response
 
-    def is_job_complete(self, job_id):
+    def _is_job_complete(self, job_id):
         response = self._storage_archive_client.get_file_size_job(
             job_id, self._device_guid
         )
-        return self._get_completion_status(response) == u"DONE"
-
-    @staticmethod
-    def _get_completion_status(response):
-        return response[u"status"]
+        return response[u"status"] == u"DONE"
 
 
 class RestoreJobManager(_RestorePoller):
@@ -263,13 +259,16 @@ class RestoreJobManager(_RestorePoller):
     def get_stream(self, file_selections):
         response = self._start_restore(file_selections)
         job_id = response["jobId"]
-        while not self.is_job_complete(job_id):
-            time.sleep(self._job_polling_interval)
+        self._wait_for_job(job_id)
         return self._get_stream(job_id)
 
-    def is_job_complete(self, job_id):
+    def _wait_for_job(self, job_id):
+        while not self._is_job_complete(job_id):
+            time.sleep(self._job_polling_interval)
+
+    def _is_job_complete(self, job_id):
         response = self._storage_archive_client.get_restore_status(job_id)
-        return self._get_completion_status(response)
+        return response[u"done"]
 
     def _start_restore(self, file_selection):
         num_files = sum([fs.num_files for fs in file_selection])
@@ -286,10 +285,6 @@ class RestoreJobManager(_RestorePoller):
             zip_result=zip_result,
             show_deleted=True,
         )
-
-    @staticmethod
-    def _get_completion_status(response):
-        return response[u"done"]
 
     def _get_stream(self, job_id):
         response = self._storage_archive_client.stream_restore_result(job_id)

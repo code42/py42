@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import time
 
 import pytest
 from requests import Response
@@ -945,6 +946,23 @@ class TestFileSizePoller(object):
         poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=5000)
         # Called 3 times for the DESKTOP and once for DOWNLOADS
         assert storage_archive_client.get_file_size_job.call_count == 4
+
+    def test_get_file_sizes_when_taking_too_long_returns_none(
+        self, mocker, storage_archive_client
+    ):
+        def take_too_long(*args, **kwargs):
+            time.sleep(0.02)
+            return self.get_create_job_side_effect(
+                mocker
+            )(*args, **kwargs)
+
+        storage_archive_client.create_file_size_job.side_effect = take_too_long
+        storage_archive_client.get_file_size_job.side_effect = self.get_file_sizes_polling_status_side_effect(
+            mocker
+        )
+        poller = FileSizePoller(storage_archive_client, DEVICE_GUID)
+        actual = poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=0.01)
+        assert actual is None
 
 
 class TestRestoreJobManager(object):

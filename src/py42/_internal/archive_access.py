@@ -1,6 +1,6 @@
+import json
 import posixpath
 import time
-import json
 from collections import namedtuple
 
 from py42.exceptions import Py42ArchiveFileNotFoundError

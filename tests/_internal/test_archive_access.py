@@ -914,9 +914,21 @@ class TestFileSizePoller(object):
         poller = FileSizePoller(storage_archive_client, DEVICE_GUID)
         actual = poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=500)
         assert set(actual[0].values()) == {1, 2, 3, "DONE", "DESKTOP_SIZE_JOB"}
-        assert set(actual[0].keys()) == {"numDirs", "numFiles", "size", "status", "jobId"}
+        assert set(actual[0].keys()) == {
+            "numDirs",
+            "numFiles",
+            "size",
+            "status",
+            "jobId",
+        }
         assert set(actual[1].values()) == {4, 5, 6, "DONE", "DOWNLOADS_SIZE_JOB"}
-        assert set(actual[1].keys()) == {"numDirs", "numFiles", "size", "status", "jobId"}
+        assert set(actual[1].keys()) == {
+            "numDirs",
+            "numFiles",
+            "size",
+            "status",
+            "jobId",
+        }
 
     def test_get_file_sizes_waits_for_size_calculation(
         self, mocker, storage_archive_client
@@ -925,7 +937,7 @@ class TestFileSizePoller(object):
             mocker
         )
 
-        desktop_statuses = ["DONE", "PENDING", "PENDING"]
+        desktop_statuses = ["DONE", "WORKING", "WORKING"]
 
         def get_file_sizes(job_id, device_id):
             resp = mocker.MagicMock(spec=Response)

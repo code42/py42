@@ -952,9 +952,7 @@ class TestFileSizePoller(object):
     ):
         def take_too_long(*args, **kwargs):
             time.sleep(0.02)
-            return self.get_create_job_side_effect(
-                mocker
-            )(*args, **kwargs)
+            return self.get_create_job_side_effect(mocker)(*args, **kwargs)
 
         storage_archive_client.create_file_size_job.side_effect = take_too_long
         storage_archive_client.get_file_size_job.side_effect = self.get_file_sizes_polling_status_side_effect(

@@ -871,7 +871,7 @@ class TestArchiveAccessor(object):
 
 class TestFileSizePoller(object):
     DESKTOP_SIZE_JOB = "DESKTOP_SIZE_JOB"
-    DOWNLOADS_SIZE_JOB = "DOWNLOAD_SIZE_JOB"
+    DOWNLOADS_SIZE_JOB = "DOWNLOADS_SIZE_JOB"
     DESKTOP_SIZES = {"numDirs": 1, "numFiles": 2, "size": 3}
     DOWNLOADS_SIZES = {"numDirs": 4, "numFiles": 5, "size": 6}
 
@@ -913,10 +913,10 @@ class TestFileSizePoller(object):
         )
         poller = FileSizePoller(storage_archive_client, DEVICE_GUID)
         actual = poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=500)
-        assert set(actual[0].values()) == {1, 2, 3}
-        assert set(actual[0].keys()) == {"numDirs", "numFiles", "size"}
-        assert set(actual[1].values()) == {4, 5, 6}
-        assert set(actual[1].keys()) == {"numDirs", "numFiles", "size"}
+        assert set(actual[0].values()) == {1, 2, 3, "DONE", "DESKTOP_SIZE_JOB"}
+        assert set(actual[0].keys()) == {"numDirs", "numFiles", "size", "status", "jobId"}
+        assert set(actual[1].values()) == {4, 5, 6, "DONE", "DOWNLOADS_SIZE_JOB"}
+        assert set(actual[1].keys()) == {"numDirs", "numFiles", "size", "status", "jobId"}
 
     def test_get_file_sizes_waits_for_size_calculation(
         self, mocker, storage_archive_client

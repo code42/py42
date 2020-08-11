@@ -1,8 +1,11 @@
 import posixpath
 import time
+import json
 from collections import namedtuple
 
 from py42.exceptions import Py42ArchiveFileNotFoundError
+from py42.settings import debug
+from py42.util import format_dict
 
 
 FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
@@ -184,12 +187,14 @@ class _RestorePoller(object):
         )
 
 
-def _create_size_dict(size_response):
-    return {
-        u"numFiles": size_response[u"numFiles"],
-        u"numDirs": size_response[u"numDirs"],
-        u"size": size_response[u"size"],
-    }
+def _create_size_dict(job_id, size_response):
+    size_dict = json.loads(size_response.text)
+    size_dict[u"jobId"] = job_id
+    return size_dict
+
+
+def _print_file_size(size_dict):
+    debug.logger.debug(format_dict(size_dict))
 
 
 class FileSizePoller(_RestorePoller):
@@ -226,9 +231,11 @@ class FileSizePoller(_RestorePoller):
         while job_ids:
             for job_id in job_ids:
                 response = self._get_job_status(job_id)
+                size_dict = _create_size_dict(job_id, response)
+                _print_file_size(size_dict)
                 if response[u"status"] == u"DONE":
                     job_ids.remove(job_id)
-                    sizes.append(_create_size_dict(response))
+                    sizes.append(size_dict)
 
             # File size calculation is taking too long.
             if time.time() - t0 > timeout:

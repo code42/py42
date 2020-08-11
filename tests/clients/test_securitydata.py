@@ -2,8 +2,8 @@
 # import pytest
 # from requests.exceptions import HTTPError
 # from py42._internal.client_factories import MicroserviceClientFactory
-# from py42.clients.securitydata import PlanStorageInfo
-# from py42.clients.securitydata import SecurityDataClient
+# from py42.services.securitydata import PlanStorageInfo
+# from py42.services.securitydata import SecurityDataClient
 # from py42.exceptions import Py42ChecksumNotFoundError
 # from py42.exceptions import Py42Error
 # from py42.exceptions import Py42HTTPError
@@ -11,7 +11,7 @@
 # from py42.services.fileevent import FileEventService
 # from py42.services.pds import PreservationDataService
 # from py42.services.securitydata import SecurityDataService
-# from py42.clients._storage import StorageClient, StorageClientFactory
+# from py42.services._storage import StorageClient, StorageClientFactory
 # from py42.services.storage import StorageSecurityDataService
 # from py42.services.storage.preservationdata import StoragePreservationDataService
 # RAW_QUERY = "RAW JSON QUERY"

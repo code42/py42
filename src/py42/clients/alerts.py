@@ -8,7 +8,7 @@ class AlertsClient(object):
         """A collection of methods for managing alert rules.
 
         Returns:
-            :class:`py42.clients.alertrules.AlertRulesClient`
+            :class:`py42.services.alertrules.AlertRulesClient`
         """
         return self._alert_rules_client
 

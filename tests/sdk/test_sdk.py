@@ -1,9 +1,9 @@
 # import pytest
 # from py42.services._connection import Connection
-# from py42.clients import alerts
-# from py42.clients import archive as arch_mod
-# from py42.clients import detectionlists
-# from py42.clients import securitydata as sec_mod
+# from py42.services import alerts
+# from py42.services import archive as arch_mod
+# from py42.services import detectionlists
+# from py42.services import securitydata as sec_mod
 # from py42.sdk import SDKClient
 # from py42.services import administration
 # from py42.services import devices

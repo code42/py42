@@ -58,8 +58,7 @@ class ArchiveAccessorManager(object):
     def _get_data_key_token(self, device_guid):
         return self._archive_service.get_data_key_token(device_guid)[u"dataKeyToken"]
 
-    @staticmethod
-    def _create_restore_session(storage_archive_service, device_guid, **kwargs):
+    def _create_restore_session(self, storage_archive_service, device_guid, **kwargs):
         response = storage_archive_service.create_restore_session(device_guid, **kwargs)
         return response[u"webRestoreSessionId"]
 

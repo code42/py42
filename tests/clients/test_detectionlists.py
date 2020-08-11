@@ -1,6 +1,6 @@
 # import pytest
 # from py42._internal.client_factories import MicroserviceClientFactory
-# from py42.clients.detectionlists import DetectionListsClient
+# from py42.services.detectionlists import DetectionListsClient
 # from py42.services.detectionlists._profile import DetectionListUserService
 # @pytest.fixture
 # def mock_microservice_client_factory(mocker):

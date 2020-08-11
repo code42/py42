@@ -32,4 +32,4 @@ class ConnectionManager(object):
         return connection
 
     def create_storage_connection(self, url, tmp_auth):
-        return self._session_factory.create_storage_connection(url, auth)
+        return self._session_factory.create_storage_connection(url, tmp_auth)

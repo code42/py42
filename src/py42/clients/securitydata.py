@@ -36,7 +36,7 @@ class SecurityDataClient(object):
         """A collection of methods related to retrieving forensic search data.
 
         Returns:
-            :class: `py42._internal.clients.securitydata.SavedSearchService`
+            :class: `py42._internal.services.securitydata.SavedSearchService`
         """
         return self._saved_search_service
 
@@ -49,7 +49,7 @@ class SecurityDataClient(object):
             user_uid (str): The UID of the user to get plan storage information for.
 
         Returns:
-            list[:class:`py42.modules.securitydata.PlanStorageInfo`]
+            list[:class:`py42.clients.securitydata.PlanStorageInfo`]
         """
         locations = None
         try:
@@ -86,7 +86,7 @@ class SecurityDataClient(object):
         `Support Article <https://support.code42.com/Administrator/6/Configuring/Endpoint_monitoring>`__
 
         Args:
-            plan_storage_info (:class:`py42.sdk.modules.securitydata.PlanStorageInfo`):
+            plan_storage_info (:class:`py42.sdk.clients.securitydata.PlanStorageInfo`):
                 Information about storage nodes for a plan to get file event activity for.
             cursor (str, optional): A cursor position for only getting file events you did not
                 previously get. Defaults to None.

@@ -101,7 +101,7 @@ class SDKClient(object):
         web-restores or finding a file on an archive.
 
         Returns:
-            :class:`py42.clients.archive.ArchiveClient`
+            :class:`py42.services.archive.ArchiveClient`
         """
         return self._clients.archive
 
@@ -163,7 +163,7 @@ class SDKClient(object):
             * Security plan information
 
         Returns:
-            :class:`py42.clients.securitydata.SecurityDataClient`
+            :class:`py42.services.securitydata.SecurityDataClient`
         """
         return self._clients.securitydata
 
@@ -173,7 +173,7 @@ class SDKClient(object):
         lists, such as departing employees.
 
         Returns:
-            :class:`py42.clients.detectionlists.DetectionListsClient`
+            :class:`py42.services.detectionlists.DetectionListsClient`
         """
         return self._clients.detectionlists
 
@@ -182,7 +182,7 @@ class SDKClient(object):
         """A collection of methods related to retrieving and updating alerts rules.
 
         Returns:
-            :class:`py42.clients.alertrules.AlertRulesClient`
+            :class:`py42.services.alertrules.AlertRulesClient`
         """
         return self._clients.alerts
 

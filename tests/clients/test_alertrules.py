@@ -31,7 +31,7 @@ class TestAlertRulesClient(object):
         )
 
     def test_alert_rules_module_calls_remove_user_with_expected_value(
-        self, mock_alert_rules_client
+        self, mock_alerts_service, mock_alert_rules_service
     ):
         alert_rules_module = AlertRulesClient(
             mock_alerts_service, mock_alert_rules_service
@@ -67,9 +67,7 @@ class TestAlertRulesClient(object):
             mock_alerts_service, mock_alert_rules_service
         )
         alert_rules_module.get_all_by_name(rule_name)
-        mock_alert_rules_service.get_all_rules_by_name.assert_called_once_with(
-            rule_name
-        )
+        mock_alerts_service.get_all_rules_by_name.assert_called_once_with(rule_name)
 
     def test_alert_rules_module_calls_get_rules_by_observer_id_with_expected_value(
         self, mock_alerts_service, mock_alert_rules_service
@@ -79,9 +77,7 @@ class TestAlertRulesClient(object):
             mock_alerts_service, mock_alert_rules_service
         )
         alert_rules_module.get_by_observer_id(rule_id)
-        mock_alert_rules_service.get_rule_by_observer_id.assert_called_once_with(
-            rule_id
-        )
+        mock_alerts_service.get_rule_by_observer_id.assert_called_once_with(rule_id)
 
     def test_alert_rules_module_calls_get_rules_page_with_expected_params(
         self, mock_alerts_service, mock_alert_rules_service
@@ -90,6 +86,6 @@ class TestAlertRulesClient(object):
             mock_alerts_service, mock_alert_rules_service
         )
         alert_rules_module.get_page("key", "dir", 70, 700)
-        mock_alert_rules_service.get_rules_page.assert_called_once_with(
+        mock_alerts_service.get_rules_page.assert_called_once_with(
             sort_key="key", sort_direction="dir", page_num=70, page_size=700
         )

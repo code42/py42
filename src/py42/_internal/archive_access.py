@@ -184,6 +184,14 @@ class _RestorePoller(object):
         )
 
 
+def _create_size_dict(size_response):
+    return {
+        u"numFiles": size_response[u"numFiles"],
+        u"numDirs": size_response[u"numDirs"],
+        u"size": size_response[u"size"],
+    }
+
+
 class FileSizePoller(_RestorePoller):
     JOB_POLLING_TIMEOUT = 10
 
@@ -202,45 +210,39 @@ class FileSizePoller(_RestorePoller):
         if not timeout:
             return None
 
-        sizes = []
-        t0 = time.time()
+        job_ids = self._start_poll(file_ids)
+        return self._wait_for_jobs(job_ids, timeout)
+
+    def _start_poll(self, file_ids):
+        job_ids = []
         for file_id in file_ids:
-            job_id = self._start_poll(file_id)
-            response = self._wait_for_job(job_id)
-            sizes.append(
-                {
-                    u"numFiles": response[u"numFiles"],
-                    u"numDirs": response[u"numDirs"],
-                    u"size": response[u"size"],
-                }
+            response = self._storage_archive_client.create_file_size_job(
+                self._device_guid, file_id
             )
+            job_id = response["jobId"]
+            job_ids.append(job_id)
+        return job_ids
+
+    def _wait_for_jobs(self, job_ids, timeout):
+        t0 = time.time()
+        sizes = []
+
+        # Waits until the job_ids stack is empty
+        while job_ids:
+            for job_id in job_ids:
+                response = self._get_job_status(job_id)
+                if response[u"status"] == u"DONE":
+                    job_ids.remove(job_id)
+                    sizes.append(_create_size_dict(response))
+
             # File size calculation is taking too long.
             if time.time() - t0 > timeout:
                 return None
 
         return sizes
 
-    def _start_poll(self, file_id, timestamp=None, show_deleted=False):
-        response = self._storage_archive_client.create_file_size_job(
-            self._device_guid, file_id, timestamp, show_deleted
-        )
-        return response["jobId"]
-
-    def _wait_for_job(self, job_id):
-        status = None
-        response = None
-        while status != u"DONE":
-            response = self._storage_archive_client.get_file_size_job(
-                job_id, self._device_guid
-            )
-            status = response[u"status"]
-        return response
-
-    def _is_job_complete(self, job_id):
-        response = self._storage_archive_client.get_file_size_job(
-            job_id, self._device_guid
-        )
-        return response[u"status"] == u"DONE"
+    def _get_job_status(self, job_id):
+        return self._storage_archive_client.get_file_size_job(job_id, self._device_guid)
 
 
 class RestoreJobManager(_RestorePoller):

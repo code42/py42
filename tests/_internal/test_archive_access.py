@@ -876,7 +876,7 @@ class TestFileSizePoller(object):
     DOWNLOADS_SIZES = {"numDirs": 4, "numFiles": 5, "size": 6}
 
     def get_create_job_side_effect(self, mocker):
-        def create_job(guid, file_id, timestamp, show_deleted):
+        def create_job(guid, file_id, *args, **kwargs):
             resp = mocker.MagicMock(spec=Response)
             if file_id == DESKTOP_ID:
                 resp.text = json.dumps({"jobId": self.DESKTOP_SIZE_JOB})
@@ -912,13 +912,11 @@ class TestFileSizePoller(object):
             mocker
         )
         poller = FileSizePoller(storage_archive_client, DEVICE_GUID)
-        actual = poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=5000)
-        assert actual[0]["numDirs"] == 1
-        assert actual[0]["numFiles"] == 2
-        assert actual[0]["size"] == 3
-        assert actual[1]["numDirs"] == 4
-        assert actual[1]["numFiles"] == 5
-        assert actual[1]["size"] == 6
+        actual = poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=500)
+        assert set(actual[0].values()) == {1, 2, 3}
+        assert set(actual[0].keys()) == {"numDirs", "numFiles", "size"}
+        assert set(actual[1].values()) == {4, 5, 6}
+        assert set(actual[1].keys()) == {"numDirs", "numFiles", "size"}
 
     def test_get_file_sizes_waits_for_size_calculation(
         self, mocker, storage_archive_client
@@ -943,7 +941,7 @@ class TestFileSizePoller(object):
 
         storage_archive_client.get_file_size_job.side_effect = get_file_sizes
         poller = FileSizePoller(storage_archive_client, DEVICE_GUID)
-        poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=5000)
+        poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=500)
         # Called 3 times for the DESKTOP and once for DOWNLOADS
         assert storage_archive_client.get_file_size_job.call_count == 4
 
@@ -951,13 +949,15 @@ class TestFileSizePoller(object):
         self, mocker, storage_archive_client
     ):
         def take_too_long(*args, **kwargs):
-            time.sleep(0.02)
-            return self.get_create_job_side_effect(mocker)(*args, **kwargs)
+            time.sleep(0.1)
+            return self.get_file_sizes_polling_status_side_effect(mocker)(
+                *args, **kwargs
+            )
 
-        storage_archive_client.create_file_size_job.side_effect = take_too_long
-        storage_archive_client.get_file_size_job.side_effect = self.get_file_sizes_polling_status_side_effect(
+        storage_archive_client.create_file_size_job.side_effect = self.get_create_job_side_effect(
             mocker
         )
+        storage_archive_client.get_file_size_job.side_effect = take_too_long
         poller = FileSizePoller(storage_archive_client, DEVICE_GUID)
         actual = poller.get_file_sizes([DESKTOP_ID, DOWNLOADS_ID], timeout=0.01)
         assert actual is None

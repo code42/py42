@@ -100,10 +100,10 @@ class TestStorageArchiveClient(object):
         storage_archive_client = StorageArchiveClient(session)
         storage_archive_client.create_file_size_job("device_guid", "file_id", 0, False)
         json_dict = {
-            u"guid": "device_guid",
-            u"fileId": "file_id",
-            u"timestamp": 0,
-            u"showDeleted": False,
+            "guid": "device_guid",
+            "fileId": "file_id",
+            "timestamp": 0,
+            "showDeleted": False,
         }
         session.post.assert_called_once_with(
             "/api/WebRestoreFileSizePolling", json=json_dict

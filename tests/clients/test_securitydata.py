@@ -197,7 +197,7 @@ PDS_FILE_VERSIONS = """{
 }"""
 
 
-class TestSecurityModule(object):
+class TestSecurityClient(object):
     @pytest.fixture
     def security_service(self, mocker):
         return mocker.MagicMock(spec=SecurityDataService)
@@ -276,14 +276,14 @@ class TestSecurityModule(object):
         saved_search_service,
         storage_service_factory,
     ):
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        security_module.search_file_events(RAW_QUERY)
+        security_client.search_file_events(RAW_QUERY)
         file_event_service.search.assert_called_once_with(RAW_QUERY)
 
     def test_get_security_plan_storage_info_one_location_returns_location_info(
@@ -294,14 +294,14 @@ class TestSecurityModule(object):
         saved_search_service,
         storage_service_factory,
     ):
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_one_location,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        storage_infos = security_client.get_security_plan_storage_info_list("foo")
         assert len(storage_infos) == 1
         assert self._storage_info_contains(
             storage_infos, "111111111111111111", "4", "41"
@@ -315,14 +315,14 @@ class TestSecurityModule(object):
         saved_search_service,
         storage_service_factory,
     ):
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_two_plans_one_node,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        storage_infos = security_client.get_security_plan_storage_info_list("foo")
         assert len(storage_infos) == 2
         assert self._storage_info_contains(
             storage_infos, "111111111111111111", "4", "41"
@@ -339,14 +339,14 @@ class TestSecurityModule(object):
         saved_search_service,
         storage_service_factory,
     ):
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_two_plans_two_nodes,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        storage_infos = security_client.get_security_plan_storage_info_list("foo")
         assert self._storage_info_contains(
             storage_infos, "111111111111111111", "4", "41"
         )
@@ -362,14 +362,14 @@ class TestSecurityModule(object):
         saved_search_service,
         storage_service_factory,
     ):
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_one_plan_two_destinations,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        storage_infos = security_client.get_security_plan_storage_info_list("foo")
         assert len(storage_infos) == 1
         assert self._storage_info_contains(
             storage_infos, "111111111111111111", "4", "41"
@@ -383,14 +383,14 @@ class TestSecurityModule(object):
         saved_search_service,
         storage_service_factory,
     ):
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_two_plans_two_destinations,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        storage_infos = security_client.get_security_plan_storage_info_list("foo")
         assert len(storage_infos) == 2
         assert self._storage_info_contains(
             storage_infos, "111111111111111111", "4", "41"
@@ -407,14 +407,14 @@ class TestSecurityModule(object):
         saved_search_service,
         storage_service_factory,
     ):
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_two_plans_two_destinations_three_nodes,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        storage_infos = security_module.get_security_plan_storage_info_list("foo")
+        storage_infos = security_client.get_security_plan_storage_info_list("foo")
         assert self._storage_info_contains(
             storage_infos, "111111111111111111", "4", "41"
         ) or self._storage_info_contains(storage_infos, "111111111111111111", "5", "51")
@@ -440,14 +440,14 @@ class TestSecurityModule(object):
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
         )
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_one_location,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        for _, _ in security_module.get_all_user_security_events("foo"):
+        for _, _ in security_client.get_all_user_security_events("foo"):
             pass
         mock_storage_security_service.get_plan_security_events.assert_called_once_with(
             "111111111111111111",
@@ -481,14 +481,14 @@ class TestSecurityModule(object):
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
         )
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_one_location,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        for _, _ in security_module.get_all_user_security_events("foo"):
+        for _, _ in security_client.get_all_user_security_events("foo"):
             pass
         assert mock_storage_security_service.get_plan_security_events.call_count == 2
 
@@ -510,14 +510,14 @@ class TestSecurityModule(object):
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
         )
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_two_plans_one_node,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        for _, _ in security_module.get_all_user_security_events("foo"):
+        for _, _ in security_client.get_all_user_security_events("foo"):
             pass
         assert mock_storage_security_service.get_plan_security_events.call_count == 2
 
@@ -546,14 +546,14 @@ class TestSecurityModule(object):
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
         )
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service_two_plans_one_node,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        for _, _ in security_module.get_all_user_security_events("foo"):
+        for _, _ in security_client.get_all_user_security_events("foo"):
             pass
         assert mock_storage_security_service.get_plan_security_events.call_count == 4
 
@@ -584,14 +584,14 @@ class TestSecurityModule(object):
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
         )
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        for _, _ in security_module.get_all_plan_security_events(plan_storage_info):
+        for _, _ in security_client.get_all_plan_security_events(plan_storage_info):
             pass
         mock_storage_security_service.get_plan_security_events.assert_called_once_with(
             "111111111111111111",
@@ -625,14 +625,14 @@ class TestSecurityModule(object):
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
         )
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        for _, _ in security_module.get_all_plan_security_events(
+        for _, _ in security_client.get_all_plan_security_events(
             PlanStorageInfo("111111111111111111", "41", "4")
         ):
             pass
@@ -656,7 +656,7 @@ class TestSecurityModule(object):
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
         )
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -667,7 +667,7 @@ class TestSecurityModule(object):
             PlanStorageInfo("111111111111111111", "41", "4"),
             PlanStorageInfo("222222222222222222", "41", "4"),
         ]
-        for _, _ in security_module.get_all_plan_security_events(plans):
+        for _, _ in security_client.get_all_plan_security_events(plans):
             pass
         assert mock_storage_security_service.get_plan_security_events.call_count == 2
 
@@ -696,7 +696,7 @@ class TestSecurityModule(object):
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
         )
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -707,7 +707,7 @@ class TestSecurityModule(object):
             PlanStorageInfo("111111111111111111", "41", "4"),
             PlanStorageInfo("222222222222222222", "41", "4"),
         ]
-        for _, _ in security_module.get_all_plan_security_events(plans):
+        for _, _ in security_client.get_all_plan_security_events(plans):
             pass
         assert mock_storage_security_service.get_plan_security_events.call_count == 4
 
@@ -731,14 +731,14 @@ class TestSecurityModule(object):
         saved_search_service,
         storage_service_factory,
     ):
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
             storage_service_factory,
         )
-        assert security_module.savedsearches
+        assert security_client.savedsearches
 
     @pytest.fixture
     def file_event_search(self, mocker):
@@ -806,7 +806,7 @@ class TestSecurityModule(object):
         storage_service_factory.create_preservation_data_service.return_value = (
             storage_node_client
         )
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -814,7 +814,7 @@ class TestSecurityModule(object):
             storage_service_factory,
         )
 
-        response = security_module.stream_file_by_sha256("shahash")
+        response = security_client.stream_file_by_sha256("shahash")
         assert response == b"stream"
 
     def test_stream_file_by_sha256_raises_py42_checksum_not_found_error_when_search_returns_empty_response(
@@ -830,7 +830,7 @@ class TestSecurityModule(object):
         file_event_search.text = "{}"
         file_event_service = mocker.MagicMock(spec=FileEventService)
         file_event_service.search.return_value = file_event_search
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -839,7 +839,7 @@ class TestSecurityModule(object):
         )
 
         with pytest.raises(Py42ChecksumNotFoundError) as e:
-            security_module.stream_file_by_sha256("shahash")
+            security_client.stream_file_by_sha256("shahash")
 
         assert u"No files found with SHA256 checksum" in e.value.args[0]
 
@@ -862,7 +862,7 @@ class TestSecurityModule(object):
             file_location
         )
 
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -871,7 +871,7 @@ class TestSecurityModule(object):
         )
 
         with pytest.raises(Py42Error) as e:
-            security_module.stream_file_by_sha256("shahash")
+            security_client.stream_file_by_sha256("shahash")
         assert u"PDS service can't find requested file" in e.value.args[0]
 
     def test_stream_file_by_sha256_raises_py42_error_when_find_file_versions_returns_204_status_code(
@@ -895,7 +895,7 @@ class TestSecurityModule(object):
         find_file_version.status_code = 204
         preservation_data_service.find_file_versions.return_value = find_file_version
 
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -904,7 +904,7 @@ class TestSecurityModule(object):
         )
 
         with pytest.raises(Py42Error) as e:
-            security_module.stream_file_by_sha256("shahash")
+            security_client.stream_file_by_sha256("shahash")
 
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
@@ -935,7 +935,7 @@ class TestSecurityModule(object):
             storage_node_client
         )
 
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -944,7 +944,7 @@ class TestSecurityModule(object):
         )
 
         with pytest.raises(Py42Error) as e:
-            security_module.stream_file_by_sha256("shahash")
+            security_client.stream_file_by_sha256("shahash")
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
     def test_stream_file_by_md5_returns_stream_of_file(
@@ -974,7 +974,7 @@ class TestSecurityModule(object):
             storage_node_client
         )
 
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -982,7 +982,7 @@ class TestSecurityModule(object):
             storage_service_factory,
         )
 
-        response = security_module.stream_file_by_md5("md5hash")
+        response = security_client.stream_file_by_md5("md5hash")
         assert response == b"stream"
 
     def test_stream_file_by_md5_raises_py42_checksum_not_found_error_when_search_returns_empty_response(
@@ -1000,7 +1000,7 @@ class TestSecurityModule(object):
         file_event_service = mocker.MagicMock(spec=FileEventService)
         file_event_service.search.return_value = file_event_search
 
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -1009,7 +1009,7 @@ class TestSecurityModule(object):
         )
 
         with pytest.raises(Py42ChecksumNotFoundError) as e:
-            security_module.stream_file_by_md5("md5hash")
+            security_client.stream_file_by_md5("md5hash")
         assert u"No files found with MD5 checksum" in e.value.args[0]
 
     def test_stream_file_by_md5_raises_file_not_found_error_when_file_location_returns_empty_response(
@@ -1031,7 +1031,7 @@ class TestSecurityModule(object):
             file_location
         )
 
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -1040,7 +1040,7 @@ class TestSecurityModule(object):
         )
 
         with pytest.raises(Py42Error) as e:
-            security_module.stream_file_by_md5("md5hash")
+            security_client.stream_file_by_md5("md5hash")
         assert u"PDS service can't find requested file" in e.value.args[0]
 
     def test_stream_file_by_md5_raises_py42_error_when_find_file_versions_returns_204_status_code(
@@ -1064,7 +1064,7 @@ class TestSecurityModule(object):
         find_file_version.status_code = 204
         preservation_data_service.find_file_versions.return_value = find_file_version
 
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -1073,7 +1073,7 @@ class TestSecurityModule(object):
         )
 
         with pytest.raises(Py42Error) as e:
-            security_module.stream_file_by_md5("md5hash")
+            security_client.stream_file_by_md5("md5hash")
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")
 
     def test_stream_file_by_md5_raises_py42_error_when_file_download_returns_failure_response(
@@ -1104,7 +1104,7 @@ class TestSecurityModule(object):
             storage_node_client
         )
 
-        security_module = SecurityDataClient(
+        security_client = SecurityDataClient(
             security_service,
             file_event_service,
             preservation_data_service,
@@ -1113,5 +1113,5 @@ class TestSecurityModule(object):
         )
 
         with pytest.raises(Py42Error) as e:
-            security_module.stream_file_by_md5("md5hash")
+            security_client.stream_file_by_md5("md5hash")
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("md5hash")

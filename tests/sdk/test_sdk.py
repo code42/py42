@@ -33,7 +33,7 @@
 #         )
 #         sdk = SDKClient(deps)
 #         assert type(sdk.serveradmin) == administration.AdministrationService
-#     def test_has_archive_module_set(
+#     def test_has_archive_client_set(
 #         self, mock_session_factory, success_requests_session
 #     ):
 #         deps = SDKDependencies(
@@ -49,13 +49,13 @@
 #         )
 #         sdk = SDKClient(deps)
 #         assert type(sdk.devices) == devices.DeviceService
-#     def test_has_alert_module_set(self, mock_session_factory, success_requests_session):
+#     def test_has_alert_client_set(self, mock_session_factory, success_requests_session):
 #         deps = SDKDependencies(
 #             HOST_ADDRESS, mock_session_factory, success_requests_session
 #         )
 #         sdk = SDKClient(deps)
 #         assert type(sdk.alerts) == alerts.AlertsClient
-#     def test_has_detection_lists_module_set(
+#     def test_has_detection_lists_client_set(
 #         self, mock_session_factory, success_requests_session
 #     ):
 #         deps = SDKDependencies(
@@ -77,7 +77,7 @@
 #         )
 #         sdk = SDKClient(deps)
 #         assert type(sdk.orgs) == orgs.OrgService
-#     def test_has_security_module_set(
+#     def test_has_security_client_set(
 #         self, mock_session_factory, success_requests_session
 #     ):
 #         deps = SDKDependencies(

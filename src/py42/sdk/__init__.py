@@ -256,7 +256,11 @@ def _init_clients(services, connection):
     )
     alertrules = AlertRulesClient(services.alerts, services.alertrules)
     securitydata = SecurityDataClient(
-        services.securitydata, services.savedsearch, storage_service_factory
+        services.securitydata,
+        services.fileevents,
+        services.preservationdata,
+        services.savedsearch,
+        storage_service_factory,
     )
     alerts = AlertsClient(services.alerts, alertrules)
     archive_accessor_mgr = ArchiveAccessorManager(

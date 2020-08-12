@@ -2,7 +2,6 @@ from requests.auth import HTTPBasicAuth
 
 from py42.clients import Clients
 from py42.clients._archive_access import ArchiveAccessorManager
-from py42.clients._storage import StorageClientFactory
 from py42.clients.alertrules import AlertRulesClient
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
@@ -26,10 +25,11 @@ from py42.services.devices import DeviceService
 from py42.services.fileevent import FileEventService
 from py42.services.legalhold import LegalHoldService
 from py42.services.orgs import OrgService
-from py42.services.pds import PreservationDataService
+from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.securitydata import SecurityDataService
-from py42.services.storage._connection_manager import ConnectionManager
+from py42.services.storage._service_factory import ConnectionManager
+from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.users import UserService
 from py42.usercontext import UserContext
 
@@ -251,16 +251,16 @@ def _init_clients(services, connection):
         services.userprofile, services.departingemployee, services.highriskemployee
     )
 
-    storage_client_factory = StorageClientFactory(
+    storage_service_factory = StorageServiceFactory(
         connection, services.devices, ConnectionManager()
     )
     alertrules = AlertRulesClient(services.alerts, services.alertrules)
     securitydata = SecurityDataClient(
-        services.securitydata, services.savedsearch, storage_client_factory
+        services.securitydata, services.savedsearch, storage_service_factory
     )
     alerts = AlertsClient(services.alerts, alertrules)
     archive_accessor_mgr = ArchiveAccessorManager(
-        services.archive, storage_client_factory
+        services.archive, storage_service_factory
     )
     archive = ArchiveClient(archive_accessor_mgr, services.archive)
     clients = Clients(

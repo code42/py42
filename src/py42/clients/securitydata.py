@@ -21,13 +21,13 @@ class SecurityDataClient(object):
         file_event_service,
         preservation_data_service,
         saved_search_service,
-        storage_client_factory,
+        storage_service_factory,
     ):
         self._security_client = security_service
         self._file_event_service = file_event_service
         self._preservation_data_service = preservation_data_service
         self._saved_search_service = saved_search_service
-        self._storage_client_factory = storage_client_factory
+        self._storage_service_factory = storage_service_factory
         self._client_cache = {}
         self._client_cache_lock = Lock()
 
@@ -188,8 +188,7 @@ class SecurityDataClient(object):
             :class:`py42.response.Py42Response`: A response containing the first 10,000
             events.
         """
-        file_event_client = self._microservices_client_factory.get_file_event_client()
-        return file_event_client.search(query)
+        return self._file_event_service.search(query)
 
     def _search_by_hash(self, hash, type):
         query = FileEventQuery.all(type.eq(hash))
@@ -197,11 +196,9 @@ class SecurityDataClient(object):
         return response[u"fileEvents"]
 
     def _find_file_versions(self, md5_hash, sha256_hash):
-        file_event_client = self._microservices_client_factory.get_file_event_client()
-        pds_client = (
-            self._microservices_client_factory.get_preservation_data_service_client()
+        response = self._file_event_service.get_file_location_detail_by_sha256(
+            sha256_hash
         )
-        response = file_event_client.get_file_location_detail_by_sha256(sha256_hash)
 
         if u"locations" not in response and not len(response[u"locations"]):
             raise Py42Error(
@@ -211,7 +208,7 @@ class SecurityDataClient(object):
 
         for device_id, paths in _parse_file_location_response(response):
             try:
-                yield pds_client.find_file_versions(
+                yield self._preservation_data_service.find_file_versions(
                     md5_hash, sha256_hash, device_id, paths
                 )
             except Py42HTTPError as err:
@@ -229,7 +226,7 @@ class SecurityDataClient(object):
             if response.status_code == 204:
                 continue
             try:
-                storage_node_client = self._microservices_client_factory.create_storage_preservation_client(
+                storage_node_client = self._storage_service_factory.create_preservation_data_service(
                     response[u"storageNodeURL"]
                 )
                 token = storage_node_client.get_download_token(
@@ -263,7 +260,7 @@ class SecurityDataClient(object):
             Returns a stream of the requested file.
         """
         events = self._search_by_hash(checksum, SHA256)
-        if not len(events):
+        if not events:
             raise Py42ChecksumNotFoundError(u"SHA256", checksum)
         md5_hash = events[0][u"md5Checksum"]
 
@@ -279,7 +276,7 @@ class SecurityDataClient(object):
             Returns a stream of the requested file.
         """
         events = self._search_by_hash(checksum, MD5)
-        if not len(events):
+        if not events:
             raise Py42ChecksumNotFoundError(u"MD5", checksum)
         sha256_hash = events[0][u"sha256Checksum"]
         return self._stream_file(
@@ -323,9 +320,9 @@ class SecurityDataClient(object):
 
         # otherwise, create it
         if client is None:
-            client = self._storage_client_factory.from_plan_info(
+            client = self._storage_service_factory.create_security_data_service(
                 plan_storage_info.plan_uid, plan_storage_info.destination_guid
-            ).securitydata
+            )
 
             # store this client via its guid so that we don't have to call StorageAuthToken
             # just to determine what storage client to use

@@ -52,6 +52,9 @@ class Connection(object):
     def proxies(self):
         return self._session.proxies
 
+    def clone(self, host_address):
+        return KnownUrlConnection(host_address, auth=self._auth)
+
     def get(self, url, **kwargs):
         return self.request(u"GET", url, **kwargs)
 
@@ -204,7 +207,7 @@ class KeyValueStoreConnection(Connection):
         except HTTPError as ex:
             raise Py42SessionInitializationError(ex)
 
-        response_json = json.loads(response.text)
+        response_json = json_lib.loads(response.text)
         sts_base_url = response_json.get(u"stsBaseUrl")
 
         if not sts_base_url:

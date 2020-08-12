@@ -141,14 +141,14 @@
 #     tmp_token_provider, request, mocker
 # ):
 #     tmp_token_provider = request.getfixturevalue(tmp_token_provider)
-#     mocker.spy(tmp_token_provider, "get_tmp_auth_token")
+#     mocker.spy(tmp_token_provider, "get_tmp_auth")
 #     tmp_token_provider.get_login_info()
 #     assert (
-#         tmp_token_provider.get_tmp_auth_token.call_count == 1
-#     ), "get_tmp_auth_token never called"
+#         tmp_token_provider.get_tmp_auth.call_count == 1
+#     ), "get_tmp_auth never called"
 #     tmp_token_provider.get_login_info()
-#     call_count = tmp_token_provider.get_tmp_auth_token.call_count
-#     message = "get_tmp_auth_token was called {} times, expected once".format(call_count)
+#     call_count = tmp_token_provider.get_tmp_auth.call_count
+#     message = "get_tmp_auth was called {} times, expected once".format(call_count)
 #     assert call_count == 1, message
 # @pytest.mark.parametrize(
 #     "tmp_token_provider",
@@ -159,12 +159,12 @@
 #     tmp_token_provider, request, mocker
 # ):
 #     tmp_token_provider = request.getfixturevalue(tmp_token_provider)
-#     mocker.spy(tmp_token_provider, "get_tmp_auth_token")
+#     mocker.spy(tmp_token_provider, "get_tmp_auth")
 #     tmp_token_provider.get_secret_value()
 #     assert (
-#         tmp_token_provider.get_tmp_auth_token.call_count == 1
-#     ), "get_tmp_auth_token never called"
+#         tmp_token_provider.get_tmp_auth.call_count == 1
+#     ), "get_tmp_auth never called"
 #     tmp_token_provider.get_secret_value()
-#     call_count = tmp_token_provider.get_tmp_auth_token.call_count
-#     message = "get_tmp_auth_token was called {} times, expected once".format(call_count)
+#     call_count = tmp_token_provider.get_tmp_auth.call_count
+#     message = "get_tmp_auth was called {} times, expected once".format(call_count)
 #     assert call_count == 1, message

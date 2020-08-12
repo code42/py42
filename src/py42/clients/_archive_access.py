@@ -13,9 +13,9 @@ class FileType(object):
 
 
 class ArchiveAccessorManager(object):
-    def __init__(self, archive_service, storage_client_factory):
+    def __init__(self, archive_service, storage_service_factory):
         self._archive_service = archive_service
-        self._storage_client_factory = storage_client_factory
+        self._storage_service_factory = storage_service_factory
 
     def get_archive_accessor(
         self,
@@ -24,21 +24,19 @@ class ArchiveAccessorManager(object):
         private_password=None,
         encryption_key=None,
     ):
-        client = self._storage_client_factory.from_device_guid(
+        client = self._storage_service_factory.create_archive_service(
             device_guid, destination_guid=destination_guid
         )
         decryption_keys = self._get_decryption_keys(
             device_guid, private_password, encryption_key
         )
         session_id = self._create_restore_session(
-            client.archive, device_guid, **decryption_keys
+            client, device_guid, **decryption_keys
         )
         restore_job_manager = create_restore_job_manager(
-            client.archive, device_guid, session_id
+            client, device_guid, session_id
         )
-        return ArchiveAccessor(
-            device_guid, session_id, client.archive, restore_job_manager
-        )
+        return ArchiveAccessor(device_guid, session_id, client, restore_job_manager)
 
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):
         decryption_keys = {}
@@ -58,7 +56,8 @@ class ArchiveAccessorManager(object):
     def _get_data_key_token(self, device_guid):
         return self._archive_service.get_data_key_token(device_guid)[u"dataKeyToken"]
 
-    def _create_restore_session(self, storage_archive_service, device_guid, **kwargs):
+    @staticmethod
+    def _create_restore_session(storage_archive_service, device_guid, **kwargs):
         response = storage_archive_service.create_restore_session(device_guid, **kwargs)
         return response[u"webRestoreSessionId"]
 
@@ -72,12 +71,12 @@ class ArchiveAccessor(object):
         self,
         device_guid,
         archive_session_id,
-        storage_archive_client,
+        storage_archive_service,
         restore_job_manager,
     ):
         self._device_guid = device_guid
         self._archive_session_id = archive_session_id
-        self._storage_archive_client = storage_archive_client
+        self._storage_archive_service = storage_archive_service
         self._restore_job_manager = restore_job_manager
 
     def stream_from_backup(self, file_path):
@@ -115,7 +114,7 @@ class ArchiveAccessor(object):
         raise Py42ArchiveFileNotFoundError(self._device_guid, target_child_path)
 
     def _get_children(self, node_id=None):
-        return self._storage_archive_client.get_file_path_metadata(
+        return self._storage_archive_service.get_file_path_metadata(
             self._archive_session_id,
             self._device_guid,
             file_id=node_id,
@@ -135,12 +134,12 @@ class RestoreJobManager(object):
 
     def __init__(
         self,
-        storage_archive_client,
+        storage_archive_service,
         device_guid,
         archive_session_id,
         job_polling_interval=JOB_POLLING_INTERVAL_SECONDS,
     ):
-        self._storage_archive_client = storage_archive_client
+        self._storage_archive_service = storage_archive_service
         self._device_guid = device_guid
         self._archive_session_id = archive_session_id
         self._job_polling_interval = job_polling_interval
@@ -155,11 +154,11 @@ class RestoreJobManager(object):
         return self._get_stream(job_id)
 
     def is_job_complete(self, job_id):
-        response = self._storage_archive_client.get_restore_status(job_id)
+        response = self._storage_archive_service.get_restore_status(job_id)
         return self._get_completion_status(response)
 
     def _start_restore(self, file_selection):
-        return self._storage_archive_client.start_restore(
+        return self._storage_archive_service.start_restore(
             self._device_guid,
             self._archive_session_id,
             file_selection.path_set,
@@ -174,9 +173,11 @@ class RestoreJobManager(object):
         return response[u"done"]
 
     def _get_stream(self, job_id):
-        response = self._storage_archive_client.stream_restore_result(job_id)
+        response = self._storage_archive_service.stream_restore_result(job_id)
         return response
 
 
-def create_restore_job_manager(storage_archive_client, device_guid, archive_session_id):
-    return RestoreJobManager(storage_archive_client, device_guid, archive_session_id)
+def create_restore_job_manager(
+    storage_archive_service, device_guid, archive_session_id
+):
+    return RestoreJobManager(storage_archive_service, device_guid, archive_session_id)

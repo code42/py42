@@ -16,7 +16,7 @@
 # from py42.services._auth import StorageTokenProviderFactory
 # from py42.services._connection_manager import ConnectionManager
 # from py42.services.storage import StorageClient
-# from py42.services.storage import StorageClientFactory
+# from py42.services.storage import StorageServiceFactory
 # from py42.services.users import UserService
 # from py42.usercontext import UserContext
 # TEST_ROOT_URL = "https://example.com"
@@ -75,13 +75,13 @@
 #         client = factory.create_user_client()
 #         assert type(client) == users.UserService
 # class TestStorageClientFactory(object):
-#     def test_from_device_guid(self, token_provider_factory, storage_session_manager):
-#         factory = StorageClientFactory(storage_session_manager, token_provider_factory)
-#         client = factory.from_device_guid("test-device-guid")
+#     def test_create_archive_service(self, token_provider_factory, storage_session_manager):
+#         factory = StorageServiceFactory(storage_session_manager, token_provider_factory)
+#         client = factory.create_archive_service("test-device-guid")
 #         assert type(client) == StorageClient
-#     def test_from_plan_info(self, token_provider_factory, storage_session_manager):
-#         factory = StorageClientFactory(storage_session_manager, token_provider_factory)
-#         client = factory.from_plan_info("test-plan-uid", "test-dest-guid")
+#     def test_create_security_data_service(self, token_provider_factory, storage_session_manager):
+#         factory = StorageServiceFactory(storage_session_manager, token_provider_factory)
+#         client = factory.create_security_data_service("test-plan-uid", "test-dest-guid")
 #         assert type(client) == StorageClient
 # class TestMicroserviceClientFactory(object):
 #     def test_get_alerts_client(

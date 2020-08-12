@@ -1,8 +1,8 @@
 import pytest
 
+from py42.clients.alerts import AlertsClient
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.services.alertrules import AlertRulesService
-from py42.clients.alerts import AlertsClient
 from py42.services.alerts import AlertService
 
 
@@ -31,10 +31,7 @@ class TestAlertsModule(object):
         assert alert_module.rules
 
     def test_alerts_module_calls_search_with_expected_value(
-        self,
-        mock_alerts_service,
-        mock_alert_rules_service,
-        mock_alert_query,
+        self, mock_alerts_service, mock_alert_rules_service, mock_alert_query,
     ):
         alert_module = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_module.search(mock_alert_query)
@@ -50,9 +47,7 @@ class TestAlertsModule(object):
         )
 
     def test_alerts_module_calls_resolve_with_expected_value(
-        self,
-        mock_alerts_service,
-        mock_alert_rules_service,
+        self, mock_alerts_service, mock_alert_rules_service,
     ):
         alert_module = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_module.resolve(self._alert_ids)
@@ -61,9 +56,7 @@ class TestAlertsModule(object):
         )
 
     def test_alerts_module_calls_reopen_with_expected_value(
-        self,
-        mock_alerts_service,
-        mock_alert_rules_service,
+        self, mock_alerts_service, mock_alert_rules_service,
     ):
         alert_module = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_module.reopen(self._alert_ids)

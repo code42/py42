@@ -16,7 +16,7 @@ def py42session(mocker):
 
 
 @pytest.fixture
-def storage_security_client(py42session):
+def storage_security_service(py42session):
     return StorageSecurityDataService(py42session)
 
 
@@ -77,12 +77,12 @@ def security_detection_event_summary_params(security_detection_events_params):
 class TestStorageSecurityClient(object):
     def test_get_plan_security_events_calls_get_with_correct_params(
         self,
-        storage_security_client,
+        storage_security_service,
         py42session,
         plan_security_detection_events_params,
     ):
         params = plan_security_detection_events_params
-        storage_security_client.get_plan_security_events(
+        storage_security_service.get_plan_security_events(
             plan_uid=params[u"planUid"],
             cursor=params[u"cursor"],
             include_files=params[u"incFiles"],
@@ -94,12 +94,12 @@ class TestStorageSecurityClient(object):
 
     def test_get_user_security_events_calls_get_with_correct_params(
         self,
-        storage_security_client,
+        storage_security_service,
         py42session,
         user_security_detection_events_params,
     ):
         params = user_security_detection_events_params
-        storage_security_client.get_user_security_events(
+        storage_security_service.get_user_security_events(
             user_uid=params[u"userUid"],
             cursor=params[u"cursor"],
             include_files=params[u"incFiles"],
@@ -111,12 +111,12 @@ class TestStorageSecurityClient(object):
 
     def test_get_security_detection_event_summary_calls_get_with_correct_params(
         self,
-        storage_security_client,
+        storage_security_service,
         py42session,
         security_detection_event_summary_params,
     ):
         params = security_detection_event_summary_params
-        storage_security_client.get_security_detection_event_summary(
+        storage_security_service.get_security_detection_event_summary(
             user_uid=params[u"userUid"],
             cursor=params[u"cursor"],
             min_timestamp=mock_min_ts,

@@ -10,7 +10,7 @@ class StorageTmpAuth(C42RenewableAuth):
 
     def get_login_info(self):
         if self._cached_info is None:
-            response = self.get_tmp_auth_token()
+            response = self.get_tmp_auth()
             self._cached_info = response
         return self._cached_info
 
@@ -18,7 +18,7 @@ class StorageTmpAuth(C42RenewableAuth):
         self._cached_info = None
         super(StorageTmpAuth, self).clear_credentials()
 
-    def get_tmp_auth_token(self):
+    def get_tmp_auth(self):
         raise NotImplementedError()
 
     def _get_credentials(self):
@@ -36,7 +36,7 @@ class FileArchiveTmpAuth(StorageTmpAuth):
         self._device_guid = device_guid
         self._destination_guid = destination_guid
 
-    def get_tmp_auth_token(self):
+    def get_tmp_auth(self):
         uri = u"/api/LoginToken"
         data = {
             u"userId": self._user_id,
@@ -54,7 +54,7 @@ class SecurityArchiveTmpAuth(StorageTmpAuth):
         self._plan_uid = plan_uid
         self._destination_guid = destination_guid
 
-    def get_tmp_auth_token(self):
+    def get_tmp_auth(self):
         uri = u"/api/StorageAuthToken"
         data = {u"planUid": self._plan_uid, u"destinationGuid": self._destination_guid}
         response = self._connection.post(uri, json=data)

@@ -219,7 +219,7 @@ class FileSizePoller(_RestorePoller):
             response = self._storage_archive_client.create_file_size_job(
                 self._device_guid, file_id
             )
-            job_id = response["jobId"]
+            job_id = response[u"jobId"]
             job_ids.append(job_id)
         return job_ids
 

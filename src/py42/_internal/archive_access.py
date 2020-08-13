@@ -241,6 +241,8 @@ class FileSizePoller(_RestorePoller):
             if time.time() - t0 > timeout:
                 return None
 
+            if job_ids:
+                time.sleep(self._job_polling_interval)
         return sizes
 
     def _get_job_status(self, job_id):

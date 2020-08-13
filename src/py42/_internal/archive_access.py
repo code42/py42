@@ -274,6 +274,11 @@ class RestoreJobManager(_RestorePoller):
 
     def _is_job_complete(self, job_id):
         response = self._storage_archive_client.get_restore_status(job_id)
+        percentage_dict = {
+            u"jobId": job_id,
+            u"percentComplete": response[u"percentComplete"],
+        }
+        debug.logger.debug(format_dict(percentage_dict))
         return response[u"done"]
 
     def _start_restore(self, file_selection):

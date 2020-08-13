@@ -278,7 +278,7 @@ class GetWebRestoreJobResponses(object):
         """
 
     DONE = """{
-                "status": "preparing",
+                "status": "done",
                 "zipResult": false,
                 "name": "WebRestore_13",
                 "sourceId": "896477098509532085",
@@ -288,8 +288,7 @@ class GetWebRestoreJobResponses(object):
                 "canceled": false,
                 "done": true,
                 "expirationDate": 1556888724979,
-                "creationDate": 1556802324979,
-                "percentComplete": 0
+                "creationDate": 1556802324979
             }
         """
 

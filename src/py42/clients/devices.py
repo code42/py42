@@ -1,14 +1,67 @@
 import json
+from copy import deepcopy
 
 from py42 import settings
 from py42._internal.compat import ChainMap
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42.exceptions import Py42Error
 
 
 class DeviceConfig(object):
     def __init__(self, config_json):
         pass
+
+
+class BackupSet(object):
+    def __init__(self, settings_manager, set_dict):
+        self._manager = settings_manager
+        backup_paths_dict = set_dict.pop("backupPaths")
+        self._set = ChainMap({}, set_dict)
+        self._backup_paths = ChainMap({}, backup_paths_dict)
+
+    @property
+    def backup_paths(self):
+        pathset = self._backup_paths["pathset"][0]["path"]
+        return [p["@include"] for p in pathset if "@include" in p]
+
+    def add_backup_path(self, path):
+        pathset = deepcopy(self._backup_paths["pathset"])
+        pathset[0]["path"].append({"@include": path})
+        self._backup_paths["pathset"] = pathset
+
+    @property
+    def backup_path_excludes(self):
+        pathset = self._backup_paths["pathset"][0]["path"]
+        return [p["@exclude"] for p in pathset if "@exclude" in p]
+
+    def exclude_backup_path(self, path):
+        pathset = deepcopy(self._backup_paths["pathset"])
+        path_list = pathset[0]["path"]
+        path_list.append({"@exclude": path})
+        if {"@include": path} in path_list:
+            path_list.remove({"@include": path})
+        pathset[0]["path"] = path_list
+        self._backup_paths["pathset"] = pathset
+
+    @property
+    def filename_exclusions(self):
+        excludes = self._set["backupPaths"]["excludeUser"][0].get("pattern")
+        if excludes:
+            return [e["@regex"] for e in excludes]
+        return []
+
+    def add_filename_exclusion(self, regex_string):
+        user_excludes = deepcopy(self._set["backupPaths"]["excludeUser"])
+
+    def add_destination(self, destination_guid):
+        if destination_guid in self._manager.available_destinations:
+            if destination_guid not in list(self._set["destinations"].values()):
+                self._set["destinations"].append({"@id": destination_guid})
+        else:
+            raise Py42Error(
+                "Invalid destination guid or destination not offered to device's Org."
+            )
 
 
 class DeviceSettingsManager(object):
@@ -19,14 +72,23 @@ class DeviceSettingsManager(object):
 
         device_dict = device_response.data
         settings_dict = device_dict.pop("settings")
-        config_dict = settings_dict.pop("serviceBackupConfig")
+        service_config_dict = settings_dict.pop("serviceBackupConfig")
+        backup_config_dict = service_config_dict.pop("backupConfig")
 
+        self.available_destinations = {
+            d["guid"]: d["destinationName"]
+            for d in device_dict["availableDestinations"]
+        }
         self._device = ChainMap({}, device_dict)
         self._settings = ChainMap({}, settings_dict)
-        self._config = ChainMap({}, config_dict)
+        self._service_config = ChainMap({}, service_config_dict)
+        self._backup_config = ChainMap({}, backup_config_dict)
         self._device_settings = ChainMap({}, device_settings_response.data)
         self._device_client = device_client
         self._errored = None
+        self.backup_sets = [
+            BackupSet(self, set_dict) for set_dict in self._backup_config["backupSets"]
+        ]
         self.settings_response = None
         self.device_settings_response = None
 

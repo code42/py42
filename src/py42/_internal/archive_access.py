@@ -111,6 +111,12 @@ class ArchiveAccessor(object):
         self._file_size_poller = file_size_poller
 
     def stream_from_backup(self, file_paths, file_size_calc_timeout=None):
+        file_selections = self._create_file_selections(
+            file_paths, file_size_calc_timeout
+        )
+        return self._restore_job_manager.get_stream(file_selections)
+
+    def _create_file_selections(self, file_paths, file_size_calc_timeout):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
         file_paths = [fp.replace(u"\\", u"/") for fp in file_paths]
@@ -119,8 +125,7 @@ class ArchiveAccessor(object):
         file_sizes = self._file_size_poller.get_file_sizes(
             file_ids, timeout=file_size_calc_timeout
         )
-        file_selections = _create_file_selections(file_paths, metadata_list, file_sizes)
-        return self._restore_job_manager.get_stream(file_selections)
+        return _create_file_selections(file_paths, metadata_list, file_sizes)
 
     def _get_restore_metadata(self, file_paths):
         metadata_list = []

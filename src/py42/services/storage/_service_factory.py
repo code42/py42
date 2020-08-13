@@ -4,8 +4,7 @@ from requests import HTTPError
 
 from py42._compat import str
 from py42.exceptions import Py42StorageSessionInitializationError
-from py42.services._connection import KnownUrlConnection
-from py42.services._connection import ROOT_SESSION
+from py42.services._connection import Connection
 from py42.services.storage._auth import FileArchiveTmpAuth
 from py42.services.storage._auth import SecurityArchiveTmpAuth
 from py42.services.storage.archive import StorageArchiveService
@@ -36,7 +35,7 @@ class StorageServiceFactory(object):
 
     def create_preservation_data_service(self, host_address):
         main_connection = self._connection.clone(host_address)
-        streaming_connection = KnownUrlConnection(host_address)
+        streaming_connection = Connection.from_host_address(host_address)
         return StoragePreservationDataService(main_connection, streaming_connection)
 
     def _auto_select_destination_guid(self, device_guid):
@@ -68,7 +67,7 @@ class ConnectionManager(object):
                 with self._list_update_lock:
                     connection = self.get_saved_connection_for_url(url)
                     if connection is None:
-                        connection = KnownUrlConnection(url, auth=tmp_auth)
+                        connection = Connection.from_host_address(url, auth=tmp_auth)
                         self._session_cache[url.lower()] = connection
         except HTTPError as ex:
             message = u"Failed to create or retrieve connection, caused by: {}".format(

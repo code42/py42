@@ -10,9 +10,7 @@ from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
 from py42.services import Services
 from py42.services._auth import V3Auth
-from py42.services._connection import KeyValueStoreConnection
-from py42.services._connection import KnownUrlConnection
-from py42.services._connection import MicroserviceConnection
+from py42.services._connection import Connection
 from py42.services._keyvaluestore import KeyValueStoreClient
 from py42.services.administration import AdministrationService
 from py42.services.alertrules import AlertRulesService
@@ -49,12 +47,17 @@ def from_local_account(host_address, username, password):
     Returns:
         :class:`py42.sdk.SDKClient`
     """
-    return SDKClient.from_local_account(host_address, username, password)
+    client = SDKClient.from_local_account(host_address, username, password)
+
+    # test credentials
+    client.users.get_current()
+    return client
 
 
 class SDKClient(object):
-    def __init__(self, clients, user_ctx):
-        self._clients = clients
+    def __init__(self, main_connection, auth):
+        services, user_ctx = _init_services(main_connection, auth)
+        self._clients = _init_clients(services, auth)
         self._user_ctx = user_ctx
 
     @classmethod
@@ -74,16 +77,13 @@ class SDKClient(object):
             :class:`py42.sdk.SDKClient`
         """
         basic_auth = HTTPBasicAuth(username, password)
-        basic_auth_connection = KnownUrlConnection(host_address, auth=basic_auth)
+        basic_auth_connection = Connection.from_host_address(
+            host_address, auth=basic_auth
+        )
         auth = V3Auth(basic_auth_connection)
-        authority_connection = KnownUrlConnection(host_address, auth=auth)
-        services, user_ctx = _init_services(authority_connection, auth)
-        clients = _init_clients(services, auth)
+        main_connection = Connection.from_host_address(host_address, auth=auth)
 
-        # test credentials
-        clients.authority.users.get_current()
-
-        return cls(clients, user_ctx)
+        return cls(main_connection, auth)
 
     @property
     def serveradmin(self):
@@ -187,50 +187,56 @@ class SDKClient(object):
         return self._clients.alerts
 
 
-def _init_services(authority_connection, main_auth):
+def _init_services(main_connection, main_auth):
     alert_rules_key = u"FedObserver-API_URL"
     alerts_key = u"AlertService-API_URL"
     file_events_key = u"FORENSIC_SEARCH-API_URL"
     preservation_data_key = u"PRESERVATION-DATA-SERVICE_API-URL"
     employee_case_mgmt_key = u"employeecasemanagement-API_URL"
+    kv_prefix = u"simple-key-value-store"
 
-    kv_connection = KeyValueStoreClient(KeyValueStoreConnection())
+    kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
+    kv_service = KeyValueStoreClient(kv_connection)
 
-    def create_microservice_connection(key):
-        return MicroserviceConnection(kv_connection, key, auth=main_auth)
+    alert_rules_conn = Connection.from_microservice_key(
+        kv_service, alert_rules_key, auth=main_auth
+    )
+    alerts_conn = Connection.from_microservice_key(
+        kv_service, alerts_key, auth=main_auth
+    )
+    file_events_conn = Connection.from_microservice_key(
+        kv_service, file_events_key, auth=main_auth
+    )
+    pds_conn = Connection.from_microservice_key(
+        kv_service, preservation_data_key, auth=main_auth
+    )
+    ecm_conn = Connection.from_microservice_key(
+        kv_service, employee_case_mgmt_key, auth=main_auth
+    )
 
-    alert_rules_connection = create_microservice_connection(alert_rules_key)
-    alerts_connection = create_microservice_connection(alerts_key)
-    file_events_connection = create_microservice_connection(file_events_key)
-    pds_connection = create_microservice_connection(preservation_data_key)
-    ecm_connection = create_microservice_connection(employee_case_mgmt_key)
-    user_svc = UserService(authority_connection)
-    administration_svc = AdministrationService(authority_connection)
-    file_events_service = FileEventService(file_events_connection)
+    user_svc = UserService(main_connection)
+    administration_svc = AdministrationService(main_connection)
+    file_events_service = FileEventService(file_events_conn)
     user_ctx = UserContext(administration_svc)
-    user_profile_svc = DetectionListUserService(ecm_connection, user_ctx, user_svc)
+    user_profile_svc = DetectionListUserService(ecm_conn, user_ctx, user_svc)
 
     services = Services(
         administration=administration_svc,
-        archive=ArchiveService(authority_connection),
-        devices=DeviceService(authority_connection),
-        legalhold=LegalHoldService(authority_connection),
-        orgs=OrgService(authority_connection),
-        securitydata=SecurityDataService(authority_connection),
-        users=UserService(authority_connection),
-        alertrules=AlertRulesService(
-            alert_rules_connection, user_ctx, user_profile_svc
-        ),
-        alerts=AlertService(alerts_connection, user_ctx),
-        filevents=file_events_service,
-        savedsearch=SavedSearchService(file_events_connection, file_events_service),
-        preservationdata=PreservationDataService(pds_connection),
+        archive=ArchiveService(main_connection),
+        devices=DeviceService(main_connection),
+        legalhold=LegalHoldService(main_connection),
+        orgs=OrgService(main_connection),
+        securitydata=SecurityDataService(main_connection),
+        users=UserService(main_connection),
+        alertrules=AlertRulesService(alert_rules_conn, user_ctx, user_profile_svc),
+        alerts=AlertService(alerts_conn, user_ctx),
+        fileevents=file_events_service,
+        savedsearch=SavedSearchService(file_events_conn, file_events_service),
+        preservationdata=PreservationDataService(pds_conn),
         departingemployee=DepartingEmployeeService(
-            ecm_connection, user_ctx, user_profile_svc
+            ecm_conn, user_ctx, user_profile_svc
         ),
-        highriskemployee=HighRiskEmployeeService(
-            ecm_connection, user_ctx, user_profile_svc
-        ),
+        highriskemployee=HighRiskEmployeeService(ecm_conn, user_ctx, user_profile_svc),
         userprofile=user_profile_svc,
     )
 

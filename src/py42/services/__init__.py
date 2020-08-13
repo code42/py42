@@ -18,7 +18,7 @@ Services = namedtuple(
         u"users",
         u"alertrules",
         u"alerts",
-        u"filevents",
+        u"fileevents",
         u"savedsearch",
         u"preservationdata",
         u"departingemployee",

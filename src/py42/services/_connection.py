@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import json as json_lib
+from threading import Lock
 
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
@@ -32,17 +33,99 @@ ROOT_SESSION.headers = {
 }
 
 
+class HostResolver(object):
+    def get_host_address(self):
+        raise NotImplementedError()
+
+
+class KnownUrlHostResolver(HostResolver):
+    def __init__(self, host_address):
+        self._host_address = host_address
+
+    def get_host_address(self):
+        return self._host_address
+
+
+class MicroservicePrefixHostResolver(HostResolver):
+    def __init__(self, connection, prefix):
+        self._connection = connection
+        self._prefix = prefix
+
+    def get_host_address(self):
+        sts_url = self._get_sts_base_url()
+        return sts_url.replace(u"sts", self._prefix)
+
+    def _get_sts_base_url(self):
+        uri = u"/api/ServerEnv"
+        try:
+            response = self._connection.get(uri)
+        except HTTPError as ex:
+            raise Py42SessionInitializationError(ex)
+
+        print(response.text)
+        response_json = json_lib.loads(response.text)
+        sts_base_url = response_json.get(u"stsBaseUrl")
+
+        if not sts_base_url:
+            raise Py42FeatureUnavailableError()
+
+        return sts_base_url
+
+
+class MicroserviceKeyHostResolver(HostResolver):
+    def __init__(self, kv_service, key):
+        self._kv_service = kv_service
+        self._key = key
+
+    def get_host_address(self):
+        return self._kv_service.get_stored_value(self._key).text
+
+
+def _handle_error(method, url, response):
+    if response is None:
+        msg = u"No response was returned for {} request to {}.".format(method, url)
+        raise Py42Error(msg)
+
+    try:
+        response.raise_for_status()
+    except HTTPError as ex:
+        raise_py42_error(ex)
+
+
+def _print_request(method, url, params=None, data=None):
+    debug.logger.info(u"{}{}".format(method.ljust(8), url))
+    if params:
+        debug.logger.debug(format_dict(params, u"  params"))
+    if data:
+        debug.logger.debug(format_dict(data, u"  data"))
+
+
 class Connection(object):
-    def __init__(self, auth=None, session=None):
+    def __init__(self, host_resolver, auth=None, session=None):
+        self._host_resolver = host_resolver
         self._session = session or ROOT_SESSION
         self._auth = auth
+        self._resolve_lock = Lock()
         self._host_address = None
+
+    @classmethod
+    def from_host_address(cls, host_address, auth=None, session=None):
+        host_resolver = KnownUrlHostResolver(host_address)
+        return cls(host_resolver, auth=auth, session=session)
+
+    @classmethod
+    def from_microservice_key(cls, kv_service, key, auth=None, session=None):
+        host_resolver = MicroserviceKeyHostResolver(kv_service, key)
+        return cls(host_resolver, auth=auth, session=session)
+
+    @classmethod
+    def from_microservice_prefix(cls, connection, prefix, auth=None, session=None):
+        host_resolver = MicroservicePrefixHostResolver(connection, prefix)
+        return cls(host_resolver, auth=auth, session=session)
 
     @property
     def host_address(self):
-        if not self._host_address:
-            self._host_address = self._init_host_info()
-        return self._host_address
+        return self._get_host_address()
 
     @property
     def headers(self):
@@ -53,7 +136,8 @@ class Connection(object):
         return self._session.proxies
 
     def clone(self, host_address):
-        return KnownUrlConnection(host_address, auth=self._auth)
+        host_resolver = KnownUrlHostResolver(host_address)
+        return Connection(host_resolver, auth=self._auth)
 
     def get(self, url, **kwargs):
         return self.request(u"GET", url, **kwargs)
@@ -149,16 +233,16 @@ class Connection(object):
         self._session.verify = settings.verify_ssl_certs
 
         if json:
-            data = json_lib.loads(json)
+            data = json_lib.dumps(json)
 
-        additional_headers = {u"User-Agent": settings.get_user_agent_string()}
+        final_headers = {u"User-Agent": settings.get_user_agent_string()}
         if headers:
-            additional_headers = additional_headers.update(headers)
-
+            final_headers.update(headers)
+        final_headers.update(self._session.headers)
         request = Request(
             method=method,
             url=url,
-            headers=additional_headers,
+            headers=final_headers,
             files=files,
             data=data,
             params=params,
@@ -172,74 +256,16 @@ class Connection(object):
         return request.prepare()
 
     def _get_host_address(self):
-        raise NotImplementedError()
+        if not self._host_address:
+            with self._resolve_lock:
+                if not self._host_address:
+                    host = self._host_resolver.get_host_address()
+                    self._init_host_info(host)
+        return self._host_address
 
-    def _init_host_info(self):
-        host = self._get_host_address()
+    def _init_host_info(self, host):
         if not host.startswith(u"http://") and not host.startswith(u"https://"):
             host = u"https://{}".format(host)
         parsed_host = urlparse(host)
         self._session.headers[u"Host"] = parsed_host.netloc
-        return host
-
-
-class KnownUrlConnection(Connection):
-    def __init__(self, host_address, auth=None, session=None):
-        super(KnownUrlConnection, self).__init__(auth=auth, session=session)
-        self._known_host_address = host_address
-
-    def _get_host_address(self):
-        return self._known_host_address
-
-
-class KeyValueStoreConnection(Connection):
-    def __init__(self, auth=None, session=None):
-        super(KeyValueStoreConnection, self).__init__(auth=auth, session=session)
-
-    def _get_host_address(self):
-        sts_url = self._get_sts_base_url()
-        return sts_url.replace(u"sts", u"key-value-store")
-
-    def _get_sts_base_url(self):
-        uri = u"/api/ServerEnv"
-        try:
-            response = self.get(uri)
-        except HTTPError as ex:
-            raise Py42SessionInitializationError(ex)
-
-        response_json = json_lib.loads(response.text)
-        sts_base_url = response_json.get(u"stsBaseUrl")
-
-        if not sts_base_url:
-            raise Py42FeatureUnavailableError()
-
-        return sts_base_url
-
-
-class MicroserviceConnection(Connection):
-    def __init__(self, kvs_connection, key, auth=None, session=None):
-        super(MicroserviceConnection, self).__init__(auth=auth, session=session)
-        self._kvs_connection = kvs_connection
-        self._key = key
-
-    def _get_host_address(self):
-        return self._kvs_connection.get_stored_value(self._key).text
-
-
-def _handle_error(method, url, response):
-    if response is None:
-        msg = u"No response was returned for {} request to {}.".format(method, url)
-        raise Py42Error(msg)
-
-    try:
-        response.raise_for_status()
-    except HTTPError as ex:
-        raise_py42_error(ex)
-
-
-def _print_request(method, url, params=None, data=None):
-    debug.logger.info(u"{}{}".format(method.ljust(8), url))
-    if params:
-        debug.logger.debug(format_dict(params, u"  params"))
-    if data:
-        debug.logger.debug(format_dict(data, u"  data"))
+        self._host_address = host

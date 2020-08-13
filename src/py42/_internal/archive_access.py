@@ -286,15 +286,15 @@ class RestoreJobManager(_RestorePoller):
         debug.logger.debug(format_dict(percentage_dict))
         return response[u"done"]
 
-    def _start_restore(self, file_selection):
-        num_files = sum([fs.num_files for fs in file_selection])
-        num_dirs = sum([fs.num_dirs for fs in file_selection])
-        size = sum([fs.size for fs in file_selection])
-        zip_result = _check_for_multiple_files(file_selection) or None
+    def _start_restore(self, file_selections):
+        num_files = sum([fs.num_files for fs in file_selections])
+        num_dirs = sum([fs.num_dirs for fs in file_selections])
+        size = sum([fs.size for fs in file_selections])
+        zip_result = _check_for_multiple_files(file_selections) or None
         return self._storage_archive_client.start_restore(
             guid=self._device_guid,
             web_restore_session_id=self._archive_session_id,
-            path_set=[fs.path_set for fs in file_selection],
+            path_set=[fs.path_set for fs in file_selections],
             num_files=num_files,
             num_dirs=num_dirs,
             size=size,

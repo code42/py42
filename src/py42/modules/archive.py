@@ -1,3 +1,6 @@
+_FILE_SIZE_CALC_TIMEOUT = 10
+
+
 class ArchiveModule(object):
     """A module for getting information about backup archives on storage nodes along with
     functionality for streaming a file from backup.
@@ -9,38 +12,51 @@ class ArchiveModule(object):
 
     def stream_from_backup(
         self,
-        file_path,
+        file_paths,
         device_guid,
         destination_guid=None,
         archive_password=None,
         encryption_key=None,
+        file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
-        """Streams a file from a backup archive to memory.
+        """Streams a file from a backup archive to memory. If streaming multiple files, the
+        results will be zipped.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
-            file_path (str): The path to the file in your archive.
+            file_paths (str or list of str): The path or list of paths to the files or directories in
+                your archive.
             device_guid (str): The GUID of the device the file belongs to.
             destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your
                 destinations or if you want to optimize performance. Defaults to None.
-            archive_password (str, None): The password for archives that are protected with an
-                additional password. This is only relevant to users with archive key password
-                security. Defaults to None.
-            encryption_key (str, None): A custom encryption key for decryption an archive's file
-                contents, necessary for restoring files. This is only relevant to users with custom
+            archive_password (str or None, optional): The password for the archive, if password-
+                protected. This is only relevant to users with archive key password security. Defaults
+                to None.
+            encryption_key (str or None, optional): A custom encryption key for decrypting an archive's
+                file contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
+            file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
+                file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
+                Defaults to 10.
+
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.
 
         Usage example::
 
             stream_response = sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
-            with open("/path/to/my/file", 'wb') as f:
+            with open("/path/to/my/file", "wb") as f:
                 for chunk in stream_response.iter_content(chunk_size=128):
                     if chunk:
                         f.write(chunk)
+
+        If downloading multiple files, you will need to unzip the results::
+
+            import zipfile
+            with zipfile.ZipFile("downloaded_directory.zip", "r") as zf:
+                zf.extractall(".")
         """
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
             device_guid,
@@ -48,7 +64,9 @@ class ArchiveModule(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        return archive_accessor.stream_from_backup(file_path)
+        return archive_accessor.stream_from_backup(
+            file_paths, file_size_calc_timeout=file_size_calc_timeout
+        )
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific

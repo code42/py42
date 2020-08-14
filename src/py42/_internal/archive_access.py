@@ -282,6 +282,7 @@ class RestoreJobManager(_RestorePoller):
         is_done = response[u"done"]
         percentage_dict = {
             u"jobId": job_id,
+            u"status": response[u"status"],
             u"percentComplete": response[u"percentComplete"] if not is_done else 100,
         }
         debug.logger.debug(format_dict(percentage_dict))

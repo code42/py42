@@ -19,6 +19,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- Debug logs for restore progress during the method call `py42.archive.stream_from_back()`.
+
 - `py42.constants.SortDirection` constants `DESC` and `ASC`.
 
 - `sdk.detectionlists.departing_employee.DepartingEmployeeFilters` constants `OPEN`,

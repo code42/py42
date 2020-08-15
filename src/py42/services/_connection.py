@@ -62,7 +62,6 @@ class MicroservicePrefixHostResolver(HostResolver):
         except HTTPError as ex:
             raise Py42SessionInitializationError(ex)
 
-        print(response.text)
         response_json = json_lib.loads(response.text)
         sts_base_url = response_json.get(u"stsBaseUrl")
 
@@ -79,25 +78,6 @@ class MicroserviceKeyHostResolver(HostResolver):
 
     def get_host_address(self):
         return self._kv_service.get_stored_value(self._key).text
-
-
-def _handle_error(method, url, response):
-    if response is None:
-        msg = u"No response was returned for {} request to {}.".format(method, url)
-        raise Py42Error(msg)
-
-    try:
-        response.raise_for_status()
-    except HTTPError as ex:
-        raise_py42_error(ex)
-
-
-def _print_request(method, url, params=None, data=None):
-    debug.logger.info(u"{}{}".format(method.ljust(8), url))
-    if params:
-        debug.logger.debug(format_dict(params, u"  params"))
-    if data:
-        debug.logger.debug(format_dict(data, u"  data"))
 
 
 class Connection(object):
@@ -179,20 +159,21 @@ class Connection(object):
         proxies=None,
     ):
         response = None
-        request = self._prepare_request(
-            method,
-            url,
-            params=params,
-            data=data,
-            json=json,
-            headers=headers,
-            cookies=cookies,
-            files=files,
-            auth=auth,
-            hooks=hooks,
-        )
 
         for _ in range(2):
+            request = self._prepare_request(
+                method,
+                url,
+                params=params,
+                data=data,
+                json=json,
+                headers=headers,
+                cookies=cookies,
+                files=files,
+                auth=auth,
+                hooks=hooks,
+            )
+
             response = self._session.send(
                 request,
                 stream=stream,
@@ -232,7 +213,7 @@ class Connection(object):
         self._session.proxies = settings.proxies
         self._session.verify = settings.verify_ssl_certs
 
-        if json:
+        if json is not None:
             data = json_lib.dumps(json)
 
         final_headers = {u"User-Agent": settings.get_user_agent_string()}
@@ -269,3 +250,22 @@ class Connection(object):
         parsed_host = urlparse(host)
         self._session.headers[u"Host"] = parsed_host.netloc
         self._host_address = host
+
+
+def _handle_error(method, url, response):
+    if response is None:
+        msg = u"No response was returned for {} request to {}.".format(method, url)
+        raise Py42Error(msg)
+
+    try:
+        response.raise_for_status()
+    except HTTPError as ex:
+        raise_py42_error(ex)
+
+
+def _print_request(method, url, params=None, data=None):
+    debug.logger.info(u"{}{}".format(method.ljust(8), url))
+    if params:
+        debug.logger.debug(format_dict(params, u"  params"))
+    if data:
+        debug.logger.debug(format_dict(data, u"  data"))

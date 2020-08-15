@@ -6,6 +6,7 @@ from requests import HTTPError
 from requests import Response
 from requests import Session
 
+from py42.exceptions import Py42UnauthorizedError
 from py42.response import Py42Response
 from py42.sdk.queries.query_filter import QueryFilter
 from py42.services._auth import C42RenewableAuth
@@ -44,20 +45,16 @@ VALUE_UNICODE = u"您已经发现了秘密信息"
 
 
 @pytest.fixture
+def http_error():
+    return HTTPError(REQUEST_EXCEPTION_MESSAGE)
+
+
+@pytest.fixture
 def successful_response(mocker):
     response = mocker.MagicMock(spec=Response)
     response.text = TEST_RESPONSE_CONTENT
     response.status_code = 200
     response.encoding = None
-    return response
-
-
-@pytest.fixture
-def py42_response(mocker):
-    response = mocker.MagicMock(spec=Py42Response)
-    response.status_code = 200
-    response.encoding = None
-    response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
     return response
 
 
@@ -72,8 +69,22 @@ def error_response(mocker, http_error):
 
 
 @pytest.fixture
-def http_error():
-    return HTTPError(REQUEST_EXCEPTION_MESSAGE)
+def unauthorized_response(mocker, http_error):
+    response = mocker.MagicMock(spec=Response)
+    response.text = TEST_RESPONSE_CONTENT
+    response.status_code = 401
+    response.encoding = None
+    response.raise_for_status.side_effect = [Py42UnauthorizedError(http_error)]
+    return response
+
+
+@pytest.fixture
+def py42_response(mocker):
+    response = mocker.MagicMock(spec=Py42Response)
+    response.status_code = 200
+    response.encoding = None
+    response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
+    return response
 
 
 @pytest.fixture
@@ -86,30 +97,34 @@ def traceback(mocker):
 @pytest.fixture
 def success_requests_session(mocker, successful_response):
     session = mocker.MagicMock(spec=Session)
-    session.get.return_value = successful_response
-    session.request.return_value = successful_response
+    session.headers = {}
+    session.send.return_value = successful_response
     return session
 
 
 @pytest.fixture
 def error_requests_session(mocker, error_response):
     session = mocker.MagicMock(spec=Session)
-    session.request.return_value = error_response.response
+    session.headers = {}
+    session.send.return_value = error_response.response
     return session
 
 
 @pytest.fixture
-def valid_auth_handler(mocker):
-    auth_handler = mocker.MagicMock(spec=C42RenewableAuth)
-    return auth_handler
+def unauthorized_requests_session(mocker, unauthorized_response):
+    session = mocker.MagicMock(spec=Session)
+    session.headers = {}
+    session.send.return_value = unauthorized_response
+    return session
 
 
 @pytest.fixture
-def renewing_auth_handler(mocker):
-    auth_handler = mocker.MagicMock(spec=C42RenewableAuth)
-    # initialized, unauthorized, corrected
-    auth_handler.return_value.status_code.side_effect = [False, True, False]
-    return auth_handler
+def renewed_requests_session(mocker, unauthorized_response, successful_response):
+    session = mocker.MagicMock(spec=Session)
+    session.headers = {}
+    # unauthorized, then corrected
+    session.send.side_effect = [unauthorized_response, successful_response]
+    return session
 
 
 @pytest.fixture

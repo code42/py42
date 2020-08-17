@@ -7,4 +7,6 @@ class KeyValueStoreClient(BaseService):
 
     def get_stored_value(self, key):
         uri = u"/v1/{}".format(key)
-        return self._connection.get(uri)
+        # this request doesn't expect json, unlike most.
+        headers = {"Accept": "*/*"}
+        return self._connection.get(uri, headers=headers)

@@ -10,7 +10,7 @@ _ver = sys.version_info
 is_py2 = _ver[0] == 2
 
 if is_py2:
-    from urllib import quote
+    from urllib import quote, urlencode
 
     from urlparse import urljoin, urlparse
 
@@ -21,7 +21,7 @@ if is_py2:
     string_type = basestring
 
 else:
-    from urllib.parse import urljoin, urlparse, quote
+    from urllib.parse import urljoin, urlparse, quote, urlencode
 
     str = str
 

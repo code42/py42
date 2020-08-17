@@ -57,7 +57,7 @@ def from_local_account(host_address, username, password):
 class SDKClient(object):
     def __init__(self, main_connection, auth):
         services, user_ctx = _init_services(main_connection, auth)
-        self._clients = _init_clients(services, auth)
+        self._clients = _init_clients(services, main_connection)
         self._user_ctx = user_ctx
 
     @classmethod

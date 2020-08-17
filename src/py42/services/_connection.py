@@ -80,6 +80,7 @@ class Connection(object):
     def __init__(self, host_resolver, auth=None, session=None):
         self._host_resolver = host_resolver
         self._session = session or ROOT_SESSION
+        self._headers = self._session.headers.copy()
         self._auth = auth
         self._resolve_lock = Lock()
         self._host_address = None
@@ -171,6 +172,8 @@ class Connection(object):
                 proxies=proxies,
             )
 
+            print(response.status_code)
+
             if not stream and response is not None:
                 # setting this manually speeds up read times
                 response.encoding = u"utf-8"
@@ -201,17 +204,19 @@ class Connection(object):
         self._session.proxies = settings.proxies
         self._session.verify = settings.verify_ssl_certs
 
+        print(url)
         if json is not None:
             data = json_lib.dumps(json)
 
-        final_headers = {u"User-Agent": settings.get_user_agent_string()}
+        user_headers = {u"User-Agent": settings.get_user_agent_string()}
         if headers:
-            final_headers.update(headers)
-        final_headers.update(self._session.headers)
+            user_headers.update(headers)
+        self._headers.update(user_headers)
+
         request = Request(
             method=method,
             url=url,
-            headers=final_headers,
+            headers=self._headers,
             files=files,
             data=data,
             params=params,
@@ -236,7 +241,7 @@ class Connection(object):
         if not host.startswith(u"http://") and not host.startswith(u"https://"):
             host = u"https://{}".format(host)
         parsed_host = urlparse(host)
-        self._session.headers[u"Host"] = parsed_host.netloc
+        self._headers[u"Host"] = parsed_host.netloc
         self._host_address = host
 
 

@@ -13,7 +13,6 @@ class StorageTmpAuth(C42RenewableAuth):
         return self._cached_info
 
     def clear_credentials(self):
-        self._cached_info = None
         super(StorageTmpAuth, self).clear_credentials()
 
     def get_tmp_auth(self):

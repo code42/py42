@@ -198,28 +198,45 @@ class SecurityDataClient(object):
         return response
 
     def _find_file_version(self, device_guid, md5_hash, sha256_hash, path):
-        version = self._get_device_file_version(device_guid, md5_hash, sha256_hash, path)
+        version = self._get_device_file_version(
+            device_guid, md5_hash, sha256_hash, path
+        )
         if not version:
             version = self._get_other_file_location_version(md5_hash, sha256_hash)
         return version
 
     def _get_device_file_version(self, device_guid, md5_hash, sha256_hash, path):
-        response = self._preservation_data_service.get_file_version_list(device_guid, md5_hash, sha256_hash, path)
+        response = self._preservation_data_service.get_file_version_list(
+            device_guid, md5_hash, sha256_hash, path
+        )
         versions = response["versions"]
         if versions:
-            exact_match = next((x for x in versions if x["fileMD5"] == md5_hash and x["fileSHA256"] == sha256_hash), None)
+            exact_match = next(
+                (
+                    x
+                    for x in versions
+                    if x["fileMD5"] == md5_hash and x["fileSHA256"] == sha256_hash
+                ),
+                None,
+            )
             if exact_match:
                 return exact_match
 
-            most_recent = sorted(versions, key=lambda i: i["versionTimestamp"], reverse=True)
+            most_recent = sorted(
+                versions, key=lambda i: i["versionTimestamp"], reverse=True
+            )
             return most_recent[0]
 
     def _get_other_file_location_version(self, md5_hash, sha256_hash):
-        response = self._file_event_service.get_file_location_detail_by_sha256(sha256_hash)
+        response = self._file_event_service.get_file_location_detail_by_sha256(
+            sha256_hash
+        )
         locations = response["locations"]
         if locations:
             paths = _parse_file_location_response(locations)
-            version = self._preservation_data_service.find_file_version(md5_hash, sha256_hash, paths)
+            version = self._preservation_data_service.find_file_version(
+                md5_hash, sha256_hash, paths
+            )
             if version.status_code != 204:
                 return version
 
@@ -258,7 +275,9 @@ class SecurityDataClient(object):
             raise Py42ChecksumNotFoundError(response, u"SHA256", checksum)
         (device_guid, md5_hash, sha256_hash, path) = info
 
-        return self._stream_file(self._find_file_version(device_guid, md5_hash, sha256_hash, path), checksum)
+        return self._stream_file(
+            self._find_file_version(device_guid, md5_hash, sha256_hash, path), checksum
+        )
 
     def stream_file_by_md5(self, checksum):
         """Stream file based on MD5 checksum.

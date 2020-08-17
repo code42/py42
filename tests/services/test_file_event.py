@@ -9,7 +9,7 @@ RAW_QUERY = "RAW JSON QUERY"
 RAW_UNICODE_QUERY = u"RAW UNICODE JSON QUERY 我能吞"
 
 
-class TestFileEventClient(object):
+class TestFileEventService(object):
     @pytest.fixture
     def connection(self, mocker):
         return mocker.MagicMock(spec=Connection)

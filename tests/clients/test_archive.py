@@ -57,7 +57,7 @@ class TestArchiveClient(object):
         )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(
-        self, archive_accessor_manager, archive_service, archive_accessor
+        self, archive_accessor_manager, archive_service
     ):
         archive = ArchiveClient(archive_accessor_manager, archive_service)
         archive.get_backup_sets("device_guid", "dest_guid")
@@ -66,7 +66,7 @@ class TestArchiveClient(object):
         )
 
     def test_get_all_org_restore_history_calls_get_all_restore_history_with_expected_id(
-        self, archive_accessor_manager, archive_service, archive_accessor
+        self, archive_accessor_manager, archive_service
     ):
         archive = ArchiveClient(archive_accessor_manager, archive_service)
         archive.get_all_org_restore_history(self._TEST_DAYS, self._TEST_ID)
@@ -75,7 +75,7 @@ class TestArchiveClient(object):
         )
 
     def test_get_all_user_restore_history_calls_get_all_restore_history_with_expected_id(
-        self, archive_accessor_manager, archive_service, archive_accessor
+        self, archive_accessor_manager, archive_service
     ):
         archive = ArchiveClient(archive_accessor_manager, archive_service)
         archive.get_all_user_restore_history(self._TEST_DAYS, self._TEST_ID)
@@ -84,7 +84,7 @@ class TestArchiveClient(object):
         )
 
     def test_get_all_device_restore_history_calls_get_all_restore_history_with_expected_id(
-        self, archive_accessor_manager, archive_service, archive_accessor
+        self, archive_accessor_manager, archive_service
     ):
         archive = ArchiveClient(archive_accessor_manager, archive_service)
         archive.get_all_device_restore_history(self._TEST_DAYS, self._TEST_ID)
@@ -93,7 +93,7 @@ class TestArchiveClient(object):
         )
 
     def test_update_cold_storage_purge_date_calls_update_cold_storage_with_expected_data(
-        self, archive_accessor_manager, archive_service, archive_accessor
+        self, archive_accessor_manager, archive_service
     ):
         archive = ArchiveClient(archive_accessor_manager, archive_service)
         archive.update_cold_storage_purge_date(u"123", u"2020-04-24")
@@ -102,7 +102,7 @@ class TestArchiveClient(object):
         )
 
     def test_get_all_org_cold_storage_archives_calls_client_with_expected_data(
-        self, archive_accessor_manager, archive_service, archive_accessor
+        self, archive_accessor_manager, archive_service
     ):
         archive = ArchiveClient(archive_accessor_manager, archive_service)
         archive.get_all_org_cold_storage_archives(

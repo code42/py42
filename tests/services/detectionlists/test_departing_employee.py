@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
-
 import pytest
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 

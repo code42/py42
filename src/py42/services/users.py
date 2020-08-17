@@ -1,5 +1,3 @@
-import json
-
 from py42 import settings
 from py42._compat import quote
 from py42.services import BaseService

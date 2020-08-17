@@ -1,5 +1,3 @@
-import json
-
 from py42.services.alertrules import FileTypeMismatchService
 
 

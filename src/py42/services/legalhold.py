@@ -1,5 +1,3 @@
-import json
-
 from py42 import settings
 from py42.exceptions import Py42Error
 from py42.services import BaseService

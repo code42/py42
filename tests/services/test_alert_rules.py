@@ -1,5 +1,3 @@
-import json
-
 import pytest
 
 from py42.services.alertrules import AlertRulesService

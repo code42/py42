@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 
 from py42.services._connection import Connection
-from py42.services.storage import StorageSecurityDataService
+from py42.services.storage.securitydata import StorageSecurityDataService
 
 uri = u"/api/SecurityDetectionEvent"
 mock_min_ts = 1000000

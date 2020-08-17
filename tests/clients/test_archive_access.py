@@ -14,7 +14,7 @@ from py42.clients._archive_access import RestoreJobManager
 from py42.exceptions import Py42ArchiveFileNotFoundError
 from py42.response import Py42Response
 from py42.services.archive import ArchiveService
-from py42.services.storage import StorageArchiveService
+from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage._service_factory import StorageServiceFactory
 
 DEVICE_GUID = "device-guid"

@@ -13,7 +13,7 @@ from py42.services.fileevent import FileEventService
 from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.securitydata import SecurityDataService
-from py42.services.storage import StorageSecurityDataService
+from py42.services.storage.securitydata import StorageSecurityDataService
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.preservationdata import StoragePreservationDataService
 

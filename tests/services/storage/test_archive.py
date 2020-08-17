@@ -2,7 +2,7 @@ import pytest
 
 from py42.response import Py42Response
 from py42.services._connection import Connection
-from py42.services.storage import StorageArchiveService
+from py42.services.storage.archive import StorageArchiveService
 
 DATA_KEYWORD = "data"
 JSON_KEYWORD = "json"

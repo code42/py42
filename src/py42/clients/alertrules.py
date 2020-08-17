@@ -1,4 +1,6 @@
 from py42 import settings
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidRuleOperationError
 
 
 class AlertRulesClient(object):
@@ -43,7 +45,12 @@ class AlertRulesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        return self._alert_rules_service.add_user(rule_id, user_id)
+        try:
+            return self._alert_rules_service.add_user(rule_id, user_id)
+        except Py42InternalServerError as err:
+            rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
+            _check_if_system_rule(err, rules)
+            raise
 
     def remove_user(self, rule_id, user_id):
         """Update alert rule criteria to remove a user and all its aliases from a rule.
@@ -55,7 +62,12 @@ class AlertRulesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        return self._alert_rules_service.remove_user(rule_id, user_id)
+        try:
+            return self._alert_rules_service.remove_user(rule_id, user_id)
+        except Py42InternalServerError as err:
+            rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
+            _check_if_system_rule(err, rules)
+            raise
 
     def remove_all_users(self, rule_id):
         """Update alert rule criteria to remove all users the from the alert rule.
@@ -69,7 +81,7 @@ class AlertRulesClient(object):
         return self._alert_rules_service.remove_all_users(rule_id)
 
     def get_page(
-        self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None
+        self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None,
     ):
         """Gets a page of alert rules. Note that you can use page_size here the same
         way as other methods that have a `page_size` parameter in py42. However, under
@@ -77,10 +89,12 @@ class AlertRulesClient(object):
         the Code42 alerts API expected the start page to be zero while the rest of the
         Code42 APIs expect the start page to be one.
 
-        sort_key (str, optional): Sort results based by field. Defaults to "CreatedAt".
-        sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to  "DESC".
-        page_num (int, optional): The page number to get. Defaults to 1.
-        page_size (int, optional): The number of items per page. Defaults to `py42.settings.items_per_page`.
+        Args:
+            sort_key (str, optional): Sort results based by field. Defaults to "CreatedAt".
+            sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
+                :class:`py42.constants.SortDirection`. Defaults to  "DESC".
+            page_num (int, optional): The page number to get. Defaults to 1.
+            page_size (int, optional): The number of items per page. Defaults to `py42.settings.items_per_page`.
 
         Returns:
              :class:`py42.response.Py42Response`
@@ -98,7 +112,8 @@ class AlertRulesClient(object):
 
         Args:
             sort_key (str, optional): Sort results based by field. Defaults to 'CreatedAt'.
-            sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to  "DESC"
+            sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
+                :class:`py42.constants.SortDirection`. Defaults to  "DESC"
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -130,3 +145,12 @@ class AlertRulesClient(object):
             :class:`py42.response.Py42Response`
         """
         return self._alerts_service.get_rule_by_observer_id(observer_id)
+
+
+def _check_if_system_rule(base_err, rules):
+    """You cannot add or remove users from system rules this way; use the specific
+    feature behind the rule, such as the Departing Employee list."""
+    if rules and rules[0][u"isSystem"]:
+        raise Py42InvalidRuleOperationError(
+            base_err, rules[0][u"observerRuleId"], rules[0][u"ruleSource"]
+        )

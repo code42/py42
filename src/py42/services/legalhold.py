@@ -1,5 +1,9 @@
 from py42 import settings
+from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
+from py42.exceptions import Py42ForbiddenError
+from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
+from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 
@@ -102,7 +106,10 @@ class LegalHoldService(BaseService):
             :class:`py42.response.Py42Response`: A response containing the Matter.
         """
         uri = u"/api/LegalHold/{}".format(legal_hold_uid)
-        return self._connection.get(uri)
+        try:
+            return self._connection.get(uri)
+        except Py42ForbiddenError as err:
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
 
     def get_matters_page(
         self,
@@ -271,7 +278,16 @@ class LegalHoldService(BaseService):
         """
         uri = u"/api/LegalHoldMembership"
         data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42BadRequestError as err:
+            if u"USER_ALREADY_IN_HOLD" in err.response.text:
+                matter = self.get_matter_by_uid(legal_hold_uid)
+                matter_id_and_name_text = u"legal hold matter id={}, name={}".format(
+                    legal_hold_uid, matter[u"name"]
+                )
+                raise Py42UserAlreadyAddedError(err, user_uid, matter_id_and_name_text)
+            raise
 
     def remove_from_matter(self, legal_hold_membership_uid):
         """Remove a user (Custodian) from a Legal Hold Matter.

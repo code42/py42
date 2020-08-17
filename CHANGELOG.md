@@ -10,13 +10,38 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Removed
+
+- Removed `tenant_id` parameter from methods:
+    - `sdk.alerts.get_details()`
+    - `sdk.alerts.resolve()`
+    - `sdk.alerts.reopen()`
+
+### Added
+
+- Debug logs for restore progress during the method call `py42.archive.stream_from_back()`.
+
+- `py42.constants.SortDirection` constants `DESC` and `ASC`.
+
+- `sdk.detectionlists.departing_employee.DepartingEmployeeFilters` constants `OPEN`,
+    `EXFILTRATION_30_DAYS`, `EXFILTRATION_24_HOURS`, and `LEAVING_TODAY`.
+
+- `sdk.detectionlists.high_risk_employee.HighRiskEmployeeFilters` constants `OPEN`,
+    `EXFILTRATION_30_DAYS`, and `EXFILTRATION_24_HOURS`.
+
 - Methods for calling the agent-state APIs:
     - `sdk.devices.get_agent_state()`
     - `sdk.devices.get_agent_full_disk_access_state()`
     - `sdk.orgs.get_agent_state()`
     - `sdk.orgs.get_agent_full_disk_access_states()`
 
-### Added
+- Exception classes (`py42.execeptions`)
+    - `Py42ResponseError`
+    - `Py42UserAlreadyAddedError`
+    - `Py42UserNotInLegalHoldError`
+    - `Py42LegalHoldNotFoundOrPermissionDeniedError`
+    - `Py42UserDoesNotExistError`
+    - `Py42InvalidRuleOperationError`
 
 - Methods for getting individual response pages:
     - `sdk.detectionlists.departing_employee.get_page()`
@@ -56,6 +81,24 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - RuleType
     - AlertState
     - Severity
+
+### Changed
+
+- `py42.archive.stream_from_backup()` now calculates file sizes and accepts a `file_size_calc_timeout` parameter.
+- Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths` and can now take a list of file paths to restore.
+- `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
+- `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
+- `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.
+- `py42.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when the user does not have
+    access or the ID does not exist.
+- `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError` when the user is not found.
+- `py42.alerts.rules.add_user()` now raises `Py42InvalidRuleTypeError` when trying to add a user to a system rule.
+- `py42.alerts.rules.remove_user()` now raises `Py42InvalidRuleTypeError` when trying to remove user from a system rule.
+- `Py42ArchiveFileNotFoundError` now includes the response.
+- `Py42ChecksumNotFoundError` now includes the response.
+- `Py42FeatureUnavailableError` now includes the response.
+- `Py42UserDoesNotExistError` now includes the response.
+- `Py42StorageSessionInitializationError` now includes the response.
 
 ## 1.7.1 - 2020-07-24
 

@@ -1,6 +1,18 @@
+from py42.exceptions import Py42BadRequestError
+from py42.sdk.queries.query_filter import filter_attributes
 from py42.services import BaseService
+from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
+from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
+
+
+class HighRiskEmployeeFilters(_DetectionListFilters):
+    """Constants available for filtering High Risk Employee search results."""
+
+    @staticmethod
+    def choices():
+        return filter_attributes(HighRiskEmployeeFilters)
 
 
 class HighRiskEmployeeService(BaseService):
@@ -40,7 +52,13 @@ class HighRiskEmployeeService(BaseService):
         """
         if self._detection_list_user_client.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
-            return self._add_high_risk_employee(tenant_id, user_id)
+            try:
+                return self._add_high_risk_employee(tenant_id, user_id)
+            except Py42BadRequestError as err:
+                handle_user_already_added_error(
+                    err, user_id, u"high-risk-employee list"
+                )
+                raise
 
     def set_alerts_enabled(self, enabled=True):
         """Enables alerts.
@@ -92,14 +110,22 @@ class HighRiskEmployeeService(BaseService):
         uri = self._make_uri(u"/get")
         return self._connection.post(uri, json=data)
 
-    def get_all(self, filter_type=u"OPEN", sort_key=None, sort_direction=None):
+    def get_all(
+        self,
+        filter_type=HighRiskEmployeeFilters.OPEN,
+        sort_key=None,
+        sort_direction=None,
+    ):
         """Searches High Risk Employee list. Filter results by filter_type.
 
         Args:
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                or ``OPEN``. Defaults to "OPEN".
+                or ``OPEN``. Constants are available at
+                :class:`py42.clients.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
+                Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
-            sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to None.
+            sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
+                :class:`py42.constants.SortDirection`. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -118,7 +144,7 @@ class HighRiskEmployeeService(BaseService):
     def get_page(
         self,
         page_num,
-        filter_type=u"OPEN",
+        filter_type=HighRiskEmployeeFilters.OPEN,
         sort_key=None,
         sort_direction=None,
         page_size=_PAGE_SIZE,
@@ -128,9 +154,12 @@ class HighRiskEmployeeService(BaseService):
         Args:
             page_num (int): The page number to request.
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                or ``OPEN``. Defaults to "OPEN".
+                or ``OPEN``. Constants are available at
+                :class:`py42.clients.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
+                Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
-            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to None.
+            sort_direction (str. optional): ``ASC`` or ``DESC``. Constants available at
+                :class:`py42.constants.SortDirection`. Defaults to None.
             page_size (int, optional): The number of high risk employees to return
                 per page. Defaults to 100.
 

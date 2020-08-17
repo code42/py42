@@ -1,6 +1,11 @@
 import pytest
+from requests import HTTPError
+from requests import Response
 
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services.detectionlists._profile import DetectionListUserService
+from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeFilters
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.users import UserService
 
@@ -11,6 +16,13 @@ CREATE_USER_SAMPLE_RESPONSE = """
     "displayName":"Test Employee",
     "cloudUsernames":["test.employee@test.com"],"riskFactors":[]}
 """
+
+
+class TestHighRiskEmployeeFilters(object):
+    def test_choices_are_correct(self):
+        actual = HighRiskEmployeeFilters.choices()
+        expected = ["OPEN", "EXFILTRATION_24_HOURS", "EXFILTRATION_30_DAYS"]
+        assert set(actual) == set(expected)
 
 
 class TestHighRiskEmployeeClient(object):
@@ -58,6 +70,26 @@ class TestHighRiskEmployeeClient(object):
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
         )
+
+    def test_add_when_user_already_on_list_raises_user_already_added_error(
+        self, mocker, mock_connection, user_context, mock_detection_list_user_client
+    ):
+        def side_effect(url, json):
+            if "add" in url:
+                base_err = mocker.MagicMock(spec=HTTPError)
+                base_err.response = mocker.MagicMock(spec=Response)
+                base_err.response.text = "User already on list"
+                raise Py42BadRequestError(base_err)
+
+        mock_connection.post.side_effect = side_effect
+        client = HighRiskEmployeeService(
+            mock_connection, user_context, mock_detection_list_user_client
+        )
+        with pytest.raises(Py42UserAlreadyAddedError) as err:
+            client.add("user_id")
+
+        expected = "User with ID user_id is already on the high-risk-employee list."
+        assert str(err.value) == expected
 
     def test_set_alerts_enabled_posts_expected_data_with_default_value(
         self, user_context, mock_connection, mock_detection_list_user_client
@@ -116,11 +148,7 @@ class TestHighRiskEmployeeClient(object):
         assert posted_data["userId"] == "942897397520289999"
 
     def test_get_posts_expected_data(
-        self,
-        user_context,
-        mock_connection,
-        mock_detection_list_user_client,
-        mock_user_client,
+        self, user_context, mock_connection, mock_detection_list_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
@@ -138,11 +166,7 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_get_all_posts_expected_data(
-        self,
-        user_context,
-        mock_connection,
-        mock_detection_list_user_client,
-        mock_user_client,
+        self, user_context, mock_connection, mock_detection_list_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client

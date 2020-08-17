@@ -1,7 +1,14 @@
+import json
+
 import pytest
+from requests import HTTPError
 from requests import Response
 
 import py42
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42ForbiddenError
+from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
+from py42.exceptions import Py42UserAlreadyAddedError
 from py42.response import Py42Response
 from py42.services.legalhold import LegalHoldService
 
@@ -62,7 +69,7 @@ class TestLegalHoldClient(object):
         response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
         return Py42Response(response)
 
-    def test_get_legal_hold_by_uid_calls_get_with_uri_and_params(
+    def test_get_matter_by_uid_calls_get_with_uri_and_params(
         self, mock_connection, successful_response
     ):
         mock_connection.get.return_value = successful_response
@@ -70,6 +77,22 @@ class TestLegalHoldClient(object):
         client.get_matter_by_uid("LEGAL_HOLD_UID")
         uri = "{}/{}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
         mock_connection.get.assert_called_once_with(uri)
+
+    def test_get_matter_by_uid_when_forbidden_raises_legal_hold_permission_denied_error(
+        self, mocker, mock_connection, successful_response
+    ):
+        def side_effect(*args, **kwargs):
+            base_err = mocker.MagicMock(spec=HTTPError)
+            base_err.response = mocker.MagicMock(spec=Response)
+            raise Py42ForbiddenError(base_err)
+
+        mock_connection.get.side_effect = side_effect
+        client = LegalHoldService(mock_connection)
+        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+            client.get_matter_by_uid("matter")
+
+        expected = "Matter with ID=matter can not be found. Your account may not have permission to view the matter."
+        assert str(err.value) == expected
 
     def test_get_all_matters_calls_get_expected_number_of_times(
         self,
@@ -143,3 +166,33 @@ class TestLegalHoldClient(object):
                 "pgSize": 200,
             },
         )
+
+    def test_add_to_matter_calls_post_with_expected_url_and_params(
+        self, mock_connection
+    ):
+        client = LegalHoldService(mock_connection)
+        client.add_to_matter("user", "legal")
+        expected_data = {"legalHoldUid": "legal", "userUid": "user"}
+        mock_connection.post.assert_called_once_with(
+            "/api/LegalHoldMembership", json=expected_data
+        )
+
+    def test_add_to_matter_when_post_raises_bad_request_error_indicating_user_already_added_raises_user_already_added(
+        self, mocker, mock_connection
+    ):
+        def side_effect(*args, **kwargs):
+            base_err = mocker.MagicMock(spec=HTTPError)
+            base_err.response = mocker.MagicMock(spec=Response)
+            base_err.response.text = "USER_ALREADY_IN_HOLD"
+            raise Py42BadRequestError(base_err)
+
+        mock_connection.post.side_effect = side_effect
+        mock_connection.get.return_value = {"name": "NAME"}
+        client = LegalHoldService(mock_connection)
+        with pytest.raises(Py42UserAlreadyAddedError) as err:
+            client.add_to_matter("user", "legal")
+
+        expected = (
+            "User with ID user is already on the legal hold matter id=legal, name=NAME."
+        )
+        assert str(err.value) == expected

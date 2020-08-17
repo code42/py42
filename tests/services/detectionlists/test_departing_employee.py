@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 import pytest
+from requests import HTTPError
+from requests import Response
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services.detectionlists._profile import DetectionListUserService
+from py42.services.detectionlists.departing_employee import DepartingEmployeeFilters
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.users import UserService
 
@@ -52,6 +57,18 @@ _GET_ALL_CASES_RESPONSE = """
 _GET_ALL_CASES_EMPTY_RESPONSE = """
 {"type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE","cases":[],"totalCount":0}
 """
+
+
+class TestDepartingEmployeeFilters(object):
+    def test_choices_are_correct(self):
+        actual = DepartingEmployeeFilters.choices()
+        expected = [
+            "OPEN",
+            "LEAVING_TODAY",
+            "EXFILTRATION_24_HOURS",
+            "EXFILTRATION_30_DAYS",
+        ]
+        assert set(actual) == set(expected)
 
 
 class TestDepartingEmployeeClient(object):
@@ -116,6 +133,26 @@ class TestDepartingEmployeeClient(object):
             mock_connection.post.call_args[0][0] == "/svc/api/v2/departingemployee/add"
         )
         assert mock_connection.post.call_count == 2
+
+    def test_add_when_user_already_on_list_raises_user_already_added_error(
+        self, mocker, mock_connection, user_context, mock_detection_list_user_client
+    ):
+        def side_effect(url, json):
+            if "add" in url:
+                base_err = mocker.MagicMock(spec=HTTPError)
+                base_err.response = mocker.MagicMock(spec=Response)
+                base_err.response.text = "User already on list"
+                raise Py42BadRequestError(base_err)
+
+        mock_connection.post.side_effect = side_effect
+        client = DepartingEmployeeService(
+            mock_connection, user_context, mock_detection_list_user_client
+        )
+        with pytest.raises(Py42UserAlreadyAddedError) as err:
+            client.add("user_id")
+
+        expected = "User with ID user_id is already on the departing-employee list."
+        assert str(err.value) == expected
 
     def test_remove_posts_expected_data_and_to_expected_url(
         self,

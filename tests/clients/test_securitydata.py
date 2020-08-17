@@ -13,9 +13,9 @@ from py42.services.fileevent import FileEventService
 from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.securitydata import SecurityDataService
-from py42.services.storage.securitydata import StorageSecurityDataService
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.preservationdata import StoragePreservationDataService
+from py42.services.storage.securitydata import StorageSecurityDataService
 
 RAW_QUERY = "RAW JSON QUERY"
 USER_UID = "user-uid"
@@ -827,7 +827,7 @@ class TestSecurityClient(object):
         storage_service_factory,
         file_event_search,
     ):
-        file_event_search.text = "{}"
+        file_event_search.text = '{"fileEvents": []}'
         file_event_service = mocker.MagicMock(spec=FileEventService)
         file_event_service.search.return_value = file_event_search
         security_client = SecurityDataClient(
@@ -996,7 +996,7 @@ class TestSecurityClient(object):
         file_event_search,
     ):
 
-        file_event_search.text = "{}"
+        file_event_search.text = '{"fileEvents": []}'
         file_event_service = mocker.MagicMock(spec=FileEventService)
         file_event_service.search.return_value = file_event_search
 

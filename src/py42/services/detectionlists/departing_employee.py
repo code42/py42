@@ -1,6 +1,20 @@
+from py42.exceptions import Py42BadRequestError
+from py42.sdk.queries.query_filter import filter_attributes
 from py42.services import BaseService
+from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
+from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
+
+
+class DepartingEmployeeFilters(_DetectionListFilters):
+    """Constants available for filtering Departing Employee search results."""
+
+    LEAVING_TODAY = u"LEAVING_TODAY"
+
+    @staticmethod
+    def choices():
+        return filter_attributes(DepartingEmployeeFilters)
 
 
 class DepartingEmployeeService(BaseService):
@@ -8,8 +22,10 @@ class DepartingEmployeeService(BaseService):
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
 
-    def __init__(self, connection, user_context, detection_list_user_client):
-        super(DepartingEmployeeService, self).__init__(connection)
+    _CREATED_AT = u"CREATED_AT"
+
+    def __init__(self, session, user_context, detection_list_user_client):
+        super(DepartingEmployeeService, self).__init__(session)
         self._user_context = user_context
         self._detection_list_user_client = detection_list_user_client
 
@@ -31,14 +47,19 @@ class DepartingEmployeeService(BaseService):
         """
         if self._detection_list_user_client.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
-
             data = {
                 u"tenantId": tenant_id,
                 u"userId": user_id,
                 u"departureDate": departure_date,
             }
             uri = self._uri_prefix.format(u"add")
-            return self._connection.post(uri, json=data)
+            try:
+                return self._connection.post(uri, json=data)
+            except Py42BadRequestError as err:
+                handle_user_already_added_error(
+                    err, user_id, u"departing-employee list"
+                )
+                raise
 
     def get(self, user_id):
         """Gets departing employee data of a user.
@@ -72,13 +93,18 @@ class DepartingEmployeeService(BaseService):
         return self._connection.post(uri, json=data)
 
     def get_all(
-        self, filter_type=u"OPEN", sort_key=u"CREATED_AT", sort_direction=u"DESC"
+        self,
+        filter_type=DepartingEmployeeFilters.OPEN,
+        sort_key=_CREATED_AT,
+        sort_direction=u"DESC",
     ):
         """Gets all Departing Employees.
 
         Args:
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                ``OPEN``, or ``LEAVING_TODAY``. Defaults to None.
+                ``OPEN``, or ``LEAVING_TODAY``. Constants are available at
+                :class:`py42.clients.detectionlists.departing_employee.DepartingEmployeeFilters`.
+                Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
 
@@ -98,8 +124,8 @@ class DepartingEmployeeService(BaseService):
     def get_page(
         self,
         page_num,
-        filter_type=u"OPEN",
-        sort_key=u"CREATED_AT",
+        filter_type=DepartingEmployeeFilters.OPEN,
+        sort_key=_CREATED_AT,
         sort_direction=u"DESC",
         page_size=_PAGE_SIZE,
     ):
@@ -108,7 +134,9 @@ class DepartingEmployeeService(BaseService):
         Args:
             page_num (int): The page number to request.
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                ``OPEN``, or ``LEAVING_TODAY``. Defaults to "OPEN".
+                ``OPEN``, or ``LEAVING_TODAY``. Constants are available at
+                :class:`py42.clients.detectionlists.departing_employee.DepartingEmployeeFilters`.
+                Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
             page_size (int, optional): The number of departing employees to return

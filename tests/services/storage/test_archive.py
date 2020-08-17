@@ -29,7 +29,6 @@ EXPIRE_JOB_KEY = "expireJob"
 SHOW_DELETED_KEY = "showDeleted"
 RESTORE_FULL_PATH_KEY = "restoreFullPath"
 TIMESTAMP_KEY = "timestamp"
-EXCEPTIONS_KEY = "exceptions"
 BACKUP_SET_ID_KEY = "backupSetId"
 JOB_ID_KEY = "jobId"
 
@@ -45,10 +44,6 @@ NUM_DIRS = 0
 SIZE = 3
 ZIP_RESULT = True
 TIMESTAMP = 1557139716
-EXCEPTIONS = [
-    {"path": "/dir/file.ext", TIMESTAMP_KEY: TIMESTAMP},
-    {"path": "/dir2/file2.ext", TIMESTAMP_KEY: TIMESTAMP},
-]
 BACKUP_SET_ID = "12345"
 WEB_RESTORE_JOB_ID = "46289723"
 
@@ -101,10 +96,31 @@ class TestStorageArchiveClient(object):
             },
         )
 
+    def test_create_file_size_job_calls_post_with_expected_params(self, connection):
+        storage_archive_service = StorageArchiveService(connection)
+        storage_archive_service.create_file_size_job("device_guid", "file_id", 0, False)
+        json_dict = {
+            "guid": "device_guid",
+            "fileId": "file_id",
+            "timestamp": 0,
+            "showDeleted": False,
+        }
+        connection.post.assert_called_once_with(
+            "/api/WebRestoreFileSizePolling", json=json_dict
+        )
+
+    def test_get_file_size_job_calls_get_with_expected_params(self, connection):
+        storage_archive_service = StorageArchiveService(connection)
+        storage_archive_service.get_file_size_job("job_id", "device_guid")
+        connection.get.assert_called_once_with(
+            "/api/WebRestoreFileSizePolling",
+            params={"jobId": "job_id", "guid": "device_guid"},
+        )
+
     def test_get_file_path_metadata_calls_get_with_expected_params(self, connection):
         storage_archive_service = StorageArchiveService(connection)
         storage_archive_service.get_file_path_metadata(
-            "connection",
+            "session",
             "guid",
             "file_id",
             "timestamp",
@@ -117,7 +133,7 @@ class TestStorageArchiveClient(object):
         connection.get.assert_called_once_with(
             u"/api/WebRestoreTreeNode",
             params={
-                "webRestoreSessionId": "connection",
+                "webRestoreSessionId": "session",
                 "guid": "guid",
                 "fileId": "file_id",
                 "timestamp": "timestamp",
@@ -210,7 +226,6 @@ class TestStorageArchiveClient(object):
             SHOW_DELETED_KEY,
             RESTORE_FULL_PATH_KEY,
             TIMESTAMP_KEY,
-            EXCEPTIONS_KEY,
             BACKUP_SET_ID_KEY,
         ]
 
@@ -364,22 +379,6 @@ class TestStorageArchiveClient(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(TIMESTAMP_KEY) == TIMESTAMP
 
-    def test_start_restore_with_exceptions_calls_post_with_exceptions_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            exceptions=EXCEPTIONS,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(EXCEPTIONS_KEY) == EXCEPTIONS
-
     def test_start_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(
         self, connection
     ):
@@ -412,7 +411,6 @@ class TestStorageArchiveClient(object):
             show_deleted=True,
             restore_full_path=True,
             timestamp=TIMESTAMP,
-            exceptions=EXCEPTIONS,
             backup_set_id=BACKUP_SET_ID,
         )
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
@@ -428,7 +426,6 @@ class TestStorageArchiveClient(object):
             SHOW_DELETED_KEY: True,
             RESTORE_FULL_PATH_KEY: True,
             TIMESTAMP_KEY: TIMESTAMP,
-            EXCEPTIONS_KEY: EXCEPTIONS,
             BACKUP_SET_ID_KEY: BACKUP_SET_ID,
         }
         assert json_arg == expected_data

@@ -41,6 +41,26 @@ class StorageArchiveService(BaseService):
         }
         return self._connection.get(uri, params=params)
 
+    def create_file_size_job(
+        self, device_guid, file_id, timestamp=None, show_deleted=None,
+    ):
+        uri = u"/api/WebRestoreFileSizePolling"
+        json_dict = {
+            u"guid": device_guid,
+            u"fileId": file_id,
+            u"timestamp": timestamp,
+            u"showDeleted": show_deleted,
+        }
+        return self._connection.post(uri, json=json_dict)
+
+    def get_file_size_job(self, job_id, device_guid):
+        uri = u"/api/WebRestoreFileSizePolling"
+        params = {
+            u"jobId": job_id,
+            u"guid": device_guid,
+        }
+        return self._connection.get(uri, params=params)
+
     def get_file_path_metadata(
         self,
         session_id,
@@ -100,7 +120,6 @@ class StorageArchiveService(BaseService):
         show_deleted=None,
         restore_full_path=None,
         timestamp=None,
-        exceptions=None,
         backup_set_id=None,
     ):
         """Submits a web restore job.
@@ -119,7 +138,6 @@ class StorageArchiveService(BaseService):
             u"showDeleted": show_deleted,
             u"restoreFullPath": restore_full_path,
             u"timestamp": timestamp,
-            u"exceptions": exceptions,
             u"backupSetId": backup_set_id,
         }
 

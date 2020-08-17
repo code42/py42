@@ -62,7 +62,7 @@ class MicroservicePrefixHostResolver(HostResolver):
         sts_base_url = response_json.get(u"stsBaseUrl")
 
         if not sts_base_url:
-            raise Py42FeatureUnavailableError()
+            raise Py42FeatureUnavailableError(response)
 
         return sts_base_url
 

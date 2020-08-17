@@ -1,8 +1,35 @@
 import pytest
+from requests import HTTPError
+from requests import Response
 
 from py42.clients.alertrules import AlertRulesClient
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidRuleOperationError
+from py42.response import Py42Response
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
+
+TEST_RULE_ID = "rule-id"
+
+
+TEST_SYSTEM_RULE_RESPONSE = {
+    "ruleMetadata": [
+        {
+            "observerRuleId": TEST_RULE_ID,
+            "type": "FED_FILE_TYPE_MISMATCH",
+            "isSystem": True,
+            "ruleSource": "NOTVALID",
+        }
+    ]
+}
+
+
+@pytest.fixture
+def mock_alerts_service_system_rule(mocker, mock_alerts_service):
+    response = mocker.MagicMock(spec=Py42Response)
+    response.text = TEST_SYSTEM_RULE_RESPONSE
+    mock_alerts_service.get_rule_by_observer_id.return_value = response
+    return mock_alerts_service
 
 
 @pytest.fixture
@@ -28,6 +55,26 @@ class TestAlertRulesClient(object):
         alert_rules_client.add_user(self._rule_id, self._rule_id)
         mock_alert_rules_service.add_user.assert_called_once_with(
             self._rule_id, self._rule_id
+        )
+
+    def test_alert_rules_modules_raises_invalid_rule_type_error_when_adding_to_system_rule(
+        self, mocker, mock_alerts_service_system_rule, mock_alert_rules_service
+    ):
+        def add(*args, **kwargs):
+            base_err = mocker.MagicMock(spec=HTTPError)
+            base_err.response = mocker.MagicMock(spec=Response)
+            raise Py42InternalServerError(base_err)
+
+        mock_alert_rules_service.add_user.side_effect = add
+        alert_rules_module = AlertRulesClient(
+            mock_alerts_service_system_rule, mock_alert_rules_service
+        )
+        with pytest.raises(Py42InvalidRuleOperationError) as err:
+            alert_rules_module.add_user(self._rule_id, self._rule_id)
+
+        assert (
+            "Only alert rules with a source of 'Alerting' can be targeted by this command."
+            in str(err.value)
         )
 
     def test_alert_rules_client_calls_remove_user_with_expected_value(

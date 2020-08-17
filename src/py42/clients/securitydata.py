@@ -6,6 +6,7 @@ from requests.exceptions import HTTPError
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42HTTPError
+from py42.exceptions import Py42ResponseError
 from py42.exceptions import Py42SecurityPlanConnectionError
 from py42.exceptions import raise_py42_error
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
@@ -51,6 +52,7 @@ class SecurityDataClient(object):
         Returns:
             list[:class:`py42.clients.securitydata.PlanStorageInfo`]
         """
+        response = None
         locations = None
         try:
             response = self._security_client.get_security_event_locations(user_uid)
@@ -61,13 +63,14 @@ class SecurityDataClient(object):
             else:
                 raise_py42_error(err)
 
-        if locations:
+        if response and locations:
             plan_destination_map = _get_plan_destination_map(locations)
             selected_plan_infos = self._get_plan_storage_infos(plan_destination_map)
             if not selected_plan_infos:
                 raise Py42SecurityPlanConnectionError(
+                    response,
                     u"Could not establish a connection to retrieve "
-                    u"security events for user {}".format(user_uid)
+                    u"security events for user {}".format(user_uid),
                 )
 
             return selected_plan_infos
@@ -193,7 +196,7 @@ class SecurityDataClient(object):
     def _search_by_hash(self, hash, type):
         query = FileEventQuery.all(type.eq(hash))
         response = self.search_file_events(query)
-        return response[u"fileEvents"]
+        return response
 
     def _find_file_versions(self, md5_hash, sha256_hash):
         response = self._file_event_service.get_file_location_detail_by_sha256(
@@ -201,9 +204,10 @@ class SecurityDataClient(object):
         )
 
         if u"locations" not in response and not len(response[u"locations"]):
-            raise Py42Error(
+            raise Py42ResponseError(
+                response,
                 u"PDS service can't find requested file "
-                u"with md5 hash {} and sha256 hash {}.".format(md5_hash, sha256_hash)
+                u"with md5 hash {} and sha256 hash {}.".format(md5_hash, sha256_hash),
             )
 
         for device_id, paths in _parse_file_location_response(response):
@@ -259,9 +263,10 @@ class SecurityDataClient(object):
         Returns:
             Returns a stream of the requested file.
         """
-        events = self._search_by_hash(checksum, SHA256)
-        if not events:
-            raise Py42ChecksumNotFoundError(u"SHA256", checksum)
+        response = self._search_by_hash(checksum, SHA256)
+        events = response[u"fileEvents"]
+        if not len(events):
+            raise Py42ChecksumNotFoundError(response, u"SHA256", checksum)
         md5_hash = events[0][u"md5Checksum"]
 
         return self._stream_file(self._find_file_versions(md5_hash, checksum), checksum)
@@ -275,9 +280,10 @@ class SecurityDataClient(object):
         Returns:
             Returns a stream of the requested file.
         """
-        events = self._search_by_hash(checksum, MD5)
-        if not events:
-            raise Py42ChecksumNotFoundError(u"MD5", checksum)
+        response = self._search_by_hash(checksum, MD5)
+        events = response[u"fileEvents"]
+        if not len(events):
+            raise Py42ChecksumNotFoundError(response, u"MD5", checksum)
         sha256_hash = events[0][u"sha256Checksum"]
         return self._stream_file(
             self._find_file_versions(checksum, sha256_hash), checksum

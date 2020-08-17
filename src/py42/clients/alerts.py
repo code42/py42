@@ -26,50 +26,39 @@ class AlertsClient(object):
         """
         return self._alert_service.search(query)
 
-    def get_details(self, alert_ids, tenant_id=None):
+    def get_details(self, alert_ids):
         """Gets the details for the alerts with the given IDs, including the file event query that,
         when passed into a search, would result in events that could have triggered the alerts.
 
         Args:
             alert_ids (iter[str]): The identification numbers of the alerts for which you want to
                 get details for.
-            tenant_id (str, optional): The unique identifier of the tenant that the alerts belong to.
-                When given None, it uses the currently logged in user's tenant ID. Defaults to
-                None.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the alert details.
         """
-        return self._alert_service.get_details(alert_ids, tenant_id=tenant_id)
+        return self._alert_service.get_details(alert_ids)
 
-    def resolve(self, alert_ids, tenant_id=None, reason=None):
+    def resolve(self, alert_ids, reason=None):
         """Resolves the alerts with the given IDs.
 
         Args:
             alert_ids (iter[str]): The identification numbers for the alerts to resolve.
-            tenant_id (str, optional): The unique identifier for the tenant that the alerts belong
-                to. When given None, it uses the currently logged in user's tenant ID. Defaults to
-                None.
             reason (str, optional): The reason the alerts are now resolved. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.resolve(
-            alert_ids, tenant_id=tenant_id, reason=reason
-        )
+        return self._alert_service.resolve(alert_ids, reason=reason)
 
-    def reopen(self, alert_ids, tenant_id=None, reason=None):
+    def reopen(self, alert_ids, reason=None):
         """Reopens the resolved alerts with the given IDs.
 
         Args:
             alert_ids (iter[str]): The identification numbers for the alerts to reopen.
-            tenant_id (str, optional): The unique identifier for the tenant that the alerts belong
-                to. When given None, it uses the currently logged in user's tenant ID. Defaults to
-                None.
             reason (str, optional): The reason the alerts are reopened. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.reopen(alert_ids, tenant_id=tenant_id, reason=reason)
+        return self._alert_service.reopen(alert_ids, reason=reason)

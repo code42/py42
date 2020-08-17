@@ -9,12 +9,24 @@
 ## Departing Employees
 
 ```eval_rst
+.. autoclass:: py42.clients.detectionlists.departing_employee.DepartingEmployeeFilters
+    :members:
+    :show-inheritance:
+```
+
+```eval_rst
 .. autoclass:: py42.clients.detectionlists.departing_employee.DepartingEmployeeClient
     :members:
     :show-inheritance:
 ```
 
 ## High Risk Employee
+
+```eval_rst
+.. autoclass:: py42.clients.detectionlists.high_risk_employee.HighRiskEmployeeFilters
+    :members:
+    :show-inheritance:
+```
 
 ```eval_rst
 .. autoclass:: py42.clients.detectionlists.high_risk_employee.HighRiskEmployeeClient

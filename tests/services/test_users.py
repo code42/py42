@@ -3,6 +3,7 @@ import pytest
 from requests import Response
 
 import py42.settings
+from py42.exceptions import Py42UserDoesNotExistError
 from py42.response import Py42Response
 from py42.services.users import UserService
 
@@ -27,7 +28,7 @@ MOCK_text = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
 
 class TestUserClient(object):
     @pytest.fixture
-    def mock_get_all_response(self, mocker):
+    def mock_get_users_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 200
         response.encoding = "utf-8"
@@ -35,7 +36,7 @@ class TestUserClient(object):
         return Py42Response(response)
 
     @pytest.fixture
-    def mock_get_all_empty_response(self, mocker):
+    def mock_get_users_empty_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 200
         response.encoding = "utf-8"
@@ -50,7 +51,7 @@ class TestUserClient(object):
         response.text = MOCK_text
         return Py42Response(response)
 
-    def test_post_create_user_is_successful(
+    def test_create_user_calls_post_with_expected_url_and_params(
         self, mock_connection, post_api_mock_response
     ):
         user_client = UserService(mock_connection)
@@ -74,9 +75,9 @@ class TestUserClient(object):
         mock_connection.post.assert_called_once_with(USER_URI, json=expected_params)
 
     def test_get_all_calls_get_with_uri_and_params(
-        self, mock_connection, mock_get_all_response
+        self, mock_connection, mock_get_users_response
     ):
-        mock_connection.get.side_effect = [mock_get_all_response]
+        mock_connection.get.side_effect = [mock_get_users_response]
         client = UserService(mock_connection)
         for _ in client.get_all():
             break
@@ -85,14 +86,24 @@ class TestUserClient(object):
         assert first_call[1]["params"] == DEFAULT_GET_ALL_PARAMS
 
     def test_unicode_username_get_user_by_username_calls_get_with_username(
-        self, mock_connection, successful_response
+        self, mock_connection, mock_get_users_response
     ):
         username = u"您已经发现了秘密信息"
-        mock_connection.get.return_value = successful_response
+        mock_connection.get.return_value = mock_get_users_response
         client = UserService(mock_connection)
         client.get_by_username(username)
         expected_params = {u"username": username}
         mock_connection.get.assert_called_once_with(USER_URI, params=expected_params)
+
+    def test_get_by_username_when_empty_list_returns_raises_user_not_exists(
+        self, mock_connection, mock_get_users_empty_response
+    ):
+        mock_connection.get.return_value = mock_get_users_empty_response
+        client = UserService(mock_connection)
+        with pytest.raises(Py42UserDoesNotExistError) as err:
+            client.get_by_username("username")
+
+        assert str(err.value) == "User 'username' does not exist."
 
     def test_get_user_by_id_calls_get_with_uri_and_params(
         self, mock_connection, successful_response
@@ -104,14 +115,14 @@ class TestUserClient(object):
         mock_connection.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
-        self, mock_connection, mock_get_all_response, mock_get_all_empty_response
+        self, mock_connection, mock_get_users_response, mock_get_users_empty_response
     ):
         py42.settings.items_per_page = 1
         client = UserService(mock_connection)
         mock_connection.get.side_effect = [
-            mock_get_all_response,
-            mock_get_all_response,
-            mock_get_all_empty_response,
+            mock_get_users_response,
+            mock_get_users_response,
+            mock_get_users_empty_response,
         ]
         for _ in client.get_all():
             pass

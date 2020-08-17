@@ -6,9 +6,9 @@ from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UserAlreadyAddedError
-from py42.services.detectionlists.user_profile import DetectionListUserService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeFilters
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
+from py42.services.detectionlists.user_profile import DetectionListUserService
 from py42.services.users import UserService
 
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"

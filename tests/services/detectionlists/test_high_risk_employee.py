@@ -4,7 +4,7 @@ from requests import Response
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UserAlreadyAddedError
-from py42.services.detectionlists._profile import DetectionListUserService
+from py42.services.detectionlists.user_profile import DetectionListUserService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeFilters
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.users import UserService

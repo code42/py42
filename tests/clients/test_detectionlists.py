@@ -2,7 +2,7 @@ import pytest
 
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.detectionlists import RiskTags
-from py42.services.detectionlists._profile import DetectionListUserService
+from py42.services.detectionlists.user_profile import DetectionListUserService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 

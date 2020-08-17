@@ -16,7 +16,7 @@ from py42.services.administration import AdministrationService
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
 from py42.services.archive import ArchiveService
-from py42.services.detectionlists._profile import DetectionListUserService
+from py42.services.detectionlists.user_profile import DetectionListUserService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.devices import DeviceService

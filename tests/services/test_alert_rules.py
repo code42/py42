@@ -1,7 +1,7 @@
 import pytest
 
 from py42.services.alertrules import AlertRulesService
-from py42.services.detectionlists._profile import DetectionListUserService
+from py42.services.detectionlists.user_profile import DetectionListUserService
 
 MOCK_DETECTION_LIST_GET_RESPONSE = """
 {"type$": "USER_V2", "tenantId": "1d71796f-af5b-4231-9d8e-df6434da4663",

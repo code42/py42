@@ -73,5 +73,5 @@ class ConnectionManager(object):
             message = u"Failed to create or retrieve connection, caused by: {}".format(
                 str(ex)
             )
-            raise Py42StorageSessionInitializationError(message)
+            raise Py42StorageSessionInitializationError(ex, message)
         return connection

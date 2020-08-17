@@ -57,7 +57,7 @@ class TestAlertRulesClient(object):
             self._rule_id, self._rule_id
         )
 
-    def test_alert_rules_modules_raises_invalid_rule_type_error_when_adding_to_system_rule(
+    def test_alert_rules_client_raises_invalid_rule_type_error_when_adding_to_system_rule(
         self, mocker, mock_alerts_service_system_rule, mock_alert_rules_service
     ):
         def add(*args, **kwargs):

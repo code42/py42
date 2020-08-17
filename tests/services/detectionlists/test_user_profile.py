@@ -3,7 +3,7 @@ from requests import Response
 from requests.exceptions import HTTPError
 
 from py42.exceptions import Py42BadRequestError
-from py42.services.detectionlists._profile import DetectionListUserService
+from py42.services.detectionlists.user_profile import DetectionListUserService
 from py42.services.users import UserService
 
 

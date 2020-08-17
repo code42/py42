@@ -30,11 +30,11 @@
 # def storage_session_manager(mocker):
 #     return mocker.MagicMock(spec=ConnectionManager)
 # @pytest.fixture
-# def session_factory(mocker, mock_session):
+# def session_factory(mocker, mock_connection):
 #     mock_factory = mocker.MagicMock(spec=SessionFactory)
 #     mock_env_response = '{"stsBaseUrl": "sts-"}'
-#     mock_session.get.return_value.text = mock_env_response
-#     mock_factory.create_anonymous_session.return_value = mock_session
+#     mock_connection.get.return_value.text = mock_env_response
+#     mock_factory.create_anonymous_session.return_value = mock_connection
 #     return mock_factory
 # @pytest.fixture
 # def user_context(mocker):
@@ -46,32 +46,32 @@
 # def key_value_store_client(mocker):
 #     return mocker.MagicMock(spec=_key_value_store.KeyValueStoreClient)
 # class TestAuthorityClientFactory(object):
-#     def test_create_adminstration_client(self, mock_session):
-#         factory = AuthorityClient(mock_session)
+#     def test_create_adminstration_client(self, mock_connection):
+#         factory = AuthorityClient(mock_connection)
 #         client = factory.create_administration_client()
 #         assert type(client) == administration.AdministrationService
-#     def test_create_archive_client(self, mock_session):
-#         factory = AuthorityClient(mock_session)
+#     def test_create_archive_client(self, mock_connection):
+#         factory = AuthorityClient(mock_connection)
 #         client = factory.create_archive_client()
 #         assert type(client) == archive.ArchiveService
-#     def test_create_device_client(self, mock_session):
-#         factory = AuthorityClient(mock_session)
+#     def test_create_device_client(self, mock_connection):
+#         factory = AuthorityClient(mock_connection)
 #         client = factory.create_device_client()
 #         assert type(client) == devices.DeviceService
-#     def test_create_legal_hold_client(self, mock_session):
-#         factory = AuthorityClient(mock_session)
+#     def test_create_legal_hold_client(self, mock_connection):
+#         factory = AuthorityClient(mock_connection)
 #         client = factory.create_legal_hold_client()
 #         assert type(client) == legalhold.LegalHoldService
-#     def test_create_org_client(self, mock_session):
-#         factory = AuthorityClient(mock_session)
+#     def test_create_org_client(self, mock_connection):
+#         factory = AuthorityClient(mock_connection)
 #         client = factory.create_org_client()
 #         assert type(client) == orgs.OrgService
-#     def test_create_security_client(self, mock_session):
-#         factory = AuthorityClient(mock_session)
+#     def test_create_security_client(self, mock_connection):
+#         factory = AuthorityClient(mock_connection)
 #         client = factory.create_security_client()
 #         assert type(client) == securitydata.SecurityDataService
-#     def test_create_user_client(self, mock_session):
-#         factory = AuthorityClient(mock_session)
+#     def test_create_user_client(self, mock_connection):
+#         factory = AuthorityClient(mock_connection)
 #         client = factory.create_user_client()
 #         assert type(client) == users.UserService
 # class TestStorageClientFactory(object):
@@ -85,16 +85,16 @@
 #         assert type(client) == StorageClient
 # class TestMicroserviceClientFactory(object):
 #     def test_get_alerts_client(
-#         self, mock_session, session_factory, user_context, user_client
+#         self, mock_connection, session_factory, user_context, user_client
 #     ):
 #         factory = MicroserviceClientFactory(
-#             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+#             TEST_ROOT_URL, mock_connection, session_factory, user_context, user_client
 #         )
 #         client = factory.get_alerts_client()
 #         assert type(client) == alerts.AlertService
 #     def test_get_alerts_client_calls_get_stored_value_with_expected_key(
 #         self,
-#         mock_session,
+#         mock_connection,
 #         session_factory,
 #         user_context,
 #         user_client,
@@ -102,7 +102,7 @@
 #     ):
 #         factory = MicroserviceClientFactory(
 #             TEST_ROOT_URL,
-#             mock_session,
+#             mock_connection,
 #             session_factory,
 #             user_context,
 #             user_client,
@@ -114,7 +114,7 @@
 #         )
 #     def test_get_alerts_client_creates_client_with_expected_url(
 #         self,
-#         mock_session,
+#         mock_connection,
 #         session_factory,
 #         user_context,
 #         user_client,
@@ -123,7 +123,7 @@
 #         key_value_store_client.get_stored_value.return_value.text = ALERTS_URL
 #         factory = MicroserviceClientFactory(
 #             TEST_ROOT_URL,
-#             mock_session,
+#             mock_connection,
 #             session_factory,
 #             user_context,
 #             user_client,
@@ -131,28 +131,28 @@
 #         )
 #         factory.get_alerts_client()
 #         session_factory.create_jwt_session.assert_called_once_with(
-#             ALERTS_URL, mock_session
+#             ALERTS_URL, mock_connection
 #         )
 #     def test_get_alerts_client_returns_same_intance_on_multiple_calls(
-#         self, mock_session, session_factory, user_context, user_client
+#         self, mock_connection, session_factory, user_context, user_client
 #     ):
 #         factory = MicroserviceClientFactory(
-#             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+#             TEST_ROOT_URL, mock_connection, session_factory, user_context, user_client
 #         )
 #         client1 = factory.get_alerts_client()
 #         client2 = factory.get_alerts_client()
 #         assert client1 is client2
 #     def test_get_departing_employee_client(
-#         self, mock_session, session_factory, user_context, user_client
+#         self, mock_connection, session_factory, user_context, user_client
 #     ):
 #         factory = MicroserviceClientFactory(
-#             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+#             TEST_ROOT_URL, mock_connection, session_factory, user_context, user_client
 #         )
 #         client = factory.get_departing_employee_client()
 #         assert type(client) == detectionlists.departing_employee.DepartingEmployeeService
 #     def test_get_departing_employee_client_calls_get_stored_value_with_expected_key(
 #         self,
-#         mock_session,
+#         mock_connection,
 #         session_factory,
 #         user_context,
 #         user_client,
@@ -160,7 +160,7 @@
 #     ):
 #         factory = MicroserviceClientFactory(
 #             TEST_ROOT_URL,
-#             mock_session,
+#             mock_connection,
 #             session_factory,
 #             user_context,
 #             user_client,
@@ -173,7 +173,7 @@
 #         assert key_value_store_client.get_stored_value.call_count == 1
 #     def test_get_departing_employee_client_creates_client_with_expected_url(
 #         self,
-#         mock_session,
+#         mock_connection,
 #         session_factory,
 #         user_context,
 #         user_client,
@@ -184,7 +184,7 @@
 #         )
 #         factory = MicroserviceClientFactory(
 #             TEST_ROOT_URL,
-#             mock_session,
+#             mock_connection,
 #             session_factory,
 #             user_context,
 #             user_client,
@@ -192,29 +192,29 @@
 #         )
 #         factory.get_departing_employee_client()
 #         session_factory.create_jwt_session.assert_called_with(
-#             DEPARTING_EMPLOYEE_URL, mock_session
+#             DEPARTING_EMPLOYEE_URL, mock_connection
 #         )
 #         assert session_factory.create_jwt_session.call_count == 1
 #     def test_get_departing_employee_client_returns_same_intance_on_multiple_calls(
-#         self, mock_session, session_factory, user_context, user_client
+#         self, mock_connection, session_factory, user_context, user_client
 #     ):
 #         factory = MicroserviceClientFactory(
-#             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+#             TEST_ROOT_URL, mock_connection, session_factory, user_context, user_client
 #         )
 #         client1 = factory.get_departing_employee_client()
 #         client2 = factory.get_departing_employee_client()
 #         assert client1 is client2
 #     def test_get_file_event_client(
-#         self, mock_session, session_factory, user_context, user_client
+#         self, mock_connection, session_factory, user_context, user_client
 #     ):
 #         factory = MicroserviceClientFactory(
-#             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+#             TEST_ROOT_URL, mock_connection, session_factory, user_context, user_client
 #         )
 #         client = factory.get_file_event_client()
 #         assert type(client) == file_event.FileEventService
 #     def test_get_file_event_client_calls_get_stored_value_with_expected_key(
 #         self,
-#         mock_session,
+#         mock_connection,
 #         session_factory,
 #         user_context,
 #         user_client,
@@ -222,7 +222,7 @@
 #     ):
 #         factory = MicroserviceClientFactory(
 #             TEST_ROOT_URL,
-#             mock_session,
+#             mock_connection,
 #             session_factory,
 #             user_context,
 #             user_client,
@@ -234,7 +234,7 @@
 #         )
 #     def test_get_file_event_client_calls_creates_client_with_expected_url(
 #         self,
-#         mock_session,
+#         mock_connection,
 #         session_factory,
 #         user_context,
 #         user_client,
@@ -243,7 +243,7 @@
 #         key_value_store_client.get_stored_value.return_value.text = FILE_EVENTS_URL
 #         factory = MicroserviceClientFactory(
 #             TEST_ROOT_URL,
-#             mock_session,
+#             mock_connection,
 #             session_factory,
 #             user_context,
 #             user_client,
@@ -251,20 +251,20 @@
 #         )
 #         factory.get_file_event_client()
 #         session_factory.create_jwt_session.assert_called_once_with(
-#             FILE_EVENTS_URL, mock_session
+#             FILE_EVENTS_URL, mock_connection
 #         )
 #     def test_get_file_event_client_returns_same_intance_on_multiple_calls(
-#         self, mock_session, session_factory, user_context, user_client
+#         self, mock_connection, session_factory, user_context, user_client
 #     ):
 #         factory = MicroserviceClientFactory(
-#             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+#             TEST_ROOT_URL, mock_connection, session_factory, user_context, user_client
 #         )
 #         client1 = factory.get_file_event_client()
 #         client2 = factory.get_file_event_client()
 #         assert client1 is client2
 #     def test_get_saved_search_client_calls_creates_client_with_expected_url(
 #         self,
-#         mock_session,
+#         mock_connection,
 #         key_value_store_client,
 #         user_context,
 #         user_client,
@@ -273,7 +273,7 @@
 #         key_value_store_client.get_stored_value.return_value.text = FILE_EVENTS_URL
 #         factory = MicroserviceClientFactory(
 #             TEST_ROOT_URL,
-#             mock_session,
+#             mock_connection,
 #             session_factory,
 #             user_context,
 #             user_client,
@@ -281,17 +281,17 @@
 #         )
 #         factory.get_saved_search_client()
 #         session_factory.create_jwt_session.assert_called_once_with(
-#             FILE_EVENTS_URL, mock_session
+#             FILE_EVENTS_URL, mock_connection
 #         )
 #     def test_create_storage_preservation_client(
-#         self, mock_session, user_context, user_client, session_factory
+#         self, mock_connection, user_context, user_client, session_factory
 #     ):
 #         factory = MicroserviceClientFactory(
-#             TEST_ROOT_URL, mock_session, session_factory, user_context, user_client
+#             TEST_ROOT_URL, mock_connection, session_factory, user_context, user_client
 #         )
 #         factory.create_storage_preservation_client("https://host.com")
 #         session_factory.create_jwt_session.assert_called_once_with(
-#             "https://host.com", mock_session
+#             "https://host.com", mock_connection
 #         )
 #         session_factory.create_anonymous_session.assert_called_once_with(
 #             "https://host.com"

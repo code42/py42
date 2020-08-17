@@ -68,5 +68,5 @@ class V1Auth(C42RenewableAuth):
 
     def _get_credentials(self):
         uri = u"/api/AuthToken"
-        response = self._auth_session.post(uri, data=None)
+        response = self._auth_session.post(uri)
         return u"{} {}-{}".format(u"token", response[0], response[1])

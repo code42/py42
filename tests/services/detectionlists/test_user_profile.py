@@ -11,44 +11,44 @@ from py42.services.users import UserService
 
 class TestDetectionListUserClient(object):
     @pytest.fixture
-    def mock_user_client(self, mock_session, user_context, py42_response):
-        user_client = UserService(mock_session)
+    def mock_user_client(self, mock_connection, user_context, py42_response):
+        user_client = UserService(mock_connection)
         py42_response.text = '{"username":"username"}'
-        mock_session.get.return_value = py42_response
+        mock_connection.get.return_value = py42_response
         return user_client
 
     @pytest.fixture
-    def mock_get_by_id_fails(self, mocker, mock_session):
+    def mock_get_by_id_fails(self, mocker, mock_connection):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 400
         exception = mocker.MagicMock(spec=HTTPError)
         exception.response = response
-        mock_session.post.side_effect = Py42BadRequestError(exception)
-        return mock_session
+        mock_connection.post.side_effect = Py42BadRequestError(exception)
+        return mock_connection
 
     @pytest.fixture
     def mock_user_client_raises_exception(
-        self, mocker, mock_session, user_context, py42_response
+        self, mocker, mock_connection, user_context, py42_response
     ):
-        user_client = UserService(mock_session)
+        user_client = UserService(mock_connection)
         response = mocker.MagicMock(spec=Response)
         response.status_code = 400
         exception = mocker.MagicMock(spec=HTTPError)
         exception.response = response
-        mock_session.post.side_effect = Py42BadRequestError(exception)
+        mock_connection.post.side_effect = Py42BadRequestError(exception)
         return user_client
 
     def test_create_posts_expected_data(
-        self, mock_session, user_context, mock_user_client
+        self, mock_connection, user_context, mock_user_client
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         detection_list_user_client.create("942897397520289999")
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/create"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/create"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userName"] == "942897397520289999"
@@ -58,48 +58,48 @@ class TestDetectionListUserClient(object):
         )
 
     def test_get_posts_expected_data(
-        self, mock_session, user_context, mock_user_client
+        self, mock_connection, user_context, mock_user_client
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         detection_list_user_client.get("942897397520289999")
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyusername"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/getbyusername"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["username"] == "942897397520289999"
         )
 
     def test_get_by_id_posts_expected_data(
-        self, mock_session, user_context, mock_user_client
+        self, mock_connection, user_context, mock_user_client
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         detection_list_user_client.get_by_id("942897397520289999")
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
         )
 
     def test_update_notes_posts_expected_data(
-        self, mock_session, user_context, mock_user_client
+        self, mock_connection, user_context, mock_user_client
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         detection_list_user_client.update_notes("942897397520289999", "Test")
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/updatenotes"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/updatenotes"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -108,16 +108,16 @@ class TestDetectionListUserClient(object):
 
     @pytest.mark.parametrize("tags", ["test_tag", ["test_tag"]])
     def test_add_risk_tag_posts_expected_data(
-        self, mock_session, user_context, mock_user_client, tags
+        self, mock_connection, user_context, mock_user_client, tags
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         detection_list_user_client.add_risk_tags("942897397520289999", tags)
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/addriskfactors"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/addriskfactors"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -126,16 +126,18 @@ class TestDetectionListUserClient(object):
 
     @pytest.mark.parametrize("tags", ["test_tag", ["test_tag"]])
     def test_remove_risk_tag_posts_expected_data(
-        self, mock_session, user_context, mock_user_client, tags
+        self, mock_connection, user_context, mock_user_client, tags
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         detection_list_user_client.remove_risk_tags("942897397520289999", u"Test")
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/removeriskfactors"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert (
+            mock_connection.post.call_args[0][0] == "/svc/api/v2/user/removeriskfactors"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -143,16 +145,18 @@ class TestDetectionListUserClient(object):
         )
 
     def test_add_cloud_alias_posts_expected_data(
-        self, mock_session, user_context, mock_user_client
+        self, mock_connection, user_context, mock_user_client
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         detection_list_user_client.add_cloud_alias("942897397520289999", u"Test")
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/addcloudusernames"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert (
+            mock_connection.post.call_args[0][0] == "/svc/api/v2/user/addcloudusernames"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -160,17 +164,18 @@ class TestDetectionListUserClient(object):
         )
 
     def test_remove_cloud_alias_posts_expected_data(
-        self, mock_session, user_context, mock_user_client
+        self, mock_connection, user_context, mock_user_client
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         detection_list_user_client.remove_cloud_alias("942897397520289999", u"Test")
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
         assert (
-            mock_session.post.call_args[0][0] == "/svc/api/v2/user/removecloudusernames"
+            mock_connection.post.call_args[0][0]
+            == "/svc/api/v2/user/removecloudusernames"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -179,29 +184,29 @@ class TestDetectionListUserClient(object):
         )
 
     def test_create_if_not_exists_posts_expected_data_when_user_exists(
-        self, mock_session, user_context, mock_user_client
+        self, mock_connection, user_context, mock_user_client
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         assert (
             detection_list_user_client.create_if_not_exists("942897397520289999")
             is True
         )
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
         )
-        assert mock_session.post.call_count == 1
+        assert mock_connection.post.call_count == 1
 
     def test_create_if_not_exists_posts_expected_data_when_user_does_not_exist(
         self, mock_get_by_id_fails, user_context, mock_user_client
     ):
         # In this test case we can't verify create successful, hence we verified failure in create
-        # because same mock_session instance
+        # because same mock_connection instance
         # 'mock_get_by_id_fails' will be called for get & create and its going to return failure.
         # We verified create is being called and two times post method is called, also we
         # verified user_client.get_by_uid is successfully called.
@@ -225,16 +230,16 @@ class TestDetectionListUserClient(object):
         )
 
     def test_refresh_posts_expected_data(
-        self, mock_session, user_context, mock_user_client
+        self, mock_connection, user_context, mock_user_client
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
         detection_list_user_client.refresh("942897397520289999")
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/user/refresh"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/refresh"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"

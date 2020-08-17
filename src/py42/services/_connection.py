@@ -53,14 +53,11 @@ class MicroservicePrefixHostResolver(HostResolver):
 
     def get_host_address(self):
         sts_url = self._get_sts_base_url()
-        return sts_url.replace(u"sts", self._prefix)
+        return sts_url.replace(u"sts", self._prefix, 1)
 
     def _get_sts_base_url(self):
         uri = u"/api/ServerEnv"
-        try:
-            response = self._connection.get(uri)
-        except HTTPError as ex:
-            raise Py42SessionInitializationError(ex)
+        response = self._connection.get(uri)
 
         response_json = json_lib.loads(response.text)
         sts_base_url = response_json.get(u"stsBaseUrl")
@@ -106,14 +103,6 @@ class Connection(object):
     @property
     def host_address(self):
         return self._get_host_address()
-
-    @property
-    def headers(self):
-        return self._session.headers
-
-    @property
-    def proxies(self):
-        return self._session.proxies
 
     def clone(self, host_address):
         host_resolver = KnownUrlHostResolver(host_address)
@@ -183,11 +172,11 @@ class Connection(object):
                 proxies=proxies,
             )
 
-            if not stream:
+            if not stream and response is not None:
                 # setting this manually speeds up read times
                 response.encoding = u"utf-8"
 
-            if 200 <= response.status_code <= 299:
+            if response is not None and 200 <= response.status_code <= 299:
                 return Py42Response(response)
 
             if isinstance(self._auth, C42RenewableAuth):

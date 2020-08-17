@@ -5,17 +5,17 @@ from py42.services.preservationdata import PreservationDataService
 
 class TestPreservationDataServiceClient(object):
     @pytest.fixture
-    def mock_session(self, mock_session, successful_response):
-        mock_session.post.return_value = successful_response
-        return mock_session
+    def mock_connection(self, mock_connection, successful_response):
+        mock_connection.post.return_value = successful_response
+        return mock_connection
 
-    def test_find_file_versions_posts_expected_data(self, mock_session):
-        pds = PreservationDataService(mock_session)
+    def test_find_file_versions_posts_expected_data(self, mock_connection):
+        pds = PreservationDataService(mock_connection)
         pds.find_file_versions("abc", "adfadf", "test", "path/path")
 
-        assert mock_session.post.call_count == 1
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_args[0][0] == "/api/v1/FindAvailableVersion"
+        assert mock_connection.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_args[0][0] == "/api/v1/FindAvailableVersion"
         assert (
             posted_data[u"fileSHA256"] == "adfadf"
             and posted_data[u"fileMD5"] == "abc"

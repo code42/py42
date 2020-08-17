@@ -1,12 +1,20 @@
 import json
 
 import pytest
+from requests import Response
 
+from py42.exceptions import Py42Error
+from py42.exceptions import Py42FeatureUnavailableError
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42UnauthorizedError
+from py42.response import Py42Response
 from py42.services._auth import C42RenewableAuth
 from py42.services._connection import Connection
 from py42.services._connection import HostResolver
+from py42.services._connection import KnownUrlHostResolver
+from py42.services._connection import MicroserviceKeyHostResolver
+from py42.services._connection import MicroservicePrefixHostResolver
+from py42.services._keyvaluestore import KeyValueStoreClient
 
 default_kwargs = {
     "timeout": 60,
@@ -36,6 +44,29 @@ def mock_auth(mocker):
     return mocker.MagicMock(spec=C42RenewableAuth)
 
 
+@pytest.fixture
+def mock_key_value_service(mocker):
+    return mocker.MagicMock(spec=KeyValueStoreClient)
+
+
+@pytest.fixture
+def mock_server_env_conn(mocker):
+    mock_conn = mocker.MagicMock(spec=Connection)
+    mock_response = mocker.MagicMock(spec=Response)
+    mock_response.text = '{"stsBaseUrl": "sts-testsuffix"}'
+    mock_conn.get.return_value = Py42Response(mock_response)
+    return mock_conn
+
+
+@pytest.fixture
+def mock_server_env_conn_missing_sts_base_url(mocker):
+    mock_conn = mocker.MagicMock(spec=Connection)
+    mock_response = mocker.MagicMock(spec=Response)
+    mock_response.text = "{}"
+    mock_conn.get.return_value = Py42Response(mock_response)
+    return mock_conn
+
+
 class MockPreparedRequest(object):
     def __init__(self, method, url, data=None):
         self._method = method
@@ -48,6 +79,44 @@ class MockPreparedRequest(object):
             and self._url == other.url
             and self._data == other.body
         )
+
+
+class TestKnownUrlHostResolver(object):
+    def test_get_host_address_returns_expected_value(self):
+        resolver = KnownUrlHostResolver(HOST_ADDRESS)
+        assert resolver.get_host_address() == HOST_ADDRESS
+
+
+class TestMicroserviceKeyHostResolver(object):
+    def test_get_host_address_returns_expected_value(self, mock_key_value_service):
+        mock_key_value_service.get_stored_value.return_value.text = HOST_ADDRESS
+        resolver = MicroserviceKeyHostResolver(mock_key_value_service, "TEST_KEY")
+        assert resolver.get_host_address() == HOST_ADDRESS
+
+    def test_get_host_address_passes_expected_key(self, mock_key_value_service):
+        resolver = MicroserviceKeyHostResolver(mock_key_value_service, "TEST_KEY")
+        resolver.get_host_address()
+        mock_key_value_service.get_stored_value.assert_called_once_with("TEST_KEY")
+
+
+class TestMicroservicePrefixHostResolver(object):
+    def test_get_host_address_returns_expected_value(self, mock_server_env_conn):
+        resolver = MicroservicePrefixHostResolver(mock_server_env_conn, "TESTPREFIX")
+        assert resolver.get_host_address() == "TESTPREFIX-testsuffix"
+
+    def test_get_host_address_when_sts_base_url_not_found_raises_feature_unavailable_error(
+        self, mock_server_env_conn_missing_sts_base_url
+    ):
+        resolver = MicroservicePrefixHostResolver(
+            mock_server_env_conn_missing_sts_base_url, "TESTPREFIX"
+        )
+        with pytest.raises(Py42FeatureUnavailableError):
+            resolver.get_host_address()
+
+    def test_get_host_address_calls_correct_server_env_url(self, mock_server_env_conn):
+        resolver = MicroservicePrefixHostResolver(mock_server_env_conn, "TESTPREFIX")
+        resolver.get_host_address()
+        mock_server_env_conn.get.assert_called_once_with("/api/ServerEnv")
 
 
 class TestConnection(object):
@@ -200,3 +269,11 @@ class TestConnection(object):
             connection.get(URL)
 
         assert unauthorized_requests_session.send.call_count == 2
+
+    def test_connection_request_when_session_returns_none_raises_py42_error(
+        self, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        success_requests_session.send.return_value = None
+        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
+        with pytest.raises(Py42Error):
+            connection.get(URL)

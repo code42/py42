@@ -43,43 +43,43 @@
 #         assert type(provider) == BasicAuthProvider
 #         assert modifier == called_modifier
 #     def test_create_v1_session_creates_session_with_expected_address(
-#         self, session_modifier_factory, auth_handler_factory, mock_session
+#         self, session_modifier_factory, auth_handler_factory, mock_connection
 #     ):
 #         factory = SessionFactory(
 #             Session, session_modifier_factory, auth_handler_factory
 #         )
-#         session = factory.create_v1_session(TARGET_HOST_ADDRESS, mock_session)
+#         session = factory.create_v1_session(TARGET_HOST_ADDRESS, mock_connection)
 #         assert session.host_address == TARGET_HOST_ADDRESS
 #     def test_create_v1_session_uses_auth_handler_with_expected_provider_and_modifier(
-#         self, mocker, session_modifier_factory, auth_handler_factory, mock_session
+#         self, mocker, session_modifier_factory, auth_handler_factory, mock_connection
 #     ):
 #         modifier = mocker.MagicMock(spec=HeaderModifier)
 #         session_modifier_factory.create_header_modifier.return_value = modifier
 #         factory = SessionFactory(
 #             Session, session_modifier_factory, auth_handler_factory
 #         )
-#         factory.create_v1_session(TARGET_HOST_ADDRESS, mock_session)
+#         factory.create_v1_session(TARGET_HOST_ADDRESS, mock_connection)
 #         provider = auth_handler_factory.create_auth_handler.call_args[0][0]
 #         called_modifier = auth_handler_factory.create_auth_handler.call_args[0][1]
 #         assert type(provider) == V1Auth
 #         assert modifier == called_modifier
 #     def test_create_jwt_session_creates_session_with_expected_address(
-#         self, session_modifier_factory, auth_handler_factory, mock_session
+#         self, session_modifier_factory, auth_handler_factory, mock_connection
 #     ):
 #         factory = SessionFactory(
 #             Session, session_modifier_factory, auth_handler_factory
 #         )
-#         session = factory.create_jwt_session(TARGET_HOST_ADDRESS, mock_session)
+#         session = factory.create_jwt_session(TARGET_HOST_ADDRESS, mock_connection)
 #         assert session.host_address == TARGET_HOST_ADDRESS
 #     def test_create_jwt_session_uses_auth_handler_with_expected_provider_and_modifier(
-#         self, mocker, session_modifier_factory, auth_handler_factory, mock_session
+#         self, mocker, session_modifier_factory, auth_handler_factory, mock_connection
 #     ):
 #         modifier = mocker.MagicMock(spec=HeaderModifier)
 #         session_modifier_factory.create_header_modifier.return_value = modifier
 #         factory = SessionFactory(
 #             Session, session_modifier_factory, auth_handler_factory
 #         )
-#         factory.create_jwt_session(TARGET_HOST_ADDRESS, mock_session)
+#         factory.create_jwt_session(TARGET_HOST_ADDRESS, mock_connection)
 #         provider = auth_handler_factory.create_auth_handler.call_args[0][0]
 #         called_modifier = auth_handler_factory.create_auth_handler.call_args[0][1]
 #         assert type(provider) == V3Auth

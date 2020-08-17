@@ -9,7 +9,7 @@ from requests import Session
 from py42.exceptions import Py42UnauthorizedError
 from py42.response import Py42Response
 from py42.sdk.queries.query_filter import QueryFilter
-from py42.services._auth import C42RenewableAuth
+from py42.services._connection import Connection
 from py42.usercontext import UserContext
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"
@@ -83,7 +83,7 @@ def py42_response(mocker):
     response = mocker.MagicMock(spec=Py42Response)
     response.status_code = 200
     response.encoding = None
-    response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
+    response.__getitem__ = lambda _, key: json.loads(response.text)[key]
     return response
 
 
@@ -155,9 +155,7 @@ def unicode_query_filter():
 
 
 @pytest.fixture
-def mock_session(mocker):
-    from py42.services._connection import Connection
-
+def mock_connection(mocker):
     connection = mocker.MagicMock(spec=Connection)
     connection.headers = {}
 
@@ -165,6 +163,6 @@ def mock_session(mocker):
 
 
 @pytest.fixture
-def mock_successful_session(mock_session, successful_response):
-    mock_session.get.return_value = successful_response
-    return mock_session
+def mock_successful_connection(mock_connection, successful_response):
+    mock_connection.get.return_value = successful_response
+    return mock_connection

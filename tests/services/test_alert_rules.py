@@ -13,9 +13,9 @@ MOCK_DETECTION_LIST_GET_RESPONSE = """
 
 
 @pytest.fixture
-def mock_response(self, mock_session, py42_response):
-    mock_session.post.return_value = py42_response
-    return mock_session
+def mock_response(self, mock_connection, py42_response):
+    mock_connection.post.return_value = py42_response
+    return mock_connection
 
 
 @pytest.fixture
@@ -28,16 +28,16 @@ def mock_detection_list_user_client(mocker, py42_response):
 
 class TestAlertRulesClient(object):
     def test_add_user_posts_expected_data(
-        self, mock_session, user_context, mock_detection_list_user_client
+        self, mock_connection, user_context, mock_detection_list_user_client
     ):
         alert_rule_client = AlertRulesService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         alert_rule_client.add_user(u"rule-id", u"user-id")
 
-        assert mock_session.post.call_count == 1
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_args[0][0] == "/svc/api/v1/Rules/add-users"
+        assert mock_connection.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/Rules/add-users"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["ruleId"] == u"rule-id"
@@ -47,16 +47,16 @@ class TestAlertRulesClient(object):
         )
 
     def test_remove_user_posts_expected_data(
-        self, mock_session, user_context, mock_detection_list_user_client
+        self, mock_connection, user_context, mock_detection_list_user_client
     ):
         alert_rule_client = AlertRulesService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         alert_rule_client.remove_user(u"rule-id", u"user-id")
 
-        assert mock_session.post.call_count == 1
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_args[0][0] == "/svc/api/v1/Rules/remove-users"
+        assert mock_connection.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/Rules/remove-users"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["ruleId"] == u"rule-id"
@@ -64,16 +64,18 @@ class TestAlertRulesClient(object):
         )
 
     def test_remove_all_users_posts_expected_data(
-        self, mock_session, user_context, mock_detection_list_user_client
+        self, mock_connection, user_context, mock_detection_list_user_client
     ):
         alert_rule_client = AlertRulesService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         alert_rule_client.remove_all_users(u"rule-id")
 
-        assert mock_session.post.call_count == 1
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_args[0][0] == "/svc/api/v1/Rules/remove-all-users"
+        assert mock_connection.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert (
+            mock_connection.post.call_args[0][0] == "/svc/api/v1/Rules/remove-all-users"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["ruleId"] == u"rule-id"

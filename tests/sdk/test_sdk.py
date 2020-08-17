@@ -22,9 +22,9 @@ TEST_PASSWORD = "test-password"
 class TestSDK(object):
     @pytest.fixture
     def py42_connection(self, mocker, successful_response):
-        mock_session = mocker.MagicMock(spec=Connection)
-        mock_session.get.return_value = successful_response
-        return mock_session
+        mock_connection = mocker.MagicMock(spec=Connection)
+        mock_connection.get.return_value = successful_response
+        return mock_connection
 
     @pytest.fixture
     def mock_auth(self, mocker):

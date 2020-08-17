@@ -17,40 +17,43 @@ CREATE_USER_SAMPLE_RESPONSE = """
 
 class TestHighRiskEmployeeClient(object):
     @pytest.fixture
-    def mock_session_post_success(self, mock_session, py42_response):
+    def mock_connection_post_success(self, mock_connection, py42_response):
         py42_response.status_code = 201
         py42_response.text = CREATE_USER_SAMPLE_RESPONSE
-        mock_session.post.return_value = py42_response
-        return mock_session
+        mock_connection.post.return_value = py42_response
+        return mock_connection
 
     @pytest.fixture
-    def mock_user_client(self, mock_session, user_context, py42_response):
-        user_client = UserService(mock_session)
-        mock_session.post.return_value = py42_response
+    def mock_user_client(self, mock_connection, user_context, py42_response):
+        user_client = UserService(mock_connection)
+        mock_connection.post.return_value = py42_response
         return user_client
 
     @pytest.fixture
     def mock_detection_list_user_client(
-        self, mock_session, user_context, py42_response, mock_user_client
+        self, mock_connection, user_context, py42_response, mock_user_client
     ):
         user_client = DetectionListUserService(
-            mock_session, user_context, mock_user_client
+            mock_connection, user_context, mock_user_client
         )
-        mock_session.post.return_value = py42_response
+        mock_connection.post.return_value = py42_response
         return user_client
 
     def test_add_posts_expected_data(
-        self, user_context, mock_session_post_success, mock_detection_list_user_client
+        self,
+        user_context,
+        mock_connection_post_success,
+        mock_detection_list_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeService(
-            mock_session_post_success, user_context, mock_detection_list_user_client
+            mock_connection_post_success, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.add("942897397520289999")
 
-        posted_data = mock_session_post_success.post.call_args[1]["json"]
-        assert mock_session_post_success.post.call_count == 2
+        posted_data = mock_connection_post_success.post.call_args[1]["json"]
+        assert mock_connection_post_success.post.call_count == 2
         assert (
-            mock_session_post_success.post.call_args[0][0]
+            mock_connection_post_success.post.call_args[0][0]
             == "/svc/api/v2/highriskemployee/add"
         )
         assert (
@@ -59,17 +62,17 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_set_alerts_enabled_posts_expected_data_with_default_value(
-        self, user_context, mock_session, mock_detection_list_user_client
+        self, user_context, mock_connection, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.set_alerts_enabled()
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
         assert (
-            mock_session.post.call_args[0][0]
+            mock_connection.post.call_args[0][0]
             == "/svc/api/v2/highriskemployee/setalertstate"
         )
         assert (
@@ -78,17 +81,17 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_set_alerts_enabled_posts_expected_data(
-        self, user_context, mock_session, mock_detection_list_user_client
+        self, user_context, mock_connection, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.set_alerts_enabled(False)
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
         assert (
-            mock_session.post.call_args[0][0]
+            mock_connection.post.call_args[0][0]
             == "/svc/api/v2/highriskemployee/setalertstate"
         )
         assert (
@@ -97,18 +100,19 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_remove_posts_expected_data(
-        self, user_context, mock_session, mock_detection_list_user_client
+        self, user_context, mock_connection, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.remove("942897397520289999")
 
-        posted_data = mock_session.post.call_args[1]["json"]
+        posted_data = mock_connection.post.call_args[1]["json"]
 
-        assert mock_session.post.call_count == 1
+        assert mock_connection.post.call_count == 1
         assert (
-            mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/remove"
+            mock_connection.post.call_args[0][0]
+            == "/svc/api/v2/highriskemployee/remove"
         )
         assert posted_data["tenantId"] == user_context.get_current_tenant_id()
         assert posted_data["userId"] == "942897397520289999"
@@ -116,18 +120,20 @@ class TestHighRiskEmployeeClient(object):
     def test_get_posts_expected_data(
         self,
         user_context,
-        mock_session,
+        mock_connection,
         mock_detection_list_user_client,
         mock_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.get("942897397520289999")
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
-        assert mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/get"
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert (
+            mock_connection.post.call_args[0][0] == "/svc/api/v2/highriskemployee/get"
+        )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -136,20 +142,21 @@ class TestHighRiskEmployeeClient(object):
     def test_get_all_posts_expected_data(
         self,
         user_context,
-        mock_session,
+        mock_connection,
         mock_detection_list_user_client,
         mock_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         for _ in high_risk_employee_client.get_all():
             break
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
         assert (
-            mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
+            mock_connection.post.call_args[0][0]
+            == "/svc/api/v2/highriskemployee/search"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -161,20 +168,21 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_get_all_posts_expected_data_with_non_default_values(
-        self, user_context, mock_session, mock_detection_list_user_client
+        self, user_context, mock_connection, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         for _ in high_risk_employee_client.get_all(
             filter_type="NEW_FILTER", sort_direction="DESC", sort_key="DISPLAY_NAME"
         ):
             break
 
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
         assert (
-            mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
+            mock_connection.post.call_args[0][0]
+            == "/svc/api/v2/highriskemployee/search"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -186,10 +194,10 @@ class TestHighRiskEmployeeClient(object):
         )
 
     def test_get_page_posts_data_to_expected_url(
-        self, user_context, mock_session, mock_detection_list_user_client
+        self, user_context, mock_connection, mock_detection_list_user_client
     ):
         high_risk_employee_client = HighRiskEmployeeService(
-            mock_session, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_client
         )
         high_risk_employee_client.get_page(
             filter_type="NEW_FILTER",
@@ -198,10 +206,11 @@ class TestHighRiskEmployeeClient(object):
             sort_direction="DESC",
             sort_key="DISPLAY_NAME",
         )
-        posted_data = mock_session.post.call_args[1]["json"]
-        assert mock_session.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
         assert (
-            mock_session.post.call_args[0][0] == "/svc/api/v2/highriskemployee/search"
+            mock_connection.post.call_args[0][0]
+            == "/svc/api/v2/highriskemployee/search"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()

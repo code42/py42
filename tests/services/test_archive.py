@@ -55,13 +55,13 @@ class TestArchiveClient(object):
 
     def test_get_all_restore_history_calls_get_expected_number_of_times(
         self,
-        mock_session,
+        mock_connection,
         mock_get_all_restore_history_response,
         mock_get_all_restore_history_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = ArchiveService(mock_session)
-        mock_session.get.side_effect = [
+        client = ArchiveService(mock_connection)
+        mock_connection.get.side_effect = [
             mock_get_all_restore_history_response,
             mock_get_all_restore_history_response,
             mock_get_all_restore_history_empty_response,
@@ -69,14 +69,14 @@ class TestArchiveClient(object):
         for _ in client.get_all_restore_history(10, "orgId", "123"):
             pass
         py42.settings.items_per_page = 500
-        assert mock_session.get.call_count == 3
+        assert mock_connection.get.call_count == 3
 
     def test_update_cold_storage_purge_date_calls_coldstorage_with_expected_data(
-        self, mock_session
+        self, mock_connection
     ):
-        client = ArchiveService(mock_session)
+        client = ArchiveService(mock_connection)
         client.update_cold_storage_purge_date(u"123", u"2020-04-24")
-        mock_session.put.assert_called_once_with(
+        mock_connection.put.assert_called_once_with(
             u"/api/coldStorage/123",
             params={u"idType": u"guid"},
             json={u"archiveHoldExpireDate": u"2020-04-24"},
@@ -84,13 +84,13 @@ class TestArchiveClient(object):
 
     def test_get_all_org_cold_storage_archives_calls_get_expected_number_of_times(
         self,
-        mock_session,
+        mock_connection,
         mock_get_all_org_cold_storage_response,
         mock_get_all_org_cold_storage_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = ArchiveService(mock_session)
-        mock_session.get.side_effect = [
+        client = ArchiveService(mock_connection)
+        mock_connection.get.side_effect = [
             mock_get_all_org_cold_storage_response,
             mock_get_all_org_cold_storage_response,
             mock_get_all_org_cold_storage_empty_response,
@@ -98,13 +98,13 @@ class TestArchiveClient(object):
         for _ in client.get_all_org_cold_storage_archives("orgId"):
             pass
         py42.settings.items_per_page = 500
-        assert mock_session.get.call_count == 3
+        assert mock_connection.get.call_count == 3
 
     def test_get_all_org_cold_storage_archives_calls_get_with_expected_uri_and_params(
-        self, mock_session, mock_get_all_org_cold_storage_empty_response
+        self, mock_connection, mock_get_all_org_cold_storage_empty_response
     ):
-        client = ArchiveService(mock_session)
-        mock_session.get.side_effect = [mock_get_all_org_cold_storage_empty_response]
+        client = ArchiveService(mock_connection)
+        mock_connection.get.side_effect = [mock_get_all_org_cold_storage_empty_response]
         for _ in client.get_all_org_cold_storage_archives("orgId"):
             break
 
@@ -116,4 +116,4 @@ class TestArchiveClient(object):
             "srtDir": "asc",
             "srtKey": "archiveHoldExpireDate",
         }
-        mock_session.get.assert_called_once_with("/api/ColdStorage", params=params)
+        mock_connection.get.assert_called_once_with("/api/ColdStorage", params=params)

@@ -63,23 +63,23 @@ class TestLegalHoldClient(object):
         return Py42Response(response)
 
     def test_get_legal_hold_by_uid_calls_get_with_uri_and_params(
-        self, mock_session, successful_response
+        self, mock_connection, successful_response
     ):
-        mock_session.get.return_value = successful_response
-        client = LegalHoldService(mock_session)
+        mock_connection.get.return_value = successful_response
+        client = LegalHoldService(mock_connection)
         client.get_matter_by_uid("LEGAL_HOLD_UID")
         uri = "{}/{}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
-        mock_session.get.assert_called_once_with(uri)
+        mock_connection.get.assert_called_once_with(uri)
 
     def test_get_all_matters_calls_get_expected_number_of_times(
         self,
-        mock_session,
+        mock_connection,
         mock_get_all_matters_response,
         mock_get_all_matters_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldService(mock_session)
-        mock_session.get.side_effect = [
+        client = LegalHoldService(mock_connection)
+        mock_connection.get.side_effect = [
             mock_get_all_matters_response,
             mock_get_all_matters_response,
             mock_get_all_matters_empty_response,
@@ -87,17 +87,17 @@ class TestLegalHoldClient(object):
         for _ in client.get_all_matters():
             pass
         py42.settings.items_per_page = 500
-        assert mock_session.get.call_count == 3
+        assert mock_connection.get.call_count == 3
 
     def test_get_all_matter_custodians_calls_get_expected_number_of_times(
         self,
-        mock_session,
+        mock_connection,
         mock_get_all_matter_custodians_response,
         mock_get_all_matter_custodians_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldService(mock_session)
-        mock_session.get.side_effect = [
+        client = LegalHoldService(mock_connection)
+        mock_connection.get.side_effect = [
             mock_get_all_matter_custodians_response,
             mock_get_all_matter_custodians_response,
             mock_get_all_matter_custodians_empty_response,
@@ -105,14 +105,14 @@ class TestLegalHoldClient(object):
         for _ in client.get_all_matter_custodians():
             pass
         py42.settings.items_per_page = 500
-        assert mock_session.get.call_count == 3
+        assert mock_connection.get.call_count == 3
 
     def test_get_matters_page_calls_get_with_expected_url_and_params(
-        self, mock_session
+        self, mock_connection
     ):
-        client = LegalHoldService(mock_session)
+        client = LegalHoldService(mock_connection)
         client.get_matters_page(10, "creator", True, "name", "ref", 100)
-        mock_session.get.assert_called_once_with(
+        mock_connection.get.assert_called_once_with(
             "/api/LegalHold",
             params={
                 "creatorUserUid": "creator",
@@ -125,13 +125,13 @@ class TestLegalHoldClient(object):
         )
 
     def test_get_custodians_page_calls_get_with_expected_url_and_params(
-        self, mock_session
+        self, mock_connection
     ):
-        client = LegalHoldService(mock_session)
+        client = LegalHoldService(mock_connection)
         client.get_custodians_page(
             20, "membership", "legalhold", "user ID", "username", True, 200
         )
-        mock_session.get.assert_called_once_with(
+        mock_connection.get.assert_called_once_with(
             "/api/LegalHoldMembership",
             params={
                 "legalHoldMembershipUid": "membership",

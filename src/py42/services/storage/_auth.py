@@ -4,25 +4,19 @@ from py42.services._auth import C42RenewableAuth
 class StorageTmpAuth(C42RenewableAuth):
     def __init__(self):
         super(StorageTmpAuth, self).__init__()
-        self._cached_info = None
+        self._storage_url = None
 
-    def get_login_info(self):
-        if self._cached_info is None:
-            response = self.get_tmp_auth()
-            self._cached_info = response
-        return self._cached_info
-
-    def clear_credentials(self):
-        self._cached_info = None
-        super(StorageTmpAuth, self).clear_credentials()
+    def get_storage_url(self):
+        self.get_credentials()
+        return self._server_url
 
     def get_tmp_auth(self):
         raise NotImplementedError()
 
     def _get_credentials(self):
-        if self._cached_info is None:
-            self.get_login_info()
-        login_token = self._cached_info[u"loginToken"]
+        login_info = self.get_tmp_auth()
+        login_token = login_info[u"loginToken"]
+        self._server_url = login_info[u"serverUrl"]
         return u"{} {}".format(u"login_token", login_token)
 
 

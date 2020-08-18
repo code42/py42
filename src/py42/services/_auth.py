@@ -9,15 +9,20 @@ class C42RenewableAuth(AuthBase):
         self._credentials = None
 
     def __call__(self, r):
-        with self._auth_lock:
-            self._credentials = self._credentials or self._get_credentials()
-            r.headers[u"Authorization"] = self._credentials
+        r.headers[u"Authorization"] = self.get_credentials()
         return r
 
     def clear_credentials(self):
         # Do not clear credentials while they are being retrieved
         with self._auth_lock:
             self._credentials = None
+
+    def get_credentials(self):
+        if not self._credentials:
+            with self._auth_lock:
+                if not self._credentials:
+                    self._credentials = self._credentials or self._get_credentials()
+        return self._credentials
 
     def _get_credentials(self):
         raise NotImplementedError()

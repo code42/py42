@@ -20,7 +20,7 @@ def mock_request(mocker):
 
 @pytest.fixture
 def mock_tmp_auth_conn(mock_connection, py42_response):
-    py42_response.text = '{"loginToken": "TEST_TMP_TOKEN_VALUE"}'
+    py42_response.text = '{"serverUrl": "testhost.com", "loginToken": "TEST_TMP_TOKEN_VALUE"}'
     mock_connection.post.return_value = py42_response
     return mock_connection
 
@@ -79,6 +79,23 @@ class TestFileArchiveTmpAuth(object):
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 2
 
+    def test_get_storage_url_returns_expected_value(self, mock_tmp_auth_conn):
+        auth = FileArchiveTmpAuth(
+            mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
+        )
+        assert auth.get_storage_url() == "testhost.com"
+
+    def test_get_storage_url_only_calls_auth_api_first_time(
+        self, mock_tmp_auth_conn
+    ):
+        auth = FileArchiveTmpAuth(
+            mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
+        )
+        auth.get_storage_url()
+        assert mock_tmp_auth_conn.post.call_count == 1
+        auth.get_storage_url()
+        assert mock_tmp_auth_conn.post.call_count == 1
+
 
 class TestSecurityArchiveTmpAuth(object):
     def test_call_returns_request_with_expected_header(
@@ -124,6 +141,23 @@ class TestSecurityArchiveTmpAuth(object):
         auth.clear_credentials()
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 2
+
+    def test_get_storage_url_returns_expected_value(self, mock_tmp_auth_conn):
+        auth = SecurityArchiveTmpAuth(
+            mock_tmp_auth_conn, TEST_PLAN_UID, TEST_DESTINATION_GUID
+        )
+        assert auth.get_storage_url() == "testhost.com"
+
+    def test_get_storage_url_only_calls_auth_api_first_time(
+        self, mock_tmp_auth_conn
+    ):
+        auth = SecurityArchiveTmpAuth(
+            mock_tmp_auth_conn, TEST_PLAN_UID, TEST_DESTINATION_GUID
+        )
+        auth.get_storage_url()
+        assert mock_tmp_auth_conn.post.call_count == 1
+        auth.get_storage_url()
+        assert mock_tmp_auth_conn.post.call_count == 1
 
 
 class TestV1Auth(object):

@@ -61,7 +61,7 @@ class ConnectionManager(object):
 
     def get_storage_connection(self, tmp_auth):
         try:
-            url = tmp_auth.get_login_info()[u"serverUrl"]
+            url = tmp_auth.get_server_url()
             connection = self.get_saved_connection_for_url(url)
             if connection is None:
                 with self._list_update_lock:

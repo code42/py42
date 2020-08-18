@@ -179,8 +179,9 @@ class Connection(object):
             if response is not None and 200 <= response.status_code <= 399:
                 return Py42Response(response)
 
-            if isinstance(self._auth, C42RenewableAuth):
-                self._auth.clear_credentials()
+            if response is not None and response.status_code == 401:
+                if isinstance(self._auth, C42RenewableAuth):
+                    self._auth.clear_credentials()
 
         # if nothing has been returned after two attempts, something went wrong
         _handle_error(method, url, response)

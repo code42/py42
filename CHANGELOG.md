@@ -17,9 +17,15 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.alerts.resolve()`
     - `sdk.alerts.reopen()`
 
+## Fixed
+
+- Issue that in rare circumstance could cause py42 to exhaust network sockets. This could sometimes occur if you were running a multi-threaded program that communicated with many Code42 storage nodes.
+
 ### Added
 
-- Debug logs for restore progress during the method call `py42.archive.stream_from_back()`.
+- [.netrc](https://ec.haxx.se/usingcurl/usingcurl-netrc) support. Calling `py42.sdk.from_local_account()` with no username and password will now result in py42 attempting to authenticate via an entry in your `.netrc` file, if you have one.
+
+- Debug logs for restore progress during the method call `sdk.archive.stream_from_backup()`.
 
 - `py42.constants.SortDirection` constants `DESC` and `ASC`.
 
@@ -35,7 +41,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.orgs.get_agent_state()`
     - `sdk.orgs.get_agent_full_disk_access_states()`
 
-- Exception classes (`py42.execeptions`)
+- Exception classes (`py42.exceptions`)
     - `Py42ResponseError`
     - `Py42UserAlreadyAddedError`
     - `Py42UserNotInLegalHoldError`
@@ -84,16 +90,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- `py42.archive.stream_from_backup()` now calculates file sizes and accepts a `file_size_calc_timeout` parameter.
+- `sdk.archive.stream_from_backup()` now calculates file sizes and accepts a `file_size_calc_timeout` parameter.
 - Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths` and can now take a list of file paths to restore.
-- `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
-- `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
-- `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.
-- `py42.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when the user does not have
+- `sdk.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
+- `sdk.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
+- `sdk.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.
+- `sdk.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when the user does not have
     access or the ID does not exist.
-- `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError` when the user is not found.
-- `py42.alerts.rules.add_user()` now raises `Py42InvalidRuleTypeError` when trying to add a user to a system rule.
-- `py42.alerts.rules.remove_user()` now raises `Py42InvalidRuleTypeError` when trying to remove user from a system rule.
+- `sdk.users.get_by_username()` now raises `Py42UserDoesNotExistError` when the user is not found.
+- `sdk.alerts.rules.add_user()` now raises `Py42InvalidRuleTypeError` when trying to add a user to a system rule.
+- `sdk.alerts.rules.remove_user()` now raises `Py42InvalidRuleTypeError` when trying to remove user from a system rule.
 - `Py42ArchiveFileNotFoundError` now includes the response.
 - `Py42ChecksumNotFoundError` now includes the response.
 - `Py42FeatureUnavailableError` now includes the response.

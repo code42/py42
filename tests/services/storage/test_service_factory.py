@@ -1,6 +1,5 @@
 import pytest
 from requests.exceptions import HTTPError
-from tests.conftest import py42_response
 
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42StorageSessionInitializationError

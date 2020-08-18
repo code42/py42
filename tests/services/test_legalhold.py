@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from requests import HTTPError
 from requests import Response

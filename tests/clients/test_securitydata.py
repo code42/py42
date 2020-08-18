@@ -1,13 +1,11 @@
 import json
 
 import pytest
-from requests.exceptions import HTTPError
 
 from py42.clients.securitydata import PlanStorageInfo
 from py42.clients.securitydata import SecurityDataClient
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
-from py42.exceptions import Py42HTTPError
 from py42.response import Py42Response
 from py42.services.fileevent import FileEventService
 from py42.services.preservationdata import PreservationDataService

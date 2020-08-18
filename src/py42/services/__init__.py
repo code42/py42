@@ -1,7 +1,10 @@
 from collections import namedtuple
 
 
-class BaseService(object):
+class BaseClient(object):
+
+    __slots__ = ["_connection"]
+
     def __init__(self, connection):
         self._connection = connection
 

@@ -143,12 +143,10 @@ class Connection(object):
         hooks=None,
         stream=False,
         timeout=60,
-        verify=True,
         cert=None,
         proxies=None,
     ):
         response = None
-
         for _ in range(2):
             request = self._prepare_request(
                 method,
@@ -167,7 +165,7 @@ class Connection(object):
                 request,
                 stream=stream,
                 timeout=timeout,
-                verify=verify,
+                verify=settings.verify_ssl_certs,
                 cert=cert,
                 proxies=proxies,
             )

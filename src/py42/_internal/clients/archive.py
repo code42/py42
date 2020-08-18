@@ -2,6 +2,7 @@ import json
 
 from py42.clients import BaseClient
 from py42.clients.util import get_all_pages
+from py42 import settings
 
 
 class ArchiveClient(BaseClient):
@@ -9,6 +10,76 @@ class ArchiveClient(BaseClient):
         uri = u"/api/DataKeyToken"
         data = {u"computerGuid": device_guid}
         return self._session.post(uri, data=json.dumps(data))
+
+    def get_single_archive(self, archive_guid):
+        """Gets single archive information by GUID.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            archive_guid (int): The GUID for the archive.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing archive information.
+        """
+        uri = u"/api/Archive/{}".format(archive_guid)
+        return self._session.get(uri)
+
+    def get_page(self, page_num, page_size=None, **kwargs):
+        """Gets an individual page of archives.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            page_num (int): The page number to request.
+            page_size (int, optional): The number of archives to return per page.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        uri = u"/api/Archive"
+        page_size = page_size or settings.items_per_page
+        params = dict(
+            pgNum=page_num,
+            pgSize=page_size,
+            **kwargs
+        )
+        return self._session.get(uri, params=params)
+
+    def get_archives_from_value(self, id_value, id_type):
+        """Gets archive information from a query value.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            id_value (int): Query value for archive.
+            id_type (str): API query value description (e.g backupSourceGuid,
+            userUid, storePointId, serverGuid, destiationGuid, planUid)
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of archives.
+                """
+        params = {u"{}".format(id_type): u"{}".format(id_value)}
+        return get_all_pages(
+            self.get_page,
+            u"archives",
+            **params,
+        )
+
+    def get_archives_from_user_uid_list(self, user_uid_list):
+        """Gets archive information for a list of userUids.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+             user_uid_list (list): A list of userUids.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of archives.
+        """
+        return get_all_pages(
+            self.get_page,
+            u"archives",
+            userUid=','.join(map(str, user_uid_list)),
+        )
 
     def get_backup_sets(self, device_guid, destination_guid):
         uri = u"/c42api/v3/BackupSets/{}/{}".format(device_guid, destination_guid)

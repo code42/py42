@@ -7,6 +7,114 @@ class ArchiveModule(object):
         self._archive_accessor_manager = archive_accessor_manager
         self._archive_client = archive_client
 
+    def get_by_archive_guid(self, archive_guid):
+        """Gets single archive information by GUID.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            archive_guid (int): The GUID for the archive.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing archive
+            information.
+        """
+        uri = u"/api/Archive/{}".format(archive_guid)
+        return self._archive_client.get_single_archive(uri)
+
+    def get_by_device_guid(self, device_guid):
+        """Gets archive information for a device.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            device_guid (int): The GUID for the device.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response`
+            objects that each contain a page of archives.
+        """
+        return self._archive_client.get(device_guid, u"backupSourceGuid")
+
+    def get_by_user_uid(self, user_uid):
+        """Gets archive information for a user.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            user_uid (int): The userUid for a user.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response`
+            objects that each contain a page of archives.
+        """
+        return self._archive_client.get_archives_from_value(user_uid, u"userUid")
+
+    def get_by_store_point_id(self, store_point_id):
+        """Gets archive information for a store point.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            store_point_id (int): The storePointId for a storepoint.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response`
+            objects that each contain a page of archives.
+        """
+        return self._archive_client.get_archives_from_value(store_point_id,
+                                                            u"storePointId")
+
+    def get_by_server_guid(self, server_guid):
+        """Gets archive information for a server.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            server_guid (int): The serverGuid for a server.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response`
+            objects that each contain a page of archives.
+        """
+        return self._archive_client.get_archives_from_value(server_guid, u"serverGuid")
+
+    def get_by_destination_guid(self, destination_guid):
+        """Gets archive information for a destination.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            destination_guid (int): The destinationGuid for a destination.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response`
+            objects that each contain a page of archives.
+        """
+        return self._archive_client.get_archives_from_value(destination_guid,
+                                                            u"destinationGuid")
+
+    def get_by_plan_uid(self, plan_uid):
+        """Gets archive information for a destination.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            plan_uid (int): The planUid for a device.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response`
+            objects that each contain a page of archives.
+        """
+        return self._archive_client.get_archives_from_value(plan_uid,
+                                                            u"planUid")
+
+    def get_by_uid_list(self, user_uid_list):
+        """Gets archive information for a list of userUids.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+             user_uid_list (str list): A list of userUids.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of archives.
+        """
+        return self._archive_client.get_archives_from_uid_list(user_uid_list)
+
     def stream_from_backup(
         self,
         file_path,

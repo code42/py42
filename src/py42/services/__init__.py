@@ -1,7 +1,7 @@
 from collections import namedtuple
 
 
-class BaseClient(object):
+class BaseService(object):
 
     __slots__ = ["_connection"]
 

@@ -209,7 +209,6 @@ class Connection(object):
         if headers:
             user_headers.update(headers)
         self._headers.update(user_headers)
-
         request = Request(
             method=method,
             url=url,
@@ -224,7 +223,7 @@ class Connection(object):
 
         _print_request(method, url, params=params, data=data)
 
-        return request.prepare()
+        return self._session.prepare_request(request)
 
     def _get_host_address(self):
         if not self._host_address:

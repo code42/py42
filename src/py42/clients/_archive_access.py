@@ -234,6 +234,7 @@ class FileSizePoller(_RestorePoller):
                 response = self._get_job_status(job_id)
                 size_dict = _create_size_dict(job_id, response)
                 _print_file_size(size_dict)
+                print(response)
                 if response[u"status"].lower() == u"done":
                     job_ids.remove(job_id)
                     sizes.append(size_dict)
@@ -278,9 +279,10 @@ class RestoreJobManager(_RestorePoller):
     def _is_job_complete(self, job_id):
         response = self._storage_archive_service.get_restore_status(job_id)
         is_done = response[u"done"]
+        print(response)
         percentage_dict = {
             u"jobId": job_id,
-            u"status": response[u"status"],
+            u"status": response.data.get("status"),
             u"percentComplete": response[u"percentComplete"] if not is_done else 100,
         }
         debug.logger.debug(format_dict(percentage_dict))

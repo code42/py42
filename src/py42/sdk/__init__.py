@@ -76,11 +76,13 @@ class SDKClient(object):
         Returns:
             :class:`py42.sdk.SDKClient`
         """
-        basic_auth = HTTPBasicAuth(username, password)
-        basic_auth_connection = Connection.from_host_address(
-            host_address, auth=basic_auth
+        auth = None
+        if username and password:
+            auth = HTTPBasicAuth(username, password)
+        auth_connection = Connection.from_host_address(
+            host_address, auth=auth
         )
-        auth = V3Auth(basic_auth_connection)
+        auth = V3Auth(auth_connection)
         main_connection = Connection.from_host_address(host_address, auth=auth)
 
         return cls(main_connection, auth)

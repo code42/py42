@@ -1,5 +1,4 @@
 from py42._compat import quote
-from py42._compat import urlencode
 from py42.services import BaseService
 
 
@@ -25,13 +24,7 @@ class PreservationDataService(BaseService):
         return self._connection.post(uri, json=data)
 
     def get_file_version_list(self, deviceGuid, file_md5, file_sha256, path):
-        params = {
-            "fileSHA256": file_sha256,
-            "fileMD5": file_md5,
-            "deviceGuid": deviceGuid,
-            "path": path,
-        }
-        params = urlencode(params, quote_via=quote)
+        params = "fileSHA256={}&fileMD5={}&deviceGuid={}&path={}"
+        params = params.format(file_sha256, file_md5, deviceGuid, quote(path))
         uri = u"/api/v1/FileVersionListing?{}".format(params)
-        print(uri)
         return self._connection.get(uri)

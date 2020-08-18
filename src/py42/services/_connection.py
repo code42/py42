@@ -172,13 +172,11 @@ class Connection(object):
                 proxies=proxies,
             )
 
-            print(response.status_code)
-
             if not stream and response is not None:
                 # setting this manually speeds up read times
                 response.encoding = u"utf-8"
 
-            if response is not None and 200 <= response.status_code <= 299:
+            if response is not None and 200 <= response.status_code <= 399:
                 return Py42Response(response)
 
             if isinstance(self._auth, C42RenewableAuth):
@@ -204,7 +202,6 @@ class Connection(object):
         self._session.proxies = settings.proxies
         self._session.verify = settings.verify_ssl_certs
 
-        print(url)
         if json is not None:
             data = json_lib.dumps(json)
 

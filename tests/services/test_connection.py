@@ -71,13 +71,13 @@ class MockPreparedRequest(object):
     def __init__(self, method, url, data=None):
         self._method = method
         self._url = url
-        self._data = data
+        self._data = data or []
 
     def __eq__(self, other):
         return (
             self._method == other.method
             and self._url == other.url
-            and self._data == other.body
+            and self._data == other.data
         )
 
 
@@ -126,8 +126,8 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.get(URL)
         expected = MockPreparedRequest("GET", HOST_ADDRESS + URL, None)
-        success_requests_session.send.assert_called_once_with(
-            expected, **default_kwargs
+        success_requests_session.prepare_request.assert_called_once_with(
+            expected
         )
 
     def test_connection_put_calls_requests_with_put(
@@ -136,8 +136,8 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.put(URL, data="testdata")
         expected = MockPreparedRequest("PUT", HOST_ADDRESS + URL, "testdata")
-        success_requests_session.send.assert_called_once_with(
-            expected, **default_kwargs
+        success_requests_session.prepare_request.assert_called_once_with(
+            expected
         )
 
     def test_connection_post_calls_requests_with_post(
@@ -146,8 +146,8 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.post(URL, data="testdata")
         expected = MockPreparedRequest("POST", HOST_ADDRESS + URL, "testdata")
-        success_requests_session.send.assert_called_once_with(
-            expected, **default_kwargs
+        success_requests_session.prepare_request.assert_called_once_with(
+            expected
         )
 
     def test_connection_patch_calls_requests_with_patch(
@@ -156,8 +156,8 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.patch(URL, data="testdata")
         expected = MockPreparedRequest("PATCH", HOST_ADDRESS + URL, "testdata")
-        success_requests_session.send.assert_called_once_with(
-            expected, **default_kwargs
+        success_requests_session.prepare_request.assert_called_once_with(
+            expected
         )
 
     def test_connection_delete_calls_requests_with_delete(
@@ -166,8 +166,8 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.delete(URL)
         expected = MockPreparedRequest("DELETE", HOST_ADDRESS + URL)
-        success_requests_session.send.assert_called_once_with(
-            expected, **default_kwargs
+        success_requests_session.prepare_request.assert_called_once_with(
+            expected
         )
 
     def test_connection_options_calls_requests_with_options(
@@ -176,8 +176,8 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.options(URL)
         expected = MockPreparedRequest("OPTIONS", HOST_ADDRESS + URL)
-        success_requests_session.send.assert_called_once_with(
-            expected, **default_kwargs
+        success_requests_session.prepare_request.assert_called_once_with(
+            expected
         )
 
     def test_connection_head_calls_requests_with_head(
@@ -186,8 +186,8 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.head(URL)
         expected = MockPreparedRequest("HEAD", HOST_ADDRESS + URL)
-        success_requests_session.send.assert_called_once_with(
-            expected, **default_kwargs
+        success_requests_session.prepare_request.assert_called_once_with(
+            expected
         )
 
     def test_connection_post_with_json_prepares_request_with_string_encoded_json_body(
@@ -198,8 +198,8 @@ class TestConnection(object):
         expected = MockPreparedRequest(
             "POST", HOST_ADDRESS + URL, json.dumps(JSON_VALUE)
         )
-        success_requests_session.send.assert_called_once_with(
-            expected, **default_kwargs
+        success_requests_session.prepare_request.assert_called_once_with(
+            expected
         )
 
     def test_connection_post_with_data_and_json_params_overwrites_data_with_json(
@@ -210,8 +210,8 @@ class TestConnection(object):
         expected = MockPreparedRequest(
             "POST", HOST_ADDRESS + URL, json.dumps(JSON_VALUE)
         )
-        success_requests_session.send.assert_called_once_with(
-            expected, **default_kwargs
+        success_requests_session.prepare_request.assert_called_once_with(
+            expected
         )
 
     def test_connection_request_returns_utf8_response(
@@ -247,7 +247,7 @@ class TestConnection(object):
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.get(URL)
-        assert mock_auth.call_count == 1
+        assert success_requests_session.prepare_request.call_count == 1
 
     def test_connection_request_calls_auth_handler_clears_renews_credentials_when_response_unauthorized(
         self, mock_host_resolver, mock_auth, renewed_requests_session
@@ -255,7 +255,7 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, renewed_requests_session)
         connection.get(URL)
         assert renewed_requests_session.send.call_count == 2
-        assert mock_auth.call_count == 2
+        assert renewed_requests_session.prepare_request.call_count == 2
         assert mock_auth.clear_credentials.call_count == 1
 
     def test_connection_request_raises_unauthorized_error_when_renewal_results_in_401(

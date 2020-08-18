@@ -222,7 +222,6 @@ class Connection(object):
         )
 
         _print_request(method, url, params=params, data=data)
-
         return self._session.prepare_request(request)
 
     def _get_host_address(self):

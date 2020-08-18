@@ -231,7 +231,9 @@ class SecurityDataClient(object):
 
     def _stream_file(self, checksum, version_info):
         (device_guid, md5_hash, sha256_hash, path) = version_info
-        version = self._get_file_version_for_stream(device_guid, md5_hash, sha256_hash, path)
+        version = self._get_file_version_for_stream(
+            device_guid, md5_hash, sha256_hash, path
+        )
         if version:
             pds = self._storage_service_factory.create_preservation_data_service(
                 version[u"storageNodeURL"]

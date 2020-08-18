@@ -79,9 +79,7 @@ class SDKClient(object):
         auth = None
         if username and password:
             auth = HTTPBasicAuth(username, password)
-        auth_connection = Connection.from_host_address(
-            host_address, auth=auth
-        )
+        auth_connection = Connection.from_host_address(host_address, auth=auth)
         auth = V3Auth(auth_connection)
         main_connection = Connection.from_host_address(host_address, auth=auth)
 

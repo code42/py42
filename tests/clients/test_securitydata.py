@@ -853,13 +853,24 @@ class TestSecurityClient(object):
         )
 
         response = security_client.stream_file_by_sha256("testsha256-2")
-        version_list_params = ["testdeviceUid", "testmd5-2", "testsha256-2", "/test/file/path/testfileName"]
-        preservation_data_service.get_file_version_list.assert_called_once_with(*version_list_params)
-        storage_service_factory.create_preservation_data_service.assert_called_once_with("https://host-2.com")
+        version_list_params = [
+            "testdeviceUid",
+            "testmd5-2",
+            "testsha256-2",
+            "/test/file/path/testfileName",
+        ]
+        preservation_data_service.get_file_version_list.assert_called_once_with(
+            *version_list_params
+        )
+        storage_service_factory.create_preservation_data_service.assert_called_once_with(
+            "https://host-2.com"
+        )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
         download_token_params = ["archiveid-2", "fileid-2", 12344]
-        storage_node_client.get_download_token.assert_called_once_with(*download_token_params)
+        storage_node_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
         assert response == b"stream"
 
     def test_stream_file_by_sha256_without_exact_match_response_calls_get_version_list_with_expected_params(
@@ -892,14 +903,25 @@ class TestSecurityClient(object):
         )
 
         response = security_client.stream_file_by_sha256("testsha256-6")
-        expected = ["testdeviceUid", "testmd5-6", "testsha256-6", "/test/file/path/testfileName"]
-        preservation_data_service.get_file_version_list.assert_called_once_with(*expected)
-        storage_service_factory.create_preservation_data_service.assert_called_once_with("https://host-3.com")
+        expected = [
+            "testdeviceUid",
+            "testmd5-6",
+            "testsha256-6",
+            "/test/file/path/testfileName",
+        ]
+        preservation_data_service.get_file_version_list.assert_called_once_with(
+            *expected
+        )
+        storage_service_factory.create_preservation_data_service.assert_called_once_with(
+            "https://host-3.com"
+        )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
         # should get version with most recent versionTimestamp
         download_token_params = ["archiveid-3", "fileid-3", 12346]
-        storage_node_client.get_download_token.assert_called_once_with(*download_token_params)
+        storage_node_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
         assert response == b"stream"
 
     def test_stream_file_by_sha256_when_search_returns_empty_response_raises_py42_checksum_not_found_error_(
@@ -963,12 +985,16 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_sha256("shahash")
         assert response == b"stream"
-        file_event_service.get_file_location_detail_by_sha256.assert_called_once_with("testsha256-2")
+        file_event_service.get_file_location_detail_by_sha256.assert_called_once_with(
+            "testsha256-2"
+        )
         expected = ["testmd5-2", "testsha256-2", mocker.ANY]
         preservation_data_service.find_file_version.assert_called_once_with(*expected)
         # should return version returned by find_file_version
         download_token_params = ["archiveid-3", "fileid-3", 12346]
-        storage_node_client.get_download_token.assert_called_once_with(*download_token_params)
+        storage_node_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
 
     def test_stream_file_by_sha256_when_get_locations_returns_empty_list_raises_py42_error(
         self,
@@ -980,7 +1006,7 @@ class TestSecurityClient(object):
         storage_service_factory,
         file_event_search,
         file_version_list,
-        file_location
+        file_location,
     ):
         file_version_list.text = '{"versions": []}'
         file_location.text = '{"locations": []}'
@@ -1066,13 +1092,24 @@ class TestSecurityClient(object):
         )
 
         response = security_client.stream_file_by_md5("testmd5-2")
-        version_list_params = ["testdeviceUid", "testmd5-2", "testsha256-2", "/test/file/path/testfileName"]
-        preservation_data_service.get_file_version_list.assert_called_once_with(*version_list_params)
-        storage_service_factory.create_preservation_data_service.assert_called_once_with("https://host-2.com")
+        version_list_params = [
+            "testdeviceUid",
+            "testmd5-2",
+            "testsha256-2",
+            "/test/file/path/testfileName",
+        ]
+        preservation_data_service.get_file_version_list.assert_called_once_with(
+            *version_list_params
+        )
+        storage_service_factory.create_preservation_data_service.assert_called_once_with(
+            "https://host-2.com"
+        )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
         download_token_params = ["archiveid-2", "fileid-2", 12344]
-        storage_node_client.get_download_token.assert_called_once_with(*download_token_params)
+        storage_node_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
         assert response == b"stream"
 
     def test_stream_file_by_md5_without_exact_match_response_calls_get_version_list_with_expected_params(
@@ -1105,14 +1142,25 @@ class TestSecurityClient(object):
         )
 
         response = security_client.stream_file_by_md5("testmd5-6")
-        expected = ["testdeviceUid", "testmd5-6", "testsha256-6", "/test/file/path/testfileName"]
-        preservation_data_service.get_file_version_list.assert_called_once_with(*expected)
-        storage_service_factory.create_preservation_data_service.assert_called_once_with("https://host-3.com")
+        expected = [
+            "testdeviceUid",
+            "testmd5-6",
+            "testsha256-6",
+            "/test/file/path/testfileName",
+        ]
+        preservation_data_service.get_file_version_list.assert_called_once_with(
+            *expected
+        )
+        storage_service_factory.create_preservation_data_service.assert_called_once_with(
+            "https://host-3.com"
+        )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
         # should get version returned with most recent versionTimestamp
         download_token_params = ["archiveid-3", "fileid-3", 12346]
-        storage_node_client.get_download_token.assert_called_once_with(*download_token_params)
+        storage_node_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
         assert response == b"stream"
 
     def test_stream_file_by_md5_when_search_returns_empty_response_raises_py42_checksum_not_found_error_(
@@ -1176,12 +1224,16 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_md5("mdhash")
         assert response == b"stream"
-        file_event_service.get_file_location_detail_by_sha256.assert_called_once_with("testsha256-2")
+        file_event_service.get_file_location_detail_by_sha256.assert_called_once_with(
+            "testsha256-2"
+        )
         expected = ["testmd5-2", "testsha256-2", mocker.ANY]
         preservation_data_service.find_file_version.assert_called_once_with(*expected)
         # should return version returned by find_file_version
         download_token_params = ["archiveid-3", "fileid-3", 12346]
-        storage_node_client.get_download_token.assert_called_once_with(*download_token_params)
+        storage_node_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
 
     def test_stream_file_by_md5_when_get_locations_returns_empty_list_raises_py42_error(
         self,
@@ -1192,7 +1244,7 @@ class TestSecurityClient(object):
         storage_service_factory,
         file_event_search,
         file_version_list,
-        file_location
+        file_location,
     ):
         file_version_list.text = '{"versions": []}'
         file_location.text = '{"locations": []}'

@@ -6,7 +6,6 @@ from py42.exceptions import Py42Error
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42SecurityPlanConnectionError
-from py42.exceptions import raise_py42_error
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters.file_filter import MD5
 from py42.sdk.queries.fileevents.filters.file_filter import SHA256

@@ -1,10 +1,10 @@
 import json
 from threading import Lock
 
-from requests.exceptions import HTTPError
-
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
+from py42.exceptions import Py42HTTPError
+from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42SecurityPlanConnectionError
 from py42.exceptions import raise_py42_error
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
@@ -54,11 +54,8 @@ class SecurityDataClient(object):
         try:
             response = self._security_client.get_security_event_locations(user_uid)
             locations = response[u"securityPlanLocationsByDestination"]
-        except HTTPError as err:
-            if err.response.status_code == 404:
-                pass
-            else:
-                raise_py42_error(err)
+        except Py42NotFoundError:
+            pass
 
         if response and locations:
             plan_destination_map = _get_plan_destination_map(locations)
@@ -320,7 +317,7 @@ class SecurityDataClient(object):
             plan_storage_info = PlanStorageInfo(plan_uid, destination_guid, node_guid)
             self._try_get_security_detection_event_client(plan_storage_info)
             return plan_storage_info
-        except HTTPError:
+        except Py42HTTPError:
             #  This function is called in a loop until we get a result that is not None.
             #  If all return None, then the calling function raises Py42SecurityPlanConnectionError.
             pass

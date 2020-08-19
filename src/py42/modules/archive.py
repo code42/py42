@@ -21,7 +21,7 @@ class ArchiveModule(object):
         uri = u"/api/Archive/{}".format(archive_guid)
         return self._archive_client.get_single_archive(uri)
 
-    def get_by_device_guid(self, device_guid):
+    def get_all_by_device_guid(self, device_guid):
         """Gets archive information for a device.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
@@ -36,7 +36,7 @@ class ArchiveModule(object):
             device_guid, u"backupSourceGuid"
         )
 
-    def get_by_user_uid(self, user_uid):
+    def get_all_by_user_uid(self, user_uid):
         """Gets archive information for a user.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
@@ -49,7 +49,7 @@ class ArchiveModule(object):
         """
         return self._archive_client.get_all_archives_from_value(user_uid, u"userUid")
 
-    def get_by_destination_guid(self, destination_guid):
+    def get_all_by_destination_guid(self, destination_guid):
         """Gets archive information for a destination.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 

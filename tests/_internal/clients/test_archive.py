@@ -80,7 +80,7 @@ class TestArchiveClient(object):
         response.text = MOCK_EMPTY_GET_ORG_COLD_STORAGE_RESPONSE
         return Py42Response(response)
 
-    def test_get_by_archive_guid_calls_get_with_expected_uri(
+    def test_get_single_archive_calls_get_with_expected_uri(
         self, mock_session, successful_response
     ):
         mock_session.get.return_value = successful_response
@@ -89,7 +89,7 @@ class TestArchiveClient(object):
         uri = "{}/{}".format(ARCHIVE_URI, "ARCHIVE_GUID")
         mock_session.get.assert_called_once_with(uri)
 
-    def test_get_archives_from_value_calls_get_expected_number_of_times(
+    def test_get_all_archives_from_value_calls_get_expected_number_of_times(
         self, mock_session, mock_get_archives_response, mock_get_archives_empty_response
     ):
         device_guid = 42
@@ -100,46 +100,18 @@ class TestArchiveClient(object):
             mock_get_archives_response,
             mock_get_archives_empty_response,
         ]
-        for _ in client.get_archives_from_value(device_guid, u"backupSourceGuid"):
+        for _ in client.get_all_archives_from_value(device_guid, u"backupSourceGuid"):
             pass
         py42.settings.items_per_page = 500
         assert mock_session.get.call_count == 3
 
-    def test_get_by_value_calls_get_with_expected_uri_and_params(
-        self, mock_session
-    ):
+    def test_get_by_value_calls_get_with_expected_uri_and_params(self, mock_session):
         device_guid = 42
         client = ArchiveClient(mock_session)
-        for _ in client.get_archives_from_value(device_guid, u"backupSourceGuid"):
+        for _ in client.get_all_archives_from_value(device_guid, u"backupSourceGuid"):
             pass
         expected_params = {"pgNum": 1, "pgSize": 500, "backupSourceGuid": "42"}
         mock_session.get.assert_called_with(ARCHIVE_URI, params=expected_params)
-
-    def test_get_archives_from_user_uid_list_calls_get_expected_number_of_times(
-        self, mock_session, mock_get_archives_response, mock_get_archives_empty_response
-    ):
-        user_uid_list = [1, 2, 3, 4, 5]
-        py42.settings.items_per_page = 1
-        client = ArchiveClient(mock_session)
-        mock_session.get.side_effect = [
-            mock_get_archives_response,
-            mock_get_archives_response,
-            mock_get_archives_empty_response,
-        ]
-        for _ in client.get_archives_from_user_uid_list(user_uid_list):
-            pass
-        py42.settings.items_per_page = 500
-        assert mock_session.get.call_count == 3
-
-    def test_get_by_user_uid_list_calls_get_with_expect_uri_and_params(
-        self, mock_session
-    ):
-        user_uid_list = [1, 2, 3, 4, 5]
-        client = ArchiveClient(mock_session)
-        for _ in client.get_archives_from_user_uid_list(user_uid_list):
-            pass
-        expected_params = {"pgNum": 1, "pgSize": 500, "userUid": "1,2,3,4,5"}
-        mock_session.get.assert_called_once_with(ARCHIVE_URI, params=expected_params)
 
     def test_get_all_restore_history_calls_get_expected_number_of_times(
         self,

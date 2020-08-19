@@ -32,7 +32,9 @@ class ArchiveModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response`
             objects that each contain a page of archives.
         """
-        return self._archive_client.get(device_guid, u"backupSourceGuid")
+        return self._archive_client.get_all_archives_from_value(
+            device_guid, u"backupSourceGuid"
+        )
 
     def get_by_user_uid(self, user_uid):
         """Gets archive information for a user.
@@ -45,34 +47,7 @@ class ArchiveModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response`
             objects that each contain a page of archives.
         """
-        return self._archive_client.get_archives_from_value(user_uid, u"userUid")
-
-    def get_by_store_point_id(self, store_point_id):
-        """Gets archive information for a store point.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
-
-        Args:
-            store_point_id (int): The storePointId for a storepoint.
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response`
-            objects that each contain a page of archives.
-        """
-        return self._archive_client.get_archives_from_value(store_point_id,
-                                                            u"storePointId")
-
-    def get_by_server_guid(self, server_guid):
-        """Gets archive information for a server.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
-
-        Args:
-            server_guid (int): The serverGuid for a server.
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response`
-            objects that each contain a page of archives.
-        """
-        return self._archive_client.get_archives_from_value(server_guid, u"serverGuid")
+        return self._archive_client.get_all_archives_from_value(user_uid, u"userUid")
 
     def get_by_destination_guid(self, destination_guid):
         """Gets archive information for a destination.
@@ -85,35 +60,9 @@ class ArchiveModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response`
             objects that each contain a page of archives.
         """
-        return self._archive_client.get_archives_from_value(destination_guid,
-                                                            u"destinationGuid")
-
-    def get_by_plan_uid(self, plan_uid):
-        """Gets archive information for a destination.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
-
-        Args:
-            plan_uid (int): The planUid for a device.
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response`
-            objects that each contain a page of archives.
-        """
-        return self._archive_client.get_archives_from_value(plan_uid,
-                                                            u"planUid")
-
-    def get_by_uid_list(self, user_uid_list):
-        """Gets archive information for a list of userUids.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
-
-        Args:
-             user_uid_list (str list): A list of userUids.
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of archives.
-        """
-        return self._archive_client.get_archives_from_uid_list(user_uid_list)
+        return self._archive_client.get_archives_from_value(
+            destination_guid, u"destinationGuid"
+        )
 
     def stream_from_backup(
         self,

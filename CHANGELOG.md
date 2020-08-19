@@ -23,11 +23,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.archive.get_by_archive_guid`
     - `sdk.archive.get_by_device_guid`
     - `sdk.archive.get_by_user_uid`
-    - `sdk.archive.get_by_store_point_id`
     - `sdk.archive.get_by_destination_guid`
-    - `sdk.archive.get_by_plan_uid`
-    - `sdk.archive.get_by_user_uid_list`
-
 
 - Methods for calling the agent-state APIs:
     - `sdk.devices.get_agent_state()`

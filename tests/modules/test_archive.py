@@ -27,7 +27,7 @@ class TestArchiveModule(object):
     _TEST_ID = 424242
 
     def test_get_by_archive_guid_calls_get_single_archive_with_expected_params(
-        self, mocker
+        self, archive_client, archive_accessor_manager
     ):
         archive_guid = 42
         archive = ArchiveModule(archive_accessor_manager, archive_client)
@@ -35,7 +35,7 @@ class TestArchiveModule(object):
         archive._archive_client.get_single_archive.assert_called_once_with(archive_guid)
 
     def test_get_all_by_device_guid_calls_get_all_archives_from_value_with_expected_params(
-        self, mocker
+        self, archive_client, archive_accessor_manager
     ):
         device_guid = 42
         archive = ArchiveModule(archive_accessor_manager, archive_client)
@@ -46,7 +46,7 @@ class TestArchiveModule(object):
         )
 
     def test_get_all_by_user_uid_calls_get_all_archives_from_value_with_expected_params(
-        self, mocker
+        self, archive_client, archive_accessor_manager
     ):
         user_uid = 42
         archive = ArchiveModule(archive_accessor_manager, archive_client)
@@ -57,7 +57,7 @@ class TestArchiveModule(object):
         )
 
     def test_get_all_by_destination_guid_calls_get_all_archives_from_value_with_expected_params(
-        self, mocker
+        self, archive_client, archive_accessor_manager
     ):
         destination_guid = 42
         archive = ArchiveModule(archive_accessor_manager, archive_client)

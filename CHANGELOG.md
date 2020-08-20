@@ -19,6 +19,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+
+- Methods for obtaining archive information:
+    - `sdk.archive.get_by_archive_guid`
+    - `sdk.archive.get_by_device_guid`
+    - `sdk.archive.get_by_user_uid`
+    - `sdk.archive.get_by_destination_guid`
+
 - Debug logs for restore progress during the method call `py42.archive.stream_from_back()`.
 
 - `py42.constants.SortDirection` constants `DESC` and `ASC`.

@@ -6,6 +6,7 @@ from requests import Response
 
 from py42._internal.clients.detection_list_user import DetectionListUserClient
 from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeClient
+from py42.clients.detectionlists.high_risk_employee import HighRiskEmployeeFilters
 from py42.clients.users import UserClient
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UserAlreadyAddedError
@@ -17,6 +18,13 @@ CREATE_USER_SAMPLE_RESPONSE = """
     "displayName":"Test Employee",
     "cloudUsernames":["test.employee@test.com"],"riskFactors":[]}
 """
+
+
+class TestHighRiskEmployeeFilters(object):
+    def test_choices_are_correct(self):
+        actual = HighRiskEmployeeFilters.choices()
+        expected = ["OPEN", "EXFILTRATION_24_HOURS", "EXFILTRATION_30_DAYS"]
+        assert set(actual) == set(expected)
 
 
 class TestHighRiskEmployeeClient(object):

@@ -19,6 +19,7 @@ if is_py2:
     import repr as reprlib
 
     string_type = basestring
+
 else:
     from urllib.parse import urljoin, urlparse, quote
 

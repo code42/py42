@@ -15,6 +15,14 @@ from py42.settings import debug
 from py42.util import format_dict
 
 
+def _print_request(method, url, params=None, data=None):
+    debug.logger.info(u"{}{}".format(str(method).ljust(8), url))
+    if params:
+        debug.logger.debug(format_dict(params, u"  params"))
+    if data:
+        debug.logger.debug(format_dict(data, u"  data"))
+
+
 class Py42Session(object):
     def __init__(self, session, host_address, auth_handler=None):
         self._initialized = False
@@ -138,7 +146,7 @@ class Py42Session(object):
         cert=None,
     ):
 
-        self._print_request(method, url, params=params, data=data)
+        _print_request(method, url, params=params, data=data)
 
         response = self._session.request(
             method,
@@ -181,13 +189,6 @@ class Py42Session(object):
 
         # if there's no auth handler or we handled auth without errors, initialization is done.
         self._initialized = True
-
-    def _print_request(self, method, url, params=None, data=None):
-        debug.logger.info(u"{}{}".format(str(method).ljust(8), url))
-        if params:
-            debug.logger.debug(format_dict(params, u"  params"))
-        if data:
-            debug.logger.debug(format_dict(data, u"  data"))
 
 
 def _filter_out_none(_dict):

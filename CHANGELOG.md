@@ -19,11 +19,22 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+
 - Methods for obtaining archive information:
     - `sdk.archive.get_by_archive_guid`
     - `sdk.archive.get_by_device_guid`
     - `sdk.archive.get_by_user_uid`
     - `sdk.archive.get_by_destination_guid`
+
+- Debug logs for restore progress during the method call `py42.archive.stream_from_back()`.
+
+- `py42.constants.SortDirection` constants `DESC` and `ASC`.
+
+- `sdk.detectionlists.departing_employee.DepartingEmployeeFilters` constants `OPEN`,
+    `EXFILTRATION_30_DAYS`, `EXFILTRATION_24_HOURS`, and `LEAVING_TODAY`.
+
+- `sdk.detectionlists.high_risk_employee.HighRiskEmployeeFilters` constants `OPEN`,
+    `EXFILTRATION_30_DAYS`, and `EXFILTRATION_24_HOURS`.
 
 - Methods for calling the agent-state APIs:
     - `sdk.devices.get_agent_state()`
@@ -80,6 +91,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
+- `py42.archive.stream_from_backup()` now calculates file sizes and accepts a `file_size_calc_timeout` parameter.
+- Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths` and can now take a list of file paths to restore.
 - `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
 - `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
 - `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.

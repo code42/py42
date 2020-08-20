@@ -37,8 +37,9 @@ class ArchiveClient(BaseClient):
         """
         uri = u"/api/Archive"
         page_size = page_size or settings.items_per_page
-        params = dict(pgNum=page_num, pgSize=page_size, **kwargs,)
-        return self._session.get(uri, params=params)
+        kwargs[u"pgNum"] = page_num
+        kwargs[u"pgSize"] = page_size
+        return self._session.get(uri, params=kwargs)
 
     def get_all_archives_from_value(self, id_value, id_type):
         """Gets archive information from an ID, such as a User UID, Device GUID, or Destination GUID.

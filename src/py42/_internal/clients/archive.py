@@ -37,9 +37,8 @@ class ArchiveClient(BaseClient):
         """
         uri = u"/api/Archive"
         page_size = page_size or settings.items_per_page
-        kwargs[u"pgNum"] = page_num
-        kwargs[u"pgSize"] = page_size
-        return self._session.get(uri, params=kwargs)
+        params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
+        return self._session.get(uri, params=params)
 
     def get_all_archives_from_value(self, id_value, id_type):
         """Gets archive information from an ID, such as a User UID, Device GUID, or Destination GUID.
@@ -55,7 +54,7 @@ class ArchiveClient(BaseClient):
             that each contain a page of archives.
         """
         params = {u"{}".format(id_type): u"{}".format(id_value)}
-        return get_all_pages(self.get_page, u"archives", **params,)
+        return get_all_pages(self.get_page, u"archives", **params)
 
     def get_backup_sets(self, device_guid, destination_guid):
         uri = u"/c42api/v3/BackupSets/{}/{}".format(device_guid, destination_guid)
@@ -68,7 +67,7 @@ class ArchiveClient(BaseClient):
             days=days,
             id_type=id_type,
             id_value=id_value,
-            **kwargs,
+            **kwargs
         )
 
     def _get_restore_history_page(

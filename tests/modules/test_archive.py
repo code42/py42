@@ -30,7 +30,7 @@ class TestArchiveModule(object):
         self, mocker
     ):
         archive_guid = 42
-        archive = _get_module(mocker)
+        archive = ArchiveModule(archive_accessor_manager, archive_client)
         archive.get_by_archive_guid(archive_guid)
         archive._archive_client.get_single_archive.assert_called_once_with(archive_guid)
 
@@ -38,7 +38,7 @@ class TestArchiveModule(object):
         self, mocker
     ):
         device_guid = 42
-        archive = _get_module(mocker)
+        archive = ArchiveModule(archive_accessor_manager, archive_client)
         for _ in archive.get_all_by_device_guid(device_guid):
             pass
         archive._archive_client.get_all_archives_from_value.assert_called_with(
@@ -49,7 +49,7 @@ class TestArchiveModule(object):
         self, mocker
     ):
         user_uid = 42
-        archive = _get_module(mocker)
+        archive = ArchiveModule(archive_accessor_manager, archive_client)
         for _ in archive.get_all_by_user_uid(user_uid):
             pass
         archive._archive_client.get_all_archives_from_value.assert_called_with(
@@ -60,7 +60,7 @@ class TestArchiveModule(object):
         self, mocker
     ):
         destination_guid = 42
-        archive = _get_module(mocker)
+        archive = ArchiveModule(archive_accessor_manager, archive_client)
         for _ in archive.get_all_by_destination_guid(destination_guid):
             pass
         archive._archive_client.get_all_archives_from_value.assert_called_with(

@@ -7,8 +7,8 @@ from py42.clients.util import get_all_pages
 
 class ArchiveClient(BaseClient):
     def get_data_key_token(self, device_guid):
-        uri = u"/api/DataKeyToken"
-        data = {u"computerGuid": device_guid}
+        uri = "/api/DataKeyToken"
+        data = {"computerGuid": device_guid}
         return self._session.post(uri, data=json.dumps(data))
 
     def get_single_archive(self, archive_guid):
@@ -21,7 +21,7 @@ class ArchiveClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`: A response containing archive information.
         """
-        uri = u"/api/Archive/{}".format(archive_guid)
+        uri = "/api/Archive/{}".format(archive_guid)
         return self._session.get(uri)
 
     def get_page(self, page_num, page_size=None, **kwargs):
@@ -35,7 +35,7 @@ class ArchiveClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/Archive"
+        uri = "/api/Archive"
         page_size = page_size or settings.items_per_page
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs,)
         return self._session.get(uri, params=params)
@@ -53,11 +53,11 @@ class ArchiveClient(BaseClient):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of archives.
         """
-        params = {u"{}".format(id_type): u"{}".format(id_value)}
-        return get_all_pages(self.get_page, u"archives", **params,)
+        params = {"{}".format(id_type): "{}".format(id_value)}
+        return get_all_pages(self.get_page, "archives", **params,)
 
     def get_backup_sets(self, device_guid, destination_guid):
-        uri = u"/c42api/v3/BackupSets/{}/{}".format(device_guid, destination_guid)
+        uri = "/c42api/v3/BackupSets/{}/{}".format(device_guid, destination_guid)
         return self._session.get(uri)
 
     def get_all_restore_history(self, days, id_type, id_value, **kwargs):

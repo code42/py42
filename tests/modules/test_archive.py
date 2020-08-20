@@ -14,6 +14,47 @@ class TestArchiveModule(object):
     _TEST_DAYS = 42
     _TEST_ID = 424242
 
+    def test_get_by_archive_guid_calls_get_single_archive_with_expected_params(
+        self, mocker
+    ):
+        archive_guid = 42
+        archive = _get_module(mocker)
+        archive.get_by_archive_guid(archive_guid)
+        archive._archive_client.get_single_archive.assert_called_once_with(archive_guid)
+
+    def test_get_all_by_device_guid_calls_get_all_archives_from_value_with_expected_params(
+        self, mocker
+    ):
+        device_guid = 42
+        archive = _get_module(mocker)
+        for _ in archive.get_all_by_device_guid(device_guid):
+            pass
+        archive._archive_client.get_all_archives_from_value.assert_called_with(
+            device_guid, u"backupSourceGuid"
+        )
+
+    def test_get_all_by_user_uid_calls_get_all_archives_from_value_with_expected_params(
+        self, mocker
+    ):
+        user_uid = 42
+        archive = _get_module(mocker)
+        for _ in archive.get_all_by_user_uid(user_uid):
+            pass
+        archive._archive_client.get_all_archives_from_value.assert_called_with(
+            user_uid, u"userUid"
+        )
+
+    def test_get_all_by_destination_guid_calls_get_all_archives_from_value_with_expected_params(
+        self, mocker
+    ):
+        destination_guid = 42
+        archive = _get_module(mocker)
+        for _ in archive.get_all_by_destination_guid(destination_guid):
+            pass
+        archive._archive_client.get_all_archives_from_value.assert_called_with(
+            destination_guid, u"destinationGuid"
+        )
+
     def test_stream_from_backup_calls_get_archive_accessor_with_expected_params(
         self, mocker
     ):

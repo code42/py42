@@ -18,8 +18,7 @@ class ArchiveModule(object):
             :class:`py42.response.Py42Response`: A response containing archive
             information.
         """
-        uri = u"/api/Archive/{}".format(archive_guid)
-        return self._archive_client.get_single_archive(uri)
+        return self._archive_client.get_single_archive(archive_guid)
 
     def get_all_by_device_guid(self, device_guid):
         """Gets archive information for a device.
@@ -60,7 +59,7 @@ class ArchiveModule(object):
             generator: An object that iterates over :class:`py42.response.Py42Response`
             objects that each contain a page of archives.
         """
-        return self._archive_client.get_archives_from_value(
+        return self._archive_client.get_all_archives_from_value(
             destination_guid, u"destinationGuid"
         )
 

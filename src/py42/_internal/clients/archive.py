@@ -16,7 +16,7 @@ class ArchiveClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
-            archive_guid (int): The GUID for the archive.
+            archive_guid (str): The GUID for the archive.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing archive information.
@@ -45,7 +45,7 @@ class ArchiveClient(BaseClient):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
-            id_value (int): Query value for archive.
+            id_value (str): Query value for archive.
             id_type (str): API query value description (e.g backupSourceGuid,
                 userUid, destinationGuid)
 

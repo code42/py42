@@ -111,7 +111,7 @@ class TestArchiveClient(object):
         for _ in client.get_all_archives_from_value(device_guid, u"backupSourceGuid"):
             pass
         expected_params = {"pgNum": 1, "pgSize": 500, "backupSourceGuid": "42"}
-        mock_session.get.assert_called_with(ARCHIVE_URI, params=expected_params)
+        mock_session.get.assert_called_once_with(ARCHIVE_URI, params=expected_params)
 
     def test_get_all_restore_history_calls_get_expected_number_of_times(
         self,

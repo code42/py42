@@ -41,7 +41,7 @@ class TestArchiveModule(object):
         archive = ArchiveModule(archive_accessor_manager, archive_client)
         for _ in archive.get_all_by_device_guid(device_guid):
             pass
-        archive._archive_client.get_all_archives_from_value.assert_called_with(
+        archive._archive_client.get_all_archives_from_value.assert_called_once_with(
             device_guid, u"backupSourceGuid"
         )
 
@@ -52,7 +52,7 @@ class TestArchiveModule(object):
         archive = ArchiveModule(archive_accessor_manager, archive_client)
         for _ in archive.get_all_by_user_uid(user_uid):
             pass
-        archive._archive_client.get_all_archives_from_value.assert_called_with(
+        archive._archive_client.get_all_archives_from_value.assert_called_once_with(
             user_uid, u"userUid"
         )
 
@@ -63,7 +63,7 @@ class TestArchiveModule(object):
         archive = ArchiveModule(archive_accessor_manager, archive_client)
         for _ in archive.get_all_by_destination_guid(destination_guid):
             pass
-        archive._archive_client.get_all_archives_from_value.assert_called_with(
+        archive._archive_client.get_all_archives_from_value.assert_called_once_with(
             destination_guid, u"destinationGuid"
         )
 

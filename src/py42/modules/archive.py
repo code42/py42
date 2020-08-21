@@ -15,7 +15,7 @@ class ArchiveModule(object):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
-            archive_guid (int): The GUID for the archive.
+            archive_guid (str): The GUID for the archive.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing archive
@@ -28,7 +28,7 @@ class ArchiveModule(object):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
-            device_guid (int): The GUID for the device.
+            device_guid (str): The GUID for the device.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response`
@@ -43,7 +43,7 @@ class ArchiveModule(object):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
-            user_uid (int): The userUid for a user.
+            user_uid (str): The userUid for a user.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response`
@@ -56,7 +56,7 @@ class ArchiveModule(object):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
-            destination_guid (int): The destinationGuid for a destination.
+            destination_guid (str): The destinationGuid for a destination.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response`

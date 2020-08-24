@@ -199,37 +199,30 @@ class OrgClient(BaseClient):
             """
         return self.get_agent_state(guid, u"fullDiskAccess")
 
-    def put_to_org_endpoint(self, org_id, data):
-        uri = "/api/Org/{}".format(org_id)
-        return self._session.put(uri, data=json.dumps(data))
-
-    def put_to_org_setting_endpoint(self, org_id, data):
-        uri = u"/api/OrgSetting/{}".format(org_id)
-        return self._session.put(uri, data=json.dumps(data))
-
     def get_settings_manager(self, org_id):
         org_settings = self.get_by_id(org_id, incSettings=True, incDeviceDefaults=True)
         t_settings = self.get_settings_by_id(org_id)
         return OrgSettingsManager(org_settings.data, t_settings.data)
 
     def update_org_settings(self, org_settings_manager):
+        org_id = org_settings_manager.org_id
         error = False
         org_settings_response = settings_response = None
 
         if org_settings_manager.packets:
+            uri = u"/api/OrgSetting/{}".format(org_id)
             payload = {"packets": org_settings_manager.packets}
             try:
-                org_settings_response = self.put_to_org_setting_endpoint(
-                    org_settings_manager.org_id, data=payload
-                )
+                org_settings_response = self._session.put(uri, data=json.dumps(payload))
             except Py42Error as ex:
                 error = True
                 org_settings_response = ex
 
         if org_settings_manager.changes:
+            uri = "/api/Org/{}".format(org_id)
             try:
-                settings_response = self.put_to_org_endpoint(
-                    org_settings_manager.org_id, data=org_settings_manager.data
+                settings_response = self._session.put(
+                    uri, data=json.dumps(org_settings_manager.data)
                 )
             except Py42Error as ex:
                 error = True

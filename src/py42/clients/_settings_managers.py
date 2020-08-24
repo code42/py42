@@ -25,9 +25,9 @@ def bool_to_str(value):
 
 
 def str_to_bool(value):
-    if value == "true":
+    if value.lower() == "true":
         return True
-    if value == "false":
+    if value.lower() == "false":
         return False
     else:
         return value

@@ -22,6 +22,10 @@ if is_py2:
 
     from py42._internal.chainmap2 import ChainMap
 
+    from UserDict import UserDict
+
+    from UserList import UserList
+
 
 else:
     from urllib.parse import urljoin, urlparse, quote
@@ -33,3 +37,5 @@ else:
     string_type = str
 
     from collections import ChainMap
+
+    from collections import UserDict, UserList

@@ -1,225 +1,9 @@
 import json
 
 from py42 import settings
-from py42._internal.compat import ChainMap
 from py42.clients import BaseClient
+from py42.clients._settings_managers import OrgSettingsManager
 from py42.clients.util import get_all_pages
-from py42.exceptions import Py42Error
-from py42.settings import debug
-from py42.util import bool_required
-from py42.util import bool_to_str
-from py42.util import str_to_bool
-
-
-class OrgSettingsManager(object):
-    def __init__(self, org_client, org_id):
-        org_response = org_client.get_by_id(org_id, incSettings=True)
-        org_settings_response = org_client.get_settings_by_id(org_id)
-
-        org_dict = org_response.data
-        settings_dict = org_dict.pop("settings")
-
-        self._org = ChainMap({}, org_dict)
-        self._settings = ChainMap({}, settings_dict)
-        self._t_settings = ChainMap({}, org_settings_response.data)
-        self._org_client = org_client
-        self.errored = None
-        self.org_response = None
-        self.org_settings_response = None
-
-    @property
-    def changes(self):
-        changes_dict = {}
-        changes_dict["settings"] = self._diff_chainmap(self._org) or {}
-        changes_dict["settings"].update(self._diff_chainmap(self._settings))
-        t_settings_diff = list(self._diff_chainmap(self._t_settings).values())
-        changes_dict["t_settings"] = t_settings_diff or None
-        return changes_dict
-
-    @property
-    def org_id(self):
-        return self._org["orgId"]
-
-    @property
-    def org_name(self):
-        return self._org["orgName"]
-
-    @org_name.setter
-    def org_name(self, name):
-        self._org["orgName"] = name
-
-    @property
-    def external_reference(self):
-        return self._org["orgExtRef"]
-
-    @external_reference.setter
-    def external_reference(self, value):
-        self._org["orgExtRef"] = value
-
-    @property
-    def notes(self):
-        return self._org["notes"]
-
-    @notes.setter
-    def notes(self, value):
-        self._org["notes"] = value
-
-    @property
-    def archive_hold_days(self):
-        return self._settings["archiveHoldDays"]
-
-    @archive_hold_days.setter
-    def archive_hold_days(self, value):
-        self._settings["archiveHoldDays"] = value
-        self._settings["isUsingQuotaDefaults"] = False
-
-    @property
-    def max_user_subscriptions(self):
-        return self._settings["maxSeats"]
-
-    @max_user_subscriptions.setter
-    def max_user_subscriptions(self, value):
-        self._settings["maxSeats"] = value
-        self._settings["isUsingQuotaDefaults"] = False
-
-    @property
-    def endpoint_monitoring_enabled(self):
-        value = self._t_settings["org-securityTools-enable"]["value"]
-        return str_to_bool(value)
-
-    @endpoint_monitoring_enabled.setter
-    @bool_required
-    def endpoint_monitoring_enabled(self, value):
-        self._t_settings["org-securityTools-enable"] = {
-            "key": "org-securityTools-enable",
-            "value": bool_to_str(value),
-            "locked": False,
-        }
-        self._t_settings["device_advancedExfiltrationDetection_enabled"] = {
-            "key": "device_advancedExfiltrationDetection_enabled",
-            "value": bool_to_str(value),
-            "locked": False,
-        }
-        if not value:  # disable everything but FMC, like the UI does
-            self.endpoint_monitoring_removable_media_enabled = False
-            self.endpoint_monitoring_browser_and_applications_enabled = False
-            self.endpoint_monitoring_cloud_sync_enabled = False
-
-    @property
-    def endpoint_monitoring_removable_media_enabled(self):
-        value = self._t_settings["org-securityTools-device-detection-enable"]["value"]
-        return str_to_bool(value)
-
-    @endpoint_monitoring_removable_media_enabled.setter
-    @bool_required
-    def endpoint_monitoring_removable_media_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = True
-        self._t_settings["org-securityTools-device-detection-enable"] = {
-            "key": "org-securityTools-device-detection-enable",
-            "value": bool_to_str(value),
-            "locked": False,
-        }
-
-    @property
-    def endpoint_monitoring_cloud_sync_enabled(self):
-        value = self._t_settings["org-securityTools-cloud-detection-enable"]["value"]
-        return str_to_bool(value)
-
-    @endpoint_monitoring_cloud_sync_enabled.setter
-    @bool_required
-    def endpoint_monitoring_cloud_sync_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = True
-        self._t_settings["org-securityTools-cloud-detection-enable"] = {
-            "key": "org-securityTools-cloud-detection-enable",
-            "value": bool_to_str(value),
-            "locked": False,
-        }
-
-    @property
-    def endpoint_monitoring_browser_and_applications_enabled(self):
-        value = self._t_settings["org-securityTools-open-file-detection-enable"][
-            "value"
-        ]
-        return str_to_bool(value)
-
-    @endpoint_monitoring_browser_and_applications_enabled.setter
-    @bool_required
-    def endpoint_monitoring_browser_and_applications_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = True
-        self._t_settings["org-securityTools-open-file-detection-enable"] = {
-            "key": "org-securityTools-open-file-detection-enable",
-            "value": bool_to_str(value),
-            "locked": False,
-        }
-
-    @property
-    def endpoint_monitoring_file_metadata_enabled(self):
-        value = self._t_settings["device_fileForensics_enabled"]["value"]
-        return str_to_bool(value)
-
-    @endpoint_monitoring_file_metadata_enabled.setter
-    @bool_required
-    def endpoint_monitoring_file_metadata_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = True
-        self._t_settings["device_fileForensics_enabled"] = {
-            "key": "device_fileForensics_enabled",
-            "value": bool_to_str(value),
-            "locked": False,
-        }
-
-    def update(self):
-        msg = "Updating org_id={}, org_name={}, with changes: {}".format(
-            self.org_id, self._org.maps[1]["orgName"], self.changes
-        )
-        debug.logger.debug(msg)
-        if self.changes["settings"]:
-            self._update_settings()
-        if self.changes["t_settings"]:
-            self._update_org_settings()
-
-        return "Success" if not self.errored else "Error(s) occurred."
-
-    def _diff_chainmap(self, cm):
-        updates, orig = cm.maps
-        diff = {}
-        for key, value in updates.items():
-            if value != orig[key]:
-                diff[key] = value
-        return diff
-
-    def _prepare_settings_payload(self):
-        org_updates, org_original = self._org.maps
-        settings_updates, settings_orig = self._settings.maps
-        payload = org_original.copy()
-        payload.update(org_updates)
-        payload["settings"] = settings_orig.copy()
-        payload["settings"].update(settings_updates)
-        return payload
-
-    def _update_settings(self):
-        settings_payload = self._prepare_settings_payload()
-        try:
-            self.org_response = self._org_client.put_to_org_endpoint(
-                self.org_id, data=settings_payload
-            )
-        except Py42Error as e:
-            self.errored = True
-            self.org_response = e
-
-    def _update_org_settings(self):
-        packet_list = list(self._t_settings.maps[0].values())
-        org_settings_payload = {"packets": packet_list}
-        try:
-            self.org_settings_response = self._org_client.put_to_org_setting_endpoint(
-                self.org_id, data=org_settings_payload
-            )
-        except Py42Error as e:
-            self.errored = True
-            self.org_settings_response = e
 
 
 class OrgClient(BaseClient):
@@ -418,4 +202,17 @@ class OrgClient(BaseClient):
         return self._session.put(uri, data=json.dumps(data))
 
     def get_settings_manager(self, org_id):
-        return OrgSettingsManager(self, org_id)
+        org_settings = self.get_by_id(org_id, incSettings=True, incDeviceDefaults=True)
+        t_settings = self.get_settings_by_id(org_id)
+        return OrgSettingsManager(org_settings.data, t_settings.data)
+
+    def update_org_settings(self, org_settings_manager):
+        if org_settings_manager.packets:
+            payload = {"packets": org_settings_manager.packets}
+            org_setting_response = self.put_to_org_setting_endpoint(
+                org_settings_manager.org_id, data=payload
+            )
+        if org_settings_manager.changes:
+            org_response = self.put_to_org_endpoint(
+                org_settings_manager.org_id, data=org_settings_manager.data
+            )

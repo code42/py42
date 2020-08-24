@@ -212,33 +212,33 @@ class OrgClient(BaseClient):
         t_settings = self.get_settings_by_id(org_id)
         return OrgSettings(org_settings.data, t_settings.data)
 
-    def update_org_settings(self, org_settings_manager):
-        """Updates an org's settings based on changes to the passed in `OrgSettingsManager` instance.
+    def update_org_settings(self, org_settings):
+        """Updates an org's settings based on changes to the passed in `OrgSettings` instance.
 
         Args:
-            settings_manager (`OrgSettings`): An instance of an OrgSettingsManager with desired modifications to settings.
+            org_settings (`OrgSettings`): An `OrgSettings` instance with desired modifications to settings.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the result of the setting change.
                 """
-        org_id = org_settings_manager.org_id
+        org_id = org_settings.org_id
         error = False
         org_settings_response = settings_response = None
 
-        if org_settings_manager.packets:
+        if org_settings.packets:
             uri = u"/api/OrgSetting/{}".format(org_id)
-            payload = {"packets": org_settings_manager.packets}
+            payload = {"packets": org_settings.packets}
             try:
                 org_settings_response = self._session.put(uri, data=json.dumps(payload))
             except Py42Error as ex:
                 error = True
                 org_settings_response = ex
 
-        if org_settings_manager.changes:
+        if org_settings.changes:
             uri = "/api/Org/{}".format(org_id)
             try:
                 settings_response = self._session.put(
-                    uri, data=json.dumps(org_settings_manager.data)
+                    uri, data=json.dumps(org_settings.data)
                 )
             except Py42Error as ex:
                 error = True

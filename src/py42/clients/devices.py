@@ -281,17 +281,18 @@ class DeviceClient(BaseClient):
         settings = self.get_by_guid(guid, incSettings=True)
         return DeviceSettings(settings.data)
 
-    def update_device_settings(self, settings_manager):
+    def update_device_settings(self, device_settings):
         """Updates a device's settings based on changes to the passed in `DeviceSettingsManager` instance.
 
         Args:
-            settings_manager (`DeviceSettings`): An instance of a DeviceSettingsManager with desired modifications to settings.
+            device_settings (`DeviceSettings`): An instance of a DeviceSettingsManager with desired modifications to settings.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the result of the setting change.
         """
-        device_id = settings_manager["computerId"]
+        device_settings = dict(device_settings)
+        device_id = device_settings["computerId"]
         uri = "/api/Computer/{}".format(device_id)
         new_config_date_ms = str(int(time() * 1000))
-        settings_manager["settings"]["configDateMs"] = new_config_date_ms
-        return self._session.put(uri, data=json.dumps(settings_manager.data))
+        device_settings["settings"]["configDateMs"] = new_config_date_ms
+        return self._session.put(uri, data=json.dumps(device_settings))

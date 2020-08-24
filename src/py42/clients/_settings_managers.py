@@ -18,10 +18,8 @@ def get_val(d, keys):
 
 
 def bool_to_str(value):
-    if isinstance(value, bool):
-        return "true" if value else "false"
-    elif value in ("true", "false"):
-        return value
+    if isinstance(value, bool) or value in ("true", "false"):
+        return str(value).lower()
     else:
         raise ValueError("Value must be True or False")
 

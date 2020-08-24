@@ -1,9 +1,15 @@
 import json
+from collections import namedtuple
 
 from py42 import settings
 from py42.clients import BaseClient
 from py42.clients._settings_managers import OrgSettingsManager
 from py42.clients.util import get_all_pages
+from py42.exceptions import Py42Error
+
+OrgSettingsManagerResponse = namedtuple(
+    "SettingsManagerResponse", ["error", "settings_response", "org_settings_response"]
+)
 
 
 class OrgClient(BaseClient):
@@ -207,12 +213,29 @@ class OrgClient(BaseClient):
         return OrgSettingsManager(org_settings.data, t_settings.data)
 
     def update_org_settings(self, org_settings_manager):
+        error = False
+        org_settings_response = settings_response = None
+
         if org_settings_manager.packets:
             payload = {"packets": org_settings_manager.packets}
-            org_setting_response = self.put_to_org_setting_endpoint(
-                org_settings_manager.org_id, data=payload
-            )
+            try:
+                org_settings_response = self.put_to_org_setting_endpoint(
+                    org_settings_manager.org_id, data=payload
+                )
+            except Py42Error as ex:
+                error = True
+                org_settings_response = ex
+
         if org_settings_manager.changes:
-            org_response = self.put_to_org_endpoint(
-                org_settings_manager.org_id, data=org_settings_manager.data
-            )
+            try:
+                settings_response = self.put_to_org_endpoint(
+                    org_settings_manager.org_id, data=org_settings_manager.data
+                )
+            except Py42Error as ex:
+                error = True
+                settings_response = ex
+        return OrgSettingsManagerResponse(
+            error=error,
+            settings_response=settings_response,
+            org_settings_response=org_settings_response,
+        )

@@ -200,11 +200,27 @@ class OrgClient(BaseClient):
         return self.get_agent_state(guid, u"fullDiskAccess")
 
     def get_settings_manager(self, org_id):
+        """Gets setting data for an org and returns an `OrgSettingsManager` for the target org.
+
+        Args:
+            org_id (int,str): The identifier of the org.
+
+        Returns:
+            :class:`py42.clients._settings_managers.OrgSettingsManager`: A class to help manage org settings.
+                """
         org_settings = self.get_by_id(org_id, incSettings=True, incDeviceDefaults=True)
         t_settings = self.get_settings_by_id(org_id)
         return OrgSettingsManager(org_settings.data, t_settings.data)
 
     def update_org_settings(self, org_settings_manager):
+        """Updates an org's settings based on changes to the passed in `OrgSettingsManager` instance.
+
+        Args:
+            settings_manager (`OrgSettingsManager`): An instance of an OrgSettingsManager with desired modifications to settings.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing the result of the setting change.
+                """
         org_id = org_settings_manager.org_id
         error = False
         org_settings_response = settings_response = None

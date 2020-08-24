@@ -242,10 +242,6 @@ class DeviceClient(BaseClient):
         params = {u"guid": guid, u"keys": keys}
         return self._session.get(uri, params=params)
 
-    def put_to_computer_endpoint(self, device_id, data):
-        uri = "/api/Computer/{}".format(device_id)
-        return self._session.put(uri, data=json.dumps(data))
-
     def get_agent_state(self, guid, property_name):
         """Gets the agent state of the device.
             `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
@@ -274,12 +270,28 @@ class DeviceClient(BaseClient):
         return self.get_agent_state(guid, u"fullDiskAccess")
 
     def get_settings_manager(self, guid):
+        """Gets setting data for a device and returns a `DeviceSettingsManager` for the target device.
+
+        Args:
+            guid (int,str): The globally unique identifier of the device.
+
+        Returns:
+            :class:`py42.clients._settings_managers.DeviceSettingsManager`: A class to help manage device settings.
+        """
         settings = self.get_by_guid(guid, incSettings=True)
         return DeviceSettingsManager(settings.data)
 
-    def update_settings(self, settings_manager):
+    def update_device_settings(self, settings_manager):
+        """Updates a device's settings based on changes to the passed in `DeviceSettingsManager` instance.
+
+        Args:
+            settings_manager (`DeviceSettingsManager`): An instance of a DeviceSettingsManager with desired modifications to settings.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing the result of the setting change.
+        """
+        device_id = settings_manager["computerId"]
+        uri = "/api/Computer/{}".format(device_id)
         new_config_date_ms = str(int(time() * 1000))
         settings_manager["settings"]["configDateMs"] = new_config_date_ms
-        return self.put_to_computer_endpoint(
-            settings_manager["computerId"], settings_manager.data
-        )
+        return self._session.put(uri, data=json.dumps(settings_manager.data))

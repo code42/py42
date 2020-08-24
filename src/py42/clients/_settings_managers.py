@@ -53,6 +53,16 @@ def no_conversion(x):
 
 
 class SettingProperty(object):
+    """Descriptor class to help manage changes to nested dict values. Assumes attributes
+    being managed are on a UserDict/UserList subclass.
+
+    Args:
+        name (str): name of attribute this class manages (changes will be registered with this name).
+        location (list): list of keys defining the location of the value being managed in the managed class.
+        get_converter (func, optional): function to convert retrieved values to preferred format.
+        set_converter (func, optional): function to convert values being set to preferred format.
+    """
+
     def __init__(
         self, name, location, get_converter=no_conversion, set_converter=no_conversion
     ):
@@ -84,6 +94,14 @@ class SettingProperty(object):
 
 
 class TSettingProperty(object):
+    """Descriptor class to help manage transforming t_setting packet values. Assumes t_setting
+    dict is stored in `._t_settings` attribute on managed instances.
+
+    Args:
+        name (str): name of attribute this class manages (changes will be registered with this name).
+        key (str): name of t_setting packet this class is managing.
+    """
+
     def __init__(self, name, key):
         self.name = name
         self.key = key
@@ -110,12 +128,14 @@ class TSettingProperty(object):
 
 
 class TrackedFileSelectionList(UserList):
+    """Helper class to track modifications to file selection lists."""
+
     def __init__(self, manager, name, _list, changes_dict):
         self.manager = manager
         self.name = name
         self.orig = list(_list)
+        self.data = _list
         self._changes = changes_dict
-        super(TrackedFileSelectionList, self).__init__(_list)
 
     def register_change(self):
         self.manager._build_file_selection()
@@ -152,6 +172,8 @@ class TrackedFileSelectionList(UserList):
 
 
 class OrgSettingsManager(UserDict):
+    """Helper class for managing Organization settings."""
+
     def __init__(self, org_settings, t_settings):
         self.data = org_settings
         self._t_settings = t_settings
@@ -265,6 +287,8 @@ class OrgSettingsManager(UserDict):
 
 
 class DeviceSettingsManager(UserDict):
+    """Helper class for managing Device settings and Org Device Default settings."""
+
     def __init__(self, device_dict, org_manager=None):
         self.data = device_dict
         if org_manager:
@@ -348,6 +372,8 @@ class DeviceSettingsManager(UserDict):
 
 
 class BackupSetManager(UserDict):
+    """Helper class for managing device backup sets and Org device default backup sets."""
+
     def __init__(self, settings_manager, changes_dict, backup_set_dict):
         self._manager = settings_manager
         self._changes = changes_dict
@@ -492,79 +518,3 @@ class BackupSetManager(UserDict):
 
     def __str__(self):
         return str(dict(self))
-
-
-class FileSelectionManager(UserDict):
-    def __init__(self, changes_dict, backup_paths_dict):
-        self.data = backup_paths_dict
-        includes, excludes = self._extract_file_selection_lists()
-        regex_excludes = self._extract_regex_exclusions()
-        self.included_files = TrackedFileSelectionList(
-            self, "included_files", includes, changes_dict
-        )
-        self.excluded_files = TrackedFileSelectionList(
-            self, "excluded_files", excludes, changes_dict
-        )
-        self.filename_exclusions = TrackedFileSelectionList(
-            self, "filename_exclusions", regex_excludes, changes_dict
-        )
-        self.changes = changes_dict
-
-    def _extract_file_selection_lists(self):
-        try:
-            pathset = self.data["pathset"][0]["path"]
-        except KeyError:  # no files selected
-            return [], []
-        if isinstance(pathset, dict):
-            pathset = [pathset]
-        includes = [p["@include"] for p in pathset if "@include" in p]
-        excludes = [p["@exclude"] for p in pathset if "@exclude" in p]
-        return includes, excludes
-
-    def _build_file_selection(self):
-        if not self.included_files:
-            self.data["pathset"] = {
-                "paths": {"@cleared": "true", "@os": "Linux", "path": []}
-            }
-            return
-        pathset = []
-        for path in self.included_files:
-            pathset.append({"@include": path, "@und": "false"})
-        for path in self.excluded_files:
-            pathset.append({"@exclude": path, "@und": "false"})
-        self.data["pathset"] = {
-            "paths": {"@os": "Linux", "path": pathset, "@cleared": "false"}
-        }
-
-    def _extract_regex_exclusions(self):
-        exclude_user = self.data["excludeUser"][0]
-        pattern_list = exclude_user.get("pattern")
-        if not pattern_list:
-            return []
-        if isinstance(pattern_list, dict):
-            pattern_list = [pattern_list]
-        return [p["@regex"] for p in pattern_list]
-
-    def _build_regex_exclusions(self):
-        patterns = []
-        for regex in self.filename_exclusions:
-            patterns.append({"@regex": regex})
-        user_exclude_dict = {
-            "patternList": {
-                "pattern": patterns,
-                "windows": {"pattern": []},
-                "macintosh": {"pattern": []},
-                "linux": {"pattern": []},
-            }
-        }
-        self.data["excludeUser"] = user_exclude_dict
-
-    def __getitem__(self, key):
-        self._build_file_selection()
-        self._build_regex_exclusions()
-        return super(FileSelectionManager, self).__getitem__(key)
-
-    def __repr__(self):
-        self._build_file_selection()
-        self._build_regex_exclusions()
-        return super(FileSelectionManager, self).__repr__()

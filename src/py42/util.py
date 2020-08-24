@@ -72,30 +72,3 @@ def format_dict(dict_, label=None):
     if label:
         return u"{} {}".format(label, indented_dict)
     return indented_dict
-
-
-def bool_to_str(value):
-    if isinstance(value, bool):
-        return "true" if value else "false"
-    else:
-        raise TypeError("Value must be True or False")
-
-
-def str_to_bool(value):
-    if value == u"true":
-        return True
-    if value == u"false":
-        return False
-    else:
-        raise ValueError(u'Expecting either "true" or "false", got {}.'.format(value))
-
-
-def bool_required(f):
-    """Decorator to force property setter args to be booleans only."""
-
-    def wrapper(self, value):
-        if isinstance(value, bool):
-            return f(self, value)
-        raise TypeError(u"Value must be True or False.")
-
-    return wrapper

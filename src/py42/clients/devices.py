@@ -1,7 +1,10 @@
 import json
+from time import time
 
 from py42 import settings
+from py42._internal.compat import str
 from py42.clients import BaseClient
+from py42.clients._settings_managers import DeviceSettingsManager
 from py42.clients.util import get_all_pages
 
 
@@ -239,6 +242,10 @@ class DeviceClient(BaseClient):
         params = {u"guid": guid, u"keys": keys}
         return self._session.get(uri, params=params)
 
+    def put_to_computer_endpoint(self, device_id, data):
+        uri = "/api/Computer/{}".format(device_id)
+        return self._session.put(uri, data=json.dumps(data))
+
     def get_agent_state(self, guid, property_name):
         """Gets the agent state of the device.
             `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
@@ -265,3 +272,14 @@ class DeviceClient(BaseClient):
                 :class:`py42.response.Py42Response`: A response containing settings information.
             """
         return self.get_agent_state(guid, u"fullDiskAccess")
+
+    def get_settings_manager(self, guid):
+        settings = self.get_by_guid(guid, incSettings=True)
+        return DeviceSettingsManager(settings.data)
+
+    def update_settings(self, settings_manager):
+        new_config_date_ms = str(int(time() * 1000))
+        settings_manager["settings"]["configDateMs"] = new_config_date_ms
+        return self.put_to_computer_endpoint(
+            settings_manager["computerId"], settings_manager.data
+        )

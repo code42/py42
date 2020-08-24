@@ -34,7 +34,7 @@ def str_to_bool(value):
 
 
 def days_to_minutes(days):
-    return str(int(days) * 1440)
+    return str(int(float(days) * 1440))
 
 
 def minutes_to_days(minutes):

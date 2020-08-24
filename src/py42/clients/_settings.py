@@ -169,7 +169,7 @@ class TrackedFileSelectionList(UserList):
         self.register_change()
 
 
-class OrgSettingsManager(UserDict):
+class OrgSettings(UserDict):
     """Helper class for managing Organization settings."""
 
     def __init__(self, org_settings, t_settings):
@@ -177,7 +177,7 @@ class OrgSettingsManager(UserDict):
         self._t_settings = t_settings
         self._packets = {}
         self.changes = {}
-        self.device_defaults = DeviceSettingsManager(
+        self.device_defaults = DeviceSettings(
             self.data["deviceDefaults"], org_manager=self,
         )
 
@@ -284,7 +284,7 @@ class OrgSettingsManager(UserDict):
         self._file_metadata_collection_enabled = value
 
 
-class DeviceSettingsManager(UserDict):
+class DeviceSettings(UserDict):
     """Helper class for managing Device settings and Org Device Default settings."""
 
     def __init__(self, device_dict, org_manager=None):
@@ -301,7 +301,7 @@ class DeviceSettingsManager(UserDict):
             d["guid"]: d["destinationName"] for d in destinations
         }
         self.backup_sets = [
-            BackupSetManager(self, self.changes, backup_set)
+            BackupSet(self, self.changes, backup_set)
             for backup_set in service_config["backupConfig"]["backupSets"]
         ]
 
@@ -369,7 +369,7 @@ class DeviceSettingsManager(UserDict):
         )
 
 
-class BackupSetManager(UserDict):
+class BackupSet(UserDict):
     """Helper class for managing device backup sets and Org device default backup sets."""
 
     def __init__(self, settings_manager, changes_dict, backup_set_dict):

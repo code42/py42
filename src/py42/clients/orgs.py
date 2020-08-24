@@ -3,7 +3,7 @@ from collections import namedtuple
 
 from py42 import settings
 from py42.clients import BaseClient
-from py42.clients._settings_managers import OrgSettingsManager
+from py42.clients._settings_managers import OrgSettings
 from py42.clients.util import get_all_pages
 from py42.exceptions import Py42Error
 
@@ -206,17 +206,17 @@ class OrgClient(BaseClient):
             org_id (int,str): The identifier of the org.
 
         Returns:
-            :class:`py42.clients._settings_managers.OrgSettingsManager`: A class to help manage org settings.
+            :class:`py42.clients._settings_managers.OrgSettings`: A class to help manage org settings.
                 """
         org_settings = self.get_by_id(org_id, incSettings=True, incDeviceDefaults=True)
         t_settings = self.get_settings_by_id(org_id)
-        return OrgSettingsManager(org_settings.data, t_settings.data)
+        return OrgSettings(org_settings.data, t_settings.data)
 
     def update_org_settings(self, org_settings_manager):
         """Updates an org's settings based on changes to the passed in `OrgSettingsManager` instance.
 
         Args:
-            settings_manager (`OrgSettingsManager`): An instance of an OrgSettingsManager with desired modifications to settings.
+            settings_manager (`OrgSettings`): An instance of an OrgSettingsManager with desired modifications to settings.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the result of the setting change.

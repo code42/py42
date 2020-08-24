@@ -4,7 +4,7 @@ from time import time
 from py42 import settings
 from py42._internal.compat import str
 from py42.clients import BaseClient
-from py42.clients._settings_managers import DeviceSettingsManager
+from py42.clients._settings_managers import DeviceSettings
 from py42.clients.util import get_all_pages
 
 
@@ -276,16 +276,16 @@ class DeviceClient(BaseClient):
             guid (int,str): The globally unique identifier of the device.
 
         Returns:
-            :class:`py42.clients._settings_managers.DeviceSettingsManager`: A class to help manage device settings.
+            :class:`py42.clients._settings_managers.DeviceSettings`: A class to help manage device settings.
         """
         settings = self.get_by_guid(guid, incSettings=True)
-        return DeviceSettingsManager(settings.data)
+        return DeviceSettings(settings.data)
 
     def update_device_settings(self, settings_manager):
         """Updates a device's settings based on changes to the passed in `DeviceSettingsManager` instance.
 
         Args:
-            settings_manager (`DeviceSettingsManager`): An instance of a DeviceSettingsManager with desired modifications to settings.
+            settings_manager (`DeviceSettings`): An instance of a DeviceSettingsManager with desired modifications to settings.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the result of the setting change.

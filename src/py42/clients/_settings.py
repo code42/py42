@@ -57,8 +57,8 @@ class SettingProperty(object):
     Args:
         name (str): name of attribute this class manages (changes will be registered with this name).
         location (list): list of keys defining the location of the value being managed in the managed class.
-        get_converter (func, optional): function to convert retrieved values to preferred format.
-        set_converter (func, optional): function to convert values being set to preferred format.
+        get_converter (func, optional): function to convert retrieved values to preferred format. Defaults to no conversion.
+        set_converter (func, optional): function to convert values being set to preferred format. Defaults to no conversion.
     """
 
     def __init__(

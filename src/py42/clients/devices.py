@@ -4,7 +4,7 @@ from time import time
 from py42 import settings
 from py42._internal.compat import str
 from py42.clients import BaseClient
-from py42.clients._settings_managers import DeviceSettings
+from py42.clients._settings import DeviceSettings
 from py42.clients.util import get_all_pages
 
 

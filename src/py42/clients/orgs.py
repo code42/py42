@@ -3,11 +3,11 @@ from collections import namedtuple
 
 from py42 import settings
 from py42.clients import BaseClient
-from py42.clients._settings_managers import OrgSettings
+from py42.clients._settings import OrgSettings
 from py42.clients.util import get_all_pages
 from py42.exceptions import Py42Error
 
-OrgSettingsManagerResponse = namedtuple(
+OrgSettingsResponse = namedtuple(
     "SettingsManagerResponse", ["error", "settings_response", "org_settings_response"]
 )
 
@@ -243,7 +243,7 @@ class OrgClient(BaseClient):
             except Py42Error as ex:
                 error = True
                 settings_response = ex
-        return OrgSettingsManagerResponse(
+        return OrgSettingsResponse(
             error=error,
             settings_response=settings_response,
             org_settings_response=org_settings_response,

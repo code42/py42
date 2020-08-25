@@ -260,6 +260,21 @@ class GetFilePathMetadataResponses(object):
 
 class GetWebRestoreJobResponses(object):
 
+    MISSING_STATUS = """{
+                "zipResult": false,
+                "name": "WebRestore_13",
+                "sourceId": "896477098509532085",
+                "userId": 202011,
+                "bytesZipped": 0,
+                "jobId": "899350590659304988",
+                "canceled": false,
+                "done": true,
+                "expirationDate": 1556888724979,
+                "creationDate": 1556802324979,
+                "percentComplete": 0
+            }
+        """
+
     NOT_DONE = """{
                 "status": "preparing",
                 "zipResult": false,
@@ -1028,6 +1043,36 @@ class TestRestoreJobManager(object):
         )
         restore_job_manager.get_stream(single_file_selection)
         job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
+        expected_call = mocker.call(job_id)
+        storage_archive_service.get_restore_status.assert_has_calls(
+            [expected_call, expected_call, expected_call]
+        )
+        assert storage_archive_service.get_restore_status.call_count == 3
+
+    def test_get_stream_when_response_missing_status_polls_job_status_until_job_is_complete(
+        self, mocker, storage_archive_service, single_file_selection
+    ):
+        mock_start_restore_response(
+            mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
+        )
+        mock_get_restore_status_responses(
+            mocker,
+            storage_archive_service,
+            [
+                GetWebRestoreJobResponses.NOT_DONE,
+                GetWebRestoreJobResponses.NOT_DONE,
+                GetWebRestoreJobResponses.MISSING_STATUS,
+            ],
+        )
+
+        restore_job_manager = RestoreJobManager(
+            storage_archive_service,
+            DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID,
+            job_polling_interval=0.000001,
+        )
+        restore_job_manager.get_stream(single_file_selection)
+        job_id = get_response_job_id(GetWebRestoreJobResponses.MISSING_STATUS)
         expected_call = mocker.call(job_id)
         storage_archive_service.get_restore_status.assert_has_calls(
             [expected_call, expected_call, expected_call]

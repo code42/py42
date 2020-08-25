@@ -220,8 +220,8 @@ class SecurityDataClient(object):
 
     def _search_by_hash(self, hash, type):
         query = FileEventQuery.all(type.eq(hash))
-        query.sort_key = "eventTimestamp"
-        query.sort_direction = "desc"
+        query.sort_key = u"eventTimestamp"
+        query.sort_direction = u"desc"
         response = self.search_file_events(query)
         return response
 
@@ -259,13 +259,13 @@ class SecurityDataClient(object):
         response = self._preservation_data_service.get_file_version_list(
             device_guid, md5_hash, sha256_hash, path
         )
-        versions = response["versions"]
+        versions = response[u"versions"]
         if versions:
             exact_match = next(
                 (
                     x
                     for x in versions
-                    if x["fileMD5"] == md5_hash and x["fileSHA256"] == sha256_hash
+                    if x[u"fileMD5"] == md5_hash and x[u"fileSHA256"] == sha256_hash
                 ),
                 None,
             )
@@ -273,7 +273,7 @@ class SecurityDataClient(object):
                 return exact_match
 
             most_recent = sorted(
-                versions, key=lambda i: i["versionTimestamp"], reverse=True
+                versions, key=lambda i: i[u"versionTimestamp"], reverse=True
             )
             return most_recent[0]
 
@@ -281,7 +281,7 @@ class SecurityDataClient(object):
         response = self._file_event_service.get_file_location_detail_by_sha256(
             sha256_hash
         )
-        locations = response["locations"]
+        locations = response[u"locations"]
         if locations:
             paths = _parse_file_location_response(locations)
             version = self._preservation_data_service.find_file_version(

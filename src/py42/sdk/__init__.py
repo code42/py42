@@ -76,14 +76,14 @@ class SDKClient(object):
         Returns:
             :class:`py42.sdk.SDKClient`
         """
-        auth = None
+        basic_auth = None
         if username and password:
-            auth = HTTPBasicAuth(username, password)
-        auth_connection = Connection.from_host_address(host_address, auth=auth)
-        auth = V3Auth(auth_connection)
-        main_connection = Connection.from_host_address(host_address, auth=auth)
+            basic_auth = HTTPBasicAuth(username, password)
+        auth_connection = Connection.from_host_address(host_address, auth=basic_auth)
+        v3_auth = V3Auth(auth_connection)
+        main_connection = Connection.from_host_address(host_address, auth=v3_auth)
 
-        return cls(main_connection, auth)
+        return cls(main_connection, v3_auth)
 
     @property
     def serveradmin(self):

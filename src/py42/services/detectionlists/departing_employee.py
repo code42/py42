@@ -18,16 +18,16 @@ class DepartingEmployeeFilters(_DetectionListFilters):
 
 
 class DepartingEmployeeService(BaseService):
-    """A client for interacting with Code42 Departing Employee APIs."""
+    """A service for interacting with Code42 Departing Employee APIs."""
 
     _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
 
     _CREATED_AT = u"CREATED_AT"
 
-    def __init__(self, session, user_context, detection_list_user_client):
+    def __init__(self, session, user_context, user_profile_service):
         super(DepartingEmployeeService, self).__init__(session)
         self._user_context = user_context
-        self._detection_list_user_client = detection_list_user_client
+        self._user_profile_service = user_profile_service
 
     def add(self, user_id, departure_date=None):
         """Adds a user to the Departing Employees list. Creates a detection list user profile if one \
@@ -45,7 +45,7 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        if self._detection_list_user_client.create_if_not_exists(user_id):
+        if self._user_profile_service.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
             data = {
                 u"tenantId": tenant_id,
@@ -103,7 +103,7 @@ class DepartingEmployeeService(BaseService):
         Args:
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
                 ``OPEN``, or ``LEAVING_TODAY``. Constants are available at
-                :class:`py42.clients.detectionlists.departing_employee.DepartingEmployeeFilters`.
+                :class:`py42.services.detectionlists.departing_employee.DepartingEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
@@ -135,7 +135,7 @@ class DepartingEmployeeService(BaseService):
             page_num (int): The page number to request.
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
                 ``OPEN``, or ``LEAVING_TODAY``. Constants are available at
-                :class:`py42.clients.detectionlists.departing_employee.DepartingEmployeeFilters`.
+                :class:`py42.services.detectionlists.departing_employee.DepartingEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".

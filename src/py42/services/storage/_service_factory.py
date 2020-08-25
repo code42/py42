@@ -12,9 +12,9 @@ from py42.services.storage.securitydata import StorageSecurityDataService
 
 
 class StorageServiceFactory(object):
-    def __init__(self, connection, device_client, connection_manager):
+    def __init__(self, connection, device_service, connection_manager):
         self._connection = connection
-        self._device_client = device_client
+        self._device_service = device_service
         self._connection_manager = connection_manager
 
     def create_archive_service(self, device_guid, destination_guid=None):
@@ -38,7 +38,7 @@ class StorageServiceFactory(object):
         return StoragePreservationDataService(main_connection, streaming_connection)
 
     def _auto_select_destination_guid(self, device_guid):
-        response = self._device_client.get_by_guid(
+        response = self._device_service.get_by_guid(
             device_guid, include_backup_usage=True
         )
         # take the first destination guid we find

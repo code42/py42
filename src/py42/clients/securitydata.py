@@ -20,7 +20,7 @@ class SecurityDataClient(object):
         saved_search_service,
         storage_service_factory,
     ):
-        self._security_client = security_service
+        self._security_service = security_service
         self._file_event_service = file_event_service
         self._preservation_data_service = preservation_data_service
         self._saved_search_service = saved_search_service
@@ -51,7 +51,7 @@ class SecurityDataClient(object):
         response = None
         locations = None
         try:
-            response = self._security_client.get_security_event_locations(user_uid)
+            response = self._security_service.get_security_event_locations(user_uid)
             locations = response[u"securityPlanLocationsByDestination"]
         except Py42NotFoundError:
             pass
@@ -410,7 +410,7 @@ def _parse_file_location_response(locations):
         device_id = location[u"deviceUid"]
         device_entry = devices.get(device_id)
         if device_entry:
-            device_entry["paths"].append(file_path)
+            devices[device_id]["paths"].append(file_path)
         else:
             devices[device_id] = {"deviceGuid": device_id, "paths": [file_path]}
 

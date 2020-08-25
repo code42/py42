@@ -13,10 +13,10 @@ class DetectionListUserService(BaseService):
     _uri_prefix = u"/svc/api/{}".format(_api_version)
     _resource = u"/user"
 
-    def __init__(self, connection, user_context, user_client):
+    def __init__(self, connection, user_context, user_service):
         super(DetectionListUserService, self).__init__(connection)
         self._user_context = user_context
-        self._user_client = user_client
+        self._user_service = user_service
 
     def _make_uri(self, action):
         return u"{}{}{}".format(self._uri_prefix, self._resource, action)
@@ -37,7 +37,7 @@ class DetectionListUserService(BaseService):
         try:
             self.get_by_id(user_id)
         except (Py42NotFoundError, Py42BadRequestError):
-            user = self._user_client.get_by_uid(user_id)
+            user = self._user_service.get_by_uid(user_id)
             self.create(user[u"username"])
         return True
 

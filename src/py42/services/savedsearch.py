@@ -3,7 +3,7 @@ from py42.services import BaseService
 
 
 class SavedSearchService(BaseService):
-    """A client to interact with saved search APIs."""
+    """A service to interact with saved search APIs."""
 
     _version = u"v1"
     _resource = u"/forensic-search/queryservice/api/{}/saved".format(_version)

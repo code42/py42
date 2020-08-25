@@ -4,7 +4,7 @@ from py42.services.util import get_all_pages
 
 
 class OrgService(BaseService):
-    """A client for interacting with Code42 organization APIs.
+    """A service for interacting with Code42 organization APIs.
 
     Use the OrgService to create and retrieve organizations. You can also use it to block and
     deactivate organizations.

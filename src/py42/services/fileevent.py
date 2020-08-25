@@ -3,7 +3,7 @@ from py42.services import BaseService
 
 
 class FileEventService(BaseService):
-    """A client for searching file events.
+    """A service for searching file events.
 
     See the :ref:`Executing Searches User Guide <anchor_search_file_events>` to learn more about how
     to construct a query.

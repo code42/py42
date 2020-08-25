@@ -30,42 +30,42 @@ class TestSDK(object):
     def mock_auth(self, mocker):
         return mocker.MagicMock(spec=C42RenewableAuth)
 
-    def test_has_administation_client_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.serveradmin) == administration.AdministrationService
+    def test_has_administation_service_set(self, py42_connection, mock_auth):
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.serveradmin) == administration.AdministrationService
 
-    def test_has_archive_client_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.archive) == ArchiveClient
+    def test_has_archive_service_set(self, py42_connection, mock_auth):
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.archive) == ArchiveClient
 
-    def test_has_device_client_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.devices) == devices.DeviceService
+    def test_has_device_service_set(self, py42_connection, mock_auth):
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.devices) == devices.DeviceService
 
-    def test_has_alert_client_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.alerts) == AlertsClient
+    def test_has_alert_service_set(self, py42_connection, mock_auth):
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.alerts) == AlertsClient
 
-    def test_has_detection_lists_client_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.detectionlists) == DetectionListsClient
+    def test_has_detection_lists_service_set(self, py42_connection, mock_auth):
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.detectionlists) == DetectionListsClient
 
-    def test_has_legal_hold_client_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.legalhold) == legalhold.LegalHoldService
+    def test_has_legal_hold_service_set(self, py42_connection, mock_auth):
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.legalhold) == legalhold.LegalHoldService
 
-    def test_has_org_client_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.orgs) == orgs.OrgService
+    def test_has_org_service_set(self, py42_connection, mock_auth):
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.orgs) == orgs.OrgService
 
-    def test_has_security_client_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.securitydata) == SecurityDataClient
+    def test_has_security_service_set(self, py42_connection, mock_auth):
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.securitydata) == SecurityDataClient
 
-    def test_has_user_client_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.users) == users.UserService
+    def test_has_user_service_set(self, py42_connection, mock_auth):
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.users) == users.UserService
 
     def test_has_user_context_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.usercontext) == UserContext
+        service = SDKClient(py42_connection, mock_auth)
+        assert type(service.usercontext) == UserContext

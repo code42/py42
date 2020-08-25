@@ -16,16 +16,16 @@ class HighRiskEmployeeFilters(_DetectionListFilters):
 
 
 class HighRiskEmployeeService(BaseService):
-    """A client for interacting with High Risk Employee APIs."""
+    """A service for interacting with High Risk Employee APIs."""
 
     _api_version = u"v2"
     _uri_prefix = u"/svc/api/{}".format(_api_version)
     _resource = u"/highriskemployee"
 
-    def __init__(self, connection, user_context, detection_list_user_client):
+    def __init__(self, connection, user_context, user_profile_service):
         super(HighRiskEmployeeService, self).__init__(connection)
         self._user_context = user_context
-        self._detection_list_user_client = detection_list_user_client
+        self._user_profile_service = user_profile_service
 
     def _make_uri(self, action):
         return u"{}{}{}".format(self._uri_prefix, self._resource, action)
@@ -50,7 +50,7 @@ class HighRiskEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        if self._detection_list_user_client.create_if_not_exists(user_id):
+        if self._user_profile_service.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
             try:
                 return self._add_high_risk_employee(tenant_id, user_id)
@@ -121,7 +121,7 @@ class HighRiskEmployeeService(BaseService):
         Args:
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
                 or ``OPEN``. Constants are available at
-                :class:`py42.clients.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
+                :class:`py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
@@ -155,7 +155,7 @@ class HighRiskEmployeeService(BaseService):
             page_num (int): The page number to request.
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
                 or ``OPEN``. Constants are available at
-                :class:`py42.clients.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
+                :class:`py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str. optional): ``ASC`` or ``DESC``. Constants available at

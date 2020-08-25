@@ -28,21 +28,21 @@ class ArchiveAccessorManager(object):
         private_password=None,
         encryption_key=None,
     ):
-        client = self._storage_service_factory.create_archive_service(
+        service = self._storage_service_factory.create_archive_service(
             device_guid, destination_guid=destination_guid
         )
         decryption_keys = self._get_decryption_keys(
             device_guid, private_password, encryption_key
         )
         session_id = self._create_restore_session(
-            client, device_guid, **decryption_keys
+            service, device_guid, **decryption_keys
         )
         restore_job_manager = create_restore_job_manager(
-            client, device_guid, session_id
+            service, device_guid, session_id
         )
-        file_size_poller = create_file_size_poller(client, device_guid)
+        file_size_poller = create_file_size_poller(service, device_guid)
         return ArchiveAccessor(
-            device_guid, session_id, client, restore_job_manager, file_size_poller,
+            device_guid, session_id, service, restore_job_manager, file_size_poller,
         )
 
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):

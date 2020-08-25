@@ -19,7 +19,7 @@ def _active_state_map(active):
 
 
 class LegalHoldService(BaseService):
-    """A client for interacting with Code42 Legal Hold APIs.
+    """A service for interacting with Code42 Legal Hold APIs.
 
     The LegalHoldService provides the ability to manage Code42 Legal Hold Policies and Matters.
     It can:

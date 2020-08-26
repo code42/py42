@@ -1,4 +1,4 @@
-from py42._internal.compat import str
+from py42._compat import str
 from py42.sdk.queries import BaseQuery
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
@@ -10,7 +10,7 @@ class FileEventQuery(BaseQuery):
 
     A FileEventQuery instance's ``all()`` and ``any()`` take one or more
     :class:`~py42.sdk.queries.query_filter.FilterGroup` objects to construct a query that
-    can be passed to the :meth:`FileEventClient.search()` method. ``all()`` returns results
+    can be passed to the :meth:`FileEventService.search()` method. ``all()`` returns results
     that match all of the provided filter criteria, ``any()`` will return results that
     match any of the filters.
 

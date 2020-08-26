@@ -1,18 +1,17 @@
 import pytest
 
-from py42._internal.initialization import SDKDependencies
-from py42._internal.session import Py42Session
-from py42._internal.session_factory import SessionFactory
-from py42.clients import administration
-from py42.clients import devices
-from py42.clients import legalhold
-from py42.clients import orgs
-from py42.clients import users
-from py42.modules import alerts
-from py42.modules import archive as arch_mod
-from py42.modules import detectionlists
-from py42.modules import securitydata as sec_mod
+from py42.clients.alerts import AlertsClient
+from py42.clients.archive import ArchiveClient
+from py42.clients.detectionlists import DetectionListsClient
+from py42.clients.securitydata import SecurityDataClient
 from py42.sdk import SDKClient
+from py42.services import administration
+from py42.services import devices
+from py42.services import legalhold
+from py42.services import orgs
+from py42.services import users
+from py42.services._auth import C42RenewableAuth
+from py42.services._connection import Connection
 from py42.usercontext import UserContext
 
 HOST_ADDRESS = "https://example.com"
@@ -22,95 +21,51 @@ TEST_PASSWORD = "test-password"
 
 class TestSDK(object):
     @pytest.fixture
-    def py42_session(self, mocker, successful_response):
-        mock_session = mocker.MagicMock(spec=Py42Session)
-        mock_session.get.return_value = successful_response
-        return mock_session
+    def py42_connection(self, mocker, successful_response):
+        mock_connection = mocker.MagicMock(spec=Connection)
+        mock_connection.get.return_value = successful_response
+        return mock_connection
 
     @pytest.fixture
-    def mock_session_factory(self, mocker, py42_session):
-        mock_session_factory = mocker.MagicMock(spec=SessionFactory)
-        mock_session_factory.create_jwt_session.return_value = py42_session
-        return mock_session_factory
+    def mock_auth(self, mocker):
+        return mocker.MagicMock(spec=C42RenewableAuth)
 
-    def test_has_administation_client_set(
-        self, mock_session_factory, success_requests_session
-    ):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.serveradmin) == administration.AdministrationClient
+    def test_has_administration_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.serveradmin) == administration.AdministrationService
 
-    def test_has_archive_module_set(
-        self, mock_session_factory, success_requests_session
-    ):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.archive) == arch_mod.ArchiveModule
+    def test_has_archive_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.archive) == ArchiveClient
 
-    def test_has_device_client_set(
-        self, mock_session_factory, success_requests_session
-    ):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.devices) == devices.DeviceClient
+    def test_has_device_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.devices) == devices.DeviceService
 
-    def test_has_alert_module_set(self, mock_session_factory, success_requests_session):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.alerts) == alerts.AlertsModule
+    def test_has_alert_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.alerts) == AlertsClient
 
-    def test_has_detection_lists_module_set(
-        self, mock_session_factory, success_requests_session
-    ):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.detectionlists) == detectionlists.DetectionListsModule
+    def test_has_detection_lists_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.detectionlists) == DetectionListsClient
 
-    def test_has_legal_hold_client_set(
-        self, mock_session_factory, success_requests_session
-    ):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.legalhold) == legalhold.LegalHoldClient
+    def test_has_legal_hold_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.legalhold) == legalhold.LegalHoldService
 
-    def test_has_org_client_set(self, mock_session_factory, success_requests_session):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.orgs) == orgs.OrgClient
+    def test_has_org_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.orgs) == orgs.OrgService
 
-    def test_has_security_module_set(
-        self, mock_session_factory, success_requests_session
-    ):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.securitydata) == sec_mod.SecurityModule
+    def test_has_security_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.securitydata) == SecurityDataClient
 
-    def test_has_user_client_set(self, mock_session_factory, success_requests_session):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.users) == users.UserClient
+    def test_has_user_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.users) == users.UserService
 
-    def test_has_user_context_set(self, mock_session_factory, success_requests_session):
-        deps = SDKDependencies(
-            HOST_ADDRESS, mock_session_factory, success_requests_session
-        )
-        sdk = SDKClient(deps)
-        assert type(sdk.usercontext) == UserContext
+    def test_has_user_context_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.usercontext) == UserContext

@@ -1,4 +1,4 @@
-from py42._internal.compat import str
+from py42._compat import str
 
 
 class Py42Error(Exception):
@@ -83,9 +83,9 @@ class Py42StorageSessionInitializationError(Py42HTTPError):
         )
 
 
-class Py42SessionInitializationError(Py42HTTPError):
-    """An exception raised when a user session is invalid. A session might be invalid due to
-    session timeout, invalid token, etc.
+class Py42SessionInitializationError(Py42Error):
+    """An exception raised when a user connection is invalid. A connection might be invalid due to
+    connection timeout, invalid token, etc.
     """
 
     def __init__(self, exception):

@@ -216,7 +216,7 @@ def _init_services(main_connection, main_auth):
 
     user_svc = UserService(main_connection)
     administration_svc = AdministrationService(main_connection)
-    file_events_service = FileEventService(file_events_conn)
+    file_event_svc = FileEventService(file_events_conn)
     user_ctx = UserContext(administration_svc)
     user_profile_svc = DetectionListUserService(ecm_conn, user_ctx, user_svc)
 
@@ -230,8 +230,8 @@ def _init_services(main_connection, main_auth):
         users=UserService(main_connection),
         alertrules=AlertRulesService(alert_rules_conn, user_ctx, user_profile_svc),
         alerts=AlertService(alerts_conn, user_ctx),
-        fileevents=file_events_service,
-        savedsearch=SavedSearchService(file_events_conn, file_events_service),
+        fileevents=file_event_svc,
+        savedsearch=SavedSearchService(file_events_conn, file_event_svc),
         preservationdata=PreservationDataService(pds_conn),
         departingemployee=DepartingEmployeeService(
             ecm_conn, user_ctx, user_profile_svc

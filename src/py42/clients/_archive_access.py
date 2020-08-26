@@ -1,4 +1,3 @@
-import json
 import posixpath
 import time
 from collections import namedtuple
@@ -189,7 +188,7 @@ class _RestorePoller(object):
 
 
 def _create_size_dict(job_id, size_response):
-    size_dict = json.loads(size_response.text)
+    size_dict = size_response.data
     size_dict[u"jobId"] = job_id
     return size_dict
 

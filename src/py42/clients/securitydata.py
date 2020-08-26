@@ -370,7 +370,7 @@ class SecurityDataClient(object):
                 if response.text:
                     # we use json.loads here because the cursor prop doesn't appear
                     # on responses that have no results
-                    cursor = json.loads(response.text).get(u"cursor")
+                    cursor = response.data.get(u"cursor")
                     # if there are no results, we don't get a cursor and have reached the end
                     if cursor:
                         yield response, cursor

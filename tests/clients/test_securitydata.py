@@ -468,6 +468,7 @@ class TestSecurityClient(object):
         )
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
+        response.data = {}
         mock_storage_security_service.get_plan_security_events.return_value = response
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
@@ -503,9 +504,12 @@ class TestSecurityClient(object):
             spec=StorageSecurityDataService
         )
         response1 = mocker.MagicMock(spec=Py42Response)
-        response1.text = '{"cursor": "1:1"}'
+        cursor_json = '{"cursor": "1:1"}'
+        response1.text = cursor_json
+        response1.data = json.loads(cursor_json)
         response2 = mocker.MagicMock(spec=Py42Response)
         response2.text = "{}"
+        response2.data = {}
         mock_storage_security_service.get_plan_security_events.side_effect = [
             response1,
             response2,
@@ -538,6 +542,7 @@ class TestSecurityClient(object):
         )
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
+        response.data = {}
         mock_storage_security_service.get_plan_security_events.return_value = response
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
@@ -566,9 +571,12 @@ class TestSecurityClient(object):
             spec=StorageSecurityDataService
         )
         response1 = mocker.MagicMock(spec=Py42Response)
-        response1.text = '{"cursor": "1:1"}'
+        cursor_json = '{"cursor": "1:1"}'
+        response1.text = cursor_json
+        response1.data = json.loads(cursor_json)
         response2 = mocker.MagicMock(spec=Py42Response)
         response2.text = "{}"
+        response2.data = {}
         mock_storage_security_service.get_plan_security_events.side_effect = [
             response1,
             response2,
@@ -612,6 +620,7 @@ class TestSecurityClient(object):
         )
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
+        response.data = {}
         mock_storage_security_service.get_plan_security_events.return_value = response
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
@@ -647,9 +656,12 @@ class TestSecurityClient(object):
             spec=StorageSecurityDataService
         )
         response1 = mocker.MagicMock(spec=Py42Response)
-        response1.text = '{"cursor": "1:1"}'
+        cursor_json = '{"cursor": "1:1"}'
+        response1.text = cursor_json
+        response1.data = json.loads(cursor_json)
         response2 = mocker.MagicMock(spec=Py42Response)
         response2.text = "{}"
+        response2.data = {}
         mock_storage_security_service.get_plan_security_events.side_effect = [
             response1,
             response2,
@@ -684,6 +696,7 @@ class TestSecurityClient(object):
         )
         response = mocker.MagicMock(spec=Py42Response)
         response.text = "{}"
+        response.data = {}
         mock_storage_security_service.get_plan_security_events.return_value = response
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
@@ -716,9 +729,12 @@ class TestSecurityClient(object):
             spec=StorageSecurityDataService
         )
         response1 = mocker.MagicMock(spec=Py42Response)
-        response1.text = '{"cursor": "1:1"}'
+        cursor_json = '{"cursor": "1:1"}'
+        response1.text = cursor_json
+        response1.data = json.loads(cursor_json)
         response2 = mocker.MagicMock(spec=Py42Response)
         response2.text = "{}"
+        response2.data = {}
         mock_storage_security_service.get_plan_security_events.side_effect = [
             response1,
             response2,

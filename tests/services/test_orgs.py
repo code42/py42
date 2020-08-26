@@ -15,7 +15,7 @@ MOCK_GET_ORG_RESPONSE = (
 MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "orgs": []}"""
 
 
-class TestOrgClient(object):
+class TestOrgService(object):
     @pytest.fixture
     def mock_get_all_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
@@ -36,8 +36,8 @@ class TestOrgClient(object):
         self, mock_connection, successful_response
     ):
         mock_connection.get.return_value = successful_response
-        client = OrgService(mock_connection)
-        client.get_by_id(12345)
+        service = OrgService(mock_connection)
+        service.get_by_id(12345)
         uri = "{}/{}".format(COMPUTER_URI, 12345)
         mock_connection.get.assert_called_once_with(uri, params={})
 
@@ -45,20 +45,20 @@ class TestOrgClient(object):
         self, mock_connection, mock_get_all_response, mock_get_all_empty_response
     ):
         py42.settings.items_per_page = 1
-        client = OrgService(mock_connection)
+        service = OrgService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_response,
             mock_get_all_response,
             mock_get_all_empty_response,
         ]
-        for _ in client.get_all():
+        for _ in service.get_all():
             pass
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_connection):
-        client = OrgService(mock_connection)
-        client.get_page(3, 25)
+        service = OrgService(mock_connection)
+        service.get_page(3, 25)
         mock_connection.get.assert_called_once_with(
             "/api/Org", params={"pgNum": 3, "pgSize": 25}
         )
@@ -67,8 +67,8 @@ class TestOrgClient(object):
         self, mock_connection, successful_response
     ):
         mock_connection.get.return_value = successful_response
-        client = OrgService(mock_connection)
-        client.get_agent_state("ORG_ID", property_name="KEY")
+        service = OrgService(mock_connection)
+        service.get_agent_state("ORG_ID", property_name="KEY")
         expected_params = {"orgId": "ORG_ID", "propertyName": "KEY"}
         uri = u"/api/v14/agent-state/view-by-organization-id"
         mock_connection.get.assert_called_once_with(uri, params=expected_params)
@@ -77,7 +77,7 @@ class TestOrgClient(object):
         self, mock_connection, successful_response, mocker
     ):
         mock_connection.get.return_value = successful_response
-        client = OrgService(mock_connection)
-        client.get_agent_state = mocker.Mock()
-        client.get_agent_full_disk_access_states("ORG_ID")
-        client.get_agent_state.assert_called_once_with("ORG_ID", "fullDiskAccess")
+        service = OrgService(mock_connection)
+        service.get_agent_state = mocker.Mock()
+        service.get_agent_full_disk_access_states("ORG_ID")
+        service.get_agent_state.assert_called_once_with("ORG_ID", "fullDiskAccess")

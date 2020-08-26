@@ -8,12 +8,12 @@ SAVED_SEARCH_GET_RESPONSE = """
 """
 
 
-class TestSavedSearchClient(object):
+class TestSavedSearchService(object):
     def test_get_calls_get_with_expected_uri(self, mock_connection, py42_response):
         mock_connection.get.return_value = py42_response
-        file_event_client = FileEventService(mock_connection)
-        saved_search_client = SavedSearchService(mock_connection, file_event_client)
-        saved_search_client.get()
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.get()
         assert mock_connection.get.call_count == 1
         assert (
             mock_connection.get.call_args[0][0]
@@ -24,9 +24,9 @@ class TestSavedSearchClient(object):
         self, mock_connection, py42_response
     ):
         mock_connection.get.return_value = py42_response
-        file_event_client = FileEventService(mock_connection)
-        saved_search_client = SavedSearchService(mock_connection, file_event_client)
-        saved_search_client.get_by_id(u"TEst-id")
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.get_by_id(u"TEst-id")
         assert (
             mock_connection.get.call_args[0][0]
             == "/forensic-search/queryservice/api/v1/saved/TEst-id"
@@ -35,9 +35,9 @@ class TestSavedSearchClient(object):
     def test_execute_calls_post_with_expected_uri(self, mock_connection, py42_response):
         py42_response.text = '{u"searches": [{u"groups": []}]}'
         mock_connection.post.return_value = py42_response
-        file_event_client = FileEventService(mock_connection)
-        saved_search_client = SavedSearchService(mock_connection, file_event_client)
-        saved_search_client.execute(u"test-id")
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.execute(u"test-id")
         assert (
             mock_connection.post.call_args[0][0]
             == "/forensic-search/queryservice/api/v1/fileevent"
@@ -48,9 +48,9 @@ class TestSavedSearchClient(object):
     ):
         py42_response.text = SAVED_SEARCH_GET_RESPONSE
         mock_connection.get.return_value = py42_response
-        file_event_client = FileEventService(mock_connection)
-        saved_search_client = SavedSearchService(mock_connection, file_event_client)
-        saved_search_client.execute(u"test-id")
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.execute(u"test-id")
         assert mock_connection.post.call_count == 1
         posted_data = json.loads(mock_connection.post.call_args[1]["data"])
         assert (
@@ -64,9 +64,9 @@ class TestSavedSearchClient(object):
     ):
         py42_response.text = '{u"searches": [{u"groups": []}]}'
         mock_connection.post.return_value = py42_response
-        file_event_client = FileEventService(mock_connection)
-        saved_search_client = SavedSearchService(mock_connection, file_event_client)
-        saved_search_client.get_query(u"test-id")
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.get_query(u"test-id")
         assert (
             mock_connection.get.call_args[0][0]
             == "/forensic-search/queryservice/api/v1/saved/test-id"

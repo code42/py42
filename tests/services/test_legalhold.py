@@ -34,7 +34,7 @@ MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{"legalHoldMemberships": ["foo"]}""
 MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{"legalHoldMemberships": []}"""
 
 
-class TestLegalHoldClient(object):
+class TestLegalHoldService(object):
     @pytest.fixture
     def mock_get_all_matters_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
@@ -71,8 +71,8 @@ class TestLegalHoldClient(object):
         self, mock_connection, successful_response
     ):
         mock_connection.get.return_value = successful_response
-        client = LegalHoldService(mock_connection)
-        client.get_matter_by_uid("LEGAL_HOLD_UID")
+        service = LegalHoldService(mock_connection)
+        service.get_matter_by_uid("LEGAL_HOLD_UID")
         uri = "{}/{}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
         mock_connection.get.assert_called_once_with(uri)
 
@@ -85,9 +85,9 @@ class TestLegalHoldClient(object):
             raise Py42ForbiddenError(base_err)
 
         mock_connection.get.side_effect = side_effect
-        client = LegalHoldService(mock_connection)
+        service = LegalHoldService(mock_connection)
         with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
-            client.get_matter_by_uid("matter")
+            service.get_matter_by_uid("matter")
 
         expected = "Matter with ID=matter can not be found. Your account may not have permission to view the matter."
         assert str(err.value) == expected
@@ -99,13 +99,13 @@ class TestLegalHoldClient(object):
         mock_get_all_matters_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldService(mock_connection)
+        service = LegalHoldService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_matters_response,
             mock_get_all_matters_response,
             mock_get_all_matters_empty_response,
         ]
-        for _ in client.get_all_matters():
+        for _ in service.get_all_matters():
             pass
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
@@ -117,13 +117,13 @@ class TestLegalHoldClient(object):
         mock_get_all_matter_custodians_empty_response,
     ):
         py42.settings.items_per_page = 1
-        client = LegalHoldService(mock_connection)
+        service = LegalHoldService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_matter_custodians_response,
             mock_get_all_matter_custodians_response,
             mock_get_all_matter_custodians_empty_response,
         ]
-        for _ in client.get_all_matter_custodians():
+        for _ in service.get_all_matter_custodians():
             pass
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
@@ -131,8 +131,8 @@ class TestLegalHoldClient(object):
     def test_get_matters_page_calls_get_with_expected_url_and_params(
         self, mock_connection
     ):
-        client = LegalHoldService(mock_connection)
-        client.get_matters_page(10, "creator", True, "name", "ref", 100)
+        service = LegalHoldService(mock_connection)
+        service.get_matters_page(10, "creator", True, "name", "ref", 100)
         mock_connection.get.assert_called_once_with(
             "/api/LegalHold",
             params={
@@ -148,8 +148,8 @@ class TestLegalHoldClient(object):
     def test_get_custodians_page_calls_get_with_expected_url_and_params(
         self, mock_connection
     ):
-        client = LegalHoldService(mock_connection)
-        client.get_custodians_page(
+        service = LegalHoldService(mock_connection)
+        service.get_custodians_page(
             20, "membership", "legalhold", "user ID", "username", True, 200
         )
         mock_connection.get.assert_called_once_with(
@@ -168,8 +168,8 @@ class TestLegalHoldClient(object):
     def test_add_to_matter_calls_post_with_expected_url_and_params(
         self, mock_connection
     ):
-        client = LegalHoldService(mock_connection)
-        client.add_to_matter("user", "legal")
+        service = LegalHoldService(mock_connection)
+        service.add_to_matter("user", "legal")
         expected_data = {"legalHoldUid": "legal", "userUid": "user"}
         mock_connection.post.assert_called_once_with(
             "/api/LegalHoldMembership", json=expected_data
@@ -186,9 +186,9 @@ class TestLegalHoldClient(object):
 
         mock_connection.post.side_effect = side_effect
         mock_connection.get.return_value = {"name": "NAME"}
-        client = LegalHoldService(mock_connection)
+        service = LegalHoldService(mock_connection)
         with pytest.raises(Py42UserAlreadyAddedError) as err:
-            client.add_to_matter("user", "legal")
+            service.add_to_matter("user", "legal")
 
         expected = (
             "User with ID user is already on the legal hold matter id=legal, name=NAME."

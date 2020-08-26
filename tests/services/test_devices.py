@@ -26,7 +26,7 @@ MOCK_GET_DEVICE_RESPONSE = """{"totalCount": 3000, "computers":["foo"]}"""
 MOCK_EMPTY_GET_DEVICE_RESPONSE = """{"totalCount": 3000, "computers":[]}"""
 
 
-class TestDeviceClient(object):
+class TestDeviceService(object):
     @pytest.fixture
     def mock_get_all_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
@@ -46,9 +46,9 @@ class TestDeviceClient(object):
     def test_get_all_calls_get_with_uri_and_params(
         self, mock_connection, mock_get_all_response
     ):
-        client = DeviceService(mock_connection)
+        service = DeviceService(mock_connection)
         mock_connection.get.return_value = mock_get_all_response
-        for _ in client.get_all(q="TEST-HOSTNAME"):
+        for _ in service.get_all(q="TEST-HOSTNAME"):
             break
         expected_params = DEFAULT_GET_DEVICES_PARAMS
         expected_params["q"] = "TEST-HOSTNAME"
@@ -60,9 +60,9 @@ class TestDeviceClient(object):
         self, mock_connection, mock_get_all_response
     ):
         unicode_hostname = u"您已经发现了秘密信息"
-        client = DeviceService(mock_connection)
+        service = DeviceService(mock_connection)
         mock_connection.get.return_value = mock_get_all_response
-        for _ in client.get_all(q=unicode_hostname):
+        for _ in service.get_all(q=unicode_hostname):
             break
         first_call = mock_connection.get.call_args_list[0]
         assert first_call[0][0] == COMPUTER_URI
@@ -74,8 +74,8 @@ class TestDeviceClient(object):
         self, mock_connection, successful_response
     ):
         mock_connection.get.return_value = successful_response
-        client = DeviceService(mock_connection)
-        client.get_by_id("DEVICE_ID", include_backup_usage=True)
+        service = DeviceService(mock_connection)
+        service.get_by_id("DEVICE_ID", include_backup_usage=True)
         expected_params = {"incBackupUsage": True}
         uri = "{}/{}".format(COMPUTER_URI, "DEVICE_ID")
         mock_connection.get.assert_called_once_with(uri, params=expected_params)
@@ -84,20 +84,20 @@ class TestDeviceClient(object):
         self, mock_connection, mock_get_all_response, mock_get_all_empty_response
     ):
         py42.settings.items_per_page = 1
-        client = DeviceService(mock_connection)
+        service = DeviceService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_response,
             mock_get_all_response,
             mock_get_all_empty_response,
         ]
-        for _ in client.get_all():
+        for _ in service.get_all():
             pass
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_connection):
-        client = DeviceService(mock_connection)
-        client.get_page(20, True, True, "org", "user", "dest", True, True, 1000)
+        service = DeviceService(mock_connection)
+        service.get_page(20, True, True, "org", "user", "dest", True, True, 1000)
         mock_connection.get.assert_called_once_with(
             "/api/Computer",
             params={
@@ -118,8 +118,8 @@ class TestDeviceClient(object):
         self, mock_connection, successful_response
     ):
         mock_connection.get.return_value = successful_response
-        client = DeviceService(mock_connection)
-        client.get_agent_state("DEVICE_ID", property_name="KEY")
+        service = DeviceService(mock_connection)
+        service.get_agent_state("DEVICE_ID", property_name="KEY")
         expected_params = {"deviceGuid": "DEVICE_ID", "propertyName": "KEY"}
         uri = u"/api/v14/agent-state/view-by-device-guid"
         mock_connection.get.assert_called_once_with(uri, params=expected_params)
@@ -128,7 +128,7 @@ class TestDeviceClient(object):
         self, mock_connection, successful_response, mocker
     ):
         mock_connection.get.return_value = successful_response
-        client = DeviceService(mock_connection)
-        client.get_agent_state = mocker.Mock()
-        client.get_agent_full_disk_access_state("DEVICE_ID")
-        client.get_agent_state.assert_called_once_with("DEVICE_ID", "fullDiskAccess")
+        service = DeviceService(mock_connection)
+        service.get_agent_state = mocker.Mock()
+        service.get_agent_full_disk_access_state("DEVICE_ID")
+        service.get_agent_state.assert_called_once_with("DEVICE_ID", "fullDiskAccess")

@@ -3,7 +3,7 @@ import pytest
 from py42.services.preservationdata import PreservationDataService
 
 
-class TestPreservationDataServiceClient(object):
+class TestPreservationDataService(object):
     @pytest.fixture
     def mock_connection(self, mock_connection, successful_response):
         mock_connection.post.return_value = successful_response

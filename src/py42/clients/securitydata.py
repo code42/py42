@@ -1,4 +1,3 @@
-import json
 from threading import Lock
 
 from py42.exceptions import Py42ChecksumNotFoundError

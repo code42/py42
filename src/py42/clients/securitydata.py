@@ -218,8 +218,8 @@ class SecurityDataClient(object):
             raise Py42ChecksumNotFoundError(response, u"MD5", checksum)
         return self._stream_file(checksum, info)
 
-    def _search_by_hash(self, hash, type):
-        query = FileEventQuery.all(type.eq(hash))
+    def _search_by_hash(self, checksum, checksum_type):
+        query = FileEventQuery.all(checksum_type.eq(checksum))
         query.sort_key = u"eventTimestamp"
         query.sort_direction = u"desc"
         response = self.search_file_events(query)

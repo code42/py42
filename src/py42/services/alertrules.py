@@ -42,7 +42,7 @@ class AlertRulesService(BaseService):
     def add_user(self, rule_id, user_id):
         tenant_id = self._user_context.get_current_tenant_id()
         user_details = self._user_profile_service.get_by_id(user_id)
-        user_aliases = user_details["cloudUsernames"] or []
+        user_aliases = user_details.data.get(u"cloudUsernames") or []
         data = {
             u"tenantId": tenant_id,
             u"ruleId": rule_id,
@@ -132,5 +132,5 @@ class FileTypeMismatchService(BaseService):
         Returns
             :class:`py42.response.Py42Response`
         """
-        data = {"tenantId": self._tenant_id, "ruleIds": [rule_id]}
+        data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
         return self._connection.post(self._api_prefix, json=data)

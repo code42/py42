@@ -17,7 +17,7 @@ class StorageTmpAuth(C42RenewableAuth):
         login_info = self.get_tmp_auth()
         login_token = login_info[u"loginToken"]
         self._server_url = login_info[u"serverUrl"]
-        return u"{} {}".format(u"login_token", login_token)
+        return u"login_token {}".format(login_token)
 
 
 class FileArchiveTmpAuth(StorageTmpAuth):
@@ -61,4 +61,4 @@ class V1Auth(C42RenewableAuth):
     def _get_credentials(self):
         uri = u"/api/AuthToken"
         response = self._auth_session.post(uri)
-        return u"{} {}-{}".format(u"token", response[0], response[1])
+        return u"token {}-{}".format(response[0], response[1])

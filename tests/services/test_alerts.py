@@ -73,10 +73,10 @@ class TestAlertClient(object):
     def test_search_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)
-        alert_client.search(query)
+        alert_service.search(query)
         post_data = json.loads(mock_connection.post.call_args[1]["data"])
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -94,10 +94,10 @@ class TestAlertClient(object):
     def test_search_posts_to_expected_url(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)
-        alert_client.search(query)
+        alert_service.search(query)
         assert mock_connection.post.call_args[0][0] == u"/svc/api/v1/query-alerts"
 
     def test_get_details_when_not_given_tenant_id_posts_expected_data(
@@ -105,9 +105,9 @@ class TestAlertClient(object):
     ):
         py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         mock_connection.post.return_value = py42_response
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.get_details(alert_ids)
+        alert_service.get_details(alert_ids)
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -123,8 +123,8 @@ class TestAlertClient(object):
     ):
         py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         mock_connection.post.return_value = py42_response
-        alert_client = AlertService(mock_connection, user_context)
-        alert_client.get_details(alert_id)
+        alert_service = AlertService(mock_connection, user_context)
+        alert_service.get_details(alert_id)
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -136,9 +136,9 @@ class TestAlertClient(object):
     ):
         py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         mock_connection.post.return_value = py42_response
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.get_details(alert_ids)
+        alert_service.get_details(alert_ids)
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -151,9 +151,9 @@ class TestAlertClient(object):
     ):
         py42_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         mock_connection.post.return_value = py42_response
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.get_details(alert_ids)
+        alert_service.get_details(alert_ids)
         assert mock_connection.post.call_args[0][0] == "/svc/api/v1/query-details"
 
     def test_get_details_converts_json_observation_strings_to_objects(
@@ -163,8 +163,8 @@ class TestAlertClient(object):
         requests_response.text = TEST_PARSEABLE_ALERT_DETAIL_RESPONSE
         py42_response = Py42Response(requests_response)
         mock_connection.post.return_value = py42_response
-        alert_client = AlertService(mock_connection, user_context)
-        response = alert_client.get_details("alert_id")
+        alert_service = AlertService(mock_connection, user_context)
+        response = alert_service.get_details("alert_id")
         observation_data = response["alerts"][0]["observations"][0]["data"]
         assert observation_data["example_key"] == "example_string_value"
         assert type(observation_data["example_list"]) is list
@@ -176,8 +176,8 @@ class TestAlertClient(object):
         requests_response.text = TEST_NON_PARSEABLE_ALERT_DETAIL_RESPONSE
         py42_response = Py42Response(requests_response)
         mock_connection.post.return_value = py42_response
-        alert_client = AlertService(mock_connection, user_context)
-        response = alert_client.get_details("alert_id")
+        alert_service = AlertService(mock_connection, user_context)
+        response = alert_service.get_details("alert_id")
         observation_data = response["alerts"][0]["observations"][0]["data"]
         expected_observation_data = '{"invalid_json": ][ }'
         assert observation_data == expected_observation_data
@@ -185,9 +185,9 @@ class TestAlertClient(object):
     def test_resolve_when_not_given_tenant_id_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.resolve(alert_ids)
+        alert_service.resolve(alert_ids)
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -201,8 +201,8 @@ class TestAlertClient(object):
     def test_resolve_when_given_single_alert_id_posts_expected_data(
         self, mock_connection, user_context, successful_post, alert_id
     ):
-        alert_client = AlertService(mock_connection, user_context)
-        alert_client.resolve(alert_id)
+        alert_service = AlertService(mock_connection, user_context)
+        alert_service.resolve(alert_id)
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -212,9 +212,9 @@ class TestAlertClient(object):
     def test_resolve_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.resolve(alert_ids,)
+        alert_service.resolve(alert_ids,)
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -225,17 +225,17 @@ class TestAlertClient(object):
     def test_resolve_posts_to_expected_url(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.resolve(alert_ids, "some-tenant-id")
+        alert_service.resolve(alert_ids, "some-tenant-id")
         assert mock_connection.post.call_args[0][0] == "/svc/api/v1/resolve-alert"
 
     def test_reopen_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.reopen(alert_ids)
+        alert_service.reopen(alert_ids)
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -249,8 +249,8 @@ class TestAlertClient(object):
     def test_reopen_when_given_single_alert_id_posts_expected_data(
         self, mock_connection, user_context, successful_post, alert_id
     ):
-        alert_client = AlertService(mock_connection, user_context)
-        alert_client.reopen(alert_id)
+        alert_service = AlertService(mock_connection, user_context)
+        alert_service.reopen(alert_id)
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
@@ -260,15 +260,15 @@ class TestAlertClient(object):
     def test_reopen_posts_to_expected_url(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_client.reopen(alert_ids, "some-tenant-id")
+        alert_service.reopen(alert_ids, "some-tenant-id")
         assert mock_connection.post.call_args[0][0] == "/svc/api/v1/reopen-alert"
 
     def test_get_all_rules_posts_expected_data(self, mock_connection, user_context):
-        alert_client = AlertService(mock_connection, user_context)
+        alert_service = AlertService(mock_connection, user_context)
 
-        for _ in alert_client.get_all_rules(sort_key="key", sort_direction="ASC"):
+        for _ in alert_service.get_all_rules(sort_key="key", sort_direction="ASC"):
             break
 
         assert mock_connection.post.call_count == 1
@@ -290,8 +290,8 @@ class TestAlertClient(object):
     def test_get_all_rules_by_name_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
-        for _ in alert_client.get_all_rules_by_name(
+        alert_service = AlertService(mock_connection, user_context)
+        for _ in alert_service.get_all_rules_by_name(
             "testname", sort_key="key", sort_direction="ASC"
         ):
             break
@@ -319,8 +319,8 @@ class TestAlertClient(object):
     def test_get_rule_by_observer_id_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
-        for _ in alert_client.get_rule_by_observer_id("testid"):
+        alert_service = AlertService(mock_connection, user_context)
+        for _ in alert_service.get_rule_by_observer_id("testid"):
             break
 
         assert mock_connection.post.call_count == 1
@@ -346,8 +346,8 @@ class TestAlertClient(object):
     def test_get_rules_page_calls_post_with_expected_url_and_data(
         self, mock_connection, user_context, successful_post
     ):
-        alert_client = AlertService(mock_connection, user_context)
-        alert_client.get_rules_page(
+        alert_service = AlertService(mock_connection, user_context)
+        alert_service.get_rules_page(
             groups=["groups"],
             page_num=1,
             page_size=100,

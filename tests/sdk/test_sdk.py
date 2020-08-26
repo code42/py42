@@ -30,7 +30,7 @@ class TestSDK(object):
     def mock_auth(self, mocker):
         return mocker.MagicMock(spec=C42RenewableAuth)
 
-    def test_has_administation_service_set(self, py42_connection, mock_auth):
+    def test_has_administration_service_set(self, py42_connection, mock_auth):
         service = SDKClient(py42_connection, mock_auth)
         assert type(service.serveradmin) == administration.AdministrationService
 

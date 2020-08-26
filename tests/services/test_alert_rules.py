@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from py42.services.alertrules import AlertRulesService
@@ -11,7 +13,7 @@ MOCK_DETECTION_LIST_GET_RESPONSE = """
 
 
 @pytest.fixture
-def mock_response(self, mock_connection, py42_response):
+def mock_response(mock_connection, py42_response):
     mock_connection.post.return_value = py42_response
     return mock_connection
 
@@ -19,6 +21,7 @@ def mock_response(self, mock_connection, py42_response):
 @pytest.fixture
 def mock_detection_list_user_client(mocker, py42_response):
     py42_response.text = MOCK_DETECTION_LIST_GET_RESPONSE
+    py42_response.data = json.loads(MOCK_DETECTION_LIST_GET_RESPONSE)
     detection_list_user_client = mocker.MagicMock(spec=DetectionListUserService)
     detection_list_user_client.get_by_id.return_value = py42_response
     return detection_list_user_client

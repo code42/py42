@@ -25,14 +25,14 @@ class FileEventService(BaseService):
         uri = u"/forensic-search/queryservice/api/v1/fileevent"
         return self._connection.post(uri, data=query)
 
-    def get_file_location_detail_by_sha256(self, hash):
+    def get_file_location_detail_by_sha256(self, checksum):
         """Get file location details based on SHA256 hash.
 
         Args:
-            hash (str): SHA256 checksum of a file.
+            checksum (str): SHA256 checksum of a file.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing file details.
         """
         uri = u"/forensic-search/queryservice/api/v1/filelocations"
-        return self._connection.get(uri, params={u"sha256": hash})
+        return self._connection.get(uri, params={u"sha256": checksum})

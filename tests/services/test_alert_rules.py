@@ -31,10 +31,10 @@ class TestAlertRulesService(object):
     def test_add_user_posts_expected_data(
         self, mock_connection, user_context, mock_detection_list_user_service
     ):
-        alert_rule_client = AlertRulesService(
+        alert_rule_service = AlertRulesService(
             mock_connection, user_context, mock_detection_list_user_service
         )
-        alert_rule_client.add_user(u"rule-id", u"user-id")
+        alert_rule_service.add_user(u"rule-id", u"user-id")
 
         assert mock_connection.post.call_count == 1
         posted_data = mock_connection.post.call_args[1]["json"]
@@ -50,10 +50,10 @@ class TestAlertRulesService(object):
     def test_remove_user_posts_expected_data(
         self, mock_connection, user_context, mock_detection_list_user_service
     ):
-        alert_rule_client = AlertRulesService(
+        alert_rule_service = AlertRulesService(
             mock_connection, user_context, mock_detection_list_user_service
         )
-        alert_rule_client.remove_user(u"rule-id", u"user-id")
+        alert_rule_service.remove_user(u"rule-id", u"user-id")
 
         assert mock_connection.post.call_count == 1
         posted_data = mock_connection.post.call_args[1]["json"]
@@ -67,10 +67,10 @@ class TestAlertRulesService(object):
     def test_remove_all_users_posts_expected_data(
         self, mock_connection, user_context, mock_detection_list_user_service
     ):
-        alert_rule_client = AlertRulesService(
+        alert_rule_service = AlertRulesService(
             mock_connection, user_context, mock_detection_list_user_service
         )
-        alert_rule_client.remove_all_users(u"rule-id")
+        alert_rule_service.remove_all_users(u"rule-id")
 
         assert mock_connection.post.call_count == 1
         posted_data = mock_connection.post.call_args[1]["json"]

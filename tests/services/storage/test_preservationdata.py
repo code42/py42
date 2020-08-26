@@ -4,7 +4,7 @@ import requests
 from py42.services.storage.preservationdata import StoragePreservationDataService
 
 
-class TestStoragePreservationDataClient(object):
+class TestStoragePreservationDataService(object):
     @pytest.fixture
     def mock_request(self, mocker):
         request = mocker.patch.object(requests, "get")
@@ -14,10 +14,10 @@ class TestStoragePreservationDataClient(object):
     def test_get_download_token_calls_get_with_valid_params(
         self, mock_successful_connection
     ):
-        client = StoragePreservationDataService(
+        service = StoragePreservationDataService(
             mock_successful_connection, mock_successful_connection
         )
-        client.get_download_token("abc", "fabc", 1223)
+        service.get_download_token("abc", "fabc", 1223)
 
         mock_successful_connection.get.assert_called_once_with(
             u"c42api/v3/FileDownloadToken",
@@ -33,10 +33,10 @@ class TestStoragePreservationDataClient(object):
     ):
         mock_successful_connection.host_address = "https://host.com"
 
-        client = StoragePreservationDataService(
+        service = StoragePreservationDataService(
             mock_successful_connection, mock_successful_connection
         )
-        client.get_file("token")
+        service.get_file("token")
         mock_successful_connection.get.assert_called_once_with(
             "https://host.com/c42api/v3/GetFile",
             headers={"Accept": "*/*"},
@@ -48,10 +48,10 @@ class TestStoragePreservationDataClient(object):
         self, mock_successful_connection, mock_request
     ):
         mock_successful_connection.host_address = "https://host.com"
-        client = StoragePreservationDataService(
+        service = StoragePreservationDataService(
             mock_successful_connection, mock_successful_connection
         )
-        client.get_file("PDSDownloadToken=token")
+        service.get_file("PDSDownloadToken=token")
         mock_successful_connection.get.assert_called_once_with(
             "https://host.com/c42api/v3/GetFile",
             headers={"Accept": "*/*"},

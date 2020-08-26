@@ -74,7 +74,7 @@ def security_detection_event_summary_params(security_detection_events_params):
     return params
 
 
-class TestStorageSecurityClient(object):
+class TestStorageSecurityService(object):
     def test_get_plan_security_events_calls_get_with_correct_params(
         self,
         storage_security_service,

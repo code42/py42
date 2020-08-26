@@ -19,20 +19,20 @@ def mock_response(mock_connection, py42_response):
 
 
 @pytest.fixture
-def mock_detection_list_user_client(mocker, py42_response):
+def mock_detection_list_user_service(mocker, py42_response):
     py42_response.text = MOCK_DETECTION_LIST_GET_RESPONSE
     py42_response.data = json.loads(MOCK_DETECTION_LIST_GET_RESPONSE)
-    detection_list_user_client = mocker.MagicMock(spec=DetectionListUserService)
-    detection_list_user_client.get_by_id.return_value = py42_response
-    return detection_list_user_client
+    detection_list_user_service = mocker.MagicMock(spec=DetectionListUserService)
+    detection_list_user_service.get_by_id.return_value = py42_response
+    return detection_list_user_service
 
 
-class TestAlertRulesClient(object):
+class TestAlertRulesService(object):
     def test_add_user_posts_expected_data(
-        self, mock_connection, user_context, mock_detection_list_user_client
+        self, mock_connection, user_context, mock_detection_list_user_service
     ):
         alert_rule_client = AlertRulesService(
-            mock_connection, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_service
         )
         alert_rule_client.add_user(u"rule-id", u"user-id")
 
@@ -48,10 +48,10 @@ class TestAlertRulesClient(object):
         )
 
     def test_remove_user_posts_expected_data(
-        self, mock_connection, user_context, mock_detection_list_user_client
+        self, mock_connection, user_context, mock_detection_list_user_service
     ):
         alert_rule_client = AlertRulesService(
-            mock_connection, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_service
         )
         alert_rule_client.remove_user(u"rule-id", u"user-id")
 
@@ -65,10 +65,10 @@ class TestAlertRulesClient(object):
         )
 
     def test_remove_all_users_posts_expected_data(
-        self, mock_connection, user_context, mock_detection_list_user_client
+        self, mock_connection, user_context, mock_detection_list_user_service
     ):
         alert_rule_client = AlertRulesService(
-            mock_connection, user_context, mock_detection_list_user_client
+            mock_connection, user_context, mock_detection_list_user_service
         )
         alert_rule_client.remove_all_users(u"rule-id")
 

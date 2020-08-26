@@ -62,7 +62,7 @@ def storage_archive_service(mocker):
     return mocker.MagicMock(spec=StorageArchiveService)
 
 
-class TestStorageArchiveClient(object):
+class TestStorageArchiveService(object):
     def test_search_paths_calls_get_with_expected_params(self, connection):
         storage_archive_service = StorageArchiveService(connection)
         storage_archive_service.search_paths(

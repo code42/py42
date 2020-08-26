@@ -65,7 +65,7 @@ def mock_get_all_session(mocker, py42_response):
     return connection
 
 
-class TestAlertClient(object):
+class TestAlertService(object):
     @pytest.fixture
     def successful_post(self, mock_connection, successful_response):
         mock_connection.post.return_value = successful_response

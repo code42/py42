@@ -1,7 +1,6 @@
 from threading import Lock
 
 from py42._compat import str
-from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
 from py42.services.storage._auth import FileArchiveTmpAuth
@@ -68,7 +67,7 @@ class ConnectionManager(object):
                     if connection is None:
                         connection = Connection.from_host_address(url, auth=tmp_auth)
                         self._session_cache[url.lower()] = connection
-        except Py42HTTPError as ex:
+        except Exception as ex:
             message = u"Failed to create or retrieve connection, caused by: {}".format(
                 str(ex)
             )

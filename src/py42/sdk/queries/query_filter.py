@@ -1,8 +1,8 @@
 from collections import OrderedDict
 from datetime import datetime
 
-from py42._internal.compat import str
-from py42._internal.compat import string_type
+from py42._compat import str
+from py42._compat import string_type
 from py42.util import convert_datetime_to_timestamp_str
 from py42.util import convert_timestamp_to_str
 

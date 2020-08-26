@@ -1,4 +1,4 @@
-from py42._internal.compat import str
+from py42._compat import str
 from py42.sdk.queries.alerts.filters.alert_filter import create_contains_filter_group
 from py42.sdk.queries.alerts.filters.alert_filter import (
     create_not_contains_filter_group,

@@ -1,7 +1,7 @@
 # Alert Rules
 
 ```eval_rst
-.. autoclass:: py42.modules.alertrules.AlertRulesModule
+.. autoclass:: py42.clients.alertrules.AlertRulesClient
     :members:
     :show-inheritance:
 ```
@@ -9,7 +9,7 @@
 ## Exfiltration rules
 
 ```eval_rst
-.. autoclass:: py42.clients.alertrules.exfiltration.ExfiltrationClient
+.. autoclass:: py42.services.alertrules.ExfiltrationService
     :members:
     :show-inheritance:
 ```
@@ -17,7 +17,7 @@
 ## Cloud share rules
 
 ```eval_rst
-.. autoclass:: py42.clients.alertrules.cloud_share.CloudShareClient
+.. autoclass:: py42.services.alertrules.CloudShareService
     :members:
     :show-inheritance:
 ```
@@ -25,7 +25,7 @@
 ## File type mismatch rules
 
 ```eval_rst
-.. autoclass:: py42.clients.alertrules.file_type_mismatch.FileTypeMismatchClient
+.. autoclass:: py42.services.alertrules.FileTypeMismatchService
     :members:
     :show-inheritance:
 ```

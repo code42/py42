@@ -50,9 +50,9 @@ class TestAlertRulesClient(object):
         alert_rules_client = AlertRulesClient(
             mock_alerts_service, mock_alert_rules_service
         )
-        alert_rules_client.add_user(TEST_RULE_ID, TEST_RULE_ID)
+        alert_rules_client.add_user(TEST_RULE_ID, TEST_USER_ID)
         mock_alert_rules_service.add_user.assert_called_once_with(
-            TEST_RULE_ID, TEST_RULE_ID
+            TEST_RULE_ID, TEST_USER_ID
         )
 
     def test_add_user_raises_invalid_rule_type_error_when_adding_to_system_rule(

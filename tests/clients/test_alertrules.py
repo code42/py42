@@ -3,8 +3,8 @@ from requests import HTTPError
 from requests import Response
 
 from py42.clients.alertrules import AlertRulesClient
-from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidRuleOperationError
+from py42.exceptions import Py42NotFoundError
 from py42.response import Py42Response
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
@@ -63,7 +63,7 @@ class TestAlertRulesClient(object):
         def add(*args, **kwargs):
             base_err = mocker.MagicMock(spec=HTTPError)
             base_err.response = mocker.MagicMock(spec=Response)
-            raise Py42InternalServerError(base_err)
+            raise Py42NotFoundError(base_err)
 
         mock_alert_rules_service.add_user.side_effect = add
         alert_rules_module = AlertRulesClient(

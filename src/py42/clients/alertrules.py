@@ -1,6 +1,6 @@
 from py42 import settings
-from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidRuleOperationError
+from py42.exceptions import Py42NotFoundError
 
 
 class AlertRulesClient(object):
@@ -47,7 +47,7 @@ class AlertRulesClient(object):
         """
         try:
             return self._alert_rules_service.add_user(rule_id, user_id)
-        except Py42InternalServerError as err:
+        except Py42NotFoundError as err:
             rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
             _check_if_system_rule(err, rules)
             raise
@@ -64,7 +64,7 @@ class AlertRulesClient(object):
         """
         try:
             return self._alert_rules_service.remove_user(rule_id, user_id)
-        except Py42InternalServerError as err:
+        except Py42NotFoundError as err:
             rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
             _check_if_system_rule(err, rules)
             raise

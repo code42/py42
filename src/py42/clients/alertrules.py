@@ -45,7 +45,10 @@ class AlertRulesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        return self._alert_rules_service.add_user(rule_id, user_id)
+        try:
+            return self._alert_rules_service.add_user(rule_id, user_id)
+        except Py42NotFoundError as err:
+            raise Py42InvalidRuleOperationError(err, rule_id)
 
     def remove_user(self, rule_id, user_id):
         """Update alert rule criteria to remove a user and all its aliases from a rule.
@@ -57,7 +60,10 @@ class AlertRulesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        return self._alert_rules_service.remove_user(rule_id, user_id)
+        try:
+            return self._alert_rules_service.remove_user(rule_id, user_id)
+        except Py42NotFoundError as err:
+            raise Py42InvalidRuleOperationError(err, rule_id)
 
     def remove_all_users(self, rule_id):
         """Update alert rule criteria to remove all users the from the alert rule.
@@ -68,7 +74,10 @@ class AlertRulesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        return self._alert_rules_service.remove_all_users(rule_id)
+        try:
+            return self._alert_rules_service.remove_all_users(rule_id)
+        except Py42NotFoundError as err:
+            raise Py42InvalidRuleOperationError(err, rule_id)
 
     def get_page(
         self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None,

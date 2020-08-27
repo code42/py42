@@ -48,6 +48,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42ResponseError`
     - `Py42UserAlreadyAddedError`
     - `Py42LegalHoldNotFoundOrPermissionDeniedError`
+    - `Py42InvalidRuleOperationError`
 
 - Methods for getting individual response pages:
     - `sdk.detectionlists.departing_employee.get_page()`
@@ -97,6 +98,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `sdk.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.
 - `sdk.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when the user does not have
     access or the ID does not exist.
+- `sdk.alerts.rules.add_user` now raises `Py42InvalidRuleOperationError` on 404s.
+- `sdk.alerts.rules.remove_user` now raises `Py42InvalidRuleOperationError` on 404s.
+- `sdk.alerts.rules.remove_all_users` now raises `Py42InvalidRuleOperationError` on 404s.
 - `Py42ArchiveFileNotFoundError` now includes the response.
 - `Py42ChecksumNotFoundError` now includes the response.
 - `Py42FeatureUnavailableError` now includes the response.

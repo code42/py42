@@ -129,6 +129,16 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
         )
 
 
+class Py42InvalidRuleOperationError(Py42NotFoundError):
+    """An exception raised when trying to add or remove users to a system rule, or when
+    trying to retrieve information about a system rule."""
+
+    def __init__(self, exception, rule_id):
+        msg = u"Unable to find or access Rule with ID '{}'. ".format(rule_id)
+        msg += u"You might be trying to access a system rule."
+        super(Py42InvalidRuleOperationError, self).__init__(exception, msg)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

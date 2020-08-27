@@ -1,6 +1,5 @@
 from py42 import settings
 from py42._compat import quote
-from py42.exceptions import Py42UserDoesNotExistError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 
@@ -78,8 +77,7 @@ class UserService(BaseService):
         return self._connection.get(uri, params=params)
 
     def get_by_username(self, username, **kwargs):
-        """Gets the user with the given username. Raises :class:`~py42.exceptions.Py42UserDoesNotExistError`
-        when no user is found.
+        """Gets the user with the given username.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
@@ -90,10 +88,7 @@ class UserService(BaseService):
         """
         uri = u"/api/User"
         params = dict(username=username, **kwargs)
-        response = self._connection.get(uri, params=params)
-        if not response[u"users"]:
-            raise Py42UserDoesNotExistError(response, username)
-        return response
+        return self._connection.get(uri, params=params)
 
     def get_current(self, **kwargs):
         """Gets the currently signed in user.

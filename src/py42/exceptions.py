@@ -48,15 +48,6 @@ class Py42FeatureUnavailableError(Py42ResponseError):
         )
 
 
-class Py42UserDoesNotExistError(Py42ResponseError):
-    """An exception raised when a username is not in our system."""
-
-    def __init__(self, response, username):
-        super(Py42UserDoesNotExistError, self).__init__(
-            response, message=u"User '{}' does not exist.".format(username),
-        )
-
-
 class Py42HTTPError(Py42ResponseError):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
@@ -96,7 +87,27 @@ class Py42SessionInitializationError(Py42Error):
         super(Py42SessionInitializationError, self).__init__(exception, error_message)
 
 
-class Py42UserAlreadyAddedError(Py42HTTPError):
+class Py42BadRequestError(Py42HTTPError):
+    """A wrapper to represent an HTTP 400 error."""
+
+
+class Py42UnauthorizedError(Py42HTTPError):
+    """A wrapper to represent an HTTP 401 error."""
+
+
+class Py42ForbiddenError(Py42HTTPError):
+    """A wrapper to represent an HTTP 403 error."""
+
+
+class Py42NotFoundError(Py42HTTPError):
+    """A wrapper to represent an HTTP 404 error."""
+
+
+class Py42InternalServerError(Py42HTTPError):
+    """A wrapper to represent an HTTP 500 error."""
+
+
+class Py42UserAlreadyAddedError(Py42BadRequestError):
     """An exception raised when the user is already added to group or list, such as the
     Departing Employee list."""
 
@@ -105,7 +116,7 @@ class Py42UserAlreadyAddedError(Py42HTTPError):
         super(Py42UserAlreadyAddedError, self).__init__(exception, msg)
 
 
-class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42HTTPError):
+class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
     """An exception raised when a legal hold matter is inaccessible from your account or
     the matter ID is not valid."""
 
@@ -127,26 +138,6 @@ class Py42InvalidRuleOperationError(Py42HTTPError):
         super(Py42InvalidRuleOperationError, self).__init__(
             exception, msg.format(rule_id, source)
         )
-
-
-class Py42BadRequestError(Py42HTTPError):
-    """A wrapper to represent an HTTP 400 error."""
-
-
-class Py42UnauthorizedError(Py42HTTPError):
-    """A wrapper to represent an HTTP 401 error."""
-
-
-class Py42ForbiddenError(Py42HTTPError):
-    """A wrapper to represent an HTTP 403 error."""
-
-
-class Py42NotFoundError(Py42HTTPError):
-    """A wrapper to represent an HTTP 404 error."""
-
-
-class Py42InternalServerError(Py42HTTPError):
-    """A wrapper to represent an HTTP 500 error."""
 
 
 def raise_py42_error(raised_error):

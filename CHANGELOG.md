@@ -25,11 +25,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Methods for obtaining archive information:
     - `sdk.archive.get_by_archive_guid`
-    - `sdk.archive.get_by_device_guid`
-    - `sdk.archive.get_by_user_uid`
-    - `sdk.archive.get_by_destination_guid`
+    - `sdk.archive.get_all_by_device_guid`
 
-- Debug logs for restore progress during the method call `py42.archive.stream_from_back()`.
+- Debug logs for restore progress during the method call `py42.archive.stream_from_backup()`.
 - [.netrc](https://ec.haxx.se/usingcurl/usingcurl-netrc) support. Calling `py42.sdk.from_local_account()` with no username and password will now result in py42 attempting to authenticate via an entry in your `.netrc` file, if you have one.
 
 - `py42.constants.SortDirection` constants `DESC` and `ASC`.

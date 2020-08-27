@@ -38,34 +38,6 @@ class ArchiveClient(object):
             device_guid, u"backupSourceGuid"
         )
 
-    def get_all_by_user_uid(self, user_uid):
-        """Gets archive information for a user.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
-
-        Args:
-            user_uid (str): The userUid for a user.
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response`
-            objects that each contain a page of archives.
-        """
-        return self._archive_service.get_all_archives_from_value(user_uid, u"userUid")
-
-    def get_all_by_destination_guid(self, destination_guid):
-        """Gets archive information for a destination.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
-
-        Args:
-            destination_guid (str): The destinationGuid for a destination.
-
-        Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response`
-            objects that each contain a page of archives.
-        """
-        return self._archive_service.get_all_archives_from_value(
-            destination_guid, u"destinationGuid"
-        )
-
     def stream_from_backup(
         self,
         file_paths,

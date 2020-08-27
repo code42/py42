@@ -1,3 +1,4 @@
+from py42 import settings
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 
@@ -7,6 +8,51 @@ class ArchiveService(BaseService):
         uri = u"/api/DataKeyToken"
         data = {u"computerGuid": device_guid}
         return self._connection.post(uri, json=data)
+
+    def get_single_archive(self, archive_guid):
+        """Gets single archive information by GUID.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            archive_guid (str): The GUID for the archive.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing archive information.
+        """
+        uri = u"/api/Archive/{}".format(archive_guid)
+        return self._connection.get(uri)
+
+    def get_page(self, page_num, page_size=None, **kwargs):
+        """Gets an individual page of archives.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            page_num (int): The page number to request.
+            page_size (int, optional): The number of archives to return per page. Defaults to `py42.settings.items_per_page`.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        uri = u"/api/Archive"
+        page_size = page_size or settings.items_per_page
+        params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
+        return self._connection.get(uri, params=params)
+
+    def get_all_archives_from_value(self, id_value, id_type):
+        """Gets archive information from an ID, such as a User UID, Device GUID, or Destination GUID.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            id_value (str): Query value for archive.
+            id_type (str): API query value description (e.g backupSourceGuid,
+                userUid, destinationGuid)
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of archives.
+        """
+        params = {u"{}".format(id_type): u"{}".format(id_value)}
+        return get_all_pages(self.get_page, u"archives", **params)
 
     def get_backup_sets(self, device_guid, destination_guid):
         uri = u"/c42api/v3/BackupSets/{}/{}".format(device_guid, destination_guid)
@@ -39,8 +85,8 @@ class ArchiveService(BaseService):
         self,
         org_id=None,
         include_child_orgs=None,
-        sort_key="archiveHoldExpireDate",
-        sort_dir="asc",
+        sort_key=u"archiveHoldExpireDate",
+        sort_dir=u"asc",
         page_size=None,
         page_num=None,
     ):
@@ -60,8 +106,8 @@ class ArchiveService(BaseService):
         self,
         org_id,
         include_child_orgs=True,
-        sort_key="archiveHoldExpireDate",
-        sort_dir="asc",
+        sort_key=u"archiveHoldExpireDate",
+        sort_dir=u"asc",
     ):
         return get_all_pages(
             self._get_cold_storage_archives_page,

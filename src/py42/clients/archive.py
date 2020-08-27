@@ -10,6 +10,34 @@ class ArchiveClient(object):
         self._archive_accessor_manager = archive_accessor_manager
         self._archive_service = archive_service
 
+    def get_by_archive_guid(self, archive_guid):
+        """Gets single archive information by GUID.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            archive_guid (str): The GUID for the archive.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing archive
+            information.
+        """
+        return self._archive_service.get_single_archive(archive_guid)
+
+    def get_all_by_device_guid(self, device_guid):
+        """Gets archive information for a device.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
+
+        Args:
+            device_guid (str): The GUID for the device.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response`
+            objects that each contain a page of archives.
+        """
+        return self._archive_service.get_all_archives_from_value(
+            device_guid, u"backupSourceGuid"
+        )
+
     def stream_from_backup(
         self,
         file_paths,

@@ -26,6 +26,25 @@ class TestArchiveClient(object):
     _TEST_DAYS = 42
     _TEST_ID = 424242
 
+    def test_get_by_archive_guid_calls_get_single_archive_with_expected_params(
+        self, archive_service, archive_accessor_manager
+    ):
+        archive_guid = 42
+        archive = ArchiveClient(archive_accessor_manager, archive_service)
+        archive.get_by_archive_guid(archive_guid)
+        archive_service.get_single_archive.assert_called_once_with(archive_guid)
+
+    def test_get_all_by_device_guid_calls_get_all_archives_from_value_with_expected_params(
+        self, archive_service, archive_accessor_manager
+    ):
+        device_guid = 42
+        archive = ArchiveClient(archive_accessor_manager, archive_service)
+        for _ in archive.get_all_by_device_guid(device_guid):
+            pass
+        archive_service.get_all_archives_from_value.assert_called_once_with(
+            device_guid, u"backupSourceGuid"
+        )
+
     def test_stream_from_backup_calls_get_archive_accessor_with_expected_params(
         self, archive_accessor_manager, archive_service
     ):
@@ -33,7 +52,7 @@ class TestArchiveClient(object):
         archive.stream_from_backup(
             "path", "device_guid", "dest_guid", "password", "encryption_key"
         )
-        archive._archive_accessor_manager.get_archive_accessor.assert_called_once_with(
+        archive_accessor_manager.get_archive_accessor.assert_called_once_with(
             "device_guid",
             destination_guid="dest_guid",
             private_password="password",

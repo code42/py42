@@ -44,9 +44,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Exception classes (`py42.exceptions`)
     - `Py42ResponseError`
     - `Py42UserAlreadyAddedError`
-    - `Py42UserNotInLegalHoldError`
     - `Py42LegalHoldNotFoundOrPermissionDeniedError`
-    - `Py42UserDoesNotExistError`
     - `Py42InvalidRuleOperationError`
 
 - Methods for getting individual response pages:

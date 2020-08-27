@@ -99,8 +99,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `sdk.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when the user does not have
     access or the ID does not exist.
 - `sdk.users.get_by_username()` now raises `Py42UserDoesNotExistError` when the user is not found.
-- `sdk.alerts.rules.add_user()` now raises `Py42InvalidRuleTypeError` when trying to add a user to a system rule.
-- `sdk.alerts.rules.remove_user()` now raises `Py42InvalidRuleTypeError` when trying to remove user from a system rule.
+- `sdk.alerts.rules.add_user()` now raises `Py42InvalidRuleOperationError` when trying to add a user to a system rule.
+- `sdk.alerts.rules.remove_user()` now raises `Py42InvalidRuleOperationError` when trying to remove user from a system rule.
 - `Py42ArchiveFileNotFoundError` now includes the response.
 - `Py42ChecksumNotFoundError` now includes the response.
 - `Py42FeatureUnavailableError` now includes the response.

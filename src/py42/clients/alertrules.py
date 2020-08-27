@@ -45,12 +45,7 @@ class AlertRulesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        try:
-            return self._alert_rules_service.add_user(rule_id, user_id)
-        except Py42NotFoundError as err:
-            rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
-            _check_if_system_rule(err, rules)
-            raise
+        return self._alert_rules_service.add_user(rule_id, user_id)
 
     def remove_user(self, rule_id, user_id):
         """Update alert rule criteria to remove a user and all its aliases from a rule.
@@ -62,12 +57,7 @@ class AlertRulesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        try:
-            return self._alert_rules_service.remove_user(rule_id, user_id)
-        except Py42NotFoundError as err:
-            rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
-            _check_if_system_rule(err, rules)
-            raise
+        return self._alert_rules_service.remove_user(rule_id, user_id)
 
     def remove_all_users(self, rule_id):
         """Update alert rule criteria to remove all users the from the alert rule.
@@ -145,12 +135,3 @@ class AlertRulesClient(object):
             :class:`py42.response.Py42Response`
         """
         return self._alerts_service.get_rule_by_observer_id(observer_id)
-
-
-def _check_if_system_rule(base_err, rules):
-    """You cannot add or remove users from system rules this way; use the specific
-    feature behind the rule, such as the Departing Employee list."""
-    if rules and rules[0][u"isSystem"]:
-        raise Py42InvalidRuleOperationError(
-            base_err, rules[0][u"observerRuleId"], rules[0][u"ruleSource"]
-        )

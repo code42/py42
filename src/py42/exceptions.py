@@ -129,17 +129,6 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
         )
 
 
-class Py42InvalidRuleOperationError(Py42HTTPError):
-    """An exception raised when trying to add or remove users to a system rule."""
-
-    def __init__(self, exception, rule_id, source):
-        msg = u"Only alert rules with a source of 'Alerting' can be targeted by this command. "
-        msg += u"Rule {0} has a source of '{1}'."
-        super(Py42InvalidRuleOperationError, self).__init__(
-            exception, msg.format(rule_id, source)
-        )
-
-
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

@@ -106,7 +106,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `Py42FeatureUnavailableError` now includes the response.
 - `Py42StorageSessionInitializationError` now includes the response.
 
-## 1.7.1 - 2020-07-24
+## 1.7.1 - 2020-07-27
 
 ### Changed
 

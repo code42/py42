@@ -3,7 +3,6 @@ import pytest
 from requests import Response
 
 import py42.settings
-from py42.exceptions import Py42UserDoesNotExistError
 from py42.response import Py42Response
 from py42.services.users import UserService
 
@@ -96,16 +95,6 @@ class TestUserService(object):
         service.get_by_username(username)
         expected_params = {u"username": username}
         mock_connection.get.assert_called_once_with(USER_URI, params=expected_params)
-
-    def test_get_by_username_when_empty_list_returns_raises_user_not_exists(
-        self, mock_connection, mock_get_users_empty_response
-    ):
-        mock_connection.get.return_value = mock_get_users_empty_response
-        service = UserService(mock_connection)
-        with pytest.raises(Py42UserDoesNotExistError) as err:
-            service.get_by_username("username")
-
-        assert str(err.value) == "User 'username' does not exist."
 
     def test_get_user_by_id_calls_get_with_uri_and_params(
         self, mock_connection, successful_response

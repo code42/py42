@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+# Unreleased
+
+### Fixed
+
+- Corrected error logic for trying to add or remove users from a system rule.
+
 ## 1.8.0 - 2020-08-27
 
 ### Removed

@@ -267,7 +267,7 @@ class QueryFilterTimestampField(object):
         provided ``value``.
 
         Args:
-            value (str or int): The value used to filter results.
+            value (str or int or float): The value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
@@ -282,7 +282,7 @@ class QueryFilterTimestampField(object):
         provided ``value``.
 
         Args:
-            value (str or int): The value used to filter results.
+            value (str or int or float): The value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
@@ -297,8 +297,8 @@ class QueryFilterTimestampField(object):
         the provided ``start_value`` and ``end_value``.
 
         Args:
-            start_value (str or int): The start value used to filter results.
-            end_value (str or int): The end value used to filter results.
+            start_value (str or int or float): The start value used to filter results.
+            end_value (str or int or float): The end value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
@@ -316,7 +316,7 @@ class QueryFilterTimestampField(object):
         calendar day as the provided ``value``.
 
         Args:
-            value (str or int): The value used to filter results.
+            value (str or int or float): The value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`

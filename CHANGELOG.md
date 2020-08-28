@@ -14,6 +14,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
 
+## 1.8.1 - 2020-08-28
+
+### Fixed
+
+- Corrected error logic for trying to add or remove users from a system rule.
+
 ## 1.8.0 - 2020-08-27
 
 ### Removed

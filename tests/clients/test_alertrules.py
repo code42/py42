@@ -1,10 +1,12 @@
+import json
+
 import pytest
 from requests import HTTPError
 from requests import Response
 
 from py42.clients.alertrules import AlertRulesClient
+from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidRuleOperationError
-from py42.exceptions import Py42NotFoundError
 from py42.response import Py42Response
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
@@ -27,9 +29,10 @@ TEST_SYSTEM_RULE_RESPONSE = {
 
 @pytest.fixture
 def mock_alerts_service_system_rule(mocker, mock_alerts_service):
-    response = mocker.MagicMock(spec=Py42Response)
-    response.text = TEST_SYSTEM_RULE_RESPONSE
-    mock_alerts_service.get_rule_by_observer_id.return_value = response
+    response = mocker.MagicMock(spec=Response)
+    response.text = json.dumps(TEST_SYSTEM_RULE_RESPONSE)
+    py42_response = Py42Response(response)
+    mock_alerts_service.get_rule_by_observer_id.return_value = py42_response
     return mock_alerts_service
 
 
@@ -41,6 +44,13 @@ def mock_alert_rules_service(mocker):
 @pytest.fixture
 def mock_alerts_service(mocker):
     return mocker.MagicMock(spec=AlertService)
+
+
+@pytest.fixture
+def internal_server_error(mocker):
+    base_err = mocker.MagicMock(spec=HTTPError)
+    base_err.response = mocker.MagicMock(spec=Response)
+    return Py42InternalServerError(base_err)
 
 
 class TestAlertRulesClient(object):
@@ -56,12 +66,13 @@ class TestAlertRulesClient(object):
         )
 
     def test_add_user_raises_invalid_rule_type_error_when_adding_to_system_rule(
-        self, mocker, mock_alerts_service_system_rule, mock_alert_rules_service
+        self,
+        mock_alerts_service_system_rule,
+        mock_alert_rules_service,
+        internal_server_error,
     ):
         def add(*args, **kwargs):
-            base_err = mocker.MagicMock(spec=HTTPError)
-            base_err.response = mocker.MagicMock(spec=Response)
-            raise Py42NotFoundError(base_err)
+            raise internal_server_error
 
         mock_alert_rules_service.add_user.side_effect = add
         alert_rules_module = AlertRulesClient(
@@ -70,11 +81,12 @@ class TestAlertRulesClient(object):
         with pytest.raises(Py42InvalidRuleOperationError) as err:
             alert_rules_module.add_user(TEST_RULE_ID, TEST_USER_ID)
 
-        expected_text = u"Unable to find or access Rule with ID '{}'. ".format(
-            TEST_RULE_ID
+        actual = str(err.value)
+        assert (
+            "Only alert rules with a source of 'Alerting' can be targeted by this command."
+            in actual
         )
-        expected_text += u"You might be trying to access a system rule."
-        assert expected_text in str(err.value)
+        assert "Rule rule-id has a source of 'NOTVALID'." in actual
 
     def test_remove_user_calls_alert_rules_service_remove_user_with_expected_value(
         self, mock_alerts_service, mock_alert_rules_service
@@ -88,12 +100,13 @@ class TestAlertRulesClient(object):
         )
 
     def test_remove_user_raises_invalid_rule_type_error_when_adding_to_system_rule(
-        self, mocker, mock_alerts_service_system_rule, mock_alert_rules_service
+        self,
+        mock_alerts_service_system_rule,
+        mock_alert_rules_service,
+        internal_server_error,
     ):
         def add(*args, **kwargs):
-            base_err = mocker.MagicMock(spec=HTTPError)
-            base_err.response = mocker.MagicMock(spec=Response)
-            raise Py42NotFoundError(base_err)
+            raise internal_server_error
 
         mock_alert_rules_service.remove_user.side_effect = add
         alert_rules_module = AlertRulesClient(
@@ -102,11 +115,12 @@ class TestAlertRulesClient(object):
         with pytest.raises(Py42InvalidRuleOperationError) as err:
             alert_rules_module.remove_user(TEST_RULE_ID, TEST_USER_ID)
 
-        expected_text = u"Unable to find or access Rule with ID '{}'. ".format(
-            TEST_RULE_ID
+        actual = str(err.value)
+        assert (
+            "Only alert rules with a source of 'Alerting' can be targeted by this command."
+            in actual
         )
-        expected_text += u"You might be trying to access a system rule."
-        assert expected_text in str(err.value)
+        assert "Rule rule-id has a source of 'NOTVALID'." in actual
 
     def test_remove_all_users_calls_alert_service_remove_all_users_with_expected_value(
         self, mock_alerts_service, mock_alert_rules_service
@@ -118,12 +132,13 @@ class TestAlertRulesClient(object):
         mock_alert_rules_service.remove_all_users.assert_called_once_with(TEST_RULE_ID)
 
     def test_remove_all_users_raises_invalid_rule_type_error_when_adding_to_system_rule(
-        self, mocker, mock_alerts_service_system_rule, mock_alert_rules_service
+        self,
+        mock_alerts_service_system_rule,
+        mock_alert_rules_service,
+        internal_server_error,
     ):
         def add(*args, **kwargs):
-            base_err = mocker.MagicMock(spec=HTTPError)
-            base_err.response = mocker.MagicMock(spec=Response)
-            raise Py42NotFoundError(base_err)
+            raise internal_server_error
 
         mock_alert_rules_service.remove_all_users.side_effect = add
         alert_rules_module = AlertRulesClient(
@@ -132,11 +147,12 @@ class TestAlertRulesClient(object):
         with pytest.raises(Py42InvalidRuleOperationError) as err:
             alert_rules_module.remove_all_users(TEST_RULE_ID)
 
-        expected_text = u"Unable to find or access Rule with ID '{}'. ".format(
-            TEST_RULE_ID
+        actual = str(err.value)
+        assert (
+            "Only alert rules with a source of 'Alerting' can be targeted by this command."
+            in actual
         )
-        expected_text += u"You might be trying to access a system rule."
-        assert expected_text in str(err.value)
+        assert "Rule rule-id has a source of 'NOTVALID'." in actual
 
     def test_alert_rules_service_calls_get_all_with_expected_value(
         self, mock_alerts_service, mock_alert_rules_service

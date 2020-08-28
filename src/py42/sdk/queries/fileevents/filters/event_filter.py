@@ -1,10 +1,11 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
+from py42.sdk.queries.fileevents.file_event_query import FileEventFilterTimestampField
 from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import QueryFilterBooleanField
 from py42.sdk.queries.query_filter import QueryFilterTimestampField
 
 
-class EventTimestamp(QueryFilterTimestampField):
+class EventTimestamp(FileEventFilterTimestampField):
     """Class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These

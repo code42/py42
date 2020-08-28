@@ -334,20 +334,6 @@ class QueryFilterTimestampField(object):
             cls._term, formatted_start_time, formatted_end_time
         )
 
-    @classmethod
-    def within_the_last(cls, value):
-        """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
-        for finding results where the key ``self._term`` is an ``EventTimestamp._term``
-        and the value is one of the ``EventTimestamp`` attributes as ``value``.
-
-        Args:
-            value (str): `EventTimestamp` attribute.
-
-        Returns:
-            :class:`~py42.sdk.queries.query_filter.FilterGroup`
-        """
-        return create_within_the_last_filter_group(cls._term, value)
-
 
 class QueryFilterBooleanField(object):
     """Helper class for creating filters where the search value is a boolean."""

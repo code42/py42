@@ -67,6 +67,10 @@ def test_date_observed_on_or_before_str_gives_correct_json_representation():
     assert str(_filter) == expected
 
 
+def test_date_observed_does_not_have_within_the_last_option():
+    assert not hasattr(DateObserved(), "within_the_last")
+
+
 def test_date_observed_in_range_str_gives_correct_json_representation():
     test_before_time = time()
     test_after_time = time() + 30  # make sure timestamps are actually different

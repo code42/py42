@@ -1,4 +1,4 @@
-from py42._internal.compat import str
+from py42._compat import str
 
 
 class Py42Error(Exception):
@@ -48,15 +48,6 @@ class Py42FeatureUnavailableError(Py42ResponseError):
         )
 
 
-class Py42UserDoesNotExistError(Py42ResponseError):
-    """An exception raised when a username is not in our system."""
-
-    def __init__(self, response, username):
-        super(Py42UserDoesNotExistError, self).__init__(
-            response, message=u"User '{}' does not exist.".format(username),
-        )
-
-
 class Py42HTTPError(Py42ResponseError):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
@@ -83,9 +74,9 @@ class Py42StorageSessionInitializationError(Py42HTTPError):
         )
 
 
-class Py42SessionInitializationError(Py42HTTPError):
-    """An exception raised when a user session is invalid. A session might be invalid due to
-    session timeout, invalid token, etc.
+class Py42SessionInitializationError(Py42Error):
+    """An exception raised when a user connection is invalid. A connection might be invalid due to
+    connection timeout, invalid token, etc.
     """
 
     def __init__(self, exception):
@@ -94,39 +85,6 @@ class Py42SessionInitializationError(Py42HTTPError):
             u"server environment information, caused by {}".format(str(exception))
         )
         super(Py42SessionInitializationError, self).__init__(exception, error_message)
-
-
-class Py42UserAlreadyAddedError(Py42HTTPError):
-    """An exception raised when the user is already added to group or list, such as the
-    Departing Employee list."""
-
-    def __init__(self, exception, user_id, list_name):
-        msg = u"User with ID {} is already on the {}.".format(user_id, list_name)
-        super(Py42UserAlreadyAddedError, self).__init__(exception, msg)
-
-
-class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42HTTPError):
-    """An exception raised when a legal hold matter is inaccessible from your account or
-    the matter ID is not valid."""
-
-    def __init__(self, exception, matter_id):
-        super(Py42LegalHoldNotFoundOrPermissionDeniedError, self).__init__(
-            exception,
-            u"Matter with ID={} can not be found. Your account may not have permission to view the matter.".format(
-                matter_id
-            ),
-        )
-
-
-class Py42InvalidRuleOperationError(Py42HTTPError):
-    """An exception raised when trying to add or remove users to a system rule."""
-
-    def __init__(self, exception, rule_id, source):
-        msg = u"Only alert rules with a source of 'Alerting' can be targeted by this command. "
-        msg += u"Rule {0} has a source of '{1}'."
-        super(Py42InvalidRuleOperationError, self).__init__(
-            exception, msg.format(rule_id, source)
-        )
 
 
 class Py42BadRequestError(Py42HTTPError):
@@ -147,6 +105,38 @@ class Py42NotFoundError(Py42HTTPError):
 
 class Py42InternalServerError(Py42HTTPError):
     """A wrapper to represent an HTTP 500 error."""
+
+
+class Py42UserAlreadyAddedError(Py42BadRequestError):
+    """An exception raised when the user is already added to group or list, such as the
+    Departing Employee list."""
+
+    def __init__(self, exception, user_id, list_name):
+        msg = u"User with ID {} is already on the {}.".format(user_id, list_name)
+        super(Py42UserAlreadyAddedError, self).__init__(exception, msg)
+
+
+class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
+    """An exception raised when a legal hold matter is inaccessible from your account or
+    the matter ID is not valid."""
+
+    def __init__(self, exception, matter_id):
+        super(Py42LegalHoldNotFoundOrPermissionDeniedError, self).__init__(
+            exception,
+            u"Matter with ID={} can not be found. Your account may not have permission to view the matter.".format(
+                matter_id
+            ),
+        )
+
+
+class Py42InvalidRuleOperationError(Py42NotFoundError):
+    """An exception raised when trying to add or remove users to a system rule, or when
+    trying to retrieve information about a system rule."""
+
+    def __init__(self, exception, rule_id):
+        msg = u"Unable to find or access Rule with ID '{}'. ".format(rule_id)
+        msg += u"You might be trying to access a system rule."
+        super(Py42InvalidRuleOperationError, self).__init__(exception, msg)
 
 
 def raise_py42_error(raised_error):

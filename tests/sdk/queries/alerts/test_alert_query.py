@@ -14,7 +14,7 @@ from tests.sdk.queries.conftest import NOT_IN
 from tests.sdk.queries.conftest import ON_OR_AFTER
 from tests.sdk.queries.conftest import ON_OR_BEFORE
 
-from py42._internal.compat import str
+from py42._compat import str
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import Actor
 from py42.sdk.queries.alerts.filters import AlertState

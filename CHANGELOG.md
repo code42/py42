@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.8.0 - 2020-08-27
 
 ### Removed
 
@@ -17,7 +17,26 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.alerts.resolve()`
     - `sdk.alerts.reopen()`
 
+## Fixed
+
+- Issue that in rare circumstance could cause py42 to exhaust network sockets. This could sometimes occur if you were running a multi-threaded program that communicated with many Code42 storage nodes.
+
 ### Added
+
+- Methods for obtaining archive information:
+    - `sdk.archive.get_by_archive_guid`
+    - `sdk.archive.get_all_by_device_guid`
+
+- Debug logs for restore progress during the method call `py42.archive.stream_from_backup()`.
+- [.netrc](https://ec.haxx.se/usingcurl/usingcurl-netrc) support. Calling `py42.sdk.from_local_account()` with no username and password will now result in py42 attempting to authenticate via an entry in your `.netrc` file, if you have one.
+
+- `py42.constants.SortDirection` constants `DESC` and `ASC`.
+
+- `sdk.detectionlists.departing_employee.DepartingEmployeeFilters` constants `OPEN`,
+    `EXFILTRATION_30_DAYS`, `EXFILTRATION_24_HOURS`, and `LEAVING_TODAY`.
+
+- `sdk.detectionlists.high_risk_employee.HighRiskEmployeeFilters` constants `OPEN`,
+    `EXFILTRATION_30_DAYS`, and `EXFILTRATION_24_HOURS`.
 
 - Methods for calling the agent-state APIs:
     - `sdk.devices.get_agent_state()`
@@ -25,12 +44,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.orgs.get_agent_state()`
     - `sdk.orgs.get_agent_full_disk_access_states()`
 
-- Exception classes (`py42.execeptions`)
+- Exception classes (`py42.exceptions`)
     - `Py42ResponseError`
     - `Py42UserAlreadyAddedError`
-    - `Py42UserNotInLegalHoldError`
     - `Py42LegalHoldNotFoundOrPermissionDeniedError`
-    - `Py42UserDoesNotExistError`
     - `Py42InvalidRuleOperationError`
 
 - Methods for getting individual response pages:
@@ -74,21 +91,22 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
-- `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
-- `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.
-- `py42.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when the user does not have
+- `sdk.archive.stream_from_backup()` now calculates file sizes and accepts a `file_size_calc_timeout` parameter.
+- Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths` and can now take a list of file paths to restore.
+- `sdk.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
+- `sdk.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
+- `sdk.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.
+- `sdk.legalhold.get_matter_by_uid()` now raises `Py42LegalHoldNotFoundOrPermissionDeniedError` when the user does not have
     access or the ID does not exist.
-- `py42.users.get_by_username()` now raises `Py42UserDoesNotExistError` when the user is not found.
-- `py42.alerts.rules.add_user()` now raises `Py42InvalidRuleTypeError` when trying to add a user to a system rule.
-- `py42.alerts.rules.remove_user()` now raises `Py42InvalidRuleTypeError` when trying to remove user from a system rule.
+- `sdk.alerts.rules.add_user()` now raises `Py42InvalidRuleOperationError` on 404s.
+- `sdk.alerts.rules.remove_user()` now raises `Py42InvalidRuleOperationError` on 404s.
+- `sdk.alerts.rules.remove_all_users()` now raises `Py42InvalidRuleOperationError` on 404s.
 - `Py42ArchiveFileNotFoundError` now includes the response.
 - `Py42ChecksumNotFoundError` now includes the response.
 - `Py42FeatureUnavailableError` now includes the response.
-- `Py42UserDoesNotExistError` now includes the response.
 - `Py42StorageSessionInitializationError` now includes the response.
 
-## 1.7.1 - 2020-07-24
+## 1.7.1 - 2020-07-27
 
 ### Changed
 

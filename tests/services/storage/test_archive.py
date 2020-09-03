@@ -47,6 +47,23 @@ TIMESTAMP = 1557139716
 BACKUP_SET_ID = "12345"
 WEB_RESTORE_JOB_ID = "46289723"
 
+SOURCE_GUID_KEY = "sourceGuid"
+TARGET_NODE_GUID_KEY = "targetNodeGuid"
+ACCEPTING_GUID_KEY = "acceptingGuid"
+RESTORE_PATH_KEY = "restorePath"
+NUM_BYTES_KEY = "numBytes"
+PUSH_RESTORE_STRATEGY_KEY = "pushRestoreStrategy"
+PERMIT_RESTORE_TO_DIFFERENT_OS_VERSION_KEY = "permitRestoreToDifferentOsVersion"
+EXISTING_FILES_KEY = "existingFiles"
+FILE_PERMISSIONS_KEY = "filePermissions"
+
+NODE_GUID = "node-guid"
+ACCEPTING_GUID = "accepting-guid"
+RESTORE_PATH = "path/to/restore/to"
+PUSH_RESTORE_STRATEGY = "TARGET_DIRECTORY"
+EXISTING_FILES = "OVERWRITE_ORIGINAL"
+FILE_PERMISSIONS = "CURRENT"
+
 
 @pytest.fixture
 def connection(mocker, py42_response):
@@ -226,6 +243,47 @@ class TestStorageArchiveService(object):
             RESTORE_FULL_PATH_KEY: True,
             TIMESTAMP_KEY: TIMESTAMP,
             BACKUP_SET_ID_KEY: BACKUP_SET_ID,
+        }
+        assert json_arg == expected_data
+
+    def test_start_push_restore_calls_post_with_expected_url_and_data(self, connection):
+        storage_archive_service = StorageArchiveService(connection)
+        storage_archive_service.start_push_restore(
+            DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID,
+            NODE_GUID,
+            ACCEPTING_GUID,
+            RESTORE_PATH,
+            PATH_SET,
+            NUM_FILES,
+            SIZE,
+            show_deleted=True,
+            restore_full_path=True,
+            timestamp=TIMESTAMP,
+            backup_set_id=BACKUP_SET_ID,
+            push_restore_strategy=PUSH_RESTORE_STRATEGY,
+            existing_files=EXISTING_FILES,
+            file_permissions=FILE_PERMISSIONS,
+            permit_restore_to_different_os_version=True,
+        )
+        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        expected_data = {
+            SOURCE_GUID_KEY: DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID_KEY: WEB_RESTORE_SESSION_ID,
+            TARGET_NODE_GUID_KEY: NODE_GUID,
+            ACCEPTING_GUID_KEY: ACCEPTING_GUID,
+            RESTORE_PATH_KEY: RESTORE_PATH,
+            PATH_SET_KEY: PATH_SET,
+            NUM_FILES_KEY: NUM_FILES,
+            NUM_BYTES_KEY: SIZE,
+            SHOW_DELETED_KEY: True,
+            RESTORE_FULL_PATH_KEY: True,
+            TIMESTAMP_KEY: TIMESTAMP,
+            BACKUP_SET_ID_KEY: BACKUP_SET_ID,
+            PUSH_RESTORE_STRATEGY_KEY: PUSH_RESTORE_STRATEGY,
+            EXISTING_FILES_KEY: EXISTING_FILES,
+            FILE_PERMISSIONS_KEY: FILE_PERMISSIONS,
+            PERMIT_RESTORE_TO_DIFFERENT_OS_VERSION_KEY: True,
         }
         assert json_arg == expected_data
 

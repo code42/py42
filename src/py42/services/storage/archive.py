@@ -107,7 +107,7 @@ class StorageArchiveService(BaseService):
         }
         return self._connection.post(uri, json=json_dict)
 
-    def start_restore(
+    def start_web_restore(
         self,
         guid,
         web_restore_session_id,

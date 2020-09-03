@@ -376,8 +376,8 @@ def file_content_chunks():
     return list("file contents")
 
 
-def mock_start_restore_response(mocker, storage_archive_service, response):
-    def mock_start_restore(
+def mock_start_web_restore_response(mocker, storage_archive_service, response):
+    def mock_start_web_restore(
         guid,
         web_restore_session_id,
         path_set,
@@ -387,12 +387,12 @@ def mock_start_restore_response(mocker, storage_archive_service, response):
         zip_result,
         **kwargs
     ):
-        start_restore_response = mocker.MagicMock(spec=Response)
-        start_restore_response.text = response
-        start_restore_response.status_code = 200
-        return Py42Response(start_restore_response)
+        start_web_restore_response = mocker.MagicMock(spec=Response)
+        start_web_restore_response.text = response
+        start_web_restore_response.status_code = 200
+        return Py42Response(start_web_restore_response)
 
-    storage_archive_service.start_restore.side_effect = mock_start_restore
+    storage_archive_service.start_web_restore.side_effect = mock_start_web_restore
 
 
 def mock_get_restore_status_responses(mocker, storage_archive_service, json_responses):
@@ -967,10 +967,10 @@ class TestRestoreJobManager(object):
             storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
 
-    def test_get_stream_calls_start_restore_with_correct_args(
+    def test_get_stream_calls_start_web_restore_with_correct_args(
         self, mocker, storage_archive_service, single_file_selection
     ):
-        mock_start_restore_response(
+        mock_start_web_restore_response(
             mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
         )
         mock_get_restore_status_responses(
@@ -980,7 +980,7 @@ class TestRestoreJobManager(object):
             storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.get_stream(single_file_selection)
-        storage_archive_service.start_restore.assert_called_once_with(
+        storage_archive_service.start_web_restore.assert_called_once_with(
             guid=DEVICE_GUID,
             web_restore_session_id=WEB_RESTORE_SESSION_ID,
             path_set=[single_file_selection[0].path_set],
@@ -991,10 +991,10 @@ class TestRestoreJobManager(object):
             zip_result=None,
         )
 
-    def test_get_stream_when_multiple_files_selected_calls_start_restore_with_correct_args(
+    def test_get_stream_when_multiple_files_selected_calls_start_web_restore_with_correct_args(
         self, mocker, storage_archive_service, double_file_selection
     ):
-        mock_start_restore_response(
+        mock_start_web_restore_response(
             mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
         )
         mock_get_restore_status_responses(
@@ -1005,7 +1005,7 @@ class TestRestoreJobManager(object):
             storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.get_stream(double_file_selection)
-        storage_archive_service.start_restore.assert_called_once_with(
+        storage_archive_service.start_web_restore.assert_called_once_with(
             guid=DEVICE_GUID,
             web_restore_session_id=WEB_RESTORE_SESSION_ID,
             path_set=[
@@ -1022,7 +1022,7 @@ class TestRestoreJobManager(object):
     def test_get_stream_polls_job_status_until_job_is_complete(
         self, mocker, storage_archive_service, single_file_selection
     ):
-        mock_start_restore_response(
+        mock_start_web_restore_response(
             mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
         )
         mock_get_restore_status_responses(
@@ -1052,7 +1052,7 @@ class TestRestoreJobManager(object):
     def test_get_stream_when_response_missing_status_polls_job_status_until_job_is_complete(
         self, mocker, storage_archive_service, single_file_selection
     ):
-        mock_start_restore_response(
+        mock_start_web_restore_response(
             mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
         )
         mock_get_restore_status_responses(
@@ -1086,7 +1086,7 @@ class TestRestoreJobManager(object):
         single_file_selection,
         file_content_chunks,
     ):
-        mock_start_restore_response(
+        mock_start_web_restore_response(
             mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
         )
         mock_get_restore_status_responses(
@@ -1108,7 +1108,7 @@ class TestRestoreJobManager(object):
         single_file_selection,
         file_content_chunks,
     ):
-        mock_start_restore_response(
+        mock_start_web_restore_response(
             mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
         )
         mock_get_restore_status_responses(
@@ -1121,13 +1121,13 @@ class TestRestoreJobManager(object):
             storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.get_stream(single_file_selection)
-        actual = storage_archive_service.start_restore.call_args[1]["zip_result"]
+        actual = storage_archive_service.start_web_restore.call_args[1]["zip_result"]
         assert actual is None
 
     def test_get_stream_when_is_directory_type_sets_zip_result_to_true(
         self, mocker, storage_archive_service, single_dir_selection, file_content_chunks
     ):
-        mock_start_restore_response(
+        mock_start_web_restore_response(
             mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
         )
         mock_get_restore_status_responses(
@@ -1140,5 +1140,5 @@ class TestRestoreJobManager(object):
             storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
         restore_job_manager.get_stream(single_dir_selection)
-        actual = storage_archive_service.start_restore.call_args[1]["zip_result"]
+        actual = storage_archive_service.start_web_restore.call_args[1]["zip_result"]
         assert actual is True

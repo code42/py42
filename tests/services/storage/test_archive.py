@@ -196,19 +196,19 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(ENCRYPTION_KEY_KEY) == ENCRYPTION_KEY
 
-    def test_start_restore_calls_post_with_correct_url(self, connection):
+    def test_start_web_restore_calls_post_with_correct_url(self, connection):
         storage_archive_service = StorageArchiveService(connection)
 
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES, NUM_DIRS, SIZE
         )
         assert connection.post.call_args[ARGS_INDEX][ARGS_INDEX] == WEB_RESTORE_JOB_URL
 
-    def test_start_restore_with_required_args_calls_post_with_all_args_in_json(
+    def test_start_web_restore_with_required_args_calls_post_with_all_args_in_json(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES, NUM_DIRS, SIZE
         )
 
@@ -231,12 +231,12 @@ class TestStorageArchiveService(object):
 
         assert sorted(json_arg.keys()) == sorted(keys)
 
-    def test_start_restore_with_opt_zip_result_as_false_calls_post_with_zip_result_in_data(
+    def test_start_web_restore_with_opt_zip_result_as_false_calls_post_with_zip_result_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
 
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -248,12 +248,12 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(ZIP_RESULT_KEY) is False
 
-    def test_start_restore_with_opt_zip_result_as_true_calls_post_with_zip_result_in_data(
+    def test_start_web_restore_with_opt_zip_result_as_true_calls_post_with_zip_result_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
 
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -265,12 +265,12 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(ZIP_RESULT_KEY) is True
 
-    def test_start_restore_with_expire_job_as_true_calls_post_with_expire_job_in_data(
+    def test_start_web_restore_with_expire_job_as_true_calls_post_with_expire_job_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
 
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -282,12 +282,12 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(EXPIRE_JOB_KEY) is True
 
-    def test_start_restore_with_expire_job_as_false_calls_post_with_expire_job_in_data(
+    def test_start_web_restore_with_expire_job_as_false_calls_post_with_expire_job_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
 
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -299,11 +299,11 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(EXPIRE_JOB_KEY) is False
 
-    def test_start_restore_with_show_deleted_true_calls_post_with_show_deleted_in_data(
+    def test_start_web_restore_with_show_deleted_true_calls_post_with_show_deleted_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -315,11 +315,11 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(SHOW_DELETED_KEY) is True
 
-    def test_start_restore_with_show_deleted_false_calls_post_with_show_deleted_false_in_data(
+    def test_start_web_restore_with_show_deleted_false_calls_post_with_show_deleted_false_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -331,11 +331,11 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(SHOW_DELETED_KEY) is False
 
-    def test_start_restore_with_restore_full_path_true_calls_post_with_restore_full_path_true_in_data(
+    def test_start_web_restore_with_restore_full_path_true_calls_post_with_restore_full_path_true_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -347,11 +347,11 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(RESTORE_FULL_PATH_KEY) is True
 
-    def test_start_restore_with_restore_full_path_false_calls_post_with_restore_full_path_true_in_data(
+    def test_start_web_restore_with_restore_full_path_false_calls_post_with_restore_full_path_true_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -363,11 +363,11 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(RESTORE_FULL_PATH_KEY) is False
 
-    def test_start_restore_with_timestamp_calls_post_with_timestamp_in_data(
+    def test_start_web_restore_with_timestamp_calls_post_with_timestamp_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -379,11 +379,11 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(TIMESTAMP_KEY) == TIMESTAMP
 
-    def test_start_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(
+    def test_start_web_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,
@@ -395,11 +395,11 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(BACKUP_SET_ID_KEY) == BACKUP_SET_ID
 
-    def test_start_restore_with_all_args_calls_post_with_all_args_in_data(
+    def test_start_web_restore_with_all_args_calls_post_with_all_args_in_data(
         self, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
+        storage_archive_service.start_web_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             PATH_SET,

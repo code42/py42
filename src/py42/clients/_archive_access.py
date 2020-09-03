@@ -111,6 +111,24 @@ class ArchiveAccessor(object):
         )
         return self._restore_job_manager.get_stream(file_selections)
 
+    def stream_to_destination(
+        self,
+        destination_guid,
+        accepting_guid,
+        restore_path,
+        file_paths,
+        file_size_calc_timeout=None
+    ):
+        file_selections = self._create_file_selections(
+            file_paths, file_size_calc_timeout
+        )
+        return self._restore_job_manager.send_stream(
+            destination_guid,
+            accepting_guid,
+            restore_path,
+            file_selections
+        )
+
     def _create_file_selections(self, file_paths, file_size_calc_timeout):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
@@ -270,6 +288,16 @@ class RestoreJobManager(_RestorePoller):
         self._wait_for_job(job_id)
         return self._get_stream(job_id)
 
+    def send_stream(self, destination_guid, accepting_guid, restore_path, file_selections):
+        response = self._start_push_restore(
+            destination_guid,
+            accepting_guid,
+            restore_path,
+            file_selections,
+        )
+        job_id = response["restoreId"]
+        self._wait_for_job(job_id)
+
     def _wait_for_job(self, job_id):
         while not self._is_job_complete(job_id):
             time.sleep(self._job_polling_interval)
@@ -291,13 +319,33 @@ class RestoreJobManager(_RestorePoller):
         size = sum([fs.size for fs in file_selections])
         zip_result = _check_for_multiple_files(file_selections) or None
         return self._storage_archive_service.start_web_restore(
-            guid=self._device_guid,
+            device_guid=self._device_guid,
             web_restore_session_id=self._archive_session_id,
             path_set=[fs.path_set for fs in file_selections],
             num_files=num_files,
             num_dirs=num_dirs,
             size=size,
             zip_result=zip_result,
+            show_deleted=True,
+        )
+
+    def _start_push_restore(
+        self, destination_guid,
+        accepting_guid,
+        restore_path,
+        file_selections
+    ):
+        num_files = sum([fs.num_files for fs in file_selections])
+        size = sum([fs.size for fs in file_selections])
+        return self._storage_archive_service.start_push_restore(
+            device_guid=self._device_guid,
+            web_restore_session_id=self._archive_session_id,
+            destination_guid=destination_guid,
+            accepting_guid=accepting_guid,
+            restore_path=restore_path,
+            path_set=[fs.path_set for fs in file_selections],
+            num_files=num_files,
+            size=size,
             show_deleted=True,
         )
 

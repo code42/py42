@@ -96,6 +96,31 @@ class ArchiveClient(object):
             file_paths, file_size_calc_timeout=file_size_calc_timeout
         )
 
+    def stream_to_destination(
+        self,
+        file_paths,
+        device_guid,
+        accepting_device_guid,
+        restore_path,
+        destination_guid=None,
+        archive_password=None,
+        encryption_key=None,
+        file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
+    ):
+        archive_accessor = self._archive_accessor_manager.get_archive_accessor(
+            device_guid,
+            destination_guid=destination_guid,
+            private_password=archive_password,
+            encryption_key=encryption_key,
+        )
+        return archive_accessor.stream_to_destination(
+            destination_guid,
+            accepting_device_guid,
+            restore_path,
+            file_paths,
+            file_size_calc_timeout=file_size_calc_timeout
+        )
+
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific
         device.

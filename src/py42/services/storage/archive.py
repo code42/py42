@@ -146,12 +146,12 @@ class StorageArchiveService(BaseService):
         self,
         device_guid,
         web_restore_session_id,
-        node_guid,
+        destination_guid,
         accepting_guid,
         restore_path,
         path_set,
         num_files,
-        num_bytes,
+        size,
         show_deleted=None,
         restore_full_path=None,
         timestamp=None,
@@ -162,18 +162,18 @@ class StorageArchiveService(BaseService):
         permit_restore_to_different_os_version=None,
     ):
         """Submits a push restore job.
-        See https://console.us.code42.com/apidocviewer/#WebRestoreJob-post
+        See https://console.us.code42.com/apidocviewer/#PushRestoreJob-post
         """
         uri = u"/api/WebRestoreJob"
         json_dict = {
             u"sourceGuid": device_guid,
             u"webRestoreSessionId": web_restore_session_id,
-            u"targetNodeGuid": node_guid,
+            u"targetNodeGuid": destination_guid,
             u"acceptingGuid": accepting_guid,
             u"restorePath": restore_path,
             u"pathSet": path_set,
             u"numFiles": num_files,
-            "numBytes": num_bytes,
+            "numBytes": size,
             u"showDeleted": show_deleted,
             u"restoreFullPath": restore_full_path,
             u"timestamp": timestamp,

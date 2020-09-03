@@ -1,12 +1,13 @@
 from collections import namedtuple
+
 from py42 import settings
+from py42.clients.settings.org_settings import OrgSettings
+from py42.exceptions import Py42Error
 from py42.services import BaseService
 from py42.services.util import get_all_pages
-from py42.clients._settings import OrgSettings
-from py42.exceptions import Py42Error
 
 OrgSettingsResponse = namedtuple(
-    "SettingsManagerResponse", ["error", "settings_response", "org_settings_response"]
+    "OrgSettingsResponse", ["error", "settings_response", "org_settings_response"]
 )
 
 
@@ -214,8 +215,8 @@ class OrgService(BaseService):
             org_settings (`OrgSettings`): An `OrgSettings` instance with desired modifications to settings.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the result of the setting change.
-                """
+            :class:`py42.services.orgs.OrgSettings`: A namedtuple containing the result of the setting change api calls.
+        """
         org_id = org_settings.org_id
         error = False
         org_settings_response = settings_response = None
@@ -232,9 +233,7 @@ class OrgService(BaseService):
         if org_settings.changes:
             uri = "/api/Org/{}".format(org_id)
             try:
-                settings_response = self._connection.put(
-                    uri, json=org_settings.data
-                )
+                settings_response = self._connection.put(uri, json=org_settings.data)
             except Py42Error as ex:
                 error = True
                 settings_response = ex

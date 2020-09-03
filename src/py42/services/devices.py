@@ -1,10 +1,15 @@
+from collections import namedtuple
 from time import time
 
 from py42 import settings
-from py42._internal.compat import str
+from py42._compat import str
+from py42.clients.settings.device_settings import DeviceSettings
 from py42.services import BaseService
 from py42.services.util import get_all_pages
-from py42.clients._settings import DeviceSettings
+
+DeviceSettingsResponse = namedtuple(
+    "DeviceSettingsResponse", ["error", "settings_response", "device_settings_response"]
+)
 
 
 class DeviceService(BaseService):
@@ -281,10 +286,10 @@ class DeviceService(BaseService):
         return DeviceSettings(settings.data)
 
     def update_device_settings(self, device_settings):
-        """Updates a device's settings based on changes to the passed in `DeviceSettingsManager` instance.
+        """Updates a device's settings based on changes to the passed in `DeviceSettings` instance.
 
         Args:
-            device_settings (`DeviceSettings`): An instance of a DeviceSettingsManager with desired modifications to settings.
+            device_settings (`DeviceSettings`): An instance of `DeviceSettings` with desired modifications to settings.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the result of the setting change.

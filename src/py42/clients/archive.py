@@ -118,7 +118,7 @@ class ArchiveClient(object):
             accepting_device_guid,
             restore_path,
             file_paths,
-            file_size_calc_timeout=file_size_calc_timeout
+            file_size_calc_timeout=file_size_calc_timeout,
         )
 
     def get_backup_sets(self, device_guid, destination_guid):

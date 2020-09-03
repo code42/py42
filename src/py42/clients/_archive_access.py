@@ -117,16 +117,13 @@ class ArchiveAccessor(object):
         accepting_guid,
         restore_path,
         file_paths,
-        file_size_calc_timeout=None
+        file_size_calc_timeout=None,
     ):
         file_selections = self._create_file_selections(
             file_paths, file_size_calc_timeout
         )
         return self._restore_job_manager.send_stream(
-            destination_guid,
-            accepting_guid,
-            restore_path,
-            file_selections
+            destination_guid, accepting_guid, restore_path, file_selections
         )
 
     def _create_file_selections(self, file_paths, file_size_calc_timeout):
@@ -288,12 +285,11 @@ class RestoreJobManager(_RestorePoller):
         self._wait_for_job(job_id)
         return self._get_stream(job_id)
 
-    def send_stream(self, destination_guid, accepting_guid, restore_path, file_selections):
+    def send_stream(
+        self, destination_guid, accepting_guid, restore_path, file_selections
+    ):
         response = self._start_push_restore(
-            destination_guid,
-            accepting_guid,
-            restore_path,
-            file_selections,
+            destination_guid, accepting_guid, restore_path, file_selections,
         )
         job_id = response["restoreId"]
         self._wait_for_job(job_id)
@@ -330,10 +326,7 @@ class RestoreJobManager(_RestorePoller):
         )
 
     def _start_push_restore(
-        self, destination_guid,
-        accepting_guid,
-        restore_path,
-        file_selections
+        self, destination_guid, accepting_guid, restore_path, file_selections
     ):
         num_files = sum([fs.num_files for fs in file_selections])
         size = sum([fs.size for fs in file_selections])

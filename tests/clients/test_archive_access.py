@@ -377,16 +377,7 @@ def file_content_chunks():
 
 
 def mock_start_web_restore_response(mocker, storage_archive_service, response):
-    def mock_start_web_restore(
-        guid,
-        web_restore_session_id,
-        path_set,
-        num_files,
-        num_dirs,
-        size,
-        zip_result,
-        **kwargs
-    ):
+    def mock_start_web_restore(*args, **kwargs):
         start_web_restore_response = mocker.MagicMock(spec=Response)
         start_web_restore_response.text = response
         start_web_restore_response.status_code = 200
@@ -981,7 +972,7 @@ class TestRestoreJobManager(object):
         )
         restore_job_manager.get_stream(single_file_selection)
         storage_archive_service.start_web_restore.assert_called_once_with(
-            guid=DEVICE_GUID,
+            device_guid=DEVICE_GUID,
             web_restore_session_id=WEB_RESTORE_SESSION_ID,
             path_set=[single_file_selection[0].path_set],
             num_files=1,
@@ -1006,7 +997,7 @@ class TestRestoreJobManager(object):
         )
         restore_job_manager.get_stream(double_file_selection)
         storage_archive_service.start_web_restore.assert_called_once_with(
-            guid=DEVICE_GUID,
+            device_guid=DEVICE_GUID,
             web_restore_session_id=WEB_RESTORE_SESSION_ID,
             path_set=[
                 double_file_selection[0].path_set,

@@ -107,6 +107,9 @@ class ArchiveClient(object):
         encryption_key=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
+        if not destination_guid:
+            response = self.get_all_by_device_guid(device_guid)
+            destination_guid = next(response)["archives"][0]["targetGuid"]
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
             device_guid,
             destination_guid=destination_guid,

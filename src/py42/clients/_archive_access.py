@@ -340,6 +340,11 @@ class RestoreJobManager(_RestorePoller):
             num_files=num_files,
             size=size,
             show_deleted=True,
+            permit_restore_to_different_os_version=False,
+            restore_full_path=False,
+            push_restore_strategy="TARGET_DIRECTORY",
+            existing_files="RENAME_ORIGINAL",
+            file_permissions="CURRENT",
         )
 
     def _get_stream(self, job_id):

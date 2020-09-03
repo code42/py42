@@ -164,7 +164,7 @@ class StorageArchiveService(BaseService):
         """Submits a push restore job.
         See https://console.us.code42.com/apidocviewer/#PushRestoreJob-post
         """
-        uri = u"/api/WebRestoreJob"
+        uri = u"/api/PushRestoreJob"
         json_dict = {
             u"sourceGuid": device_guid,
             u"webRestoreSessionId": web_restore_session_id,

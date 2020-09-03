@@ -109,7 +109,7 @@ class StorageArchiveService(BaseService):
 
     def start_web_restore(
         self,
-        guid,
+        device_guid,
         web_restore_session_id,
         path_set,
         num_files,
@@ -127,7 +127,7 @@ class StorageArchiveService(BaseService):
         """
         uri = u"/api/WebRestoreJob"
         json_dict = {
-            u"guid": guid,
+            u"guid": device_guid,
             u"webRestoreSessionId": web_restore_session_id,
             u"pathSet": path_set,
             u"numFiles": num_files,
@@ -140,7 +140,49 @@ class StorageArchiveService(BaseService):
             u"timestamp": timestamp,
             u"backupSetId": backup_set_id,
         }
+        return self._connection.post(uri, json=json_dict)
 
+    def start_push_restore(
+        self,
+        device_guid,
+        web_restore_session_id,
+        node_guid,
+        accepting_guid,
+        restore_path,
+        path_set,
+        num_files,
+        num_bytes,
+        show_deleted=None,
+        restore_full_path=None,
+        timestamp=None,
+        backup_set_id=None,
+        push_restore_strategy=None,
+        existing_files=None,
+        file_permissions=None,
+        permit_restore_to_different_os_version=None,
+    ):
+        """Submits a push restore job.
+        See https://console.us.code42.com/apidocviewer/#WebRestoreJob-post
+        """
+        uri = u"/api/WebRestoreJob"
+        json_dict = {
+            u"sourceGuid": device_guid,
+            u"webRestoreSessionId": web_restore_session_id,
+            u"targetNodeGuid": node_guid,
+            u"acceptingGuid": accepting_guid,
+            u"restorePath": restore_path,
+            u"pathSet": path_set,
+            u"numFiles": num_files,
+            "numBytes": num_bytes,
+            u"showDeleted": show_deleted,
+            u"restoreFullPath": restore_full_path,
+            u"timestamp": timestamp,
+            u"backupSetId": backup_set_id,
+            u"pushRestoreStrategy": push_restore_strategy,
+            u"existingFiles": existing_files,
+            u"filePermissions": file_permissions,
+            u"permitRestoreToDifferentOsVersion": permit_restore_to_different_os_version,
+        }
         return self._connection.post(uri, json=json_dict)
 
     def get_restore_status(self, job_id):

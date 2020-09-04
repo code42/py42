@@ -410,29 +410,32 @@ class TestOrgSettings(object):
         t_setting["org-securityTools-enable"]["value"] = "true"
         org_settings = OrgSettings(TEST_ORG_SETTINGS_DICT, t_setting)
         org_settings.endpoint_monitoring_enabled = False
-        assert org_settings.packets == [
-            {"key": "org-securityTools-enable", "value": "false", "locked": False},
-            {
-                "key": "device_advancedExfiltrationDetection_enabled",
-                "value": "false",
-                "locked": False,
-            },
-            {
-                "key": "org-securityTools-cloud-detection-enable",
-                "value": "false",
-                "locked": False,
-            },
-            {
-                "key": "org-securityTools-open-file-detection-enable",
-                "value": "false",
-                "locked": False,
-            },
-            {
-                "key": "org-securityTools-device-detection-enable",
-                "value": "false",
-                "locked": False,
-            },
-        ]
+        assert {
+            "key": "org-securityTools-enable",
+            "value": "false",
+            "locked": False,
+        } in org_settings.packets
+        assert {
+            "key": "device_advancedExfiltrationDetection_enabled",
+            "value": "false",
+            "locked": False,
+        } in org_settings.packets
+        assert {
+            "key": "org-securityTools-cloud-detection-enable",
+            "value": "false",
+            "locked": False,
+        } in org_settings.packets
+        assert {
+            "key": "org-securityTools-open-file-detection-enable",
+            "value": "false",
+            "locked": False,
+        } in org_settings.packets
+        assert {
+            "key": "org-securityTools-device-detection-enable",
+            "value": "false",
+            "locked": False,
+        } in org_settings.packets
+        assert len(org_settings.packets) == 5
 
     def test_org_settings_set_endpoint_monitoring_enabled_to_false_from_true_creates_expected_packets(
         self,
@@ -441,14 +444,25 @@ class TestOrgSettings(object):
         t_setting["org-securityTools-enable"]["value"] = "false"
         org_settings = OrgSettings(TEST_ORG_SETTINGS_DICT, t_setting)
         org_settings.endpoint_monitoring_enabled = True
-        assert org_settings.packets == [
-            {"key": "org-securityTools-enable", "value": "true", "locked": False},
-            {
-                "key": "device_advancedExfiltrationDetection_enabled",
-                "value": "true",
-                "locked": False,
-            },
-        ]
+        assert {
+            "key": "org-securityTools-enable",
+            "value": "true",
+            "locked": False,
+        } in org_settings.packets
+        assert {
+            "key": "device_advancedExfiltrationDetection_enabled",
+            "value": "true",
+            "locked": False,
+        } in org_settings.packets
+        assert len(org_settings.packets) == 2
+        # assert org_settings.packets == [
+        #     {"key": "org-securityTools-enable", "value": "true", "locked": False},
+        #     {
+        #         "key": "device_advancedExfiltrationDetection_enabled",
+        #         "value": "true",
+        #         "locked": False,
+        #     },
+        # ]
 
     @pytest.mark.parametrize(
         "param",

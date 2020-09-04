@@ -1,10 +1,27 @@
 from copy import deepcopy
+
 import pytest
-from py42.clients.settings.org_settings import OrgSettings
-from py42.clients.settings import get_val
-from py42.exceptions import Py42Error
+from tests.clients.conftest import param
+from tests.clients.conftest import PHOTOS_REGEX
+from tests.clients.conftest import PICTURES_REGEX
+from tests.clients.conftest import TEST_ADDED_EXCLUDED_PATH
+from tests.clients.conftest import TEST_ADDED_PATH
+from tests.clients.conftest import TEST_CONFIG_DATE_MS
+from tests.clients.conftest import TEST_DESTINATION_GUID_1
+from tests.clients.conftest import TEST_DESTINATION_GUID_2
+from tests.clients.conftest import TEST_DESTINATION_GUID_3
+from tests.clients.conftest import TEST_DESTINATION_NAME_1
+from tests.clients.conftest import TEST_DESTINATION_NAME_2
+from tests.clients.conftest import TEST_DESTINATION_NAME_3
+from tests.clients.conftest import TEST_DEVICE_VERSION
+from tests.clients.conftest import TEST_EXTERNAL_DOCUMENTS_DIR
+from tests.clients.conftest import TEST_HOME_DIR
+from tests.clients.conftest import TEST_PHOTOS_DIR
 from tests.clients.test_device_settings import DEVICE_DICT_W_SETTINGS
-from tests.clients.conftest import *
+
+from py42.clients.settings import get_val
+from py42.clients.settings.org_settings import OrgSettings
+from py42.exceptions import Py42Error
 
 ONEGB = 1000000000
 TEST_ORG_ID = 42
@@ -504,6 +521,54 @@ class TestOrgSettings(object):
                 new_val=99,
                 expected_stored_val=99,
                 dict_location=["settings", "maxSeats"],
+            ),
+            param(
+                name="org_backup_quota_bytes",
+                new_val=ONEGB * 42,
+                expected_stored_val=ONEGB * 42,
+                dict_location=["settings", "maxBytes"],
+            ),
+            param(
+                name="user_backup_quota_bytes",
+                new_val=ONEGB * 42,
+                expected_stored_val=ONEGB * 42,
+                dict_location=["settings", "defaultUserMaxBytes"],
+            ),
+            param(
+                name="web_restore_admin_limit_mb",
+                new_val=42,
+                expected_stored_val=42,
+                dict_location=["settings", "webRestoreAdminLimitMb"],
+            ),
+            param(
+                name="web_restore_user_limit_mb",
+                new_val=42,
+                expected_stored_val=42,
+                dict_location=["settings", "webRestoreUserLimitMb"],
+            ),
+            param(
+                name="backup_warning_email_days",
+                new_val=14,
+                expected_stored_val=14,
+                dict_location=["settings", "warnInDays"],
+            ),
+            param(
+                name="backup_critical_email_days",
+                new_val=25,
+                expected_stored_val=25,
+                dict_location=["settings", "alertInDays"],
+            ),
+            param(
+                name="backup_alert_recipient_emails",
+                new_val="test@example.com",  # test string input
+                expected_stored_val=["test@example.com"],
+                dict_location=["settings", "recipients"],
+            ),
+            param(
+                name="backup_alert_recipient_emails",
+                new_val=["test@example.com", "test2@example.com",],  # test list input
+                expected_stored_val=["test@example.com", "test2@example.com"],
+                dict_location=["settings", "recipients"],
             ),
         ],
     )

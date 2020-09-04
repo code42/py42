@@ -1,11 +1,11 @@
 from copy import deepcopy
 
 import pytest
+from tests.clients.conftest import param
 
 from py42.clients.settings import get_val
 from py42.clients.settings.device_settings import DeviceSettings
 from py42.exceptions import Py42Error
-from tests.clients.conftest import param
 
 TEST_USER_ID = 13548744
 TEST_COMPUTER_ID = 4290210

@@ -6,14 +6,12 @@ from tests.clients.conftest import PHOTOS_REGEX
 from tests.clients.conftest import PICTURES_REGEX
 from tests.clients.conftest import TEST_ADDED_EXCLUDED_PATH
 from tests.clients.conftest import TEST_ADDED_PATH
-from tests.clients.conftest import TEST_CONFIG_DATE_MS
 from tests.clients.conftest import TEST_DESTINATION_GUID_1
 from tests.clients.conftest import TEST_DESTINATION_GUID_2
 from tests.clients.conftest import TEST_DESTINATION_GUID_3
 from tests.clients.conftest import TEST_DESTINATION_NAME_1
 from tests.clients.conftest import TEST_DESTINATION_NAME_2
 from tests.clients.conftest import TEST_DESTINATION_NAME_3
-from tests.clients.conftest import TEST_DEVICE_VERSION
 from tests.clients.conftest import TEST_EXTERNAL_DOCUMENTS_DIR
 from tests.clients.conftest import TEST_HOME_DIR
 from tests.clients.conftest import TEST_PHOTOS_DIR
@@ -559,14 +557,18 @@ class TestOrgSettings(object):
             ),
             param(
                 name="backup_alert_recipient_emails",
-                new_val=["test@example.com", "test2@example.com",],  # test list input
+                new_val=[
+                    "test@example.com",
+                    "test2@example.com",
+                ],  # test list input
                 expected_stored_val=["test@example.com", "test2@example.com"],
                 dict_location=["settings", "recipients"],
             ),
         ],
     )
     def test_org_settings_setting_mutable_property_updates_dict_correctly_and_registers_changes(
-        self, param,
+        self,
+        param,
     ):
         setattr(self.org_settings, param.name, param.new_val)
         assert (
@@ -581,14 +583,18 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         deepcopy(TEST_ORG_SETTINGS_DICT), deepcopy(TEST_T_SETTINGS_DICT)
     )
 
-    def test_backup_set_destinations_property_returns_expected_value(self,):
+    def test_backup_set_destinations_property_returns_expected_value(
+        self,
+    ):
         expected_destinations = {"4200": "Dest42 <LOCKED>", "4300": "Dest43"}
         assert (
             self.org_settings.device_defaults.backup_sets[0].destinations
             == expected_destinations
         )
 
-    def test_backup_set_add_destination_when_destination_available(self,):
+    def test_backup_set_add_destination_when_destination_available(
+        self,
+    ):
         self.org_settings.device_defaults.backup_sets[0].add_destination(4400)
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
@@ -611,7 +617,9 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             == expected_destinations_dict
         )
 
-    def test_backup_set_add_destination_when_destination_not_available_raises(self,):
+    def test_backup_set_add_destination_when_destination_not_available_raises(
+        self,
+    ):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",
@@ -624,7 +632,9 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             == expected_destinations_property
         )
 
-    def test_backup_set_remove_destination_when_destination_available(self,):
+    def test_backup_set_remove_destination_when_destination_available(
+        self,
+    ):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",
@@ -645,7 +655,9 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             == expected_destinations_dict
         )
 
-    def test_backup_set_remove_destination_when_destination_not_available_raises(self,):
+    def test_backup_set_remove_destination_when_destination_not_available_raises(
+        self,
+    ):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",

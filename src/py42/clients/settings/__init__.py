@@ -83,12 +83,12 @@ class SettingProperty(BaseSettingProperty):
 
 class SettingLockProperty(BaseSettingProperty):
     """Descriptor class to help manage changes to the locked status of nested dict values. Assumes attributes
-        being managed are on a UserDict/UserList subclass.
+    being managed are on a UserDict/UserList subclass.
 
-        Args:
-            name (str): name of attribute this class manages (changes will be registered with this name).
-            location (list): list of keys defining the location of the value being managed in the managed class.
-        """
+    Args:
+        name (str): name of attribute this class manages (changes will be registered with this name).
+        location (list): list of keys defining the location of the value being managed in the managed class.
+    """
 
     def __get__(self, instance, owner):
         val = get_val(instance.data, self.location)
@@ -132,26 +132,37 @@ class TSettingProperty(object):
         key (str): name of t_setting packet this class is managing.
     """
 
-    def __init__(self, name, key, enforce_bool=False):
+    def __init__(
+        self, name, key, get_converter=no_conversion, set_converter=no_conversion
+    ):
         self.name = name
         self.key = key
-        self.enforce_bool = enforce_bool
+        self.get_converter = get_converter
+        self.set_converter = set_converter
         self.init_val = None
 
     def __get__(self, instance, owner):
-        packet = instance._t_settings[self.key]
-        return str_to_bool(packet["value"])
+        if self.key in instance._packets:
+            packet = instance._packets[self.key]
+        else:
+            packet = instance._t_settings.get(self.key)
+        if packet is None:
+            return None
+        return self.get_converter(packet["value"])
 
     def __set__(self, instance, val):
-        if self.enforce_bool:
-            val = bool_to_str(val)
+        val = self.set_converter(val)
         packet = {"key": self.key, "value": val, "locked": False}
         instance._packets[self.key] = packet
         self._register_change(instance, val)
 
     def _register_change(self, instance, val):
         if self.init_val is None:
-            self.init_val = instance._t_settings[self.key]["value"]
+            packet = instance._t_settings.get(self.key)
+            if packet is None:
+                self.init_val = None
+            else:
+                self.init_val = packet["value"]
         if self.init_val == val:
             if self.name in instance.changes:
                 instance.changes.pop(self.name)

@@ -250,7 +250,7 @@ TEST_T_SETTINGS_DICT = {
     },
     "device_webRestore_enabled": {
         "scope": "ORG",
-        "value": "true",
+        "value": "false",
         "locked": False,
         "id": 510808,
     },
@@ -435,7 +435,12 @@ class TestOrgSettings(object):
             "value": "false",
             "locked": False,
         } in org_settings.packets
-        assert len(org_settings.packets) == 5
+        assert {
+            "key": "org_securityTools_printer_detection_enable",
+            "value": "false",
+            "locked": False,
+        } in org_settings.packets
+        assert len(org_settings.packets) == 6
 
     def test_org_settings_set_endpoint_monitoring_enabled_to_false_from_true_creates_expected_packets(
         self,
@@ -455,14 +460,6 @@ class TestOrgSettings(object):
             "locked": False,
         } in org_settings.packets
         assert len(org_settings.packets) == 2
-        # assert org_settings.packets == [
-        #     {"key": "org-securityTools-enable", "value": "true", "locked": False},
-        #     {
-        #         "key": "device_advancedExfiltrationDetection_enabled",
-        #         "value": "true",
-        #         "locked": False,
-        #     },
-        # ]
 
     @pytest.mark.parametrize(
         "param",
@@ -490,8 +487,9 @@ class TestOrgSettings(object):
     ):
         attr, key = param
         t_setting = deepcopy(TEST_T_SETTINGS_DICT)
+        settings = deepcopy(TEST_ORG_SETTINGS_DICT)
         t_setting["org-securityTools-enable"]["value"] = "false"
-        org_settings = OrgSettings(TEST_ORG_SETTINGS_DICT, t_setting)
+        org_settings = OrgSettings(settings, t_setting)
         setattr(org_settings, attr, True)
         packet_keys = [packet["key"] for packet in org_settings.packets]
         assert key in packet_keys
@@ -501,6 +499,67 @@ class TestOrgSettings(object):
                 assert packet["value"] == "true"
             if packet["key"] == key:
                 assert packet["value"] == "true"
+
+    @pytest.mark.parametrize(
+        "param",
+        [
+            param(
+                name="endpoint_monitoring_file_metadata_scan_enabled",
+                new_val=True,
+                expected_stored_val="true",
+                dict_location="device_fileForensics_scan_enabled",
+            ),
+            param(
+                name="endpoint_monitoring_file_metadata_ingest_scan_enabled",
+                new_val=True,
+                expected_stored_val="true",
+                dict_location="device_fileForensics_enqueue_scan_events_during_ingest",
+            ),
+            param(
+                name="endpoint_monitoring_background_priority_enabled",
+                new_val=True,
+                expected_stored_val="true",
+                dict_location="device_background_priority_enabled",
+            ),
+            param(
+                name="web_restore_enabled",
+                new_val=True,
+                expected_stored_val="true",
+                dict_location="device_webRestore_enabled",
+            ),
+        ],
+    )
+    def test_org_settings_set_independent_t_setting_properties(
+        self, param
+    ):
+        t_setting = deepcopy(TEST_T_SETTINGS_DICT)
+        settings = deepcopy(TEST_ORG_SETTINGS_DICT)
+        org_settings = OrgSettings(settings, t_setting)
+
+        setattr(org_settings, param.name, param.new_val)
+        packet_keys = [packet["key"] for packet in org_settings.packets]
+        assert param.dict_location in packet_keys
+        for packet in org_settings.packets:
+            if packet["key"] == param.dict_location:
+                assert packet["value"] == "true"
+
+        setattr(org_settings, param.name, False)
+        packet_keys = [packet["key"] for packet in org_settings.packets]
+        assert param.dict_location in packet_keys
+        for packet in org_settings.packets:
+            if packet["key"] == param.dict_location:
+                assert packet["value"] == "false"
+
+    def test_missing_t_settings_return_none_when_accessed_by_property(self):
+        assert self.org_settings.endpoint_monitoring_file_metadata_scan_enabled is None
+        assert (
+            self.org_settings.endpoint_monitoring_file_metadata_ingest_scan_enabled
+            is None
+        )
+        assert self.org_settings.endpoint_monitoring_background_priority_enabled is None
+        assert self.org_settings.endpoint_monitoring_custom_applications_win is None
+        assert self.org_settings.endpoint_monitoring_custom_applications_mac is None
+        assert self.org_settings.endpoint_monitoring_file_metadata_collection_exclusions is None
 
     @pytest.mark.parametrize(
         "param",
@@ -580,7 +639,8 @@ class TestOrgSettings(object):
         ],
     )
     def test_org_settings_setting_mutable_property_updates_dict_correctly_and_registers_changes(
-        self, param,
+        self,
+        param,
     ):
         setattr(self.org_settings, param.name, param.new_val)
         assert (
@@ -595,14 +655,18 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         deepcopy(TEST_ORG_SETTINGS_DICT), deepcopy(TEST_T_SETTINGS_DICT)
     )
 
-    def test_backup_set_destinations_property_returns_expected_value(self,):
+    def test_backup_set_destinations_property_returns_expected_value(
+        self,
+    ):
         expected_destinations = {"4200": "Dest42 <LOCKED>", "4300": "Dest43"}
         assert (
             self.org_settings.device_defaults.backup_sets[0].destinations
             == expected_destinations
         )
 
-    def test_backup_set_add_destination_when_destination_available(self,):
+    def test_backup_set_add_destination_when_destination_available(
+        self,
+    ):
         self.org_settings.device_defaults.backup_sets[0].add_destination(4400)
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
@@ -625,7 +689,9 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             == expected_destinations_dict
         )
 
-    def test_backup_set_add_destination_when_destination_not_available_raises(self,):
+    def test_backup_set_add_destination_when_destination_not_available_raises(
+        self,
+    ):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",
@@ -638,7 +704,9 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             == expected_destinations_property
         )
 
-    def test_backup_set_remove_destination_when_destination_available(self,):
+    def test_backup_set_remove_destination_when_destination_available(
+        self,
+    ):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",
@@ -659,7 +727,9 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             == expected_destinations_dict
         )
 
-    def test_backup_set_remove_destination_when_destination_not_available_raises(self,):
+    def test_backup_set_remove_destination_when_destination_not_available_raises(
+        self,
+    ):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",

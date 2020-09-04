@@ -12,7 +12,7 @@ from py42.exceptions import Py42Error
 
 class DeviceSettingsDefaults(UserDict, object):
     """Helper class for managing Org Device Default settings. Also acts as a base class
-     for `DeviceSettings` to manage individual device settings."""
+    for `DeviceSettings` to manage individual device settings."""
 
     def __init__(self, device_dict, org_settings):
         self.data = device_dict
@@ -266,7 +266,7 @@ class BackupSet(UserDict, object):
         return str(dict(self))
 
 
-class TrackedFileSelectionList(UserList):
+class TrackedFileSelectionList(UserList, object):
     """Helper class to track modifications to file selection lists."""
 
     def __init__(self, manager, name, _list, changes_dict):

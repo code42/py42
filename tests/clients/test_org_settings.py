@@ -349,7 +349,9 @@ def org_device_defaults_with_multiple_values():
 
 
 class TestOrgSettings(object):
-    org_settings = OrgSettings(TEST_ORG_SETTINGS_DICT, TEST_T_SETTINGS_DICT)
+    org_settings = OrgSettings(
+        deepcopy(TEST_ORG_SETTINGS_DICT), deepcopy(TEST_T_SETTINGS_DICT)
+    )
 
     @pytest.mark.parametrize(
         "param",

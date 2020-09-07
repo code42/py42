@@ -27,7 +27,6 @@ class FileEventQuery(BaseQuery):
     def __init__(self, *args, **kwargs):
         super(FileEventQuery, self).__init__(*args, **kwargs)
         self.sort_key = u"eventId"
-        self.page_number = 1
 
     def __str__(self):
         groups_string = u",".join(

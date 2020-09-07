@@ -32,17 +32,19 @@ class SavedSearchClient(BaseClient):
         uri = u"{}/{}".format(self._resource, search_id)
         return self._session.get(uri)
 
-    def get_query(self, search_id):
+    def get_query(self, search_id, pg_num=1, pg_size=10000):
         """Get the saved search in form of a query(`py42.sdk.queries.fileevents.file_event_query`).
 
         Args:
             search_id (str): Unique search Id of the saved search.
+            pg_num (int, optional): The consecutive group of results of size pg_size in the result set to return. Defaults to 1.
+            pg_size (int, optional): The maximum number of results to be returned. Defaults to 10,000.
         Returns:
             :class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`
         """
         response = self.get_by_id(search_id)
         search = response[u"searches"][0]
-        return FileEventQuery.from_dict(search)
+        return FileEventQuery.from_dict(search, page_number=pg_num, page_size=pg_size)
 
     def execute(self, search_id, pg_num=1, pg_size=10000):
         """
@@ -55,5 +57,6 @@ class SavedSearchClient(BaseClient):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        query = self.get_query(search_id)
+        query = self.get_query(search_id, pg_num=pg_num, pg_size=pg_size)
+        print(query)
         return self._file_event_client.search(query)

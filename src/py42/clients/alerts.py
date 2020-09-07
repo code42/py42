@@ -76,11 +76,11 @@ class AlertsClient(object):
         )
 
     def pending(self, alert_ids, reason=None):
-        """Reopens the resolved alerts with the given IDs.
+        """Set the alerts status to pending with the given IDs.
 
         Args:
-            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
-            reason (str, optional): The reason the alerts are reopened. Defaults to None.
+            alert_ids (iter[str]): The identification numbers for the alerts to set to in-progress status.
+            reason (str, optional): The reason the alerts are set to pending status. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -90,11 +90,11 @@ class AlertsClient(object):
         )
 
     def in_progress(self, alert_ids, reason=None):
-        """Reopens the resolved alerts with the given IDs.
+        """Sets the alerts status to in-progress with the given IDs.
 
         Args:
-            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
-            reason (str, optional): The reason the alerts are reopened. Defaults to None.
+            alert_ids (iter[str]): The identification numbers for the alerts to set to in-progress status.
+            reason (str, optional): The reason the alerts are set to in-progress status. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`

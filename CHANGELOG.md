@@ -14,6 +14,15 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
 
+### Changed
+- Updated Alert `resolve-alert` and `reopen-alert` endpoints to `update-state` endpoint.
+
+### Added
+
+- `sdk.alerts` methods to support new alert states `pending` and `in progress`:
+    `sdk.alerts.pending()`
+    `sdk.alerts.in_progress()`
+
 ## 1.8.1 - 2020-08-28
 
 ### Fixed

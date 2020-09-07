@@ -58,5 +58,4 @@ class SavedSearchClient(BaseClient):
             :class:`py42.response.Py42Response`
         """
         query = self.get_query(search_id, pg_num=pg_num, pg_size=pg_size)
-        print(query)
         return self._file_event_client.search(query)

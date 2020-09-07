@@ -74,6 +74,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
+- `py42.securitydata.savedsearches.get_query()` now accepts `pg_num` and `pg_size` arguments.
 - `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
 - `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
 - `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.

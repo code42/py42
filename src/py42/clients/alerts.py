@@ -1,3 +1,11 @@
+class AlertState(object):
+
+    IN_PROGRESS = "IN_PROGRESS"
+    OPEN = "OPEN"
+    PENDING = "PENDING"
+    RESOLVED = "RESOLVED"
+
+
 class AlertsClient(object):
     def __init__(self, alert_service, alert_rules_client):
         self._alert_service = alert_service
@@ -49,7 +57,9 @@ class AlertsClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.resolve(alert_ids, reason=reason)
+        return self._alert_service.update_state(
+            AlertState.RESOLVED, alert_ids, reason=reason
+        )
 
     def reopen(self, alert_ids, reason=None):
         """Reopens the resolved alerts with the given IDs.
@@ -61,4 +71,34 @@ class AlertsClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.reopen(alert_ids, reason=reason)
+        return self._alert_service.update_state(
+            AlertState.OPEN, alert_ids, reason=reason
+        )
+
+    def pending(self, alert_ids, reason=None):
+        """Reopens the resolved alerts with the given IDs.
+
+        Args:
+            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
+            reason (str, optional): The reason the alerts are reopened. Defaults to None.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        return self._alert_service.update_state(
+            AlertState.PENDING, alert_ids, reason=reason
+        )
+
+    def in_progress(self, alert_ids, reason=None):
+        """Reopens the resolved alerts with the given IDs.
+
+        Args:
+            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
+            reason (str, optional): The reason the alerts are reopened. Defaults to None.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        return self._alert_service.update_state(
+            AlertState.IN_PROGRESS, alert_ids, reason=reason
+        )

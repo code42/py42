@@ -194,7 +194,7 @@ class OrgService(BaseService):
             """
         return self.get_agent_state(org_id, u"fullDiskAccess")
 
-    def get_settings_manager(self, org_id):
+    def get_settings(self, org_id):
         """Gets setting data for an org and returns an `OrgSettingsManager` for the target org.
 
         Args:
@@ -208,7 +208,7 @@ class OrgService(BaseService):
         t_settings = self._connection.get(uri)
         return OrgSettings(org_settings.data, t_settings.data)
 
-    def update_org_settings(self, org_settings):
+    def update_settings(self, org_settings):
         """Updates an org's settings based on changes to the passed in `OrgSettings` instance.
 
         Args:

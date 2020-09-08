@@ -231,21 +231,6 @@ class DeviceService(BaseService):
         uri = u"/api/ComputerDeauthorization/{}".format(device_id)
         return self._connection.put(uri)
 
-    def get_settings(self, guid, keys=None):
-        """Gets settings of the device.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#DeviceSetting>`__
-
-        Args:
-            guid (str): The globally unique identifier of the device.
-            keys (str, optional): A comma separated list of device keys. Defaults to None.
-
-        Returns:
-            :class:`py42.response.Py42Response`: A response containing settings information.
-        """
-        uri = u"/api/v4/device-setting/view"
-        params = {u"guid": guid, u"keys": keys}
-        return self._connection.get(uri, params=params)
-
     def get_agent_state(self, guid, property_name):
         """Gets the agent state of the device.
             `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
@@ -273,19 +258,19 @@ class DeviceService(BaseService):
             """
         return self.get_agent_state(guid, u"fullDiskAccess")
 
-    def get_settings_manager(self, guid):
-        """Gets setting data for a device and returns a `DeviceSettingsManager` for the target device.
+    def get_settings(self, guid):
+        """Gets setting data for a device and returns a `DeviceSettings` object for the target device.
 
         Args:
             guid (int,str): The globally unique identifier of the device.
 
         Returns:
-            :class:`py42.clients._settings_managers.DeviceSettings`: A class to help manage device settings.
+            :class:`py42.clients.settings.device_settings.DeviceSettings`: A class to help manage device settings.
         """
         settings = self.get_by_guid(guid, incSettings=True)
         return DeviceSettings(settings.data)
 
-    def update_device_settings(self, device_settings):
+    def update_settings(self, device_settings):
         """Updates a device's settings based on changes to the passed in `DeviceSettings` instance.
 
         Args:

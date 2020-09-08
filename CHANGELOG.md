@@ -19,6 +19,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- Added additional user-adjustable setting for security events page size:
+    - `py42.settings.security_events_per_page`
+
+- Page pg_num for saved search queries (pg_num):
+    - `py42.securitydata.savedsearches.get_query()`
+    - `py42.securitydata.savedsearches.execute()`
+
 - Methods for calling the agent-state APIs:
     - `sdk.devices.get_agent_state()`
     - `sdk.devices.get_agent_full_disk_access_state()`
@@ -74,7 +81,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- `py42.securitydata.savedsearches.get_query()` now accepts `pg_num` and `pg_size` arguments.
 - `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
 - `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
 - `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.

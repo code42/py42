@@ -1,12 +1,13 @@
 from py42.sdk.queries.query_filter import FilterGroup
+from py42 import settings
 
 
 class BaseQuery(object):
     def __init__(self, *args, **kwargs):
         self._filter_group_list = list(args)
         self._group_clause = kwargs.get(u"group_clause", u"AND")
-        self.page_number = kwargs.get(u"page_number", 1)
-        self.page_size = kwargs.get(u"page_size", 10000)
+        self.page_number = kwargs.get(u"page_number") or 1
+        self.page_size = settings.security_events_per_page
         self.sort_direction = u"asc"
 
         # Override

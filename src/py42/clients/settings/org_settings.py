@@ -1,11 +1,11 @@
 from py42._compat import UserDict
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import TSettingProperty
-from py42.clients.settings.converters import str_to_bool
-from py42.clients.settings.converters import bool_to_str
-from py42.clients.settings.converters import comma_separated_to_list
-from py42.clients.settings.converters import to_comma_separated
-from py42.clients.settings.converters import to_list
+from py42.clients.settings._converters import bool_to_str
+from py42.clients.settings._converters import comma_separated_to_list
+from py42.clients.settings._converters import str_to_bool
+from py42.clients.settings._converters import to_comma_separated
+from py42.clients.settings._converters import to_list
 from py42.clients.settings.device_settings import DeviceSettingsDefaults
 
 
@@ -18,8 +18,7 @@ class OrgSettings(UserDict, object):
         self._packets = {}
         self.changes = {}
         self.device_defaults = DeviceSettingsDefaults(
-            self.data["deviceDefaults"],
-            org_settings=self,
+            self.data["deviceDefaults"], org_settings=self,
         )
 
     @property

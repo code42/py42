@@ -3,10 +3,10 @@ from py42._compat import UserDict
 from py42._compat import UserList
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import show_change
-from py42.clients.settings.converters import bool_to_str
-from py42.clients.settings.converters import days_to_minutes
-from py42.clients.settings.converters import minutes_to_days
-from py42.clients.settings.converters import str_to_bool
+from py42.clients.settings._converters import bool_to_str
+from py42.clients.settings._converters import days_to_minutes
+from py42.clients.settings._converters import minutes_to_days
+from py42.clients.settings._converters import str_to_bool
 from py42.exceptions import Py42Error
 
 

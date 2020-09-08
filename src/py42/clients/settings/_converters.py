@@ -14,7 +14,7 @@ def str_to_bool(value):
     if value.lower() == "false":
         return False
     else:
-        return value
+        raise ValueError("str_to_bool expects either 'true' or 'false'.")
 
 
 def to_list(value):

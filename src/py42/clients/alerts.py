@@ -1,9 +1,4 @@
-class AlertState(object):
-
-    IN_PROGRESS = "IN_PROGRESS"
-    OPEN = "OPEN"
-    PENDING = "PENDING"
-    RESOLVED = "RESOLVED"
+from py42.sdk.queries.alerts.filters import AlertState
 
 
 class AlertsClient(object):
@@ -50,6 +45,8 @@ class AlertsClient(object):
     def resolve(self, alert_ids, reason=None):
         """Resolves the alerts with the given IDs.
 
+        Deprecated. Support will be removed from version 2.0.0. Use `update_state` instead.
+
         Args:
             alert_ids (iter[str]): The identification numbers for the alerts to resolve.
             reason (str, optional): The reason the alerts are now resolved. Defaults to None.
@@ -58,11 +55,13 @@ class AlertsClient(object):
             :class:`py42.response.Py42Response`
         """
         return self._alert_service.update_state(
-            AlertState.RESOLVED, alert_ids, reason=reason
+            AlertState.DISMISSED, alert_ids, reason=reason
         )
 
     def reopen(self, alert_ids, reason=None):
         """Reopens the resolved alerts with the given IDs.
+
+        Deprecated. Support will be removed from version 2.0.0. Use `update_state` instead.
 
         Args:
             alert_ids (iter[str]): The identification numbers for the alerts to reopen.
@@ -75,30 +74,15 @@ class AlertsClient(object):
             AlertState.OPEN, alert_ids, reason=reason
         )
 
-    def pending(self, alert_ids, reason=None):
-        """Set the alerts status to pending with the given IDs.
+    def update_state(self, status, alert_ids, reason=None):
+        """Update status for given alert IDs.
 
         Args:
-            alert_ids (iter[str]): The identification numbers for the alerts to set to in-progress status.
-            reason (str, optional): The reason the alerts are set to pending status. Defaults to None.
+            status (str): Status to set from OPEN, RESOLVED, PENDING, IN_PROGRESS
+            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
+            reason (str, optional): The reason the alerts are reopened. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.update_state(
-            AlertState.PENDING, alert_ids, reason=reason
-        )
-
-    def in_progress(self, alert_ids, reason=None):
-        """Sets the alerts status to in-progress with the given IDs.
-
-        Args:
-            alert_ids (iter[str]): The identification numbers for the alerts to set to in-progress status.
-            reason (str, optional): The reason the alerts are set to in-progress status. Defaults to None.
-
-        Returns:
-            :class:`py42.response.Py42Response`
-        """
-        return self._alert_service.update_state(
-            AlertState.IN_PROGRESS, alert_ids, reason=reason
-        )
+        return self._alert_service.update_state(status, alert_ids, reason=reason)

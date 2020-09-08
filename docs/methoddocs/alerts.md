@@ -1,17 +1,3 @@
-# Alerts
-
-```eval_rst
-.. autoclass:: py42.clients.alerts.AlertsClient
-    :members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.sdk.queries.alerts.alert_query.AlertQuery
-    :members:
-    :show-inheritance:
-```
-
 ## Filter Classes
 
 The following classes construct filters for file event queries. Each filter class corresponds to an alert detail.
@@ -25,5 +11,20 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 .. automodule:: py42.sdk.queries.alerts.filters.alert_filter
     :members:
     :inherited-members:
+    :show-inheritance:
+```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.alerts.alert_query.AlertQuery
+    :members:
+    :show-inheritance:
+```
+
+
+# Alerts
+
+```eval_rst
+.. autoclass:: py42.clients.alerts.AlertsClient
+    :members:
     :show-inheritance:
 ```

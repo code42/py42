@@ -50,7 +50,7 @@ class TestAlertsClient(object):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.resolve(self._alert_ids)
         mock_alerts_service.update_state.assert_called_once_with(
-            "RESOLVED", self._alert_ids, reason=None
+            "RESOLVED", self._alert_ids, note=None
         )
 
     def test_alerts_client_calls_update_state_with_reopen_state_and_expected_value(
@@ -59,7 +59,7 @@ class TestAlertsClient(object):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.reopen(self._alert_ids)
         mock_alerts_service.update_state.assert_called_once_with(
-            "OPEN", self._alert_ids, reason=None
+            "OPEN", self._alert_ids, note=None
         )
 
     def test_alerts_client_calls_update_state_with_state_and_expected_value(
@@ -68,5 +68,5 @@ class TestAlertsClient(object):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.update_state("RESOLVED", self._alert_ids)
         mock_alerts_service.update_state.assert_called_once_with(
-            "RESOLVED", self._alert_ids, reason=None
+            "RESOLVED", self._alert_ids, note=None
         )

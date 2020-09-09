@@ -213,7 +213,7 @@ class TestAlertService(object):
             and post_data["note"] == ""
         )
 
-    def test_update_posts_expected_data(
+    def test_update_state_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
         alert_service = AlertService(mock_connection, user_context)
@@ -235,6 +235,22 @@ class TestAlertService(object):
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
         alert_service.update_state("RESOLVED", alert_ids, "some-tenant-id")
         assert mock_connection.post.call_args[0][0] == "/svc/api/v1/update-state"
+
+    def test_update_state_when_note_passed_none_posts_expected_data(
+        self, mock_connection, user_context, successful_post
+    ):
+        alert_service = AlertService(mock_connection, user_context)
+        alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
+        alert_service.update_state("RESOLVED", alert_ids, note=None)
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/update-state"
+        post_data = mock_connection.post.call_args[1]["json"]
+        assert (
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and post_data["alertIds"][0] == "ALERT_ID_1"
+            and post_data["alertIds"][1] == "ALERT_ID_2"
+            and post_data["state"] == "RESOLVED"
+            and post_data["note"] == ""
+        )
 
     def test_get_all_rules_posts_expected_data(self, mock_connection, user_context):
         alert_service = AlertService(mock_connection, user_context)

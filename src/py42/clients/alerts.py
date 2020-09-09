@@ -55,7 +55,7 @@ class AlertsClient(object):
             :class:`py42.response.Py42Response`
         """
         return self._alert_service.update_state(
-            AlertState.DISMISSED, alert_ids, reason=reason
+            AlertState.DISMISSED, alert_ids, note=reason
         )
 
     def reopen(self, alert_ids, reason=None):
@@ -70,19 +70,17 @@ class AlertsClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.update_state(
-            AlertState.OPEN, alert_ids, reason=reason
-        )
+        return self._alert_service.update_state(AlertState.OPEN, alert_ids, note=reason)
 
-    def update_state(self, status, alert_ids, reason=None):
+    def update_state(self, status, alert_ids, note=None):
         """Update status for given alert IDs.
 
         Args:
             status (str): Status to set from OPEN, RESOLVED, PENDING, IN_PROGRESS
             alert_ids (iter[str]): The identification numbers for the alerts to reopen.
-            reason (str, optional): The reason the alerts are reopened. Defaults to None.
+            note (str, optional): User note regarding the status. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.update_state(status, alert_ids, reason=reason)
+        return self._alert_service.update_state(status, alert_ids, note=note)

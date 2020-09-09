@@ -71,7 +71,7 @@ class TestSavedSearchService(object):
         file_event_client = FileEventService(mock_connection)
         saved_search_client = SavedSearchService(mock_connection, file_event_client)
         saved_search_client.execute(
-            u"test-id", pg_num=test_custom_page_num,
+            u"test-id", page_number=test_custom_page_num,
         )
         assert mock_connection.post.call_count == 1
         posted_data = json.loads(mock_connection.post.call_args[1]["data"])
@@ -94,7 +94,9 @@ class TestSavedSearchService(object):
         file_event_client = FileEventService(mock_connection)
         saved_search_client = SavedSearchService(mock_connection, file_event_client)
         saved_search_client.execute(
-            u"test-id", pg_num=test_custom_page_num, pg_size=test_custom_page_size,
+            u"test-id",
+            page_number=test_custom_page_num,
+            page_size=test_custom_page_size,
         )
         assert mock_connection.post.call_count == 1
         posted_data = json.loads(mock_connection.post.call_args[1]["data"])

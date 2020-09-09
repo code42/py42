@@ -416,17 +416,3 @@ def test_filter_group_when_changed_filter_clause_has_correct_json_representation
         '{"operator":"IS", "term":"term", "value":"value2"},'
         '{"operator":"IS", "term":"term", "value":"value3"}]}'
     )
-
-
-class FilterClassTest(object):
-    _private = "test"
-    CONSTANT1 = "value1"
-    CONSTANT2 = "value2"
-
-    def method(self):
-        pass
-
-
-def test_filter_attributes_returns_public_class_variables():
-    public_attributes = filter_attributes(FilterClassTest)
-    assert set(public_attributes) == {"value1", "value2"}

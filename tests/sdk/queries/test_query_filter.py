@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 
-from py42._compat import str
+from py42._internal.compat import str
 from py42.sdk.queries.query_filter import create_eq_filter_group
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_in_range_filter_group
@@ -14,6 +14,7 @@ from py42.sdk.queries.query_filter import create_query_filter
 from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import FilterGroup
 from py42.sdk.queries.query_filter import QueryFilter
+
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"

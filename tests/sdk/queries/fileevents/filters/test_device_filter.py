@@ -7,7 +7,7 @@ from tests.sdk.queries.conftest import IS_NOT
 from tests.sdk.queries.conftest import NOT_EXISTS
 from tests.sdk.queries.conftest import NOT_IN
 
-from py42._compat import str
+from py42._internal.compat import str
 from py42.sdk.queries.fileevents.filters.device_filter import DeviceSignedInUserName
 from py42.sdk.queries.fileevents.filters.device_filter import DeviceUsername
 from py42.sdk.queries.fileevents.filters.device_filter import OSHostname

@@ -6,10 +6,9 @@ from requests import HTTPError
 from requests import Response
 from requests import Session
 
-from py42.exceptions import Py42UnauthorizedError
+from py42._internal.auth_handling import AuthHandler
 from py42.response import Py42Response
 from py42.sdk.queries.query_filter import QueryFilter
-from py42.services._connection import Connection
 from py42.usercontext import UserContext
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"
@@ -45,16 +44,20 @@ VALUE_UNICODE = u"您已经发现了秘密信息"
 
 
 @pytest.fixture
-def http_error():
-    return HTTPError(REQUEST_EXCEPTION_MESSAGE)
-
-
-@pytest.fixture
 def successful_response(mocker):
     response = mocker.MagicMock(spec=Response)
     response.text = TEST_RESPONSE_CONTENT
     response.status_code = 200
     response.encoding = None
+    return response
+
+
+@pytest.fixture
+def py42_response(mocker):
+    response = mocker.MagicMock(spec=Py42Response)
+    response.status_code = 200
+    response.encoding = None
+    response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
     return response
 
 
@@ -69,22 +72,8 @@ def error_response(mocker, http_error):
 
 
 @pytest.fixture
-def unauthorized_response(mocker, http_error):
-    response = mocker.MagicMock(spec=Response)
-    response.text = TEST_RESPONSE_CONTENT
-    response.status_code = 401
-    response.encoding = None
-    response.raise_for_status.side_effect = [Py42UnauthorizedError(http_error)]
-    return response
-
-
-@pytest.fixture
-def py42_response(mocker):
-    response = mocker.MagicMock(spec=Py42Response)
-    response.status_code = 200
-    response.encoding = None
-    response.__getitem__ = lambda _, key: json.loads(response.text)[key]
-    return response
+def http_error():
+    return HTTPError(REQUEST_EXCEPTION_MESSAGE)
 
 
 @pytest.fixture
@@ -97,34 +86,31 @@ def traceback(mocker):
 @pytest.fixture
 def success_requests_session(mocker, successful_response):
     session = mocker.MagicMock(spec=Session)
-    session.headers = {}
-    session.send.return_value = successful_response
+    session.get.return_value = successful_response
+    session.request.return_value = successful_response
     return session
 
 
 @pytest.fixture
 def error_requests_session(mocker, error_response):
     session = mocker.MagicMock(spec=Session)
-    session.headers = {}
-    session.send.return_value = error_response.response
+    session.request.return_value = error_response.response
     return session
 
 
 @pytest.fixture
-def unauthorized_requests_session(mocker, unauthorized_response):
-    session = mocker.MagicMock(spec=Session)
-    session.headers = {}
-    session.send.return_value = unauthorized_response
-    return session
+def valid_auth_handler(mocker):
+    auth_handler = mocker.MagicMock(spec=AuthHandler)
+    auth_handler.response_indicates_unauthorized.return_value = False
+    return auth_handler
 
 
 @pytest.fixture
-def renewed_requests_session(mocker, unauthorized_response, successful_response):
-    session = mocker.MagicMock(spec=Session)
-    session.headers = {}
-    # unauthorized, then corrected
-    session.send.side_effect = [unauthorized_response, successful_response]
-    return session
+def renewing_auth_handler(mocker):
+    auth_handler = mocker.MagicMock(spec=AuthHandler)
+    # initialized, unauthorized, corrected
+    auth_handler.response_indicates_unauthorized.side_effect = [False, True, False]
+    return auth_handler
 
 
 @pytest.fixture
@@ -155,14 +141,16 @@ def unicode_query_filter():
 
 
 @pytest.fixture
-def mock_connection(mocker):
-    connection = mocker.MagicMock(spec=Connection)
-    connection.headers = {}
+def mock_session(mocker):
+    from py42._internal.session import Py42Session
 
-    return connection
+    session = mocker.MagicMock(spec=Py42Session)
+    session.headers = {}
+
+    return session
 
 
 @pytest.fixture
-def mock_successful_connection(mock_connection, successful_response):
-    mock_connection.get.return_value = successful_response
-    return mock_connection
+def mock_successful_session(mock_session, successful_response):
+    mock_session.get.return_value = successful_response
+    return mock_session

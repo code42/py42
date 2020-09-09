@@ -72,3 +72,12 @@ def format_dict(dict_, label=None):
     if label:
         return u"{} {}".format(label, indented_dict)
     return indented_dict
+
+
+def filter_attributes(cls):
+
+    return [
+        cls().__getattribute__(attr)
+        for attr in dir(cls)
+        if not callable(cls().__getattribute__(attr)) and not attr.startswith(u"_")
+    ]

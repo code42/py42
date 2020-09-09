@@ -1,4 +1,4 @@
-from py42.sdk.queries.query_filter import filter_attributes
+from py42.util import filter_attributes
 
 
 class RiskTags(object):

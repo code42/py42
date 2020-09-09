@@ -73,7 +73,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - Severity
 
 ### Changed
-
+- Refactored `filter_attributes()` from `query_filter.py` to `util.py`, and updated imports.
 - `py42.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.
 - `py42.detectionlists.high_risk_employee.add()` now raises `Py42UserAlreadyAddedError` when the user already on the list.
 - `py42.legalhold.add_to_matter()` now raises `Py42UserAlreadyAddedError` when the user is already on the matter.

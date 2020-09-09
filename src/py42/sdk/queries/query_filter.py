@@ -185,15 +185,6 @@ def create_within_the_last_filter_group(term, value):
     return create_filter_group(filter_list, u"AND")
 
 
-def filter_attributes(cls):
-
-    return [
-        cls().__getattribute__(attr)
-        for attr in dir(cls)
-        if not callable(cls().__getattribute__(attr)) and not attr.startswith(u"_")
-    ]
-
-
 class QueryFilterStringField(object):
     """Helper class for creating filters where the search value is a string."""
 

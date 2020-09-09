@@ -11,7 +11,7 @@ from py42.sdk.queries.query_filter import create_not_in_filter_group
 from py42.sdk.queries.query_filter import create_on_or_after_filter_group
 from py42.sdk.queries.query_filter import create_on_or_before_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
-from py42.sdk.queries.query_filter import filter_attributes
+from py42.util import filter_attributes
 from py42.sdk.queries.query_filter import FilterGroup
 from py42.sdk.queries.query_filter import QueryFilter
 

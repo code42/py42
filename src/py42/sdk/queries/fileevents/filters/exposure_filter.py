@@ -1,5 +1,5 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.query_filter import filter_attributes
+from py42.util import filter_attributes
 
 
 class ExposureType(FileEventFilterStringField):

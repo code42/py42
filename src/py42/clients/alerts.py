@@ -45,7 +45,7 @@ class AlertsClient(object):
     def resolve(self, alert_ids, reason=None):
         """Resolves the alerts with the given IDs.
 
-        Deprecated. Support will be removed from version 2.0.0. Use `update_state` instead.
+        Deprecated. Support will be removed from version 2.0.0. Use :meth:`~py42.clients.alerts.AlertClient.update_state()` instead.
 
         Args:
             alert_ids (iter[str]): The identification numbers for the alerts to resolve.
@@ -61,7 +61,7 @@ class AlertsClient(object):
     def reopen(self, alert_ids, reason=None):
         """Reopens the resolved alerts with the given IDs.
 
-        Deprecated. Support will be removed from version 2.0.0. Use `update_state` instead.
+        Deprecated. Support will be removed from version 2.0.0. Use :meth:`~py42.clients.alerts.AlertClient.update_state()` instead.
 
         Args:
             alert_ids (iter[str]): The identification numbers for the alerts to reopen.

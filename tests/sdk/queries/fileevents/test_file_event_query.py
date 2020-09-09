@@ -1,4 +1,4 @@
-from py42._internal.compat import str
+from py42._compat import str
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 
 

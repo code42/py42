@@ -14,9 +14,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
 
-### Changed
-- Updated Alert `resolve-alert` and `reopen-alert` endpoints to `update-state` endpoint.
-
 ### Added
 
 - `sdk.alerts.update_state()` method to update state, `sdk.alerts.resolve` and `sdk.alerts.reopen` are deprecated and will be removed from version 2.0

@@ -11,8 +11,8 @@ from py42.exceptions import Py42Error
 
 
 class DeviceSettingsDefaults(UserDict, object):
-    """Helper class for managing Org Device Default settings. Also acts as a base class
-    for `DeviceSettings` to manage individual device settings."""
+    """Class used for managing an Organization's Device Default settings. Also acts as a
+    base class for `DeviceSettings` to manage individual device settings."""
 
     def __init__(self, device_dict, org_settings):
         self.data = device_dict
@@ -31,6 +31,9 @@ class DeviceSettingsDefaults(UserDict, object):
 
     @property
     def available_destinations(self):
+        """Returns a dict of destinations available to be used by devices. Dict keys are
+        destination guids and values are destination names.
+        """
         return {d["guid"]: d["destinationName"] for d in self._destinations}
 
     warning_email_enabled = SettingProperty(
@@ -39,36 +42,51 @@ class DeviceSettingsDefaults(UserDict, object):
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
+    """Determines if backup "warning" threshold email alerts are configured for this device."""
+
     critical_email_enabled = SettingProperty(
         name="critical_email_enabled",
         location=["settings", "serviceBackupConfig", "severeEmailEnabled"],
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
+    """Determines if backup "critical" threshold email alerts are configured for this device."""
+
     warning_alert_days = SettingProperty(
         name="warning_alert_days",
         location=["settings", "serviceBackupConfig", "minutesUntilWarning"],
         get_converter=minutes_to_days,
         set_converter=days_to_minutes,
     )
+    """Determines the number of days a device can go without any backup activity before
+    "warning" alert threshold is passed.
+    """
+
     critical_alert_days = SettingProperty(
         name="critical_alert_days",
         location=["settings", "serviceBackupConfig", "minutesUntilSevere"],
         get_converter=minutes_to_days,
         set_converter=days_to_minutes,
     )
+    """Determines the number of days a device can go without any backup activity before
+    "warning" alert threshold is passed.
+    """
+
     backup_status_email_enabled = SettingProperty(
         name="backup_status_email_enabled",
         location=["settings", "serviceBackupConfig", "backupStatusEmailEnabled"],
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
+    """Determines if the regularly scheduled backup status email is enabled."""
+
     backup_status_email_frequency_days = SettingProperty(
         name="backup_status_email_frequency_days",
         location=["settings", "serviceBackupConfig", "backupStatusEmailFreqInMinutes"],
         get_converter=minutes_to_days,
         set_converter=days_to_minutes,
     )
+    """Determines the frequency of the regularly scheduled backup status email."""
 
     def __repr__(self):
         return "<DeviceSettingsDefaults: org_id: {}>".format(self._org_settings.org_id)
@@ -87,32 +105,43 @@ class DeviceSettings(DeviceSettingsDefaults):
                 "backupConfig"
             ]["backupSets"]
         ]
+        """List of :class:`BackupSet` objects used to manage this device's backup set configurations."""
 
     @property
     def computer_id(self):
+        """Identifier of this device. Read-only."""
         return self.data["computerId"]
 
     @property
     def guid(self):
+        """Globally unique identifier of this device. Read-only."""
         return self.data["guid"]
 
     @property
     def org_id(self):
+        """Identifier of the organization this device belongs to. Read-only."""
         return self.data["orgId"]
 
     @property
     def user_id(self):
+        """Identifier of the user this device belongs to. Read-only."""
         return self.data["userId"]
 
     @property
     def version(self):
+        """Latest reported Code42 client version number for this device. Read-only."""
         return self.data["version"]
 
     name = SettingProperty(name="name", location=["name"])
+    """Name for this device."""
+
     external_reference = SettingProperty(
         name="external_reference", location=["computerExtRef"]
     )
+    """External reference field for this device."""
+
     notes = SettingProperty(name="notes", location=["notes"])
+    """Notes field for this device."""
 
     def __repr__(self):
         return "<DeviceSettings: guid: {}, name: {}>".format(
@@ -142,6 +171,10 @@ class BackupSet(UserDict, object):
 
     @property
     def included_files(self):
+        """Returns the list of files/folders included in the backup selection. Items can
+        be added/removed from this list via normal list methods, or assigning a new list
+        of files to this attribute to replace the existing one.
+        """
         return self._included_files
 
     @included_files.setter
@@ -154,6 +187,10 @@ class BackupSet(UserDict, object):
 
     @property
     def excluded_files(self):
+        """Returns the list of files/folders excluded from the backup selection. Items can
+        be added/removed from this list via normal list methods, or assigning a new list
+        of files to this attribute to replace the existing one.
+        """
         return self._excluded_files
 
     @excluded_files.setter
@@ -166,6 +203,11 @@ class BackupSet(UserDict, object):
 
     @property
     def filename_exclusions(self):
+        """Returns the list of regex patterns used to exclude file paths from the backup
+        selection. Items can be added/removed from this list via normal list methods,
+        or assigning a new list of patterns to this attribute to replace the existing
+        one.
+        """
         return self._filename_exclusions
 
     @filename_exclusions.setter
@@ -178,6 +220,9 @@ class BackupSet(UserDict, object):
 
     @property
     def destinations(self):
+        """Returns a dict of the destinations used for backup for the backup set. Dict
+        keys are the destination guids, values are the destination names.
+        """
         destination_dict = {}
         for d in self.data["destinations"]:
             guid = d["@id"]
@@ -188,6 +233,13 @@ class BackupSet(UserDict, object):
         return destination_dict
 
     def add_destination(self, destination_guid):
+        """Adds a destination to be used by this backup set. Raises an exception if
+        the supplied destination guid is not available to the parent device/org.
+
+        Args:
+            destination_guid (str, int): The globally unique identifier of the
+            destination to be added.
+        """
         destination_guid = str(destination_guid)
         if destination_guid in self._manager.available_destinations:
             if destination_guid not in self.destinations:
@@ -201,6 +253,12 @@ class BackupSet(UserDict, object):
             )
 
     def remove_destination(self, destination_guid):
+        """Removes a destination from use by this backup set.
+
+        Args:
+            destination_guid (str, int): The globally unique identifier of the
+            destination to be removed.
+        """
         destination_guid = str(destination_guid)
         self._raise_if_invalid_destination(destination_guid)
         if destination_guid in self.destinations:
@@ -212,6 +270,10 @@ class BackupSet(UserDict, object):
             )
 
     def lock_destination(self, destination_guid):
+        """Locks an in-use destination, disallowing the device owner from removing this
+        destination from their backup. Raises an exception if the supplied destination
+        guid is not in use on this backup set, or not available to the parent device/org.
+        """
         destination_guid = str(destination_guid)
         if destination_guid in self._manager.available_destinations:
             if destination_guid not in self.destinations:
@@ -229,6 +291,10 @@ class BackupSet(UserDict, object):
             )
 
     def unlock_destination(self, destination_guid):
+        """Unlocks an in-use destination, allowing the device owner to remove this
+        destination from their backup. Raises an exception if the supplied destination
+        guid is not in use on this backup set, or not available to the parent device/org.
+        """
         destination_guid = str(destination_guid)
         self._raise_if_invalid_destination(destination_guid)
         if destination_guid not in self.destinations:

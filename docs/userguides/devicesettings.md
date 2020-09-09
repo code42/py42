@@ -61,3 +61,34 @@ with the server response:
 >>> sdk.devices.update_settings(device_settings)
 <Py42Response [status=200, data={'active': True, 'address': '192.168.74.144:4247', 'alertState': 0, 'alertStates': ['OK'], ...}]>
 ```
+
+## Advanced Usage
+
+Because `DeviceSettings` is a subclass of `UserDict` with added attributes/methods to help easily access/modify setting values,
+the underlying dict that ultimately gets posted to the server is stored on the `.data` attribute of `DeviceSettings` instances,
+and a `DeviceSettings` object otherwise behaves like a normal dict.
+
+If there is a setting that is not yet implemented by py42 as a helper method/attribute, those values can be manually managed
+by treating the `DeviceSettings` object as a normal dict.
+
+For example, setting the "backup status email frequency" value to only send every 10 days, via the helper attribute:
+
+```python
+>>> device_settings.backup_status_email_frequency_days = 10
+```
+
+And doing the same thing by setting the value manually on the underlying dict:
+
+```python
+>>> device_settings["settings"]["serviceBackupConfig"]["backupStatusEmailFreqInMinutes"] = "14400"
+```
+
+The benefits of the py42 helper attributes/methods is that the values mimic what the Console UI uses (in this case days
+vs the minutes expected by the API endpoint), so you don't have to worry about doing conversions yourself. But since
+the underlying dict is accessible, you aren't constrained to only what py42 has so far implemented.
+
+```eval_rst
+.. warning::
+    When manually changing values on the underlying dict, those aren't registered in the `.changes` property and thus
+    won't be captured in debug logs by the `sdk.devices.update_settings()` method.
+```

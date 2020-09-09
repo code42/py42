@@ -126,16 +126,52 @@ class BackupSet(UserDict, object):
         self.data = backup_set_dict
         includes, excludes = self._extract_file_selection_lists()
         regex_excludes = self._extract_regex_exclusions()
-        self.included_files = TrackedFileSelectionList(
+        self._included_files = TrackedFileSelectionList(
             self, "included_files", includes, self._changes
         )
-        self.excluded_files = TrackedFileSelectionList(
+        self._excluded_files = TrackedFileSelectionList(
             self, "excluded_files", excludes, self._changes
         )
-        self.filename_exclusions = TrackedFileSelectionList(
+        self._filename_exclusions = TrackedFileSelectionList(
             self, "filename_exclusions", regex_excludes, self._changes
         )
         self._orig_destinations = self.destinations
+
+    @property
+    def included_files(self):
+        return self._included_files
+
+    @included_files.setter
+    def included_files(self, value):
+        if isinstance(value, (list, tuple)):
+            self._included_files.clear()
+            self._included_files.extend(value)
+        else:
+            raise AttributeError("included files must be a list/tuple.")
+
+    @property
+    def excluded_files(self):
+        return self._excluded_files
+
+    @excluded_files.setter
+    def excluded_files(self, value):
+        if isinstance(value, (list, tuple)):
+            self._excluded_files.clear()
+            self._excluded_files.extend(value)
+        else:
+            raise AttributeError("excluded files must be a list/tuple.")
+
+    @property
+    def filename_exclusions(self):
+        return self._filename_exclusions
+
+    @filename_exclusions.setter
+    def filename_exclusions(self, value):
+        if isinstance(value, (list, tuple)):
+            self._filename_exclusions.clear()
+            self._filename_exclusions.extend(value)
+        else:
+            raise AttributeError("filename exclusions must be a list/tuple.")
 
     @property
     def destinations(self):
@@ -220,15 +256,15 @@ class BackupSet(UserDict, object):
         return includes, excludes
 
     def _build_file_selection(self):
-        if not self.included_files:
+        if not self._included_files:
             self.data["backupPaths"]["pathset"] = {
                 "paths": {"@cleared": "true", "@os": "Linux", "path": []}
             }
             return
         pathset = []
-        for path in self.included_files:
+        for path in self._included_files:
             pathset.append({"@include": path, "@und": "false"})
-        for path in self.excluded_files:
+        for path in self._excluded_files:
             pathset.append({"@exclude": path, "@und": "false"})
         self.data["backupPaths"]["pathset"] = {
             "paths": {"@os": "Linux", "path": pathset, "@cleared": "false"}
@@ -245,7 +281,7 @@ class BackupSet(UserDict, object):
 
     def _build_regex_exclusions(self):
         patterns = []
-        for regex in self.filename_exclusions:
+        for regex in self._filename_exclusions:
             patterns.append({"@regex": regex})
         user_exclude_dict = {
             "patternList": {

@@ -44,7 +44,7 @@ property returns a list of `BackupSet` wrapper classes that help manage backup c
 [<BackupSet: id: 1, name: 'Primary - Backup Set'>, <BackupSet: id: 298010138, name: 'Secondary (large files) - Backup Set'>]
 ```
 
-See the [Configuring Backup Sets](#backupsets) guide for details on managing backup set settings.
+See the [Configuring Backup Sets](backupsets.md) guide for details on managing backup set settings.
 
 
 For convenience and logging purposes, all changes are tracked in the `.changes` property of the `DeviceSettings` objects.

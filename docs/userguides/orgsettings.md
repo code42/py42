@@ -28,7 +28,7 @@ And to change settings, in most cases you can just assign new values to the appr
 >>> org_settings.name = "Admin Production Org"
 ```
 
-Configuring device backup defaults for an org is very similar to [configuring backup settings for an individual device](#devicesettings),
+Configuring device backup defaults for an org is very similar to [configuring backup settings for an individual device](devicesettings.md),
 the `OrgSetting` object has a `.device_defaults` property that contains a `DeviceSettingsDefaults` object providing
 convenience attributes/methods for configuring defaults for all devices in the org.
 
@@ -48,7 +48,7 @@ wrapper classes for each set configured for the org:
 [<BackupSet: id: 1, name: 'Production Environment - Backup Set'>]
 ```
 
-See the [Configuring Backup Sets](#backupsets) guide for details on managing backup set settings.
+See the [Configuring Backup Sets](backupsets.md) guide for details on managing backup set settings.
 
 Once you've made all the desired changes to an `OrgSettings` object, you can post the changes by passing it to the `sdk.orgs.update_settings()` method.
 

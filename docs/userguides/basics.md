@@ -72,7 +72,11 @@ print(response)  # JSON as Dictionary - same as print(response.text)
 print(response.raw_text)  # Raw API response
 print(response.status_code)  # 200
 cloud_usernames = response["cloudUsernames"]
-print(cloud_usernames)
+# if the response might not contain the property you're looking for,
+# check to see if it exists with data.get
+cloud_usernames = response.data.get("cloudUsernames")
+if cloud_usernames:
+    print(cloud_usernames)
 ```
 
 ```eval_rst

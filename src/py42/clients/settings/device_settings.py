@@ -70,6 +70,9 @@ class DeviceSettingsDefaults(UserDict, object):
         set_converter=days_to_minutes,
     )
 
+    def __repr__(self):
+        return "<DeviceSettingsDefaults: org_id: {}>".format(self._org_settings.org_id)
+
 
 class DeviceSettings(DeviceSettingsDefaults):
     """Class used to manage an individual device's settings."""

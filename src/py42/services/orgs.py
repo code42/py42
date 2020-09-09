@@ -7,7 +7,7 @@ from py42.services import BaseService
 from py42.services.util import get_all_pages
 
 OrgSettingsResponse = namedtuple(
-    "OrgSettingsResponse", ["error", "settings_response", "org_settings_response"]
+    "OrgSettingsResponse", ["error", "org_response", "org_settings_response"]
 )
 
 
@@ -219,7 +219,7 @@ class OrgService(BaseService):
         """
         org_id = org_settings.org_id
         error = False
-        org_settings_response = settings_response = None
+        org_settings_response = org_response = None
 
         if org_settings.packets:
             uri = u"/api/OrgSetting/{}".format(org_id)
@@ -233,12 +233,12 @@ class OrgService(BaseService):
         if org_settings.changes:
             uri = "/api/Org/{}".format(org_id)
             try:
-                settings_response = self._connection.put(uri, json=org_settings.data)
+                org_response = self._connection.put(uri, json=org_settings.data)
             except Py42Error as ex:
                 error = True
-                settings_response = ex
+                org_response = ex
         return OrgSettingsResponse(
             error=error,
-            settings_response=settings_response,
+            org_response=org_response,
             org_settings_response=org_settings_response,
         )

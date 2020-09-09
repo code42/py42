@@ -1,4 +1,5 @@
 from py42._compat import UserDict
+from py42._compat import str
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import TSettingProperty
 from py42.clients.settings._converters import bool_to_str
@@ -213,3 +214,11 @@ class OrgSettings(UserDict, object):
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
+
+    def __repr__(self):
+        return "<OrgSettings: org_id: {}, name: '{}'>".format(
+            self.data["orgId"], self.data["orgName"]
+        )
+
+    def __str__(self):
+        return str(self.data)

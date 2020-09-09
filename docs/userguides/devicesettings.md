@@ -44,52 +44,14 @@ property returns a list of `BackupSet` wrapper classes that help manage backup c
 [<BackupSet: id: 1, name: 'Primary - Backup Set'>, <BackupSet: id: 298010138, name: 'Secondary (large files) - Backup Set'>]
 ```
 
-You can view or update the existing backup settings for each set by accessing and assigning to the `BackupSet`s attributes, or using
-the other methods to update values:
+See the [Configuring Backup Sets](#backupsets) guide for details on managing backup set settings.
 
-View/update destinations:
-
-```python
->>> primary_bs = device_settings.backup_sets[0]
->>> primary_bs.destinations
-{'43': 'PROe Cloud, US <LOCKED>'}
->>>
->>> primary_bs.add_destination(587738803578339329)
->>> primary_bs.destinations
-{'43': 'PROe Cloud, US <LOCKED>', '632540230984925185': 'PROe Cloud, US - West'}
-```
-
-View/update backup file selection:
-
-```python
->>> primary_bs.included_files
-['C:/Users/Bob/']
->>> primary_bs.excluded_files
-[]
->>>
->>> primary_bs.included_files.append("D:/")
->>> primary_bs.excluded_files.append("C:/Users/Bob/Downloads")
-```
-
-Or you can replace them with a whole new list:
-
-```python
->>> primary_bs.included_files = ["C:/Users/", "D:/"]
-```
-
-View/update filename exclusion patterns:
-
-```python
->>> primary_bs.filename_exclusions
-['.*/Photos/']
->>> primart_bs.filename_exclusions.append(".*/Pictures/")
-```
 
 For convenience and logging purposes, all changes are tracked in the `.changes` property of the `DeviceSettings` objects.
 
 ```python
 >>> device_settings.changes
-{'included_files': "['C:/Users/Bob/'] -> ['C:/Users', 'D:/']",'destinations': "{'43': 'PROe Cloud, US <LOCKED>'} -> {'43': 'PROe Cloud, US <LOCKED>', '632540230984925185': 'PROe Cloud, US - West'}"}
+{'destinations': "{'43': 'PROe Cloud, US <LOCKED>'} -> {'43': 'PROe Cloud, US <LOCKED>', '632540230984925185': 'PROe Cloud, US - West'}"}
 ```
 
 Once you've made all the desired changes to a `DeviceSettings` object, you can post the changes by passing it to the `sdk.devices.update_settings` method, which returns a `Py42Response` object

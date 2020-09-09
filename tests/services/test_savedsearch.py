@@ -1,5 +1,6 @@
 import json
 
+from py42 import settings
 from py42.services.fileevent import FileEventService
 from py42.services.savedsearch import SavedSearchService
 
@@ -56,6 +57,51 @@ class TestSavedSearchService(object):
         assert (
             posted_data["pgSize"] == 10000
             and posted_data[u"pgNum"] == 1
+            and posted_data[u"groups"] == []
+        )
+
+    def test_execute_calls_post_with_expected_setting_page_param(
+        self, mock_connection, py42_response
+    ):
+        test_custom_page_num = 2
+        settings.security_events_per_page = 5000
+
+        py42_response.text = SAVED_SEARCH_GET_RESPONSE
+        mock_connection.get.return_value = py42_response
+        file_event_client = FileEventService(mock_connection)
+        saved_search_client = SavedSearchService(mock_connection, file_event_client)
+        saved_search_client.execute(
+            u"test-id", pg_num=test_custom_page_num,
+        )
+        assert mock_connection.post.call_count == 1
+        posted_data = json.loads(mock_connection.post.call_args[1]["data"])
+        settings.security_events_per_page = 10000
+        assert (
+            posted_data[u"pgSize"] == 5000
+            and posted_data[u"pgNum"] == 2
+            and posted_data[u"groups"] == []
+        )
+
+    def test_execute_calls_post_with_expected_page_params(
+        self, mock_connection, py42_response
+    ):
+        test_custom_page_num = 2
+        settings.security_events_per_page = 6000
+        test_custom_page_size = 5000
+
+        py42_response.text = SAVED_SEARCH_GET_RESPONSE
+        mock_connection.get.return_value = py42_response
+        file_event_client = FileEventService(mock_connection)
+        saved_search_client = SavedSearchService(mock_connection, file_event_client)
+        saved_search_client.execute(
+            u"test-id", pg_num=test_custom_page_num, pg_size=test_custom_page_size,
+        )
+        assert mock_connection.post.call_count == 1
+        posted_data = json.loads(mock_connection.post.call_args[1]["data"])
+        settings.security_events_per_page = 10000
+        assert (
+            posted_data[u"pgSize"] == 5000
+            and posted_data[u"pgNum"] == 2
             and posted_data[u"groups"] == []
         )
 

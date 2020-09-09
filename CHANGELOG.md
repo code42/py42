@@ -38,7 +38,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Added additional user-adjustable setting for security events page size:
     - `py42.settings.security_events_per_page`
 
-- Page pg_num and pg_size parameters for saved search queries:
+- Page page_number and page_size parameters for saved search queries:
     - `py42.securitydata.savedsearches.get_query()`
     - `py42.securitydata.savedsearches.execute()`
 

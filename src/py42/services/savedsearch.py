@@ -37,8 +37,8 @@ class SavedSearchService(BaseService):
 
         Args:
             search_id (str): Unique search Id of the saved search.
-            page_number (int, optional): The consecutive group of results of size pg_size in the result set to return. Defaults to 1.
-            page_size (int, optional): The maximum number of results to be returned. Defaults to 10,000.
+            page_number (int, optional): The consecutive group of results of size page_size in the result set to return. Defaults to None.
+            page_size (int, optional): The maximum number of results to be returned. Defaults to None.
         Returns:
             :class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`
         """
@@ -54,8 +54,8 @@ class SavedSearchService(BaseService):
 
         Args:
             search_id (str): Unique search Id of the saved search.
-            page_number (int, optional): The consecutive group of results of size pg_size in the result set to return. Defaults to 1.
-            page_size (int, optional): The maximum number of results to be returned. Defaults to 10,000.
+            page_number (int, optional): The consecutive group of results of size page_size in the result set to return. Defaults to None.
+            page_size (int, optional): The maximum number of results to be returned. Defaults to None.
         Returns:
             :class:`py42.response.Py42Response`
         """

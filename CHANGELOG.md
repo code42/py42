@@ -14,6 +14,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
 
+### Added
+
+- `sdk.alerts.update_state()` method to update state.
+
 ## 1.8.1 - 2020-08-28
 
 ### Fixed

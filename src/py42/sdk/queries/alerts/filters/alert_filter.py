@@ -171,12 +171,16 @@ class AlertState(QueryFilterStringField):
     Available options are:
         - :attr:`AlertState.OPEN`
         - :attr:`AlertState.DISMISSED`
+        - :attr:`AlertState.PENDING`
+        - :attr:`AlertState.IN_PROGRESS`
     """
 
     _term = u"state"
 
     OPEN = u"OPEN"
     DISMISSED = u"RESOLVED"
+    PENDING = u"PENDING"
+    IN_PROGRESS = u"IN_PROGRESS"
 
     @staticmethod
     def choices():

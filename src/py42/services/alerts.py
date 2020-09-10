@@ -31,21 +31,18 @@ class AlertService(BaseService):
         results = self._connection.post(uri, json=data)
         return _convert_observation_json_strings_to_objects(results)
 
-    def resolve(self, alert_ids, reason=None):
+    def update_state(self, state, alert_ids, note=""):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
+        note = note or ""
         tenant_id = self._user_context.get_current_tenant_id()
-        reason = reason or u""
-        uri = self._uri_prefix.format(u"resolve-alert")
-        data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
-        return self._connection.post(uri, json=data)
-
-    def reopen(self, alert_ids, reason=None):
-        if not isinstance(alert_ids, (list, tuple)):
-            alert_ids = [alert_ids]
-        tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format(u"reopen-alert")
-        data = {u"tenantId": tenant_id, u"alertIds": alert_ids, u"reason": reason}
+        uri = self._uri_prefix.format(u"update-state")
+        data = {
+            u"tenantId": tenant_id,
+            u"alertIds": alert_ids,
+            u"note": note,
+            u"state": state,
+        }
         return self._connection.post(uri, json=data)
 
     def _add_tenant_id_if_missing(self, query):

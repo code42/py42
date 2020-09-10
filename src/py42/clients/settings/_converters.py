@@ -44,5 +44,19 @@ def minutes_to_days(minutes):
     return int(minutes / 1440)
 
 
+def bytes_to_gb(bytes):
+    gb = bytes / 1000 ** 3
+    if gb.is_integer():
+        return int(gb)
+    return gb
+
+
+def gb_to_bytes(gb):
+    try:
+        return gb * 1000 ** 3
+    except ValueError:
+        raise AttributeError("value must be numeric.")
+
+
 def no_conversion(x):
     return x

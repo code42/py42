@@ -58,7 +58,7 @@ class DeviceSettingsDefaults(UserDict, object):
         get_converter=minutes_to_days,
         set_converter=days_to_minutes,
     )
-    """Determines the number of days a device can go without any backup activity before
+    """The number of days a device can go without any backup activity before
     "warning" alert threshold is passed.
     """
 
@@ -68,8 +68,8 @@ class DeviceSettingsDefaults(UserDict, object):
         get_converter=minutes_to_days,
         set_converter=days_to_minutes,
     )
-    """Determines the number of days a device can go without any backup activity before
-    "warning" alert threshold is passed.
+    """The number of days a device can go without any backup activity before "warning"
+    alert threshold is passed.
     """
 
     backup_status_email_enabled = SettingProperty(

@@ -36,19 +36,21 @@ def comma_separated_to_list(value):
 
 
 def days_to_minutes(days):
-    return str(int(float(days) * 1440))
+    minutes = int(float(days) * 1440)
+    return str(minutes)
 
 
 def minutes_to_days(minutes):
     minutes = int(minutes)
-    return int(minutes / 1440)
+    days = minutes / 1440
+    if isinstance(days, float) and days.is_integer():
+        return int(days)
+    return days
 
 
 def bytes_to_gb(bytes):
     gb = bytes / 1000 ** 3
-    if isinstance(gb, int):
-        return gb
-    if gb.is_integer():
+    if isinstance(gb, float) and gb.is_integer():
         return int(gb)
     return gb
 

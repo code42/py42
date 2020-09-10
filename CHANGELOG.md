@@ -16,7 +16,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- `sdk.alerts.update_state()` method to update state, `sdk.alerts.resolve` and `sdk.alerts.reopen` are deprecated and will be removed from version 2.0
+- `sdk.alerts.update_state()` method to update state.
 
 ## 1.8.1 - 2020-08-28
 

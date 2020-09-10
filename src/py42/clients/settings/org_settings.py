@@ -297,10 +297,20 @@ class OrgSettings(UserDict, object):
         "file_metadata_collection_exclusions",
         "device_fileForensics_fileExclusions_org",
     )
-    """List of file types and file paths to exclude from file metadata collection.
+    """File types and file paths to exclude from file metadata collection.
 
     See `Support Documentation <https://support.code42.com/Administrator/Cloud/Configuring/File_Metadata_Collection_exclusions>`__
-    for more details.
+    for more details on the expected shape of the body this setting expects.
+    """
+
+    endpoint_monitoring_file_exfiltration_detection_exclusions = TSettingProperty(
+        "file_exfiltration_detection_exclusions",
+        "org_securityTools_detection_monitoring_exclusions",
+    )
+    """File types and file paths to exclude from file exfiltration detection.
+
+    See `Support Documentation <https://support.code42.com/Administrator/Cloud/Configuring/Endpoint_monitoring#ExcludePaths>`__
+    for more details on the expected shape of the body this setting expects.
     """
 
     web_restore_enabled = TSettingProperty(

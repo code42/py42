@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from py42.util import filter_attributes
 import py42.util as util
+from py42.util import filter_attributes
 
 
 def test_convert_timestamp_to_str_returns_expected_str():

@@ -1,6 +1,6 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import QueryFilterBooleanField
+from py42.util import get_attribute_keys_from_class
 
 
 class Actor(FileEventFilterStringField):
@@ -53,4 +53,4 @@ class SharingTypeAdded(FileEventFilterStringField):
 
     @staticmethod
     def choices():
-        return filter_attributes(SharingTypeAdded)
+        return get_attribute_keys_from_class(SharingTypeAdded)

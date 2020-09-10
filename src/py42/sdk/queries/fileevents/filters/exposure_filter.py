@@ -1,5 +1,5 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.query_filter import filter_attributes
+from py42.util import get_attribute_keys_from_class
 
 
 class ExposureType(FileEventFilterStringField):
@@ -26,7 +26,7 @@ class ExposureType(FileEventFilterStringField):
 
     @staticmethod
     def choices():
-        return filter_attributes(ExposureType)
+        return get_attribute_keys_from_class(ExposureType)
 
 
 class ProcessName(FileEventFilterStringField):
@@ -121,7 +121,7 @@ class SyncDestination(FileEventFilterStringField):
 
     @staticmethod
     def choices():
-        return filter_attributes(SyncDestination)
+        return get_attribute_keys_from_class(SyncDestination)
 
 
 class TabURL(FileEventFilterStringField):

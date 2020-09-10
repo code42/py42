@@ -1,8 +1,8 @@
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
-from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import QueryFilterStringField
 from py42.sdk.queries.query_filter import QueryFilterTimestampField
+from py42.util import get_attribute_keys_from_class
 
 
 def create_contains_filter_group(term, value):
@@ -116,7 +116,7 @@ class RuleSource(QueryFilterStringField):
 
     @staticmethod
     def choices():
-        return filter_attributes(RuleSource)
+        return get_attribute_keys_from_class(RuleSource)
 
 
 class RuleType(QueryFilterStringField):
@@ -136,7 +136,7 @@ class RuleType(QueryFilterStringField):
 
     @staticmethod
     def choices():
-        return filter_attributes(RuleType)
+        return get_attribute_keys_from_class(RuleType)
 
 
 class Description(AlertQueryFilterStringField):
@@ -162,7 +162,7 @@ class Severity(QueryFilterStringField):
 
     @staticmethod
     def choices():
-        return filter_attributes(Severity)
+        return get_attribute_keys_from_class(Severity)
 
 
 class AlertState(QueryFilterStringField):
@@ -180,4 +180,4 @@ class AlertState(QueryFilterStringField):
 
     @staticmethod
     def choices():
-        return filter_attributes(AlertState)
+        return get_attribute_keys_from_class(AlertState)

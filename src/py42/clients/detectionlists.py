@@ -1,4 +1,4 @@
-from py42.sdk.queries.query_filter import filter_attributes
+from py42.util import get_attribute_keys_from_class
 
 
 class RiskTags(object):
@@ -15,7 +15,7 @@ class RiskTags(object):
 
     @staticmethod
     def choices():
-        return filter_attributes(RiskTags)
+        return get_attribute_keys_from_class(RiskTags)
 
 
 class DetectionListsClient(object):

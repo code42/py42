@@ -1,5 +1,5 @@
-from py42._compat import UserDict
 from py42._compat import str
+from py42._compat import UserDict
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import TSettingProperty
 from py42.clients.settings._converters import bool_to_str
@@ -7,11 +7,13 @@ from py42.clients.settings._converters import comma_separated_to_list
 from py42.clients.settings._converters import str_to_bool
 from py42.clients.settings._converters import to_comma_separated
 from py42.clients.settings._converters import to_list
+from py42.clients.settings._converters import gb_to_bytes
+from py42.clients.settings._converters import bytes_to_gb
 from py42.clients.settings.device_settings import DeviceSettingsDefaults
 
 
 class OrgSettings(UserDict, object):
-    """Helper class for managing Organization settings."""
+    """Class used to manage an Organization's settings."""
 
     def __init__(self, org_settings, t_settings):
         self.data = org_settings
@@ -24,48 +26,90 @@ class OrgSettings(UserDict, object):
 
     @property
     def packets(self):
+        """The setting packets for any modifications to be posted to the /api/OrgSettings
+        endpoint.
+        """
         return list(self._packets.values())
 
     @property
     def org_id(self):
+        """The identifier for the org."""
         return self.data["orgId"]
 
     @property
     def registration_key(self):
+        """The registration key for the org."""
         return self.data["registrationKey"]
 
     org_name = SettingProperty("org_name", ["orgName"])
+    """Name for this Org."""
+
     external_reference = SettingProperty("external_reference", ["orgExtRef"])
+    """External reference field for this Org."""
+
     notes = SettingProperty("notes", ["notes"])
+    """Notes field for this Org."""
+
     archive_hold_days = SettingProperty(
         "archive_hold_days", ["settings", "archiveHoldDays"]
     )
+    """Number of days backup archives are held in cold storage after deactivation or
+    destination removal from any devices in this Org.
+    """
+
     maximum_user_subscriptions = SettingProperty(
         "maximum_user_subscriptions", ["settings", "maxSeats"]
     )
-    org_backup_quota_bytes = SettingProperty(
-        "org_backup_quota_bytes", ["settings", "maxBytes"]
+    """Number of users allowed to consume a license in this Org."""
+
+    org_backup_quota = SettingProperty(
+        "org_backup_quota",
+        ["settings", "maxBytes"],
+        get_converter=bytes_to_gb,
+        set_converter=gb_to_bytes,
     )
-    user_backup_quota_bytes = SettingProperty(
-        "user_backup_quota_bytes", ["settings", "defaultUserMaxBytes"]
+    """Backup storage quota (in GB) for this organization."""
+
+    user_backup_quota = SettingProperty(
+        "user_backup_quota",
+        ["settings", "defaultUserMaxBytes"],
+        get_converter=bytes_to_gb,
+        set_converter=gb_to_bytes,
     )
-    web_restore_admin_limit_mb = SettingProperty(
-        "web_restore_admin_limit_mb", ["settings", "webRestoreAdminLimitMb"]
+    """Backup storage quota (in GB) for each user in this organization."""
+
+    web_restore_admin_limit = SettingProperty(
+        "web_restore_admin_limit", ["settings", "webRestoreAdminLimitMb"]
     )
-    web_restore_user_limit_mb = SettingProperty(
-        "web_restore_user_limit_mb", ["settings", "webRestoreUserLimitMb"]
+    """Limit (in MB) to amount of data restorable by admin users via web restore."""
+
+    web_restore_user_limit = SettingProperty(
+        "web_restore_user_limit", ["settings", "webRestoreUserLimitMb"]
     )
+    """Limit (in MB) to amount of data restorable by non-admin users via web restore."""
+
     backup_warning_email_days = SettingProperty(
         "backup_warning_email_days", ["settings", "warnInDays"]
     )
+    """The number of days devices in this org can go without any backup before "warning"
+    alerts get sent to org admins.
+    """
+
     backup_critical_email_days = SettingProperty(
         "backup_critical_email_days", ["settings", "alertInDays"]
     )
+    """The number of days devices in this org can go without any backup before "critical"
+    alerts get sent to org admins.
+    """
+
     backup_alert_recipient_emails = SettingProperty(
         "backup_alert_recipient_emails",
         ["settings", "recipients"],
         set_converter=to_list,
     )
+    """List of email addresses that organization backup alert emails get sent to (org
+    admin users get these automatically).
+    """
 
     _endpoint_monitoring_enabled = TSettingProperty(
         "endpoint_monitoring_enabled",
@@ -112,6 +156,11 @@ class OrgSettings(UserDict, object):
 
     @property
     def endpoint_monitoring_enabled(self):
+        """Determines if endpoint monitoring settings are enabled for this org.
+
+        Disabling this property also disables "removable media", "cloud sync",
+        "browser and application monitoring" and "printer detection" properties.
+        """
         return self._endpoint_monitoring_enabled
 
     @endpoint_monitoring_enabled.setter
@@ -126,6 +175,9 @@ class OrgSettings(UserDict, object):
 
     @property
     def endpoint_monitoring_removable_media_enabled(self):
+        """Determines if removable media endpoint monitoring event capturing is enabled
+        for this org.
+        """
         return self._removable_media_enabled
 
     @endpoint_monitoring_removable_media_enabled.setter
@@ -136,6 +188,9 @@ class OrgSettings(UserDict, object):
 
     @property
     def endpoint_monitoring_cloud_sync_enabled(self):
+        """Determines if cloud sync endpoint monitoring event capturing is enabled
+        for this org.
+        """
         return self._cloud_sync_enabled
 
     @endpoint_monitoring_cloud_sync_enabled.setter
@@ -146,6 +201,9 @@ class OrgSettings(UserDict, object):
 
     @property
     def endpoint_monitoring_browser_and_applications_enabled(self):
+        """Determines if browser and other application activity endpoint monitoring
+        event capturing is enabled for this org.
+        """
         return self._browser_and_applications_enabled
 
     @endpoint_monitoring_browser_and_applications_enabled.setter
@@ -155,17 +213,10 @@ class OrgSettings(UserDict, object):
         self._browser_and_applications_enabled = value
 
     @property
-    def endpoint_monitoring_file_metadata_collection_enabled(self):
-        return self._file_metadata_collection_enabled
-
-    @endpoint_monitoring_file_metadata_collection_enabled.setter
-    def endpoint_monitoring_file_metadata_collection_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = value
-        self._file_metadata_collection_enabled = value
-
-    @property
     def endpoint_monitoring_printer_detection_enabled(self):
+        """Determines if printer endpoint monitoring event capturing is enabled for this
+        org.
+        """
         return self._printer_detection_enabled
 
     @endpoint_monitoring_printer_detection_enabled.setter
@@ -174,46 +225,91 @@ class OrgSettings(UserDict, object):
             self.endpoint_monitoring_enabled = value
         self._printer_detection_enabled = value
 
+    @property
+    def endpoint_monitoring_file_metadata_collection_enabled(self):
+        """Determines if file metadata collection is enabled for this org."""
+        return self._file_metadata_collection_enabled
+
+    @endpoint_monitoring_file_metadata_collection_enabled.setter
+    def endpoint_monitoring_file_metadata_collection_enabled(self, value):
+        if value:
+            self.endpoint_monitoring_enabled = value
+        self._file_metadata_collection_enabled = value
+
     endpoint_monitoring_file_metadata_scan_enabled = TSettingProperty(
         "file_metadata_scan_enabled",
         "device_fileForensics_scan_enabled",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
+    """Determines if file metadata collection regular full scans are enabled for this
+    org.
+    """
+
     endpoint_monitoring_file_metadata_ingest_scan_enabled = TSettingProperty(
         "file_metadata_ingest_scan_enabled",
         "device_fileForensics_enqueue_scan_events_during_ingest",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
+    """Determines if file metadata collection does an initial full scan when first
+    enabled on devices.
+    """
+
     endpoint_monitoring_background_priority_enabled = TSettingProperty(
         "background_priority_enabled",
         "device_background_priority_enabled",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
+    """Determines if devices in this org have reduced priority in some IO bound tasks.
+    If enabled, devices may see improved general device performance at the expense of
+    some Code42 backup/security tasks taking longer.
+    """
+
     endpoint_monitoring_custom_applications_win = TSettingProperty(
         "custom_monitored_applications_win",
         "device_org_winAppActivity_binaryWhitelist",
         get_converter=comma_separated_to_list,
         set_converter=to_comma_separated,
     )
+    """List of additional applications the Code42 client monitors for file exfiltration
+    activity.
+
+    See `Support Documentation <https://support.code42.com/Administrator/Cloud/Configuring/Customize_applications_monitored_for_file_exfiltration>`__
+    for more details.
+    """
+
     endpoint_monitoring_custom_applications_mac = TSettingProperty(
         "custom_monitored_applications_mac",
         "device_org_macAppActivity_binaryWhitelist",
         get_converter=comma_separated_to_list,
         set_converter=to_comma_separated,
     )
+    """List of additional applications the Code42 client monitors for file exfiltration
+    activity.
+
+    See `Support Documentation <https://support.code42.com/Administrator/Cloud/Configuring/Customize_applications_monitored_for_file_exfiltration>`__
+    for more details.
+    """
+
     endpoint_monitoring_file_metadata_collection_exclusions = TSettingProperty(
         "file_metadata_collection_exclusions",
         "device_fileForensics_fileExclusions_org",
     )
+    """List of file types and file paths to exclude from file metadata collection.
+
+    See `Support Documentation <https://support.code42.com/Administrator/Cloud/Configuring/File_Metadata_Collection_exclusions>`__
+    for more details.
+    """
+
     web_restore_enabled = TSettingProperty(
         "web_restore_enabled",
         "device_webRestore_enabled",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
+    """Determines if web restores are enabled for devices in this org."""
 
     def __repr__(self):
         return "<OrgSettings: org_id: {}, name: '{}'>".format(

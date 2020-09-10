@@ -306,7 +306,7 @@ def org_device_defaults_with_single_values():
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
     ][0]["backupPaths"]["pathset"] = [
-        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux",}
+        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux"}
     ]
     # set single filename exclusions
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][

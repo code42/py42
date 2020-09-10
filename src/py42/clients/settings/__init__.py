@@ -1,6 +1,4 @@
 from py42._compat import string_type
-from py42.clients.settings._converters import bool_to_str
-from py42.clients.settings._converters import str_to_bool
 
 
 def set_val(d, keys, value):

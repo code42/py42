@@ -358,7 +358,7 @@ def device_settings_with_single_values():
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
     ][0]["backupPaths"]["pathset"] = [
-        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux",}
+        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux"}
     ]
     # set single filename exclusions
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][

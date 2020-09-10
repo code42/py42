@@ -9,6 +9,13 @@ from py42.clients.settings._converters import minutes_to_days
 from py42.clients.settings._converters import str_to_bool
 from py42.exceptions import Py42Error
 
+invalid_destination_error = Py42Error(
+    "Invalid destination guid or destination not offered to device's Org."
+)
+destination_not_added_error = Py42Error(
+    "Destination is not added to device, unable to lock."
+)
+
 
 class DeviceSettingsDefaults(UserDict, object):
     """Class used for managing an Organization's Device Default settings. Also acts as a
@@ -233,7 +240,7 @@ class BackupSet(UserDict, object):
         return destination_dict
 
     def add_destination(self, destination_guid):
-        """Adds a destination to be used by this backup set. Raises an exception if
+        """Adds a destination to be used by this backup set. Raises a :class:`Py42Error` if
         the supplied destination guid is not available to the parent device/org.
 
         Args:
@@ -248,9 +255,7 @@ class BackupSet(UserDict, object):
                     self._orig_destinations, self.destinations
                 )
         else:
-            raise Py42Error(
-                "Invalid destination guid or destination not offered to device's Org."
-            )
+            raise invalid_destination_error
 
     def remove_destination(self, destination_guid):
         """Removes a destination from use by this backup set.
@@ -271,13 +276,13 @@ class BackupSet(UserDict, object):
 
     def lock_destination(self, destination_guid):
         """Locks an in-use destination, disallowing the device owner from removing this
-        destination from their backup. Raises an exception if the supplied destination
+        destination from their backup. Raises a :class:`Py42Error` if the supplied destination
         guid is not in use on this backup set, or not available to the parent device/org.
         """
         destination_guid = str(destination_guid)
         if destination_guid in self._manager.available_destinations:
             if destination_guid not in self.destinations:
-                raise Py42Error("Destination is not added to device, unable to lock.")
+                raise destination_not_added_error
             else:
                 for d in self.data["destinations"]:
                     if d["@id"] == destination_guid:
@@ -286,19 +291,17 @@ class BackupSet(UserDict, object):
                     self._orig_destinations, self.destinations
                 )
         else:
-            raise Py42Error(
-                "Invalid destination guid or destination not offered to device's Org."
-            )
+            raise invalid_destination_error
 
     def unlock_destination(self, destination_guid):
         """Unlocks an in-use destination, allowing the device owner to remove this
-        destination from their backup. Raises an exception if the supplied destination
+        destination from their backup. Raises a :class:`Py42Error` if the supplied destination
         guid is not in use on this backup set, or not available to the parent device/org.
         """
         destination_guid = str(destination_guid)
         self._raise_if_invalid_destination(destination_guid)
         if destination_guid not in self.destinations:
-            raise Py42Error("Destination is not added to device, unable to unlock.")
+            raise destination_not_added_error
         else:
             for d in self.data["destinations"]:
                 if d["@id"] == destination_guid:
@@ -309,9 +312,7 @@ class BackupSet(UserDict, object):
 
     def _raise_if_invalid_destination(self, destination_guid):
         if destination_guid not in self._manager.available_destinations:
-            raise Py42Error(
-                "Invalid destination guid or destination not offered to device's Org."
-            )
+            raise invalid_destination_error
 
     def _extract_file_selection_lists(self):
         try:

@@ -18,11 +18,11 @@ jobs:
           # the below token should have repo scope and must be manually added by you in the repository's secret
           PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
-          path-to-signatures: 'signatures/version1/cla.json'
-          path-to-cla-document: 'https://gist.github.com/timabrmsn/7ef5bba8f2b1eb4ac1b7f2a26f98c951'
+          path-to-signatures: '.github/signatures/cla.json'
+          path-to-cla-document: 'https://github.com/code42/py42/blob/master/CONTRIBUTOR_LICENSE_AGREEMENT.md'
           # branch should not be protected
-          branch: 'chore/implement_cla_workflow'
-          allowlist: alang13,bot*
+          branch: 'master'
+          allowlist: alang13,unparalleled-js,kiran-chaudhary,timabrmsn,ceciliastevens,DiscoRiver,annie-payseur,amoravec
 
          #below are the optional inputs - If the optional inputs are not given, then default values will be taken
           #remote-organization-name: enter the remote organization name where the signatures should be stored (Default is storing the signatures in the same repository)
@@ -31,3 +31,4 @@ jobs:
           #signed-commit-message: 'For example: $contributorName has signed the CLA in #$pullRequestNo'
           #custom-notsigned-prcomment: 'pull request comment with Introductory message to ask new contributors to sign'
           #custom-allsigned-prcomment: 'pull request comment when all contributors has signed, defaults to **CLA Assistant Lite bot** All Contributors have signed the CLA.'
+

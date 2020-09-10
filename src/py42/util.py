@@ -75,7 +75,7 @@ def format_dict(dict_, label=None):
 
 
 def get_attribute_keys_from_class(cls):
-    """Returns attribute names for the given class object
+    """Returns attribute names for the given class.
 
     Args:
         cls (class): The class to obtain attributes from.

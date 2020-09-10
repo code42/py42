@@ -72,3 +72,19 @@ def format_dict(dict_, label=None):
     if label:
         return u"{} {}".format(label, indented_dict)
     return indented_dict
+
+
+def get_attribute_keys_from_class(cls):
+    """Returns attribute names for the given class object
+
+    Args:
+        cls (class): The class to obtain attributes from.
+
+    Returns:
+        (list): A list containing the attribute names of the given class.
+    """
+    return [
+        cls().__getattribute__(attr)
+        for attr in dir(cls)
+        if not callable(cls().__getattribute__(attr)) and not attr.startswith(u"_")
+    ]

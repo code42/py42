@@ -118,7 +118,7 @@ DEVICE_DICT_W_SETTINGS = {
                                         {"@include": TEST_EXTERNAL_DOCUMENTS_DIR},
                                         {"@exclude": TEST_PHOTOS_DIR},
                                     ],
-                                }
+                                },
                             ],
                         },
                         "backupRunWindow": [
@@ -358,7 +358,7 @@ def device_settings_with_single_values():
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
     ][0]["backupPaths"]["pathset"] = [
-        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux"}
+        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux",}
     ]
     # set single filename exclusions
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
@@ -389,6 +389,7 @@ def device_settings_with_multiple_values():
             "@os": "Linux",
         }
     ]
+
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
     ][0]["backupPaths"]["excludeUser"] = [

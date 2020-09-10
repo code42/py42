@@ -58,7 +58,3 @@ def gb_to_bytes(gb):
         return gb * 1000 ** 3
     except ValueError:
         raise AttributeError("value must be numeric.")
-
-
-def no_conversion(x):
-    return x

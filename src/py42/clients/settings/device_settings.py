@@ -336,7 +336,7 @@ class BackupSet(UserDict, object):
         for path in self._excluded_files:
             pathset.append({"@exclude": path, "@und": "false"})
         self.data["backupPaths"]["pathset"] = {
-            "paths": {"@os": "Linux", "path": pathset, "@cleared": "false"}
+            "paths": {"@os": "Linux", "path": pathset, "@cleared": "false",}
         }
 
     def _extract_regex_exclusions(self):

@@ -287,7 +287,9 @@ def org_device_defaults_with_empty_values():
     # set empty file selection
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
-    ][0]["backupPaths"]["pathset"] = [{"@cleared": "true", "@os": "Linux"}]
+    ][0]["backupPaths"]["pathset"] = [
+        {"paths": {"@os": "Linux", "path": [], "@cleared": "true"}}
+    ]
     # set empty filename exclusions
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
@@ -304,7 +306,7 @@ def org_device_defaults_with_single_values():
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
     ][0]["backupPaths"]["pathset"] = [
-        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux"}
+        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux",}
     ]
     # set single filename exclusions
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][

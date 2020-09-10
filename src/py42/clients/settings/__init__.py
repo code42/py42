@@ -1,6 +1,5 @@
 from py42._compat import string_type
 from py42.clients.settings._converters import bool_to_str
-from py42.clients.settings._converters import no_conversion
 from py42.clients.settings._converters import str_to_bool
 
 
@@ -53,9 +52,7 @@ class SettingProperty(BaseSettingProperty):
         set_converter (func, optional): function to convert values being set to preferred format. Defaults to no conversion.
     """
 
-    def __init__(
-        self, name, location, get_converter=no_conversion, set_converter=no_conversion
-    ):
+    def __init__(self, name, location, get_converter=None, set_converter=None):
         super(SettingProperty, self).__init__(name, location)
         self.get_converter = get_converter
         self.set_converter = set_converter
@@ -64,10 +61,12 @@ class SettingProperty(BaseSettingProperty):
         val = get_val(instance.data, self.location)
         if isinstance(val, dict):
             val = val["#text"]
-        return self.get_converter(val)
+        return self.get_converter(val) if self.get_converter is not None else val
 
     def __set__(self, instance, new_val):
-        converted_new_val = self.set_converter(new_val)
+        converted_new_val = (
+            self.set_converter(new_val) if self.set_converter is not None else new_val
+        )
         orig_val = get_val(instance.data, self.location)
 
         # if locked, value is a dict with '#text' as the _real_ value key
@@ -81,48 +80,6 @@ class SettingProperty(BaseSettingProperty):
         set_val(instance.data, location, converted_new_val)
 
 
-class SettingLockProperty(BaseSettingProperty):
-    """Descriptor class to help manage changes to the locked status of nested dict values. Assumes attributes
-    being managed are on a UserDict/UserList subclass.
-
-    Args:
-        name (str): name of attribute this class manages (changes will be registered with this name).
-        location (list): list of keys defining the location of the value being managed in the managed class.
-    """
-
-    def __get__(self, instance, owner):
-        val = get_val(instance.data, self.location)
-        if isinstance(val, dict):
-            return str_to_bool(val["@locked"])
-        else:
-            return False
-
-    def __set__(self, instance, new_val):
-        val_string = bool_to_str(new_val)
-        currently_locked = getattr(instance, self.name)
-        if currently_locked and new_val:
-            return
-        elif not currently_locked and not new_val:
-            return
-        else:
-            current_setting_value = get_val(instance.data, self.location)
-            if isinstance(current_setting_value, dict):
-                current_locked_value = str_to_bool(current_setting_value["@locked"])
-                current_setting_value = current_setting_value["#text"]
-            else:
-                current_locked_value = False
-            self._register_change(instance, current_locked_value, new_val)
-            set_val(
-                instance.data,
-                self.location,
-                {
-                    "#text": current_setting_value,
-                    "@locked": val_string,
-                    "@publish": "true",
-                },
-            )
-
-
 class TSettingProperty(object):
     """Descriptor class to help manage transforming t_setting packet values. Assumes t_setting
     dict is stored in `._t_settings` attribute on managed instances.
@@ -132,9 +89,7 @@ class TSettingProperty(object):
         key (str): name of t_setting packet this class is managing.
     """
 
-    def __init__(
-        self, name, key, get_converter=no_conversion, set_converter=no_conversion
-    ):
+    def __init__(self, name, key, get_converter=None, set_converter=None):
         self.name = name
         self.key = key
         self.get_converter = get_converter
@@ -148,10 +103,14 @@ class TSettingProperty(object):
             packet = instance._t_settings.get(self.key)
         if packet is None:
             return None
-        return self.get_converter(packet["value"])
+        return (
+            self.get_converter(packet["value"])
+            if self.get_converter is not None
+            else packet["value"]
+        )
 
     def __set__(self, instance, val):
-        val = self.set_converter(val)
+        val = self.set_converter(val) if self.set_converter is not None else val
         packet = {"key": self.key, "value": val, "locked": False}
         instance._packets[self.key] = packet
         self._register_change(instance, val)
@@ -168,32 +127,3 @@ class TSettingProperty(object):
                 instance.changes.pop(self.name)
         else:
             instance.changes[self.name] = show_change(self.init_val, val)
-
-
-class TSettingLockProperty(object):
-    def __init__(self, name, key):
-        self.name = name
-        self.key = key
-        self.init_val = None
-
-    def __get__(self, instance, owner):
-        packet = instance._t_settings[self.key]
-        return str_to_bool(packet["@locked"])
-
-    def __set__(self, instance, new_val):
-        new_val_string = bool_to_str(new_val)
-        packet = instance._t_settings[self.key]
-        if self.init_val is None:
-            self.init_val = str_to_bool(packet["@locked"])
-        packet = {"key"}
-
-        name = self.name.lstrip("_")
-        try:
-            changes = instance.changes
-        except AttributeError:
-            changes = instance._changes
-        if self.init_val == new_val:
-            if name in changes:
-                changes.pop(name)
-        else:
-            changes[name] = new_val_string

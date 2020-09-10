@@ -1,7 +1,6 @@
 - [Set up your Development environment](#set-up-your-development-environment)
   - [macOS](#macos)
   - [Windows/Linux](#windowslinux)
-- [Installation](#installation)
 - [Run a full build](#run-a-full-build)
 - [Coding Style](#coding-style)
   - [General](#general)
@@ -71,8 +70,6 @@ To leave the virtual environment, simply use:
 ```bash
 deactivate
 ```
-
-## Installation
 
 Next, with your virtual environment activated, install py42 and its development dependencies. The `-e` option installs py42 in
 ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs).

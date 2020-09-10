@@ -1,7 +1,7 @@
 # Legal Hold
 
 ```eval_rst
-.. autoclass:: py42.services.legalhold.LegalHoldService
+.. autoclass:: py42.clients.legalhold.LegalHoldClient
     :members:
     :show-inheritance:
 ```

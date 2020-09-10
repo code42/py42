@@ -1,7 +1,7 @@
 # Detection Lists
 
 ```eval_rst
-.. autoclass:: py42.clients.detectionlists.DetectionListsClient
+.. autoclass:: py42.modules.detectionlists.DetectionListsModule
     :members:
     :show-inheritance:
 ```
@@ -9,13 +9,7 @@
 ## Departing Employees
 
 ```eval_rst
-.. autoclass:: py42.services.detectionlists.departing_employee.DepartingEmployeeFilters
-    :members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.services.detectionlists.departing_employee.DepartingEmployeeService
+.. autoclass:: py42.clients.detectionlists.departing_employee.DepartingEmployeeClient
     :members:
     :show-inheritance:
 ```
@@ -23,13 +17,7 @@
 ## High Risk Employee
 
 ```eval_rst
-.. autoclass:: py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters
-    :members:
-    :show-inheritance:
-```
-
-```eval_rst
-.. autoclass:: py42.services.detectionlists.high_risk_employee.HighRiskEmployeeService
+.. autoclass:: py42.clients.detectionlists.high_risk_employee.HighRiskEmployeeClient
     :members:
     :show-inheritance:
 ```

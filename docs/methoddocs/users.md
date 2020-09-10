@@ -1,7 +1,7 @@
 # Users
 
 ```eval_rst
-.. autoclass:: py42.services.users.UserService
+.. autoclass:: py42.clients.users.UserClient
     :members:
     :show-inheritance:
 ```

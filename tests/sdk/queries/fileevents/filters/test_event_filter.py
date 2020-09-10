@@ -23,14 +23,6 @@ from py42.sdk.queries.fileevents.filters.event_filter import OutsideActiveHours
 from py42.sdk.queries.fileevents.filters.event_filter import Source
 
 
-def test_event_timestamp_filter_has_within_the_last():
-    assert hasattr(EventTimestamp(), "within_the_last")
-
-
-def test_insertion_timestamp_filter_has_within_the_last():
-    assert hasattr(InsertionTimestamp(), "within_the_last")
-
-
 def test_event_timestamp_on_or_after_str_gives_correct_json_representation():
     test_time = time()
     formatted = format_timestamp(test_time)

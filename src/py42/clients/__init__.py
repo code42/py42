@@ -1,6 +1,6 @@
-from collections import namedtuple
+class BaseClient(object):
 
-Clients = namedtuple(
-    u"Clients",
-    [u"alerts", u"archive", u"authority", u"detectionlists", u"securitydata"],
-)
+    __slots__ = ["_session"]
+
+    def __init__(self, session):
+        self._session = session

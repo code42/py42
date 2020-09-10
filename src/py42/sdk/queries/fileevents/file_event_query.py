@@ -2,7 +2,9 @@ from py42._compat import str
 from py42.sdk.queries import BaseQuery
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import create_within_the_last_filter_group
 from py42.sdk.queries.query_filter import QueryFilterStringField
+from py42.sdk.queries.query_filter import QueryFilterTimestampField
 
 
 class FileEventQuery(BaseQuery):
@@ -27,7 +29,6 @@ class FileEventQuery(BaseQuery):
     def __init__(self, *args, **kwargs):
         super(FileEventQuery, self).__init__(*args, **kwargs)
         self.sort_key = u"eventId"
-        self.page_number = 1
 
     def __str__(self):
         groups_string = u",".join(
@@ -177,3 +178,20 @@ class FileEventFilterComparableField(object):
         """
         value = int(value)
         return create_less_than_filter_group(cls._term, value)
+
+
+class FileEventFilterTimestampField(QueryFilterTimestampField):
+    @classmethod
+    def within_the_last(cls, value):
+        """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
+        for finding results where the key ``self._term`` is a timestamp-related term,
+        such as ``EventTimestamp._term``, and ``value`` is one of it's accepted values,
+        such as one of the values in ``EventTimestamp.choices()``.
+
+        Args:
+            value (str): The value used to filter file events.
+
+        Returns:
+            :class:`~py42.sdk.queries.query_filter.FilterGroup`
+        """
+        return create_within_the_last_filter_group(cls._term, value)

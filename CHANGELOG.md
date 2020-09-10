@@ -8,6 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Removed
+
+- Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
+
+### Added
+
+- `sdk.alerts.update_state()` method to update state.
+
+## 1.8.1 - 2020-08-28
+
+### Fixed
+
+- Corrected error logic for trying to add or remove users from a system rule.
+
 ## 1.8.0 - 2020-08-27
 
 ### Removed
@@ -22,6 +38,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Issue that in rare circumstance could cause py42 to exhaust network sockets. This could sometimes occur if you were running a multi-threaded program that communicated with many Code42 storage nodes.
 
 ### Added
+
+- Added additional user-adjustable setting for security events page size:
+    - `py42.settings.security_events_per_page`
+
+- Page page_number and page_size parameters for saved search queries:
+    - `py42.securitydata.savedsearches.get_query()`
+    - `py42.securitydata.savedsearches.execute()`
 
 - Methods for obtaining archive information:
     - `sdk.archive.get_by_archive_guid`
@@ -91,6 +114,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
+- `py42.sdk.queries.query_filter.filter_attributes` renamed to `py42.util.get_attribute_keys_from_class`
 - `sdk.archive.stream_from_backup()` now calculates file sizes and accepts a `file_size_calc_timeout` parameter.
 - Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths` and can now take a list of file paths to restore.
 - `sdk.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.

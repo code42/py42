@@ -185,15 +185,6 @@ def create_within_the_last_filter_group(term, value):
     return create_filter_group(filter_list, u"AND")
 
 
-def filter_attributes(cls):
-
-    return [
-        cls().__getattribute__(attr)
-        for attr in dir(cls)
-        if not callable(cls().__getattribute__(attr)) and not attr.startswith(u"_")
-    ]
-
-
 class QueryFilterStringField(object):
     """Helper class for creating filters where the search value is a string."""
 
@@ -267,7 +258,7 @@ class QueryFilterTimestampField(object):
         provided ``value``.
 
         Args:
-            value (str or int): The value used to filter results.
+            value (str or int or float): The value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
@@ -282,7 +273,7 @@ class QueryFilterTimestampField(object):
         provided ``value``.
 
         Args:
-            value (str or int): The value used to filter results.
+            value (str or int or float): The value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
@@ -297,8 +288,8 @@ class QueryFilterTimestampField(object):
         the provided ``start_value`` and ``end_value``.
 
         Args:
-            start_value (str or int): The start value used to filter results.
-            end_value (str or int): The end value used to filter results.
+            start_value (str or int or float): The start value used to filter results.
+            end_value (str or int or float): The end value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
@@ -316,7 +307,7 @@ class QueryFilterTimestampField(object):
         calendar day as the provided ``value``.
 
         Args:
-            value (str or int): The value used to filter results.
+            value (str or int or float): The value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
@@ -333,20 +324,6 @@ class QueryFilterTimestampField(object):
         return create_in_range_filter_group(
             cls._term, formatted_start_time, formatted_end_time
         )
-
-    @classmethod
-    def within_the_last(cls, value):
-        """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
-        for finding results where the key ``self._term`` is an ``EventTimestamp._term``
-        and the value is one of the ``EventTimestamp`` attributes as ``value``.
-
-        Args:
-            value (str): `EventTimestamp` attribute.
-
-        Returns:
-            :class:`~py42.sdk.queries.query_filter.FilterGroup`
-        """
-        return create_within_the_last_filter_group(cls._term, value)
 
 
 class QueryFilterBooleanField(object):

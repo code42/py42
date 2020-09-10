@@ -182,88 +182,75 @@ class TestAlertService(object):
         expected_observation_data = '{"invalid_json": ][ }'
         assert observation_data == expected_observation_data
 
-    def test_resolve_when_not_given_tenant_id_posts_expected_data(
+    def test_update_state_when_not_given_tenant_id_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
         alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_service.resolve(alert_ids)
+        alert_service.update_state("RESOLVED", alert_ids, "")
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
+            and post_data["state"] == "RESOLVED"
+            and post_data["note"] == ""
         )
 
     @pytest.mark.parametrize(
         "alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]]
     )
-    def test_resolve_when_given_single_alert_id_posts_expected_data(
+    def test_update_state_when_given_single_alert_id_posts_expected_data(
         self, mock_connection, user_context, successful_post, alert_id
     ):
         alert_service = AlertService(mock_connection, user_context)
-        alert_service.resolve(alert_id)
+        alert_service.update_state("PENDING", alert_id)
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
+            and post_data["state"] == "PENDING"
+            and post_data["note"] == ""
         )
 
-    def test_resolve_posts_expected_data(
+    def test_update_state_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
         alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_service.resolve(alert_ids,)
+        alert_service.update_state("OPEN", alert_ids, "some-tenant-id")
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
+            and post_data["state"] == "OPEN"
+            and post_data["note"] == "some-tenant-id"
         )
 
-    def test_resolve_posts_to_expected_url(
+    def test_update_state_posts_to_expected_url(
         self, mock_connection, user_context, successful_post
     ):
         alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_service.resolve(alert_ids, "some-tenant-id")
-        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/resolve-alert"
+        alert_service.update_state("RESOLVED", alert_ids, "some-tenant-id")
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/update-state"
 
-    def test_reopen_posts_expected_data(
+    def test_update_state_when_note_passed_none_posts_expected_data(
         self, mock_connection, user_context, successful_post
     ):
         alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_service.reopen(alert_ids)
+        alert_service.update_state("RESOLVED", alert_ids, note=None)
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/update-state"
         post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
+            and post_data["state"] == "RESOLVED"
+            and post_data["note"] == ""
         )
-
-    @pytest.mark.parametrize(
-        "alert_id", ["ALERT_ID_1", ("ALERT_ID_1",), ["ALERT_ID_1"]]
-    )
-    def test_reopen_when_given_single_alert_id_posts_expected_data(
-        self, mock_connection, user_context, successful_post, alert_id
-    ):
-        alert_service = AlertService(mock_connection, user_context)
-        alert_service.reopen(alert_id)
-        post_data = mock_connection.post.call_args[1]["json"]
-        assert (
-            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
-            and post_data["alertIds"][0] == "ALERT_ID_1"
-        )
-
-    def test_reopen_posts_to_expected_url(
-        self, mock_connection, user_context, successful_post
-    ):
-        alert_service = AlertService(mock_connection, user_context)
-        alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
-        alert_service.reopen(alert_ids, "some-tenant-id")
-        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/reopen-alert"
 
     def test_get_all_rules_posts_expected_data(self, mock_connection, user_context):
         alert_service = AlertService(mock_connection, user_context)

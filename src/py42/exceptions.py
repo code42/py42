@@ -129,14 +129,15 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
         )
 
 
-class Py42InvalidRuleOperationError(Py42NotFoundError):
-    """An exception raised when trying to add or remove users to a system rule, or when
-    trying to retrieve information about a system rule."""
+class Py42InvalidRuleOperationError(Py42HTTPError):
+    """An exception raised when trying to add or remove users to a system rule."""
 
-    def __init__(self, exception, rule_id):
-        msg = u"Unable to find or access Rule with ID '{}'. ".format(rule_id)
-        msg += u"You might be trying to access a system rule."
-        super(Py42InvalidRuleOperationError, self).__init__(exception, msg)
+    def __init__(self, exception, rule_id, source):
+        msg = u"Only alert rules with a source of 'Alerting' can be targeted by this command. "
+        msg += u"Rule {0} has a source of '{1}'."
+        super(Py42InvalidRuleOperationError, self).__init__(
+            exception, msg.format(rule_id, source)
+        )
 
 
 def raise_py42_error(raised_error):

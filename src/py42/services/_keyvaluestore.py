@@ -1,9 +1,9 @@
 from py42.services import BaseService
 
 
-class KeyValueStoreClient(BaseService):
+class KeyValueStoreService(BaseService):
     def __init__(self, connection):
-        super(KeyValueStoreClient, self).__init__(connection)
+        super(KeyValueStoreService, self).__init__(connection)
 
     def get_stored_value(self, key):
         uri = u"/v1/{}".format(key)

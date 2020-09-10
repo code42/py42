@@ -46,6 +46,8 @@ def minutes_to_days(minutes):
 
 def bytes_to_gb(bytes):
     gb = bytes / 1000 ** 3
+    if isinstance(gb, int):
+        return gb
     if gb.is_integer():
         return int(gb)
     return gb

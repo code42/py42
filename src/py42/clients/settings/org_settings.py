@@ -3,12 +3,12 @@ from py42._compat import UserDict
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import TSettingProperty
 from py42.clients.settings._converters import bool_to_str
+from py42.clients.settings._converters import bytes_to_gb
 from py42.clients.settings._converters import comma_separated_to_list
+from py42.clients.settings._converters import gb_to_bytes
 from py42.clients.settings._converters import str_to_bool
 from py42.clients.settings._converters import to_comma_separated
 from py42.clients.settings._converters import to_list
-from py42.clients.settings._converters import gb_to_bytes
-from py42.clients.settings._converters import bytes_to_gb
 from py42.clients.settings.device_settings import DeviceSettingsDefaults
 
 

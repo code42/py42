@@ -238,7 +238,7 @@ class BackupSet(UserDict, object):
 
         Args:
             destination_guid (str, int): The globally unique identifier of the
-            destination to be added.
+                destination to be added.
         """
         destination_guid = str(destination_guid)
         if destination_guid in self._manager.available_destinations:
@@ -257,7 +257,7 @@ class BackupSet(UserDict, object):
 
         Args:
             destination_guid (str, int): The globally unique identifier of the
-            destination to be removed.
+                destination to be removed.
         """
         destination_guid = str(destination_guid)
         self._raise_if_invalid_destination(destination_guid)

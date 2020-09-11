@@ -17,6 +17,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Added
 
 - `sdk.alerts.update_state()` method to update state.
+- `OrgSettings` and `DeviceSettings` classes to help with Org and Device setting management.
+    - `sdk.orgs.get_settings(org_id)` now returns an instance of `OrgSettings` which can be used to view
+        existing Org settings and modify them by passing the updated `OrgSettings` object to `sdk.orgs.update_settings()`
+    - `sdk.devices.get_settings(org_id)` now returns an instance of `DeviceSettings` which can be used to view
+        existing Device settings and modify them by passing the updated `DeviceSettings` object to `sdk.devices.update_settings()`
 
 ## 1.8.1 - 2020-08-28
 

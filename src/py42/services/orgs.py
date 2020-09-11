@@ -7,7 +7,7 @@ from py42.services import BaseService
 from py42.services.util import get_all_pages
 
 OrgSettingsResponse = namedtuple(
-    "OrgSettingsResponse", ["error", "org_response", "org_settings_response"]
+    u"OrgSettingsResponse", [u"error", u"org_response", u"org_settings_response"]
 )
 
 

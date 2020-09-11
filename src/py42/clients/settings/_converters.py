@@ -2,19 +2,19 @@ from py42._compat import str
 
 
 def bool_to_str(value):
-    if isinstance(value, bool) or value in ("true", "false"):
+    if isinstance(value, bool) or value in (u"true", u"false"):
         return str(value).lower()
     else:
-        raise ValueError("Value must be True or False")
+        raise ValueError(u"Value must be True or False")
 
 
 def str_to_bool(value):
-    if value.lower() == "true":
+    if value.lower() == u"true":
         return True
-    if value.lower() == "false":
+    if value.lower() == u"false":
         return False
     else:
-        raise ValueError("str_to_bool expects either 'true' or 'false'.")
+        raise ValueError(u"str_to_bool expects either 'true' or 'false'.")
 
 
 def to_list(value):
@@ -26,7 +26,7 @@ def to_list(value):
 
 def to_comma_separated(value):
     if isinstance(value, (list, tuple)):
-        return ",".join(value)
+        return u",".join(value)
     else:
         return value
 
@@ -59,4 +59,4 @@ def gb_to_bytes(gb):
     try:
         return gb * 1000 ** 3
     except ValueError:
-        raise AttributeError("value must be numeric.")
+        raise AttributeError(u"value must be numeric.")

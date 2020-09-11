@@ -21,7 +21,7 @@ class OrgSettings(UserDict, object):
         self._packets = {}
         self.changes = {}
         self.device_defaults = DeviceSettingsDefaults(
-            self.data["deviceDefaults"], org_settings=self,
+            self.data[u"deviceDefaults"], org_settings=self,
         )
 
     @property
@@ -34,77 +34,77 @@ class OrgSettings(UserDict, object):
     @property
     def org_id(self):
         """The identifier for the org."""
-        return self.data["orgId"]
+        return self.data[u"orgId"]
 
     @property
     def registration_key(self):
         """The registration key for the org."""
-        return self.data["registrationKey"]
+        return self.data[u"registrationKey"]
 
-    org_name = SettingProperty("org_name", ["orgName"])
+    org_name = SettingProperty(u"org_name", [u"orgName"])
     """Name for this Org."""
 
-    external_reference = SettingProperty("external_reference", ["orgExtRef"])
+    external_reference = SettingProperty(u"external_reference", [u"orgExtRef"])
     """External reference field for this Org."""
 
-    notes = SettingProperty("notes", ["notes"])
+    notes = SettingProperty(u"notes", [u"notes"])
     """Notes field for this Org."""
 
     archive_hold_days = SettingProperty(
-        "archive_hold_days", ["settings", "archiveHoldDays"]
+        u"archive_hold_days", [u"settings", u"archiveHoldDays"]
     )
     """Number of days backup archives are held in cold storage after deactivation or
     destination removal from any devices in this Org.
     """
 
     maximum_user_subscriptions = SettingProperty(
-        "maximum_user_subscriptions", ["settings", "maxSeats"]
+        u"maximum_user_subscriptions", [u"settings", u"maxSeats"]
     )
     """Number of users allowed to consume a license in this Org."""
 
     org_backup_quota = SettingProperty(
-        "org_backup_quota",
-        ["settings", "maxBytes"],
+        u"org_backup_quota",
+        [u"settings", u"maxBytes"],
         get_converter=bytes_to_gb,
         set_converter=gb_to_bytes,
     )
     """Backup storage quota (in GB) for this organization."""
 
     user_backup_quota = SettingProperty(
-        "user_backup_quota",
-        ["settings", "defaultUserMaxBytes"],
+        u"user_backup_quota",
+        [u"settings", u"defaultUserMaxBytes"],
         get_converter=bytes_to_gb,
         set_converter=gb_to_bytes,
     )
     """Backup storage quota (in GB) for each user in this organization."""
 
     web_restore_admin_limit = SettingProperty(
-        "web_restore_admin_limit", ["settings", "webRestoreAdminLimitMb"]
+        u"web_restore_admin_limit", [u"settings", u"webRestoreAdminLimitMb"]
     )
     """Limit (in MB) to amount of data restorable by admin users via web restore."""
 
     web_restore_user_limit = SettingProperty(
-        "web_restore_user_limit", ["settings", "webRestoreUserLimitMb"]
+        u"web_restore_user_limit", [u"settings", u"webRestoreUserLimitMb"]
     )
     """Limit (in MB) to amount of data restorable by non-admin users via web restore."""
 
     backup_warning_email_days = SettingProperty(
-        "backup_warning_email_days", ["settings", "warnInDays"]
+        u"backup_warning_email_days", [u"settings", u"warnInDays"]
     )
     """The number of days devices in this org can go without any backup before "warning"
     alerts get sent to org admins.
     """
 
     backup_critical_email_days = SettingProperty(
-        "backup_critical_email_days", ["settings", "alertInDays"]
+        u"backup_critical_email_days", [u"settings", u"alertInDays"]
     )
     """The number of days devices in this org can go without any backup before "critical"
     alerts get sent to org admins.
     """
 
     backup_alert_recipient_emails = SettingProperty(
-        "backup_alert_recipient_emails",
-        ["settings", "recipients"],
+        u"backup_alert_recipient_emails",
+        [u"settings", u"recipients"],
         set_converter=to_list,
     )
     """List of email addresses that organization backup alert emails get sent to (org
@@ -112,44 +112,44 @@ class OrgSettings(UserDict, object):
     """
 
     _endpoint_monitoring_enabled = TSettingProperty(
-        "endpoint_monitoring_enabled",
-        "org-securityTools-enable",
+        u"endpoint_monitoring_enabled",
+        u"org-securityTools-enable",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     _aed_enabled = TSettingProperty(
-        "aed_enabled",
-        "device_advancedExfiltrationDetection_enabled",
+        u"aed_enabled",
+        u"device_advancedExfiltrationDetection_enabled",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     _removable_media_enabled = TSettingProperty(
-        "removable_media_enabled",
-        "org-securityTools-device-detection-enable",
+        u"removable_media_enabled",
+        u"org-securityTools-device-detection-enable",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     _cloud_sync_enabled = TSettingProperty(
-        "cloud_sync_enabled",
-        "org-securityTools-cloud-detection-enable",
+        u"cloud_sync_enabled",
+        u"org-securityTools-cloud-detection-enable",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     _browser_and_applications_enabled = TSettingProperty(
-        "browser_and_applications_enabled",
-        "org-securityTools-open-file-detection-enable",
+        u"browser_and_applications_enabled",
+        u"org-securityTools-open-file-detection-enable",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     _file_metadata_collection_enabled = TSettingProperty(
-        "file_metadata_collection_enabled",
-        "device_fileForensics_enabled",
+        u"file_metadata_collection_enabled",
+        u"device_fileForensics_enabled",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     _printer_detection_enabled = TSettingProperty(
-        "printer_detection_enabled",
-        "org_securityTools_printer_detection_enable",
+        u"printer_detection_enabled",
+        u"org_securityTools_printer_detection_enable",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
@@ -237,8 +237,8 @@ class OrgSettings(UserDict, object):
         self._file_metadata_collection_enabled = value
 
     endpoint_monitoring_file_metadata_scan_enabled = TSettingProperty(
-        "file_metadata_scan_enabled",
-        "device_fileForensics_scan_enabled",
+        u"file_metadata_scan_enabled",
+        u"device_fileForensics_scan_enabled",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
@@ -247,8 +247,8 @@ class OrgSettings(UserDict, object):
     """
 
     endpoint_monitoring_file_metadata_ingest_scan_enabled = TSettingProperty(
-        "file_metadata_ingest_scan_enabled",
-        "device_fileForensics_enqueue_scan_events_during_ingest",
+        u"file_metadata_ingest_scan_enabled",
+        u"device_fileForensics_enqueue_scan_events_during_ingest",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
@@ -257,8 +257,8 @@ class OrgSettings(UserDict, object):
     """
 
     endpoint_monitoring_background_priority_enabled = TSettingProperty(
-        "background_priority_enabled",
-        "device_background_priority_enabled",
+        u"background_priority_enabled",
+        u"device_background_priority_enabled",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
@@ -268,8 +268,8 @@ class OrgSettings(UserDict, object):
     """
 
     endpoint_monitoring_custom_applications_win = TSettingProperty(
-        "custom_monitored_applications_win",
-        "device_org_winAppActivity_binaryWhitelist",
+        u"custom_monitored_applications_win",
+        u"device_org_winAppActivity_binaryWhitelist",
         get_converter=comma_separated_to_list,
         set_converter=to_comma_separated,
     )
@@ -281,8 +281,8 @@ class OrgSettings(UserDict, object):
     """
 
     endpoint_monitoring_custom_applications_mac = TSettingProperty(
-        "custom_monitored_applications_mac",
-        "device_org_macAppActivity_binaryWhitelist",
+        u"custom_monitored_applications_mac",
+        u"device_org_macAppActivity_binaryWhitelist",
         get_converter=comma_separated_to_list,
         set_converter=to_comma_separated,
     )
@@ -294,8 +294,8 @@ class OrgSettings(UserDict, object):
     """
 
     endpoint_monitoring_file_metadata_collection_exclusions = TSettingProperty(
-        "file_metadata_collection_exclusions",
-        "device_fileForensics_fileExclusions_org",
+        u"file_metadata_collection_exclusions",
+        u"device_fileForensics_fileExclusions_org",
     )
     """File types and file paths to exclude from file metadata collection.
 
@@ -304,8 +304,8 @@ class OrgSettings(UserDict, object):
     """
 
     endpoint_monitoring_file_exfiltration_detection_exclusions = TSettingProperty(
-        "file_exfiltration_detection_exclusions",
-        "org_securityTools_detection_monitoring_exclusions",
+        u"file_exfiltration_detection_exclusions",
+        u"org_securityTools_detection_monitoring_exclusions",
     )
     """File types and file paths to exclude from file exfiltration detection.
 
@@ -314,16 +314,16 @@ class OrgSettings(UserDict, object):
     """
 
     web_restore_enabled = TSettingProperty(
-        "web_restore_enabled",
-        "device_webRestore_enabled",
+        u"web_restore_enabled",
+        u"device_webRestore_enabled",
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     """Determines if web restores are enabled for devices in this org."""
 
     def __repr__(self):
-        return "<OrgSettings: org_id: {}, name: '{}'>".format(
-            self.data["orgId"], self.data["orgName"]
+        return u"<OrgSettings: org_id: {}, name: '{}'>".format(
+            self.data[u"orgId"], self.data[u"orgName"]
         )
 
     def __str__(self):

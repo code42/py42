@@ -16,10 +16,10 @@ def get_val(d, keys):
 
 def show_change(val1, val2):
     if isinstance(val1, string_type):
-        val1 = '"{}"'.format(val1)
+        val1 = u'"{}"'.format(val1)
     if isinstance(val2, string_type):
-        val2 = '"{}"'.format(val2)
-    return "{} -> {}".format(val1, val2)
+        val2 = u'"{}"'.format(val2)
+    return u"{} -> {}".format(val1, val2)
 
 
 class BaseSettingProperty(object):
@@ -29,7 +29,7 @@ class BaseSettingProperty(object):
         self.init_val = None
 
     def _register_change(self, instance, orig_val, new_val):
-        name = self.name.lstrip("_")
+        name = self.name.lstrip(u"_")
         if self.init_val is None:
             self.init_val = orig_val
         if self.init_val == new_val:
@@ -58,7 +58,7 @@ class SettingProperty(BaseSettingProperty):
     def __get__(self, instance, owner):
         val = get_val(instance.data, self.location)
         if isinstance(val, dict):
-            val = val["#text"]
+            val = val[u"#text"]
         return self.get_converter(val) if self.get_converter is not None else val
 
     def __set__(self, instance, new_val):
@@ -69,8 +69,8 @@ class SettingProperty(BaseSettingProperty):
 
         # if locked, value is a dict with '#text' as the _real_ value key
         if isinstance(orig_val, dict):
-            location = self.location + ["#text"]
-            orig_val = orig_val["#text"]
+            location = self.location + [u"#text"]
+            orig_val = orig_val[u"#text"]
         else:
             location = self.location
 
@@ -102,14 +102,14 @@ class TSettingProperty(object):
         if packet is None:
             return None
         return (
-            self.get_converter(packet["value"])
+            self.get_converter(packet[u"value"])
             if self.get_converter is not None
-            else packet["value"]
+            else packet[u"value"]
         )
 
     def __set__(self, instance, val):
         val = self.set_converter(val) if self.set_converter is not None else val
-        packet = {"key": self.key, "value": val, "locked": False}
+        packet = {u"key": self.key, u"value": val, u"locked": False}
         instance._packets[self.key] = packet
         self._register_change(instance, val)
 
@@ -119,7 +119,7 @@ class TSettingProperty(object):
             if packet is None:
                 self.init_val = None
             else:
-                self.init_val = packet["value"]
+                self.init_val = packet[u"value"]
         if self.init_val == val:
             if self.name in instance.changes:
                 instance.changes.pop(self.name)

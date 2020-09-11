@@ -81,3 +81,14 @@ class TestOrgService(object):
         service.get_agent_state = mocker.Mock()
         service.get_agent_full_disk_access_states("ORG_ID")
         service.get_agent_state.assert_called_once_with("ORG_ID", "fullDiskAccess")
+
+    def test_get_settings_calls_org_and_org_settings_endpoints(
+        self, mock_connection, successful_response, mocker
+    ):
+        mock_connection.get.return_value = successful_response
+        service = OrgService(mock_connection)
+        service.get_settings = mocker.Mock()
+        service.get_settings("ORG_ID")
+        expected_params = {"incSettings": True}
+        uri = u"/api/Org/{}".format("ORG_ID")
+        mock_connection.get.assert_called_once_with(uri, params=expected_params)

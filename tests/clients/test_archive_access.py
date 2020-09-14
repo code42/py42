@@ -19,6 +19,7 @@ from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.archive import StorageArchiveService
 
 DEVICE_GUID = "device-guid"
+BACKUP_SET_ID = "backup-set-id"
 INVALID_DEVICE_GUID = "invalid-device-guid"
 DESTINATION_GUID = "destination-guid"
 DATA_KEY_TOKEN = "FAKE_DATA_KEY_TOKEN"
@@ -378,13 +379,12 @@ def file_content_chunks():
 
 def mock_start_restore_response(mocker, storage_archive_service, response):
     def mock_start_restore(
-        guid,
+        device_guid,
         web_restore_session_id,
-        path_set,
+        restore_groups,
         num_files,
         num_dirs,
-        size,
-        zip_result,
+        num_bytes,
         **kwargs
     ):
         start_restore_response = mocker.MagicMock(spec=Response)
@@ -458,12 +458,12 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
     return mock_get_file_path_metadata
 
 
-def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, size=1):
+def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, num_bytes=1):
     return FileSelection(
-        {"type": file_type, "path": file_path, "selected": True},
+        {"fileType": file_type, "path": file_path, "selected": "true"},
         num_files,
         num_dirs,
-        size,
+        num_bytes,
     )
 
 
@@ -646,9 +646,13 @@ class TestArchiveAccessor(object):
             restore_job_manager,
             file_size_poller,
         )
-        archive_accessor.stream_from_backup("/", file_size_calc_timeout=0)
+        archive_accessor.stream_from_backup(
+            "/", BACKUP_SET_ID, file_size_calc_timeout=0
+        )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "/")]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            expected_file_selection, BACKUP_SET_ID
+        )
 
     def test_stream_from_backup_with_root_level_folder_calls_get_stream(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller
@@ -665,9 +669,11 @@ class TestArchiveAccessor(object):
             restore_job_manager,
             file_size_poller,
         )
-        archive_accessor.stream_from_backup(USERS_DIR)
+        archive_accessor.stream_from_backup(USERS_DIR, BACKUP_SET_ID)
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, USERS_DIR)]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            expected_file_selection, BACKUP_SET_ID
+        )
 
     def test_stream_from_backup_with_file_path_calls_get_stream(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller
@@ -681,12 +687,14 @@ class TestArchiveAccessor(object):
             file_size_poller,
         )
         archive_accessor.stream_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, file_size_calc_timeout=0
+            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, BACKUP_SET_ID, file_size_calc_timeout=0
         )
         expected_file_selection = [
             get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
         ]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            expected_file_selection, BACKUP_SET_ID
+        )
 
     def test_stream_from_backup_normalizes_windows_paths(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
@@ -699,9 +707,13 @@ class TestArchiveAccessor(object):
             restore_job_manager,
             file_size_poller,
         )
-        archive_accessor.stream_from_backup("C:\\", file_size_calc_timeout=0)
+        archive_accessor.stream_from_backup(
+            "C:\\", BACKUP_SET_ID, file_size_calc_timeout=0
+        )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "C:/")]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            expected_file_selection, BACKUP_SET_ID
+        )
 
     def test_stream_from_backup_calls_get_file_size_with_expected_params(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
@@ -715,7 +727,7 @@ class TestArchiveAccessor(object):
             file_size_poller,
         )
         archive_accessor.stream_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, file_size_calc_timeout=10
+            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, BACKUP_SET_ID, file_size_calc_timeout=10
         )
         file_size_poller.get_file_sizes.assert_called_once_with(
             [DOWNLOADS_ID], timeout=10
@@ -741,7 +753,7 @@ class TestArchiveAccessor(object):
 
         file_size_poller.get_file_sizes.side_effect = get_file_sizes
         archive_accessor.stream_from_backup(
-            [PATH_TO_FILE_IN_DOWNLOADS_FOLDER, PATH_TO_DESKTOP_FOLDER],
+            [PATH_TO_FILE_IN_DOWNLOADS_FOLDER, PATH_TO_DESKTOP_FOLDER], BACKUP_SET_ID,
         )
         expected_file_selection = [
             get_file_selection(
@@ -749,7 +761,9 @@ class TestArchiveAccessor(object):
             ),
             get_file_selection(FileType.DIRECTORY, PATH_TO_DESKTOP_FOLDER, 4, 5, 6,),
         ]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            expected_file_selection, BACKUP_SET_ID
+        )
 
     def test_stream_from_backup_with_file_not_in_archive_raises_exception(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
@@ -764,7 +778,9 @@ class TestArchiveAccessor(object):
         )
         invalid_path_in_downloads_folder = "/Users/qa/Downloads/file-not-in-archive.txt"
         with pytest.raises(Exception) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(
+                invalid_path_in_downloads_folder, BACKUP_SET_ID
+            )
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
@@ -785,7 +801,9 @@ class TestArchiveAccessor(object):
         invalid_path_in_downloads_folder = u"/Users/qa/Downloads/吞"
 
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(
+                invalid_path_in_downloads_folder, BACKUP_SET_ID
+            )
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
@@ -807,7 +825,9 @@ class TestArchiveAccessor(object):
             "C:/Users/qa/Downloads/file-not-in-archive.txt"
         )
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(
+                invalid_path_in_downloads_folder, BACKUP_SET_ID
+            )
 
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
@@ -830,7 +850,9 @@ class TestArchiveAccessor(object):
             "c:/Users/qa/Downloads/file-not-in-archive.txt"
         )
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(
+                invalid_path_in_downloads_folder, BACKUP_SET_ID
+            )
 
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
@@ -849,7 +871,9 @@ class TestArchiveAccessor(object):
             restore_job_manager,
             file_size_poller,
         )
-        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+        archive_accessor.stream_from_backup(
+            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, BACKUP_SET_ID
+        )
         storage_archive_service.get_file_path_metadata.assert_called_with(
             WEB_RESTORE_SESSION_ID, DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
         )
@@ -979,16 +1003,21 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
-        restore_job_manager.get_stream(single_file_selection)
+        restore_job_manager.get_stream(single_file_selection, BACKUP_SET_ID)
+        expected_restore_groups = [
+            {
+                u"backupSetId": BACKUP_SET_ID,
+                u"files": [single_file_selection[0].path_set],
+            }
+        ]
         storage_archive_service.start_restore.assert_called_once_with(
-            guid=DEVICE_GUID,
+            device_guid=DEVICE_GUID,
             web_restore_session_id=WEB_RESTORE_SESSION_ID,
-            path_set=[single_file_selection[0].path_set],
+            restore_groups=expected_restore_groups,
             num_files=1,
             num_dirs=1,
-            size=1,
+            num_bytes=1,
             show_deleted=True,
-            zip_result=None,
         )
 
     def test_get_stream_when_multiple_files_selected_calls_start_restore_with_correct_args(
@@ -1004,19 +1033,24 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
-        restore_job_manager.get_stream(double_file_selection)
+        restore_job_manager.get_stream(double_file_selection, BACKUP_SET_ID)
+        expected_restore_groups = [
+            {
+                u"backupSetId": BACKUP_SET_ID,
+                u"files": [
+                    double_file_selection[0].path_set,
+                    double_file_selection[1].path_set,
+                ],
+            }
+        ]
         storage_archive_service.start_restore.assert_called_once_with(
-            guid=DEVICE_GUID,
+            device_guid=DEVICE_GUID,
             web_restore_session_id=WEB_RESTORE_SESSION_ID,
-            path_set=[
-                double_file_selection[0].path_set,
-                double_file_selection[1].path_set,
-            ],
+            restore_groups=expected_restore_groups,
             num_files=1 + 4,
             num_dirs=2 + 5,
-            size=3 + 6,
+            num_bytes=3 + 6,
             show_deleted=True,
-            zip_result=True,
         )
 
     def test_get_stream_polls_job_status_until_job_is_complete(
@@ -1041,7 +1075,7 @@ class TestRestoreJobManager(object):
             WEB_RESTORE_SESSION_ID,
             job_polling_interval=0.000001,
         )
-        restore_job_manager.get_stream(single_file_selection)
+        restore_job_manager.get_stream(single_file_selection, BACKUP_SET_ID)
         job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
         expected_call = mocker.call(job_id)
         storage_archive_service.get_restore_status.assert_has_calls(
@@ -1071,7 +1105,7 @@ class TestRestoreJobManager(object):
             WEB_RESTORE_SESSION_ID,
             job_polling_interval=0.000001,
         )
-        restore_job_manager.get_stream(single_file_selection)
+        restore_job_manager.get_stream(single_file_selection, BACKUP_SET_ID)
         job_id = get_response_job_id(GetWebRestoreJobResponses.MISSING_STATUS)
         expected_call = mocker.call(job_id)
         storage_archive_service.get_restore_status.assert_has_calls(
@@ -1099,46 +1133,4 @@ class TestRestoreJobManager(object):
             storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
 
-        assert restore_job_manager.get_stream(single_file_selection)
-
-    def test_get_stream_when_is_file_type_does_not_set_zip_result(
-        self,
-        mocker,
-        storage_archive_service,
-        single_file_selection,
-        file_content_chunks,
-    ):
-        mock_start_restore_response(
-            mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
-        )
-        mock_get_restore_status_responses(
-            mocker, storage_archive_service, [GetWebRestoreJobResponses.DONE]
-        )
-        stream_restore_result_response_mock(
-            mocker, storage_archive_service, file_content_chunks
-        )
-        restore_job_manager = RestoreJobManager(
-            storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
-        )
-        restore_job_manager.get_stream(single_file_selection)
-        actual = storage_archive_service.start_restore.call_args[1]["zip_result"]
-        assert actual is None
-
-    def test_get_stream_when_is_directory_type_sets_zip_result_to_true(
-        self, mocker, storage_archive_service, single_dir_selection, file_content_chunks
-    ):
-        mock_start_restore_response(
-            mocker, storage_archive_service, GetWebRestoreJobResponses.NOT_DONE
-        )
-        mock_get_restore_status_responses(
-            mocker, storage_archive_service, [GetWebRestoreJobResponses.DONE]
-        )
-        stream_restore_result_response_mock(
-            mocker, storage_archive_service, file_content_chunks
-        )
-        restore_job_manager = RestoreJobManager(
-            storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
-        )
-        restore_job_manager.get_stream(single_dir_selection)
-        actual = storage_archive_service.start_restore.call_args[1]["zip_result"]
-        assert actual is True
+        assert restore_job_manager.get_stream(single_file_selection, BACKUP_SET_ID)

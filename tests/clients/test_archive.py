@@ -1,14 +1,29 @@
 import pytest
+from requests import Response
 
 from py42.clients._archive_access import ArchiveAccessor
 from py42.clients._archive_access import ArchiveAccessorManager
 from py42.clients.archive import ArchiveClient
+from py42.response import Py42Response
 from py42.services.archive import ArchiveService
+
+
+BACKUP_SET_ID = "backup-set-id"
+ARCHIVE_GUID = "4224"
+DEVICE_GUID = "device-guid"
+DAYS = 42
+ORG_ID = 424242
 
 
 @pytest.fixture
 def archive_service(mocker):
-    return mocker.MagicMock(spec=ArchiveService)
+    service = mocker.MagicMock(spec=ArchiveService)
+    back_up_sets_response = mocker.MagicMock(spec=Response)
+    back_up_sets_response.text = """{{"backupSets": [{{"backupSetId": "{}"}}]}}""".format(
+        BACKUP_SET_ID
+    )
+    service.get_backup_sets.return_value = Py42Response(back_up_sets_response)
+    return service
 
 
 @pytest.fixture
@@ -22,27 +37,21 @@ def archive_accessor(mocker):
 
 
 class TestArchiveClient(object):
-
-    _TEST_DAYS = 42
-    _TEST_ID = 424242
-
     def test_get_by_archive_guid_calls_get_single_archive_with_expected_params(
         self, archive_service, archive_accessor_manager
     ):
-        archive_guid = 42
         archive = ArchiveClient(archive_accessor_manager, archive_service)
-        archive.get_by_archive_guid(archive_guid)
-        archive_service.get_single_archive.assert_called_once_with(archive_guid)
+        archive.get_by_archive_guid(ARCHIVE_GUID)
+        archive_service.get_single_archive.assert_called_once_with(ARCHIVE_GUID)
 
     def test_get_all_by_device_guid_calls_get_all_archives_from_value_with_expected_params(
         self, archive_service, archive_accessor_manager
     ):
-        device_guid = 42
         archive = ArchiveClient(archive_accessor_manager, archive_service)
-        for _ in archive.get_all_by_device_guid(device_guid):
+        for _ in archive.get_all_by_device_guid(DEVICE_GUID):
             pass
         archive_service.get_all_archives_from_value.assert_called_once_with(
-            device_guid, u"backupSourceGuid"
+            DEVICE_GUID, u"backupSourceGuid"
         )
 
     def test_stream_from_backup_calls_get_archive_accessor_with_expected_params(
@@ -72,7 +81,9 @@ class TestArchiveClient(object):
             "encryption_key",
         )
         archive_accessor.stream_from_backup.assert_called_once_with(
-            ["path/to/first/file", "path/to/second/file"], file_size_calc_timeout=10
+            ["path/to/first/file", "path/to/second/file"],
+            BACKUP_SET_ID,
+            file_size_calc_timeout=10,
         )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(
@@ -88,27 +99,27 @@ class TestArchiveClient(object):
         self, archive_accessor_manager, archive_service
     ):
         archive = ArchiveClient(archive_accessor_manager, archive_service)
-        archive.get_all_org_restore_history(self._TEST_DAYS, self._TEST_ID)
+        archive.get_all_org_restore_history(DAYS, ORG_ID)
         archive_service.get_all_restore_history.assert_called_once_with(
-            self._TEST_DAYS, "orgId", self._TEST_ID
+            DAYS, "orgId", ORG_ID
         )
 
     def test_get_all_user_restore_history_calls_get_all_restore_history_with_expected_id(
         self, archive_accessor_manager, archive_service
     ):
         archive = ArchiveClient(archive_accessor_manager, archive_service)
-        archive.get_all_user_restore_history(self._TEST_DAYS, self._TEST_ID)
+        archive.get_all_user_restore_history(DAYS, ORG_ID)
         archive_service.get_all_restore_history.assert_called_once_with(
-            self._TEST_DAYS, "userId", self._TEST_ID
+            DAYS, "userId", ORG_ID
         )
 
     def test_get_all_device_restore_history_calls_get_all_restore_history_with_expected_id(
         self, archive_accessor_manager, archive_service
     ):
         archive = ArchiveClient(archive_accessor_manager, archive_service)
-        archive.get_all_device_restore_history(self._TEST_DAYS, self._TEST_ID)
+        archive.get_all_device_restore_history(DAYS, ORG_ID)
         archive_service.get_all_restore_history.assert_called_once_with(
-            self._TEST_DAYS, "computerId", self._TEST_ID
+            DAYS, "computerId", ORG_ID
         )
 
     def test_update_cold_storage_purge_date_calls_update_cold_storage_with_expected_data(

@@ -113,7 +113,7 @@ class StorageArchiveService(BaseService):
 
     def start_restore(
         self,
-        guid,
+        device_guid,
         web_restore_session_id,
         restore_groups,
         num_files,
@@ -121,15 +121,15 @@ class StorageArchiveService(BaseService):
         num_bytes,
         expire_job=None,
         show_deleted=None,
-        restore_full_path=False,
-        restore_to_server=False,
+        restore_full_path=None,
+        restore_to_server=None,
     ):
         """Submits a web restore job."""
         uri = u"/api/v9/restore/web"
         json_dict = {
-            u"sourceComputerGuid": guid,
+            u"sourceComputerGuid": device_guid,
             u"webRestoreSessionId": web_restore_session_id,
-            u"restoreGroups": [restore_groups],
+            u"restoreGroups": restore_groups,
             u"numFiles": num_files,
             u"numDirs": num_dirs,
             u"numBytes": num_bytes,

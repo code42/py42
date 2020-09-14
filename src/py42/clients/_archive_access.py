@@ -13,8 +13,8 @@ FileSelection = namedtuple(
 
 
 class FileType(object):
-    DIRECTORY = u"directory"
-    FILE = u"file"
+    DIRECTORY = u"DIRECTORY"
+    FILE = u"FILE"
 
 
 class ArchiveAccessorManager(object):
@@ -316,12 +316,14 @@ class RestoreJobManager(_RestorePoller):
         num_dirs = sum([fs.num_dirs for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
         return self._storage_archive_service.start_restore(
-            guid=self._device_guid,
+            device_guid=self._device_guid,
             web_restore_session_id=self._archive_session_id,
-            restore_groups={
-                u"backupSetId": backup_set_id,
-                u"files": [f.path_set for f in file_selections],
-            },
+            restore_groups=[
+                {
+                    u"backupSetId": backup_set_id,
+                    u"files": [f.path_set for f in file_selections],
+                }
+            ],
             num_files=num_files,
             num_dirs=num_dirs,
             num_bytes=num_bytes,

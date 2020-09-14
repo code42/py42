@@ -140,6 +140,11 @@ class Py42InvalidRuleOperationError(Py42HTTPError):
         )
 
 
+class Py42InvalidDestinationError(Py42ResponseError):
+    """An error when the response indicated the target destination GUID was invalid.
+    Used by `stream_to_destination()`."""
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

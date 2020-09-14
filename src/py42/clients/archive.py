@@ -108,8 +108,9 @@ class ArchiveClient(object):
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         if not destination_guid:
+            # Select the first destination GUID available.
             response = self.get_all_by_device_guid(device_guid)
-            destination_guid = next(response)["archives"][0]["targetGuid"]
+            destination_guid = next(response)[u"archives"][0][u"targetGuid"]
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
             device_guid,
             destination_guid=destination_guid,
@@ -202,8 +203,8 @@ class ArchiveClient(object):
         self,
         org_id,
         include_child_orgs=True,
-        sort_key="archiveHoldExpireDate",
-        sort_dir="asc",
+        sort_key=u"archiveHoldExpireDate",
+        sort_dir=u"asc",
     ):
         """Returns a detailed list of cold storage archive information for a given org ID.
 

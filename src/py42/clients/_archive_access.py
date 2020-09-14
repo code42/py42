@@ -291,7 +291,7 @@ class RestoreJobManager(_RestorePoller):
         response = self._start_push_restore(
             destination_guid, accepting_guid, restore_path, file_selections,
         )
-        job_id = response["restoreId"]
+        job_id = response[u"restoreId"]
         self._wait_for_job(job_id)
 
     def _wait_for_job(self, job_id):

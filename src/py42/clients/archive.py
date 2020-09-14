@@ -107,6 +107,13 @@ class ArchiveClient(object):
         encryption_key=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
+        """Streams a file from a backup archive to a specified device. If streaming multiple files, the
+        results will be zipped.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#PushRestoreJobResult-post>`__
+
+        Returns:
+            :class:`py42.response.Py42Response`.
+        """
         if not destination_guid:
             # Select the first destination GUID available.
             response = self.get_all_by_device_guid(device_guid)

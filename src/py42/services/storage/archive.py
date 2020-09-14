@@ -111,16 +111,14 @@ class StorageArchiveService(BaseService):
         self,
         guid,
         web_restore_session_id,
-        path_set,
+        restore_groups,
         num_files,
         num_dirs,
         size,
-        zip_result=None,
         expire_job=None,
         show_deleted=None,
         restore_full_path=None,
-        timestamp=None,
-        backup_set_id=None,
+        restore_to_server=None,
     ):
         """Submits a web restore job.
         See https://console.us.code42.com/apidocviewer/#WebRestoreJob-post
@@ -129,16 +127,14 @@ class StorageArchiveService(BaseService):
         json_dict = {
             u"guid": guid,
             u"webRestoreSessionId": web_restore_session_id,
-            u"pathSet": path_set,
+            u"restoreGroups": restore_groups,
             u"numFiles": num_files,
             u"numDirs": num_dirs,
             u"numBytes": size,
-            u"zipResult": zip_result,
             u"expireJob": expire_job,
             u"showDeleted": show_deleted,
             u"restoreFullPath": restore_full_path,
-            u"timestamp": timestamp,
-            u"backupSetId": backup_set_id,
+            u"restoreToServer": restore_to_server,
         }
 
         return self._connection.post(uri, json=json_dict)

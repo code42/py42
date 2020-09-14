@@ -13,6 +13,7 @@ from py42._compat import urljoin
 from py42._compat import urlparse
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42FeatureUnavailableError
+from py42.exceptions import Py42MFARequiredError
 from py42.exceptions import raise_py42_error
 from py42.response import Py42Response
 from py42.services._auth import C42RenewableAuth
@@ -247,7 +248,13 @@ def _handle_error(method, url, response):
     try:
         response.raise_for_status()
     except HTTPError as ex:
-        raise_py42_error(ex)
+        if response.json()["error"][0]["primaryErrorKey"] in [
+            "TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER",
+            "TIME_BASED_ONE_TIME_PASSWORD_REQUIRED",
+        ]:
+            raise Py42MFARequiredError(ex)
+        else:
+            raise_py42_error(ex)
 
 
 def _print_request(method, url, params=None, data=None):

@@ -105,6 +105,9 @@ class Connection(object):
     def host_address(self):
         return self._get_host_address()
 
+    def add_header(self, header):
+        return self._headers.update(header)
+
     def clone(self, host_address):
         host_resolver = KnownUrlHostResolver(host_address)
         return Connection(host_resolver, auth=self._auth)

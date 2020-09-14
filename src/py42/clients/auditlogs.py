@@ -8,22 +8,22 @@ class AuditLogsClient(object):
         end_time=None,
         event_types=None,
         user_ids=None,
-        user_names=None,
+        usernames=None,
         user_ip_addresses=None,
         affected_user_ids=None,
-        affected_user_names=None,
+        affected_usernames=None,
     ):
         """Retrieve audit logs, filtered based on given arguments.
 
         Args:
             begin_time (datetime, optional): A datetime.datetime instance for a given timestamp. Defaults to None.
             end_time (datetime, optional): A datetime.datetime instance for a given timestamp. Defaults to None.
-            event_types (str, optional): Comma separated str of valid event types. Defaults to None.
-            user_ids (str, optional): Comma separated str of user ids. Defaults to None.
-            user_names (str, optional): Comma separated str of user names. Defaults to None.
-            user_ip_addresses (str, optional): Comma separated str of user ip addresses. Defaults to None.
-            affected_user_ids (str, optional): Comma separated str of affected user ids. Defaults to None.
-            affected_user_names (str, optional): Comma separated str of affected user names. Defaults to None.
+            event_types (str or list, optional): A str or list of str of valid event types. Defaults to None.
+            user_ids (str or list, optional): A str or list of str of user ids. Defaults to None.
+            usernames (str or list, optional): A str or list of str of user names. Defaults to None.
+            user_ip_addresses (str or list, optional): A str or list of str of user ip addresses. Defaults to None.
+            affected_user_ids (str or list, optional): A str or list of str of affected user ids. Defaults to None.
+            affected_usernames  (str or list, optional): A str or list of str of affected user names. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -34,8 +34,8 @@ class AuditLogsClient(object):
             end_time=end_time,
             event_types=event_types,
             user_ids=user_ids,
-            user_names=user_names,
+            usernames=usernames,
             user_ip_addresses=user_ip_addresses,
             affected_user_ids=affected_user_ids,
-            affected_user_names=affected_user_names,
+            affected_usernames=affected_usernames,
         )

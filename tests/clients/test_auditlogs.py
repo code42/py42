@@ -19,8 +19,8 @@ class TestAuditLogsClient(object):
             end_time=None,
             event_types=None,
             user_ids=None,
-            user_names=None,
+            usernames=None,
             user_ip_addresses=None,
             affected_user_ids=None,
-            affected_user_names=None,
+            affected_usernames=None,
         )

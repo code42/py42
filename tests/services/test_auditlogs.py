@@ -53,7 +53,7 @@ class TestAuditLogService(object):
 
     def test_get_all_calls_actor_names_with_list_of_user_names(self, mock_connection):
         service = AuditLogsService(mock_connection)
-        for _ in service.get_all(user_names="test@test.com,test@code42.com"):
+        for _ in service.get_all(usernames=["test@test.com", "test@code42.com"]):
             pass
         expected_data = {
             "page": 0,
@@ -74,12 +74,12 @@ class TestAuditLogService(object):
     def test_get_all_calls_all_params_in_valid_formats(self, mock_connection):
         service = AuditLogsService(mock_connection)
         for _ in service.get_all(
-            user_names="test@test.com,test@code42.com",
-            user_ids="1208,12089",
+            usernames=["test@test.com", "test@code42.com"],
+            user_ids=["1208", "12089"],
             event_types="abc",
-            user_ip_addresses="127.0.0.1,0.0.0.0",
+            user_ip_addresses=["127.0.0.1", "0.0.0.0"],
             affected_user_ids="",
-            affected_user_names="test_user@name.com",
+            affected_usernames="test_user@name.com",
         ):
             pass
         expected_data = {

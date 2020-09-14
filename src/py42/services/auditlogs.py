@@ -2,6 +2,7 @@ from py42 import settings
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 from py42.util import convert_datetime_to_timestamp_str
+from py42.util import to_list
 
 
 class AuditLogsService(BaseService):
@@ -15,13 +16,13 @@ class AuditLogsService(BaseService):
             dateRange=kwargs["date_range"],
             eventTypes=kwargs["event_types"],
             actorIds=kwargs["user_ids"],
-            actorNames=kwargs["user_names"],
+            actorNames=kwargs["usernames"],
             actorIpAddresses=kwargs["user_ip_addresses"],
             affectedUserIds=kwargs["affected_user_ids"],
-            affectedUserNames=kwargs["affected_user_names"],
+            affectedUserNames=kwargs["affected_usernames"],
         )
         params["type$"] = "audit_log::audit_log_queries.search_audit_log/1"
-        return self._connection.post(uri, json=params,)
+        return self._connection.post(uri, json=params)
 
     def get_all(
         self,
@@ -29,20 +30,18 @@ class AuditLogsService(BaseService):
         end_time=None,
         event_types=None,
         user_ids=None,
-        user_names=None,
+        usernames=None,
         user_ip_addresses=None,
         affected_user_ids=None,
-        affected_user_names=None,
+        affected_usernames=None,
     ):
-        comma = u","
-        event_types = event_types.split(comma) if event_types else []
-        user_ids = user_ids.split(comma) if user_ids else []
-        user_names = user_names.split(comma) if user_names else []
-        user_ip_addresses = user_ip_addresses.split(comma) if user_ip_addresses else []
-        affected_user_ids = affected_user_ids.split(comma) if affected_user_ids else []
-        affected_user_names = (
-            affected_user_names.split(comma) if affected_user_names else []
-        )
+
+        event_types = to_list(event_types)
+        user_ids = to_list(user_ids)
+        usernames = to_list(usernames)
+        user_ip_addresses = to_list(user_ip_addresses)
+        affected_user_ids = to_list(affected_user_ids)
+        affected_usernames = to_list(affected_usernames)
 
         date_range = {}
         if begin_time:
@@ -56,8 +55,8 @@ class AuditLogsService(BaseService):
             date_range=date_range,
             event_types=event_types,
             user_ids=user_ids,
-            user_names=user_names,
+            usernames=usernames,
             user_ip_addresses=user_ip_addresses,
             affected_user_ids=affected_user_ids,
-            affected_user_names=affected_user_names,
+            affected_usernames=affected_usernames,
         )

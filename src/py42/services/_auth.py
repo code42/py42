@@ -38,6 +38,6 @@ class V3Auth(C42RenewableAuth):
         uri = u"/c42api/v3/auth/jwt"
         params = {u"useBody": True}
         currentToken = self._totp()
-        headers = {"totp-auth": currentToken} if currentToken else None
+        headers = {"totp-auth": str(currentToken)} if currentToken else None
         response = self._auth_connection.get(uri, params=params, headers=headers)
         return u"v3_user_token {}".format(response["v3_user_token"])

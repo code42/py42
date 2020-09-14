@@ -1,6 +1,6 @@
 from py42.exceptions import Py42Error
-from py42.exceptions import Py42InvalidDestinationError
 from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidDestinationError
 
 _FILE_SIZE_CALC_TIMEOUT = 10
 
@@ -122,7 +122,9 @@ class ArchiveClient(object):
             response = self.get_all_by_device_guid(device_guid)
             archives = next(response)[u"archives"]
             if not archives:
-                raise Py42Error("No destination for device with GUID {}.".format(device_guid))
+                raise Py42Error(
+                    "No destination for device with GUID {}.".format(device_guid)
+                )
             target_guids = [a[u"targetGuid"] for a in archives]
         else:
             target_guids = [destination_guid]
@@ -174,7 +176,15 @@ class ArchiveClient(object):
             )
         except Py42InternalServerError as err:
             if "Invalid target node guid" in err.response.text:
-                raise Py42InvalidDestinationError(err.response, "")
+                raise Py42InvalidDestinationError(
+                    err.response,
+                    "Invalid target node GUID {}.".format(destination_guid),
+                )
+            elif "No backup plans" in err.response.text:
+                raise Py42InvalidDestinationError(
+                    err.response,
+                    "No backup plans for destination {}.".format(destination_guid),
+                )
             raise
 
     def get_backup_sets(self, device_guid, destination_guid):

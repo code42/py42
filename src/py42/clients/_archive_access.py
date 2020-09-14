@@ -30,7 +30,7 @@ class ArchiveAccessorManager(object):
         encryption_key=None,
     ):
         service = self._storage_service_factory.create_archive_service(
-            device_guid=device_guid, destination_guid=destination_guid
+            device_guid, destination_guid=destination_guid
         )
         decryption_keys = self._get_decryption_keys(
             device_guid=device_guid,
@@ -38,16 +38,14 @@ class ArchiveAccessorManager(object):
             encryption_key=encryption_key,
         )
         session_id = self._create_restore_session(
-            storage_archive_service=service, device_guid=device_guid, **decryption_keys
+            service, device_guid, **decryption_keys
         )
         restore_job_manager = create_restore_job_manager(
             storage_archive_service=service,
             device_guid=device_guid,
             archive_session_id=session_id,
         )
-        file_size_poller = create_file_size_poller(
-            storage_archive_service=service, device_guid=device_guid
-        )
+        file_size_poller = create_file_size_poller(service, device_guid)
         return ArchiveAccessor(
             device_guid=device_guid,
             archive_session_id=session_id,

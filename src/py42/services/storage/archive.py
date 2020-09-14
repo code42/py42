@@ -6,11 +6,6 @@ class StorageArchiveService(BaseService):
         self.destination_guid = connection._auth.destination_guid
         super(StorageArchiveService, self).__init__(connection)
 
-    def get_connected_server_url(self, device_guid):
-        url = u"/api/connectedServerUrl"
-        params = {"guid": device_guid}
-        return self._connection.get(url, params=params)
-
     def search_paths(
         self,
         session_id,

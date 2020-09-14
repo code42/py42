@@ -92,7 +92,7 @@ class ArchiveClient(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        backup_set_id = self._archive_service.get_backup_sets(
+        backup_set_id = self.get_backup_sets(
             device_guid, archive_accessor.destination_guid
         )[u"backupSets"][0][u"backupSetId"]
         return archive_accessor.stream_from_backup(

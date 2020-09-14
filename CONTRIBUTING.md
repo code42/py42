@@ -100,7 +100,7 @@ If the full process runs without any errors, your environment is set up correctl
 ### General
 
 * Use syntax and built-in modules that are compatible with both Python 2 and 3.
-* Use the `py42._internal.compat` module to create abstractions around functionality that differs between 2 and 3.
+* Use the `py42._compat` module to create abstractions around functionality that differs between 2 and 3.
 
 ### Wrapping web APIs
 

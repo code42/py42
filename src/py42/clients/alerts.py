@@ -1,3 +1,6 @@
+from py42.sdk.queries.alerts.filters import AlertState
+
+
 class AlertsClient(object):
     def __init__(self, alert_service, alert_rules_client):
         self._alert_service = alert_service
@@ -49,7 +52,9 @@ class AlertsClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.resolve(alert_ids, reason=reason)
+        return self._alert_service.update_state(
+            AlertState.DISMISSED, alert_ids, note=reason
+        )
 
     def reopen(self, alert_ids, reason=None):
         """Reopens the resolved alerts with the given IDs.
@@ -61,4 +66,17 @@ class AlertsClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._alert_service.reopen(alert_ids, reason=reason)
+        return self._alert_service.update_state(AlertState.OPEN, alert_ids, note=reason)
+
+    def update_state(self, status, alert_ids, note=None):
+        """Update status for given alert IDs.
+
+        Args:
+            status (str): Status to set from OPEN, RESOLVED, PENDING, IN_PROGRESS
+            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
+            note (str, optional): User note regarding the status. Defaults to None.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        return self._alert_service.update_state(status, alert_ids, note=note)

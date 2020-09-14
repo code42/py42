@@ -11,7 +11,7 @@ from py42.clients.securitydata import SecurityDataClient
 from py42.services import Services
 from py42.services._auth import V3Auth
 from py42.services._connection import Connection
-from py42.services._keyvaluestore import KeyValueStoreClient
+from py42.services._keyvaluestore import KeyValueStoreService
 from py42.services.administration import AdministrationService
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
@@ -196,7 +196,7 @@ def _init_services(main_connection, main_auth):
     kv_prefix = u"simple-key-value-store"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
-    kv_service = KeyValueStoreClient(kv_connection)
+    kv_service = KeyValueStoreService(kv_connection)
 
     alert_rules_conn = Connection.from_microservice_key(
         kv_service, alert_rules_key, auth=main_auth

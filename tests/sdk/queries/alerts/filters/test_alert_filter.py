@@ -360,5 +360,5 @@ def test_severity_choices_returns_set():
 
 def test_alert_state_choices_returns_set():
     choices = AlertState.choices()
-    valid_set = {"OPEN", "RESOLVED"}
+    valid_set = {"OPEN", "RESOLVED", "PENDING", "IN_PROGRESS"}
     assert set(choices) == valid_set

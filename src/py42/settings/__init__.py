@@ -9,6 +9,7 @@ proxies = None
 verify_ssl_certs = True
 
 items_per_page = 500
+security_events_per_page = 10000
 
 _custom_user_suffix = u""
 _python_version = u"{}.{}.{}".format(

@@ -125,14 +125,14 @@ class StorageArchiveService(BaseService):
         """Submits a web restore job.
         See https://console.us.code42.com/apidocviewer/#WebRestoreJob-post
         """
-        uri = u"/api/WebRestoreJob"
+        uri = u"/api/v9/restore/web"
         json_dict = {
             u"guid": guid,
             u"webRestoreSessionId": web_restore_session_id,
             u"pathSet": path_set,
             u"numFiles": num_files,
             u"numDirs": num_dirs,
-            u"size": size,
+            u"numBytes": size,
             u"zipResult": zip_result,
             u"expireJob": expire_job,
             u"showDeleted": show_deleted,

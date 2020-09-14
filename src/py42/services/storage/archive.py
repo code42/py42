@@ -2,6 +2,15 @@ from py42.services import BaseService
 
 
 class StorageArchiveService(BaseService):
+    def __init__(self, connection):
+        self.destination_guid = connection._auth.destination_guid
+        super(StorageArchiveService, self).__init__(connection)
+
+    def get_connected_server_url(self, device_guid):
+        url = u"/api/connectedServerUrl"
+        params = {"guid": device_guid}
+        return self._connection.get(url, params=params)
+
     def search_paths(
         self,
         session_id,
@@ -114,29 +123,26 @@ class StorageArchiveService(BaseService):
         restore_groups,
         num_files,
         num_dirs,
-        size,
+        num_bytes,
         expire_job=None,
         show_deleted=None,
-        restore_full_path=None,
-        restore_to_server=None,
+        restore_full_path=False,
+        restore_to_server=False,
     ):
-        """Submits a web restore job.
-        See https://console.us.code42.com/apidocviewer/#WebRestoreJob-post
-        """
+        """Submits a web restore job."""
         uri = u"/api/v9/restore/web"
         json_dict = {
-            u"guid": guid,
+            u"sourceComputerGuid": guid,
             u"webRestoreSessionId": web_restore_session_id,
-            u"restoreGroups": restore_groups,
+            u"restoreGroups": [restore_groups],
             u"numFiles": num_files,
             u"numDirs": num_dirs,
-            u"numBytes": size,
+            u"numBytes": num_bytes,
             u"expireJob": expire_job,
             u"showDeleted": show_deleted,
             u"restoreFullPath": restore_full_path,
             u"restoreToServer": restore_to_server,
         }
-
         return self._connection.post(uri, json=json_dict)
 
     def get_restore_status(self, job_id):

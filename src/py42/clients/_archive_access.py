@@ -7,7 +7,9 @@ from py42.settings import debug
 from py42.util import format_dict
 
 
-FileSelection = namedtuple(u"FileSelection", u"path_set, num_files, num_dirs, size")
+FileSelection = namedtuple(
+    u"FileSelection", u"path_set, num_files, num_dirs, num_bytes"
+)
 
 
 class FileType(object):
@@ -28,20 +30,30 @@ class ArchiveAccessorManager(object):
         encryption_key=None,
     ):
         service = self._storage_service_factory.create_archive_service(
-            device_guid, destination_guid=destination_guid
+            device_guid=device_guid, destination_guid=destination_guid
         )
         decryption_keys = self._get_decryption_keys(
-            device_guid, private_password, encryption_key
+            device_guid=device_guid,
+            private_password=private_password,
+            encryption_key=encryption_key,
         )
         session_id = self._create_restore_session(
-            service, device_guid, **decryption_keys
+            storage_archive_service=service, device_guid=device_guid, **decryption_keys
         )
         restore_job_manager = create_restore_job_manager(
-            service, device_guid, session_id
+            storage_archive_service=service,
+            device_guid=device_guid,
+            archive_session_id=session_id,
         )
-        file_size_poller = create_file_size_poller(service, device_guid)
+        file_size_poller = create_file_size_poller(
+            storage_archive_service=service, device_guid=device_guid
+        )
         return ArchiveAccessor(
-            device_guid, session_id, service, restore_job_manager, file_size_poller,
+            device_guid=device_guid,
+            archive_session_id=session_id,
+            storage_archive_service=service,
+            restore_job_manager=restore_job_manager,
+            file_size_poller=file_size_poller,
         )
 
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):
@@ -74,12 +86,15 @@ def _create_file_selections(file_paths, metadata_list, file_sizes=None):
         metadata = metadata_list[i]
         size_info = file_sizes[i] if file_sizes else _get_default_file_size()
         path_set = {
-            u"type": metadata[u"type"],
+            u"fileType": metadata[u"type"].upper(),
             u"path": metadata[u"path"],
-            u"selected": True,
+            u"selected": str(True).lower(),
         }
         selection = FileSelection(
-            path_set, size_info[u"numFiles"], size_info[u"numDirs"], size_info[u"size"],
+            path_set=path_set,
+            num_files=size_info[u"numFiles"],
+            num_dirs=size_info[u"numDirs"],
+            num_bytes=size_info[u"size"],
         )
         file_selections.append(selection)
 
@@ -87,9 +102,12 @@ def _create_file_selections(file_paths, metadata_list, file_sizes=None):
 
 
 class ArchiveAccessor(object):
-
     DEFAULT_DIRECTORY_DOWNLOAD_NAME = u"download"
     JOB_POLLING_INTERVAL = 1
+
+    @property
+    def destination_guid(self):
+        return self._restore_job_manager.destination_guid
 
     def __init__(
         self,
@@ -105,11 +123,13 @@ class ArchiveAccessor(object):
         self._restore_job_manager = restore_job_manager
         self._file_size_poller = file_size_poller
 
-    def stream_from_backup(self, file_paths, file_size_calc_timeout=None):
+    def stream_from_backup(
+        self, file_paths, backup_set_id, file_size_calc_timeout=None
+    ):
         file_selections = self._create_file_selections(
             file_paths, file_size_calc_timeout
         )
-        return self._restore_job_manager.get_stream(file_selections)
+        return self._restore_job_manager.get_stream(file_selections, backup_set_id)
 
     def _create_file_selections(self, file_paths, file_size_calc_timeout):
         if not isinstance(file_paths, (list, tuple)):
@@ -179,7 +199,9 @@ def _get_default_file_size():
 class _RestorePoller(object):
     JOB_POLLING_INTERVAL_SECONDS = 1
 
-    def __init__(self, storage_archive_service, device_guid, job_polling_interval=None):
+    def __init__(
+        self, storage_archive_service, device_guid, job_polling_interval=None,
+    ):
         self._storage_archive_service = storage_archive_service
         self._device_guid = device_guid
         self._job_polling_interval = (
@@ -260,12 +282,18 @@ class RestoreJobManager(_RestorePoller):
         job_polling_interval=None,
     ):
         super(RestoreJobManager, self).__init__(
-            storage_archive_service, device_guid, job_polling_interval
+            storage_archive_service=storage_archive_service,
+            device_guid=device_guid,
+            job_polling_interval=job_polling_interval,
         )
         self._archive_session_id = archive_session_id
 
-    def get_stream(self, file_selections):
-        response = self._start_restore(file_selections)
+    @property
+    def destination_guid(self):
+        return self._storage_archive_service.destination_guid
+
+    def get_stream(self, file_selections, backup_set_id):
+        response = self._start_restore(file_selections, backup_set_id)
         job_id = response["jobId"]
         self._wait_for_job(job_id)
         return self._get_stream(job_id)
@@ -285,19 +313,20 @@ class RestoreJobManager(_RestorePoller):
         debug.logger.debug(format_dict(percentage_dict))
         return is_done
 
-    def _start_restore(self, file_selections):
+    def _start_restore(self, file_selections, backup_set_id):
         num_files = sum([fs.num_files for fs in file_selections])
         num_dirs = sum([fs.num_dirs for fs in file_selections])
-        size = sum([fs.size for fs in file_selections])
-        zip_result = _check_for_multiple_files(file_selections) or None
+        num_bytes = sum([fs.num_bytes for fs in file_selections])
         return self._storage_archive_service.start_restore(
             guid=self._device_guid,
             web_restore_session_id=self._archive_session_id,
-            path_set=[fs.path_set for fs in file_selections],
+            restore_groups={
+                u"backupSetId": backup_set_id,
+                u"files": [f.path_set for f in file_selections],
+            },
             num_files=num_files,
             num_dirs=num_dirs,
-            size=size,
-            zip_result=zip_result,
+            num_bytes=num_bytes,
             show_deleted=True,
         )
 
@@ -309,7 +338,11 @@ class RestoreJobManager(_RestorePoller):
 def create_restore_job_manager(
     storage_archive_service, device_guid, archive_session_id
 ):
-    return RestoreJobManager(storage_archive_service, device_guid, archive_session_id)
+    return RestoreJobManager(
+        storage_archive_service=storage_archive_service,
+        device_guid=device_guid,
+        archive_session_id=archive_session_id,
+    )
 
 
 def create_file_size_poller(storage_archive_service, device_guid):
@@ -324,4 +357,4 @@ def _check_for_multiple_files(file_selection):
 
     # Only one file selected
     selection = file_selection[0]
-    return selection.path_set[u"type"].lower() == u"directory"
+    return selection.path_set[u"fileType"].lower() == u"directory"

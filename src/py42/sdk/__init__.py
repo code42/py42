@@ -30,6 +30,7 @@ from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.users import UserService
 from py42.usercontext import UserContext
+from py42.services.audit_logs import AuditLogsService
 
 
 def from_local_account(host_address, username, password):
@@ -186,6 +187,16 @@ class SDKClient(object):
         """
         return self._clients.alerts
 
+    @property
+    def auditlogs(self):
+        """A collections of methods for retrieving audit logs.
+
+        Returns:
+            :class:`py42.services.auditlogs.AuditLogsService`
+        """
+
+
+
 
 def _init_services(main_connection, main_auth):
     alert_rules_key = u"FedObserver-API_URL"
@@ -194,6 +205,7 @@ def _init_services(main_connection, main_auth):
     preservation_data_key = u"PRESERVATION-DATA-SERVICE_API-URL"
     employee_case_mgmt_key = u"employeecasemanagement-API_URL"
     kv_prefix = u"simple-key-value-store"
+    audit_logs_key = u"AUDIT-LOG_API-URL"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
     kv_service = KeyValueStoreService(kv_connection)
@@ -213,7 +225,9 @@ def _init_services(main_connection, main_auth):
     ecm_conn = Connection.from_microservice_key(
         kv_service, employee_case_mgmt_key, auth=main_auth
     )
-
+    audit_logs_conn = Connection.from_microservice_key(
+        kv_service, audit_logs_key, auth=main_auth
+    )
     user_svc = UserService(main_connection)
     administration_svc = AdministrationService(main_connection)
     file_event_svc = FileEventService(file_events_conn)
@@ -238,6 +252,7 @@ def _init_services(main_connection, main_auth):
         ),
         highriskemployee=HighRiskEmployeeService(ecm_conn, user_ctx, user_profile_svc),
         userprofile=user_profile_svc,
+        audit_logs=AuditLogsService(audit_logs_conn, user_ctx)
     )
 
     return services, user_ctx

@@ -27,5 +27,6 @@ Services = namedtuple(
         u"departingemployee",
         u"highriskemployee",
         u"userprofile",
+        u"auditlogs",
     ],
 )

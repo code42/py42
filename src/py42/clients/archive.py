@@ -1,3 +1,5 @@
+from py42.exceptions import Py42Error
+
 _FILE_SIZE_CALC_TIMEOUT = 10
 
 
@@ -117,6 +119,9 @@ class ArchiveClient(object):
         if not destination_guid:
             # Select the first destination GUID available.
             response = self.get_all_by_device_guid(device_guid)
+            archives = next(response)[u"archives"]
+            if not archives:
+                raise Py42Error("No destination for device with GUID {}.".format(device_guid))
             destination_guid = next(response)[u"archives"][0][u"targetGuid"]
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
             device_guid,

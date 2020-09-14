@@ -105,6 +105,10 @@ class ArchiveAccessor(object):
         self._restore_job_manager = restore_job_manager
         self._file_size_poller = file_size_poller
 
+    @property
+    def destination_guid(self):
+        return self._restore_job_manager.destination_guid
+
     def stream_from_backup(self, file_paths, file_size_calc_timeout=None):
         file_selections = self._create_file_selections(
             file_paths, file_size_calc_timeout
@@ -113,7 +117,6 @@ class ArchiveAccessor(object):
 
     def stream_to_destination(
         self,
-        destination_guid,
         accepting_guid,
         restore_path,
         file_paths,
@@ -123,7 +126,7 @@ class ArchiveAccessor(object):
             file_paths, file_size_calc_timeout
         )
         return self._restore_job_manager.send_stream(
-            destination_guid, accepting_guid, restore_path, file_selections
+            self.destination_guid, accepting_guid, restore_path, file_selections
         )
 
     def _create_file_selections(self, file_paths, file_size_calc_timeout):
@@ -278,6 +281,10 @@ class RestoreJobManager(_RestorePoller):
             storage_archive_service, device_guid, job_polling_interval
         )
         self._archive_session_id = archive_session_id
+
+    @property
+    def destination_guid(self):
+        return self._storage_archive_service.destination_guid
 
     def get_stream(self, file_selections):
         response = self._start_web_restore(file_selections)

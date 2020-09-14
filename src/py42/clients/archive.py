@@ -118,48 +118,6 @@ class ArchiveClient(object):
         Returns:
             :class:`py42.response.Py42Response`.
         """
-        if not destination_guid:
-            response = self.get_all_by_device_guid(device_guid)
-            archives = next(response)[u"archives"]
-            if not archives:
-                raise Py42Error(
-                    "No destination for device with GUID {}.".format(device_guid)
-                )
-            target_guids = [a[u"targetGuid"] for a in archives]
-        else:
-            target_guids = [destination_guid]
-
-        # Try all target GUIDs until doesn't result in specific error.
-        for guid in target_guids:
-            try:
-                res = self._stream_to_destination(
-                    file_paths,
-                    device_guid,
-                    accepting_device_guid,
-                    restore_path,
-                    destination_guid=guid,
-                    archive_password=archive_password,
-                    encryption_key=encryption_key,
-                    file_size_calc_timeout=file_size_calc_timeout,
-                )
-                return res
-            except Py42InvalidDestinationError:
-                target_guids.pop()
-                if target_guids:
-                    continue
-                raise
-
-    def _stream_to_destination(
-        self,
-        file_paths,
-        device_guid,
-        accepting_device_guid,
-        restore_path,
-        destination_guid,
-        archive_password=None,
-        encryption_key=None,
-        file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
-    ):
         archive_accessor = self._archive_accessor_manager.get_archive_accessor(
             device_guid,
             destination_guid=destination_guid,
@@ -168,22 +126,21 @@ class ArchiveClient(object):
         )
         try:
             return archive_accessor.stream_to_destination(
-                destination_guid,
                 accepting_device_guid,
                 restore_path,
                 file_paths,
                 file_size_calc_timeout=file_size_calc_timeout,
             )
         except Py42InternalServerError as err:
-            if "Invalid target node guid" in err.response.text:
+            if u"Invalid target node guid" in err.response.text:
                 raise Py42InvalidDestinationError(
                     err.response,
-                    "Invalid target node GUID {}.".format(destination_guid),
+                    u"Invalid target node GUID {}.".format(destination_guid),
                 )
-            elif "No backup plans" in err.response.text:
+            elif u"No backup plans" in err.response.text:
                 raise Py42InvalidDestinationError(
                     err.response,
-                    "No backup plans for destination {}.".format(destination_guid),
+                    u"No backup plans for destination {}.".format(destination_guid),
                 )
             raise
 

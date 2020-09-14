@@ -83,9 +83,7 @@ class SDKClient(object):
         if username and password:
             basic_auth = HTTPBasicAuth(username, password)
         auth_connection = Connection.from_host_address(host_address, auth=basic_auth)
-        if totp:
-            auth_connection.add_header({"totp-auth": str(totp)})
-        v3_auth = V3Auth(auth_connection)
+        v3_auth = V3Auth(auth_connection, totp)
         main_connection = Connection.from_host_address(host_address, auth=v3_auth)
 
         return cls(main_connection, v3_auth)

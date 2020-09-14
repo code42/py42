@@ -29,12 +29,16 @@ class C42RenewableAuth(AuthBase):
 
 
 class V3Auth(C42RenewableAuth):
-    def __init__(self, auth_connection):
+    def __init__(self, auth_connection, totp=None):
         super(V3Auth, self).__init__()
         self._auth_connection = auth_connection
+        self._totp = totp if callable(totp) else lambda: totp
 
     def _get_credentials(self):
         uri = u"/c42api/v3/auth/jwt"
         params = {u"useBody": True}
+        currentToken = self._totp()
+        if currentToken:
+            self._auth_connection.add_header({"totp-auth": currentToken})
         response = self._auth_connection.get(uri, params=params)
         return u"v3_user_token {}".format(response["v3_user_token"])

@@ -281,7 +281,7 @@ class RestoreJobManager(_RestorePoller):
 
     def get_stream(self, file_selections):
         response = self._start_web_restore(file_selections)
-        job_id = response["jobId"]
+        job_id = response[u"jobId"]
         self._wait_for_job(job_id)
         return self._get_stream(job_id)
 
@@ -303,7 +303,7 @@ class RestoreJobManager(_RestorePoller):
         is_done = response[u"done"]
         percentage_dict = {
             u"jobId": job_id,
-            u"status": response.data.get("status"),
+            u"status": response.data.get(u"status"),
             u"percentComplete": response[u"percentComplete"] if not is_done else 100,
         }
         debug.logger.debug(format_dict(percentage_dict))
@@ -342,9 +342,9 @@ class RestoreJobManager(_RestorePoller):
             show_deleted=True,
             permit_restore_to_different_os_version=False,
             restore_full_path=False,
-            push_restore_strategy="TARGET_DIRECTORY",
-            existing_files="RENAME_ORIGINAL",
-            file_permissions="CURRENT",
+            push_restore_strategy=u"TARGET_DIRECTORY",
+            existing_files=u"RENAME_ORIGINAL",
+            file_permissions=u"CURRENT",
         )
 
     def _get_stream(self, job_id):

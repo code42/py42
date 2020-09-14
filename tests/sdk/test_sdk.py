@@ -2,6 +2,7 @@ import pytest
 
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
+from py42.clients.audit_logs import AuditLogsClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
 from py42.sdk import SDKClient
@@ -13,6 +14,7 @@ from py42.services import users
 from py42.services._auth import C42RenewableAuth
 from py42.services._connection import Connection
 from py42.usercontext import UserContext
+
 
 HOST_ADDRESS = "https://example.com"
 TEST_USERNAME = "test-username"
@@ -69,3 +71,7 @@ class TestSDK(object):
     def test_has_user_context_set(self, py42_connection, mock_auth):
         client = SDKClient(py42_connection, mock_auth)
         assert type(client.usercontext) == UserContext
+
+    def test_has_auditlog_service_set(self, py42_connection, mock_auth):
+        client = SDKClient(py42_connection, mock_auth)
+        assert type(client.auditlogs) == AuditLogsClient

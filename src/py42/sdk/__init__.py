@@ -5,6 +5,7 @@ from py42.clients._archive_access import ArchiveAccessorManager
 from py42.clients.alertrules import AlertRulesClient
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
+from py42.clients.audit_logs import AuditLogsClient
 from py42.clients.authority import AuthorityClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
@@ -16,6 +17,7 @@ from py42.services.administration import AdministrationService
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
 from py42.services.archive import ArchiveService
+from py42.services.audit_logs import AuditLogsService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.detectionlists.user_profile import DetectionListUserService
@@ -30,7 +32,6 @@ from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.users import UserService
 from py42.usercontext import UserContext
-from py42.services.audit_logs import AuditLogsService
 
 
 def from_local_account(host_address, username, password):
@@ -194,8 +195,7 @@ class SDKClient(object):
         Returns:
             :class:`py42.services.auditlogs.AuditLogsService`
         """
-
-
+        return self._clients.auditlogs
 
 
 def _init_services(main_connection, main_auth):
@@ -252,7 +252,7 @@ def _init_services(main_connection, main_auth):
         ),
         highriskemployee=HighRiskEmployeeService(ecm_conn, user_ctx, user_profile_svc),
         userprofile=user_profile_svc,
-        audit_logs=AuditLogsService(audit_logs_conn, user_ctx)
+        auditlogs=AuditLogsService(audit_logs_conn),
     )
 
     return services, user_ctx
@@ -288,11 +288,13 @@ def _init_clients(services, connection):
         services.archive, storage_service_factory
     )
     archive = ArchiveClient(archive_accessor_mgr, services.archive)
+    auditlogs = AuditLogsClient(services.auditlogs)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
         alerts=alerts,
         securitydata=securitydata,
         archive=archive,
+        auditlogs=auditlogs,
     )
     return clients

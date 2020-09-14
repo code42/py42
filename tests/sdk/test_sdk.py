@@ -2,7 +2,7 @@ import pytest
 
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
-from py42.clients.audit_logs import AuditLogsClient
+from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
 from py42.sdk import SDKClient

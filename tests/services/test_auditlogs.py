@@ -1,4 +1,4 @@
-from py42.services.audit_logs import AuditLogsService
+from py42.services.auditlogs import AuditLogsService
 
 
 class TestAuditLogService(object):

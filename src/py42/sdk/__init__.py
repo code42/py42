@@ -5,7 +5,7 @@ from py42.clients._archive_access import ArchiveAccessorManager
 from py42.clients.alertrules import AlertRulesClient
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
-from py42.clients.audit_logs import AuditLogsClient
+from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.authority import AuthorityClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
@@ -17,7 +17,7 @@ from py42.services.administration import AdministrationService
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
 from py42.services.archive import ArchiveService
-from py42.services.audit_logs import AuditLogsService
+from py42.services.auditlogs import AuditLogsService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.detectionlists.user_profile import DetectionListUserService

@@ -1,7 +1,7 @@
 import pytest
 
-from py42.clients.audit_logs import AuditLogsClient
-from py42.services.audit_logs import AuditLogsService
+from py42.clients.auditlogs import AuditLogsClient
+from py42.services.auditlogs import AuditLogsService
 
 
 @pytest.fixture

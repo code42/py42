@@ -43,7 +43,7 @@ def from_local_account(host_address, username, password, totp=None):
             console.us.code42.com
         username (str): The username of the authenticating account.
         password (str): The password of the authenticating account.
-        totp (str, optional): The time-based one-time password of the authenticating account. Include only
+        totp (callable or str, optional): The time-based one-time password of the authenticating account. Include only
             if the account uses Code42's two-factor authentication. Defaults to None.
 
     Returns:
@@ -74,7 +74,7 @@ class SDKClient(object):
                 console.us.code42.com
             username (str): The username of the authenticating account.
             password (str): The password of the authenticating account.
-            totp (str, optional): The time-based one-time password of the authenticating account. Include only
+            totp (callable or str, optional): The time-based one-time password of the authenticating account. Include only
                 if the account uses Code42's two-factor authentication. Defaults to None.
         Returns:
             :class:`py42.sdk.SDKClient`

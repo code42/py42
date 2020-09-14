@@ -22,6 +22,12 @@ import py42.sdk
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 ```
 
+If your account uses [two-factor authentication](https://support.code42.com/Administrator/Cloud/Configuring/Two-factor_authentication_for_local_users), include the time-based one-time password:
+
+```
+sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password",totp="123456")
+```
+
 ## Paging
 
 py42 clients often have a method with the name (or name prefix) `get_all`  which handles iterating over pages of

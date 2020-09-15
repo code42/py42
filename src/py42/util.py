@@ -95,6 +95,6 @@ def to_list(value):
         return []
     if type(value) is str:
         return [value]
-    if type(value) is list or tuple:
-        return value
-    raise ValueError(u"Can't convert type {0} to list type".format(type(value)))
+    if type(value) in [list, tuple]:
+        return list(value)
+    raise ValueError(u"Can't convert type {} to list type".format(type(value)))

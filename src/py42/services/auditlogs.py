@@ -17,11 +17,22 @@ _FILTER_PARAMS = (
 
 
 class AuditLogsService(BaseService):
-    def get_page(self, page_num, page_size=None, **kwargs):
+    def get_page(
+        self,
+        page_num,
+        page_size=None,
+        begin_time=None,
+        end_time=None,
+        event_types=None,
+        user_ids=None,
+        usernames=None,
+        user_ip_addresses=None,
+        affected_user_ids=None,
+        affected_usernames=None,
+        **kwargs
+    ):
 
         date_range = {}
-        begin_time = kwargs.get(u"begin_time")
-        end_time = kwargs.get(u"end_time")
         if begin_time:
             date_range["startTime"] = convert_timestamp_to_str(begin_time)
         if end_time:
@@ -33,19 +44,13 @@ class AuditLogsService(BaseService):
             page=page_num - 1,
             pageSize=page_size,
             dateRange=date_range,
-            eventTypes=to_list(kwargs.get(u"event_types")),
-            actorIds=to_list(kwargs.get(u"user_ids")),
-            actorNames=to_list(kwargs.get(u"usernames")),
-            actorIpAddresses=to_list(kwargs.get(u"user_ip_addresses")),
-            affectedUserIds=to_list(kwargs.get(u"affected_user_ids")),
-            affectedUserNames=to_list(kwargs.get(u"affected_usernames")),
+            eventTypes=to_list(event_types),
+            actorIds=to_list(user_ids),
+            actorNames=to_list(usernames),
+            actorIpAddresses=to_list(user_ip_addresses),
+            affectedUserIds=to_list(affected_user_ids),
+            affectedUserNames=to_list(affected_usernames),
         )
-
-        for key in _FILTER_PARAMS:
-            try:
-                kwargs.pop(key)
-            except KeyError:
-                pass
 
         params.update(**kwargs)
         return self._connection.post(uri, json=params)

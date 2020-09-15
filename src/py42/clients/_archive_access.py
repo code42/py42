@@ -215,9 +215,7 @@ def _print_file_size(size_dict):
 
 
 class FileSizePoller(_RestorePoller):
-    def __init__(
-        self, storage_archive_service, device_guid, job_polling_interval=None,
-    ):
+    def __init__(self, storage_archive_service, device_guid, job_polling_interval=None):
         super(FileSizePoller, self).__init__(
             storage_archive_service, device_guid, job_polling_interval
         )

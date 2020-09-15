@@ -92,3 +92,114 @@ class TestAuditLogService(object):
         mock_connection.post.assert_called_once_with(
             "/rpc/search/search-audit-log", json=expected_data
         )
+
+    def test_get_page_calls_expected_uri_and_params(self, mock_connection):
+        service = AuditLogsService(mock_connection)
+        service.get_page(
+            page_num=1,
+            page_size=3,
+            begin_time=None,
+            end_time=None,
+            event_types=None,
+            user_ids=None,
+            usernames=None,
+            user_ip_addresses=None,
+            affected_user_ids=None,
+            affected_usernames=None,
+        )
+        expected_data = {
+            "page": 0,
+            "pageSize": 3,
+            "dateRange": {},
+            "eventTypes": [],
+            "actorIds": [],
+            "actorNames": [],
+            "actorIpAddresses": [],
+            "affectedUserIds": [],
+            "affectedUserNames": [],
+        }
+        mock_connection.post.assert_called_once_with(
+            "/rpc/search/search-audit-log", json=expected_data
+        )
+
+    def test_get_page_calls_expected_uri_and_params_in_valid_formats(
+        self, mock_connection
+    ):
+        service = AuditLogsService(mock_connection)
+        service.get_page(
+            page_num=5,
+            page_size=300,
+            begin_time=None,
+            end_time=None,
+            usernames=["test@test.com", "test@code42.com"],
+            user_ids=["1208", "12089"],
+            event_types="abc",
+            user_ip_addresses=["127.0.0.1", "0.0.0.0"],
+            affected_user_ids="",
+            affected_usernames="test_user@name.com",
+        )
+        expected_data = {
+            "page": 4,
+            "pageSize": 300,
+            "dateRange": {},
+            "eventTypes": ["abc"],
+            "actorIds": ["1208", "12089"],
+            "actorNames": ["test@test.com", "test@code42.com"],
+            "actorIpAddresses": ["127.0.0.1", "0.0.0.0"],
+            "affectedUserIds": [],
+            "affectedUserNames": ["test_user@name.com"],
+        }
+        mock_connection.post.assert_called_once_with(
+            "/rpc/search/search-audit-log", json=expected_data
+        )
+
+    def test_get_page_passes_undefined_field_in_api_request(self, mock_connection):
+        service = AuditLogsService(mock_connection)
+        service.get_page(
+            page_num=1,
+            page_size=500,
+            begin_time=None,
+            end_time=None,
+            event_types=None,
+            user_ids=None,
+            usernames=None,
+            user_ip_addresses=None,
+            affected_user_ids=None,
+            affected_usernames=None,
+            customParam="",
+        )
+        expected_data = {
+            "page": 0,
+            "pageSize": 500,
+            "dateRange": {},
+            "eventTypes": [],
+            "actorIds": [],
+            "actorNames": [],
+            "actorIpAddresses": [],
+            "affectedUserIds": [],
+            "affectedUserNames": [],
+            "customParam": "",
+        }
+        mock_connection.post.assert_called_once_with(
+            "/rpc/search/search-audit-log", json=expected_data
+        )
+
+    def test_get_all_passes_undefined_param_in_api(self, mock_connection):
+        service = AuditLogsService(mock_connection)
+        for _ in service.get_all(custom_param="abc"):
+            pass
+        expected_data = {
+            "page": 0,
+            "pageSize": 500,
+            "dateRange": {},
+            "eventTypes": [],
+            "actorIds": [],
+            "actorNames": [],
+            "actorIpAddresses": [],
+            "affectedUserIds": [],
+            "affectedUserNames": [],
+            "custom_param": "abc",
+        }
+        mock_connection.post.assert_called_once_with(
+            "/rpc/search/search-audit-log", json=expected_data
+        )

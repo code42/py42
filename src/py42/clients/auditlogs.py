@@ -18,10 +18,10 @@ class AuditLogsClient(object):
     ):
         """Retrieve a page of audit logs, filtered based on given arguments.
 
-        Note that you can use page_num here the same way as other methods that have a
+        Note: `page_num` here can be used same way as other methods that have a
         `page_num` parameter in py42. However, under the hood, it subtracts one from
-        the given page size in the implementation as the Code42 alerts API expected the
-        start page to be zero while the rest of the.
+        the given `page_num` in the implementation as the Code42 Audit-Logs API expects
+        the start page to be zero.
 
         Args:
             page_num (int, optional): The page number to get. Defaults to 1.
@@ -49,6 +49,7 @@ class AuditLogsClient(object):
             user_ip_addresses=user_ip_addresses,
             affected_user_ids=affected_user_ids,
             affected_usernames=affected_usernames,
+            **kwargs
         )
 
     def get_all(
@@ -61,6 +62,7 @@ class AuditLogsClient(object):
         user_ip_addresses=None,
         affected_user_ids=None,
         affected_usernames=None,
+        **kwargs
     ):
         """Retrieve audit logs, filtered based on given arguments.
 
@@ -87,4 +89,5 @@ class AuditLogsClient(object):
             user_ip_addresses=user_ip_addresses,
             affected_user_ids=affected_user_ids,
             affected_usernames=affected_usernames,
+            **kwargs
         )

@@ -18,6 +18,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `sdk.alerts.update_state()` method to update state.
 
+- `sdk.auditlogs` method:
+    - `sdk.auditlogs.get_page()`
+    - `sdk.auditlogs.get_all()`
+
 ## 1.8.1 - 2020-08-28
 
 ### Fixed

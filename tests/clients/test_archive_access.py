@@ -459,7 +459,7 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
 
 def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, num_bytes=1):
     return FileSelection(
-        {"fileType": file_type, "path": file_path, "selected": "true"},
+        {"fileType": file_type, "path": file_path, "selected": True},
         num_files,
         num_dirs,
         num_bytes,

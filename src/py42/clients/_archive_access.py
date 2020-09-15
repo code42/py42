@@ -86,7 +86,7 @@ def _create_file_selections(file_paths, metadata_list, file_sizes=None):
         path_set = {
             u"fileType": metadata[u"type"].upper(),
             u"path": metadata[u"path"],
-            u"selected": str(True).lower(),
+            u"selected": True,
         }
         selection = FileSelection(
             path_set=path_set,

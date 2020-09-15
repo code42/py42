@@ -21,7 +21,6 @@ class AuditLogsService(BaseService):
             affectedUserIds=kwargs["affected_user_ids"],
             affectedUserNames=kwargs["affected_usernames"],
         )
-        params["type$"] = "audit_log::audit_log_queries.search_audit_log/1"
         return self._connection.post(uri, json=params)
 
     def get_all(

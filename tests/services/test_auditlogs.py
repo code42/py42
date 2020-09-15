@@ -16,7 +16,6 @@ class TestAuditLogService(object):
             "actorIpAddresses": [],
             "affectedUserIds": [],
             "affectedUserNames": [],
-            "type$": "audit_log::audit_log_queries.search_audit_log/1",
         }
         mock_connection.post.assert_called_once_with(
             "/rpc/search/search-audit-log", json=expected_data
@@ -45,7 +44,6 @@ class TestAuditLogService(object):
             "actorIpAddresses": [],
             "affectedUserIds": [],
             "affectedUserNames": [],
-            "type$": "audit_log::audit_log_queries.search_audit_log/1",
         }
         mock_connection.post.assert_called_once_with(
             "/rpc/search/search-audit-log", json=expected_data
@@ -65,7 +63,6 @@ class TestAuditLogService(object):
             "actorIpAddresses": [],
             "affectedUserIds": [],
             "affectedUserNames": [],
-            "type$": "audit_log::audit_log_queries.search_audit_log/1",
         }
         mock_connection.post.assert_called_once_with(
             "/rpc/search/search-audit-log", json=expected_data
@@ -92,7 +89,6 @@ class TestAuditLogService(object):
             "actorIpAddresses": ["127.0.0.1", "0.0.0.0"],
             "affectedUserIds": [],
             "affectedUserNames": ["test_user@name.com"],
-            "type$": "audit_log::audit_log_queries.search_audit_log/1",
         }
         mock_connection.post.assert_called_once_with(
             "/rpc/search/search-audit-log", json=expected_data

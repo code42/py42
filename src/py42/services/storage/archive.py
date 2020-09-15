@@ -2,10 +2,6 @@ from py42.services import BaseService
 
 
 class StorageArchiveService(BaseService):
-    def __init__(self, connection):
-        self.destination_guid = connection._auth.destination_guid
-        super(StorageArchiveService, self).__init__(connection)
-
     def search_paths(
         self,
         session_id,

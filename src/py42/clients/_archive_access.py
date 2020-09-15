@@ -29,7 +29,10 @@ class ArchiveAccessorManager(object):
         private_password=None,
         encryption_key=None,
     ):
-        service, destination_guid = self._storage_service_factory.create_archive_service(
+        (
+            service,
+            destination_guid,
+        ) = self._storage_service_factory.create_archive_service(
             device_guid, destination_guid=destination_guid
         )
         decryption_keys = self._get_decryption_keys(

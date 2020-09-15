@@ -93,8 +93,6 @@ def get_attribute_keys_from_class(cls):
 def to_list(value):
     if not value:
         return []
-    if type(value) is str:
+    if not isinstance(value, (list, tuple)):
         return [value]
-    if type(value) in [list, tuple]:
-        return list(value)
-    raise ValueError(u"Can't convert type {} to list type".format(type(value)))
+    return value

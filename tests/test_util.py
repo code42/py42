@@ -1,7 +1,5 @@
 from datetime import datetime
 
-import pytest
-
 import py42.util as util
 
 
@@ -32,15 +30,4 @@ def test_to_list():
     assert util.to_list(None) == []
     assert util.to_list("") == []
     assert util.to_list(["a"]) == ["a"]
-    assert util.to_list(tuple("a")) == ["a"]
-
-
-def test_to_list_raises_exception_when_type_conversion_is_not_supported():
-    with pytest.raises(ValueError) as ex:
-        util.to_list({"a": "b"})
-
-    assert "Can't convert type <class 'dict'> to list type" in str(ex.value)
-
-    with pytest.raises(ValueError) as ex:
-        util.to_list({1, 2})
-    assert "Can't convert type <class 'set'> to list type" in str(ex.value)
+    assert util.to_list("a") == ["a"]

@@ -503,19 +503,20 @@ class TestArchiveAccessManager(object):
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service
+            storage_archive_service,
+            DESTINATION_GUID,
         )
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
-
-        assert accessor_manager.get_archive_accessor(DEVICE_GUID, DESTINATION_GUID)
+        assert accessor_manager.get_archive_accessor(DEVICE_GUID)
 
     def test_get_archive_accessor_calls_storage_service_factory_with_correct_args(
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service
+            storage_archive_service,
+            DESTINATION_GUID,
         )
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
@@ -545,7 +546,8 @@ class TestArchiveAccessManager(object):
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service
+            storage_archive_service,
+            DESTINATION_GUID,
         )
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
@@ -560,7 +562,8 @@ class TestArchiveAccessManager(object):
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service
+            storage_archive_service,
+            DESTINATION_GUID,
         )
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
@@ -577,7 +580,8 @@ class TestArchiveAccessManager(object):
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service
+            storage_archive_service,
+            DESTINATION_GUID,
         )
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
@@ -594,7 +598,8 @@ class TestArchiveAccessManager(object):
         spy = mocker.spy(py42.clients._archive_access, "create_restore_job_manager")
 
         storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service
+            storage_archive_service,
+            DESTINATION_GUID,
         )
 
         accessor_manager = ArchiveAccessorManager(

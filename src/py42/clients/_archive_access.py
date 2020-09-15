@@ -283,10 +283,6 @@ class RestoreJobManager(_RestorePoller):
         )
         self._archive_session_id = archive_session_id
 
-    @property
-    def destination_guid(self):
-        return self._storage_archive_service.destination_guid
-
     def get_stream(self, file_selections):
         response = self._start_restore(file_selections)
         job_id = response[u"jobId"]

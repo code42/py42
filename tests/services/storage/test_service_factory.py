@@ -38,7 +38,7 @@ class TestStorageServiceFactory(object):
         factory = StorageServiceFactory(
             mock_successful_connection, mock_device_service, mock_connection_manager
         )
-        service = factory.create_archive_service("testguid")
+        service, guid = factory.create_archive_service("testguid")
         mock_device_service.get_by_guid.assert_called_once_with(
             "testguid", include_backup_usage=True
         )

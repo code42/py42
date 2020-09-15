@@ -26,14 +26,14 @@ class FileArchiveTmpAuth(StorageTmpAuth):
         self._connection = connection
         self._user_id = user_id
         self._device_guid = device_guid
-        self.destination_guid = destination_guid
+        self._destination_guid = destination_guid
 
     def get_tmp_auth(self):
         uri = u"/api/LoginToken"
         data = {
             u"userId": self._user_id,
             u"sourceGuid": self._device_guid,
-            u"destinationGuid": self.destination_guid,
+            u"destinationGuid": self._destination_guid,
         }
         response = self._connection.post(uri, json=data)
         return response

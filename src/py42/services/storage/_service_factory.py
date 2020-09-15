@@ -24,7 +24,7 @@ class StorageServiceFactory(object):
             self._connection, u"my", device_guid, destination_guid
         )
         connection = self._connection_manager.get_storage_connection(auth)
-        return StorageArchiveService(connection), destination_guid
+        return StorageArchiveService(connection)
 
     def create_security_data_service(self, plan_uid, destination_guid):
         auth = SecurityArchiveTmpAuth(self._connection, plan_uid, destination_guid)

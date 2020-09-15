@@ -29,10 +29,7 @@ class ArchiveAccessorManager(object):
         private_password=None,
         encryption_key=None,
     ):
-        (
-            service,
-            destination_guid,
-        ) = self._storage_service_factory.create_archive_service(
+        service = self._storage_service_factory.create_archive_service(
             device_guid, destination_guid=destination_guid
         )
         decryption_keys = self._get_decryption_keys(
@@ -51,7 +48,6 @@ class ArchiveAccessorManager(object):
         file_size_poller = create_file_size_poller(service, device_guid)
         return ArchiveAccessor(
             device_guid=device_guid,
-            destination_guid=destination_guid,
             archive_session_id=session_id,
             storage_archive_service=service,
             restore_job_manager=restore_job_manager,
@@ -110,14 +106,12 @@ class ArchiveAccessor(object):
     def __init__(
         self,
         device_guid,
-        destination_guid,
         archive_session_id,
         storage_archive_service,
         restore_job_manager,
         file_size_poller,
     ):
         self._device_guid = device_guid
-        self._destination_guid = destination_guid
         self._archive_session_id = archive_session_id
         self._storage_archive_service = storage_archive_service
         self._restore_job_manager = restore_job_manager

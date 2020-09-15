@@ -45,12 +45,11 @@ class TestStorageServiceFactory(object):
         factory = StorageServiceFactory(
             mock_successful_connection, mock_device_service, mock_connection_manager
         )
-        service, guid = factory.create_archive_service("testguid")
+        service = factory.create_archive_service("testguid")
         mock_device_service.get_by_guid.assert_called_once_with(
             "testguid", include_backup_usage=True
         )
         assert type(service) == StorageArchiveService
-        assert guid == "123"  # From mock_device_service
 
     def test_create_archive_service_when_given_destination_guid_does_not_call_device_service(
         self, mock_successful_connection, mock_device_service, mock_connection_manager
@@ -58,7 +57,7 @@ class TestStorageServiceFactory(object):
         factory = StorageServiceFactory(
             mock_successful_connection, mock_device_service, mock_connection_manager
         )
-        service, dest_guid = factory.create_archive_service("testguid", "destguid")
+        service = factory.create_archive_service("testguid", "destguid")
         assert mock_device_service.get_by_guid.call_count == 0
         assert type(service) == StorageArchiveService
 

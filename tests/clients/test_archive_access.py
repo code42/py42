@@ -502,10 +502,7 @@ class TestArchiveAccessManager(object):
     def test_get_archive_accessor_with_device_guid_and_destination_guid_returns(
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
-        storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service,
-            DESTINATION_GUID,
-        )
+        storage_service_factory.create_archive_service.return_value = storage_archive_service
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
@@ -514,25 +511,19 @@ class TestArchiveAccessManager(object):
     def test_get_archive_accessor_calls_storage_service_factory_with_correct_args(
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
-        storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service,
-            DESTINATION_GUID,
-        )
+        storage_service_factory.create_archive_service.return_value = storage_archive_service
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
         accessor_manager.get_archive_accessor(DEVICE_GUID)
         storage_service_factory.create_archive_service.assert_called_with(
-            DEVICE_GUID, destination_guid=None
+            DEVICE_GUID, destination_guid=None,
         )
 
     def test_get_archive_accessor_with_opt_dest_guid_calls_storage_service_factory_with_correct_args(
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
-        storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service,
-            DESTINATION_GUID,
-        )
+        storage_service_factory.create_archive_service.return_value = storage_archive_service
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
@@ -546,10 +537,7 @@ class TestArchiveAccessManager(object):
     def test_get_archive_accessor_creates_web_restore_session_with_correct_args(
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
-        storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service,
-            DESTINATION_GUID,
-        )
+        storage_service_factory.create_archive_service.return_value = storage_archive_service
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
@@ -562,10 +550,7 @@ class TestArchiveAccessManager(object):
     def test_get_archive_accessor_when_given_private_password_creates_expected_restore_session(
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
-        storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service,
-            DESTINATION_GUID,
-        )
+        storage_service_factory.create_archive_service.return_value = storage_archive_service
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
@@ -580,10 +565,7 @@ class TestArchiveAccessManager(object):
     def test_get_archive_accessor_when_given_encryption_key_creates_expected_restore_session(
         self, archive_client, storage_service_factory, storage_archive_service,
     ):
-        storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service,
-            DESTINATION_GUID,
-        )
+        storage_service_factory.create_archive_service.return_value = storage_archive_service
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
@@ -597,12 +579,7 @@ class TestArchiveAccessManager(object):
         self, mocker, archive_client, storage_service_factory, storage_archive_service,
     ):
         spy = mocker.spy(py42.clients._archive_access, "create_restore_job_manager")
-
-        storage_service_factory.create_archive_service.return_value = (
-            storage_archive_service,
-            DESTINATION_GUID,
-        )
-
+        storage_service_factory.create_archive_service.return_value = storage_archive_service
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
@@ -632,7 +609,6 @@ class TestArchiveAccessor(object):
     ):
         assert ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -647,7 +623,6 @@ class TestArchiveAccessor(object):
         )
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -667,7 +642,6 @@ class TestArchiveAccessor(object):
         )
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -683,7 +657,6 @@ class TestArchiveAccessor(object):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -703,7 +676,6 @@ class TestArchiveAccessor(object):
         mock_walking_tree_for_windows_path(mocker, storage_archive_service)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -719,7 +691,6 @@ class TestArchiveAccessor(object):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -738,7 +709,6 @@ class TestArchiveAccessor(object):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -769,7 +739,6 @@ class TestArchiveAccessor(object):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -790,7 +759,6 @@ class TestArchiveAccessor(object):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -812,7 +780,6 @@ class TestArchiveAccessor(object):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -836,7 +803,6 @@ class TestArchiveAccessor(object):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,
@@ -860,7 +826,6 @@ class TestArchiveAccessor(object):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveAccessor(
             DEVICE_GUID,
-            DESTINATION_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
             restore_job_manager,

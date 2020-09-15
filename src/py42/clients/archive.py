@@ -92,9 +92,10 @@ class ArchiveClient(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        backup_set_id = self.get_backup_sets(
-            device_guid, archive_accessor.destination_guid
-        )[u"backupSets"][0][u"backupSetId"]
+        # backup_set_id = self.get_backup_sets(
+        #     device_guid, archive_accessor.destination_guid
+        # )[u"backupSets"][0][u"backupSetId"]
+        backup_set_id = None
         return archive_accessor.stream_from_backup(
             file_paths, backup_set_id, file_size_calc_timeout=file_size_calc_timeout
         )

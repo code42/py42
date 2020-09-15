@@ -342,14 +342,3 @@ def create_restore_job_manager(
 
 def create_file_size_poller(storage_archive_service, device_guid):
     return FileSizePoller(storage_archive_service, device_guid)
-
-
-def _check_for_multiple_files(file_selection):
-    if not file_selection:
-        return False
-    if len(file_selection) > 1:
-        return True
-
-    # Only one file selected
-    selection = file_selection[0]
-    return selection.path_set[u"fileType"].lower() == u"directory"

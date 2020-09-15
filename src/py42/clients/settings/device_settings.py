@@ -124,6 +124,11 @@ class DeviceSettings(DeviceSettingsDefaults):
         return self.data[u"computerId"]
 
     @property
+    def device_id(self):
+        """Identifier of this device (alias of `.computer_id`). Read only."""
+        return self.computer_id
+
+    @property
     def guid(self):
         """Globally unique identifier of this device. Read-only."""
         return self.data[u"guid"]
@@ -179,6 +184,85 @@ class BackupSet(UserDict, object):
             self, u"filename_exclusions", regex_excludes, self._changes
         )
         self._orig_destinations = self.destinations
+
+    def _extract_file_selection_lists(self):
+        """Converts the file selection portion of the settings dict ("pathset") into two
+        lists of just paths, `included` and `excluded`.
+
+        The "pathset" object is a different shape depending on how many paths it contains:
+            No paths:   `pathset=[{"@cleared": "true", "@os": "Linux"}]`
+            One path:   `pathset=[{"path": {"@include": "C:/"}, "@os": "Linux"}]`
+            One+ paths: `pathset=[{"path": [{"@include": "C:/Users"},{"@exclude": "C:/Users/Admin"},],"@os": "Linux"}]`
+        """
+        pathset = self.data[u"backupPaths"][u"pathset"][0]
+        pathlist = pathset.get(u"path")
+
+        # no paths selected
+        if pathlist is None:
+            return [], []
+
+        # one path selected
+        if isinstance(pathlist, dict):
+            pathlist = [pathlist]
+
+        includes = [p[u"@include"] for p in pathlist if u"@include" in p]
+        excludes = [p[u"@exclude"] for p in pathlist if u"@exclude" in p]
+        return includes, excludes
+
+    def _extract_regex_exclusions(self):
+        """Converts the filename exclusion portion ("excludeUser") of the settings dict
+        into a simple list of regex patterns.
+
+        The "excludeUser" object is a different shape based on the number of exclusion
+        patterns present:
+            No exclusions:   `[{"windows": [], "linux": [], "macintosh": []}]`
+            One exclusion:   `[{"windows": [], "pattern": {"@regex": ".*"}, "linux": [], "macintosh": []}]`
+            One+ exclusions: `[{"windows": [], "pattern": [{"@regex": ".*1"}, {"@regex": ".*2"}],"linux": [],"macintosh": []}]
+        """
+        exclude_user = self.data[u"backupPaths"][u"excludeUser"][0]
+        pattern_list = exclude_user.get(u"pattern")
+        if not pattern_list:
+            return []
+        if isinstance(pattern_list, dict):
+            pattern_list = [pattern_list]
+        return [p[u"@regex"] for p in pattern_list]
+
+    def _build_file_selection(self):
+        """Converts the user-friendly lists of included and excluded file paths back
+        into a "pathset" object the api expects. Called whenever one of the file selection
+        property lists (`.included_files`, `.excluded_files`) is modified.
+        """
+        paths = {u"@os": u"Linux", u"path": []}
+        if not self._included_files:  # ignore excluded values if nothing is included
+            paths[u"@cleared"] = u"true"
+        else:
+            path_list = []
+            for path in self._included_files:
+                path_list.append({u"@include": path, u"@und": u"false"})
+            for path in self._excluded_files:
+                path_list.append({u"@exclude": path, u"@und": u"false"})
+            paths[u"path"] = path_list
+            paths[u"@cleared"] = u"false"
+
+        self.data[u"backupPaths"][u"pathset"] = {u"paths": paths}
+
+    def _build_regex_exclusions(self):
+        """Converts the user-friendly list of filename exclusions back into the
+        "excludeUser" object the api expects. Called whenever the `.filename_exclusions`
+        property list is modified.
+        """
+        patterns = []
+        for regex in self._filename_exclusions:
+            patterns.append({u"@regex": regex})
+        user_exclude_dict = {
+            u"patternList": {
+                u"pattern": patterns,
+                u"windows": {u"pattern": []},
+                u"macintosh": {u"pattern": []},
+                u"linux": {u"pattern": []},
+            }
+        }
+        self.data[u"backupPaths"][u"excludeUser"] = user_exclude_dict
 
     @property
     def included_files(self):
@@ -317,55 +401,6 @@ class BackupSet(UserDict, object):
     def _raise_if_invalid_destination(self, destination_guid):
         if destination_guid not in self._manager.available_destinations:
             raise invalid_destination_error
-
-    def _extract_file_selection_lists(self):
-        try:
-            pathset = self.data[u"backupPaths"][u"pathset"][0][u"path"]
-        except KeyError:  # no files selected
-            return [], []
-        if isinstance(pathset, dict):
-            pathset = [pathset]
-        includes = [p[u"@include"] for p in pathset if u"@include" in p]
-        excludes = [p[u"@exclude"] for p in pathset if u"@exclude" in p]
-        return includes, excludes
-
-    def _build_file_selection(self):
-        if not self._included_files:
-            self.data[u"backupPaths"][u"pathset"] = {
-                u"paths": {u"@cleared": u"true", u"@os": u"Linux", u"path": []}
-            }
-            return
-        pathset = []
-        for path in self._included_files:
-            pathset.append({u"@include": path, u"@und": u"false"})
-        for path in self._excluded_files:
-            pathset.append({u"@exclude": path, u"@und": u"false"})
-        self.data[u"backupPaths"][u"pathset"] = {
-            u"paths": {u"@os": u"Linux", u"path": pathset, u"@cleared": u"false"}
-        }
-
-    def _extract_regex_exclusions(self):
-        exclude_user = self.data[u"backupPaths"][u"excludeUser"][0]
-        pattern_list = exclude_user.get(u"pattern")
-        if not pattern_list:
-            return []
-        if isinstance(pattern_list, dict):
-            pattern_list = [pattern_list]
-        return [p[u"@regex"] for p in pattern_list]
-
-    def _build_regex_exclusions(self):
-        patterns = []
-        for regex in self._filename_exclusions:
-            patterns.append({u"@regex": regex})
-        user_exclude_dict = {
-            u"patternList": {
-                u"pattern": patterns,
-                u"windows": {u"pattern": []},
-                u"macintosh": {u"pattern": []},
-                u"linux": {u"pattern": []},
-            }
-        }
-        self.data[u"backupPaths"][u"excludeUser"] = user_exclude_dict
 
     def __repr__(self):
         return u"<BackupSet: id: {}, name: '{}'>".format(

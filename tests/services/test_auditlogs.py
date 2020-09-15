@@ -25,10 +25,9 @@ class TestAuditLogService(object):
         self, mock_connection
     ):
         service = AuditLogsService(mock_connection)
-        from datetime import datetime as dt
 
-        start_time = dt.strptime("2020-06-06 00:00:00", "%Y-%m-%d %H:%M:%S")
-        end_time = dt.strptime("2020-09-09 12:12:21", "%Y-%m-%d %H:%M:%S")
+        start_time = 1591401600  # 2020-06-06 00:00:00"
+        end_time = 1599653541  # 2020-09-09 12:12:21"
         for _ in service.get_all(begin_time=start_time, end_time=end_time):
             pass
         expected_data = {

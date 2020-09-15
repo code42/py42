@@ -65,8 +65,8 @@ class AuditLogsClient(object):
         """Retrieve audit logs, filtered based on given arguments.
 
         Args:
-            begin_time (datetime, optional): A datetime.datetime instance for a given timestamp. Defaults to None.
-            end_time (datetime, optional): A datetime.datetime instance for a given timestamp. Defaults to None.
+            begin_time (int, optional): Timestamp in milliseconds. Defaults to None.
+            end_time (int, optional): Timestamp in milliseconds. Defaults to None.
             event_types (str or list, optional): A str or list of str of valid event types. Defaults to None.
             user_ids (str or list, optional): A str or list of str of user ids. Defaults to None.
             usernames (str or list, optional): A str or list of str of user names. Defaults to None.

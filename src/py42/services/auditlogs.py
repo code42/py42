@@ -1,7 +1,7 @@
 from py42 import settings
 from py42.services import BaseService
 from py42.services.util import get_all_pages
-from py42.util import convert_datetime_to_timestamp_str
+from py42.util import convert_timestamp_to_str
 from py42.util import to_list
 
 
@@ -44,9 +44,9 @@ class AuditLogsService(BaseService):
 
         date_range = {}
         if begin_time:
-            date_range["startTime"] = convert_datetime_to_timestamp_str(begin_time)
+            date_range["startTime"] = convert_timestamp_to_str(begin_time)
         if end_time:
-            date_range["endTime"] = convert_datetime_to_timestamp_str(end_time)
+            date_range["endTime"] = convert_timestamp_to_str(end_time)
 
         return get_all_pages(
             self.get_page,

@@ -1,14 +1,11 @@
 import pytest
-from requests import Response
 
 from py42.clients._archive_access import ArchiveAccessor
 from py42.clients._archive_access import ArchiveAccessorManager
 from py42.clients.archive import ArchiveClient
-from py42.response import Py42Response
 from py42.services.archive import ArchiveService
 
 
-BACKUP_SET_ID = "backup-set-id"
 ARCHIVE_GUID = "4224"
 DEVICE_GUID = "device-guid"
 DAYS = 42
@@ -17,13 +14,7 @@ ORG_ID = 424242
 
 @pytest.fixture
 def archive_service(mocker):
-    service = mocker.MagicMock(spec=ArchiveService)
-    back_up_sets_response = mocker.MagicMock(spec=Response)
-    back_up_sets_response.text = """{{"backupSets": [{{"backupSetId": "{}"}}]}}""".format(
-        BACKUP_SET_ID
-    )
-    service.get_backup_sets.return_value = Py42Response(back_up_sets_response)
-    return service
+    return mocker.MagicMock(spec=ArchiveService)
 
 
 @pytest.fixture

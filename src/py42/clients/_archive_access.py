@@ -121,13 +121,11 @@ class ArchiveAccessor(object):
         self._restore_job_manager = restore_job_manager
         self._file_size_poller = file_size_poller
 
-    def stream_from_backup(
-        self, file_paths, backup_set_id, file_size_calc_timeout=None
-    ):
+    def stream_from_backup(self, file_paths, file_size_calc_timeout=None):
         file_selections = self._create_file_selections(
             file_paths, file_size_calc_timeout
         )
-        return self._restore_job_manager.get_stream(file_selections, backup_set_id)
+        return self._restore_job_manager.get_stream(file_selections)
 
     def _create_file_selections(self, file_paths, file_size_calc_timeout):
         if not isinstance(file_paths, (list, tuple)):
@@ -290,9 +288,9 @@ class RestoreJobManager(_RestorePoller):
     def destination_guid(self):
         return self._storage_archive_service.destination_guid
 
-    def get_stream(self, file_selections, backup_set_id):
-        response = self._start_restore(file_selections, backup_set_id)
-        job_id = response["jobId"]
+    def get_stream(self, file_selections):
+        response = self._start_restore(file_selections)
+        job_id = response[u"jobId"]
         self._wait_for_job(job_id)
         return self._get_stream(job_id)
 
@@ -311,7 +309,7 @@ class RestoreJobManager(_RestorePoller):
         debug.logger.debug(format_dict(percentage_dict))
         return is_done
 
-    def _start_restore(self, file_selections, backup_set_id):
+    def _start_restore(self, file_selections):
         num_files = sum([fs.num_files for fs in file_selections])
         num_dirs = sum([fs.num_dirs for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
@@ -319,10 +317,7 @@ class RestoreJobManager(_RestorePoller):
             device_guid=self._device_guid,
             web_restore_session_id=self._archive_session_id,
             restore_groups=[
-                {
-                    u"backupSetId": backup_set_id,
-                    u"files": [f.path_set for f in file_selections],
-                }
+                {u"backupSetId": -1, u"files": [f.path_set for f in file_selections]}
             ],
             num_files=num_files,
             num_dirs=num_dirs,

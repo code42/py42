@@ -81,9 +81,7 @@ class TestArchiveClient(object):
             "encryption_key",
         )
         archive_accessor.stream_from_backup.assert_called_once_with(
-            ["path/to/first/file", "path/to/second/file"],
-            BACKUP_SET_ID,
-            file_size_calc_timeout=10,
+            ["path/to/first/file", "path/to/second/file"], file_size_calc_timeout=10,
         )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(

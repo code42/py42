@@ -2,8 +2,7 @@ from py42.services import BaseService
 
 
 class StorageArchiveService(BaseService):
-    def __init__(self, connection, destination_guid):
-        self.destination_guid = destination_guid
+    def __init__(self, connection):
         super(StorageArchiveService, self).__init__(connection)
 
     def search_paths(
@@ -111,38 +110,32 @@ class StorageArchiveService(BaseService):
         }
         return self._connection.post(uri, json=json_dict)
 
-    def start_web_restore(
+    def start_restore(
         self,
         device_guid,
         web_restore_session_id,
-        path_set,
+        restore_groups,
         num_files,
         num_dirs,
-        size,
-        zip_result=None,
+        num_bytes,
         expire_job=None,
         show_deleted=None,
         restore_full_path=None,
-        timestamp=None,
-        backup_set_id=None,
+        restore_to_server=None,
     ):
-        """Submits a web restore job.
-        See https://console.us.code42.com/apidocviewer/#WebRestoreJob-post
-        """
-        uri = u"/api/WebRestoreJob"
+        """Submits a web restore job."""
+        uri = u"/api/v9/restore/web"
         json_dict = {
-            u"guid": device_guid,
+            u"sourceComputerGuid": device_guid,
             u"webRestoreSessionId": web_restore_session_id,
-            u"pathSet": path_set,
+            u"restoreGroups": restore_groups,
             u"numFiles": num_files,
             u"numDirs": num_dirs,
-            u"size": size,
-            u"zipResult": zip_result,
+            u"numBytes": num_bytes,
             u"expireJob": expire_job,
             u"showDeleted": show_deleted,
             u"restoreFullPath": restore_full_path,
-            u"timestamp": timestamp,
-            u"backupSetId": backup_set_id,
+            u"restoreToServer": restore_to_server,
         }
         return self._connection.post(uri, json=json_dict)
 

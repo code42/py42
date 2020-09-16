@@ -10,6 +10,7 @@ ARGS_INDEX = 0
 KWARGS_INDEX = 1
 
 WEB_RESTORE_SESSION_URL = "/api/WebRestoreSession"
+START_WEB_RESTORE_JOB_URL = "/api/v9/restore/web"
 WEB_RESTORE_JOB_URL = "/api/WebRestoreJob"
 WEB_RESTORE_JOB_RESULT_URL = "/api/WebRestoreJobResult"
 
@@ -18,32 +19,34 @@ DATA_KEY_TOKEN_KEY = "dataKeyToken"
 PRIVATE_PASSWORD_KEY = "privatePassword"
 ENCRYPTION_KEY_KEY = "encryptionKey"
 
-GUID_KEY = "guid"
+DEVICE_GUID_KEY = "sourceComputerGuid"
 WEB_RESTORE_SESSION_ID_KEY = "webRestoreSessionId"
-PATH_SET_KEY = "pathSet"
+RESTORE_GROUPS_KEY = "restoreGroups"
 NUM_FILES_KEY = "numFiles"
 NUM_DIRS_KEY = "numDirs"
-SIZE_KEY = "size"
-ZIP_RESULT_KEY = "zipResult"
+NUM_BYTES_KEY = "numBytes"
 EXPIRE_JOB_KEY = "expireJob"
 SHOW_DELETED_KEY = "showDeleted"
 RESTORE_FULL_PATH_KEY = "restoreFullPath"
-TIMESTAMP_KEY = "timestamp"
-BACKUP_SET_ID_KEY = "backupSetId"
+RESTORE_TO_SERVER_KEY = "restoreToServer"
 JOB_ID_KEY = "jobId"
 
 DEVICE_GUID = "device-guid"
 DATA_KEY_TOKEN = "data-key-token"
 ENCRYPTION_KEY = "1234567890"
 PRIVATE_PASSWORD = "password123"
+DEST_GUID = "test-dest-guid"
 WEB_RESTORE_SESSION_ID = "56729164827"
 FILE_PATH = "/directory/file.txt"
-PATH_SET = [{"type": "file", "path": FILE_PATH, "selected": True}]
+RESTORE_GROUPS = [
+    {
+        "backupSetId": "BACKUP_SET_ID",
+        "files": [{"fileType": "FILE", "path": "some/path", "selected": "true"}],
+    }
+]
 NUM_FILES = 1
 NUM_DIRS = 0
-SIZE = 3
-ZIP_RESULT = True
-TIMESTAMP = 1557139716
+NUM_BYTES = 3
 BACKUP_SET_ID = "12345"
 WEB_RESTORE_JOB_ID = "46289723"
 
@@ -67,11 +70,12 @@ FILE_PERMISSIONS = "CURRENT"
 
 @pytest.fixture
 def connection(mocker, py42_response):
-    py_session = mocker.MagicMock(spec=Connection)
+    py_connection = mocker.MagicMock(spec=Connection)
     py42_response.text = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
-
-    py_session.post.return_value = py42_response
-    return py_session
+    py_connection._auth = mocker.MagicMock()
+    py_connection._auth.destination_guid = DEST_GUID
+    py_connection.post.return_value = py42_response
+    return py_connection
 
 
 @pytest.fixture
@@ -213,79 +217,51 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get(ENCRYPTION_KEY_KEY) == ENCRYPTION_KEY
 
-    def test_start_web_restore_calls_post_with_expected_url_and_data(self, connection):
+    def test_start_restore_calls_post_with_correct_url(self, connection):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_web_restore(
+
+        storage_archive_service.start_restore(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
-            PATH_SET,
+            RESTORE_GROUPS,
             NUM_FILES,
             NUM_DIRS,
-            SIZE,
-            zip_result=True,
-            expire_job=True,
-            show_deleted=True,
-            restore_full_path=True,
-            timestamp=TIMESTAMP,
-            backup_set_id=BACKUP_SET_ID,
+            NUM_BYTES,
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
+        assert (
+            connection.post.call_args[ARGS_INDEX][ARGS_INDEX]
+            == START_WEB_RESTORE_JOB_URL
+        )
+
+    def test_start_restore_posts_expected_data_to_expected_url(self, connection):
+        storage_archive_service = StorageArchiveService(connection)
+        storage_archive_service.start_restore(
+            DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID,
+            RESTORE_GROUPS,
+            NUM_FILES,
+            NUM_DIRS,
+            NUM_BYTES,
+            True,
+            True,
+            True,
+            True,
+        )
         expected_data = {
-            GUID_KEY: DEVICE_GUID,
+            DEVICE_GUID_KEY: DEVICE_GUID,
             WEB_RESTORE_SESSION_ID_KEY: WEB_RESTORE_SESSION_ID,
-            PATH_SET_KEY: PATH_SET,
+            RESTORE_GROUPS_KEY: RESTORE_GROUPS,
             NUM_FILES_KEY: NUM_FILES,
             NUM_DIRS_KEY: NUM_DIRS,
-            SIZE_KEY: SIZE,
-            ZIP_RESULT_KEY: True,
+            NUM_BYTES_KEY: NUM_BYTES,
             EXPIRE_JOB_KEY: True,
             SHOW_DELETED_KEY: True,
             RESTORE_FULL_PATH_KEY: True,
-            TIMESTAMP_KEY: TIMESTAMP,
-            BACKUP_SET_ID_KEY: BACKUP_SET_ID,
+            RESTORE_TO_SERVER_KEY: True,
         }
-        assert json_arg == expected_data
-
-    def test_start_push_restore_calls_post_with_expected_url_and_data(self, connection):
-        storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_push_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            NODE_GUID,
-            ACCEPTING_GUID,
-            RESTORE_PATH,
-            PATH_SET,
-            NUM_FILES,
-            SIZE,
-            show_deleted=True,
-            restore_full_path=True,
-            timestamp=TIMESTAMP,
-            backup_set_id=BACKUP_SET_ID,
-            push_restore_strategy=PUSH_RESTORE_STRATEGY,
-            existing_files=EXISTING_FILES,
-            file_permissions=FILE_PERMISSIONS,
-            permit_restore_to_different_os_version=True,
+        connection.post.assert_called_once_with(
+            START_WEB_RESTORE_JOB_URL, json=expected_data
         )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        expected_data = {
-            SOURCE_GUID_KEY: DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID_KEY: WEB_RESTORE_SESSION_ID,
-            TARGET_NODE_GUID_KEY: NODE_GUID,
-            ACCEPTING_GUID_KEY: ACCEPTING_GUID,
-            RESTORE_PATH_KEY: RESTORE_PATH,
-            PATH_SET_KEY: PATH_SET,
-            NUM_FILES_KEY: NUM_FILES,
-            NUM_BYTES_KEY: SIZE,
-            SHOW_DELETED_KEY: True,
-            RESTORE_FULL_PATH_KEY: True,
-            TIMESTAMP_KEY: TIMESTAMP,
-            BACKUP_SET_ID_KEY: BACKUP_SET_ID,
-            PUSH_RESTORE_STRATEGY_KEY: PUSH_RESTORE_STRATEGY,
-            EXISTING_FILES_KEY: EXISTING_FILES,
-            FILE_PERMISSIONS_KEY: FILE_PERMISSIONS,
-            PERMIT_RESTORE_TO_DIFFERENT_OS_VERSION_KEY: True,
-        }
-        assert json_arg == expected_data
 
     def test_get_restore_status_calls_get_with_correct_url(self, mocker, connection):
         storage_archive_service = StorageArchiveService(connection)
@@ -295,21 +271,16 @@ class TestStorageArchiveService(object):
         expected_url = WEB_RESTORE_JOB_URL + "/" + WEB_RESTORE_JOB_ID
         connection.get.assert_called_once_with(expected_url)
 
-    def test_cancel_restore_calls_delete_with_correct_url(self, mocker, connection):
+    def test_cancel_restore_calls_delete_with_correct_url_and_data(
+        self, mocker, connection
+    ):
         storage_archive_service = StorageArchiveService(connection)
         api_response = mocker.MagicMock(spec=Py42Response)
         connection.delete.return_value = api_response
         storage_archive_service.cancel_restore(WEB_RESTORE_JOB_ID)
-        connection.delete.assert_called_once_with(WEB_RESTORE_JOB_URL, json=mocker.ANY)
-
-    def test_cancel_restore_calls_delete_with_job_id_in_data(self, mocker, connection):
-        storage_archive_service = StorageArchiveService(connection)
-        api_response = mocker.MagicMock(spec=Py42Response)
-        connection.delete.return_value = api_response
-        storage_archive_service.cancel_restore(WEB_RESTORE_JOB_ID)
-        json_arg = connection.delete.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        expected_data = {JOB_ID_KEY: WEB_RESTORE_JOB_ID}
-        assert json_arg == expected_data
+        connection.delete.assert_called_once_with(
+            WEB_RESTORE_JOB_URL, json={JOB_ID_KEY: WEB_RESTORE_JOB_ID}
+        )
 
     def test_stream_restore_result_status_calls_get_with_correct_url(
         self, mocker, connection

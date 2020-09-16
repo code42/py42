@@ -18,9 +18,10 @@ class FileType(object):
 
 
 class ArchiveAccessorManager(object):
-    def __init__(self, archive_service, storage_service_factory):
+    def __init__(self, archive_service, storage_service_factory, devices_service):
         self._archive_service = archive_service
         self._storage_service_factory = storage_service_factory
+        self._devices_service = devices_service
 
     def get_archive_accessor(
         self,
@@ -29,7 +30,7 @@ class ArchiveAccessorManager(object):
         private_password=None,
         encryption_key=None,
     ):
-        service = self._storage_service_factory.create_archive_service(
+        service, destination_guid = self._storage_service_factory.create_archive_service(
             device_guid, destination_guid=destination_guid
         )
         decryption_keys = self._get_decryption_keys(
@@ -41,13 +42,16 @@ class ArchiveAccessorManager(object):
             service, device_guid, **decryption_keys
         )
         restore_job_manager = create_restore_job_manager(
+            archive_service=self._archive_service,
             storage_archive_service=service,
             device_guid=device_guid,
             archive_session_id=session_id,
         )
         file_size_poller = create_file_size_poller(service, device_guid)
+        node_guid = self._get_first_node_guid(device_guid)
         return ArchiveAccessor(
             device_guid=device_guid,
+            node_guid=node_guid,
             archive_session_id=session_id,
             storage_archive_service=service,
             restore_job_manager=restore_job_manager,
@@ -72,6 +76,10 @@ class ArchiveAccessorManager(object):
     def _get_data_key_token(self, device_guid):
         return self._archive_service.get_data_key_token(device_guid)[u"dataKeyToken"]
 
+    def _get_first_node_guid(self, device_guid):
+        response = self._devices_service.get_by_guid(device_guid, include_backup_usage=True)
+        return response[u"backupUsage"][0][u"serverGuid"]
+
     @staticmethod
     def _create_restore_session(storage_archive_service, device_guid, **kwargs):
         response = storage_archive_service.create_restore_session(device_guid, **kwargs)
@@ -86,7 +94,7 @@ def _create_file_selections(file_paths, metadata_list, file_sizes=None):
         path_set = {
             u"fileType": metadata[u"type"].upper(),
             u"path": metadata[u"path"],
-            u"selected": True,
+            u"selected": "true",
         }
         selection = FileSelection(
             path_set=path_set,
@@ -106,20 +114,18 @@ class ArchiveAccessor(object):
     def __init__(
         self,
         device_guid,
+        node_guid,
         archive_session_id,
         storage_archive_service,
         restore_job_manager,
         file_size_poller,
     ):
         self._device_guid = device_guid
+        self._node_guid = node_guid
         self._archive_session_id = archive_session_id
         self._storage_archive_service = storage_archive_service
         self._restore_job_manager = restore_job_manager
         self._file_size_poller = file_size_poller
-
-    @property
-    def destination_guid(self):
-        return self._restore_job_manager.destination_guid
 
     def stream_from_backup(self, file_paths, file_size_calc_timeout=None):
         file_selections = self._create_file_selections(
@@ -128,13 +134,13 @@ class ArchiveAccessor(object):
         return self._restore_job_manager.get_stream(file_selections)
 
     def stream_to_destination(
-        self, accepting_guid, restore_path, file_paths, file_size_calc_timeout=None,
+        self, accepting_guid, file_paths, file_size_calc_timeout=None,
     ):
         file_selections = self._create_file_selections(
             file_paths, file_size_calc_timeout
         )
         return self._restore_job_manager.send_stream(
-            self.destination_guid, accepting_guid, restore_path, file_selections
+            self._node_guid, accepting_guid, file_selections
         )
 
     def _create_file_selections(self, file_paths, file_size_calc_timeout):
@@ -280,6 +286,7 @@ class FileSizePoller(_RestorePoller):
 class RestoreJobManager(_RestorePoller):
     def __init__(
         self,
+        archive_service,
         storage_archive_service,
         device_guid,
         archive_session_id,
@@ -290,6 +297,7 @@ class RestoreJobManager(_RestorePoller):
             device_guid=device_guid,
             job_polling_interval=job_polling_interval,
         )
+        self._archive_service = archive_service
         self._archive_session_id = archive_session_id
 
     def get_stream(self, file_selections):
@@ -298,11 +306,9 @@ class RestoreJobManager(_RestorePoller):
         self._wait_for_job(job_id)
         return self._get_stream(job_id)
 
-    def send_stream(
-        self, destination_guid, accepting_guid, restore_path, file_selections
-    ):
+    def send_stream(self, node_guid, accepting_guid, file_selections):
         response = self._start_push_restore(
-            destination_guid, accepting_guid, restore_path, file_selections,
+            node_guid, accepting_guid, file_selections,
         )
         job_id = response[u"restoreId"]
         self._wait_for_job(job_id)
@@ -338,26 +344,20 @@ class RestoreJobManager(_RestorePoller):
             show_deleted=True,
         )
 
-    def _start_push_restore(
-        self, destination_guid, accepting_guid, restore_path, file_selections
-    ):
+    def _start_push_restore(self, node_guid, accepting_guid, file_selections):
         num_files = sum([fs.num_files for fs in file_selections])
-        size = sum([fs.size for fs in file_selections])
-        return self._storage_archive_service.start_push_restore(
+        size = sum([fs.num_bytes for fs in file_selections])
+        return self._archive_service.start_push_restore(
             device_guid=self._device_guid,
+            accepting_device_guid=accepting_guid,
             web_restore_session_id=self._archive_session_id,
-            destination_guid=destination_guid,
-            accepting_guid=accepting_guid,
-            restore_path=restore_path,
-            path_set=[fs.path_set for fs in file_selections],
+            node_guid=node_guid,
+            restore_groups=[
+                {u"backupSetId": -1, u"files": [f.path_set for f in file_selections]}
+            ],
             num_files=num_files,
-            size=size,
-            show_deleted=True,
-            permit_restore_to_different_os_version=False,
-            restore_full_path=False,
-            push_restore_strategy=u"TARGET_DIRECTORY",
-            existing_files=u"RENAME_ORIGINAL",
-            file_permissions=u"CURRENT",
+            num_bytes=size,
+            file_location=u"TARGET_DIRECTORY",
         )
 
     def _get_stream(self, job_id):
@@ -366,9 +366,10 @@ class RestoreJobManager(_RestorePoller):
 
 
 def create_restore_job_manager(
-    storage_archive_service, device_guid, archive_session_id
+    archive_service, storage_archive_service, device_guid, archive_session_id
 ):
     return RestoreJobManager(
+        archive_service=archive_service,
         storage_archive_service=storage_archive_service,
         device_guid=device_guid,
         archive_session_id=archive_session_id,

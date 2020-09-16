@@ -104,7 +104,6 @@ class ArchiveClient(object):
         file_paths,
         device_guid,
         accepting_device_guid,
-        restore_path,
         destination_guid=None,
         archive_password=None,
         encryption_key=None,
@@ -123,25 +122,11 @@ class ArchiveClient(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        try:
-            return archive_accessor.stream_to_destination(
-                accepting_device_guid,
-                restore_path,
-                file_paths,
-                file_size_calc_timeout=file_size_calc_timeout,
-            )
-        except Py42InternalServerError as err:
-            if u"Invalid target node guid" in err.response.text:
-                raise Py42InvalidDestinationError(
-                    err.response,
-                    u"Invalid target node GUID {}.".format(destination_guid),
-                )
-            elif u"No backup plans" in err.response.text:
-                raise Py42InvalidDestinationError(
-                    err.response,
-                    u"No backup plans for destination {}.".format(destination_guid),
-                )
-            raise
+        return archive_accessor.stream_to_destination(
+            accepting_device_guid,
+            file_paths,
+            file_size_calc_timeout=file_size_calc_timeout,
+        )
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific

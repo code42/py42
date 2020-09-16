@@ -139,49 +139,6 @@ class StorageArchiveService(BaseService):
         }
         return self._connection.post(uri, json=json_dict)
 
-    def start_push_restore(
-        self,
-        device_guid,
-        web_restore_session_id,
-        destination_guid,
-        accepting_guid,
-        restore_path,
-        path_set,
-        num_files,
-        size,
-        show_deleted=None,
-        restore_full_path=None,
-        timestamp=None,
-        backup_set_id=None,
-        push_restore_strategy=None,
-        existing_files=None,
-        file_permissions=None,
-        permit_restore_to_different_os_version=None,
-    ):
-        """Submits a push restore job.
-        See https://console.us.code42.com/apidocviewer/#PushRestoreJob-post
-        """
-        uri = u"/api/PushRestoreJob"
-        json_dict = {
-            u"sourceGuid": device_guid,
-            u"webRestoreSessionId": web_restore_session_id,
-            u"targetNodeGuid": destination_guid,
-            u"acceptingGuid": accepting_guid,
-            u"restorePath": restore_path,
-            u"pathSet": path_set,
-            u"numFiles": num_files,
-            "numBytes": size,
-            u"showDeleted": show_deleted,
-            u"restoreFullPath": restore_full_path,
-            u"timestamp": timestamp,
-            u"backupSetId": backup_set_id,
-            u"pushRestoreStrategy": push_restore_strategy,
-            u"existingFiles": existing_files,
-            u"filePermissions": file_permissions,
-            u"permitRestoreToDifferentOsVersion": permit_restore_to_different_os_version,
-        }
-        return self._connection.post(uri, json=json_dict)
-
     def get_restore_status(self, job_id):
         uri = u"/api/WebRestoreJob/{}".format(job_id)
         return self._connection.get(uri)

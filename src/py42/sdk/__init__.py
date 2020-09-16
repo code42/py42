@@ -159,7 +159,6 @@ class SDKClient(object):
     def securitydata(self):
         """A collection of methods and properties for getting security data such as:
             * File events
-            * Alerts
             * Security plan information
 
         Returns:

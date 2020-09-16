@@ -1,4 +1,3 @@
-from py42.exceptions import Py42Error
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidDestinationError
 

@@ -15,11 +15,15 @@ _FILTER_PARAMS = (
     u"end_time",
 )
 
+HEADER_MAP = {"CSV": {"Accept": "text/csv"}, "CEF": {"Accept": "text/x-cef"}}
+
 
 class AuditLogsService(BaseService):
+    """https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Search_Audit_Log_events_with_the_Code42_API"""
+
     def get_page(
         self,
-        page_num,
+        page_num=1,
         page_size=None,
         begin_time=None,
         end_time=None,
@@ -29,6 +33,7 @@ class AuditLogsService(BaseService):
         user_ip_addresses=None,
         affected_user_ids=None,
         affected_usernames=None,
+        format=None,
         **kwargs
     ):
 
@@ -51,9 +56,10 @@ class AuditLogsService(BaseService):
             affectedUserIds=to_list(affected_user_ids),
             affectedUserNames=to_list(affected_usernames),
         )
-
         params.update(**kwargs)
-        return self._connection.post(uri, json=params)
+
+        headers = HEADER_MAP.get(format.upper()) if format else None
+        return self._connection.post(uri, json=params, headers=headers)
 
     def get_all(
         self,

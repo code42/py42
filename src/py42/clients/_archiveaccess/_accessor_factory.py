@@ -1,5 +1,4 @@
-from py42.clients._archiveaccess import ArchiveAccessor
-from py42.clients._archiveaccess import ArchiveRestorePusher
+from py42.clients._archiveaccess import ArchiveContentPusher
 from py42.clients._archiveaccess.restoremanager import create_file_size_poller
 from py42.clients._archiveaccess.restoremanager import create_restore_job_manager
 
@@ -13,6 +12,7 @@ class ArchiveAccessorFactory(object):
     def create_archive_accessor(
         self,
         device_guid,
+        accessor_class,
         destination_guid=None,
         private_password=None,
         encryption_key=None,
@@ -25,14 +25,11 @@ class ArchiveAccessorFactory(object):
             private_password=private_password,
             encryption_key=encryption_key,
             storage_archive_service=storage_archive_service,
-            accessor_class=ArchiveAccessor,
+            accessor_class=accessor_class,
         )
 
     def create_archive_accessor_for_push_restore(
-        self,
-        device_guid,
-        private_password=None,
-        encryption_key=None
+        self, device_guid, private_password=None, encryption_key=None
     ):
         push_service = self._storage_service_factory.create_push_restore_service(
             device_guid
@@ -42,7 +39,7 @@ class ArchiveAccessorFactory(object):
             private_password=private_password,
             encryption_key=encryption_key,
             storage_archive_service=push_service,
-            accessor_class=ArchiveRestorePusher,
+            accessor_class=ArchiveContentPusher,
         )
 
     def _get_archive_accessor(
@@ -97,7 +94,9 @@ class ArchiveAccessorFactory(object):
         return self._archive_service.get_data_key_token(device_guid)[u"dataKeyToken"]
 
     def _get_first_node_guid(self, device_guid):
-        response = self._devices_service.get_by_guid(device_guid, include_backup_usage=True)
+        response = self._devices_service.get_by_guid(
+            device_guid, include_backup_usage=True
+        )
         backup_usage = response[u"backupUsage"]
         if backup_usage:
             return backup_usage[0][u"serverGuid"]

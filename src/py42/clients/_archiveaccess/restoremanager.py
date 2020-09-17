@@ -172,4 +172,3 @@ def _create_size_dict(job_id, size_response):
 
 def _print_file_size(size_dict):
     debug.logger.debug(format_dict(size_dict))
-

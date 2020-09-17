@@ -1,5 +1,6 @@
-from py42.exceptions import Py42InternalServerError
-from py42.exceptions import Py42InvalidDestinationError
+from py42.clients._archiveaccess import ArchiveContentStreamer
+from py42.clients._archiveaccess import ArchiveExplorer
+
 
 _FILE_SIZE_CALC_TIMEOUT = 10
 
@@ -94,6 +95,7 @@ class ArchiveClient(object):
             destination_guid=destination_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
+            accessor_class=ArchiveContentStreamer,
         )
         return archive_accessor.stream_from_backup(
             file_paths, file_size_calc_timeout=file_size_calc_timeout
@@ -140,6 +142,7 @@ class ArchiveClient(object):
             destination_guid=destination_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
+            accessor_class=ArchiveExplorer,
         )
         file_selections = accessor.create_file_selections(
             file_paths, file_size_calc_timeout

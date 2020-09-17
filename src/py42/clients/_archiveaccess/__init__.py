@@ -4,9 +4,7 @@ from collections import namedtuple
 from py42.exceptions import Py42ArchiveFileNotFoundError
 
 
-FileSelection = namedtuple(
-    u"FileSelection", u"file, num_files, num_dirs, num_bytes"
-)
+FileSelection = namedtuple(u"FileSelection", u"file, num_files, num_dirs, num_bytes")
 
 
 class FileType(object):
@@ -34,6 +32,8 @@ class ArchiveAccessor(object):
         self._restore_job_manager = restore_job_manager
         self._file_size_poller = file_size_poller
 
+
+class ArchiveExplorer(ArchiveAccessor):
     def create_file_selections(self, file_paths, file_size_calc_timeout):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
@@ -41,7 +41,7 @@ class ArchiveAccessor(object):
         metadata_list = self._get_restore_metadata(file_paths)
         file_ids = [md[u"id"] for md in metadata_list]
         file_sizes = self._file_size_poller.get_file_sizes(
-             file_ids, timeout=file_size_calc_timeout
+            file_ids, timeout=file_size_calc_timeout
         )
         return _create_file_selections(file_paths, metadata_list, file_sizes)
 
@@ -92,6 +92,8 @@ class ArchiveAccessor(object):
             show_deleted=True,
         )
 
+
+class ArchiveContentStreamer(ArchiveExplorer):
     def stream_from_backup(self, file_paths, file_size_calc_timeout=None):
         file_selections = self.create_file_selections(
             file_paths, file_size_calc_timeout
@@ -99,7 +101,7 @@ class ArchiveAccessor(object):
         return self._restore_job_manager.get_stream(file_selections)
 
 
-class ArchiveRestorePusher(ArchiveAccessor):
+class ArchiveContentPusher(ArchiveAccessor):
     def stream_to_device(
         self, restore_path, accepting_guid, file_selections,
     ):

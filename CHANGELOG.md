@@ -23,6 +23,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.devices.get_settings(org_id)` now returns an instance of `DeviceSettings` which can be used to view
         existing Device settings and modify them by passing the updated `DeviceSettings` object to `sdk.devices.update_settings()`
 
+- `sdk.auditlogs` method:
+    - `sdk.auditlogs.get_page()`
+    - `sdk.auditlogs.get_all()`
+
 ## 1.8.1 - 2020-08-28
 
 ### Fixed

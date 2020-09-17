@@ -32,6 +32,7 @@ Explore the complete public documentation for `py42` below.
 * [Shared Query Filters](methoddocs/sharedqueryfilters.md)
 * [File Event Queries](methoddocs/filleeventqueries.md)
 * [Archive](methoddocs/archive.md)
+* [Audit Logs](methoddocs/auditlogs.md)
 * [Response](methoddocs/response.md)
 * [Exceptions](methoddocs/exceptions.md)
 * [Util](methoddocs/util.md)

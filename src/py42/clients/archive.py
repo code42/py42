@@ -111,6 +111,22 @@ class ArchiveClient(object):
     ):
         """Streams a file from a backup archive to a specified device.
 
+        Args:
+            file_paths (str or list of str): The path or list of paths to the files or directories in
+                your archive.
+            device_guid (str): The GUID of the device the file belongs to.
+            accepting_device_guid (str): The GUID of the device accepting the restore.
+            restore_path (str): The path on the accepting device where the restore will be saved.
+            archive_password (str or None, optional): The password for the archive, if password-
+                protected. This is only relevant to users with archive key password security. Defaults
+                to None.
+            encryption_key (str or None, optional): A custom encryption key for decrypting an archive's
+                file contents, necessary for restoring files. This is only relevant to users with custom
+                key archive security. Defaults to None.
+            file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
+                file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
+                Defaults to 10.
+
         Returns:
             :class:`py42.response.Py42Response`.
         """

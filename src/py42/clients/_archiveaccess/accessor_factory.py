@@ -81,6 +81,7 @@ class ArchiveAccessorFactory(object):
 
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):
         decryption_keys = {}
+        # Favor encryption-key over other security levels.
         if encryption_key:
             decryption_keys[u"encryption_key"] = encryption_key
         else:
@@ -89,7 +90,6 @@ class ArchiveAccessorFactory(object):
             )
             if data_key_token:
                 decryption_keys[u"data_key_token"] = data_key_token
-
             if private_password:
                 decryption_keys[u"private_password"] = private_password
         return decryption_keys
@@ -105,5 +105,7 @@ class ArchiveAccessorFactory(object):
 
     @staticmethod
     def _create_restore_session(session_creator, device_guid, **kwargs):
+        """Session creator is :class:`StorageArchiveService` for web restore
+        and :class:`PushRestoreService` for push restore."""
         response = session_creator.create_restore_session(device_guid, **kwargs)
         return response[u"webRestoreSessionId"]

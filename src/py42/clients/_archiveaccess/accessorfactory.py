@@ -1,6 +1,6 @@
 from py42.clients._archiveaccess import ArchiveAccessor
-from py42.clients._archiveaccess.restore_polling import create_file_size_poller
-from py42.clients._archiveaccess.restore_polling import create_restore_job_manager
+from py42.clients._archiveaccess.restoremanager import create_file_size_poller
+from py42.clients._archiveaccess.restoremanager import create_restore_job_manager
 
 
 class ArchiveAccessorFactory(object):

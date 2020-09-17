@@ -1,7 +1,7 @@
 from requests.auth import HTTPBasicAuth
 
 from py42.clients import Clients
-from py42.clients._archive_access import ArchiveAccessorManager
+from py42.clients._archiveaccess.accessor_factory import ArchiveAccessorFactory
 from py42.clients.alertrules import AlertRulesClient
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
@@ -268,7 +268,7 @@ def _init_clients(services, connection):
         storage_service_factory,
     )
     alerts = AlertsClient(services.alerts, alertrules)
-    archive_accessor_mgr = ArchiveAccessorManager(
+    archive_accessor_mgr = ArchiveAccessorFactory(
         services.archive, storage_service_factory, services.devices,
     )
     archive = ArchiveClient(archive_accessor_mgr, services.archive)

@@ -89,7 +89,7 @@ class ArchiveClient(object):
             with zipfile.ZipFile("downloaded_directory.zip", "r") as zf:
                 zf.extractall(".")
         """
-        archive_accessor = self._archive_accessor_manager.get_archive_accessor(
+        archive_accessor = self._archive_accessor_manager.create_web_archive_accessor(
             device_guid,
             destination_guid=destination_guid,
             private_password=archive_password,
@@ -105,7 +105,6 @@ class ArchiveClient(object):
         device_guid,
         accepting_device_guid,
         restore_path,
-        destination_guid=None,
         archive_password=None,
         encryption_key=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
@@ -116,12 +115,10 @@ class ArchiveClient(object):
         Returns:
             :class:`py42.response.Py42Response`.
         """
-        archive_accessor = self._archive_accessor_manager.get_archive_accessor(
+        archive_accessor = self._archive_accessor_manager.create_push_archive_accessor(
             device_guid,
-            destination_guid=destination_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
-            use_push=True,
         )
         return archive_accessor.stream_to_destination(
             restore_path=restore_path,

@@ -29,16 +29,11 @@ class ArchiveAccessorFactory(object):
     def create_archive_accessor_for_push_restore(
         self,
         device_guid,
-        destination_guid,
         private_password=None,
         encryption_key=None
     ):
-        factory = self._storage_service_factory
-        push_service = factory.create_push_restore_service(
+        push_service = self._storage_service_factory.create_push_restore_service(
             device_guid
-        )
-        storage_archive_service = self._storage_service_factory.create_archive_service(
-            device_guid, destination_guid=destination_guid
         )
         return self._get_archive_accessor(
             device_guid=device_guid,

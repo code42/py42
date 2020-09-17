@@ -1,7 +1,7 @@
 from requests.auth import HTTPBasicAuth
 
 from py42.clients import Clients
-from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
+from py42.clients._archiveaccess._accessor_factory import ArchiveAccessorFactory
 from py42.clients.alertrules import AlertRulesClient
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient

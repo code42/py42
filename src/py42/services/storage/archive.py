@@ -120,10 +120,6 @@ class StorageArchiveService(RestoreService):
         }
         return self._connection.post(uri, json=json_dict)
 
-    def get_restore_status(self, job_id):
-        uri = u"/api/WebRestoreJob/{}".format(job_id)
-        return self._connection.get(uri)
-
     def cancel_restore(self, job_id):
         uri = u"/api/WebRestoreJob"
         json_dict = {u"jobId": job_id}

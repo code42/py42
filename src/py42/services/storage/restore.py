@@ -48,6 +48,10 @@ class RestoreService(BaseService):
         }
         return self._connection.get(uri, params=params)
 
+    def get_restore_status(self, job_id):
+        uri = u"/api/WebRestoreJob/{}".format(job_id)
+        return self._connection.get(uri)
+
 
 class PushRestoreService(RestoreService):
     """A service for creating Push Restores."""

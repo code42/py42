@@ -313,10 +313,9 @@ class RestoreJobManager(_RestorePoller):
         return self._get_stream(job_id)
 
     def send_stream(self, restore_path, node_guid, accepting_guid, file_selections):
-        response = self._start_push_restore(
+        return self._start_push_restore(
             restore_path, node_guid, accepting_guid, file_selections,
         )
-        self._wait_for_job(response)
 
     def _wait_for_job(self, response):
         job_id = response[u"jobId"]

@@ -193,7 +193,7 @@ class UserService(BaseService):
         return self._connection.get(uri, params=params)
 
     def block(self, user_id):
-        """Blocks the user with the given ID. A blocked user is not allowed to log in or restore_
+        """Blocks the user with the given ID. A blocked user is not allowed to log in or restore
         files. Backups will continue if the user is still active.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#UserBlock-put>`__
 
@@ -208,7 +208,7 @@ class UserService(BaseService):
 
     def unblock(self, user_id):
         """Removes a block, if one exists, on the user with the given user ID. Unblocked users are
-        allowed to log in and restore_.
+        allowed to log in and restore.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#UserBlock-delete>`__
 
         Args:

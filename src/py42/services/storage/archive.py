@@ -2,9 +2,6 @@ from py42.services.storage.restore import RestoreService
 
 
 class StorageArchiveService(RestoreService):
-    def __init__(self, connection):
-        super(StorageArchiveService, self).__init__(connection)
-
     def search_paths(
         self,
         session_id,

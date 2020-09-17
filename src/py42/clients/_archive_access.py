@@ -8,7 +8,7 @@ from py42.util import format_dict
 
 
 FileSelection = namedtuple(
-    u"FileSelection", u"path_set, num_files, num_dirs, num_bytes"
+    u"FileSelection", u"file, num_files, num_dirs, num_bytes"
 )
 
 
@@ -29,6 +29,7 @@ class ArchiveAccessorManager(object):
         destination_guid=None,
         private_password=None,
         encryption_key=None,
+        use_push=False,
     ):
         storage_archive_service = self._storage_service_factory.create_archive_service(
             device_guid, destination_guid=destination_guid
@@ -38,10 +39,18 @@ class ArchiveAccessorManager(object):
             private_password=private_password,
             encryption_key=encryption_key,
         )
+
+        if use_push:
+            push_restore_service = self._storage_service_factory.create_push_restore_service(device_guid)
+            session_creator = push_restore_service
+        else:
+            push_restore_service = None
+            session_creator = storage_archive_service
+
         session_id = self._create_restore_session(
-            storage_archive_service, device_guid, **decryption_keys
+            session_creator, device_guid, **decryption_keys
         )
-        push_restore_service = self._storage_service_factory.create_push_restore_service(device_guid)
+
         restore_job_manager = create_restore_job_manager(
             archive_service=self._archive_service,
             storage_archive_service=storage_archive_service,
@@ -83,8 +92,8 @@ class ArchiveAccessorManager(object):
         return response[u"backupUsage"][0][u"serverGuid"]
 
     @staticmethod
-    def _create_restore_session(storage_archive_service, device_guid, **kwargs):
-        response = storage_archive_service.create_restore_session(device_guid, **kwargs)
+    def _create_restore_session(session_creator, device_guid, **kwargs):
+        response = session_creator.create_restore_session(device_guid, **kwargs)
         return response[u"webRestoreSessionId"]
 
 
@@ -93,19 +102,18 @@ def _create_file_selections(file_paths, metadata_list, file_sizes=None):
     for i in range(0, len(file_paths)):
         metadata = metadata_list[i]
         size_info = file_sizes[i] if file_sizes else _get_default_file_size()
-        path_set = {
+        file = {
             u"fileType": metadata[u"type"].upper(),
             u"path": metadata[u"path"],
-            u"selected": "true",
+            u"selected": True,
         }
         selection = FileSelection(
-            path_set=path_set,
+            file=file,
             num_files=size_info[u"numFiles"],
             num_dirs=size_info[u"numDirs"],
             num_bytes=size_info[u"size"],
         )
         file_selections.append(selection)
-
     return file_selections
 
 
@@ -175,22 +183,20 @@ class ArchiveAccessor(object):
         path_parts = file_path.split(u"/")
         path_root = path_parts[0] + u"/"
 
-        response = self._get_children(node_id=None)
+        response = self._get_children(file_id=None)
         for root in response:
             if root[u"path"].lower() == path_root.lower():
                 return self._walk_tree(response, root, path_parts[1:])
 
         raise Py42ArchiveFileNotFoundError(response, self._device_guid, file_path)
 
-    def _walk_tree(self, response, current_node, remaining_path_components):
+    def _walk_tree(self, response, current_file, remaining_path_components):
         if not remaining_path_components or not remaining_path_components[0]:
-            return current_node
+            return current_file
 
-        children = self._get_children(node_id=current_node[u"id"])
-        current_node_path = current_node[u"path"]
-        target_child_path = posixpath.join(
-            current_node_path, remaining_path_components[0]
-        )
+        children = self._get_children(file_id=current_file[u"id"])
+        current_path = current_file[u"path"]
+        target_child_path = posixpath.join(current_path, remaining_path_components[0])
 
         for child in children:
             if child[u"path"].lower() == target_child_path.lower():
@@ -200,17 +206,17 @@ class ArchiveAccessor(object):
             response, self._device_guid, target_child_path
         )
 
-    def _get_children(self, node_id=None):
+    def _get_children(self, file_id=None):
         return self._storage_archive_service.get_file_path_metadata(
             self._archive_session_id,
             self._device_guid,
-            file_id=node_id,
+            file_id=file_id,
             show_deleted=True,
         )
 
 
 def _get_default_file_size():
-    return {u"numFiles": 1, u"numDirs": 1, u"size": 1}
+    return {u"numFiles": 1, u"numDirs": 1, u"numBytes": 1}
 
 
 class _RestorePoller(object):
@@ -309,20 +315,20 @@ class RestoreJobManager(_RestorePoller):
 
     def get_stream(self, file_selections):
         response = self._start_web_restore(file_selections)
-        job_id = response[u"jobId"]
-        self._wait_for_job(job_id)
+        job_id = self._wait_for_job(response)
         return self._get_stream(job_id)
 
     def send_stream(self, restore_path, node_guid, accepting_guid, file_selections):
         response = self._start_push_restore(
             restore_path, node_guid, accepting_guid, file_selections,
         )
-        job_id = response[u"restoreId"]
-        self._wait_for_job(job_id)
+        self._wait_for_job(response)
 
-    def _wait_for_job(self, job_id):
+    def _wait_for_job(self, response):
+        job_id = response[u"jobId"]
         while not self._is_job_complete(job_id):
             time.sleep(self._job_polling_interval)
+        return job_id
 
     def _is_job_complete(self, job_id):
         response = self._storage_archive_service.get_restore_status(job_id)
@@ -343,7 +349,7 @@ class RestoreJobManager(_RestorePoller):
             device_guid=self._device_guid,
             web_restore_session_id=self._archive_session_id,
             restore_groups=[
-                {u"backupSetId": -1, u"files": [f.path_set for f in file_selections]}
+                {u"backupSetId": -1, u"files": [f.file for f in file_selections]}
             ],
             num_files=num_files,
             num_dirs=num_dirs,
@@ -360,7 +366,7 @@ class RestoreJobManager(_RestorePoller):
             web_restore_session_id=self._archive_session_id,
             node_guid=node_guid,
             restore_groups=[
-                {u"backupSetId": -1, u"files": [f.path_set for f in file_selections]}
+                {u"backupSetId": -1, u"files": [f.file for f in file_selections]}
             ],
             restore_path=restore_path,
             num_files=num_files,

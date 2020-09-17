@@ -977,7 +977,7 @@ class TestRestoreJobManager(object):
         )
         restore_job_manager.get_stream(single_file_selection)
         expected_restore_groups = [
-            {u"backupSetId": -1, u"files": [single_file_selection[0].path_set]}
+            {u"backupSetId": -1, u"files": [single_file_selection[0].file]}
         ]
         storage_archive_service.start_restore.assert_called_once_with(
             device_guid=DEVICE_GUID,
@@ -1007,8 +1007,8 @@ class TestRestoreJobManager(object):
             {
                 u"backupSetId": -1,
                 u"files": [
-                    double_file_selection[0].path_set,
-                    double_file_selection[1].path_set,
+                    double_file_selection[0].file,
+                    double_file_selection[1].file,
                 ],
             }
         ]

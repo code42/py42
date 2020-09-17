@@ -1,7 +1,7 @@
-from py42.services import BaseService
+from py42.services.storage.restore import RestoreService
 
 
-class PushRestoreService(BaseService):
+class PushRestoreService(RestoreService):
     """A service for creating Push Restores."""
 
     def start_push_restore(
@@ -15,12 +15,11 @@ class PushRestoreService(BaseService):
         num_files,
         num_bytes,
         show_deleted=None,
-        file_location=None,
         permit_restore_to_different_os_version=None,
         file_permissions=None,
         restore_full_path=None,
     ):
-        """Submits a web restore job."""
+        """Submits a push restore job."""
         uri = u"/api/v9/restore/push"
         json_dict = {
             u"sourceComputerGuid": device_guid,
@@ -31,7 +30,6 @@ class PushRestoreService(BaseService):
             u"restoreGroups": restore_groups,
             u"numFiles": num_files,
             u"numBytes": num_bytes,
-            u"fileLocation": file_location,
             u"showDeleted": show_deleted,
             u"permitRestoreToDifferentOsVersion": permit_restore_to_different_os_version,
             u"filePermissions": file_permissions,

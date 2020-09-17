@@ -1,7 +1,7 @@
-from py42.services import BaseService
+from py42.services.storage.restore_ import RestoreService
 
 
-class StorageArchiveService(BaseService):
+class StorageArchiveService(RestoreService):
     def __init__(self, connection):
         super(StorageArchiveService, self).__init__(connection)
 
@@ -90,25 +90,6 @@ class StorageArchiveService(BaseService):
             u"includeOsMetadata": include_os_metadata,
         }
         return self._connection.get(uri, params=params)
-
-    def create_restore_session(
-        self,
-        device_guid,
-        data_key_token=None,
-        private_password=None,
-        encryption_key=None,
-    ):
-        """Creates a web restore connection.
-        See https://console.us.code42.com/apidocviewer/#WebRestoreSession
-        """
-        uri = u"/api/WebRestoreSession"
-        json_dict = {
-            u"computerGuid": device_guid,
-            u"dataKeyToken": data_key_token,
-            u"privatePassword": private_password,
-            u"encryptionKey": encryption_key,
-        }
-        return self._connection.post(uri, json=json_dict)
 
     def start_restore(
         self,

@@ -3,7 +3,7 @@ from threading import Lock
 from py42._compat import str
 from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
-from py42.services.pushrestore import PushRestoreService
+from py42.services.storage.restore.pushrestore import PushRestoreService
 from py42.services.storage._auth import FileArchiveTmpAuth
 from py42.services.storage._auth import SecurityArchiveTmpAuth
 from py42.services.storage.archive import StorageArchiveService

@@ -120,7 +120,8 @@ class ArchiveClient(object):
             device_guid,
             destination_guid=destination_guid,
             private_password=archive_password,
-            encryption_key=encryption_key
+            encryption_key=encryption_key,
+            use_push=True,
         )
         return archive_accessor.stream_to_destination(
             restore_path=restore_path,

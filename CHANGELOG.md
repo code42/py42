@@ -16,7 +16,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- `sdk.archive.stream_to_destination()` for pushing a restore to another device.
+- `sdk.archive.stream_to_device()` for pushing a restore to another device.
 - `sdk.alerts.update_state()` method to update state.
 
 ## 1.8.1 - 2020-08-28

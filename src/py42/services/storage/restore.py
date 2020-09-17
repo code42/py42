@@ -9,7 +9,7 @@ class RestoreService(BaseService):
         private_password=None,
         encryption_key=None,
     ):
-        """Creates a web restore_ connection.
+        """Creates a web restore connection.
         See https://console.us.code42.com/apidocviewer/#WebRestoreSession
         """
         uri = u"/api/WebRestoreSession"
@@ -33,7 +33,7 @@ class RestoreService(BaseService):
         backup_set_id=None,
         include_os_metadata=None,
     ):
-        # session_id is a web restore_ session ID (see create_restore_session)
+        # session_id is a web restore session ID (see create_restore_session)
         uri = u"/api/WebRestoreTreeNode"
         params = {
             u"webRestoreSessionId": session_id,
@@ -67,8 +67,8 @@ class PushRestoreService(RestoreService):
         file_permissions=None,
         restore_full_path=None,
     ):
-        """Submits a push restore_ job."""
-        uri = u"/api/v9/restore_/push"
+        """Submits a push restore job."""
+        uri = u"/api/v9/restore/push"
         json_dict = {
             u"sourceComputerGuid": device_guid,
             u"acceptingComputerGuid": accepting_device_guid,

@@ -146,44 +146,44 @@ class ArchiveClient(object):
         return self._archive_service.get_backup_sets(device_guid, destination_guid)
 
     def get_all_org_restore_history(self, days, org_id):
-        """Gets all restore_ jobs from the past given days for the organization with the given ID.
+        """Gets all restore jobs from the past given days for the organization with the given ID.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
-            days (int): Number of days of restore_ history to retrieve.
-            org_id (int): The identification number of the organization to get restore_ history for.
+            days (int): Number of days of restore history to retrieve.
+            org_id (int): The identification number of the organization to get restore history for.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of restore_ history.
+            that each contain a page of restore history.
         """
         return self._archive_service.get_all_restore_history(days, u"orgId", org_id)
 
     def get_all_user_restore_history(self, days, user_id):
-        """Gets all restore_ jobs from the past given days for the user with the given ID.
+        """Gets all restore jobs from the past given days for the user with the given ID.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
-            days (int): Number of days of restore_ history to retrieve.
-            user_id (int): The identification number of the user to get restore_ history for.
+            days (int): Number of days of restore history to retrieve.
+            user_id (int): The identification number of the user to get restore history for.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of restore_ history.
+            that each contain a page of restore history.
         """
         return self._archive_service.get_all_restore_history(days, u"userId", user_id)
 
     def get_all_device_restore_history(self, days, device_id):
-        """Gets all restore_ jobs from the past given days for the device with the given ID.
+        """Gets all restore jobs from the past given days for the device with the given ID.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
-            days (int): Number of days of restore_ history to retrieve.
-            device_id (int): The identification number of the device to get restore_ history for.
+            days (int): Number of days of restore history to retrieve.
+            device_id (int): The identification number of the device to get restore history for.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of restore_ history.
+            that each contain a page of restore history.
         """
         return self._archive_service.get_all_restore_history(
             days, u"computerId", device_id

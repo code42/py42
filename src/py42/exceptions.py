@@ -65,7 +65,7 @@ class Py42SecurityPlanConnectionError(Py42HTTPError):
 
 class Py42StorageSessionInitializationError(Py42HTTPError):
     """An exception raised when the user is not authorized to initialize a storage session. This
-    may occur when trying to restore_ a file or trying to get events for file activity on removable
+    may occur when trying to restore a file or trying to get events for file activity on removable
     media, in cloud sync folders, and browser uploads."""
 
     def __init__(self, exception, error_message):

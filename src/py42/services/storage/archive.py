@@ -14,7 +14,7 @@ class StorageArchiveService(RestoreService):
         timestamp=None,
         show_deleted=None,
     ):
-        # session_id is a web restore_ session ID (see create_restore_session)
+        # session_id is a web restore session ID (see create_restore_session)
         uri = u"/api/WebRestoreSearch"
         params = {
             u"webRestoreSessionId": session_id,
@@ -76,7 +76,7 @@ class StorageArchiveService(RestoreService):
         backup_set_id=None,
         include_os_metadata=None,
     ):
-        # session_id is a web restore_ session ID (see create_restore_session)
+        # session_id is a web restore session ID (see create_restore_session)
         uri = u"/api/WebRestoreTreeNode"
         params = {
             u"webRestoreSessionId": session_id,
@@ -104,7 +104,7 @@ class StorageArchiveService(RestoreService):
         restore_full_path=None,
         restore_to_server=None,
     ):
-        """Submits a web restore_ job."""
+        """Submits a web restore job."""
         uri = u"/api/v9/restore_/web"
         json_dict = {
             u"sourceComputerGuid": device_guid,

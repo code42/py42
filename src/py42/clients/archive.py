@@ -89,7 +89,7 @@ class ArchiveClient(object):
             with zipfile.ZipFile("downloaded_directory.zip", "r") as zf:
                 zf.extractall(".")
         """
-        archive_accessor = self._archive_accessor_manager.create_web_archive_accessor(
+        archive_accessor = self._archive_accessor_manager.create_archive_accessor(
             device_guid,
             destination_guid=destination_guid,
             private_password=archive_password,
@@ -99,7 +99,7 @@ class ArchiveClient(object):
             file_paths, file_size_calc_timeout=file_size_calc_timeout
         )
 
-    def stream_to_destination(
+    def stream_to_device(
         self,
         file_paths,
         device_guid,
@@ -109,18 +109,17 @@ class ArchiveClient(object):
         encryption_key=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
-        """Streams a file from a backup archive to a specified device. If streaming multiple files, the
-        results will be zipped.
+        """Streams a file from a backup archive to a specified device.
 
         Returns:
             :class:`py42.response.Py42Response`.
         """
-        archive_accessor = self._archive_accessor_manager.create_push_archive_accessor(
+        archive_accessor = self._archive_accessor_manager.create_archive_accessor_for_push_restore(
             device_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        return archive_accessor.stream_to_destination(
+        return archive_accessor.stream_to_device(
             restore_path=restore_path,
             accepting_guid=accepting_device_guid,
             file_paths=file_paths,

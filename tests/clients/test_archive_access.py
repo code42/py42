@@ -508,7 +508,7 @@ class TestArchiveAccessManager(object):
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
-        assert accessor_manager.create_web_archive_accessor(DEVICE_GUID)
+        assert accessor_manager.create_archive_accessor(DEVICE_GUID)
 
     def test_get_archive_accessor_calls_storage_service_factory_with_correct_args(
         self, archive_client, storage_service_factory, storage_archive_service,
@@ -519,7 +519,7 @@ class TestArchiveAccessManager(object):
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
-        accessor_manager.create_web_archive_accessor(DEVICE_GUID)
+        accessor_manager.create_archive_accessor(DEVICE_GUID)
         storage_service_factory.create_archive_service.assert_called_with(
             DEVICE_GUID, destination_guid=None,
         )
@@ -533,7 +533,7 @@ class TestArchiveAccessManager(object):
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
-        accessor_manager.create_web_archive_accessor(
+        accessor_manager.create_archive_accessor(
             DEVICE_GUID, destination_guid=DESTINATION_GUID
         )
         storage_service_factory.create_archive_service.assert_called_with(
@@ -549,7 +549,7 @@ class TestArchiveAccessManager(object):
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
-        accessor_manager.create_web_archive_accessor(DEVICE_GUID)
+        accessor_manager.create_archive_accessor(DEVICE_GUID)
 
         storage_archive_service.create_restore_session.assert_called_once_with(
             DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
@@ -564,7 +564,7 @@ class TestArchiveAccessManager(object):
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
-        accessor_manager.create_web_archive_accessor(
+        accessor_manager.create_archive_accessor(
             DEVICE_GUID, private_password="TEST_PASSWORD"
         )
 
@@ -581,7 +581,7 @@ class TestArchiveAccessManager(object):
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
-        accessor_manager.create_web_archive_accessor(DEVICE_GUID, encryption_key="TEST_KEY")
+        accessor_manager.create_archive_accessor(DEVICE_GUID, encryption_key="TEST_KEY")
 
         storage_archive_service.create_restore_session.assert_called_once_with(
             DEVICE_GUID, encryption_key="TEST_KEY"
@@ -597,7 +597,7 @@ class TestArchiveAccessManager(object):
         accessor_manager = ArchiveAccessorManager(
             archive_client, storage_service_factory
         )
-        accessor_manager.create_web_archive_accessor(DEVICE_GUID)
+        accessor_manager.create_archive_accessor(DEVICE_GUID)
 
         assert spy.call_count == 1
         spy.assert_called_once_with(
@@ -614,7 +614,7 @@ class TestArchiveAccessManager(object):
             archive_client, storage_service_factory
         )
         with pytest.raises(Exception):
-            accessor_manager.create_web_archive_accessor(INVALID_DEVICE_GUID)
+            accessor_manager.create_archive_accessor(INVALID_DEVICE_GUID)
 
 
 class TestArchiveAccessor(object):

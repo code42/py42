@@ -10,7 +10,7 @@ class ArchiveAccessorFactory(object):
         self._storage_service_factory = storage_service_factory
         self._devices_service = devices_service
 
-    def create_web_archive_accessor(
+    def create_archive_accessor(
         self,
         device_guid,
         destination_guid=None,
@@ -28,7 +28,7 @@ class ArchiveAccessorFactory(object):
             accessor_class=ArchiveAccessorForWebRestore,
         )
 
-    def create_push_archive_accessor(
+    def create_archive_accessor_for_push_restore(
         self,
         device_guid,
         private_password=None,
@@ -99,7 +99,9 @@ class ArchiveAccessorFactory(object):
 
     def _get_first_node_guid(self, device_guid):
         response = self._devices_service.get_by_guid(device_guid, include_backup_usage=True)
-        return response[u"backupUsage"][0][u"serverGuid"]
+        backup_usage = response[u"backupUsage"]
+        if backup_usage:
+            return backup_usage[0][u"serverGuid"]
 
     @staticmethod
     def _create_restore_session(session_creator, device_guid, **kwargs):

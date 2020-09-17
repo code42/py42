@@ -68,32 +68,6 @@ class ArchiveService(BaseService):
             **kwargs
         )
 
-    def start_push_restore(
-        self,
-        device_guid,
-        accepting_device_guid,
-        web_restore_session_id,
-        node_guid,
-        restore_groups,
-        num_files,
-        num_bytes,
-        file_location=None,
-    ):
-        """Submits a web restore job."""
-        uri = u"/api/v9/restore/push"
-        json_dict = {
-            u"sourceComputerGuid": device_guid,
-            u"acceptingComputerGuid": accepting_device_guid,
-            u"webRestoreSessionId": web_restore_session_id,
-            u"targetNodeGuid": node_guid,
-            u"restorePath": "C:/",
-            u"restoreGroups": restore_groups,
-            u"numFiles": num_files,
-            u"numBytes": num_bytes,
-            u"fileLocation": file_location,
-        }
-        return self._connection.post(uri, json=json_dict)
-
     def _get_restore_history_page(
         self, days, id_type, id_value, page_num, page_size, **kwargs
     ):

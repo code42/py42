@@ -76,6 +76,19 @@ class MicroserviceKeyHostResolver(HostResolver):
         return self._kv_service.get_stored_value(self._key).text
 
 
+class ConnectedServerHostResolver(HostResolver):
+    def __init__(self, connection, device_guid):
+        self._connection = connection
+        self._device_guid = device_guid
+        super().__init__()
+
+    def get_host_address(self):
+        response = self._connection.get(
+            u"api/connectedServerUrl", params={u"guid": self._device_guid}
+        )
+        return response[u"serverUrl"]
+
+
 class Connection(object):
     def __init__(self, host_resolver, auth=None, session=None):
         self._host_resolver = host_resolver
@@ -99,6 +112,11 @@ class Connection(object):
     def from_microservice_prefix(cls, connection, prefix, auth=None, session=None):
         host_resolver = MicroservicePrefixHostResolver(connection, prefix)
         return cls(host_resolver, auth=auth, session=session)
+
+    @classmethod
+    def from_device_connection(cls, connection, device_guid):
+        host_resolver = ConnectedServerHostResolver(connection, device_guid)
+        return cls(host_resolver, auth=connection._auth)
 
     @property
     def host_address(self):

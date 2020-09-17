@@ -3,6 +3,7 @@ from threading import Lock
 from py42._compat import str
 from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
+from py42.services.pushrestore import PushRestoreService
 from py42.services.storage._auth import FileArchiveTmpAuth
 from py42.services.storage._auth import SecurityArchiveTmpAuth
 from py42.services.storage.archive import StorageArchiveService
@@ -16,6 +17,10 @@ class StorageServiceFactory(object):
         self._device_service = device_service
         self._connection_manager = connection_manager
 
+    def create_push_restore_service(self, device_guid):
+        connection = Connection.from_device_connection(self._connection, device_guid)
+        return PushRestoreService(connection)
+
     def create_archive_service(self, device_guid, destination_guid=None):
         if destination_guid is None:
             destination_guid = self._auto_select_destination_guid(device_guid)
@@ -24,7 +29,7 @@ class StorageServiceFactory(object):
             self._connection, u"my", device_guid, destination_guid
         )
         connection = self._connection_manager.get_storage_connection(auth)
-        return StorageArchiveService(connection), destination_guid
+        return StorageArchiveService(connection)
 
     def create_security_data_service(self, plan_uid, destination_guid):
         auth = SecurityArchiveTmpAuth(self._connection, plan_uid, destination_guid)
@@ -73,3 +78,4 @@ class ConnectionManager(object):
             )
             raise Py42StorageSessionInitializationError(ex, message)
         return connection
+

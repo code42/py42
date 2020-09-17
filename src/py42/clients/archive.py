@@ -104,6 +104,7 @@ class ArchiveClient(object):
         file_paths,
         device_guid,
         accepting_device_guid,
+        restore_path,
         destination_guid=None,
         archive_password=None,
         encryption_key=None,
@@ -111,7 +112,6 @@ class ArchiveClient(object):
     ):
         """Streams a file from a backup archive to a specified device. If streaming multiple files, the
         results will be zipped.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#PushRestoreJobResult-post>`__
 
         Returns:
             :class:`py42.response.Py42Response`.
@@ -120,11 +120,12 @@ class ArchiveClient(object):
             device_guid,
             destination_guid=destination_guid,
             private_password=archive_password,
-            encryption_key=encryption_key,
+            encryption_key=encryption_key
         )
         return archive_accessor.stream_to_destination(
-            accepting_device_guid,
-            file_paths,
+            restore_path=restore_path,
+            accepting_guid=accepting_device_guid,
+            file_paths=file_paths,
             file_size_calc_timeout=file_size_calc_timeout,
         )
 

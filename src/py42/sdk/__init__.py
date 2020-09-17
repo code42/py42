@@ -24,6 +24,7 @@ from py42.services.fileevent import FileEventService
 from py42.services.legalhold import LegalHoldService
 from py42.services.orgs import OrgService
 from py42.services.preservationdata import PreservationDataService
+from py42.services.pushrestore import PushRestoreService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.securitydata import SecurityDataService
 from py42.services.storage._service_factory import ConnectionManager

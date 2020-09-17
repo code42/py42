@@ -20,7 +20,7 @@ class ArchiveAccessorFactory(object):
         storage_archive_service = self._storage_service_factory.create_archive_service(
             device_guid, destination_guid=destination_guid
         )
-        return self._get_archive_accessor(
+        return self._create_archive_accessor(
             device_guid=device_guid,
             private_password=private_password,
             encryption_key=encryption_key,
@@ -34,7 +34,7 @@ class ArchiveAccessorFactory(object):
         push_service = self._storage_service_factory.create_push_restore_service(
             device_guid
         )
-        return self._get_archive_accessor(
+        return self._create_archive_accessor(
             device_guid=device_guid,
             private_password=private_password,
             encryption_key=encryption_key,
@@ -42,7 +42,7 @@ class ArchiveAccessorFactory(object):
             accessor_class=ArchiveContentPusher,
         )
 
-    def _get_archive_accessor(
+    def _create_archive_accessor(
         self,
         storage_archive_service,
         device_guid,

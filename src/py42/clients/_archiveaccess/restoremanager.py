@@ -107,8 +107,23 @@ class RestoreJobManager(_RestorePoller):
         return self._get_stream(job_id)
 
     def send_stream(self, restore_path, node_guid, accepting_guid, file_selections):
-        return self._start_push_restore(
-            restore_path, node_guid, accepting_guid, file_selections,
+        num_files = sum([fs.num_files for fs in file_selections])
+        size = sum([fs.num_bytes for fs in file_selections])
+        return self._storage_archive_service.start_push_restore(
+            device_guid=self._device_guid,
+            accepting_device_guid=accepting_guid,
+            web_restore_session_id=self._archive_session_id,
+            node_guid=node_guid,
+            restore_groups=[
+                {u"backupSetId": -1, u"files": [f.file for f in file_selections]}
+            ],
+            restore_path=restore_path,
+            num_files=num_files,
+            num_bytes=size,
+            show_deleted=True,
+            file_permissions=u"CURRENT",
+            permit_restore_to_different_os_version=True,
+            restore_full_path=True,
         )
 
     def _wait_for_job(self, response):
@@ -142,26 +157,6 @@ class RestoreJobManager(_RestorePoller):
             num_dirs=num_dirs,
             num_bytes=num_bytes,
             show_deleted=True,
-        )
-
-    def _start_push_restore(self, restore_path, node_guid, accepting_guid, file_selections):
-        num_files = sum([fs.num_files for fs in file_selections])
-        size = sum([fs.num_bytes for fs in file_selections])
-        return self._storage_archive_service.start_push_restore(
-            device_guid=self._device_guid,
-            accepting_device_guid=accepting_guid,
-            web_restore_session_id=self._archive_session_id,
-            node_guid=node_guid,
-            restore_groups=[
-                {u"backupSetId": -1, u"files": [f.file for f in file_selections]}
-            ],
-            restore_path=restore_path,
-            num_files=num_files,
-            num_bytes=size,
-            show_deleted=True,
-            file_permissions=u"CURRENT",
-            permit_restore_to_different_os_version=True,
-            restore_full_path=True,
         )
 
     def _get_stream(self, job_id):

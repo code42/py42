@@ -141,7 +141,7 @@ class ArchiveClient(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        file_selections = accessor._create_file_selections(
+        file_selections = accessor.create_file_selections(
             file_paths, file_size_calc_timeout
         )
         accessor_for_push = self._archive_accessor_factory.create_archive_accessor_for_push_restore(
@@ -149,6 +149,7 @@ class ArchiveClient(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
+
         return accessor_for_push.stream_to_device(
             restore_path=restore_path,
             accepting_guid=accepting_device_guid,

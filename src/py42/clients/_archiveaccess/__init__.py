@@ -34,7 +34,7 @@ class ArchiveAccessor(object):
         self._restore_job_manager = restore_job_manager
         self._file_size_poller = file_size_poller
 
-    def _create_file_selections(self, file_paths, file_size_calc_timeout):
+    def create_file_selections(self, file_paths, file_size_calc_timeout):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
         file_paths = [fp.replace(u"\\", u"/") for fp in file_paths]
@@ -93,11 +93,13 @@ class ArchiveAccessor(object):
         )
 
     def stream_from_backup(self, file_paths, file_size_calc_timeout=None):
-        file_selections = self._create_file_selections(
+        file_selections = self.create_file_selections(
             file_paths, file_size_calc_timeout
         )
         return self._restore_job_manager.get_stream(file_selections)
 
+
+class ArchiveRestorePusher(ArchiveAccessor):
     def stream_to_device(
         self, restore_path, accepting_guid, file_selections,
     ):

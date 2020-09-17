@@ -1,4 +1,5 @@
 from py42.clients._archiveaccess import ArchiveAccessor
+from py42.clients._archiveaccess import ArchiveRestorePusher
 from py42.clients._archiveaccess.restoremanager import create_file_size_poller
 from py42.clients._archiveaccess.restoremanager import create_restore_job_manager
 
@@ -24,6 +25,7 @@ class ArchiveAccessorFactory(object):
             private_password=private_password,
             encryption_key=encryption_key,
             storage_archive_service=storage_archive_service,
+            accessor_class=ArchiveAccessor,
         )
 
     def create_archive_accessor_for_push_restore(
@@ -40,6 +42,7 @@ class ArchiveAccessorFactory(object):
             private_password=private_password,
             encryption_key=encryption_key,
             storage_archive_service=push_service,
+            accessor_class=ArchiveRestorePusher,
         )
 
     def _get_archive_accessor(
@@ -48,6 +51,7 @@ class ArchiveAccessorFactory(object):
         device_guid,
         private_password,
         encryption_key,
+        accessor_class,
     ):
         decryption_keys = self._get_decryption_keys(
             device_guid=device_guid,
@@ -65,7 +69,7 @@ class ArchiveAccessorFactory(object):
         )
         file_size_poller = create_file_size_poller(storage_archive_service, device_guid)
         node_guid = self._get_first_node_guid(device_guid)
-        return ArchiveAccessor(
+        return accessor_class(
             device_guid=device_guid,
             node_guid=node_guid,
             archive_session_id=session_id,

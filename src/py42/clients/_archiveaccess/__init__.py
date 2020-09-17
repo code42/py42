@@ -34,18 +34,16 @@ class ArchiveAccessor(object):
         self._restore_job_manager = restore_job_manager
         self._file_size_poller = file_size_poller
 
-
     def _create_file_selections(self, file_paths, file_size_calc_timeout):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
         file_paths = [fp.replace(u"\\", u"/") for fp in file_paths]
-        #metadata_list = self._get_restore_metadata(file_paths)
-        #file_ids = [md[u"id"] for md in metadata_list]
-        # file_sizes = self._file_size_poller.get_file_sizes(
-        #     file_ids, timeout=file_size_calc_timeout
-        # )
-        #return _create_file_selections(file_paths, metadata_list, file_sizes)
-        return [FileSelection({"fileType": "FILE", "path": p, "selected": True}, 1, 1, 1) for p in file_paths]
+        metadata_list = self._get_restore_metadata(file_paths)
+        file_ids = [md[u"id"] for md in metadata_list]
+        file_sizes = self._file_size_poller.get_file_sizes(
+             file_ids, timeout=file_size_calc_timeout
+        )
+        return _create_file_selections(file_paths, metadata_list, file_sizes)
 
     def _get_restore_metadata(self, file_paths):
         metadata_list = []
@@ -94,22 +92,15 @@ class ArchiveAccessor(object):
             show_deleted=True,
         )
 
-
-class ArchiveAccessorForWebRestore(ArchiveAccessor):
     def stream_from_backup(self, file_paths, file_size_calc_timeout=None):
         file_selections = self._create_file_selections(
             file_paths, file_size_calc_timeout
         )
         return self._restore_job_manager.get_stream(file_selections)
 
-
-class ArchiveAccessorForPushRestore(ArchiveAccessor):
-    def stream_to_destination(
-        self, restore_path, accepting_guid, file_paths, file_size_calc_timeout=None,
+    def stream_to_device(
+        self, restore_path, accepting_guid, file_selections,
     ):
-        file_selections = self._create_file_selections(
-            file_paths, file_size_calc_timeout
-        )
         return self._restore_job_manager.send_stream(
             restore_path=restore_path,
             node_guid=self._node_guid,

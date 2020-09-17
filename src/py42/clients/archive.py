@@ -9,8 +9,8 @@ class ArchiveClient(object):
     functionality for streaming a file from backup.
     """
 
-    def __init__(self, archive_accessor_manager, archive_service):
-        self._archive_accessor_manager = archive_accessor_manager
+    def __init__(self, archive_accessor_factory, archive_service):
+        self._archive_accessor_factory = archive_accessor_factory
         self._archive_service = archive_service
 
     def get_by_archive_guid(self, archive_guid):
@@ -89,7 +89,7 @@ class ArchiveClient(object):
             with zipfile.ZipFile("downloaded_directory.zip", "r") as zf:
                 zf.extractall(".")
         """
-        archive_accessor = self._archive_accessor_manager.create_archive_accessor(
+        archive_accessor = self._archive_accessor_factory.create_archive_accessor(
             device_guid,
             destination_guid=destination_guid,
             private_password=archive_password,
@@ -105,6 +105,7 @@ class ArchiveClient(object):
         device_guid,
         accepting_device_guid,
         restore_path,
+        destination_guid=None,
         archive_password=None,
         encryption_key=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
@@ -117,6 +118,10 @@ class ArchiveClient(object):
             device_guid (str): The GUID of the device the file belongs to.
             accepting_device_guid (str): The GUID of the device accepting the restore.
             restore_path (str): The path on the accepting device where the restore will be saved.
+            destination_guid (str, optional): The GUID of the destination that stores the backup
+                of the file. If None, it will use the first destination GUID it finds for your
+                device. 'destination_guid' may be useful if the file is missing from one of your
+                destinations or if you want to optimize performance. Defaults to None.
             archive_password (str or None, optional): The password for the archive, if password-
                 protected. This is only relevant to users with archive key password security. Defaults
                 to None.
@@ -130,16 +135,25 @@ class ArchiveClient(object):
         Returns:
             :class:`py42.response.Py42Response`.
         """
-        archive_accessor = self._archive_accessor_manager.create_archive_accessor_for_push_restore(
+        accessor = self._archive_accessor_factory.create_archive_accessor(
             device_guid,
+            destination_guid=destination_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        return archive_accessor.stream_to_device(
+        file_restorer = self._archive_accessor_factory.create_archive_accessor_for_push_restore(
+            device_guid,
+            destination_guid=None,
+            private_password=archive_password,
+            encryption_key=encryption_key,
+        )
+        file_selections = accessor._create_file_selections(
+            file_paths, file_size_calc_timeout
+        )
+        return file_restorer.stream_to_device(
             restore_path=restore_path,
             accepting_guid=accepting_device_guid,
-            file_paths=file_paths,
-            file_size_calc_timeout=file_size_calc_timeout,
+            file_selections=file_selections,
         )
 
     def get_backup_sets(self, device_guid, destination_guid):

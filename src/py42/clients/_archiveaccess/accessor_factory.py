@@ -1,7 +1,6 @@
-from py42.clients._archiveaccess import ArchiveAccessorForPushRestore
-from py42.clients._archiveaccess import ArchiveAccessorForWebRestore
-from py42.clients._archiveaccess.polling import create_file_size_poller
-from py42.clients._archiveaccess.polling import create_restore_job_manager
+from py42.clients._archiveaccess import ArchiveAccessor
+from py42.clients._archiveaccess.restore_polling import create_file_size_poller
+from py42.clients._archiveaccess.restore_polling import create_restore_job_manager
 
 
 class ArchiveAccessorFactory(object):
@@ -21,29 +20,31 @@ class ArchiveAccessorFactory(object):
             device_guid, destination_guid=destination_guid
         )
         return self._get_archive_accessor(
-            storage_archive_service,
             device_guid=device_guid,
             private_password=private_password,
             encryption_key=encryption_key,
-            accessor_class=ArchiveAccessorForWebRestore,
+            storage_archive_service=storage_archive_service,
         )
 
     def create_archive_accessor_for_push_restore(
         self,
         device_guid,
+        destination_guid,
         private_password=None,
         encryption_key=None
     ):
         factory = self._storage_service_factory
-        storage_archive_service = factory.create_push_restore_service(
+        push_service = factory.create_push_restore_service(
             device_guid
         )
+        storage_archive_service = self._storage_service_factory.create_archive_service(
+            device_guid, destination_guid=destination_guid
+        )
         return self._get_archive_accessor(
-            storage_archive_service,
             device_guid=device_guid,
             private_password=private_password,
             encryption_key=encryption_key,
-            accessor_class=ArchiveAccessorForPushRestore,
+            storage_archive_service=push_service,
         )
 
     def _get_archive_accessor(
@@ -52,7 +53,6 @@ class ArchiveAccessorFactory(object):
         device_guid,
         private_password,
         encryption_key,
-        accessor_class,
     ):
         decryption_keys = self._get_decryption_keys(
             device_guid=device_guid,
@@ -70,7 +70,7 @@ class ArchiveAccessorFactory(object):
         )
         file_size_poller = create_file_size_poller(storage_archive_service, device_guid)
         node_guid = self._get_first_node_guid(device_guid)
-        return accessor_class(
+        return ArchiveAccessor(
             device_guid=device_guid,
             node_guid=node_guid,
             archive_session_id=session_id,

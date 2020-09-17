@@ -10,7 +10,7 @@ ARGS_INDEX = 0
 KWARGS_INDEX = 1
 
 WEB_RESTORE_SESSION_URL = "/api/WebRestoreSession"
-START_WEB_RESTORE_JOB_URL = "/api/v9/restore/web"
+START_WEB_RESTORE_JOB_URL = "/api/v9/restore_/web"
 WEB_RESTORE_JOB_URL = "/api/WebRestoreJob"
 WEB_RESTORE_JOB_RESULT_URL = "/api/WebRestoreJobResult"
 
@@ -62,7 +62,7 @@ FILE_PERMISSIONS_KEY = "filePermissions"
 
 NODE_GUID = "node-guid"
 ACCEPTING_GUID = "accepting-guid"
-RESTORE_PATH = "path/to/restore/to"
+RESTORE_PATH = "path/to/restore_/to"
 PUSH_RESTORE_STRATEGY = "TARGET_DIRECTORY"
 EXISTING_FILES = "OVERWRITE_ORIGINAL"
 FILE_PERMISSIONS = "CURRENT"

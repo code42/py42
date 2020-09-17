@@ -9,7 +9,7 @@ class RestoreService(BaseService):
         private_password=None,
         encryption_key=None,
     ):
-        """Creates a web restore connection.
+        """Creates a web restore_ connection.
         See https://console.us.code42.com/apidocviewer/#WebRestoreSession
         """
         uri = u"/api/WebRestoreSession"
@@ -33,7 +33,7 @@ class RestoreService(BaseService):
         backup_set_id=None,
         include_os_metadata=None,
     ):
-        # session_id is a web restore session ID (see create_restore_session)
+        # session_id is a web restore_ session ID (see create_restore_session)
         uri = u"/api/WebRestoreTreeNode"
         params = {
             u"webRestoreSessionId": session_id,
@@ -47,3 +47,40 @@ class RestoreService(BaseService):
             u"includeOsMetadata": include_os_metadata,
         }
         return self._connection.get(uri, params=params)
+
+
+class PushRestoreService(RestoreService):
+    """A service for creating Push Restores."""
+
+    def start_push_restore(
+        self,
+        device_guid,
+        accepting_device_guid,
+        web_restore_session_id,
+        node_guid,
+        restore_path,
+        restore_groups,
+        num_files,
+        num_bytes,
+        show_deleted=None,
+        permit_restore_to_different_os_version=None,
+        file_permissions=None,
+        restore_full_path=None,
+    ):
+        """Submits a push restore_ job."""
+        uri = u"/api/v9/restore_/push"
+        json_dict = {
+            u"sourceComputerGuid": device_guid,
+            u"acceptingComputerGuid": accepting_device_guid,
+            u"webRestoreSessionId": web_restore_session_id,
+            u"targetNodeGuid": node_guid,
+            u"restorePath": restore_path,
+            u"restoreGroups": restore_groups,
+            u"numFiles": num_files,
+            u"numBytes": num_bytes,
+            u"showDeleted": show_deleted,
+            u"permitRestoreToDifferentOsVersion": permit_restore_to_different_os_version,
+            u"filePermissions": file_permissions,
+            u"restoreFullPath": restore_full_path,
+        }
+        return self._connection.post(uri, json=json_dict)

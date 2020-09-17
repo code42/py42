@@ -31,9 +31,6 @@ class ArchiveAccessorManager(object):
         encryption_key=None,
         use_push=False,
     ):
-        storage_archive_service = self._storage_service_factory.create_archive_service(
-            device_guid, destination_guid=destination_guid
-        )
         decryption_keys = self._get_decryption_keys(
             device_guid=device_guid,
             private_password=private_password,
@@ -41,22 +38,20 @@ class ArchiveAccessorManager(object):
         )
 
         if use_push:
-            push_restore_service = self._storage_service_factory.create_push_restore_service(device_guid)
-            session_creator = push_restore_service
+            storage_archive_service = self._storage_service_factory.create_push_restore_service(device_guid)
         else:
-            push_restore_service = None
-            session_creator = storage_archive_service
+            storage_archive_service = self._storage_service_factory.create_archive_service(
+                device_guid, destination_guid=destination_guid
+            )
 
         session_id = self._create_restore_session(
-            session_creator, device_guid, **decryption_keys
+            storage_archive_service, device_guid, **decryption_keys
         )
-
         restore_job_manager = create_restore_job_manager(
             archive_service=self._archive_service,
             storage_archive_service=storage_archive_service,
             device_guid=device_guid,
             archive_session_id=session_id,
-            push_restore_service=push_restore_service
         )
         file_size_poller = create_file_size_poller(storage_archive_service, device_guid)
         node_guid = self._get_first_node_guid(device_guid)
@@ -160,12 +155,13 @@ class ArchiveAccessor(object):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
         file_paths = [fp.replace(u"\\", u"/") for fp in file_paths]
-        metadata_list = self._get_restore_metadata(file_paths)
-        file_ids = [md[u"id"] for md in metadata_list]
-        file_sizes = self._file_size_poller.get_file_sizes(
-            file_ids, timeout=file_size_calc_timeout
-        )
-        return _create_file_selections(file_paths, metadata_list, file_sizes)
+        #metadata_list = self._get_restore_metadata(file_paths)
+        #file_ids = [md[u"id"] for md in metadata_list]
+        # file_sizes = self._file_size_poller.get_file_sizes(
+        #     file_ids, timeout=file_size_calc_timeout
+        # )
+        #return _create_file_selections(file_paths, metadata_list, file_sizes)
+        return [FileSelection({"fileType": "FILE", "path": p, "selected": True}, 0, 0, 0) for p in file_paths]
 
     def _get_restore_metadata(self, file_paths):
         metadata_list = []
@@ -216,7 +212,7 @@ class ArchiveAccessor(object):
 
 
 def _get_default_file_size():
-    return {u"numFiles": 1, u"numDirs": 1, u"numBytes": 1}
+    return {u"numFiles": 1, u"numDirs": 1, u"size": 1}
 
 
 class _RestorePoller(object):
@@ -301,7 +297,6 @@ class RestoreJobManager(_RestorePoller):
         storage_archive_service,
         device_guid,
         archive_session_id,
-        push_restore_service=None,
         job_polling_interval=None,
     ):
         super(RestoreJobManager, self).__init__(
@@ -311,7 +306,6 @@ class RestoreJobManager(_RestorePoller):
         )
         self._archive_service = archive_service
         self._archive_session_id = archive_session_id
-        self._push_restore_service = push_restore_service
 
     def get_stream(self, file_selections):
         response = self._start_web_restore(file_selections)
@@ -358,9 +352,15 @@ class RestoreJobManager(_RestorePoller):
         )
 
     def _start_push_restore(self, restore_path, node_guid, accepting_guid, file_selections):
-        num_files = sum([fs.num_files for fs in file_selections])
-        size = sum([fs.num_bytes for fs in file_selections])
-        return self._push_restore_service.start_push_restore(
+        #num_files = sum([fs.num_files for fs in file_selections])
+
+        num_files = 1
+
+        #size = sum([fs.num_bytes for fs in file_selections])
+
+        size = 1
+
+        return self._storage_archive_service.start_push_restore(
             device_guid=self._device_guid,
             accepting_device_guid=accepting_guid,
             web_restore_session_id=self._archive_session_id,
@@ -383,14 +383,13 @@ class RestoreJobManager(_RestorePoller):
 
 
 def create_restore_job_manager(
-    archive_service, storage_archive_service, push_restore_service, device_guid, archive_session_id
+    archive_service, storage_archive_service, device_guid, archive_session_id
 ):
     return RestoreJobManager(
         archive_service=archive_service,
         storage_archive_service=storage_archive_service,
         device_guid=device_guid,
         archive_session_id=archive_session_id,
-        push_restore_service=push_restore_service,
     )
 
 

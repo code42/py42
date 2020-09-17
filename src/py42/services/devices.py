@@ -154,7 +154,7 @@ class DeviceService(BaseService):
         return self._connection.get(uri, params=params)
 
     def block(self, device_id):
-        """Blocks a device causing the user not to be able to log in to or restore from Code42 on
+        """Blocks a device causing the user not to be able to log in to or restore_ from Code42 on
         that device.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
@@ -168,7 +168,7 @@ class DeviceService(BaseService):
         return self._connection.put(uri)
 
     def unblock(self, device_id):
-        """Unblocks a device, permitting a user to be able to login and restore again.
+        """Unblocks a device, permitting a user to be able to login and restore_ again.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
         Args:

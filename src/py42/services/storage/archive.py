@@ -105,7 +105,7 @@ class StorageArchiveService(RestoreService):
         restore_to_server=None,
     ):
         """Submits a web restore job."""
-        uri = u"/api/v9/restore_/web"
+        uri = u"/api/v9/restore/web"
         json_dict = {
             u"sourceComputerGuid": device_guid,
             u"webRestoreSessionId": web_restore_session_id,

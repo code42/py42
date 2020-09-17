@@ -62,7 +62,7 @@ FILE_PERMISSIONS_KEY = "filePermissions"
 
 NODE_GUID = "node-guid"
 ACCEPTING_GUID = "accepting-guid"
-RESTORE_PATH = "path/to/restore_/to"
+RESTORE_PATH = "path/to/restore/to"
 PUSH_RESTORE_STRATEGY = "TARGET_DIRECTORY"
 EXISTING_FILES = "OVERWRITE_ORIGINAL"
 FILE_PERMISSIONS = "CURRENT"

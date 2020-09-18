@@ -73,6 +73,7 @@ class ArchiveAccessorFactory(object):
         return ArchiveContentPusher(
             device_guid=device_guid,
             archive_session_id=session_id,
+            destination_guid=destination_guid,
             storage_archive_service=push_service,
             restore_job_manager=restore_job_manager,
             file_size_poller=file_size_poller,

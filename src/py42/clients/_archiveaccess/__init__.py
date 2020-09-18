@@ -105,6 +105,7 @@ class ArchiveContentPusher(ArchiveAccessor):
     def __init__(
         self,
         device_guid,
+        destination_guid,
         node_guid,
         archive_session_id,
         storage_archive_service,
@@ -115,6 +116,7 @@ class ArchiveContentPusher(ArchiveAccessor):
         super(ArchiveContentPusher, self).__init__(
             device_guid=device_guid,
             archive_session_id=archive_session_id,
+            destination_guid=destination_guid,
             storage_archive_service=storage_archive_service,
             restore_job_manager=restore_job_manager,
             file_size_poller=file_size_poller,

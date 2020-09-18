@@ -39,6 +39,7 @@ def device_service(mocker):
 def storage_service_factory(mocker, storage_archive_service):
     factory = mocker.MagicMock(spec=StorageServiceFactory)
     factory.create_archive_service.return_value = storage_archive_service
+    factory.auto_select_destination_guid.return_value = DESTINATION_GUID
     return factory
 
 
@@ -84,7 +85,7 @@ class TestArchiveAccessFactory(object):
             DEVICE_GUID, accessor_class=ArchiveAccessor
         )
         storage_service_factory.create_archive_service.assert_called_with(
-            DEVICE_GUID, destination_guid=None,
+            DEVICE_GUID, destination_guid=DESTINATION_GUID,
         )
 
     def test_get_archive_accessor_with_opt_dest_guid_calls_storage_service_factory_with_correct_args(

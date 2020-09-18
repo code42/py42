@@ -1,16 +1,308 @@
-from py42.clients._archiveaccess import ArchiveAccessor
+import pytest
 
-from tests.clients._archiveaccess.conftest import DEVICE_GUID
+from py42.clients._archiveaccess import ArchiveContentStreamer, FileSelection, FileType
+from py42.exceptions import Py42ArchiveFileNotFoundError
+from py42.response import Py42Response
+from requests import Response
+
+from tests.clients._archiveaccess.conftest import DEVICE_GUID, \
+    PATH_TO_FILE_IN_DOWNLOADS_FOLDER, get_file_selection, PATH_TO_DESKTOP_FOLDER
 from tests.clients._archiveaccess.conftest import WEB_RESTORE_SESSION_ID
-from tests.clients._archiveaccess.conftest import mock_get_file_path_metadata_responses
+from tests.clients._archiveaccess.conftest import DOWNLOADS_ID
 
 
+USERS_DIR = "/Users"
+PATH_TO_DOWNLOADS_FOLDER = "/Users/qa/Downloads"
 
-class TestArchiveAccessor(object):
+
+def mock_walking_to_downloads_folder(mocker, storage_archive_service):
+    responses = [
+        GetFilePathMetadataResponses.NULL_ID,
+        GetFilePathMetadataResponses.ROOT,
+        GetFilePathMetadataResponses.USERS,
+        GetFilePathMetadataResponses.USERS_QA,
+        GetFilePathMetadataResponses.USERS_QA_DOWNLOADS,
+    ]
+    mock_get_file_path_metadata_responses(mocker, storage_archive_service, responses)
+
+
+def mock_walking_tree_for_windows_path(mocker, storage_archive_service):
+    responses = [GetFilePathMetadataResponses.WINDOWS_NULL_ID]
+    mock_get_file_path_metadata_responses(mocker, storage_archive_service, responses)
+
+
+class GetFilePathMetadataResponses(object):
+    @staticmethod
+    def get_file_id_from_request(response):
+        return response[1]
+
+    WINDOWS_NULL_ID = (
+        """[
+                {
+                    "deleted": false,
+                    "lastModified": "2018-06-22T10:08:37.000-05:00",
+                    "filename": "/",
+                    "lastBackup": "2019-04-12T12:56:55.023-05:00",
+                    "lastBackupMs": 1555091815023,
+                    "date": "04/12/19 12:56 PM",
+                    "path": "C:/",
+                    "hidden": false,
+                    "lastModifiedMs": 1529680117000,
+                    "type": "directory",
+                    "id": null
+                }
+            ]
+        """,
+        None,
+    )
+    NULL_ID = (
+        """[
+                {
+                    "deleted": false,
+                    "lastModified": "2018-06-22T10:08:37.000-05:00",
+                    "filename": "/",
+                    "lastBackup": "2019-04-12T12:56:55.023-05:00",
+                    "lastBackupMs": 1555091815023,
+                    "date": "04/12/19 12:56 PM",
+                    "path": "/",
+                    "hidden": false,
+                    "lastModifiedMs": 1529680117000,
+                    "type": "directory",
+                    "id": "885bf69dc0168f3624435346d7bf4836"
+                }
+            ]
+        """,
+        None,
+    )
+    ROOT = (
+        """[
+                {
+                    "deleted": false,
+                    "lastModified": "2018-06-22T10:02:44.000-05:00",
+                    "filename": "Users",
+                    "lastBackup": "2019-04-12T12:56:55.090-05:00",
+                    "lastBackupMs": 1555091815090,
+                    "date": "04/12/19 12:56 PM",
+                    "path": "/Users",
+                    "hidden": false,
+                    "lastModifiedMs": 1529679764000,
+                    "type": "directory",
+                    "id": "c2dc0a9bc27be41cb84d6ae91f6a0974"
+                }
+            ]
+        """,
+        "885bf69dc0168f3624435346d7bf4836",
+    )
+    USERS = (
+        """[
+                {
+                    "deleted": false,
+                    "lastModified": "2018-06-19T14:58:36.000-05:00",
+                    "filename": "qa",
+                    "lastBackup": "2019-04-12T12:56:55.095-05:00",
+                    "lastBackupMs": 1555091815095,
+                    "date": "04/12/19 12:56 PM",
+                    "path": "/Users/qa",
+                    "hidden": false,
+                    "lastModifiedMs": 1529438316000,
+                    "type": "directory",
+                    "id": "8f939e90bae37f9ec860ced08c5ffb7f"
+                }
+            ]
+        """,
+        "c2dc0a9bc27be41cb84d6ae91f6a0974",
+    )
+    USERS_QA = (
+        """[
+                {
+                    "deleted": false,
+                    "lastModified": "2018-06-19T14:54:46.000-05:00",
+                    "filename": ".bash_history",
+                    "lastBackup": "2019-04-12T13:01:00.832-05:00",
+                    "lastBackupMs": 1555092060832,
+                    "date": "04/12/19 01:01 PM",
+                    "path": "/Users/qa/.bash_history",
+                    "hidden": true,
+                    "lastModifiedMs": 1529438086000,
+                    "type": "file",
+                    "id": "97d8328d121983727cf854dc861d1ada"
+                },
+                {
+                    "deleted": false,
+                    "lastModified": "2018-06-19T14:58:36.000-05:00",
+                    "filename": "Applications",
+                    "lastBackup": "2019-04-12T13:00:35.478-05:00",
+                    "lastBackupMs": 1555092035478,
+                    "date": "04/12/19 01:00 PM",
+                    "path": "/Users/qa/Applications",
+                    "hidden": false,
+                    "lastModifiedMs": 1529438316000,
+                    "type": "directory",
+                    "id": "13cc0e21c1f14ff102206edd44bfc6bc"
+                },
+                {
+                    "deleted": false,
+                    "lastModified": "2019-04-18T12:56:34.000-05:00",
+                    "filename": "Desktop",
+                    "lastBackup": "2019-04-19T03:01:11.566-05:00",
+                    "lastBackupMs": 1555660871566,
+                    "date": "04/19/19 03:01 AM",
+                    "path": "/Users/qa/Desktop",
+                    "hidden": false,
+                    "lastModifiedMs": 1555610194000,
+                    "type": "directory",
+                    "id": "97c6bd9bff714bd45665130f7f381781"
+                },
+                {
+                    "deleted": false,
+                    "lastModified": "2018-02-12T12:30:03.000-06:00",
+                    "filename": "Documents",
+                    "lastBackup": "2019-04-12T13:04:18.169-05:00",
+                    "lastBackupMs": 1555092258169,
+                    "date": "04/12/19 01:04 PM",
+                    "path": "/Users/qa/Documents",
+                    "hidden": false,
+                    "lastModifiedMs": 1518460203000,
+                    "type": "directory",
+                    "id": "9db2b57abab79c4a92c939ec82d3dd0e"
+                },
+                {
+                    "deleted": false,
+                    "lastModified": "2019-04-12T12:58:34.000-05:00",
+                    "filename": "Downloads",
+                    "lastBackup": "2019-04-12T13:01:00.891-05:00",
+                    "lastBackupMs": 1555092060891,
+                    "date": "04/12/19 01:01 PM",
+                    "path": "/Users/qa/Downloads",
+                    "hidden": false,
+                    "lastModifiedMs": 1555091914000,
+                    "type": "directory",
+                    "id": "f939cfc4d476ec5535ccb0f6c0377ef4"
+                },
+                {
+                    "deleted": false,
+                    "lastModified": "2019-04-12T10:43:49.000-05:00",
+                    "filename": "Library",
+                    "lastBackup": "2019-04-12T12:59:49.676-05:00",
+                    "lastBackupMs": 1555091989676,
+                    "date": "04/12/19 12:59 PM",
+                    "path": "/Users/qa/Library",
+                    "hidden": false,
+                    "lastModifiedMs": 1555083829000,
+                    "type": "directory",
+                    "id": "bcf31dab21a4f7d4f67b812d6c891ed9"
+                }
+            ]
+        """,
+        "8f939e90bae37f9ec860ced08c5ffb7f",
+    )
+    USERS_QA_DOWNLOADS = (
+        """[
+                {
+                    "deleted": false,
+                    "lastModified": "2019-04-12T12:58:13.000-05:00",
+                    "filename": "Terminator II Screenplay.pdf",
+                    "lastBackup": "2019-04-12T13:05:10.089-05:00",
+                    "lastBackupMs": 1555092310089,
+                    "date": "04/12/19 01:05 PM",
+                    "path": "/Users/qa/Downloads/Terminator II Screenplay.pdf",
+                    "hidden": false,
+                    "lastModifiedMs": 1555091893000,
+                    "type": "file",
+                    "id": "f63aeee85943809ead0cb11cdc773625"
+                },
+                {
+                    "deleted": true,
+                    "lastModified": "2019-04-12T12:57:43.000-05:00",
+                    "filename": "terminator-genisys.jpg",
+                    "lastBackup": "2019-04-12T13:05:10.087-05:00",
+                    "lastBackupMs": 1555092310087,
+                    "date": "04/12/19 01:05 PM",
+                    "path": "/Users/qa/Downloads/terminator-genisys.jpg",
+                    "hidden": false,
+                    "lastModifiedMs": 1555091863000,
+                    "type": "file",
+                    "id": "69e930e774cbc1ee6d0c0ff2ba5804ee"
+                }
+            ]
+        """,
+        "f939cfc4d476ec5535ccb0f6c0377ef4",
+    )
+    WINDOWS = (
+        """[
+                {
+                    "deleted": true,
+                    "lastModified": "2019-04-12T12:57:43.000-05:00",
+                    "filename": "terminator-genisys.jpg",
+                    "lastBackup": "2019-04-12T13:05:10.087-05:00",
+                    "lastBackupMs": 1555092310087,
+                    "date": "04/12/19 01:05 PM",
+                    "path": "C:/Users/The Terminator/Documents/file.txt",
+                    "hidden": false,
+                    "lastModifiedMs": 1555091863000,
+                    "type": "file",
+                    "id": "1234cfc4d467895535abcdf6c00000f4"
+                }
+            ]
+        """,
+        "1234cfc4d467895535abcdf6c00000f4",
+    )
+
+
+def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
+    """Mock responses to StorageArchiveService.get_file_path_metadata(). Responses are returned in the same order as
+    they are in the given `responses` list"""
+
+    file_id_responses = {}
+    for response in responses:
+        file_id = GetFilePathMetadataResponses.get_file_id_from_request(response)
+        if file_id:
+            file_id_responses[file_id] = response[0]
+        else:
+            if None in file_id_responses:
+                raise Exception(
+                    "Response list already has a response for a 'None' fileId"
+                )
+            file_id_responses[None] = response[0]
+
+    def mock_get_file_path_metadata(*args, **kwargs):
+        if not args[0] == session_id:
+            raise Exception("Unexpected archive connection ID")
+
+        if not args[1] == device_guid:
+            raise Exception("Unexpected device GUID")
+
+        file_id = kwargs["file_id"]
+
+        if file_id not in file_id_responses:
+            raise Exception("Unexpected request with file_id: {}".format(file_id))
+
+        mock_response = mocker.MagicMock(spec=Response)
+        mock_response.status_code = 200
+        mock_response.text = file_id_responses[file_id]
+        get_file_path_metadata_response = Py42Response(mock_response)
+
+        return get_file_path_metadata_response
+
+    return mock_get_file_path_metadata
+
+
+def mock_get_file_path_metadata_responses(mocker, storage_archive_service, responses):
+    storage_archive_service.get_file_path_metadata.side_effect = get_get_file_path_metadata_mock(
+        mocker, WEB_RESTORE_SESSION_ID, DEVICE_GUID, responses
+    )
+
+
+@pytest.fixture
+def single_dir_selection():
+    return [get_file_selection(FileType.DIRECTORY, PATH_TO_DOWNLOADS_FOLDER)]
+
+
+class TestArchiveContentStreamer(object):
     def test_archive_accessor_constructor_constructs_successfully(
         self, storage_archive_service, restore_job_manager, file_size_poller
     ):
-        assert ArchiveAccessor(
+        assert ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -24,7 +316,7 @@ class TestArchiveAccessor(object):
         mock_get_file_path_metadata_responses(
             mocker, storage_archive_service, [GetFilePathMetadataResponses.NULL_ID]
         )
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -43,7 +335,7 @@ class TestArchiveAccessor(object):
             storage_archive_service,
             [GetFilePathMetadataResponses.NULL_ID, GetFilePathMetadataResponses.ROOT],
         )
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -58,7 +350,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -77,7 +369,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
     ):
         mock_walking_tree_for_windows_path(mocker, storage_archive_service)
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -92,7 +384,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -110,7 +402,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -140,7 +432,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -160,7 +452,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -181,7 +473,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -204,7 +496,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,
@@ -227,7 +519,7 @@ class TestArchiveAccessor(object):
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
-        archive_accessor = ArchiveAccessor(
+        archive_accessor = ArchiveContentStreamer(
             DEVICE_GUID,
             WEB_RESTORE_SESSION_ID,
             storage_archive_service,

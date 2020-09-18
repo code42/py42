@@ -4,11 +4,8 @@ from py42.settings import debug
 from py42.util import format_dict
 
 
-def create_restore_job_manager(
-    archive_service, storage_archive_service, device_guid, archive_session_id
-):
+def create_restore_job_manager(storage_archive_service, device_guid, archive_session_id):
     return RestoreJobManager(
-        archive_service=archive_service,
         storage_archive_service=storage_archive_service,
         device_guid=device_guid,
         archive_session_id=archive_session_id,
@@ -87,7 +84,6 @@ class FileSizePoller(_RestorePoller):
 class RestoreJobManager(_RestorePoller):
     def __init__(
         self,
-        archive_service,
         storage_archive_service,
         device_guid,
         archive_session_id,
@@ -98,7 +94,6 @@ class RestoreJobManager(_RestorePoller):
             device_guid=device_guid,
             job_polling_interval=job_polling_interval,
         )
-        self._archive_service = archive_service
         self._archive_session_id = archive_session_id
 
     def get_stream(self, file_selections):

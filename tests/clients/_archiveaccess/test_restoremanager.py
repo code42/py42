@@ -1,3 +1,109 @@
+from requests import Response
+import json
+import time
+
+from py42.response import Py42Response
+from py42.clients._archiveaccess.restoremanager import FileSizePoller
+from py42.clients._archiveaccess.restoremanager import RestoreJobManager
+from tests.clients._archiveaccess.conftest import DESKTOP_ID
+from tests.clients._archiveaccess.conftest import DOWNLOADS_ID
+from tests.clients._archiveaccess.conftest import DEVICE_GUID
+from tests.clients._archiveaccess.conftest import WEB_RESTORE_SESSION_ID
+
+
+class GetWebRestoreJobResponses(object):
+    MISSING_STATUS = """{
+                "zipResult": false,
+                "name": "WebRestore_13",
+                "sourceId": "896477098509532085",
+                "userId": 202011,
+                "bytesZipped": 0,
+                "jobId": "899350590659304988",
+                "canceled": false,
+                "done": true,
+                "expirationDate": 1556888724979,
+                "creationDate": 1556802324979,
+                "percentComplete": 0
+            }
+        """
+    NOT_DONE = """{
+                "status": "preparing",
+                "zipResult": false,
+                "name": "WebRestore_13",
+                "sourceId": "896477098509532085",
+                "userId": 202011,
+                "bytesZipped": 0,
+                "jobId": "899350590659304988",
+                "canceled": false,
+                "done": false,
+                "expirationDate": 1556888724979,
+                "creationDate": 1556802324979,
+                "percentComplete": 0
+            }
+        """
+    DONE = """{
+                "status": "done",
+                "zipResult": false,
+                "name": "WebRestore_13",
+                "sourceId": "896477098509532085",
+                "userId": 202011,
+                "bytesZipped": 0,
+                "jobId": "899350590659304988",
+                "canceled": false,
+                "done": true,
+                "expirationDate": 1556888724979,
+                "creationDate": 1556802324979
+            }
+        """
+
+
+def mock_start_restore_response(mocker, storage_archive_service, response):
+    def mock_start_restore(
+        device_guid,
+        web_restore_session_id,
+        restore_groups,
+        num_files,
+        num_dirs,
+        num_bytes,
+        **kwargs
+    ):
+        start_restore_response = mocker.MagicMock(spec=Response)
+        start_restore_response.text = response
+        start_restore_response.status_code = 200
+        return Py42Response(start_restore_response)
+
+    storage_archive_service.start_restore.side_effect = mock_start_restore
+
+
+def mock_get_restore_status_responses(mocker, storage_archive_service, json_responses):
+    responses = []
+    for json_response in json_responses:
+        get_restore_status_response = mocker.MagicMock(spec=Response)
+        get_restore_status_response.text = json_response
+        get_restore_status_response.status_code = 200
+        responses.append(Py42Response(get_restore_status_response))
+
+    storage_archive_service.get_restore_status.side_effect = responses
+
+
+def stream_restore_result_response_mock(mocker, storage_archive_service, chunks):
+    stream_restore_result_response = mocker.MagicMock(spec=Py42Response)
+
+    def mock_stream_restore_result(job_id, **kwargs):
+        stream_restore_result_response.iter_content.return_value = chunks
+        return stream_restore_result_response
+
+    storage_archive_service.stream_restore_result.side_effect = (
+        mock_stream_restore_result
+    )
+
+    return stream_restore_result_response
+
+
+def get_response_job_id(response_str):
+    return json.loads(response_str)["jobId"]
+
+
 class TestFileSizePoller(object):
     DESKTOP_SIZE_JOB = "DESKTOP_SIZE_JOB"
     DOWNLOADS_SIZE_JOB = "DOWNLOADS_SIZE_JOB"

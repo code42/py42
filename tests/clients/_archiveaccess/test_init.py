@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pytest
 from requests import Response
 from tests.clients._archiveaccess.conftest import DEVICE_GUID

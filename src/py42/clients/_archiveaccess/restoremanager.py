@@ -21,9 +21,7 @@ def create_file_size_poller(storage_archive_service, device_guid):
 class _RestorePoller(object):
     JOB_POLLING_INTERVAL_SECONDS = 1
 
-    def __init__(
-        self, storage_archive_service, device_guid, job_polling_interval=None,
-    ):
+    def __init__(self, storage_archive_service, device_guid, job_polling_interval=None):
         self._storage_archive_service = storage_archive_service
         self._device_guid = device_guid
         self._job_polling_interval = (

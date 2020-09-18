@@ -21,10 +21,7 @@ class StorageServiceFactory(object):
         connection = Connection.from_device_connection(self._connection, device_guid)
         return PushRestoreService(connection)
 
-    def create_archive_service(self, device_guid, destination_guid=None):
-        if destination_guid is None:
-            destination_guid = self._auto_select_destination_guid(device_guid)
-
+    def create_archive_service(self, device_guid, destination_guid):
         auth = FileArchiveTmpAuth(
             self._connection, u"my", device_guid, destination_guid
         )
@@ -41,7 +38,7 @@ class StorageServiceFactory(object):
         streaming_connection = Connection.from_host_address(host_address)
         return StoragePreservationDataService(main_connection, streaming_connection)
 
-    def _auto_select_destination_guid(self, device_guid):
+    def auto_select_destination_guid(self, device_guid):
         response = self._device_service.get_by_guid(
             device_guid, include_backup_usage=True
         )

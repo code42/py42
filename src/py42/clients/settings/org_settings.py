@@ -21,7 +21,7 @@ class OrgSettings(UserDict, object):
         self._packets = {}
         self.changes = {}
         self.device_defaults = DeviceSettingsDefaults(
-            self.data[u"deviceDefaults"], org_settings=self,
+            self.data[u"deviceDefaults"], org_settings=self
         )
 
     @property

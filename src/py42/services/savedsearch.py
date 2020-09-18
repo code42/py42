@@ -45,7 +45,7 @@ class SavedSearchService(BaseService):
         response = self.get_by_id(search_id)
         search = response[u"searches"][0]
         return FileEventQuery.from_dict(
-            search, page_number=page_number, page_size=page_size,
+            search, page_number=page_number, page_size=page_size
         )
 
     def execute(self, search_id, page_number=None, page_size=None):

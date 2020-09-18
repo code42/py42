@@ -151,6 +151,7 @@ class ArchiveClient(object):
             device_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
+            destination_guid=accessor.destination_guid,
         )
         return accessor_for_push.stream_to_device(
             restore_path=restore_path,

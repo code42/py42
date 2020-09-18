@@ -17,6 +17,10 @@ class ArchiveAccessorFactory(object):
         private_password=None,
         encryption_key=None,
     ):
+        destination_guid = (
+            destination_guid
+            or self._storage_service_factory.auto_select_destination_guid(device_guid)
+        )
         storage_archive_service = self._storage_service_factory.create_archive_service(
             device_guid, destination_guid=destination_guid
         )
@@ -34,13 +38,18 @@ class ArchiveAccessorFactory(object):
         return accessor_class(
             device_guid=device_guid,
             archive_session_id=session_id,
+            destination_guid=destination_guid,
             storage_archive_service=storage_archive_service,
             restore_job_manager=restore_job_manager,
             file_size_poller=file_size_poller,
         )
 
     def create_archive_accessor_for_push_restore(
-        self, device_guid, private_password=None, encryption_key=None
+        self,
+        device_guid,
+        destination_guid=None,
+        private_password=None,
+        encryption_key=None,
     ):
         push_service = self._storage_service_factory.create_push_restore_service(
             device_guid
@@ -56,7 +65,11 @@ class ArchiveAccessorFactory(object):
             encryption_key=encryption_key,
             storage_archive_service=push_service,
         )
-        node_guid = self._get_first_node_guid(device_guid)
+        destination_guid = (
+            destination_guid
+            or self._storage_service_factory.auto_select_destination_guid(device_guid)
+        )
+        node_guid = self._get_selected_node_guid(device_guid, destination_guid)
         return ArchiveContentPusher(
             device_guid=device_guid,
             archive_session_id=session_id,
@@ -103,13 +116,14 @@ class ArchiveAccessorFactory(object):
     def _get_data_key_token(self, device_guid):
         return self._archive_service.get_data_key_token(device_guid)[u"dataKeyToken"]
 
-    def _get_first_node_guid(self, device_guid):
+    def _get_selected_node_guid(self, device_guid, destination_guid):
         response = self._devices_service.get_by_guid(
             device_guid, include_backup_usage=True
         )
         backup_usage = response[u"backupUsage"]
-        if backup_usage:
-            return backup_usage[0][u"serverGuid"]
+        for usage in backup_usage:
+            if usage[u"targetComputerGuid"] == destination_guid:
+                return usage[u"serverGuid"]
 
     @staticmethod
     def _create_restore_session(session_creator, device_guid, **kwargs):

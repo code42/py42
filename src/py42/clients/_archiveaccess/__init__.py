@@ -20,12 +20,14 @@ class ArchiveAccessor(object):
         self,
         device_guid,
         archive_session_id,
+        destination_guid,
         storage_archive_service,
         restore_job_manager,
         file_size_poller,
     ):
         self._device_guid = device_guid
         self._archive_session_id = archive_session_id
+        self.destination_guid = destination_guid
         self._storage_archive_service = storage_archive_service
         self._restore_job_manager = restore_job_manager
         self._file_size_poller = file_size_poller
@@ -118,9 +120,7 @@ class ArchiveContentPusher(ArchiveAccessor):
             file_size_poller=file_size_poller,
         )
 
-    def stream_to_device(
-        self, restore_path, accepting_guid, file_selections,
-    ):
+    def stream_to_device(self, restore_path, accepting_guid, file_selections):
         return self._restore_job_manager.send_stream(
             restore_path=restore_path,
             node_guid=self._node_guid,

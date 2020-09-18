@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import json
-import pytest
-from py42.clients._archiveaccess import FileType, FileSelection
 
+import pytest
+
+from py42.clients._archiveaccess import FileSelection
+from py42.clients._archiveaccess import FileType
+from py42.clients._archiveaccess.restoremanager import FileSizePoller
+from py42.clients._archiveaccess.restoremanager import RestoreJobManager
 from py42.response import Py42Response
 from py42.services.storage.archive import StorageArchiveService
-from py42.clients._archiveaccess.restoremanager import RestoreJobManager
-from py42.clients._archiveaccess.restoremanager import FileSizePoller
 
 
 DEVICE_GUID = "device-guid"

@@ -20,7 +20,12 @@ class ArchiveAccessorFactory(object):
         storage_archive_service = self._storage_service_factory.create_archive_service(
             device_guid, destination_guid=destination_guid
         )
-        decryption_keys, session_id, restore_job_manager, file_size_poller = self._create_archive_accessor_dependencies(
+        (
+            decryption_keys,
+            session_id,
+            restore_job_manager,
+            file_size_poller,
+        ) = self._create_archive_accessor_dependencies(
             device_guid=device_guid,
             private_password=private_password,
             encryption_key=encryption_key,
@@ -40,7 +45,12 @@ class ArchiveAccessorFactory(object):
         push_service = self._storage_service_factory.create_push_restore_service(
             device_guid
         )
-        decryption_keys, session_id, restore_job_manager, file_size_poller = self._create_archive_accessor_dependencies(
+        (
+            decryption_keys,
+            session_id,
+            restore_job_manager,
+            file_size_poller,
+        ) = self._create_archive_accessor_dependencies(
             device_guid=device_guid,
             private_password=private_password,
             encryption_key=encryption_key,
@@ -57,11 +67,7 @@ class ArchiveAccessorFactory(object):
         )
 
     def _create_archive_accessor_dependencies(
-        self,
-        storage_archive_service,
-        device_guid,
-        private_password,
-        encryption_key
+        self, storage_archive_service, device_guid, private_password, encryption_key
     ):
         decryption_keys = self._get_decryption_keys(
             device_guid=device_guid,
@@ -78,7 +84,6 @@ class ArchiveAccessorFactory(object):
         )
         file_size_poller = create_file_size_poller(storage_archive_service, device_guid)
         return decryption_keys, session_id, restore_job_manager, file_size_poller
-
 
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):
         decryption_keys = {}

@@ -1,14 +1,15 @@
-from requests import Response
 import json
 import time
 
-from py42.response import Py42Response
+from requests import Response
+from tests.clients._archiveaccess.conftest import DESKTOP_ID
+from tests.clients._archiveaccess.conftest import DEVICE_GUID
+from tests.clients._archiveaccess.conftest import DOWNLOADS_ID
+from tests.clients._archiveaccess.conftest import WEB_RESTORE_SESSION_ID
+
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
-from tests.clients._archiveaccess.conftest import DESKTOP_ID
-from tests.clients._archiveaccess.conftest import DOWNLOADS_ID
-from tests.clients._archiveaccess.conftest import DEVICE_GUID
-from tests.clients._archiveaccess.conftest import WEB_RESTORE_SESSION_ID
+from py42.response import Py42Response
 
 
 class GetWebRestoreJobResponses(object):

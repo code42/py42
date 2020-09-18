@@ -63,7 +63,9 @@ class TestArchiveClient(object):
     def test_stream_from_backup_when_given_multiple_paths_calls_archive_accessor_stream_from_backup_with_expected_params(
         self, archive_accessor_factory, archive_service, archive_content_streamer
     ):
-        archive_accessor_factory.create_archive_accessor.return_value = archive_content_streamer
+        archive_accessor_factory.create_archive_accessor.return_value = (
+            archive_content_streamer
+        )
         archive = ArchiveClient(archive_accessor_factory, archive_service)
         archive.stream_from_backup(
             ["path/to/first/file", "path/to/second/file"],

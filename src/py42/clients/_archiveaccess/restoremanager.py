@@ -4,7 +4,9 @@ from py42.settings import debug
 from py42.util import format_dict
 
 
-def create_restore_job_manager(storage_archive_service, device_guid, archive_session_id):
+def create_restore_job_manager(
+    storage_archive_service, device_guid, archive_session_id
+):
     return RestoreJobManager(
         storage_archive_service=storage_archive_service,
         device_guid=device_guid,

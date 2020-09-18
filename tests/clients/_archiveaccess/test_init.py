@@ -1,14 +1,16 @@
 import pytest
+from requests import Response
+from tests.clients._archiveaccess.conftest import DEVICE_GUID
+from tests.clients._archiveaccess.conftest import DOWNLOADS_ID
+from tests.clients._archiveaccess.conftest import get_file_selection
+from tests.clients._archiveaccess.conftest import PATH_TO_DESKTOP_FOLDER
+from tests.clients._archiveaccess.conftest import PATH_TO_FILE_IN_DOWNLOADS_FOLDER
+from tests.clients._archiveaccess.conftest import WEB_RESTORE_SESSION_ID
 
-from py42.clients._archiveaccess import ArchiveContentStreamer, FileSelection, FileType
+from py42.clients._archiveaccess import ArchiveContentStreamer
+from py42.clients._archiveaccess import FileType
 from py42.exceptions import Py42ArchiveFileNotFoundError
 from py42.response import Py42Response
-from requests import Response
-
-from tests.clients._archiveaccess.conftest import DEVICE_GUID, \
-    PATH_TO_FILE_IN_DOWNLOADS_FOLDER, get_file_selection, PATH_TO_DESKTOP_FOLDER
-from tests.clients._archiveaccess.conftest import WEB_RESTORE_SESSION_ID
-from tests.clients._archiveaccess.conftest import DOWNLOADS_ID
 
 
 USERS_DIR = "/Users"
@@ -530,5 +532,3 @@ class TestArchiveContentStreamer(object):
         storage_archive_service.get_file_path_metadata.assert_called_with(
             WEB_RESTORE_SESSION_ID, DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
         )
-
-

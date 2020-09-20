@@ -19,8 +19,11 @@ sdk = py42.sdk.from_local_account("console.us.code42.com", "john.doe@example.com
 Explore the complete public documentation for `py42` below.
 
 * [Orgs](methoddocs/orgs.md)
+* [Org Settings](methoddocs/orgsettings.md)
 * [Users](methoddocs/users.md)
 * [Devices](methoddocs/devices.md)
+* [Device Settings](methoddocs/devicesettings.md)
+* [Backup Sets](methoddocs/backupset.md)
 * [Security Data](methoddocs/securitydata.md)
 * [Legal Hold](methoddocs/legalhold.md)
 * [Detection Lists](methoddocs/detectionlists.md)
@@ -29,6 +32,7 @@ Explore the complete public documentation for `py42` below.
 * [Shared Query Filters](methoddocs/sharedqueryfilters.md)
 * [File Event Queries](methoddocs/filleeventqueries.md)
 * [Archive](methoddocs/archive.md)
+* [Audit Logs](methoddocs/auditlogs.md)
 * [Response](methoddocs/response.md)
 * [Exceptions](methoddocs/exceptions.md)
 * [Util](methoddocs/util.md)

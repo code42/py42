@@ -1,6 +1,15 @@
+from collections import namedtuple
+from time import time
+
 from py42 import settings
+from py42._compat import str
+from py42.clients.settings.device_settings import DeviceSettings
 from py42.services import BaseService
 from py42.services.util import get_all_pages
+
+DeviceSettingsResponse = namedtuple(
+    "DeviceSettingsResponse", ["error", "settings_response", "device_settings_response"]
+)
 
 
 class DeviceService(BaseService):
@@ -222,21 +231,6 @@ class DeviceService(BaseService):
         uri = u"/api/ComputerDeauthorization/{}".format(device_id)
         return self._connection.put(uri)
 
-    def get_settings(self, guid, keys=None):
-        """Gets settings of the device.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#DeviceSetting>`__
-
-        Args:
-            guid (str): The globally unique identifier of the device.
-            keys (str, optional): A comma separated list of device keys. Defaults to None.
-
-        Returns:
-            :class:`py42.response.Py42Response`: A response containing settings information.
-        """
-        uri = u"/api/v4/device-setting/view"
-        params = {u"guid": guid, u"keys": keys}
-        return self._connection.get(uri, params=params)
-
     def get_agent_state(self, guid, property_name):
         """Gets the agent state of the device.
             `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
@@ -263,3 +257,31 @@ class DeviceService(BaseService):
                 :class:`py42.response.Py42Response`: A response containing settings information.
             """
         return self.get_agent_state(guid, u"fullDiskAccess")
+
+    def get_settings(self, guid):
+        """Gets setting data for a device and returns a `DeviceSettings` object for the target device.
+
+        Args:
+            guid (int,str): The globally unique identifier of the device.
+
+        Returns:
+            :class:`py42.clients.settings.device_settings.DeviceSettings`: A class to help manage device settings.
+        """
+        settings = self.get_by_guid(guid, incSettings=True)
+        return DeviceSettings(settings.data)
+
+    def update_settings(self, device_settings):
+        """Updates a device's settings based on changes to the passed in `DeviceSettings` instance.
+
+        Args:
+            device_settings (`DeviceSettings`): An instance of `DeviceSettings` with desired modifications to settings.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing the result of the setting change.
+        """
+        device_settings = dict(device_settings)
+        device_id = device_settings[u"computerId"]
+        uri = u"/api/Computer/{}".format(device_id)
+        new_config_date_ms = str(int(time() * 1000))
+        device_settings[u"settings"][u"configDateMs"] = new_config_date_ms
+        return self._connection.put(uri, json=device_settings)

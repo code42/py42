@@ -88,3 +88,11 @@ def get_attribute_keys_from_class(cls):
         for attr in dir(cls)
         if not callable(cls().__getattribute__(attr)) and not attr.startswith(u"_")
     ]
+
+
+def to_list(value):
+    if not value:
+        return []
+    if not isinstance(value, (list, tuple)):
+        return [value]
+    return value

@@ -22,6 +22,10 @@ if is_py2:
 
     string_type = basestring
 
+    from UserDict import UserDict
+
+    from UserList import UserList
+
 else:
     from urllib.parse import urljoin
     from urllib.parse import urlparse
@@ -33,3 +37,6 @@ else:
     import reprlib
 
     string_type = str
+
+    from collections import UserDict
+    from collections import UserList

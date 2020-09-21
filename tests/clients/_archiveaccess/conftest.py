@@ -18,6 +18,9 @@ DESKTOP_ID = "97c6bd9bff714bd45665130f7f381781"
 DOWNLOADS_ID = "69e930e774cbc1ee6d0c0ff2ba5804ee"
 PATH_TO_FILE_IN_DOWNLOADS_FOLDER = "/Users/qa/Downloads/terminator-genisys.jpg"
 PATH_TO_DESKTOP_FOLDER = "/Users/qa/Desktop"
+NODE_GUID = "server-node-guid"
+RESTORE_PATH = "C:/store/here/"
+ACCEPTING_GUID = "accepting-device-guid"
 
 
 @pytest.fixture

@@ -111,6 +111,7 @@ class ArchiveClient(object):
         archive_password=None,
         encryption_key=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
+        show_deleted=None,
     ):
         """Streams a file from a backup archive to a specified device.
 

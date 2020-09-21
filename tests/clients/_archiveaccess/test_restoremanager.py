@@ -1,15 +1,25 @@
 import json
 import time
 
+import pytest
 from requests import Response
+from tests.clients._archiveaccess.conftest import ACCEPTING_GUID
 from tests.clients._archiveaccess.conftest import DESKTOP_ID
 from tests.clients._archiveaccess.conftest import DEVICE_GUID
 from tests.clients._archiveaccess.conftest import DOWNLOADS_ID
+from tests.clients._archiveaccess.conftest import NODE_GUID
+from tests.clients._archiveaccess.conftest import RESTORE_PATH
 from tests.clients._archiveaccess.conftest import WEB_RESTORE_SESSION_ID
 
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
 from py42.response import Py42Response
+from py42.services.storage.restore import PushRestoreService
+
+
+@pytest.fixture
+def push_service(mocker):
+    return mocker.MagicMock(spec=PushRestoreService)
 
 
 class GetWebRestoreJobResponses(object):
@@ -355,5 +365,28 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
         )
-
         assert restore_job_manager.get_stream(single_file_selection)
+
+    def test_send_stream_calls_start_push_restore_with_expected_args(
+        self, push_service, single_file_selection
+    ):
+        restore_job_manager = RestoreJobManager(
+            push_service, DEVICE_GUID, WEB_RESTORE_SESSION_ID
+        )
+        restore_job_manager.send_stream(
+            RESTORE_PATH, NODE_GUID, ACCEPTING_GUID, single_file_selection
+        )
+        push_service.start_push_restore.assert_called_once_with(
+            DEVICE_GUID,
+            ACCEPTING_GUID,
+            WEB_RESTORE_SESSION_ID,
+            NODE_GUID,
+            [{"backupSetId": -1, "files": [single_file_selection[0].file]}],
+            RESTORE_PATH,
+            1,
+            1,
+            show_deleted=False,
+            file_permissions=u"CURRENT",
+            permit_restore_to_different_os_version=True,
+            restore_full_path=True,
+        )

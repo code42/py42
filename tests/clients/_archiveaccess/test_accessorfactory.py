@@ -81,9 +81,7 @@ class TestArchiveAccessFactory(object):
         accessor_manager = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_accessor(
-            DEVICE_GUID, ArchiveAccessor
-        )
+        accessor_manager.create_archive_accessor(DEVICE_GUID, ArchiveAccessor)
         storage_service_factory.create_archive_service.assert_called_with(
             DEVICE_GUID, DESTINATION_GUID,
         )
@@ -102,9 +100,7 @@ class TestArchiveAccessFactory(object):
             archive_service, storage_service_factory, device_service
         )
         accessor_manager.create_archive_accessor(
-            DEVICE_GUID,
-            ArchiveAccessor,
-            DESTINATION_GUID,
+            DEVICE_GUID, ArchiveAccessor, DESTINATION_GUID,
         )
         storage_service_factory.create_archive_service.assert_called_with(
             DEVICE_GUID, DESTINATION_GUID

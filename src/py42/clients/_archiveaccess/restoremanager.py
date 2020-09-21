@@ -109,7 +109,7 @@ class RestoreJobManager(_RestorePoller):
             restore_path,
             num_files,
             size,
-            show_deleted=True,
+            show_deleted=False,
             file_permissions=u"CURRENT",
             permit_restore_to_different_os_version=True,
             restore_full_path=True,

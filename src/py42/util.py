@@ -3,6 +3,8 @@ from __future__ import print_function
 import json
 from datetime import datetime
 
+MICROSECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%fZ"
+
 
 def format_json(json_string):
     """Converts a minified JSON str to a prettified JSON str.
@@ -98,7 +100,7 @@ def to_list(value):
     return value
 
 
-def parse_timestamp(timestamp):
+def parse_timestamp_to_milliseconds_precision(timestamp):
     if isinstance(timestamp, int):
         return convert_timestamp_to_str(timestamp)
 
@@ -107,5 +109,18 @@ def parse_timestamp(timestamp):
 
     if isinstance(timestamp, str):
         return convert_datetime_to_timestamp_str(
-            datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+            datetime.strptime(timestamp, u"%Y-%m-%d %H:%M:%S")
+        )
+
+
+def parse_timestamp_to_microseconds_precision(timestamp):
+    if isinstance(timestamp, int):
+        return datetime.utcfromtimestamp(timestamp).strftime(MICROSECOND_FORMAT)
+
+    if isinstance(timestamp, datetime):
+        return timestamp.strftime(MICROSECOND_FORMAT)
+
+    if isinstance(timestamp, str):
+        return datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").strftime(
+            MICROSECOND_FORMAT
         )

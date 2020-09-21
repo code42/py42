@@ -9,6 +9,9 @@ uri = u"/api/SecurityDetectionEvent"
 mock_min_ts = 1000000
 mock_max_ts = 2000000
 
+min_ts_string_format = "1970-01-12 13:46:40"
+max_ts_string_format = "1970-01-24 03:33:20"
+
 
 @pytest.fixture
 def py42session(mocker):
@@ -87,8 +90,8 @@ class TestStorageSecurityService(object):
             cursor=params[u"cursor"],
             include_files=params[u"incFiles"],
             event_types=params[u"eventType"],
-            min_timestamp=mock_min_ts,
-            max_timestamp=mock_max_ts,
+            min_timestamp=datetime.utcfromtimestamp(mock_min_ts),
+            max_timestamp=datetime.utcfromtimestamp(mock_max_ts),
         )
         py42session.get.assert_called_once_with(uri, params=params)
 
@@ -104,8 +107,8 @@ class TestStorageSecurityService(object):
             cursor=params[u"cursor"],
             include_files=params[u"incFiles"],
             event_types=params[u"eventType"],
-            min_timestamp=mock_min_ts,
-            max_timestamp=mock_max_ts,
+            min_timestamp=datetime.utcfromtimestamp(mock_min_ts),
+            max_timestamp=datetime.utcfromtimestamp(mock_max_ts),
         )
         py42session.get.assert_called_once_with(uri, params=params)
 
@@ -119,7 +122,37 @@ class TestStorageSecurityService(object):
         storage_security_service.get_security_detection_event_summary(
             user_uid=params[u"userUid"],
             cursor=params[u"cursor"],
-            min_timestamp=mock_min_ts,
-            max_timestamp=mock_max_ts,
+            min_timestamp=datetime.utcfromtimestamp(mock_min_ts),
+            max_timestamp=datetime.utcfromtimestamp(mock_max_ts),
+        )
+        py42session.get.assert_called_once_with(uri, params=params)
+
+    def test_get_security_detection_event_summary_calls_get_with_correct_date_params_for_str_format(
+        self,
+        storage_security_service,
+        py42session,
+        security_detection_event_summary_params,
+    ):
+        params = security_detection_event_summary_params
+        storage_security_service.get_security_detection_event_summary(
+            user_uid=params[u"userUid"],
+            cursor=params[u"cursor"],
+            min_timestamp=min_ts_string_format,
+            max_timestamp=max_ts_string_format,
+        )
+        py42session.get.assert_called_once_with(uri, params=params)
+
+    def test_get_security_detection_event_summary_calls_get_with_correct_date_params_for_datetime_format(
+        self,
+        storage_security_service,
+        py42session,
+        security_detection_event_summary_params,
+    ):
+        params = security_detection_event_summary_params
+        storage_security_service.get_security_detection_event_summary(
+            user_uid=params[u"userUid"],
+            cursor=params[u"cursor"],
+            min_timestamp=datetime.strptime(min_ts_string_format, "%Y-%m-%d %H:%M:%S"),
+            max_timestamp=datetime.strptime(max_ts_string_format, "%Y-%m-%d %H:%M:%S"),
         )
         py42session.get.assert_called_once_with(uri, params=params)

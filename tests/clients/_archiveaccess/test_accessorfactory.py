@@ -1,4 +1,5 @@
 import pytest
+from tests.clients.conftest import TEST_ACCEPTING_GUID
 from tests.clients.conftest import TEST_DATA_KEY_TOKEN
 from tests.clients.conftest import TEST_DESTINATION_GUID_1
 from tests.clients.conftest import TEST_DEVICE_GUID
@@ -47,10 +48,10 @@ class TestArchiveAccessFactory(object):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
         )
-        accessor_manager = ArchiveAccessorFactory(
+        accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        assert accessor_manager.create_archive_accessor(
+        assert accessor_factory.create_archive_accessor(
             TEST_DEVICE_GUID, accessor_class=ArchiveAccessor
         )
 
@@ -64,10 +65,10 @@ class TestArchiveAccessFactory(object):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
         )
-        accessor_manager = ArchiveAccessorFactory(
+        accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
+        accessor_factory.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
         storage_service_factory.create_archive_service.assert_called_with(
             TEST_DEVICE_GUID, TEST_DESTINATION_GUID_1,
         )
@@ -82,10 +83,10 @@ class TestArchiveAccessFactory(object):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
         )
-        accessor_manager = ArchiveAccessorFactory(
+        accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_accessor(
+        accessor_factory.create_archive_accessor(
             TEST_DEVICE_GUID, ArchiveAccessor, TEST_DESTINATION_GUID_1,
         )
         storage_service_factory.create_archive_service.assert_called_with(
@@ -102,10 +103,10 @@ class TestArchiveAccessFactory(object):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
         )
-        accessor_manager = ArchiveAccessorFactory(
+        accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
+        accessor_factory.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
 
         storage_archive_service.create_restore_session.assert_called_once_with(
             TEST_DEVICE_GUID, data_key_token=TEST_DATA_KEY_TOKEN
@@ -121,10 +122,10 @@ class TestArchiveAccessFactory(object):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
         )
-        accessor_manager = ArchiveAccessorFactory(
+        accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_accessor(
+        accessor_factory.create_archive_accessor(
             TEST_DEVICE_GUID, ArchiveAccessor, private_password=TEST_PASSWORD,
         )
         storage_archive_service.create_restore_session.assert_called_once_with(
@@ -143,10 +144,10 @@ class TestArchiveAccessFactory(object):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
         )
-        accessor_manager = ArchiveAccessorFactory(
+        accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_accessor(
+        accessor_factory.create_archive_accessor(
             TEST_DEVICE_GUID,
             encryption_key=TEST_ENCRYPTION_KEY,
             accessor_class=ArchiveAccessor,
@@ -170,10 +171,10 @@ class TestArchiveAccessFactory(object):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
         )
-        accessor_manager = ArchiveAccessorFactory(
+        accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
+        accessor_factory.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
 
         assert spy.call_count == 1
         spy.assert_called_once_with(
@@ -186,10 +187,23 @@ class TestArchiveAccessFactory(object):
         storage_service_factory.create_archive_service.side_effect = Exception(
             "Exception in create_backup_client"
         )
-        accessor_manager = ArchiveAccessorFactory(
+        accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
         with pytest.raises(Exception):
-            accessor_manager.create_archive_accessor(
+            accessor_factory.create_archive_accessor(
                 INVALID_DEVICE_GUID, ArchiveAccessor
             )
+
+    def test_create_archive_content_pusher_creates_push_service_with_accepting_guid(
+        self, archive_service, storage_service_factory, device_service
+    ):
+        accessor_manager = ArchiveAccessorFactory(
+            archive_service, storage_service_factory, device_service
+        )
+        accessor_manager.create_archive_content_pusher(
+            TEST_DEVICE_GUID, TEST_ACCEPTING_GUID
+        )
+        storage_service_factory.create_push_restore_service.assert_called_once_with(
+            TEST_ACCEPTING_GUID
+        )

@@ -48,6 +48,7 @@ class ArchiveAccessorFactory(object):
     def create_archive_content_pusher(
         self,
         device_guid,
+        accepting_guid,
         destination_guid=None,
         private_password=None,
         encryption_key=None,
@@ -55,7 +56,7 @@ class ArchiveAccessorFactory(object):
         """Creates a class that inherits from the ArchiveAccessor class that has method
         stream_to_device()."""
         push_service = self._storage_service_factory.create_push_restore_service(
-            device_guid
+            accepting_guid
         )
         (
             decryption_keys,

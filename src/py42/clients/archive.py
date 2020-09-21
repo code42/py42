@@ -152,6 +152,7 @@ class ArchiveClient(object):
         )
         pusher = self._archive_accessor_factory.create_archive_content_pusher(
             device_guid,
+            accepting_device_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
             destination_guid=explorer.destination_guid,

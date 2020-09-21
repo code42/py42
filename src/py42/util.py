@@ -96,3 +96,16 @@ def to_list(value):
     if not isinstance(value, (list, tuple)):
         return [value]
     return value
+
+
+def parse_timestamp(timestamp):
+    if isinstance(timestamp, int):
+        return convert_timestamp_to_str(timestamp)
+
+    if isinstance(timestamp, datetime):
+        return convert_datetime_to_timestamp_str(timestamp)
+
+    if isinstance(timestamp, str):
+        return convert_datetime_to_timestamp_str(
+            datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S")
+        )

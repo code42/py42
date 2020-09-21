@@ -1,3 +1,5 @@
+from datetime import datetime as dt
+
 from py42.services.auditlogs import AuditLogsService
 
 
@@ -26,8 +28,8 @@ class TestAuditLogService(object):
     ):
         service = AuditLogsService(mock_connection)
 
-        start_time = 1591401600  # 2020-06-06 00:00:00"
-        end_time = 1599653541  # 2020-09-09 12:12:21"
+        start_time = dt.strptime("2020-06-06 00:00:00", "%Y-%m-%d %H:%M:%S")
+        end_time = dt.strptime("2020-09-09 12:12:21", "%Y-%m-%d %H:%M:%S")
         for _ in service.get_all(begin_time=start_time, end_time=end_time):
             pass
         expected_data = {
@@ -299,6 +301,60 @@ class TestAuditLogService(object):
             "actorIpAddresses": ["127.0.0.1", "0.0.0.0"],
             "affectedUserIds": [],
             "affectedUserNames": ["test_user@name.com"],
+        }
+        mock_connection.post.assert_called_once_with(
+            "/rpc/search/search-audit-log", json=expected_data, headers=None
+        )
+
+    def test_get_all_passes_valid_date_range_param_when_begin_and_end_time_are_string_type(
+        self, mock_connection
+    ):
+        service = AuditLogsService(mock_connection)
+
+        start_time = "2020-06-06 00:00:00"
+        end_time = "2020-09-09 12:12:21"
+        for _ in service.get_all(begin_time=start_time, end_time=end_time):
+            pass
+        expected_data = {
+            "page": 0,
+            "pageSize": 500,
+            "dateRange": {
+                "startTime": "2020-06-06T00:00:00.000Z",
+                "endTime": "2020-09-09T12:12:21.000Z",
+            },
+            "eventTypes": [],
+            "actorIds": [],
+            "actorNames": [],
+            "actorIpAddresses": [],
+            "affectedUserIds": [],
+            "affectedUserNames": [],
+        }
+        mock_connection.post.assert_called_once_with(
+            "/rpc/search/search-audit-log", json=expected_data, headers=None
+        )
+
+    def test_get_all_passes_valid_date_range_param_when_begin_and_end_time_are_epoch(
+        self, mock_connection
+    ):
+        service = AuditLogsService(mock_connection)
+
+        start_time = 1591401600  # 2020-06-06 00:00:00"
+        end_time = 1599653541  # 2020-09-09 12:12:21"
+        for _ in service.get_all(begin_time=start_time, end_time=end_time):
+            pass
+        expected_data = {
+            "page": 0,
+            "pageSize": 500,
+            "dateRange": {
+                "startTime": "2020-06-06T00:00:00.000Z",
+                "endTime": "2020-09-09T12:12:21.000Z",
+            },
+            "eventTypes": [],
+            "actorIds": [],
+            "actorNames": [],
+            "actorIpAddresses": [],
+            "affectedUserIds": [],
+            "affectedUserNames": [],
         }
         mock_connection.post.assert_called_once_with(
             "/rpc/search/search-audit-log", json=expected_data, headers=None

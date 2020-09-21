@@ -10,6 +10,14 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Changed
+
+- Timestamp argument accepts input in string type( format `YYYY-MM-DD HH:MM:SS` ), int type(epoch time) as well as a datetime instance for following:
+    - `sdk.auditlogs.get_page`
+    - `sdk.auditlogs.get_all`
+    - `sdk.securitydata.get_all_plan_security_events`
+    - `sdk.securitydata.get_all_user_security_events`
+
 ### Removed
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.

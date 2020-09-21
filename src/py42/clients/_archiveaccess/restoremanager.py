@@ -101,16 +101,16 @@ class RestoreJobManager(_RestorePoller):
         self, restore_path, node_guid, accepting_guid, file_selections, show_deleted
     ):
         num_files = sum([fs.num_files for fs in file_selections])
-        size = sum([fs.num_bytes for fs in file_selections])
+        num_bytes = sum([fs.num_bytes for fs in file_selections])
         return self._storage_archive_service.start_push_restore(
             self._device_guid,
             accepting_guid,
             self._archive_session_id,
             node_guid,
-            [{u"backupSetId": -1, u"files": [f.file for f in file_selections]}],
             restore_path,
+            [{u"backupSetId": -1, u"files": [f.file for f in file_selections]}],
             num_files,
-            size,
+            num_bytes,
             show_deleted=show_deleted,
             file_permissions=u"CURRENT",
             permit_restore_to_different_os_version=True,

@@ -111,7 +111,7 @@ class ArchiveClient(object):
         archive_password=None,
         encryption_key=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
-        show_deleted=None,
+        show_deleted=False,
     ):
         """Streams a file from a backup archive to a specified device.
 
@@ -135,6 +135,7 @@ class ArchiveClient(object):
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
             show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
+                Defaults to False.
 
         Returns:
             :class:`py42.response.Py42Response`.

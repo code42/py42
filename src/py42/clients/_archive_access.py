@@ -261,8 +261,8 @@ class RestoreJobManager(_RestorePoller):
         job_polling_interval=None,
     ):
         super(RestoreJobManager, self).__init__(
-            storage_archive_service=storage_archive_service,
-            device_guid=device_guid,
+            storage_archive_service,
+            device_guid,
             job_polling_interval=job_polling_interval,
         )
         self._archive_session_id = archive_session_id
@@ -293,14 +293,12 @@ class RestoreJobManager(_RestorePoller):
         num_dirs = sum([fs.num_dirs for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
         return self._storage_archive_service.start_restore(
-            device_guid=self._device_guid,
-            web_restore_session_id=self._archive_session_id,
-            restore_groups=[
-                {u"backupSetId": -1, u"files": [f.path_set for f in file_selections]}
-            ],
-            num_files=num_files,
-            num_dirs=num_dirs,
-            num_bytes=num_bytes,
+            self._device_guid,
+            self._archive_session_id,
+            [{u"backupSetId": -1, u"files": [f.path_set for f in file_selections]}],
+            num_files,
+            num_dirs,
+            num_bytes,
             show_deleted=True,
         )
 
@@ -312,11 +310,7 @@ class RestoreJobManager(_RestorePoller):
 def create_restore_job_manager(
     storage_archive_service, device_guid, archive_session_id
 ):
-    return RestoreJobManager(
-        storage_archive_service=storage_archive_service,
-        device_guid=device_guid,
-        archive_session_id=archive_session_id,
-    )
+    return RestoreJobManager(storage_archive_service, device_guid, archive_session_id,)
 
 
 def create_file_size_poller(storage_archive_service, device_guid):

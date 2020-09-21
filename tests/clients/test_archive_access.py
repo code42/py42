@@ -980,12 +980,12 @@ class TestRestoreJobManager(object):
             {u"backupSetId": -1, u"files": [single_file_selection[0].path_set]}
         ]
         storage_archive_service.start_restore.assert_called_once_with(
-            device_guid=DEVICE_GUID,
-            web_restore_session_id=WEB_RESTORE_SESSION_ID,
-            restore_groups=expected_restore_groups,
-            num_files=1,
-            num_dirs=1,
-            num_bytes=1,
+            DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID,
+            expected_restore_groups,
+            1,
+            1,
+            1,
             show_deleted=True,
         )
 
@@ -1013,12 +1013,12 @@ class TestRestoreJobManager(object):
             }
         ]
         storage_archive_service.start_restore.assert_called_once_with(
-            device_guid=DEVICE_GUID,
-            web_restore_session_id=WEB_RESTORE_SESSION_ID,
-            restore_groups=expected_restore_groups,
-            num_files=1 + 4,
-            num_dirs=2 + 5,
-            num_bytes=3 + 6,
+            DEVICE_GUID,
+            WEB_RESTORE_SESSION_ID,
+            expected_restore_groups,
+            1 + 4,
+            2 + 5,
+            3 + 6,
             show_deleted=True,
         )
 

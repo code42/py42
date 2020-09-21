@@ -5,6 +5,7 @@ from py42.clients._archive_access import ArchiveAccessorManager
 from py42.clients.alertrules import AlertRulesClient
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
+from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.authority import AuthorityClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
@@ -16,6 +17,7 @@ from py42.services.administration import AdministrationService
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
 from py42.services.archive import ArchiveService
+from py42.services.auditlogs import AuditLogsService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.detectionlists.user_profile import DetectionListUserService
@@ -189,6 +191,15 @@ class SDKClient(object):
         """
         return self._clients.alerts
 
+    @property
+    def auditlogs(self):
+        """A collections of methods for retrieving audit logs.
+
+        Returns:
+            :class:`py42.services.auditlogs.AuditLogsService`
+        """
+        return self._clients.auditlogs
+
 
 def _init_services(main_connection, main_auth):
     alert_rules_key = u"FedObserver-API_URL"
@@ -197,6 +208,7 @@ def _init_services(main_connection, main_auth):
     preservation_data_key = u"PRESERVATION-DATA-SERVICE_API-URL"
     employee_case_mgmt_key = u"employeecasemanagement-API_URL"
     kv_prefix = u"simple-key-value-store"
+    audit_logs_key = u"AUDIT-LOG_API-URL"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
     kv_service = KeyValueStoreService(kv_connection)
@@ -216,7 +228,9 @@ def _init_services(main_connection, main_auth):
     ecm_conn = Connection.from_microservice_key(
         kv_service, employee_case_mgmt_key, auth=main_auth
     )
-
+    audit_logs_conn = Connection.from_microservice_key(
+        kv_service, audit_logs_key, auth=main_auth
+    )
     user_svc = UserService(main_connection)
     administration_svc = AdministrationService(main_connection)
     file_event_svc = FileEventService(file_events_conn)
@@ -241,6 +255,7 @@ def _init_services(main_connection, main_auth):
         ),
         highriskemployee=HighRiskEmployeeService(ecm_conn, user_ctx, user_profile_svc),
         userprofile=user_profile_svc,
+        auditlogs=AuditLogsService(audit_logs_conn),
     )
 
     return services, user_ctx
@@ -276,11 +291,13 @@ def _init_clients(services, connection):
         services.archive, storage_service_factory
     )
     archive = ArchiveClient(archive_accessor_mgr, services.archive)
+    auditlogs = AuditLogsClient(services.auditlogs)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
         alerts=alerts,
         securitydata=securitydata,
         archive=archive,
+        auditlogs=auditlogs,
     )
     return clients

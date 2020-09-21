@@ -24,3 +24,10 @@ class TestClass(object):
 def test_get_attribute_keys_from_class_returns_public_class_attribute_keys():
     public_attributes = util.get_attribute_keys_from_class(TestClass)
     assert set(public_attributes) == {"value1", "value2"}
+
+
+def test_to_list():
+    assert util.to_list(None) == []
+    assert util.to_list("") == []
+    assert util.to_list(["a"]) == ["a"]
+    assert util.to_list("a") == ["a"]

@@ -82,10 +82,10 @@ class TestArchiveAccessFactory(object):
             archive_service, storage_service_factory, device_service
         )
         accessor_manager.create_archive_accessor(
-            DEVICE_GUID, accessor_class=ArchiveAccessor
+            DEVICE_GUID, ArchiveAccessor
         )
         storage_service_factory.create_archive_service.assert_called_with(
-            DEVICE_GUID, destination_guid=DESTINATION_GUID,
+            DEVICE_GUID, DESTINATION_GUID,
         )
 
     def test_get_archive_accessor_with_opt_dest_guid_calls_storage_service_factory_with_correct_args(
@@ -103,11 +103,11 @@ class TestArchiveAccessFactory(object):
         )
         accessor_manager.create_archive_accessor(
             DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            accessor_class=ArchiveAccessor,
+            ArchiveAccessor,
+            DESTINATION_GUID,
         )
         storage_service_factory.create_archive_service.assert_called_with(
-            DEVICE_GUID, destination_guid=DESTINATION_GUID
+            DEVICE_GUID, DESTINATION_GUID
         )
 
     def test_get_archive_accessor_creates_web_restore_session_with_correct_args(

@@ -22,7 +22,7 @@ class ArchiveAccessorFactory(object):
             or self._storage_service_factory.auto_select_destination_guid(device_guid)
         )
         storage_archive_service = self._storage_service_factory.create_archive_service(
-            device_guid, destination_guid=destination_guid
+            device_guid, destination_guid
         )
         (
             decryption_keys,
@@ -30,18 +30,15 @@ class ArchiveAccessorFactory(object):
             restore_job_manager,
             file_size_poller,
         ) = self._create_archive_accessor_dependencies(
-            device_guid=device_guid,
-            private_password=private_password,
-            encryption_key=encryption_key,
-            storage_archive_service=storage_archive_service,
+            storage_archive_service, device_guid, private_password, encryption_key,
         )
         return accessor_class(
-            device_guid=device_guid,
-            archive_session_id=session_id,
-            destination_guid=destination_guid,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            device_guid,
+            session_id,
+            destination_guid,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
 
     def create_archive_accessor_for_push_restore(
@@ -60,10 +57,7 @@ class ArchiveAccessorFactory(object):
             restore_job_manager,
             file_size_poller,
         ) = self._create_archive_accessor_dependencies(
-            device_guid=device_guid,
-            private_password=private_password,
-            encryption_key=encryption_key,
-            storage_archive_service=push_service,
+            push_service, device_guid, private_password, encryption_key,
         )
         destination_guid = (
             destination_guid
@@ -71,30 +65,26 @@ class ArchiveAccessorFactory(object):
         )
         node_guid = self._get_selected_node_guid(device_guid, destination_guid)
         return ArchiveContentPusher(
-            device_guid=device_guid,
-            archive_session_id=session_id,
-            destination_guid=destination_guid,
-            storage_archive_service=push_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
-            node_guid=node_guid,
+            device_guid,
+            destination_guid,
+            node_guid,
+            session_id,
+            push_service,
+            restore_job_manager,
+            file_size_poller,
         )
 
     def _create_archive_accessor_dependencies(
         self, storage_archive_service, device_guid, private_password, encryption_key
     ):
         decryption_keys = self._get_decryption_keys(
-            device_guid=device_guid,
-            private_password=private_password,
-            encryption_key=encryption_key,
+            device_guid, private_password, encryption_key,
         )
         session_id = self._create_restore_session(
             storage_archive_service, device_guid, **decryption_keys
         )
         restore_job_manager = create_restore_job_manager(
-            storage_archive_service=storage_archive_service,
-            device_guid=device_guid,
-            archive_session_id=session_id,
+            storage_archive_service, device_guid, session_id,
         )
         file_size_poller = create_file_size_poller(storage_archive_service, device_guid)
         return decryption_keys, session_id, restore_job_manager, file_size_poller

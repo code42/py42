@@ -114,20 +114,17 @@ class ArchiveContentPusher(ArchiveAccessor):
     ):
         self._node_guid = node_guid
         super(ArchiveContentPusher, self).__init__(
-            device_guid=device_guid,
-            archive_session_id=archive_session_id,
-            destination_guid=destination_guid,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            device_guid,
+            archive_session_id,
+            destination_guid,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
 
     def stream_to_device(self, restore_path, accepting_guid, file_selections):
         return self._restore_job_manager.send_stream(
-            restore_path=restore_path,
-            node_guid=self._node_guid,
-            accepting_guid=accepting_guid,
-            file_selections=file_selections,
+            restore_path, self._node_guid, accepting_guid, file_selections,
         )
 
 
@@ -142,10 +139,7 @@ def _create_file_selections(file_paths, metadata_list, file_sizes=None):
             u"selected": True,
         }
         selection = FileSelection(
-            file=file,
-            num_files=size_info[u"numFiles"],
-            num_dirs=size_info[u"numDirs"],
-            num_bytes=size_info[u"size"],
+            file, size_info[u"numFiles"], size_info[u"numDirs"], size_info[u"size"],
         )
         file_selections.append(selection)
     return file_selections

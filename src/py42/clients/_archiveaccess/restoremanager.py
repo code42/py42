@@ -7,11 +7,7 @@ from py42.util import format_dict
 def create_restore_job_manager(
     storage_archive_service, device_guid, archive_session_id
 ):
-    return RestoreJobManager(
-        storage_archive_service=storage_archive_service,
-        device_guid=device_guid,
-        archive_session_id=archive_session_id,
-    )
+    return RestoreJobManager(storage_archive_service, device_guid, archive_session_id,)
 
 
 def create_file_size_poller(storage_archive_service, device_guid):
@@ -105,16 +101,14 @@ class RestoreJobManager(_RestorePoller):
         num_files = sum([fs.num_files for fs in file_selections])
         size = sum([fs.num_bytes for fs in file_selections])
         return self._storage_archive_service.start_push_restore(
-            device_guid=self._device_guid,
-            accepting_device_guid=accepting_guid,
-            web_restore_session_id=self._archive_session_id,
-            node_guid=node_guid,
-            restore_groups=[
-                {u"backupSetId": -1, u"files": [f.file for f in file_selections]}
-            ],
-            restore_path=restore_path,
-            num_files=num_files,
-            num_bytes=size,
+            self._device_guid,
+            accepting_guid,
+            self._archive_session_id,
+            node_guid,
+            [{u"backupSetId": -1, u"files": [f.file for f in file_selections]}],
+            restore_path,
+            num_files,
+            size,
             show_deleted=True,
             file_permissions=u"CURRENT",
             permit_restore_to_different_os_version=True,
@@ -143,14 +137,12 @@ class RestoreJobManager(_RestorePoller):
         num_dirs = sum([fs.num_dirs for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
         return self._storage_archive_service.start_restore(
-            device_guid=self._device_guid,
-            web_restore_session_id=self._archive_session_id,
-            restore_groups=[
-                {u"backupSetId": -1, u"files": [f.file for f in file_selections]}
-            ],
-            num_files=num_files,
-            num_dirs=num_dirs,
-            num_bytes=num_bytes,
+            self._device_guid,
+            self._archive_session_id,
+            [{u"backupSetId": -1, u"files": [f.file for f in file_selections]}],
+            num_files,
+            num_dirs,
+            num_bytes,
             show_deleted=True,
         )
 

@@ -81,10 +81,7 @@ def _create_file_selections(file_paths, metadata_list, file_sizes=None):
             u"selected": True,
         }
         selection = FileSelection(
-            path_set,
-            size_info[u"numFiles"],
-            size_info[u"numDirs"],
-            size_info[u"size"],
+            path_set, size_info[u"numFiles"], size_info[u"numDirs"], size_info[u"size"],
         )
         file_selections.append(selection)
 

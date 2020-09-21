@@ -396,7 +396,4 @@ class TestRestoreJobManager(object):
             1,
             1,
             show_deleted=False,
-            file_permissions=u"CURRENT",
-            permit_restore_to_different_os_version=True,
-            restore_full_path=True,
         )

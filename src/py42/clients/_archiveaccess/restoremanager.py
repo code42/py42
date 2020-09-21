@@ -112,9 +112,6 @@ class RestoreJobManager(_RestorePoller):
             num_files,
             num_bytes,
             show_deleted=show_deleted,
-            file_permissions=u"CURRENT",
-            permit_restore_to_different_os_version=True,
-            restore_full_path=True,
         )
 
     def _wait_for_job(self, response):

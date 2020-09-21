@@ -134,16 +134,17 @@ class ArchiveClient(object):
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
+            show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
 
         Returns:
             :class:`py42.response.Py42Response`.
         """
         accessor = self._archive_accessor_factory.create_archive_accessor(
             device_guid,
+            ArchiveExplorer,
             destination_guid=destination_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
-            accessor_class=ArchiveExplorer,
         )
         file_selections = accessor.create_file_selections(
             file_paths, file_size_calc_timeout
@@ -158,6 +159,7 @@ class ArchiveClient(object):
             restore_path=restore_path,
             accepting_guid=accepting_device_guid,
             file_selections=file_selections,
+            show_deleted=show_deleted,
         )
 
     def get_backup_sets(self, device_guid, destination_guid):

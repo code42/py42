@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import pytest
 from requests import Response
-from tests.clients._archiveaccess.conftest import DESTINATION_GUID
-from tests.clients._archiveaccess.conftest import DEVICE_GUID
-from tests.clients._archiveaccess.conftest import DOWNLOADS_ID
 from tests.clients._archiveaccess.conftest import get_file_selection
-from tests.clients._archiveaccess.conftest import PATH_TO_DESKTOP_FOLDER
-from tests.clients._archiveaccess.conftest import PATH_TO_FILE_IN_DOWNLOADS_FOLDER
-from tests.clients._archiveaccess.conftest import WEB_RESTORE_SESSION_ID
+from tests.clients.conftest import TEST_DESTINATION_GUID_1
+from tests.clients.conftest import TEST_DEVICE_GUID
+from tests.clients.conftest import TEST_DOWNLOADS_DIR
+from tests.clients.conftest import TEST_DOWNLOADS_FILE_ID
+from tests.clients.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
+from tests.clients.conftest import TEST_SESSION_ID
 
 from py42.clients._archiveaccess import ArchiveContentStreamer
 from py42.clients._archiveaccess import FileType
@@ -293,7 +293,7 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
 
 def mock_get_file_path_metadata_responses(mocker, storage_archive_service, responses):
     storage_archive_service.get_file_path_metadata.side_effect = get_get_file_path_metadata_mock(
-        mocker, WEB_RESTORE_SESSION_ID, DEVICE_GUID, responses
+        mocker, TEST_SESSION_ID, TEST_DEVICE_GUID, responses
     )
 
 
@@ -307,12 +307,12 @@ class TestArchiveContentStreamer(object):
         self, storage_archive_service, restore_job_manager, file_size_poller
     ):
         assert ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            destination_guid=DESTINATION_GUID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
 
     def test_stream_from_backup_with_root_folder_path_calls_get_stream(
@@ -322,12 +322,12 @@ class TestArchiveContentStreamer(object):
             mocker, storage_archive_service, [GetFilePathMetadataResponses.NULL_ID]
         )
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
         archive_accessor.stream_from_backup("/", file_size_calc_timeout=0)
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "/")]
@@ -342,12 +342,12 @@ class TestArchiveContentStreamer(object):
             [GetFilePathMetadataResponses.NULL_ID, GetFilePathMetadataResponses.ROOT],
         )
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
         archive_accessor.stream_from_backup(USERS_DIR)
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, USERS_DIR)]
@@ -358,18 +358,18 @@ class TestArchiveContentStreamer(object):
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
         archive_accessor.stream_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, file_size_calc_timeout=0
+            TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, file_size_calc_timeout=0
         )
         expected_file_selection = [
-            get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+            get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR)
         ]
         restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
@@ -378,12 +378,12 @@ class TestArchiveContentStreamer(object):
     ):
         mock_walking_tree_for_windows_path(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
         archive_accessor.stream_from_backup("C:\\", file_size_calc_timeout=0)
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "C:/")]
@@ -394,18 +394,18 @@ class TestArchiveContentStreamer(object):
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
         archive_accessor.stream_from_backup(
-            PATH_TO_FILE_IN_DOWNLOADS_FOLDER, file_size_calc_timeout=10
+            TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, file_size_calc_timeout=10
         )
         file_size_poller.get_file_sizes.assert_called_once_with(
-            [DOWNLOADS_ID], timeout=10
+            [TEST_DOWNLOADS_FILE_ID], timeout=10
         )
 
     def test_stream_from_backup_when_not_ignoring_file_size_calc_returns_size_sums_from_response(
@@ -413,12 +413,12 @@ class TestArchiveContentStreamer(object):
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
 
         def get_file_sizes(*args, **kwargs):
@@ -429,13 +429,13 @@ class TestArchiveContentStreamer(object):
 
         file_size_poller.get_file_sizes.side_effect = get_file_sizes
         archive_accessor.stream_from_backup(
-            [PATH_TO_FILE_IN_DOWNLOADS_FOLDER, PATH_TO_DESKTOP_FOLDER],
+            [TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, TEST_DOWNLOADS_DIR],
         )
         expected_file_selection = [
             get_file_selection(
-                FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER, 1, 2, 3,
+                FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, 1, 2, 3,
             ),
-            get_file_selection(FileType.DIRECTORY, PATH_TO_DESKTOP_FOLDER, 4, 5, 6,),
+            get_file_selection(FileType.DIRECTORY, TEST_DOWNLOADS_DIR, 4, 5, 6,),
         ]
         restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
 
@@ -444,12 +444,12 @@ class TestArchiveContentStreamer(object):
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
         invalid_path_in_downloads_folder = "/Users/qa/Downloads/file-not-in-archive.txt"
         with pytest.raises(Exception) as e:
@@ -465,12 +465,12 @@ class TestArchiveContentStreamer(object):
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
         invalid_path_in_downloads_folder = u"/Users/qa/Downloads/吞"
 
@@ -487,12 +487,12 @@ class TestArchiveContentStreamer(object):
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
         invalid_path_in_downloads_folder = (
             "C:/Users/qa/Downloads/file-not-in-archive.txt"
@@ -511,12 +511,12 @@ class TestArchiveContentStreamer(object):
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
         invalid_path_in_downloads_folder = (
             "c:/Users/qa/Downloads/file-not-in-archive.txt"
@@ -535,14 +535,14 @@ class TestArchiveContentStreamer(object):
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
-            device_guid=DEVICE_GUID,
-            destination_guid=DESTINATION_GUID,
-            archive_session_id=WEB_RESTORE_SESSION_ID,
-            storage_archive_service=storage_archive_service,
-            restore_job_manager=restore_job_manager,
-            file_size_poller=file_size_poller,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_DESTINATION_GUID_1,
+            storage_archive_service,
+            restore_job_manager,
+            file_size_poller,
         )
-        archive_accessor.stream_from_backup(PATH_TO_FILE_IN_DOWNLOADS_FOLDER)
+        archive_accessor.stream_from_backup(TEST_DOWNLOADS_DIR)
         storage_archive_service.get_file_path_metadata.assert_called_with(
-            WEB_RESTORE_SESSION_ID, DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
+            TEST_SESSION_ID, TEST_DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
         )

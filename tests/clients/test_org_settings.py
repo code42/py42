@@ -12,8 +12,8 @@ from tests.clients.conftest import TEST_DESTINATION_GUID_3
 from tests.clients.conftest import TEST_DESTINATION_NAME_1
 from tests.clients.conftest import TEST_DESTINATION_NAME_2
 from tests.clients.conftest import TEST_DESTINATION_NAME_3
+from tests.clients.conftest import TEST_DOWNLOADS_DIR
 from tests.clients.conftest import TEST_EXTERNAL_DOCUMENTS_DIR
-from tests.clients.conftest import TEST_HOME_DIR
 from tests.clients.conftest import TEST_PHOTOS_DIR
 from tests.clients.test_device_settings import DEVICE_DICT_W_SETTINGS
 
@@ -35,7 +35,6 @@ TEST_WEB_RESTORE_USER_LIMIT = 25
 TEST_WEB_RESTORE_ADMIN_LIMIT = 1000
 TEST_BACKUP_WARNING_EMAIL_DAYS = 5
 TEST_BACKUP_CRITICAL_EMAIL_DAYS = 10
-
 TEST_UNOFFERED_DESTINATION_GUID = "4500"
 TEST_UNOFFERED_DESTINATION_NAME = "Dest45"
 
@@ -306,7 +305,7 @@ def org_device_defaults_with_single_values():
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
     ][0]["backupPaths"]["pathset"] = [
-        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux"}
+        {"path": {"@include": TEST_DOWNLOADS_DIR}, "@os": "Linux"}
     ]
     # set single filename exclusions
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
@@ -330,7 +329,7 @@ def org_device_defaults_with_multiple_values():
     ][0]["backupPaths"]["pathset"] = [
         {
             "path": [
-                {"@include": TEST_HOME_DIR},
+                {"@include": TEST_DOWNLOADS_DIR},
                 {"@include": TEST_EXTERNAL_DOCUMENTS_DIR},
                 {"@exclude": TEST_PHOTOS_DIR},
             ],
@@ -792,7 +791,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             org_device_defaults_with_single_values, TEST_T_SETTINGS_DICT
         )
         assert org_settings.device_defaults.backup_sets[0].included_files == [
-            TEST_HOME_DIR
+            TEST_DOWNLOADS_DIR
         ]
 
         # multiple path pathset
@@ -800,7 +799,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             org_device_defaults_with_multiple_values, TEST_T_SETTINGS_DICT
         )
         assert org_settings.device_defaults.backup_sets[0].included_files == [
-            TEST_HOME_DIR,
+            TEST_DOWNLOADS_DIR,
             TEST_EXTERNAL_DOCUMENTS_DIR,
         ]
 
@@ -808,7 +807,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         self,
     ):
         expected_path_list = [
-            {"@include": TEST_HOME_DIR, "@und": "false"},
+            {"@include": TEST_DOWNLOADS_DIR, "@und": "false"},
             {"@include": TEST_EXTERNAL_DOCUMENTS_DIR, "@und": "false"},
             {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_PHOTOS_DIR, "@und": "false"},
@@ -824,14 +823,14 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         assert "included_files" in self.org_settings.device_defaults.changes
         assert (
             "-> {}".format(
-                [TEST_HOME_DIR, TEST_EXTERNAL_DOCUMENTS_DIR, TEST_ADDED_PATH]
+                [TEST_DOWNLOADS_DIR, TEST_EXTERNAL_DOCUMENTS_DIR, TEST_ADDED_PATH]
             )
             in self.org_settings.device_defaults.changes["included_files"]
         )
 
     def test_backup_set_included_files_remove_produces_expected_pathset_value(self):
         expected_path_list = [
-            {"@include": TEST_HOME_DIR, "@und": "false"},
+            {"@include": TEST_DOWNLOADS_DIR, "@und": "false"},
             {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_PHOTOS_DIR, "@und": "false"},
         ]
@@ -845,7 +844,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         assert actual_path_list == expected_path_list
         assert "included_files" in self.org_settings.device_defaults.changes
         assert (
-            "-> {}".format([TEST_HOME_DIR, TEST_ADDED_PATH])
+            "-> {}".format([TEST_DOWNLOADS_DIR, TEST_ADDED_PATH])
             in self.org_settings.device_defaults.changes["included_files"]
         )
 
@@ -875,7 +874,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             TEST_ADDED_EXCLUDED_PATH
         )
         expected_path_list = [
-            {"@include": TEST_HOME_DIR, "@und": "false"},
+            {"@include": TEST_DOWNLOADS_DIR, "@und": "false"},
             {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_PHOTOS_DIR, "@und": "false"},
             {"@exclude": TEST_ADDED_EXCLUDED_PATH, "@und": "false"},
@@ -892,7 +891,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
 
     def test_backup_set_excluded_files_remove_produces_expected_pathset_value(self):
         expected_path_list = [
-            {"@include": TEST_HOME_DIR, "@und": "false"},
+            {"@include": TEST_DOWNLOADS_DIR, "@und": "false"},
             {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_ADDED_EXCLUDED_PATH, "@und": "false"},
         ]

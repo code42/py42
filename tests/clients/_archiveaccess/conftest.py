@@ -1,6 +1,9 @@
 import json
 
 import pytest
+from tests.clients.conftest import TEST_DOWNLOADS_DIR
+from tests.clients.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
+from tests.clients.conftest import TEST_SESSION_ID
 
 from py42.clients._archiveaccess import FileSelection
 from py42.clients._archiveaccess import FileType
@@ -10,26 +13,11 @@ from py42.response import Py42Response
 from py42.services.storage.archive import StorageArchiveService
 
 
-DEVICE_GUID = "device-guid"
-DESTINATION_GUID = "destination-guid"
-WEB_RESTORE_SESSION_ID = "FAKE_SESSION_ID"
-FILE_ID = "file-id"
-DESKTOP_ID = "97c6bd9bff714bd45665130f7f381781"
-DOWNLOADS_ID = "69e930e774cbc1ee6d0c0ff2ba5804ee"
-PATH_TO_FILE_IN_DOWNLOADS_FOLDER = "/Users/qa/Downloads/terminator-genisys.jpg"
-PATH_TO_DESKTOP_FOLDER = "/Users/qa/Desktop"
-NODE_GUID = "server-node-guid"
-RESTORE_PATH = "C:/store/here/"
-ACCEPTING_GUID = "accepting-device-guid"
-
-
 @pytest.fixture
 def storage_archive_service(mocker):
     client = mocker.MagicMock(spec=StorageArchiveService)
     py42_response = mocker.MagicMock(spec=Py42Response)
-    py42_response.text = '{{"webRestoreSessionId": "{0}"}}'.format(
-        WEB_RESTORE_SESSION_ID
-    )
+    py42_response.text = '{{"webRestoreSessionId": "{0}"}}'.format(TEST_SESSION_ID)
     py42_response.status_code = 200
     py42_response.encoding = None
     py42_response.__getitem__ = lambda _, key: json.loads(py42_response.text).get(key)
@@ -57,14 +45,14 @@ def file_content_chunks():
 
 @pytest.fixture
 def single_file_selection():
-    return [get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER)]
+    return [get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR)]
 
 
 @pytest.fixture
 def double_file_selection():
     return [
-        get_file_selection(FileType.FILE, PATH_TO_FILE_IN_DOWNLOADS_FOLDER, 1, 2, 3),
-        get_file_selection(FileType.DIRECTORY, PATH_TO_DESKTOP_FOLDER, 4, 5, 6),
+        get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, 1, 2, 3),
+        get_file_selection(FileType.DIRECTORY, TEST_DOWNLOADS_DIR, 4, 5, 6),
     ]
 
 

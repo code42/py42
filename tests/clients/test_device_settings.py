@@ -2,6 +2,19 @@ from copy import deepcopy
 
 import pytest
 from tests.clients.conftest import param
+from tests.clients.conftest import PHOTOS_REGEX
+from tests.clients.conftest import PICTURES_REGEX
+from tests.clients.conftest import TEST_ADDED_EXCLUDED_PATH
+from tests.clients.conftest import TEST_ADDED_PATH
+from tests.clients.conftest import TEST_DESTINATION_GUID_1
+from tests.clients.conftest import TEST_DESTINATION_GUID_2
+from tests.clients.conftest import TEST_DESTINATION_GUID_3
+from tests.clients.conftest import TEST_DESTINATION_NAME_1
+from tests.clients.conftest import TEST_DESTINATION_NAME_2
+from tests.clients.conftest import TEST_DESTINATION_NAME_3
+from tests.clients.conftest import TEST_DOWNLOADS_DIR
+from tests.clients.conftest import TEST_EXTERNAL_DOCUMENTS_DIR
+from tests.clients.conftest import TEST_PHOTOS_DIR
 
 from py42.clients.settings import get_val
 from py42.clients.settings.device_settings import DeviceSettings
@@ -12,21 +25,8 @@ TEST_COMPUTER_ID = 4290210
 TEST_COMPUTER_GUID = 42000000
 TEST_COMPUTER_ORG_ID = 424242
 TEST_COMPUTER_NAME = "Settings Test Device"
-TEST_DESTINATION_GUID_1 = "4200"
-TEST_DESTINATION_GUID_2 = "4300"
-TEST_DESTINATION_GUID_3 = "4400"
-TEST_DESTINATION_NAME_1 = "Dest42"
-TEST_DESTINATION_NAME_2 = "Dest43"
-TEST_DESTINATION_NAME_3 = "Dest44"
 TEST_CONFIG_DATE_MS = "1577858400000"  # Jan 1, 2020
-TEST_HOME_DIR = "C:/Users/TestUser/"
-TEST_EXTERNAL_DOCUMENTS_DIR = "D:/Documents/"
-TEST_PHOTOS_DIR = "C:/Users/TestUser/Pictures/"
-TEST_ADDED_PATH = "E:/"
-TEST_ADDED_EXCLUDED_PATH = "C:/Users/TestUser/Downloads/"
 TEST_DEVICE_VERSION = 1525200006800
-PHOTOS_REGEX = ".*/Photos/"
-PICTURES_REGEX = ".*/Pictures/"
 
 
 DEVICE_DICT_W_SETTINGS = {
@@ -114,7 +114,7 @@ DEVICE_DICT_W_SETTINGS = {
                                 {
                                     "@os": "Linux",
                                     "path": [
-                                        {"@include": TEST_HOME_DIR},
+                                        {"@include": TEST_DOWNLOADS_DIR},
                                         {"@include": TEST_EXTERNAL_DOCUMENTS_DIR},
                                         {"@exclude": TEST_PHOTOS_DIR},
                                     ],
@@ -358,7 +358,7 @@ def device_settings_with_single_values():
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
     ][0]["backupPaths"]["pathset"] = [
-        {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux"}
+        {"path": {"@include": TEST_DOWNLOADS_DIR}, "@os": "Linux"}
     ]
     # set single filename exclusions
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
@@ -382,7 +382,7 @@ def device_settings_with_multiple_values():
     ][0]["backupPaths"]["pathset"] = [
         {
             "path": [
-                {"@include": TEST_HOME_DIR},
+                {"@include": TEST_DOWNLOADS_DIR},
                 {"@include": TEST_EXTERNAL_DOCUMENTS_DIR},
                 {"@exclude": TEST_PHOTOS_DIR},
             ],
@@ -681,12 +681,12 @@ class TestDeviceSettingsBackupSets(object):
 
         # single path pathset
         device_settings = DeviceSettings(device_settings_with_single_values)
-        assert device_settings.backup_sets[0].included_files == [TEST_HOME_DIR]
+        assert device_settings.backup_sets[0].included_files == [TEST_DOWNLOADS_DIR]
 
         # multiple path pathset
         device_settings = DeviceSettings(device_settings_with_multiple_values)
         assert device_settings.backup_sets[0].included_files == [
-            TEST_HOME_DIR,
+            TEST_DOWNLOADS_DIR,
             TEST_EXTERNAL_DOCUMENTS_DIR,
         ]
 
@@ -694,7 +694,7 @@ class TestDeviceSettingsBackupSets(object):
         self,
     ):
         expected_path_list = [
-            {"@include": TEST_HOME_DIR, "@und": "false"},
+            {"@include": TEST_DOWNLOADS_DIR, "@und": "false"},
             {"@include": TEST_EXTERNAL_DOCUMENTS_DIR, "@und": "false"},
             {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_PHOTOS_DIR, "@und": "false"},
@@ -709,7 +709,7 @@ class TestDeviceSettingsBackupSets(object):
 
     def test_backup_set_included_files_remove_produces_expected_pathset_value(self):
         expected_path_list = [
-            {"@include": TEST_HOME_DIR, "@und": "false"},
+            {"@include": TEST_DOWNLOADS_DIR, "@und": "false"},
             {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_PHOTOS_DIR, "@und": "false"},
         ]
@@ -741,7 +741,7 @@ class TestDeviceSettingsBackupSets(object):
             TEST_ADDED_EXCLUDED_PATH
         )
         expected_path_list = [
-            {"@include": TEST_HOME_DIR, "@und": "false"},
+            {"@include": TEST_DOWNLOADS_DIR, "@und": "false"},
             {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_PHOTOS_DIR, "@und": "false"},
             {"@exclude": TEST_ADDED_EXCLUDED_PATH, "@und": "false"},
@@ -754,7 +754,7 @@ class TestDeviceSettingsBackupSets(object):
 
     def test_backup_set_excluded_files_remove_produces_expected_pathset_value(self):
         expected_path_list = [
-            {"@include": TEST_HOME_DIR, "@und": "false"},
+            {"@include": TEST_DOWNLOADS_DIR, "@und": "false"},
             {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_ADDED_EXCLUDED_PATH, "@und": "false"},
         ]

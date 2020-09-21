@@ -97,7 +97,9 @@ class RestoreJobManager(_RestorePoller):
         job_id = self._wait_for_job(response)
         return self._get_stream(job_id)
 
-    def send_stream(self, restore_path, node_guid, accepting_guid, file_selections):
+    def send_stream(
+        self, restore_path, node_guid, accepting_guid, file_selections, show_deleted
+    ):
         num_files = sum([fs.num_files for fs in file_selections])
         size = sum([fs.num_bytes for fs in file_selections])
         return self._storage_archive_service.start_push_restore(
@@ -109,7 +111,7 @@ class RestoreJobManager(_RestorePoller):
             restore_path,
             num_files,
             size,
-            show_deleted=False,
+            show_deleted=show_deleted,
             file_permissions=u"CURRENT",
             permit_restore_to_different_os_version=True,
             restore_full_path=True,

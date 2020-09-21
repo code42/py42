@@ -17,6 +17,10 @@ class ArchiveAccessorFactory(object):
         private_password=None,
         encryption_key=None,
     ):
+        """Used for creating instances of ArchiveExplorer or ArchiveContentStreamer.
+        Web restore uses this method to create an ArchiveContentStreamer and push
+        restore uses create_archive_content_pusher() to create an ArchiveContentPusher
+        and this method to create an ArchiveExplorer."""
         destination_guid = (
             destination_guid
             or self._storage_service_factory.auto_select_destination_guid(device_guid)
@@ -48,6 +52,8 @@ class ArchiveAccessorFactory(object):
         private_password=None,
         encryption_key=None,
     ):
+        """Creates a class that inherits from the ArchiveAccessor class that has method
+        stream_to_device()."""
         push_service = self._storage_service_factory.create_push_restore_service(
             device_guid
         )

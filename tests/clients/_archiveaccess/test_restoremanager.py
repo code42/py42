@@ -4,6 +4,7 @@ import time
 import pytest
 from requests import Response
 from tests.clients.conftest import TEST_ACCEPTING_GUID
+from tests.clients.conftest import TEST_BACKUP_SET_ID
 from tests.clients.conftest import TEST_DEVICE_GUID
 from tests.clients.conftest import TEST_DOWNLOADS_DIR_ID
 from tests.clients.conftest import TEST_DOWNLOADS_FILE_ID
@@ -384,6 +385,7 @@ class TestRestoreJobManager(object):
             TEST_NODE_GUID,
             TEST_ACCEPTING_GUID,
             single_file_selection,
+            TEST_BACKUP_SET_ID,
             False,
         )
         push_service.start_push_restore.assert_called_once_with(
@@ -392,7 +394,12 @@ class TestRestoreJobManager(object):
             TEST_SESSION_ID,
             TEST_NODE_GUID,
             TEST_RESTORE_PATH,
-            [{"backupSetId": -1, "files": [single_file_selection[0].file]}],
+            [
+                {
+                    "backupSetId": TEST_BACKUP_SET_ID,
+                    "files": [single_file_selection[0].file],
+                }
+            ],
             1,
             1,
             show_deleted=False,

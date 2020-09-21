@@ -156,9 +156,19 @@ class ArchiveClient(object):
             encryption_key=encryption_key,
             destination_guid=explorer.destination_guid,
         )
+        backup_set_id = self._get_backup_set_id(device_guid, explorer.destination_guid)
         return pusher.stream_to_device(
-            restore_path, accepting_device_guid, file_selections, show_deleted,
+            restore_path,
+            accepting_device_guid,
+            file_selections,
+            backup_set_id,
+            show_deleted,
         )
+
+    def _get_backup_set_id(self, device_guid, destination_guid):
+        backup_sets = self.get_backup_sets(device_guid, destination_guid)[u"backupSets"]
+        if backup_sets:
+            return backup_sets[0][u"backupSetId"]
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific

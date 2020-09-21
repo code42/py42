@@ -98,7 +98,13 @@ class RestoreJobManager(_RestorePoller):
         return self._get_stream(job_id)
 
     def send_stream(
-        self, restore_path, node_guid, accepting_guid, file_selections, show_deleted
+        self,
+        restore_path,
+        node_guid,
+        accepting_guid,
+        file_selections,
+        backup_set_id,
+        show_deleted,
     ):
         num_files = sum([fs.num_files for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
@@ -108,7 +114,12 @@ class RestoreJobManager(_RestorePoller):
             self._archive_session_id,
             node_guid,
             restore_path,
-            [{u"backupSetId": -1, u"files": [f.file for f in file_selections]}],
+            [
+                {
+                    u"backupSetId": backup_set_id,
+                    u"files": [f.file for f in file_selections],
+                }
+            ],
             num_files,
             num_bytes,
             show_deleted=show_deleted,

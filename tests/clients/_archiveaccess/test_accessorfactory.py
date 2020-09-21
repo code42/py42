@@ -1,6 +1,5 @@
-import json
-
 import pytest
+from tests.clients.conftest import TEST_DATA_KEY_TOKEN
 from tests.clients.conftest import TEST_DESTINATION_GUID_1
 from tests.clients.conftest import TEST_DEVICE_GUID
 from tests.clients.conftest import TEST_ENCRYPTION_KEY
@@ -10,27 +9,11 @@ from tests.clients.conftest import TEST_SESSION_ID
 import py42.clients._archiveaccess.restoremanager
 from py42.clients._archiveaccess import ArchiveAccessor
 from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
-from py42.response import Py42Response
-from py42.services.archive import ArchiveService
 from py42.services.devices import DeviceService
 from py42.services.storage._service_factory import StorageServiceFactory
 
 
-DATA_KEY_TOKEN = "FAKE_DATA_KEY_TOKEN"
 INVALID_DEVICE_GUID = "invalid-device-guid"
-
-
-@pytest.fixture
-def archive_service(mocker):
-    client = mocker.MagicMock(spec=ArchiveService)
-    text = '{{"dataKeyToken": "{0}"}}'.format(DATA_KEY_TOKEN)
-    py42_response = mocker.MagicMock(spec=Py42Response)
-    py42_response.text = text
-    py42_response.status_code = 200
-    py42_response.encoding = None
-    py42_response.__getitem__ = lambda _, key: json.loads(text).get(key)
-    client.get_data_key_token.return_value = py42_response
-    return client
 
 
 @pytest.fixture
@@ -125,7 +108,7 @@ class TestArchiveAccessFactory(object):
         accessor_manager.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
 
         storage_archive_service.create_restore_session.assert_called_once_with(
-            TEST_DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
+            TEST_DEVICE_GUID, data_key_token=TEST_DATA_KEY_TOKEN
         )
 
     def test_get_archive_accessor_when_given_private_password_creates_expected_restore_session(
@@ -146,7 +129,7 @@ class TestArchiveAccessFactory(object):
         )
         storage_archive_service.create_restore_session.assert_called_once_with(
             TEST_DEVICE_GUID,
-            data_key_token=DATA_KEY_TOKEN,
+            data_key_token=TEST_DATA_KEY_TOKEN,
             private_password=TEST_PASSWORD,
         )
 

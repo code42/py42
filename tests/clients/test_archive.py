@@ -1,6 +1,7 @@
 import pytest
 from tests.clients.conftest import get_file_selection
 from tests.clients.conftest import TEST_ACCEPTING_GUID
+from tests.clients.conftest import TEST_BACKUP_SET_ID
 from tests.clients.conftest import TEST_DESTINATION_GUID_1
 from tests.clients.conftest import TEST_DEVICE_GUID
 from tests.clients.conftest import TEST_ENCRYPTION_KEY
@@ -13,7 +14,6 @@ from py42.clients._archiveaccess import ArchiveExplorer
 from py42.clients._archiveaccess import FileType
 from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
 from py42.clients.archive import ArchiveClient
-from py42.services.archive import ArchiveService
 
 
 TEST_ARCHIVE_GUID = "4224"
@@ -24,11 +24,6 @@ TEST_FILE_SELECTIONS = [
     get_file_selection(TEST_PATHS[0], FileType.FILE),
     get_file_selection(TEST_PATHS[1], FileType.FILE),
 ]
-
-
-@pytest.fixture
-def archive_service(mocker):
-    return mocker.MagicMock(spec=ArchiveService)
 
 
 @pytest.fixture
@@ -136,7 +131,11 @@ class TestArchiveClient(object):
             show_deleted=True,
         )
         archive_content_pusher.stream_to_device.assert_called_once_with(
-            TEST_RESTORE_PATH, TEST_ACCEPTING_GUID, TEST_FILE_SELECTIONS, True,
+            TEST_RESTORE_PATH,
+            TEST_ACCEPTING_GUID,
+            TEST_FILE_SELECTIONS,
+            TEST_BACKUP_SET_ID,
+            True,
         )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(

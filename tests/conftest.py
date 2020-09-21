@@ -166,3 +166,11 @@ def mock_connection(mocker):
 def mock_successful_connection(mock_connection, successful_response):
     mock_connection.get.return_value = successful_response
     return mock_connection
+
+
+def create_mock_response(mocker, text):
+    response = mocker.MagicMock(spec=Response)
+    response.text = text
+    response.status_code = 200
+    response.encoding = None
+    return Py42Response(response)

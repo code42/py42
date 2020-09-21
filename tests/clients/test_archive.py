@@ -1,4 +1,8 @@
 import pytest
+from tests.clients.conftest import TEST_DESTINATION_GUID_1
+from tests.clients.conftest import TEST_DEVICE_GUID
+from tests.clients.conftest import TEST_ENCRYPTION_KEY
+from tests.clients.conftest import TEST_PASSWORD
 
 from py42.clients._archiveaccess import ArchiveContentStreamer
 from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
@@ -6,10 +10,10 @@ from py42.clients.archive import ArchiveClient
 from py42.services.archive import ArchiveService
 
 
-ARCHIVE_GUID = "4224"
-DEVICE_GUID = "device-guid"
-DAYS = 42
-ORG_ID = 424242
+TEST_ARCHIVE_GUID = "4224"
+TEST_DAYS = 42
+TEST_ORG_ID = 424242
+TEST_PATHS = ["path/to/first/file", "path/to/second/file"]
 
 
 @pytest.fixture
@@ -32,17 +36,17 @@ class TestArchiveClient(object):
         self, archive_service, archive_accessor_factory
     ):
         archive = ArchiveClient(archive_accessor_factory, archive_service)
-        archive.get_by_archive_guid(ARCHIVE_GUID)
-        archive_service.get_single_archive.assert_called_once_with(ARCHIVE_GUID)
+        archive.get_by_archive_guid(TEST_ARCHIVE_GUID)
+        archive_service.get_single_archive.assert_called_once_with(TEST_ARCHIVE_GUID)
 
     def test_get_all_by_device_guid_calls_get_all_archives_from_value_with_expected_params(
         self, archive_service, archive_accessor_factory
     ):
         archive = ArchiveClient(archive_accessor_factory, archive_service)
-        for _ in archive.get_all_by_device_guid(DEVICE_GUID):
+        for _ in archive.get_all_by_device_guid(TEST_DEVICE_GUID):
             pass
         archive_service.get_all_archives_from_value.assert_called_once_with(
-            DEVICE_GUID, u"backupSourceGuid"
+            TEST_DEVICE_GUID, u"backupSourceGuid"
         )
 
     def test_stream_from_backup_calls_get_archive_accessor_with_expected_params(
@@ -50,14 +54,18 @@ class TestArchiveClient(object):
     ):
         archive = ArchiveClient(archive_accessor_factory, archive_service)
         archive.stream_from_backup(
-            "path", "device_guid", "dest_guid", "password", "encryption_key"
+            TEST_PATHS[0],
+            TEST_DEVICE_GUID,
+            TEST_DESTINATION_GUID_1,
+            TEST_PASSWORD,
+            TEST_ENCRYPTION_KEY,
         )
         archive_accessor_factory.create_archive_accessor.assert_called_once_with(
-            "device_guid",
-            destination_guid="dest_guid",
-            private_password="password",
-            encryption_key="encryption_key",
-            accessor_class=ArchiveContentStreamer,
+            TEST_DEVICE_GUID,
+            ArchiveContentStreamer,
+            destination_guid=TEST_DESTINATION_GUID_1,
+            private_password=TEST_PASSWORD,
+            encryption_key=TEST_ENCRYPTION_KEY,
         )
 
     def test_stream_from_backup_when_given_multiple_paths_calls_archive_accessor_stream_from_backup_with_expected_params(
@@ -68,50 +76,50 @@ class TestArchiveClient(object):
         )
         archive = ArchiveClient(archive_accessor_factory, archive_service)
         archive.stream_from_backup(
-            ["path/to/first/file", "path/to/second/file"],
-            "device_guid",
-            "dest_guid",
-            "password",
-            "encryption_key",
+            TEST_PATHS,
+            TEST_DEVICE_GUID,
+            TEST_DESTINATION_GUID_1,
+            TEST_PASSWORD,
+            TEST_ENCRYPTION_KEY,
         )
         archive_content_streamer.stream_from_backup.assert_called_once_with(
-            ["path/to/first/file", "path/to/second/file"], file_size_calc_timeout=10,
+            TEST_PATHS, file_size_calc_timeout=10,
         )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(
         self, archive_accessor_factory, archive_service
     ):
         archive = ArchiveClient(archive_accessor_factory, archive_service)
-        archive.get_backup_sets("device_guid", "dest_guid")
+        archive.get_backup_sets(TEST_DEVICE_GUID, TEST_DESTINATION_GUID_1)
         archive_service.get_backup_sets.assert_called_once_with(
-            "device_guid", "dest_guid"
+            TEST_DEVICE_GUID, TEST_DESTINATION_GUID_1
         )
 
     def test_get_all_org_restore_history_calls_get_all_restore_history_with_expected_id(
         self, archive_accessor_factory, archive_service
     ):
         archive = ArchiveClient(archive_accessor_factory, archive_service)
-        archive.get_all_org_restore_history(DAYS, ORG_ID)
+        archive.get_all_org_restore_history(TEST_DAYS, TEST_ORG_ID)
         archive_service.get_all_restore_history.assert_called_once_with(
-            DAYS, "orgId", ORG_ID
+            TEST_DAYS, "orgId", TEST_ORG_ID
         )
 
     def test_get_all_user_restore_history_calls_get_all_restore_history_with_expected_id(
         self, archive_accessor_factory, archive_service
     ):
         archive = ArchiveClient(archive_accessor_factory, archive_service)
-        archive.get_all_user_restore_history(DAYS, ORG_ID)
+        archive.get_all_user_restore_history(TEST_DAYS, TEST_ORG_ID)
         archive_service.get_all_restore_history.assert_called_once_with(
-            DAYS, "userId", ORG_ID
+            TEST_DAYS, "userId", TEST_ORG_ID
         )
 
     def test_get_all_device_restore_history_calls_get_all_restore_history_with_expected_id(
         self, archive_accessor_factory, archive_service
     ):
         archive = ArchiveClient(archive_accessor_factory, archive_service)
-        archive.get_all_device_restore_history(DAYS, ORG_ID)
+        archive.get_all_device_restore_history(TEST_DAYS, TEST_ORG_ID)
         archive_service.get_all_restore_history.assert_called_once_with(
-            DAYS, "computerId", ORG_ID
+            TEST_DAYS, "computerId", TEST_ORG_ID
         )
 
     def test_update_cold_storage_purge_date_calls_update_cold_storage_with_expected_data(

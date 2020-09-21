@@ -92,10 +92,10 @@ class ArchiveClient(object):
         """
         archive_accessor = self._archive_accessor_factory.create_archive_accessor(
             device_guid,
+            ArchiveContentStreamer,
             destination_guid=destination_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
-            accessor_class=ArchiveContentStreamer,
         )
         return archive_accessor.stream_from_backup(
             file_paths, file_size_calc_timeout=file_size_calc_timeout

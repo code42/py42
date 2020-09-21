@@ -3,6 +3,8 @@ import json
 import pytest
 from tests.clients.conftest import TEST_DESTINATION_GUID_1
 from tests.clients.conftest import TEST_DEVICE_GUID
+from tests.clients.conftest import TEST_ENCRYPTION_KEY
+from tests.clients.conftest import TEST_PASSWORD
 from tests.clients.conftest import TEST_SESSION_ID
 
 import py42.clients._archiveaccess.restoremanager
@@ -21,11 +23,12 @@ INVALID_DEVICE_GUID = "invalid-device-guid"
 @pytest.fixture
 def archive_service(mocker):
     client = mocker.MagicMock(spec=ArchiveService)
+    text = '{{"dataKeyToken": "{0}"}}'.format(DATA_KEY_TOKEN)
     py42_response = mocker.MagicMock(spec=Py42Response)
-    py42_response.text = '{{"dataKeyToken": "{0}"}}'.format(DATA_KEY_TOKEN)
+    py42_response.text = text
     py42_response.status_code = 200
     py42_response.encoding = None
-    py42_response.__getitem__ = lambda _, key: json.loads(py42_response.text).get(key)
+    py42_response.__getitem__ = lambda _, key: json.loads(text).get(key)
     client.get_data_key_token.return_value = py42_response
     return client
 
@@ -119,9 +122,7 @@ class TestArchiveAccessFactory(object):
         accessor_manager = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_accessor(
-            TEST_DEVICE_GUID, accessor_class=ArchiveAccessor
-        )
+        accessor_manager.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
 
         storage_archive_service.create_restore_session.assert_called_once_with(
             TEST_DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
@@ -141,14 +142,12 @@ class TestArchiveAccessFactory(object):
             archive_service, storage_service_factory, device_service
         )
         accessor_manager.create_archive_accessor(
-            TEST_DEVICE_GUID,
-            private_password="TEST_PASSWORD",
-            accessor_class=ArchiveAccessor,
+            TEST_DEVICE_GUID, ArchiveAccessor, private_password=TEST_PASSWORD,
         )
         storage_archive_service.create_restore_session.assert_called_once_with(
             TEST_DEVICE_GUID,
             data_key_token=DATA_KEY_TOKEN,
-            private_password="TEST_PASSWORD",
+            private_password=TEST_PASSWORD,
         )
 
     def test_get_archive_accessor_when_given_encryption_key_creates_expected_restore_session(
@@ -165,11 +164,13 @@ class TestArchiveAccessFactory(object):
             archive_service, storage_service_factory, device_service
         )
         accessor_manager.create_archive_accessor(
-            TEST_DEVICE_GUID, encryption_key="TEST_KEY", accessor_class=ArchiveAccessor
+            TEST_DEVICE_GUID,
+            encryption_key=TEST_ENCRYPTION_KEY,
+            accessor_class=ArchiveAccessor,
         )
 
         storage_archive_service.create_restore_session.assert_called_once_with(
-            TEST_DEVICE_GUID, encryption_key="TEST_KEY"
+            TEST_DEVICE_GUID, encryption_key=TEST_ENCRYPTION_KEY
         )
 
     def test_get_archive_accessor_calls_create_restore_job_manager_with_correct_args(
@@ -189,9 +190,7 @@ class TestArchiveAccessFactory(object):
         accessor_manager = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_accessor(
-            TEST_DEVICE_GUID, accessor_class=ArchiveAccessor
-        )
+        accessor_manager.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
 
         assert spy.call_count == 1
         spy.assert_called_once_with(
@@ -209,5 +208,5 @@ class TestArchiveAccessFactory(object):
         )
         with pytest.raises(Exception):
             accessor_manager.create_archive_accessor(
-                INVALID_DEVICE_GUID, accessor_class=ArchiveAccessor
+                INVALID_DEVICE_GUID, ArchiveAccessor
             )

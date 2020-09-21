@@ -41,7 +41,7 @@ class ArchiveAccessorFactory(object):
             file_size_poller,
         )
 
-    def create_archive_accessor_for_push_restore(
+    def create_archive_content_pusher(
         self,
         device_guid,
         destination_guid=None,

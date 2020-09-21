@@ -1,5 +1,7 @@
 from collections import namedtuple
 
+from py42.clients._archiveaccess import FileSelection
+
 
 param = namedtuple("param", "name new_val expected_stored_val dict_location")
 
@@ -34,3 +36,12 @@ TEST_PASSWORD = "password"
 TEST_ENCRYPTION_KEY = "encryption-key"
 PHOTOS_REGEX = ".*/Photos/"
 PICTURES_REGEX = ".*/Pictures/"
+
+
+def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, num_bytes=1):
+    return FileSelection(
+        {"fileType": file_type, "path": file_path, "selected": True},
+        num_files,
+        num_dirs,
+        num_bytes,
+    )

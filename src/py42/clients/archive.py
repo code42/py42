@@ -139,27 +139,24 @@ class ArchiveClient(object):
         Returns:
             :class:`py42.response.Py42Response`.
         """
-        accessor = self._archive_accessor_factory.create_archive_accessor(
+        explorer = self._archive_accessor_factory.create_archive_accessor(
             device_guid,
             ArchiveExplorer,
             destination_guid=destination_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        file_selections = accessor.create_file_selections(
+        file_selections = explorer.create_file_selections(
             file_paths, file_size_calc_timeout
         )
-        accessor_for_push = self._archive_accessor_factory.create_archive_accessor_for_push_restore(
+        pusher = self._archive_accessor_factory.create_archive_content_pusher(
             device_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
-            destination_guid=accessor.destination_guid,
+            destination_guid=explorer.destination_guid,
         )
-        return accessor_for_push.stream_to_device(
-            restore_path=restore_path,
-            accepting_guid=accepting_device_guid,
-            file_selections=file_selections,
-            show_deleted=show_deleted,
+        return pusher.stream_to_device(
+            restore_path, accepting_device_guid, file_selections, show_deleted,
         )
 
     def get_backup_sets(self, device_guid, destination_guid):

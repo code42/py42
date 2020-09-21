@@ -1,10 +1,16 @@
 import pytest
+from tests.clients.conftest import get_file_selection
+from tests.clients.conftest import TEST_ACCEPTING_GUID
 from tests.clients.conftest import TEST_DESTINATION_GUID_1
 from tests.clients.conftest import TEST_DEVICE_GUID
 from tests.clients.conftest import TEST_ENCRYPTION_KEY
 from tests.clients.conftest import TEST_PASSWORD
+from tests.clients.conftest import TEST_RESTORE_PATH
 
+from py42.clients._archiveaccess import ArchiveContentPusher
 from py42.clients._archiveaccess import ArchiveContentStreamer
+from py42.clients._archiveaccess import ArchiveExplorer
+from py42.clients._archiveaccess import FileType
 from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
 from py42.clients.archive import ArchiveClient
 from py42.services.archive import ArchiveService
@@ -14,6 +20,10 @@ TEST_ARCHIVE_GUID = "4224"
 TEST_DAYS = 42
 TEST_ORG_ID = 424242
 TEST_PATHS = ["path/to/first/file", "path/to/second/file"]
+TEST_FILE_SELECTIONS = [
+    get_file_selection(TEST_PATHS[0], FileType.FILE),
+    get_file_selection(TEST_PATHS[1], FileType.FILE),
+]
 
 
 @pytest.fixture
@@ -29,6 +39,22 @@ def archive_accessor_factory(mocker):
 @pytest.fixture
 def archive_content_streamer(mocker):
     return mocker.MagicMock(spec=ArchiveContentStreamer)
+
+
+@pytest.fixture
+def archive_content_pusher(mocker):
+    return mocker.MagicMock(spec=ArchiveContentPusher)
+
+
+@pytest.fixture
+def archive_explorer(mocker):
+    mock = mocker.MagicMock(spec=ArchiveExplorer)
+    mock.destination_guid = TEST_DESTINATION_GUID_1
+    mock.create_file_selections.return_value = [
+        get_file_selection(TEST_PATHS[0], FileType.FILE),
+        get_file_selection(TEST_PATHS[1], FileType.FILE),
+    ]
+    return mock
 
 
 class TestArchiveClient(object):
@@ -84,6 +110,33 @@ class TestArchiveClient(object):
         )
         archive_content_streamer.stream_from_backup.assert_called_once_with(
             TEST_PATHS, file_size_calc_timeout=10,
+        )
+
+    def test_stream_to_device_calls_accessor_stream_to_device(
+        self,
+        archive_accessor_factory,
+        archive_service,
+        archive_explorer,
+        archive_content_pusher,
+    ):
+        archive_accessor_factory.create_archive_accessor.return_value = archive_explorer
+        archive_accessor_factory.create_archive_content_pusher.return_value = (
+            archive_content_pusher
+        )
+        archive = ArchiveClient(archive_accessor_factory, archive_service)
+        archive.stream_to_device(
+            TEST_PATHS,
+            TEST_DEVICE_GUID,
+            TEST_ACCEPTING_GUID,
+            TEST_RESTORE_PATH,
+            destination_guid=TEST_DESTINATION_GUID_1,
+            archive_password=TEST_PASSWORD,
+            encryption_key=TEST_ENCRYPTION_KEY,
+            file_size_calc_timeout=100,
+            show_deleted=True,
+        )
+        archive_content_pusher.stream_to_device.assert_called_once_with(
+            TEST_RESTORE_PATH, TEST_ACCEPTING_GUID, TEST_FILE_SELECTIONS, True,
         )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(

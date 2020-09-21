@@ -1,11 +1,11 @@
 import json
 
 import pytest
+from tests.clients.conftest import get_file_selection
 from tests.clients.conftest import TEST_DOWNLOADS_DIR
 from tests.clients.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
 from tests.clients.conftest import TEST_SESSION_ID
 
-from py42.clients._archiveaccess import FileSelection
 from py42.clients._archiveaccess import FileType
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
@@ -54,12 +54,3 @@ def double_file_selection():
         get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, 1, 2, 3),
         get_file_selection(FileType.DIRECTORY, TEST_DOWNLOADS_DIR, 4, 5, 6),
     ]
-
-
-def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, num_bytes=1):
-    return FileSelection(
-        {"fileType": file_type, "path": file_path, "selected": True},
-        num_files,
-        num_dirs,
-        num_bytes,
-    )

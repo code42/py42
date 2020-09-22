@@ -159,6 +159,17 @@ class TestArchiveAccessFactory(object):
                 INVALID_DEVICE_GUID, ArchiveAccessor
             )
 
+    def test_create_archive_accessor_when_given_destination_guid_does_not_auto_select(
+        self, archive_service, storage_service_factory
+    ):
+        accessor_factory = ArchiveAccessorFactory(
+            archive_service, storage_service_factory
+        )
+        accessor_factory.create_archive_accessor(
+            TEST_DEVICE_GUID, ArchiveAccessor, TEST_DESTINATION_GUID_1
+        )
+        storage_service_factory.auto_select_destination_guid.assert_not_called()
+
     def test_create_archive_content_pusher_creates_push_service_with_accepting_guid(
         self, archive_service, storage_service_factory
     ):

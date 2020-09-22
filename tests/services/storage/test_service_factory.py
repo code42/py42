@@ -71,7 +71,7 @@ class TestStorageServiceFactory(object):
         py42_response.text = '{"backupUsage": []}'
         mock_device_service.get_by_guid.return_value = py42_response
         with pytest.raises(Exception):
-            factory.create_archive_service("testguid")
+            factory.create_archive_service("testguid", "destguid")
 
     def test_create_security_data_service(
         self, mock_successful_connection, mock_device_service, mock_connection_manager

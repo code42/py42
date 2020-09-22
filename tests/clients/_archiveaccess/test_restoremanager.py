@@ -1,7 +1,6 @@
 import json
 import time
 
-import pytest
 from requests import Response
 from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_BACKUP_SET_ID
@@ -15,12 +14,6 @@ from tests.conftest import TEST_SESSION_ID
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
 from py42.response import Py42Response
-from py42.services.storage.restore import PushRestoreService
-
-
-@pytest.fixture
-def push_service(mocker):
-    return mocker.MagicMock(spec=PushRestoreService)
 
 
 class GetWebRestoreJobResponses(object):

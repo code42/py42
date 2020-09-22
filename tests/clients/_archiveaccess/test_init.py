@@ -2,14 +2,18 @@
 import pytest
 from requests import Response
 from tests.clients._archiveaccess.conftest import get_file_selection
+from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DESTINATION_GUID_1
 from tests.conftest import TEST_DEVICE_GUID
 from tests.conftest import TEST_DOWNLOADS_DIR
 from tests.conftest import TEST_DOWNLOADS_FILE_ID
+from tests.conftest import TEST_NODE_GUID
 from tests.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
+from tests.conftest import TEST_RESTORE_PATH
 from tests.conftest import TEST_SESSION_ID
 
+from py42.clients._archiveaccess import ArchiveContentPusher
 from py42.clients._archiveaccess import ArchiveContentStreamer
 from py42.clients._archiveaccess import FileType
 from py42.exceptions import Py42ArchiveFileNotFoundError
@@ -577,4 +581,34 @@ class TestArchiveContentStreamer(object):
             TEST_BACKUP_SET_ID,
             file_id=mocker.ANY,
             show_deleted=True,
+        )
+
+
+class TestArchiveContentPusher(object):
+    def test_stream_to_device_calls_restore_manager_with_expected_args(
+        self, push_service, restore_job_manager, file_size_poller
+    ):
+        accessor = ArchiveContentPusher(
+            TEST_DEVICE_GUID,
+            TEST_DESTINATION_GUID_1,
+            TEST_NODE_GUID,
+            TEST_SESSION_ID,
+            push_service,
+            restore_job_manager,
+            file_size_poller,
+        )
+        accessor.stream_to_device(
+            TEST_RESTORE_PATH,
+            TEST_ACCEPTING_GUID,
+            TEST_DOWNLOADS_DIR,
+            TEST_BACKUP_SET_ID,
+            True,
+        )
+        restore_job_manager.send_stream.assert_called_once_with(
+            TEST_RESTORE_PATH,
+            TEST_NODE_GUID,
+            TEST_ACCEPTING_GUID,
+            TEST_DOWNLOADS_DIR,
+            TEST_BACKUP_SET_ID,
+            True,
         )

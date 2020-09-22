@@ -11,6 +11,12 @@ from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
 from py42.response import Py42Response
 from py42.services.storage.archive import StorageArchiveService
+from py42.services.storage.restore import PushRestoreService
+
+
+@pytest.fixture
+def push_service(mocker):
+    return mocker.MagicMock(spec=PushRestoreService)
 
 
 @pytest.fixture

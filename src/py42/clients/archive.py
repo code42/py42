@@ -172,12 +172,12 @@ class ArchiveClient(object):
         )
 
     def _select_backup_set_id(self, device_guid, destination_guid):
-        """If backup set with ID of 1 exists, uses that, else uses the first one."""
         backup_sets = self.get_backup_sets(device_guid, destination_guid)[u"backupSets"]
         if not backup_sets:
             return None
         for backup_set in backup_sets:
             backup_set_id = backup_set[u"backupSetId"]
+            # 1 is the default backup set ID and is preferred.
             if str(backup_set_id) == "1":
                 return backup_set_id
 

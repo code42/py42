@@ -97,7 +97,7 @@ class ArchiveAccessorFactory(object):
 
     def _get_decryption_keys(self, device_guid, private_password, encryption_key):
         decryption_keys = {}
-        # Favor encryption-key over other security levels.
+        # Favors encryption-key over other security levels.
         if encryption_key:
             decryption_keys[u"encryption_key"] = encryption_key
         else:

@@ -4,10 +4,9 @@ from py42.clients._archiveaccess.restoremanager import create_restore_job_manage
 
 
 class ArchiveAccessorFactory(object):
-    def __init__(self, archive_service, storage_service_factory, devices_service):
+    def __init__(self, archive_service, storage_service_factory):
         self._archive_service = archive_service
         self._storage_service_factory = storage_service_factory
-        self._devices_service = devices_service
 
     def create_archive_accessor(
         self,
@@ -115,13 +114,10 @@ class ArchiveAccessorFactory(object):
         return self._archive_service.get_data_key_token(device_guid)[u"dataKeyToken"]
 
     def _get_selected_node_guid(self, device_guid, destination_guid):
-        response = self._devices_service.get_by_guid(
-            device_guid, include_backup_usage=True
+        response = self._archive_service.get_web_restore_info(
+            device_guid, destination_guid
         )
-        backup_usage = response[u"backupUsage"]
-        for usage in backup_usage:
-            if usage[u"targetComputerGuid"] == destination_guid:
-                return usage[u"serverGuid"]
+        return response[u"nodeGuid"]
 
     @staticmethod
     def _create_restore_session(session_creator, device_guid, **kwargs):

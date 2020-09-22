@@ -4,6 +4,9 @@ import pytest
 from tests.conftest import create_mock_response
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DATA_KEY_TOKEN
+from tests.conftest import TEST_DESTINATION_GUID_1
+from tests.conftest import TEST_DEVICE_GUID
+from tests.conftest import TEST_NODE_GUID
 
 from py42.clients._archiveaccess import FileSelection
 from py42.services.archive import ArchiveService
@@ -25,6 +28,14 @@ def archive_service(mocker):
     )
     backup_set_response = create_mock_response(mocker, backup_set_text)
     service.get_backup_sets.return_value = backup_set_response
+    restore_info_text = '{{"nodeGuid": "{0}"}}'.format(TEST_NODE_GUID)
+    restore_info_resp = create_mock_response(mocker, restore_info_text)
+
+    def get_web_restore_info_side_effect(src_guid, dest_guid):
+        if src_guid == TEST_DEVICE_GUID and dest_guid == TEST_DESTINATION_GUID_1:
+            return restore_info_resp
+
+    service.get_web_restore_info.side_effect = get_web_restore_info_side_effect
     return service
 
 

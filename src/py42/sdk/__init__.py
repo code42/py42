@@ -283,7 +283,7 @@ def _init_clients(services, connection):
     )
     alerts = AlertsClient(services.alerts, alertrules)
     archive_accessor_factory = ArchiveAccessorFactory(
-        services.archive, storage_service_factory, services.devices
+        services.archive, storage_service_factory
     )
     archive = ArchiveClient(archive_accessor_factory, services.archive)
     auditlogs = AuditLogsClient(services.auditlogs)

@@ -97,7 +97,7 @@ class ArchiveClient(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        backup_set_id = self._get_backup_set_id(
+        backup_set_id = self._select_backup_set_id(
             device_guid, archive_accessor.destination_guid
         )
         return archive_accessor.stream_from_backup(
@@ -150,7 +150,9 @@ class ArchiveClient(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        backup_set_id = self._get_backup_set_id(device_guid, explorer.destination_guid)
+        backup_set_id = self._select_backup_set_id(
+            device_guid, explorer.destination_guid
+        )
         file_selections = explorer.create_file_selections(
             backup_set_id, file_paths, file_size_calc_timeout
         )
@@ -169,10 +171,17 @@ class ArchiveClient(object):
             show_deleted,
         )
 
-    def _get_backup_set_id(self, device_guid, destination_guid):
+    def _select_backup_set_id(self, device_guid, destination_guid):
+        """If backup set with ID of 1 exists, uses that, else uses the first one."""
         backup_sets = self.get_backup_sets(device_guid, destination_guid)[u"backupSets"]
-        if backup_sets:
-            return backup_sets[0][u"backupSetId"]
+        if not backup_sets:
+            return None
+        for backup_set in backup_sets:
+            backup_set_id = backup_set[u"backupSetId"]
+            if str(backup_set_id) == "1":
+                return backup_set_id
+
+        return backup_sets[0][u"backupSetId"]
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific

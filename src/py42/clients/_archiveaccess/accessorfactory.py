@@ -69,7 +69,7 @@ class ArchiveAccessorFactory(object):
             destination_guid
             or self._storage_service_factory.auto_select_destination_guid(device_guid)
         )
-        node_guid = self._get_selected_node_guid(device_guid, destination_guid)
+        node_guid = self._get_node_guid(device_guid, destination_guid)
         return ArchiveContentPusher(
             device_guid,
             destination_guid,
@@ -113,7 +113,7 @@ class ArchiveAccessorFactory(object):
     def _get_data_key_token(self, device_guid):
         return self._archive_service.get_data_key_token(device_guid)[u"dataKeyToken"]
 
-    def _get_selected_node_guid(self, device_guid, destination_guid):
+    def _get_node_guid(self, device_guid, destination_guid):
         response = self._archive_service.get_web_restore_info(
             device_guid, destination_guid
         )

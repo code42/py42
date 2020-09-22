@@ -1,5 +1,6 @@
 import pytest
 from tests.clients.conftest import get_file_selection
+from tests.conftest import create_mock_response
 from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DESTINATION_GUID_1
@@ -138,6 +139,39 @@ class TestArchiveClient(object):
             TEST_FILE_SELECTIONS,
             TEST_BACKUP_SET_ID,
             True,
+        )
+
+    def test_stream_to_device_prefers_backup_set_id_of_1(
+        self,
+        mocker,
+        archive_accessor_factory,
+        archive_service,
+        archive_explorer,
+        archive_content_pusher,
+    ):
+        backup_set_text = '{{"backupSets": [{{"backupSetId": "{0}"}}, {{"backupSetId": "1"}}]}}'.format(
+            TEST_BACKUP_SET_ID
+        )
+        backup_set_response = create_mock_response(mocker, backup_set_text)
+        archive_service.get_backup_sets.return_value = backup_set_response
+        archive_accessor_factory.create_archive_accessor.return_value = archive_explorer
+        archive_accessor_factory.create_archive_content_pusher.return_value = (
+            archive_content_pusher
+        )
+        archive = ArchiveClient(archive_accessor_factory, archive_service)
+        archive.stream_to_device(
+            TEST_PATHS,
+            TEST_DEVICE_GUID,
+            TEST_ACCEPTING_GUID,
+            TEST_RESTORE_PATH,
+            destination_guid=TEST_DESTINATION_GUID_1,
+            archive_password=TEST_PASSWORD,
+            encryption_key=TEST_ENCRYPTION_KEY,
+            file_size_calc_timeout=100,
+            show_deleted=True,
+        )
+        archive_content_pusher.stream_to_device.assert_called_once_with(
+            TEST_RESTORE_PATH, TEST_ACCEPTING_GUID, TEST_FILE_SELECTIONS, "1", True,
         )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(

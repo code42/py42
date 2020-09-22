@@ -79,6 +79,7 @@ class MicroserviceKeyHostResolver(HostResolver):
 class ConnectedServerHostResolver(HostResolver):
     """A connection used in Push Restores to verify the accepting device is connected
     to the Authority server."""
+
     def __init__(self, connection, device_guid):
         self._connection = connection
         self._device_guid = device_guid

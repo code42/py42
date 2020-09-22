@@ -58,7 +58,7 @@ class ArchiveClient(object):
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in
-                your archive.
+                the archive.
             device_guid (str): The GUID of the device the file belongs to.
             destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your
@@ -126,7 +126,7 @@ class ArchiveClient(object):
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in
-                your archive.
+                the archive.
             device_guid (str): The GUID of the device the file belongs to.
             accepting_device_guid (str): The GUID of the device accepting the restore.
             restore_path (str): The path on the accepting device where the restore will be saved.

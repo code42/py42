@@ -97,8 +97,11 @@ class ArchiveClient(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
+        backup_set_id = self._get_backup_set_id(
+            device_guid, archive_accessor.destination_guid
+        )
         return archive_accessor.stream_from_backup(
-            file_paths, file_size_calc_timeout=file_size_calc_timeout
+            backup_set_id, file_paths, file_size_calc_timeout=file_size_calc_timeout
         )
 
     def stream_to_device(
@@ -147,8 +150,9 @@ class ArchiveClient(object):
             private_password=archive_password,
             encryption_key=encryption_key,
         )
+        backup_set_id = self._get_backup_set_id(device_guid, explorer.destination_guid)
         file_selections = explorer.create_file_selections(
-            file_paths, file_size_calc_timeout
+            backup_set_id, file_paths, file_size_calc_timeout
         )
         pusher = self._archive_accessor_factory.create_archive_content_pusher(
             device_guid,
@@ -157,7 +161,6 @@ class ArchiveClient(object):
             encryption_key=encryption_key,
             destination_guid=explorer.destination_guid,
         )
-        backup_set_id = self._get_backup_set_id(device_guid, explorer.destination_guid)
         return pusher.stream_to_device(
             restore_path,
             accepting_device_guid,

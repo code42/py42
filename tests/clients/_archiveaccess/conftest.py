@@ -2,9 +2,9 @@ import json
 
 import pytest
 from tests.clients.conftest import get_file_selection
-from tests.clients.conftest import TEST_DOWNLOADS_DIR
-from tests.clients.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
-from tests.clients.conftest import TEST_SESSION_ID
+from tests.conftest import TEST_DOWNLOADS_DIR
+from tests.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
+from tests.conftest import TEST_SESSION_ID
 
 from py42.clients._archiveaccess import FileType
 from py42.clients._archiveaccess.restoremanager import FileSizePoller

@@ -65,12 +65,12 @@ class StorageArchiveService(RestoreService):
         self,
         session_id,
         device_guid,
+        backup_set_id,
         file_id=None,
         timestamp=None,
         show_deleted=None,
         batch_size=None,
         last_batch_file_id=None,
-        backup_set_id=None,
         include_os_metadata=None,
     ):
         # session_id is a web restore session ID (see create_restore_session)
@@ -78,12 +78,12 @@ class StorageArchiveService(RestoreService):
         params = {
             u"webRestoreSessionId": session_id,
             u"guid": device_guid,
+            u"backupSetId": backup_set_id,
             u"fileId": file_id,
             u"timestamp": timestamp,
             u"showDeleted": show_deleted,
             u"batchSize": batch_size,
             u"lastBatchFileId": last_batch_file_id,
-            u"backupSetId": backup_set_id,
             u"includeOsMetadata": include_os_metadata,
         }
         return self._connection.get(uri, params=params)

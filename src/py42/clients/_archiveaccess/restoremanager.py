@@ -92,8 +92,8 @@ class RestoreJobManager(_RestorePoller):
         )
         self._archive_session_id = archive_session_id
 
-    def get_stream(self, file_selections):
-        response = self._start_web_restore(file_selections)
+    def get_stream(self, backup_set_id, file_selections):
+        response = self._start_web_restore(backup_set_id, file_selections)
         job_id = self._wait_for_job(response)
         return self._get_stream(job_id)
 
@@ -142,14 +142,19 @@ class RestoreJobManager(_RestorePoller):
         debug.logger.debug(format_dict(percentage_dict))
         return is_done
 
-    def _start_web_restore(self, file_selections):
+    def _start_web_restore(self, backup_set_id, file_selections):
         num_files = sum([fs.num_files for fs in file_selections])
         num_dirs = sum([fs.num_dirs for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
         return self._storage_archive_service.start_restore(
             self._device_guid,
             self._archive_session_id,
-            [{u"backupSetId": -1, u"files": [f.file for f in file_selections]}],
+            [
+                {
+                    u"backupSetId": backup_set_id,
+                    u"files": [f.file for f in file_selections],
+                }
+            ],
             num_files,
             num_dirs,
             num_bytes,

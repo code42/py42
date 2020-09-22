@@ -2,12 +2,13 @@
 import pytest
 from requests import Response
 from tests.clients._archiveaccess.conftest import get_file_selection
-from tests.clients.conftest import TEST_DESTINATION_GUID_1
-from tests.clients.conftest import TEST_DEVICE_GUID
-from tests.clients.conftest import TEST_DOWNLOADS_DIR
-from tests.clients.conftest import TEST_DOWNLOADS_FILE_ID
-from tests.clients.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
-from tests.clients.conftest import TEST_SESSION_ID
+from tests.conftest import TEST_BACKUP_SET_ID
+from tests.conftest import TEST_DESTINATION_GUID_1
+from tests.conftest import TEST_DEVICE_GUID
+from tests.conftest import TEST_DOWNLOADS_DIR
+from tests.conftest import TEST_DOWNLOADS_FILE_ID
+from tests.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
+from tests.conftest import TEST_SESSION_ID
 
 from py42.clients._archiveaccess import ArchiveContentStreamer
 from py42.clients._archiveaccess import FileType
@@ -329,9 +330,13 @@ class TestArchiveContentStreamer(object):
             restore_job_manager,
             file_size_poller,
         )
-        archive_accessor.stream_from_backup("/", file_size_calc_timeout=0)
+        archive_accessor.stream_from_backup(
+            TEST_BACKUP_SET_ID, "/", file_size_calc_timeout=0
+        )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "/")]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            TEST_BACKUP_SET_ID, expected_file_selection
+        )
 
     def test_stream_from_backup_with_root_level_folder_calls_get_stream(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller
@@ -349,9 +354,11 @@ class TestArchiveContentStreamer(object):
             restore_job_manager,
             file_size_poller,
         )
-        archive_accessor.stream_from_backup(USERS_DIR)
+        archive_accessor.stream_from_backup(TEST_BACKUP_SET_ID, USERS_DIR)
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, USERS_DIR)]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            TEST_BACKUP_SET_ID, expected_file_selection
+        )
 
     def test_stream_from_backup_with_file_path_calls_get_stream(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller
@@ -366,12 +373,16 @@ class TestArchiveContentStreamer(object):
             file_size_poller,
         )
         archive_accessor.stream_from_backup(
-            TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, file_size_calc_timeout=0
+            TEST_BACKUP_SET_ID,
+            TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR,
+            file_size_calc_timeout=0,
         )
         expected_file_selection = [
             get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR)
         ]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            TEST_BACKUP_SET_ID, expected_file_selection
+        )
 
     def test_stream_from_backup_normalizes_windows_paths(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
@@ -385,9 +396,13 @@ class TestArchiveContentStreamer(object):
             restore_job_manager,
             file_size_poller,
         )
-        archive_accessor.stream_from_backup("C:\\", file_size_calc_timeout=0)
+        archive_accessor.stream_from_backup(
+            TEST_BACKUP_SET_ID, "C:\\", file_size_calc_timeout=0
+        )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "C:/")]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            TEST_BACKUP_SET_ID, expected_file_selection
+        )
 
     def test_stream_from_backup_calls_get_file_size_with_expected_params(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
@@ -402,7 +417,9 @@ class TestArchiveContentStreamer(object):
             file_size_poller,
         )
         archive_accessor.stream_from_backup(
-            TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, file_size_calc_timeout=10
+            TEST_BACKUP_SET_ID,
+            TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR,
+            file_size_calc_timeout=10,
         )
         file_size_poller.get_file_sizes.assert_called_once_with(
             [TEST_DOWNLOADS_FILE_ID], timeout=10
@@ -429,6 +446,7 @@ class TestArchiveContentStreamer(object):
 
         file_size_poller.get_file_sizes.side_effect = get_file_sizes
         archive_accessor.stream_from_backup(
+            TEST_BACKUP_SET_ID,
             [TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, TEST_DOWNLOADS_DIR],
         )
         expected_file_selection = [
@@ -437,7 +455,9 @@ class TestArchiveContentStreamer(object):
             ),
             get_file_selection(FileType.DIRECTORY, TEST_DOWNLOADS_DIR, 4, 5, 6,),
         ]
-        restore_job_manager.get_stream.assert_called_once_with(expected_file_selection)
+        restore_job_manager.get_stream.assert_called_once_with(
+            TEST_BACKUP_SET_ID, expected_file_selection
+        )
 
     def test_stream_from_backup_with_file_not_in_archive_raises_exception(
         self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
@@ -453,7 +473,9 @@ class TestArchiveContentStreamer(object):
         )
         invalid_path_in_downloads_folder = "/Users/qa/Downloads/file-not-in-archive.txt"
         with pytest.raises(Exception) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(
+                TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
+            )
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
@@ -475,7 +497,9 @@ class TestArchiveContentStreamer(object):
         invalid_path_in_downloads_folder = u"/Users/qa/Downloads/吞"
 
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(
+                TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
+            )
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
@@ -498,7 +522,9 @@ class TestArchiveContentStreamer(object):
             "C:/Users/qa/Downloads/file-not-in-archive.txt"
         )
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(
+                TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
+            )
 
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
@@ -522,7 +548,9 @@ class TestArchiveContentStreamer(object):
             "c:/Users/qa/Downloads/file-not-in-archive.txt"
         )
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
-            archive_accessor.stream_from_backup(invalid_path_in_downloads_folder)
+            archive_accessor.stream_from_backup(
+                TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
+            )
 
         expected_message = u"File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
@@ -542,7 +570,11 @@ class TestArchiveContentStreamer(object):
             restore_job_manager,
             file_size_poller,
         )
-        archive_accessor.stream_from_backup(TEST_DOWNLOADS_DIR)
+        archive_accessor.stream_from_backup(TEST_BACKUP_SET_ID, TEST_DOWNLOADS_DIR)
         storage_archive_service.get_file_path_metadata.assert_called_with(
-            TEST_SESSION_ID, TEST_DEVICE_GUID, file_id=mocker.ANY, show_deleted=True
+            TEST_SESSION_ID,
+            TEST_DEVICE_GUID,
+            TEST_BACKUP_SET_ID,
+            file_id=mocker.ANY,
+            show_deleted=True,
         )

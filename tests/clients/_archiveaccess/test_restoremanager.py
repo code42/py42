@@ -3,14 +3,14 @@ import time
 
 import pytest
 from requests import Response
-from tests.clients.conftest import TEST_ACCEPTING_GUID
-from tests.clients.conftest import TEST_BACKUP_SET_ID
-from tests.clients.conftest import TEST_DEVICE_GUID
-from tests.clients.conftest import TEST_DOWNLOADS_DIR_ID
-from tests.clients.conftest import TEST_DOWNLOADS_FILE_ID
-from tests.clients.conftest import TEST_NODE_GUID
-from tests.clients.conftest import TEST_RESTORE_PATH
-from tests.clients.conftest import TEST_SESSION_ID
+from tests.conftest import TEST_ACCEPTING_GUID
+from tests.conftest import TEST_BACKUP_SET_ID
+from tests.conftest import TEST_DEVICE_GUID
+from tests.conftest import TEST_DOWNLOADS_DIR_ID
+from tests.conftest import TEST_DOWNLOADS_FILE_ID
+from tests.conftest import TEST_NODE_GUID
+from tests.conftest import TEST_RESTORE_PATH
+from tests.conftest import TEST_SESSION_ID
 
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
@@ -246,9 +246,12 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_service, TEST_DEVICE_GUID, TEST_SESSION_ID
         )
-        restore_job_manager.get_stream(single_file_selection)
+        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection)
         expected_restore_groups = [
-            {u"backupSetId": -1, u"files": [single_file_selection[0].file]}
+            {
+                u"backupSetId": TEST_BACKUP_SET_ID,
+                u"files": [single_file_selection[0].file],
+            }
         ]
         storage_archive_service.start_restore.assert_called_once_with(
             TEST_DEVICE_GUID,
@@ -273,10 +276,10 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_service, TEST_DEVICE_GUID, TEST_SESSION_ID
         )
-        restore_job_manager.get_stream(double_file_selection)
+        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, double_file_selection)
         expected_restore_groups = [
             {
-                u"backupSetId": -1,
+                u"backupSetId": TEST_BACKUP_SET_ID,
                 u"files": [
                     double_file_selection[0].file,
                     double_file_selection[1].file,
@@ -315,7 +318,7 @@ class TestRestoreJobManager(object):
             TEST_SESSION_ID,
             job_polling_interval=0.000001,
         )
-        restore_job_manager.get_stream(single_file_selection)
+        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection)
         job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
         expected_call = mocker.call(job_id)
         storage_archive_service.get_restore_status.assert_has_calls(
@@ -345,7 +348,7 @@ class TestRestoreJobManager(object):
             TEST_SESSION_ID,
             job_polling_interval=0.000001,
         )
-        restore_job_manager.get_stream(single_file_selection)
+        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection)
         job_id = get_response_job_id(GetWebRestoreJobResponses.MISSING_STATUS)
         expected_call = mocker.call(job_id)
         storage_archive_service.get_restore_status.assert_has_calls(
@@ -372,7 +375,7 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_service, TEST_DEVICE_GUID, TEST_SESSION_ID
         )
-        assert restore_job_manager.get_stream(single_file_selection)
+        assert restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection)
 
     def test_send_stream_calls_start_push_restore_with_expected_args(
         self, push_service, single_file_selection

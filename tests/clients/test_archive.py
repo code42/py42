@@ -1,12 +1,12 @@
 import pytest
 from tests.clients.conftest import get_file_selection
-from tests.clients.conftest import TEST_ACCEPTING_GUID
-from tests.clients.conftest import TEST_BACKUP_SET_ID
-from tests.clients.conftest import TEST_DESTINATION_GUID_1
-from tests.clients.conftest import TEST_DEVICE_GUID
-from tests.clients.conftest import TEST_ENCRYPTION_KEY
-from tests.clients.conftest import TEST_PASSWORD
-from tests.clients.conftest import TEST_RESTORE_PATH
+from tests.conftest import TEST_ACCEPTING_GUID
+from tests.conftest import TEST_BACKUP_SET_ID
+from tests.conftest import TEST_DESTINATION_GUID_1
+from tests.conftest import TEST_DEVICE_GUID
+from tests.conftest import TEST_ENCRYPTION_KEY
+from tests.conftest import TEST_PASSWORD
+from tests.conftest import TEST_RESTORE_PATH
 
 from py42.clients._archiveaccess import ArchiveContentPusher
 from py42.clients._archiveaccess import ArchiveContentStreamer
@@ -33,7 +33,9 @@ def archive_accessor_factory(mocker):
 
 @pytest.fixture
 def archive_content_streamer(mocker):
-    return mocker.MagicMock(spec=ArchiveContentStreamer)
+    mock = mocker.MagicMock(spec=ArchiveContentStreamer)
+    mock.destination_guid = TEST_DESTINATION_GUID_1
+    return mock
 
 
 @pytest.fixture
@@ -104,7 +106,7 @@ class TestArchiveClient(object):
             TEST_ENCRYPTION_KEY,
         )
         archive_content_streamer.stream_from_backup.assert_called_once_with(
-            TEST_PATHS, file_size_calc_timeout=10,
+            TEST_BACKUP_SET_ID, TEST_PATHS, file_size_calc_timeout=10,
         )
 
     def test_stream_to_device_calls_accessor_stream_to_device(

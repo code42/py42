@@ -1,11 +1,11 @@
 import pytest
-from tests.clients.conftest import TEST_ACCEPTING_GUID
-from tests.clients.conftest import TEST_DATA_KEY_TOKEN
-from tests.clients.conftest import TEST_DESTINATION_GUID_1
-from tests.clients.conftest import TEST_DEVICE_GUID
-from tests.clients.conftest import TEST_ENCRYPTION_KEY
-from tests.clients.conftest import TEST_PASSWORD
-from tests.clients.conftest import TEST_SESSION_ID
+from tests.conftest import TEST_ACCEPTING_GUID
+from tests.conftest import TEST_DATA_KEY_TOKEN
+from tests.conftest import TEST_DESTINATION_GUID_1
+from tests.conftest import TEST_DEVICE_GUID
+from tests.conftest import TEST_ENCRYPTION_KEY
+from tests.conftest import TEST_PASSWORD
+from tests.conftest import TEST_SESSION_ID
 
 import py42.clients._archiveaccess.restoremanager
 from py42.clients._archiveaccess import ArchiveAccessor

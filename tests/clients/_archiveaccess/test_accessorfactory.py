@@ -38,7 +38,7 @@ class TestArchiveAccessFactory(object):
             archive_service, storage_service_factory, device_service
         )
 
-    def test_get_archive_accessor_with_device_guid_and_destination_guid_returns(
+    def test_create_archive_accessor_with_device_guid_and_destination_guid_returns(
         self,
         archive_service,
         storage_service_factory,
@@ -55,7 +55,7 @@ class TestArchiveAccessFactory(object):
             TEST_DEVICE_GUID, accessor_class=ArchiveAccessor
         )
 
-    def test_get_archive_accessor_calls_storage_service_factory_with_correct_args(
+    def test_create_archive_accessor_calls_storage_service_factory_with_correct_args(
         self,
         archive_service,
         storage_service_factory,
@@ -73,7 +73,7 @@ class TestArchiveAccessFactory(object):
             TEST_DEVICE_GUID, TEST_DESTINATION_GUID_1,
         )
 
-    def test_get_archive_accessor_with_opt_dest_guid_calls_storage_service_factory_with_correct_args(
+    def test_create_archive_accessor_with_opt_dest_guid_calls_storage_service_factory_with_correct_args(
         self,
         archive_service,
         storage_service_factory,
@@ -93,7 +93,7 @@ class TestArchiveAccessFactory(object):
             TEST_DEVICE_GUID, TEST_DESTINATION_GUID_1
         )
 
-    def test_get_archive_accessor_creates_web_restore_session_with_correct_args(
+    def test_create_archive_accessor_creates_web_restore_session_with_correct_args(
         self,
         archive_service,
         storage_service_factory,
@@ -112,7 +112,7 @@ class TestArchiveAccessFactory(object):
             TEST_DEVICE_GUID, data_key_token=TEST_DATA_KEY_TOKEN
         )
 
-    def test_get_archive_accessor_when_given_private_password_creates_expected_restore_session(
+    def test_create_archive_accessor_when_given_private_password_creates_expected_restore_session(
         self,
         archive_service,
         storage_service_factory,
@@ -134,7 +134,7 @@ class TestArchiveAccessFactory(object):
             private_password=TEST_PASSWORD,
         )
 
-    def test_get_archive_accessor_when_given_encryption_key_creates_expected_restore_session(
+    def test_create_archive_accessor_when_given_encryption_key_creates_expected_restore_session(
         self,
         archive_service,
         storage_service_factory,
@@ -157,7 +157,7 @@ class TestArchiveAccessFactory(object):
             TEST_DEVICE_GUID, encryption_key=TEST_ENCRYPTION_KEY
         )
 
-    def test_get_archive_accessor_calls_create_restore_job_manager_with_correct_args(
+    def test_create_archive_accessor_calls_create_restore_job_manager_with_correct_args(
         self,
         mocker,
         archive_service,
@@ -181,7 +181,7 @@ class TestArchiveAccessFactory(object):
             storage_archive_service, TEST_DEVICE_GUID, TEST_SESSION_ID
         )
 
-    def test_get_archive_accessor_raises_exception_when_create_backup_client_raises(
+    def test_create_archive_accessor_raises_exception_when_create_backup_client_raises(
         self, archive_service, storage_service_factory, device_service
     ):
         storage_service_factory.create_archive_service.side_effect = Exception(

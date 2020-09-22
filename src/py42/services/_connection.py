@@ -83,7 +83,7 @@ class ConnectedServerHostResolver(HostResolver):
     def __init__(self, connection, device_guid):
         self._connection = connection
         self._device_guid = device_guid
-        super().__init__()
+        super(ConnectedServerHostResolver, self).__init__()
 
     def get_host_address(self):
         response = self._connection.get(

@@ -105,9 +105,14 @@ class TestArchiveClient(object):
             TEST_DESTINATION_GUID_1,
             TEST_PASSWORD,
             TEST_ENCRYPTION_KEY,
+            file_size_calc_timeout=10000,
+            show_deleted=True,
         )
         archive_content_streamer.stream_from_backup.assert_called_once_with(
-            TEST_BACKUP_SET_ID, TEST_PATHS, file_size_calc_timeout=10,
+            TEST_BACKUP_SET_ID,
+            TEST_PATHS,
+            file_size_calc_timeout=10000,
+            show_deleted=True,
         )
 
     def test_stream_to_device_calls_accessor_stream_to_device(

@@ -335,11 +335,11 @@ class TestArchiveContentStreamer(object):
             file_size_poller,
         )
         archive_accessor.stream_from_backup(
-            TEST_BACKUP_SET_ID, "/", file_size_calc_timeout=0
+            TEST_BACKUP_SET_ID, "/", file_size_calc_timeout=0, show_deleted=True,
         )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "/")]
         restore_job_manager.get_stream.assert_called_once_with(
-            TEST_BACKUP_SET_ID, expected_file_selection
+            TEST_BACKUP_SET_ID, expected_file_selection, show_deleted=True
         )
 
     def test_stream_from_backup_with_root_level_folder_calls_get_stream(
@@ -358,10 +358,12 @@ class TestArchiveContentStreamer(object):
             restore_job_manager,
             file_size_poller,
         )
-        archive_accessor.stream_from_backup(TEST_BACKUP_SET_ID, USERS_DIR)
+        archive_accessor.stream_from_backup(
+            TEST_BACKUP_SET_ID, USERS_DIR, show_deleted=True
+        )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, USERS_DIR)]
         restore_job_manager.get_stream.assert_called_once_with(
-            TEST_BACKUP_SET_ID, expected_file_selection
+            TEST_BACKUP_SET_ID, expected_file_selection, show_deleted=True,
         )
 
     def test_stream_from_backup_with_file_path_calls_get_stream(
@@ -385,7 +387,7 @@ class TestArchiveContentStreamer(object):
             get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR)
         ]
         restore_job_manager.get_stream.assert_called_once_with(
-            TEST_BACKUP_SET_ID, expected_file_selection
+            TEST_BACKUP_SET_ID, expected_file_selection, show_deleted=None,
         )
 
     def test_stream_from_backup_normalizes_windows_paths(
@@ -405,7 +407,7 @@ class TestArchiveContentStreamer(object):
         )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "C:/")]
         restore_job_manager.get_stream.assert_called_once_with(
-            TEST_BACKUP_SET_ID, expected_file_selection
+            TEST_BACKUP_SET_ID, expected_file_selection, show_deleted=None,
         )
 
     def test_stream_from_backup_calls_get_file_size_with_expected_params(
@@ -460,7 +462,7 @@ class TestArchiveContentStreamer(object):
             get_file_selection(FileType.DIRECTORY, TEST_DOWNLOADS_DIR, 4, 5, 6,),
         ]
         restore_job_manager.get_stream.assert_called_once_with(
-            TEST_BACKUP_SET_ID, expected_file_selection
+            TEST_BACKUP_SET_ID, expected_file_selection, show_deleted=None,
         )
 
     def test_stream_from_backup_with_file_not_in_archive_raises_exception(

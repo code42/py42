@@ -50,6 +50,7 @@ class ArchiveClient(object):
         archive_password=None,
         encryption_key=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
+        show_deleted=None,
     ):
         """Streams a file from a backup archive to memory. If streaming multiple files, the
         results will be zipped.
@@ -72,6 +73,8 @@ class ArchiveClient(object):
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
+            show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
+                Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.
@@ -101,7 +104,10 @@ class ArchiveClient(object):
             device_guid, archive_accessor.destination_guid
         )
         return archive_accessor.stream_from_backup(
-            backup_set_id, file_paths, file_size_calc_timeout=file_size_calc_timeout
+            backup_set_id,
+            file_paths,
+            file_size_calc_timeout=file_size_calc_timeout,
+            show_deleted=show_deleted,
         )
 
     def stream_to_device(

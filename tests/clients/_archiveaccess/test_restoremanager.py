@@ -239,7 +239,7 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_service, TEST_DEVICE_GUID, TEST_SESSION_ID
         )
-        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection)
+        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection, True)
         expected_restore_groups = [
             {
                 u"backupSetId": TEST_BACKUP_SET_ID,
@@ -269,7 +269,7 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_service, TEST_DEVICE_GUID, TEST_SESSION_ID
         )
-        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, double_file_selection)
+        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, double_file_selection, False)
         expected_restore_groups = [
             {
                 u"backupSetId": TEST_BACKUP_SET_ID,
@@ -286,7 +286,7 @@ class TestRestoreJobManager(object):
             1 + 4,
             2 + 5,
             3 + 6,
-            show_deleted=True,
+            show_deleted=False,
         )
 
     def test_get_stream_polls_job_status_until_job_is_complete(
@@ -311,7 +311,7 @@ class TestRestoreJobManager(object):
             TEST_SESSION_ID,
             job_polling_interval=0.000001,
         )
-        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection)
+        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection, None)
         job_id = get_response_job_id(GetWebRestoreJobResponses.DONE)
         expected_call = mocker.call(job_id)
         storage_archive_service.get_restore_status.assert_has_calls(
@@ -341,7 +341,7 @@ class TestRestoreJobManager(object):
             TEST_SESSION_ID,
             job_polling_interval=0.000001,
         )
-        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection)
+        restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection, True)
         job_id = get_response_job_id(GetWebRestoreJobResponses.MISSING_STATUS)
         expected_call = mocker.call(job_id)
         storage_archive_service.get_restore_status.assert_has_calls(
@@ -368,7 +368,9 @@ class TestRestoreJobManager(object):
         restore_job_manager = RestoreJobManager(
             storage_archive_service, TEST_DEVICE_GUID, TEST_SESSION_ID
         )
-        assert restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection)
+        assert restore_job_manager.get_stream(
+            TEST_BACKUP_SET_ID, single_file_selection, True
+        )
 
     def test_send_stream_calls_start_push_restore_with_expected_args(
         self, push_service, single_file_selection

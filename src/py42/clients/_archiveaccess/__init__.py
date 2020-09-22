@@ -100,12 +100,14 @@ class ArchiveExplorer(ArchiveAccessor):
 
 class ArchiveContentStreamer(ArchiveExplorer):
     def stream_from_backup(
-        self, backup_set_id, file_paths, file_size_calc_timeout=None
+        self, backup_set_id, file_paths, file_size_calc_timeout=None, show_deleted=None,
     ):
         file_selections = self.create_file_selections(
             backup_set_id, file_paths, file_size_calc_timeout
         )
-        return self._restore_job_manager.get_stream(backup_set_id, file_selections)
+        return self._restore_job_manager.get_stream(
+            backup_set_id, file_selections, show_deleted=show_deleted
+        )
 
 
 class ArchiveContentPusher(ArchiveAccessor):

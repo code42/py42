@@ -92,8 +92,8 @@ class RestoreJobManager(_RestorePoller):
         )
         self._archive_session_id = archive_session_id
 
-    def get_stream(self, backup_set_id, file_selections):
-        response = self._start_web_restore(backup_set_id, file_selections)
+    def get_stream(self, backup_set_id, file_selections, show_deleted):
+        response = self._start_web_restore(backup_set_id, file_selections, show_deleted)
         job_id = self._wait_for_job(response)
         return self._get_stream(job_id)
 
@@ -142,10 +142,15 @@ class RestoreJobManager(_RestorePoller):
         debug.logger.debug(format_dict(percentage_dict))
         return is_done
 
-    def _start_web_restore(self, backup_set_id, file_selections):
+    def _start_web_restore(self, backup_set_id, file_selections, show_deleted):
         num_files = sum([fs.num_files for fs in file_selections])
         num_dirs = sum([fs.num_dirs for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
+
+        # For py42 backwards compat.
+        if show_deleted is None:
+            show_deleted = True
+
         return self._storage_archive_service.start_restore(
             self._device_guid,
             self._archive_session_id,
@@ -158,7 +163,7 @@ class RestoreJobManager(_RestorePoller):
             num_files,
             num_dirs,
             num_bytes,
-            show_deleted=True,
+            show_deleted=show_deleted,
         )
 
     def _get_stream(self, job_id):

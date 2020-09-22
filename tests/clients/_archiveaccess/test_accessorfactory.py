@@ -233,5 +233,6 @@ class TestArchiveAccessFactory(object):
         pusher = accessor_factory.create_archive_content_pusher(
             TEST_DEVICE_GUID, TEST_ACCEPTING_GUID
         )
+        # Set inside device_service mock
         assert pusher.destination_guid == TEST_DESTINATION_GUID_1
         assert pusher._node_guid == TEST_NODE_GUID

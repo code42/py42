@@ -1,15 +1,18 @@
 import pytest
+from requests import Response
 from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_DATA_KEY_TOKEN
 from tests.conftest import TEST_DESTINATION_GUID_1
 from tests.conftest import TEST_DEVICE_GUID
 from tests.conftest import TEST_ENCRYPTION_KEY
+from tests.conftest import TEST_NODE_GUID
 from tests.conftest import TEST_PASSWORD
 from tests.conftest import TEST_SESSION_ID
 
 import py42.clients._archiveaccess.restoremanager
 from py42.clients._archiveaccess import ArchiveAccessor
 from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
+from py42.response import Py42Response
 from py42.services.devices import DeviceService
 from py42.services.storage._service_factory import StorageServiceFactory
 
@@ -19,7 +22,20 @@ INVALID_DEVICE_GUID = "invalid-device-guid"
 
 @pytest.fixture
 def device_service(mocker):
-    return mocker.MagicMock(spec=DeviceService)
+    mock = mocker.MagicMock(spec=DeviceService)
+    text = '{{"backupUsage": [{{"targetComputerGuid": "{0}", "serverGuid": "{1}"}}]}}'.format(
+        TEST_DESTINATION_GUID_1, TEST_NODE_GUID
+    )
+    resp = mocker.MagicMock(spec=Response)
+    resp.text = text
+
+    # For getting mock server guid from mock dest guid.
+    def get_by_guid_side_effect(device_guid, include_backup_usage):
+        if device_guid == TEST_DEVICE_GUID and include_backup_usage:
+            return Py42Response(resp)
+
+    mock.get_by_guid.side_effect = get_by_guid_side_effect
+    return mock
 
 
 @pytest.fixture
@@ -198,12 +214,24 @@ class TestArchiveAccessFactory(object):
     def test_create_archive_content_pusher_creates_push_service_with_accepting_guid(
         self, archive_service, storage_service_factory, device_service
     ):
-        accessor_manager = ArchiveAccessorFactory(
+        accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory, device_service
         )
-        accessor_manager.create_archive_content_pusher(
+        accessor_factory.create_archive_content_pusher(
             TEST_DEVICE_GUID, TEST_ACCEPTING_GUID
         )
         storage_service_factory.create_push_restore_service.assert_called_once_with(
             TEST_ACCEPTING_GUID
         )
+
+    def test_create_archive_content_push_creates_pusher_with_expected_properties(
+        self, archive_service, storage_service_factory, device_service
+    ):
+        accessor_factory = ArchiveAccessorFactory(
+            archive_service, storage_service_factory, device_service
+        )
+        pusher = accessor_factory.create_archive_content_pusher(
+            TEST_DEVICE_GUID, TEST_ACCEPTING_GUID
+        )
+        assert pusher.destination_guid == TEST_DESTINATION_GUID_1
+        assert pusher._node_guid == TEST_NODE_GUID

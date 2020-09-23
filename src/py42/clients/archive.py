@@ -49,8 +49,8 @@ class ArchiveClient(object):
         destination_guid=None,
         archive_password=None,
         encryption_key=None,
-        file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
         show_deleted=None,
+        file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         """Streams a file from a backup archive to memory. If streaming multiple files, the
         results will be zipped.
@@ -70,11 +70,11 @@ class ArchiveClient(object):
             encryption_key (str or None, optional): A custom encryption key for decrypting an archive's
                 file contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
+            show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
+                Defaults to None.
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
-            show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
-                Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.
@@ -119,8 +119,8 @@ class ArchiveClient(object):
         destination_guid=None,
         archive_password=None,
         encryption_key=None,
-        file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
         show_deleted=None,
+        file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         """Streams a file from a backup archive to a specified device.
 
@@ -140,11 +140,11 @@ class ArchiveClient(object):
             encryption_key (str or None, optional): A custom encryption key for decrypting an archive's
                 file contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
+            show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
+                Defaults to None.
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
-            show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
-                Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`.

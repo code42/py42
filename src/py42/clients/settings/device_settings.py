@@ -449,9 +449,14 @@ class TrackedFileSelectionList(UserList, object):
         self.data = _list
         self._changes = changes_dict
 
-    def check_lock(self):
-        if self.backup_set.locked:
-            raise AttributeError("Unable to modify locked backup set.")
+    def check_lock(method):
+        def func(_self, *args):
+            if _self.backup_set.locked:
+                raise AttributeError("Unable to modify locked backup set.")
+            else:
+                return method(_self, *args)
+
+        return func
 
     def register_change(self):
         self.backup_set._build_file_selection()
@@ -461,33 +466,33 @@ class TrackedFileSelectionList(UserList, object):
         elif self.name in self._changes:
             del self._changes[self.name]
 
+    @check_lock
     def append(self, item):
-        self.check_lock()
         self.data.append(item)
         self.register_change()
 
+    @check_lock
     def clear(self):
-        self.check_lock()
         self.data.clear()
         self.register_change()
 
+    @check_lock
     def extend(self, other):
-        self.check_lock()
         self.data.extend(other)
         self.register_change()
 
+    @check_lock
     def insert(self, i, item):
-        self.check_lock()
         self.data.insert(i, item)
         self.register_change()
 
+    @check_lock
     def pop(self, index=-1):
-        self.check_lock()
         value = self.data.pop(index)
         self.register_change()
         return value
 
+    @check_lock
     def remove(self, value):
-        self.check_lock()
         self.data.remove(value)
         self.register_change()

@@ -37,7 +37,7 @@ class DeviceSettingsDefaults(UserDict, object):
             backup_sets = backup_sets["backupSet"]
             if isinstance(backup_sets, dict):  # there's only one set configured
                 return [BackupSet(self, backup_sets)]
-            if isinstance(backup_sets, list):
+            elif isinstance(backup_sets, list):
                 return [BackupSet(self, bs) for bs in backup_sets]
             else:
                 raise Py42Error("Unable to extract backup sets: {}".format(backup_sets))

@@ -7,6 +7,7 @@ from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DESTINATION_GUID_1
 from tests.conftest import TEST_DEVICE_GUID
 from tests.conftest import TEST_DOWNLOADS_DIR
+from tests.conftest import TEST_DOWNLOADS_DIR_ID
 from tests.conftest import TEST_DOWNLOADS_FILE_ID
 from tests.conftest import TEST_NODE_GUID
 from tests.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
@@ -123,7 +124,7 @@ class GetFilePathMetadataResponses(object):
     )
     USERS_QA = (
         """[
-                {
+                {{
                     "deleted": false,
                     "lastModified": "2018-06-19T14:54:46.000-05:00",
                     "filename": ".bash_history",
@@ -135,8 +136,8 @@ class GetFilePathMetadataResponses(object):
                     "lastModifiedMs": 1529438086000,
                     "type": "file",
                     "id": "97d8328d121983727cf854dc861d1ada"
-                },
-                {
+                }},
+                {{
                     "deleted": false,
                     "lastModified": "2018-06-19T14:58:36.000-05:00",
                     "filename": "Applications",
@@ -148,8 +149,8 @@ class GetFilePathMetadataResponses(object):
                     "lastModifiedMs": 1529438316000,
                     "type": "directory",
                     "id": "13cc0e21c1f14ff102206edd44bfc6bc"
-                },
-                {
+                }},
+                {{
                     "deleted": false,
                     "lastModified": "2019-04-18T12:56:34.000-05:00",
                     "filename": "Desktop",
@@ -161,8 +162,8 @@ class GetFilePathMetadataResponses(object):
                     "lastModifiedMs": 1555610194000,
                     "type": "directory",
                     "id": "97c6bd9bff714bd45665130f7f381781"
-                },
-                {
+                }},
+                {{
                     "deleted": false,
                     "lastModified": "2018-02-12T12:30:03.000-06:00",
                     "filename": "Documents",
@@ -174,8 +175,8 @@ class GetFilePathMetadataResponses(object):
                     "lastModifiedMs": 1518460203000,
                     "type": "directory",
                     "id": "9db2b57abab79c4a92c939ec82d3dd0e"
-                },
-                {
+                }},
+                {{
                     "deleted": false,
                     "lastModified": "2019-04-12T12:58:34.000-05:00",
                     "filename": "Downloads",
@@ -186,9 +187,9 @@ class GetFilePathMetadataResponses(object):
                     "hidden": false,
                     "lastModifiedMs": 1555091914000,
                     "type": "directory",
-                    "id": "f939cfc4d476ec5535ccb0f6c0377ef4"
-                },
-                {
+                    "id": "{0}"
+                }},
+                {{
                     "deleted": false,
                     "lastModified": "2019-04-12T10:43:49.000-05:00",
                     "filename": "Library",
@@ -200,14 +201,16 @@ class GetFilePathMetadataResponses(object):
                     "lastModifiedMs": 1555083829000,
                     "type": "directory",
                     "id": "bcf31dab21a4f7d4f67b812d6c891ed9"
-                }
+                }}
             ]
-        """,
+        """.format(
+            TEST_DOWNLOADS_DIR_ID
+        ),
         "8f939e90bae37f9ec860ced08c5ffb7f",
     )
     USERS_QA_DOWNLOADS = (
         """[
-                {
+                {{
                     "deleted": false,
                     "lastModified": "2019-04-12T12:58:13.000-05:00",
                     "filename": "Terminator II Screenplay.pdf",
@@ -219,8 +222,8 @@ class GetFilePathMetadataResponses(object):
                     "lastModifiedMs": 1555091893000,
                     "type": "file",
                     "id": "f63aeee85943809ead0cb11cdc773625"
-                },
-                {
+                }},
+                {{
                     "deleted": true,
                     "lastModified": "2019-04-12T12:57:43.000-05:00",
                     "filename": "terminator-genisys.jpg",
@@ -231,10 +234,12 @@ class GetFilePathMetadataResponses(object):
                     "hidden": false,
                     "lastModifiedMs": 1555091863000,
                     "type": "file",
-                    "id": "69e930e774cbc1ee6d0c0ff2ba5804ee"
-                }
+                    "id": "{0}"
+                }}
             ]
-        """,
+        """.format(
+            TEST_DOWNLOADS_FILE_ID
+        ),
         "f939cfc4d476ec5535ccb0f6c0377ef4",
     )
     WINDOWS = (

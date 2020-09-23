@@ -103,9 +103,9 @@ class SecurityDataClient(object):
 
                     Defaults to None.
             min_timestamp (int or str or datetime, optional): Timestamp in milliseconds or
-            str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+                str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
             max_timestamp (int or str or datetime, optional): Timestamp in milliseconds or
-            str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+                str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -153,9 +153,9 @@ class SecurityDataClient(object):
 
                     Defaults to None.
             min_timestamp (int or str or datetime, optional): Timestamp in milliseconds or
-            str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+                str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
             max_timestamp (int or str or datetime, optional): Timestamp in milliseconds or
-            str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+                str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

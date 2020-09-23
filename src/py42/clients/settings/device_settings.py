@@ -1,6 +1,7 @@
 from py42._compat import str
 from py42._compat import UserDict
 from py42._compat import UserList
+from py42.clients.settings import check_lock
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import show_change
 from py42.clients.settings._converters import bool_to_str
@@ -449,15 +450,6 @@ class TrackedFileSelectionList(UserList, object):
         self.data = _list
         self._changes = changes_dict
 
-    def check_lock(method):
-        def func(_self, *args):
-            if _self.backup_set.locked:
-                raise AttributeError("Unable to modify locked backup set.")
-            else:
-                return method(_self, *args)
-
-        return func
-
     def register_change(self):
         self.backup_set._build_file_selection()
         self.backup_set._build_regex_exclusions()
@@ -466,33 +458,33 @@ class TrackedFileSelectionList(UserList, object):
         elif self.name in self._changes:
             del self._changes[self.name]
 
-    @check_lock
+    @check_lock("backup_set")
     def append(self, item):
         self.data.append(item)
         self.register_change()
 
-    @check_lock
+    @check_lock("backup_set")
     def clear(self):
         self.data.clear()
         self.register_change()
 
-    @check_lock
+    @check_lock("backup_set")
     def extend(self, other):
         self.data.extend(other)
         self.register_change()
 
-    @check_lock
+    @check_lock("backup_set")
     def insert(self, i, item):
         self.data.insert(i, item)
         self.register_change()
 
-    @check_lock
+    @check_lock("backup_set")
     def pop(self, index=-1):
         value = self.data.pop(index)
         self.register_change()
         return value
 
-    @check_lock
+    @check_lock("backup_set")
     def remove(self, value):
         self.data.remove(value)
         self.register_change()

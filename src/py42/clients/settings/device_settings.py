@@ -1,6 +1,7 @@
 from py42._compat import str
 from py42._compat import UserDict
 from py42._compat import UserList
+from py42.clients.settings import check_lock
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import show_change
 from py42.clients.settings._converters import bool_to_str
@@ -29,12 +30,20 @@ class DeviceSettingsDefaults(UserDict, object):
         self.data[u"settings"] = {
             u"serviceBackupConfig": self.data[u"serviceBackupConfig"]
         }
-        self.backup_sets = [
-            BackupSet(self, self.changes, backup_set)
-            for backup_set in self.data[u"serviceBackupConfig"][u"backupConfig"][
-                u"backupSets"
-            ]
-        ]
+        bs = self.data[u"serviceBackupConfig"][u"backupConfig"][u"backupSets"]
+        self.backup_sets = self._extract_backup_sets(bs)
+
+    def _extract_backup_sets(self, backup_sets):
+        if isinstance(backup_sets, dict):  # number of sets are locked
+            backup_sets = backup_sets["backupSet"]
+            if isinstance(backup_sets, dict):  # there's only one set configured
+                return [BackupSet(self, backup_sets)]
+            elif isinstance(backup_sets, list):
+                return [BackupSet(self, bs) for bs in backup_sets]
+            else:
+                raise Py42Error("Unable to extract backup sets: {}".format(backup_sets))
+        else:
+            return [BackupSet(self, bs) for bs in backup_sets]
 
     @property
     def available_destinations(self):
@@ -110,12 +119,10 @@ class DeviceSettings(DeviceSettingsDefaults):
         self.changes = {}
         self.data = device_dict
         self._destinations = device_dict[u"availableDestinations"]
-        self.backup_sets = [
-            BackupSet(self, self.changes, backup_set)
-            for backup_set in self.data[u"settings"][u"serviceBackupConfig"][
-                u"backupConfig"
-            ][u"backupSets"]
+        bs = self.data[u"settings"][u"serviceBackupConfig"][u"backupConfig"][
+            u"backupSets"
         ]
+        self.backup_sets = self._extract_backup_sets(bs)
         """List of :class:`BackupSet` objects used to manage this device's backup set configurations."""
 
     @property
@@ -168,9 +175,9 @@ class DeviceSettings(DeviceSettingsDefaults):
 class BackupSet(UserDict, object):
     """Helper class for managing device backup sets and Org device default backup sets."""
 
-    def __init__(self, settings_manager, changes_dict, backup_set_dict):
+    def __init__(self, settings_manager, backup_set_dict):
         self._manager = settings_manager
-        self._changes = changes_dict
+        self._changes = settings_manager.changes
         self.data = backup_set_dict
         includes, excludes = self._extract_file_selection_lists()
         regex_excludes = self._extract_regex_exclusions()
@@ -189,24 +196,31 @@ class BackupSet(UserDict, object):
         """Converts the file selection portion of the settings dict ("pathset") into two
         lists of just paths, `included` and `excluded`.
 
-        The "pathset" object is a different shape depending on how many paths it contains:
-            No paths:   `pathset=[{"@cleared": "true", "@os": "Linux"}]`
-            One path:   `pathset=[{"path": {"@include": "C:/"}, "@os": "Linux"}]`
-            One+ paths: `pathset=[{"path": [{"@include": "C:/Users"},{"@exclude": "C:/Users/Admin"},],"@os": "Linux"}]`
+        The "pathset" object is a different shape depending on how many paths it
+        contains and whether its locked or not:
+            No paths:           `[{"@cleared": "true", "@os": "Linux"}]`
+            No paths locked:    `{'@locked': 'true', 'paths': {'@cleared': 'true', '@os': 'Linux'}}`
+            One path:           `[{"path": {"@include": "C:/"}, "@os": "Linux"}]`
+            One path locked:    `{'@locked': 'true', 'paths': {'@os': 'Linux', 'path': {'@include': 'C:/'}}}`
+            One+ paths:         `[{"path": [{"@include": "C:/Users/"},{"@exclude": "C:/Users/Admin/"},],"@os": "Linux"}]`
+            One+ paths locked:  `{'@locked': 'true', 'paths': {'@os': 'Linux', 'path': [{'@include': 'C:/Users/'}, {'@exclude': 'C:/Users/Admin/'}]}}`
         """
-        pathset = self.data[u"backupPaths"][u"pathset"][0]
-        pathlist = pathset.get(u"path")
+        pathset = self.data[u"backupPaths"][u"pathset"]
+        if isinstance(pathset, dict):  # pathset is locked
+            path_list = pathset[u"paths"].get(u"path")
+        else:
+            path_list = pathset[0].get(u"path")
 
         # no paths selected
-        if pathlist is None:
+        if path_list is None:
             return [], []
 
         # one path selected
-        if isinstance(pathlist, dict):
-            pathlist = [pathlist]
+        if isinstance(path_list, dict):
+            path_list = [path_list]
 
-        includes = [p[u"@include"] for p in pathlist if u"@include" in p]
-        excludes = [p[u"@exclude"] for p in pathlist if u"@exclude" in p]
+        includes = [p[u"@include"] for p in path_list if u"@include" in p]
+        excludes = [p[u"@exclude"] for p in path_list if u"@exclude" in p]
         return includes, excludes
 
     def _extract_regex_exclusions(self):
@@ -214,13 +228,19 @@ class BackupSet(UserDict, object):
         into a simple list of regex patterns.
 
         The "excludeUser" object is a different shape based on the number of exclusion
-        patterns present:
-            No exclusions:   `[{"windows": [], "linux": [], "macintosh": []}]`
-            One exclusion:   `[{"windows": [], "pattern": {"@regex": ".*"}, "linux": [], "macintosh": []}]`
-            One+ exclusions: `[{"windows": [], "pattern": [{"@regex": ".*1"}, {"@regex": ".*2"}],"linux": [],"macintosh": []}]
+        patterns present and whether the setting is locked or not:
+            No exclusions:          `[{"windows": [], "linux": [], "macintosh": []}]`
+            No exclusions locked:   `{'@locked': 'true', 'patternList': {'windows': [], 'macintosh': [], 'linux': []}}`
+            One exclusion:          `[{"windows": [], "pattern": {"@regex": ".*"}, "linux": [], "macintosh": []}]`
+            One exclusion locked:   `{'@locked': 'true', 'patternList': {'pattern': {'@regex': '.*'}, 'windows': [], 'macintosh': [], 'linux': []}}`
+            One+ exclusions:        `[{"windows": [], "pattern": [{"@regex": ".*1"}, {"@regex": ".*2"}],"linux": [],"macintosh": []}]
+            One+ exclusion locked:  `{'@locked': 'true', 'patternList': {'pattern': [{'@regex': '.*1'}, {'@regex': '.*2'}], 'windows': [], 'macintosh': [], 'linux': []}}`
         """
-        exclude_user = self.data[u"backupPaths"][u"excludeUser"][0]
-        pattern_list = exclude_user.get(u"pattern")
+        exclude_user = self.data[u"backupPaths"][u"excludeUser"]
+        if isinstance(exclude_user, dict):  # exclusions are locked
+            pattern_list = exclude_user[u"patternList"].get(u"pattern")
+        else:
+            pattern_list = exclude_user[0].get(u"pattern")
         if not pattern_list:
             return []
         if isinstance(pattern_list, dict):
@@ -263,6 +283,13 @@ class BackupSet(UserDict, object):
             }
         }
         self.data[u"backupPaths"][u"excludeUser"] = user_exclude_dict
+
+    @property
+    def locked(self):
+        """Indicates whether the backup set as a whole is locked. If True, individual
+        settings for this backup set (except for Destination settings), cannot be modified.
+        """
+        return u"@locked" in self.data and str_to_bool(self.data[u"@locked"])
 
     @property
     def included_files(self):
@@ -403,9 +430,11 @@ class BackupSet(UserDict, object):
             raise invalid_destination_error
 
     def __repr__(self):
-        return u"<BackupSet: id: {}, name: '{}'>".format(
-            self.data[u"@id"], self.data[u"name"]
-        )
+        if isinstance(self.data[u"name"], dict):  # name setting locked
+            name = self.data[u"name"][u"#text"]
+        else:
+            name = self.data[u"name"]
+        return u"<BackupSet: id: {}, name: '{}'>".format(self.data[u"@id"], name)
 
     def __str__(self):
         return str(dict(self))
@@ -414,42 +443,48 @@ class BackupSet(UserDict, object):
 class TrackedFileSelectionList(UserList, object):
     """Helper class to track modifications to file selection lists."""
 
-    def __init__(self, manager, name, _list, changes_dict):
-        self.manager = manager
+    def __init__(self, backup_set, name, _list, changes_dict):
+        self.backup_set = backup_set
         self.name = name
         self.orig = list(_list)
         self.data = _list
         self._changes = changes_dict
 
     def register_change(self):
-        self.manager._build_file_selection()
-        self.manager._build_regex_exclusions()
+        self.backup_set._build_file_selection()
+        self.backup_set._build_regex_exclusions()
         if set(self.orig) != set(self.data):
             self._changes[self.name] = show_change(self.orig, self.data)
         elif self.name in self._changes:
             del self._changes[self.name]
 
+    @check_lock("backup_set")
     def append(self, item):
         self.data.append(item)
         self.register_change()
 
+    @check_lock("backup_set")
     def clear(self):
         self.data.clear()
         self.register_change()
 
+    @check_lock("backup_set")
     def extend(self, other):
         self.data.extend(other)
         self.register_change()
 
+    @check_lock("backup_set")
     def insert(self, i, item):
         self.data.insert(i, item)
         self.register_change()
 
+    @check_lock("backup_set")
     def pop(self, index=-1):
         value = self.data.pop(index)
         self.register_change()
         return value
 
+    @check_lock("backup_set")
     def remove(self, value):
         self.data.remove(value)
         self.register_change()

@@ -166,7 +166,7 @@ class DeviceSettings(DeviceSettingsDefaults):
     notes = SettingProperty(name=u"notes", location=[u"notes"])
     """Notes field for this device."""
 
-    javaMemoryHeapMax = SettingProperty(
+    java_memory_heap_max = SettingProperty(
         name=u"javaMemoryHeapMax", location=[u"settings", u"javaMemoryHeapMax"]
     )
     """The maximum memory the client will use on its system"""

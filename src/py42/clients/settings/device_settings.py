@@ -166,6 +166,11 @@ class DeviceSettings(DeviceSettingsDefaults):
     notes = SettingProperty(name=u"notes", location=[u"notes"])
     """Notes field for this device."""
 
+    javaMemoryHeapMax = SettingProperty(
+        name=u"javaMemoryHeapMax", location=[u"settings", u"javaMemoryHeapMax"]
+    )
+    """The maximum memory the client will use on its system"""
+
     def __repr__(self):
         return u"<DeviceSettings: guid: {}, name: {}>".format(
             self.data[u"guid"], self.data[u"name"]

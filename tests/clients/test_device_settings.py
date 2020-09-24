@@ -561,7 +561,7 @@ class TestDeviceSettings(object):
         assert param.name in self.device_settings.changes
 
     def test_device_settings_property_with_nil_true_structure_returns_correctly(self):
-        assert self.device_settings.javaMemoryHeapMax == {"@nil": "true"}
+        assert self.device_settings.java_memory_heap_max == {"@nil": "true"}
 
 
 class TestDeviceSettingsBackupSets(object):

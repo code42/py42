@@ -17,6 +17,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.auditlogs.get_all()` arguments `begin_time` and `end_time`
     - `sdk.securitydata.get_all_plan_security_events()` arguments `min_timestamp` and `max_timestamp`
     - `sdk.securitydata.get_all_user_security_events()` arguments `min_timestamp` and `max_timestamp`
+    - `sdk.detectionlists.departing_employee.add()` argument `departure_date`
+    - `sdk.detectionlists.departing_employee.update_departure_date()` argument `departure_date`
 
 ### Removed
 

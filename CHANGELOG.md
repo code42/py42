@@ -12,11 +12,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- Timestamp argument accepts input in string type( format `YYYY-MM-DD HH:MM:SS` ), int type(epoch time) as well as a datetime instance for following:
-    - `sdk.auditlogs.get_page`
-    - `sdk.auditlogs.get_all`
-    - `sdk.securitydata.get_all_plan_security_events`
-    - `sdk.securitydata.get_all_user_security_events`
+- Timestamp argument accepts input in string type( format `yyyy-MM-dd HH:MM:SS` ), int or float type( epoch time ) as well as a datetime instance for following:
+    - `sdk.auditlogs.get_page()` arguments `begin_time` and `end_time`
+    - `sdk.auditlogs.get_all()` arguments `begin_time` and `end_time`
+    - `sdk.securitydata.get_all_plan_security_events()` arguments `min_timestamp` and `max_timestamp`
+    - `sdk.securitydata.get_all_user_security_events()` arguments `min_timestamp` and `max_timestamp`
 
 ### Removed
 

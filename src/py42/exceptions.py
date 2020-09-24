@@ -1,5 +1,6 @@
-from py42._compat import str
 import json
+
+from py42._compat import str
 
 
 class Py42Error(Exception):
@@ -165,7 +166,7 @@ def raise_py42_error(raised_error):
     if raised_error.response.status_code == 400:
         if json.loads(raised_error.response.text)[0]["name"] in [
             "USER_IN_ACTIVE_LEGAL_HOLD",
-            "ACTIVE_LEGAL_HOLD"
+            "ACTIVE_LEGAL_HOLD",
         ]:
             raise Py42ActiveLegalHoldError(raised_error)
         else:

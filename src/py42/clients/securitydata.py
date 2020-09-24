@@ -102,9 +102,9 @@ class SecurityDataClient(object):
                         - ``PERSONAL_CLOUD_SCAN_RESULT``
 
                     Defaults to None.
-            min_timestamp (int or str or datetime, optional): Timestamp in milliseconds or
+            min_timestamp (int or float or str or datetime, optional): Timestamp in milliseconds or
                 str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
-            max_timestamp (int or str or datetime, optional): Timestamp in milliseconds or
+            max_timestamp (int or float or str or datetime, optional): Timestamp in milliseconds or
                 str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
 
         Returns:
@@ -152,9 +152,9 @@ class SecurityDataClient(object):
                         - ``PERSONAL_CLOUD_SCAN_RESULT``
 
                     Defaults to None.
-            min_timestamp (int or str or datetime, optional): Timestamp in milliseconds or
+            min_timestamp (int or float or str or datetime, optional): Timestamp in milliseconds or
                 str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
-            max_timestamp (int or str or datetime, optional): Timestamp in milliseconds or
+            max_timestamp (int or float or str or datetime, optional): Timestamp in milliseconds or
                 str format "YYYY-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
 
         Returns:

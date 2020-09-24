@@ -155,6 +155,11 @@ class DeviceSettings(DeviceSettingsDefaults):
         """Latest reported Code42 client version number for this device. Read-only."""
         return self.data[u"version"]
 
+    @property
+    def java_memory_heap_max(self):
+        """The maximum memory the client will use on its system"""
+        return self.data[u"settings"][u"javaMemoryHeapMax"]
+
     name = SettingProperty(name=u"name", location=[u"name"])
     """Name for this device."""
 
@@ -165,11 +170,6 @@ class DeviceSettings(DeviceSettingsDefaults):
 
     notes = SettingProperty(name=u"notes", location=[u"notes"])
     """Notes field for this device."""
-
-    java_memory_heap_max = SettingProperty(
-        name=u"javaMemoryHeapMax", location=[u"settings", u"javaMemoryHeapMax"]
-    )
-    """The maximum memory the client will use on its system"""
 
     def __repr__(self):
         return u"<DeviceSettings: guid: {}, name: {}>".format(

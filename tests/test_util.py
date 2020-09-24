@@ -56,29 +56,30 @@ def test_parse_timestamp_to_milliseconds_precision_returns_expected_timestamp_wi
 
 def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_with_epoch_time():
     assert (
-        util.parse_timestamp_to_milliseconds_precision(1599653541)
-        == "2020-09-09T12:12:21.000Z"
+        util.parse_timestamp_to_microseconds_precision(1599653541)
+        == "2020-09-09T12:12:21.000000Z"
     )
 
 
 def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_with_str_format_time():
     assert (
-        util.parse_timestamp_to_milliseconds_precision("2020-09-09 12:12:21")
-        == "2020-09-09T12:12:21.000Z"
+        util.parse_timestamp_to_microseconds_precision("2020-09-09 12:12:21")
+        == "2020-09-09T12:12:21.000000Z"
     )
 
 
 def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_with_datetime_time():
     dt = datetime.strptime("2020-09-09 12:12:21", "%Y-%m-%d %H:%M:%S")
     assert (
-        util.parse_timestamp_to_milliseconds_precision(dt) == "2020-09-09T12:12:21.000Z"
+        util.parse_timestamp_to_microseconds_precision(dt)
+        == "2020-09-09T12:12:21.000000Z"
     )
 
 
 def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_with_float_time():
     assert (
-        util.parse_timestamp_to_milliseconds_precision(1599653541.00)
-        == "2020-09-09T12:12:21.000Z"
+        util.parse_timestamp_to_microseconds_precision(1599653541.00)
+        == "2020-09-09T12:12:21.000000Z"
     )
 
 

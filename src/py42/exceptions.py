@@ -1,4 +1,5 @@
 from py42._compat import str
+import json
 
 
 class Py42Error(Exception):
@@ -107,6 +108,15 @@ class Py42InternalServerError(Py42HTTPError):
     """A wrapper to represent an HTTP 500 error."""
 
 
+class Py42ActiveLegalHoldError(Py42BadRequestError):
+    """An exception raised when attempting to deactivate a user or device that is in an
+    active legal hold."""
+
+    def __init__(self, exception):
+        msg = u"Cannot deactivate from user in an active legal hold."
+        super(Py42ActiveLegalHoldError, self).__init__(exception, msg)
+
+
 class Py42UserAlreadyAddedError(Py42BadRequestError):
     """An exception raised when the user is already added to group or list, such as the
     Departing Employee list."""
@@ -153,7 +163,13 @@ def raise_py42_error(raised_error):
     HTTPError's response status code.
     """
     if raised_error.response.status_code == 400:
-        raise Py42BadRequestError(raised_error)
+        if json.loads(raised_error.response.text)[0]["name"] in [
+            "USER_IN_ACTIVE_LEGAL_HOLD",
+            "ACTIVE_LEGAL_HOLD"
+        ]:
+            raise Py42ActiveLegalHoldError(raised_error)
+        else:
+            raise Py42BadRequestError(raised_error)
     elif raised_error.response.status_code == 401:
         if raised_error.response.text:
             if (

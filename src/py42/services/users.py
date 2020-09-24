@@ -2,6 +2,8 @@ from py42 import settings
 from py42._compat import quote
 from py42.services import BaseService
 from py42.services.util import get_all_pages
+from py42.exceptions import Py42ActiveLegalHoldError
+
 
 
 class UserService(BaseService):
@@ -234,7 +236,11 @@ class UserService(BaseService):
         """
         uri = u"/api/UserDeactivation/{}".format(user_id)
         data = {u"blockUser": block_user}
-        return self._connection.put(uri, json=data)
+        try:
+            user_deactivate_response = self._connection.put(uri, json=data)
+        except Py42ActiveLegalHoldError as ex:
+            user_deactivate_response = ex
+        return user_deactivate_response
 
     def reactivate(self, user_id, unblock_user=None):
         """Reactivates the user with the given ID.

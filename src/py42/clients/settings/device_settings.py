@@ -289,7 +289,7 @@ class BackupSet(UserDict, object):
         """Indicates whether the backup set as a whole is locked. If True, individual
         settings for this backup set (except for Destination settings), cannot be modified.
         """
-        return u"@locked" in self.data and self.data[u"@locked"] == u"true"
+        return u"@locked" in self.data and str_to_bool(self.data[u"@locked"])
 
     @property
     def included_files(self):

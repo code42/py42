@@ -403,6 +403,15 @@ def device_settings_with_multiple_values():
     return device_settings_dict
 
 
+@pytest.fixture
+def device_settings_with_locked_backup_set():
+    device_settings_dict = deepcopy(DEVICE_DICT_W_SETTINGS)
+    device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
+        "backupSets"
+    ][0]["@locked"] = "true"
+    return device_settings_dict
+
+
 class TestDeviceSettings(object):
     device_settings = DeviceSettings(DEVICE_DICT_W_SETTINGS)
 
@@ -827,3 +836,45 @@ class TestDeviceSettingsBackupSets(object):
             {"@regex": PICTURES_REGEX},
             {"@regex": NEW_REGEX},
         ]
+
+    def test_backup_set_when_locked_returns_expected_property_value(
+        self, device_settings_with_locked_backup_set
+    ):
+        device_settings = DeviceSettings(device_settings_with_locked_backup_set)
+        assert device_settings.backup_sets[0].locked
+
+    def test_backup_set_when_set_locked_non_destination_attributes_raise_attr_error_when_set(
+        self, device_settings_with_locked_backup_set
+    ):
+        device_settings = DeviceSettings(device_settings_with_locked_backup_set)
+        with pytest.raises(AttributeError):
+            device_settings.backup_sets[0].included_files.append("test")
+
+        with pytest.raises(AttributeError):
+            device_settings.backup_sets[0].included_files = ["test"]
+
+        with pytest.raises(AttributeError):
+            device_settings.backup_sets[0].excluded_files.append("test")
+
+        with pytest.raises(AttributeError):
+            device_settings.backup_sets[0].excluded_files = ["test"]
+
+        with pytest.raises(AttributeError):
+            device_settings.backup_sets[0].filename_exclusions.append("test")
+
+        with pytest.raises(AttributeError):
+            device_settings.backup_sets[0].filename_exclusions = ["test"]
+
+    def test_backup_set_when_set_locked_allows_destination_modifications(
+        self, device_settings_with_locked_backup_set
+    ):
+        device_settings = DeviceSettings(device_settings_with_locked_backup_set)
+        destination_guid_to_add = list(device_settings.available_destinations)[2]
+        destination_guid_to_remove = list(device_settings.available_destinations)[0]
+        device_settings.backup_sets[0].add_destination(destination_guid_to_add)
+        device_settings.backup_sets[0].remove_destination(destination_guid_to_remove)
+        assert destination_guid_to_add in device_settings.backup_sets[0].destinations
+        assert (
+            destination_guid_to_remove
+            not in device_settings.backup_sets[0].destinations
+        )

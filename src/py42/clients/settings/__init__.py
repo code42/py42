@@ -125,3 +125,20 @@ class TSettingProperty(object):
                 instance.changes.pop(self.name)
         else:
             instance.changes[self.name] = show_change(self.init_val, val)
+
+
+def check_lock(locked_attr):
+    """Decorator for instance methods that enforces a property to be read-only if the
+    `.locked` attribute of the provided `locked_attr` on the instance returns True.
+    """
+
+    def f(method):
+        def func(_self, *args):
+            if getattr(_self, locked_attr).locked:
+                raise AttributeError("Unable to modify locked backup set.")
+            else:
+                return method(_self, *args)
+
+        return func
+
+    return f

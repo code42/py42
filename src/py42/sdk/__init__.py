@@ -34,7 +34,7 @@ from py42.services.users import UserService
 from py42.usercontext import UserContext
 
 
-def from_local_account(host_address, username, password):
+def from_local_account(host_address, username, password, totp=None):
     """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using the
     supplied credentials. Currently, only accounts created within the Code42 console or using the
     APIs (including py42) are supported. Username/passwords that are based on Active Directory,
@@ -45,11 +45,13 @@ def from_local_account(host_address, username, password):
             console.us.code42.com
         username (str): The username of the authenticating account.
         password (str): The password of the authenticating account.
+        totp (callable or str, optional): The time-based one-time password of the authenticating account. Include only
+            if the account uses Code42's two-factor authentication. Defaults to None.
 
     Returns:
         :class:`py42.sdk.SDKClient`
     """
-    client = SDKClient.from_local_account(host_address, username, password)
+    client = SDKClient.from_local_account(host_address, username, password, totp)
 
     # test credentials
     client.users.get_current()
@@ -63,7 +65,7 @@ class SDKClient(object):
         self._user_ctx = user_ctx
 
     @classmethod
-    def from_local_account(cls, host_address, username, password):
+    def from_local_account(cls, host_address, username, password, totp=None):
         """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
         the supplied credentials. Currently, only accounts created within the Code42 console or
         using the APIs (including py42) are supported. Username/passwords that are based on Active
@@ -74,7 +76,8 @@ class SDKClient(object):
                 console.us.code42.com
             username (str): The username of the authenticating account.
             password (str): The password of the authenticating account.
-
+            totp (callable or str, optional): The time-based one-time password of the authenticating account. Include only
+                if the account uses Code42's two-factor authentication. Defaults to None.
         Returns:
             :class:`py42.sdk.SDKClient`
         """
@@ -82,7 +85,7 @@ class SDKClient(object):
         if username and password:
             basic_auth = HTTPBasicAuth(username, password)
         auth_connection = Connection.from_host_address(host_address, auth=basic_auth)
-        v3_auth = V3Auth(auth_connection)
+        v3_auth = V3Auth(auth_connection, totp)
         main_connection = Connection.from_host_address(host_address, auth=v3_auth)
 
         return cls(main_connection, v3_auth)

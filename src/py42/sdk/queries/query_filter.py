@@ -3,8 +3,10 @@ from datetime import datetime
 
 from py42._compat import str
 from py42._compat import string_type
+from py42.util import convert_datetime_to_epoch
 from py42.util import convert_datetime_to_timestamp_str
-from py42.util import convert_timestamp_to_str
+from py42.util import DATE_STR_FORMAT
+from py42.util import parse_timestamp_to_milliseconds_precision
 
 
 def create_query_filter(term, operator, value=None):
@@ -258,12 +260,12 @@ class QueryFilterTimestampField(object):
         provided ``value``.
 
         Args:
-            value (str or int or float): The value used to filter results.
+            value (str or int or float or datetime): The value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        formatted_timestamp = convert_timestamp_to_str(value)
+        formatted_timestamp = parse_timestamp_to_milliseconds_precision(value)
         return create_on_or_after_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
@@ -273,12 +275,12 @@ class QueryFilterTimestampField(object):
         provided ``value``.
 
         Args:
-            value (str or int or float): The value used to filter results.
+            value (str or int or float or datetime): The value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        formatted_timestamp = convert_timestamp_to_str(value)
+        formatted_timestamp = parse_timestamp_to_milliseconds_precision(value)
         return create_on_or_before_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
@@ -288,14 +290,14 @@ class QueryFilterTimestampField(object):
         the provided ``start_value`` and ``end_value``.
 
         Args:
-            start_value (str or int or float): The start value used to filter results.
-            end_value (str or int or float): The end value used to filter results.
+            start_value (str or int or float or datetime): The start value used to filter results.
+            end_value (str or int or float or datetime): The end value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        formatted_start_time = convert_timestamp_to_str(start_value)
-        formatted_end_time = convert_timestamp_to_str(end_value)
+        formatted_start_time = parse_timestamp_to_milliseconds_precision(start_value)
+        formatted_end_time = parse_timestamp_to_milliseconds_precision(end_value)
         return create_in_range_filter_group(
             cls._term, formatted_start_time, formatted_end_time
         )
@@ -307,11 +309,15 @@ class QueryFilterTimestampField(object):
         calendar day as the provided ``value``.
 
         Args:
-            value (str or int or float): The value used to filter results.
+            value (str or int or float or datetime): The value used to filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
+        if isinstance(value, str):
+            value = convert_datetime_to_epoch(datetime.strptime(value, DATE_STR_FORMAT))
+        elif isinstance(value, datetime):
+            value = convert_datetime_to_epoch(value)
         date_from_value = datetime.utcfromtimestamp(value)
         start_time = datetime(
             date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0

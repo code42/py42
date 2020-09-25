@@ -4,6 +4,7 @@ from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42ForbiddenError
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42MFARequiredError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UnauthorizedError
 from py42.exceptions import raise_py42_error
@@ -18,6 +19,14 @@ class TestPy42Errors(object):
     def test_raise_py42_error_raises_unauthorized_error(self, error_response):
         error_response.response.status_code = 401
         with pytest.raises(Py42UnauthorizedError):
+            raise_py42_error(error_response)
+
+    def test_raise_py42_error_raises_MFA_required_error(self, error_response):
+        error_response.response.status_code = 401
+        error_response.response.text = (
+            '{"error":[{"primaryErrorKey":"TIME_BASED_ONE_TIME_PASSWORD_REQUIRED"}]}'
+        )
+        with pytest.raises(Py42MFARequiredError):
             raise_py42_error(error_response)
 
     def test_raise_py42_error_raises_forbidden_error(self, error_response):

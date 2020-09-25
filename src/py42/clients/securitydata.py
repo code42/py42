@@ -102,10 +102,10 @@ class SecurityDataClient(object):
                         - ``PERSONAL_CLOUD_SCAN_RESULT``
 
                     Defaults to None.
-            min_timestamp (float, optional): A POSIX timestamp representing the beginning of the
-                date range of events to get. Defaults to None.
-            max_timestamp (float, optional): A POSIX timestamp representing the end of the date
-                range of events to get. Defaults to None.
+            min_timestamp (int or float or str or datetime, optional): Timestamp in milliseconds or
+                str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+            max_timestamp (int or float or str or datetime, optional): Timestamp in milliseconds or
+                str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -152,10 +152,10 @@ class SecurityDataClient(object):
                         - ``PERSONAL_CLOUD_SCAN_RESULT``
 
                     Defaults to None.
-            min_timestamp (float, optional): A POSIX timestamp representing the beginning of the
-                date range of events to get. Defaults to None.
-            max_timestamp (float, optional): A POSIX timestamp representing the end of the date
-                range of events to get. Defaults to None.
+            min_timestamp (int or float or str or datetime, optional): Timestamp in milliseconds or
+                str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+            max_timestamp (int or float or str or datetime, optional): Timestamp in milliseconds or
+                str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

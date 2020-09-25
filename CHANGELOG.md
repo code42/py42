@@ -10,6 +10,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Changed
+
+- Timestamp argument accepts input in string type( format `yyyy-MM-dd HH:MM:SS` ), int or float type( epoch time ) as well as a datetime instance for following:
+    - `sdk.auditlogs.get_page()` arguments `begin_time` and `end_time`
+    - `sdk.auditlogs.get_all()` arguments `begin_time` and `end_time`
+    - `sdk.securitydata.get_all_plan_security_events()` arguments `min_timestamp` and `max_timestamp`
+    - `sdk.securitydata.get_all_user_security_events()` arguments `min_timestamp` and `max_timestamp`
+    - `sdk.detectionlists.departing_employee.add()` argument `departure_date`
+    - `sdk.detectionlists.departing_employee.update_departure_date()` argument `departure_date`
+
 ### Removed
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
@@ -25,6 +35,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `py42.securitydata.savedsearches.execute()`
 
 - `sdk.alerts.update_state()` method to update state.
+
+- Support for two-factor authentication in `sdk.from_local_account()`
+
 - `OrgSettings` and `DeviceSettings` classes to help with Org and Device setting management.
     - `sdk.orgs.get_settings(org_id)` now returns an instance of `OrgSettings` which can be used to view
         existing Org settings and modify them by passing the updated `OrgSettings` object to `sdk.orgs.update_settings()`

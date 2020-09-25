@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from py42.services import BaseService
+from py42.util import parse_timestamp_to_microseconds_precision
 
 
 class StorageSecurityDataService(BaseService):
@@ -20,16 +19,11 @@ class StorageSecurityDataService(BaseService):
         min_time_str = None
         max_time_str = None
 
-        def get_time_str_from_timestamp(timestamp):
-            return datetime.utcfromtimestamp(timestamp).strftime(
-                u"%Y-%m-%dT%H:%M:%S.%fZ"
-            )
-
         if min_timestamp:
-            min_time_str = get_time_str_from_timestamp(min_timestamp)
+            min_time_str = parse_timestamp_to_microseconds_precision(min_timestamp)
 
         if max_timestamp:
-            max_time_str = get_time_str_from_timestamp(max_timestamp)
+            max_time_str = parse_timestamp_to_microseconds_precision(max_timestamp)
 
         params = {
             u"userUid": user_uid,

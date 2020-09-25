@@ -111,9 +111,9 @@ class Py42ActiveLegalHoldError(Py42BadRequestError):
     """An exception raised when attempting to deactivate a user or device that is in an
     active legal hold."""
 
-    def __init__(self, exception, resource, id):
+    def __init__(self, exception, resource, resource_id):
         msg = u"Cannot deactivate the {0} with ID {1} as the {0} is involved in a legal hold matter.".format(
-            resource, id,
+            resource, resource_id,
         )
         super(Py42ActiveLegalHoldError, self).__init__(exception, msg)
 

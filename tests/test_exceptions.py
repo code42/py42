@@ -14,14 +14,7 @@ from py42.exceptions import raise_py42_error
 class TestPy42Errors(object):
     def test_raise_py42_error_raises_bad_request_error(self, error_response):
         error_response.response.status_code = 400
-        error_response.response.text = '[{"name": "test"}]'
         with pytest.raises(Py42BadRequestError):
-            raise_py42_error(error_response)
-
-    def test_raise_py42_error_raises_active_legal_hold_error(self, error_response):
-        error_response.response.status_code = 400
-        error_response.response.text = '[{"name": "ACTIVE_LEGAL_HOLD"}]'
-        with pytest.raises(Py42ActiveLegalHoldError):
             raise_py42_error(error_response)
 
     def test_raise_py42_error_raises_unauthorized_error(self, error_response):
@@ -62,7 +55,6 @@ class TestPy42Errors(object):
         self, error_response, status_code
     ):
         error_response.response.status_code = status_code
-        error_response.response.text = '[{"name": "test"}]'
         try:
             raise_py42_error(error_response)
         except Exception as e:

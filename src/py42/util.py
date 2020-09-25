@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 
 MICROSECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%fZ"
+DATE_STR_FORMAT = u"%Y-%m-%d %H:%M:%S"
 
 
 def format_json(json_string):
@@ -40,7 +41,7 @@ def convert_timestamp_to_str(timestamp):
     directives %Y-%m-%dT%H:%M:%S.%f.
 
     Args:
-        timestamp (float): A POSIX timestamp.
+        timestamp (float or int): A POSIX timestamp.
 
     Returns:
         (str): A str representing the given timestamp. Example output looks like
@@ -109,7 +110,7 @@ def parse_timestamp_to_milliseconds_precision(timestamp):
 
     if isinstance(timestamp, str):
         return convert_datetime_to_timestamp_str(
-            datetime.strptime(timestamp, u"%Y-%m-%d %H:%M:%S")
+            datetime.strptime(timestamp, DATE_STR_FORMAT)
         )
 
 
@@ -121,6 +122,6 @@ def parse_timestamp_to_microseconds_precision(timestamp):
         return timestamp.strftime(MICROSECOND_FORMAT)
 
     if isinstance(timestamp, str):
-        return datetime.strptime(timestamp, "%Y-%m-%d %H:%M:%S").strftime(
+        return datetime.strptime(timestamp, DATE_STR_FORMAT).strftime(
             MICROSECOND_FORMAT
         )

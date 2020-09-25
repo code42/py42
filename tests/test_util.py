@@ -78,13 +78,13 @@ def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_wi
 
 def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_with_float_time():
     assert (
-        util.parse_timestamp_to_microseconds_precision(1599653541.00)
-        == "2020-09-09T12:12:21.000000Z"
+        util.parse_timestamp_to_microseconds_precision(1599653541.001002)
+        == "2020-09-09T12:12:21.001002Z"
     )
 
 
 def test_parse_timestamp_to_milliseconds_precision_returns_expected_timestamp_with_float_time():
     assert (
-        util.parse_timestamp_to_milliseconds_precision(1599653541.00)
-        == "2020-09-09T12:12:21.000Z"
+        util.parse_timestamp_to_milliseconds_precision(1599653541.001002)
+        == "2020-09-09T12:12:21.001Z"
     )

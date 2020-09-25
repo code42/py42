@@ -528,3 +528,56 @@ class TestQueryFilterTimestampField:
             ],
         }
         assert dict(QueryFilterTimestampField.on_same_day(timestamp)) == filter_query
+
+    def test_on_or_after_with_decimals(self):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_AFTER",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T11:12:13.123Z",
+                }
+            ],
+        }
+
+        qf = QueryFilterTimestampField.on_or_after(1599736333.123456)
+        assert dict(qf) == filter_query
+
+    def test_on_or_before_with_decimals(self):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_BEFORE",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T11:12:13.123Z",
+                }
+            ],
+        }
+        assert (
+            dict(QueryFilterTimestampField.on_or_before(1599736333.123456))
+            == filter_query
+        )
+
+    def test_in_range_with_decimals(self):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_AFTER",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T11:12:13.123Z",
+                },
+                {
+                    "operator": "ON_OR_BEFORE",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T12:13:14.678Z",
+                },
+            ],
+        }
+
+        assert (
+            dict(QueryFilterTimestampField.in_range(1599736333.123456, 1599739994.6789))
+            == filter_query
+        )

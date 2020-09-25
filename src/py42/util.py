@@ -5,7 +5,7 @@ from datetime import datetime
 
 from py42._compat import str
 
-MICROSECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%fZ"
+_MICROSECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%fZ"
 DATE_STR_FORMAT = u"%Y-%m-%d %H:%M:%S"
 
 
@@ -106,11 +106,9 @@ def to_list(value):
 def parse_timestamp_to_milliseconds_precision(timestamp):
     if isinstance(timestamp, int) or isinstance(timestamp, float):
         return convert_timestamp_to_str(timestamp)
-
-    if isinstance(timestamp, datetime):
+    elif isinstance(timestamp, datetime):
         return convert_datetime_to_timestamp_str(timestamp)
-
-    if isinstance(timestamp, str):
+    elif isinstance(timestamp, str):
         return convert_datetime_to_timestamp_str(
             datetime.strptime(timestamp, DATE_STR_FORMAT)
         )
@@ -118,12 +116,10 @@ def parse_timestamp_to_milliseconds_precision(timestamp):
 
 def parse_timestamp_to_microseconds_precision(timestamp):
     if isinstance(timestamp, int) or isinstance(timestamp, float):
-        return datetime.utcfromtimestamp(timestamp).strftime(MICROSECOND_FORMAT)
-
-    if isinstance(timestamp, datetime):
-        return timestamp.strftime(MICROSECOND_FORMAT)
-
-    if isinstance(timestamp, str):
+        return datetime.utcfromtimestamp(timestamp).strftime(_MICROSECOND_FORMAT)
+    elif isinstance(timestamp, datetime):
+        return timestamp.strftime(_MICROSECOND_FORMAT)
+    elif isinstance(timestamp, str):
         return datetime.strptime(timestamp, DATE_STR_FORMAT).strftime(
-            MICROSECOND_FORMAT
+            _MICROSECOND_FORMAT
         )

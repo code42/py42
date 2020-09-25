@@ -316,7 +316,7 @@ class QueryFilterTimestampField(object):
         """
         if isinstance(value, str):
             value = convert_datetime_to_epoch(datetime.strptime(value, DATE_STR_FORMAT))
-        if isinstance(value, datetime):
+        elif isinstance(value, datetime):
             value = convert_datetime_to_epoch(value)
         date_from_value = datetime.utcfromtimestamp(value)
         start_time = datetime(

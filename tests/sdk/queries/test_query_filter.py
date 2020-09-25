@@ -22,7 +22,7 @@ EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
 VALUE_UNICODE = u"您已经发现了秘密信息"
-TEST_TIMESTAMP = "2020-09-10 11:12:13"
+TEST_TIMESTAMP = u"2020-09-10 11:12:13"
 
 JSON_QUERY_FILTER = '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
     OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
@@ -428,7 +428,7 @@ class TestQueryFilterTimestampField:
             (TEST_TIMESTAMP),
             (1599736333.0),
             (1599736333),
-            datetime.strptime("2020-09-10 11:12:13", "%Y-%m-%d %H:%M:%S"),
+            datetime.strptime(TEST_TIMESTAMP, "%Y-%m-%d %H:%M:%S"),
         ],
     )
     def test_on_or_after(self, timestamp):
@@ -452,7 +452,7 @@ class TestQueryFilterTimestampField:
             (TEST_TIMESTAMP),
             (1599736333.0),
             (1599736333),
-            datetime.strptime("2020-09-10 11:12:13", "%Y-%m-%d %H:%M:%S"),
+            datetime.strptime(TEST_TIMESTAMP, "%Y-%m-%d %H:%M:%S"),
         ],
     )
     def test_on_or_before(self, timestamp):
@@ -471,12 +471,12 @@ class TestQueryFilterTimestampField:
     @pytest.mark.parametrize(
         "start_timestamp, end_timestamp",
         [
-            (TEST_TIMESTAMP, "2020-09-10 12:13:14"),
+            (TEST_TIMESTAMP, u"2020-09-10 12:13:14"),
             (1599736333.0, 1599739994.0),
             (1599736333, 1599739994),
             (
                 datetime.strptime(TEST_TIMESTAMP, "%Y-%m-%d %H:%M:%S"),
-                datetime.strptime("2020-09-10 12:13:14", "%Y-%m-%d %H:%M:%S"),
+                datetime.strptime(u"2020-09-10 12:13:14", "%Y-%m-%d %H:%M:%S"),
             ),
         ],
     )
@@ -508,7 +508,7 @@ class TestQueryFilterTimestampField:
             (TEST_TIMESTAMP),
             (1599736333.0),
             (1599736333),
-            datetime.strptime("2020-09-10 11:12:13", "%Y-%m-%d %H:%M:%S"),
+            datetime.strptime(TEST_TIMESTAMP, "%Y-%m-%d %H:%M:%S"),
         ],
     )
     def test_on_same_day(self, timestamp):

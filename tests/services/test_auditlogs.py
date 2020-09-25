@@ -311,8 +311,8 @@ class TestAuditLogService(object):
     ):
         service = AuditLogsService(mock_connection)
 
-        start_time = "2020-06-06 00:00:00"
-        end_time = "2020-09-09 12:12:21"
+        start_time = u"2020-06-06 00:00:00"
+        end_time = u"2020-09-09 12:12:21"
         for _ in service.get_all(begin_time=start_time, end_time=end_time):
             pass
         expected_data = {

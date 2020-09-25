@@ -3,6 +3,8 @@ from __future__ import print_function
 import json
 from datetime import datetime
 
+from py42._compat import str
+
 MICROSECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%fZ"
 DATE_STR_FORMAT = u"%Y-%m-%d %H:%M:%S"
 

@@ -9,8 +9,8 @@ uri = u"/api/SecurityDetectionEvent"
 mock_min_ts = 1000000
 mock_max_ts = 2000000
 
-min_ts_string_format = "1970-01-12 13:46:40"
-max_ts_string_format = "1970-01-24 03:33:20"
+min_ts_string_format = u"1970-01-12 13:46:40"
+max_ts_string_format = u"1970-01-24 03:33:20"
 
 
 @pytest.fixture

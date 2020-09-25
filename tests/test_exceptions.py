@@ -1,6 +1,5 @@
 import pytest
 
-from py42.exceptions import Py42ActiveLegalHoldError
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42ForbiddenError
 from py42.exceptions import Py42HTTPError

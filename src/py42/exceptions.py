@@ -1,5 +1,3 @@
-import json
-
 from py42._compat import str
 
 

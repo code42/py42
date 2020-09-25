@@ -12,13 +12,17 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- Timestamp argument accepts input in string type( format `yyyy-MM-dd HH:MM:SS` ), int or float type( epoch time ) as well as a datetime instance for following:
+- Timestamp arguments accept input in string type( format `yyyy-MM-dd HH:MM:SS` ), int or float type( epoch time, e.g. using `time.time()` ) as well as a `datetime` instance for the following:
     - `sdk.auditlogs.get_page()` arguments `begin_time` and `end_time`
     - `sdk.auditlogs.get_all()` arguments `begin_time` and `end_time`
     - `sdk.securitydata.get_all_plan_security_events()` arguments `min_timestamp` and `max_timestamp`
     - `sdk.securitydata.get_all_user_security_events()` arguments `min_timestamp` and `max_timestamp`
     - `sdk.detectionlists.departing_employee.add()` argument `departure_date`
     - `sdk.detectionlists.departing_employee.update_departure_date()` argument `departure_date`
+    - `QueryFilterTimestampField` methods (e.g. `EventTimestamp`, `DateObserved`):
+        - `on_or_before()`
+        - `or_or_after()`
+        - `in_range()`
 
 ### Removed
 

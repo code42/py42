@@ -12,18 +12,22 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- Timestamp arguments accept input in string type( format `yyyy-MM-dd HH:MM:SS` ), int or float type( epoch time, e.g. using `time.time()` ) as well as a `datetime` instance for the following:
-    - `sdk.auditlogs.get_page()` arguments `begin_time` and `end_time`
-    - `sdk.auditlogs.get_all()` arguments `begin_time` and `end_time`
-    - `sdk.securitydata.get_all_plan_security_events()` arguments `min_timestamp` and `max_timestamp`
-    - `sdk.securitydata.get_all_user_security_events()` arguments `min_timestamp` and `max_timestamp`
-    - `sdk.detectionlists.departing_employee.add()` argument `departure_date`
-    - `sdk.detectionlists.departing_employee.update_departure_date()` argument `departure_date`
-    - `QueryFilterTimestampField` methods (e.g. `EventTimestamp`, `DateObserved`):
-        - `on_or_before()`
-        - `or_or_after()`
-        - `in_range()`
+- The following methods now support string timestamp formats (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `sdk.auditlogs.get_page()`, arguments `begin_time` and `end_time`.
+    - `sdk.auditlogs.get_all()`, arguments `begin_time` and `end_time`.
+    - `sdk.securitydata.get_all_plan_security_events()`, arguments `min_timestamp` and `max_timestamp`.
+    - `sdk.securitydata.get_all_user_security_events()`, arguments `min_timestamp` and `max_timestamp`.
 
+- The `departure_date` parameter for methods:
+    - `sdk.detectionlists.departing_employee.add()`
+    - `sdk.detectionlists.departing_employee.update_departure_date()`
+    now support a `datetime` instance.
+    
+- The following methods on timestamp-based query filters (e.g. `EventTimestamp`, `DateObserved`) now support string timestamp format (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `on_or_before()`
+    - `or_or_after()`
+    - `in_range()`
+    
 ### Removed
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.

@@ -23,7 +23,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.detectionlists.departing_employee.update_departure_date()`
     now support a `datetime` instance.
 
-- Timestamp based query filters now support string timestamp format (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance.
+- The following methods on timestamp-based query filters (e.g. `EventTimestamp`, `DateObserved`) now support string timestamp format (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `on_or_before()`
+    - `or_or_after()`
+    - `in_range()`
 
 ### Removed
 

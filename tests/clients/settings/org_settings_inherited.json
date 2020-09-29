@@ -1,0 +1,699 @@
+{
+    "metadata": {
+        "timestamp": "2020-09-28T10:16:42.707-05:00",
+        "params": {
+            "incInheritedOrgInfo": "true",
+            "incDeviceDefaults": "true",
+            "incCounts": "true",
+            "incWindowsUsmtFiles": "true",
+            "incSettings": "true"
+        }
+    },
+    "data": {
+        "orgId": 4200,
+        "orgUid": "944755074379520217",
+        "orgName": "TEST_ORG",
+        "orgExtRef": "test_ref",
+        "notes": "test_note",
+        "status": "Active",
+        "active": true,
+        "blocked": false,
+        "parentOrgId": 4242,
+        "parentOrgUid": "917669379999168715",
+        "type": "ENTERPRISE",
+        "classification": "BASIC",
+        "externalId": "944755074379520217",
+        "hierarchyCounts": {},
+        "configInheritanceCounts": {},
+        "creationDate": "2020-03-10T13:38:26.222-05:00",
+        "modificationDate": "2020-09-28T10:09:32.004-05:00",
+        "deactivationDate": null,
+        "registrationKey": "XXXX-XXXX-XXXX-XXXX",
+        "reporting": {
+            "orgManagers": []
+        },
+        "customConfig": true,
+        "settings": {
+            "maxSeats": -1,
+            "maxBytes": -1,
+            "archiveHoldDays": 14,
+            "defaultUserMaxBytes": -1,
+            "defaultUserMobileQuota": -1,
+            "webRestoreUserLimitMb": 250,
+            "webRestoreAdminLimitMb": 250,
+            "warnInDays": 7,
+            "alertInDays": 14,
+            "recipients": [],
+            "reportLastSent": null,
+            "reportSchedule": "_______",
+            "sendReports": false,
+            "usernameIsAnEmail": true,
+            "ldapServerIds": null,
+            "radiusServerIds": null,
+            "ssoIdentityProviderUids": null,
+            "securityKeyType": "AccountPassword",
+            "securityKeyLocked": true,
+            "autoOfferSelf": false,
+            "allowLocalFolders": true,
+            "defaultRoles": [],
+            "isSimpleOrg": false,
+            "isDefaultRolesInherited": true,
+            "destinations": [
+                {
+                    "destinationId": 160021993,
+                    "guid": "632540230984925185",
+                    "destinationName": "PROe Cloud, US - West",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 14,
+                    "guid": "43",
+                    "destinationName": "PROe Cloud, US",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 160022306,
+                    "guid": "673679195225718785",
+                    "destinationName": "PROe Cloud, AMS",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 160021698,
+                    "guid": "587738803578339329",
+                    "destinationName": "PROe Cloud, SIN",
+                    "type": "CLUSTER"
+                }
+            ],
+            "allDestinations": [
+                {
+                    "destinationId": 160021698,
+                    "guid": "587738803578339329",
+                    "destinationName": "PROe Cloud, SIN",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 160022306,
+                    "guid": "673679195225718785",
+                    "destinationName": "PROe Cloud, AMS",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 160021993,
+                    "guid": "632540230984925185",
+                    "destinationName": "PROe Cloud, US - West",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 14,
+                    "guid": "43",
+                    "destinationName": "PROe Cloud, US",
+                    "type": "CLUSTER"
+                }
+            ],
+            "isUsingDestinationDefaults": true,
+            "isUsingQuotaDefaults": true,
+            "isUsingReportingDefaults": true,
+            "isNativeClientsEnabled": true,
+            "securityKeyInherit": true
+        },
+        "settingsInherited": {
+            "maxSeats": -1,
+            "maxBytes": -1,
+            "archiveHoldDays": 14,
+            "defaultUserMaxBytes": -1,
+            "defaultUserMobileQuota": -1,
+            "webRestoreUserLimitMb": 250,
+            "webRestoreAdminLimitMb": 250,
+            "warnInDays": 7,
+            "alertInDays": 14,
+            "recipients": [],
+            "reportSchedule": "_______",
+            "sendReports": false,
+            "usernameIsAnEmail": true,
+            "ldapServerIds": [
+                0
+            ],
+            "radiusServerIds": [
+                0
+            ],
+            "ssoIdentityProviderUids": [
+                "0"
+            ],
+            "securityKeyType": "AccountPassword",
+            "securityKeyLocked": true,
+            "autoOfferSelf": false,
+            "allowLocalFolders": true,
+            "defaultRoles": [],
+            "isSimpleOrg": false,
+            "destinations": [
+                {
+                    "destinationId": 160021993,
+                    "guid": "632540230984925185",
+                    "destinationName": "PROe Cloud, US - West",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 14,
+                    "guid": "43",
+                    "destinationName": "PROe Cloud, US",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 160022306,
+                    "guid": "673679195225718785",
+                    "destinationName": "PROe Cloud, AMS",
+                    "type": "CLUSTER"
+                }
+            ]
+        },
+        "settingsSummary": {
+            "maxSeats": -1,
+            "maxBytes": -1,
+            "archiveHoldDays": 14,
+            "defaultUserMaxBytes": -1,
+            "defaultUserMobileQuota": -1,
+            "webRestoreUserLimitMb": 250,
+            "webRestoreAdminLimitMb": 250,
+            "warnInDays": 7,
+            "alertInDays": 14,
+            "recipients": [],
+            "reportLastSent": null,
+            "reportSchedule": "_______",
+            "sendReports": false,
+            "usernameIsAnEmail": true,
+            "ldapServerIds": [
+                0
+            ],
+            "radiusServerIds": [
+                0
+            ],
+            "ssoIdentityProviderUids": [
+                "0"
+            ],
+            "securityKeyType": "AccountPassword",
+            "securityKeyLocked": true,
+            "autoOfferSelf": false,
+            "allowLocalFolders": true,
+            "defaultRoles": [],
+            "isSimpleOrg": false,
+            "destinations": [
+                {
+                    "destinationId": 160021993,
+                    "guid": "632540230984925185",
+                    "destinationName": "PROe Cloud, US - West",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 14,
+                    "guid": "43",
+                    "destinationName": "PROe Cloud, US",
+                    "type": "CLUSTER"
+                },
+                {
+                    "destinationId": 160022306,
+                    "guid": "673679195225718785",
+                    "destinationName": "PROe Cloud, AMS",
+                    "type": "CLUSTER"
+                }
+            ]
+        },
+        "orgInheritDto": {
+            "orgId": 537575,
+            "orgUid": "944755074379520217",
+            "orgIdProvidingOrg": null,
+            "orgUidProvidingOrg": null,
+            "orgNameProvidingOrg": null,
+            "orgIdProvidingDestinations": 510682,
+            "orgUidProvidingDestinations": "917521470180740017",
+            "orgNameProvidingDestinations": "Next-Gen Platinum Support Test Environment",
+            "orgIdProvidingDeviceDefaults": 510853,
+            "orgUidProvidingDeviceDefaults": "917669379999168715",
+            "orgNameProvidingDeviceDefaults": "Support"
+        },
+        "computerCount": 7,
+        "shareDeviceCount": 0,
+        "backupDeviceCount": 7,
+        "backupComputerCount": 7,
+        "userCount": 64,
+        "licensedUserCount": 2,
+        "orgCount": 1,
+        "planCount": 35,
+        "deviceDefaults": {
+            "@id": "service",
+            "@modified": "2020-09-28T10:16:42:696-0500",
+            "@version": "13",
+            "configDateMs": "1601304811475",
+            "installVersion": "1268066820719",
+            "serviceErrorInterval": "3600000",
+            "userIdleDelay": "900000",
+            "orgType": "CONSUMER",
+            "systrayOnStartup": "true",
+            "location": "0.0.0.0:4242",
+            "helpNovice": {
+                "@nil": "true"
+            },
+            "userHome": {
+                "@nil": "true"
+            },
+            "windowsPriorityClass": "NORMAL",
+            "windowsPriorityBoost": "false",
+            "macIOPriority": "IOPOL_THROTTLE",
+            "javaMemoryHeapMax": {
+                "@nil": "true"
+            },
+            "serviceUIConfig": {
+                "serviceHost": "127.0.0.1",
+                "servicePort": "4243",
+                "showFullFilePath": "false",
+                "autoLoginPasswordHash": {
+                    "@nil": "true"
+                },
+                "autoLogin": "true",
+                "locale": {
+                    "@nil": "true"
+                }
+            },
+            "servicePeerConfig": {
+                "authority": {
+                    "@nil": "true"
+                },
+                "lastKnownVersion": {
+                    "@nil": "true"
+                },
+                "lastKnownBuildNumber": {
+                    "@nil": "true"
+                },
+                "upgradeVersion": {
+                    "@nil": "true"
+                },
+                "upgradeBuildNumber": {
+                    "@nil": "true"
+                },
+                "upgradePath": "upgrade",
+                "upgradeDelay": "15000",
+                "inboundWorkers": "4",
+                "securityProviderWorkers": "1",
+                "securityProviderCipherId": "0",
+                "socketSendBufferSize": {
+                    "@locked": "true",
+                    "#text": "-1"
+                },
+                "socketReceiveBufferSize": {
+                    "@locked": "true",
+                    "#text": "-1"
+                },
+                "inboundMessageBufferSize": "2097152",
+                "outboundMessageBufferSize": "1310720",
+                "siteLocalInboundMessageBufferSize": "1048576",
+                "siteLocalOutboundMessageBufferSize": "2621440",
+                "maxMessageSize": "20971520",
+                "listenForBackup": {
+                    "@locked": "true",
+                    "#text": "false"
+                },
+                "maxConnectAttempts": "2",
+                "portMappingEnabled": "true",
+                "useProxy": {
+                    "@locked": "true",
+                    "#text": "false"
+                },
+                "remotePACFileUrl": {
+                    "@nil": "true"
+                },
+                "centralConfig": {
+                    "websiteHost": {
+                        "@nil": "true"
+                    },
+                    "hideDestinationUsageSetting": "false"
+                }
+            },
+            "serviceBackupConfig": {
+                "backupFilesLog": [
+                    {
+                        "@append": "true",
+                        "@count": "1",
+                        "@level": "ALL",
+                        "@limit": "5000000"
+                    }
+                ],
+                "restoreFilesLog": [
+                    {
+                        "@append": "true",
+                        "@count": "1",
+                        "@level": "ALL",
+                        "@limit": "5000000"
+                    }
+                ],
+                "highBandwidthRate": {
+                    "@locked": "true",
+                    "#text": "0.0"
+                },
+                "lowBandwidthRate": {
+                    "@locked": "true",
+                    "#text": "0.0"
+                },
+                "lanHighBandwidthRate": {
+                    "@locked": "true",
+                    "#text": "0.0"
+                },
+                "lanLowBandwidthRate": {
+                    "@locked": "true",
+                    "#text": "0.0"
+                },
+                "wanNetworks": [
+                    {
+                        "windows": [],
+                        "macintosh": [],
+                        "linux": []
+                    }
+                ],
+                "lanNetworks": [
+                    {
+                        "windows": [],
+                        "macintosh": [],
+                        "linux": []
+                    }
+                ],
+                "lanTcpTrafficClass": "0",
+                "tcpNoDelay": "true",
+                "notifyDeliveryTime": "ANY",
+                "warningEmailEnabled": {
+                    "@locked": "true",
+                    "#text": "false"
+                },
+                "minutesUntilWarning": "4320",
+                "severeEmailEnabled": "false",
+                "minutesUntilSevere": "7200",
+                "backupStatusEmailEnabled": {
+                    "@locked": "true",
+                    "#text": "false"
+                },
+                "backupStatusEmailFreqInMinutes": {
+                    "@locked": "true",
+                    "#text": "10080"
+                },
+                "inboundRunWindow": [
+                    {
+                        "@always": "true",
+                        "@days": "SMTWHFS",
+                        "@endTimeOfDay": "06:00",
+                        "@startTimeOfDay": "01:00"
+                    }
+                ],
+                "hiddenFiles": [
+                    {
+                        "windows": [],
+                        "macintosh": [],
+                        "linux": []
+                    }
+                ],
+                "backupStatus": "SAFE",
+                "networkInterfacesExcluded": [
+                    {
+                        "windows": [],
+                        "macintosh": [],
+                        "linux": []
+                    }
+                ],
+                "wirelessNetworksExcluded": [
+                    {
+                        "windows": [],
+                        "macintosh": [],
+                        "linux": []
+                    }
+                ],
+                "minimumBatteryPercent": "20",
+                "backupConfig": {
+                    "backupSets": {
+                        "@locked": "true",
+                        "backupSet": [
+                            {
+                                "@id": "972283366543281500",
+                                "@locked": "true",
+                                "name": {
+                                    "@locked": "true",
+                                    "#text": "Backup Set 1"
+                                },
+                                "priority": {
+                                    "@locked": "true",
+                                    "#text": "1"
+                                },
+                                "backupPaths": {
+                                    "lastModified": {
+                                        "@locked": "true",
+                                        "#text": "1"
+                                    },
+                                    "pathset": {
+                                        "@locked": "true",
+                                        "paths": {
+                                            "@os": "Linux",
+                                            "path": {
+                                                "@include": ":user/"
+                                            }
+                                        }
+                                    },
+                                    "excludeUser": {
+                                        "@locked": "true",
+                                        "patternList": {
+                                            "windows": [],
+                                            "macintosh": [],
+                                            "linux": []
+                                        }
+                                    }
+                                },
+                                "destinations": [],
+                                "backupRunWindow": {
+                                    "@locked": "true",
+                                    "runWindow": {
+                                        "@always": "true",
+                                        "@days": "SMTWHFS",
+                                        "@endTimeOfDay": "06:00",
+                                        "@startTimeOfDay": "01:00"
+                                    }
+                                },
+                                "backupOpenFiles": {
+                                    "@locked": "true",
+                                    "#text": "true"
+                                },
+                                "compression": {
+                                    "@locked": "true",
+                                    "#text": "ON"
+                                },
+                                "dataDeDupAutoMaxFileSize": {
+                                    "@locked": "true",
+                                    "#text": "1000000000"
+                                },
+                                "dataDeDupAutoMaxFileSizeForWan": {
+                                    "@locked": "true",
+                                    "#text": "1000000000"
+                                },
+                                "dataDeDuplication": {
+                                    "@locked": "true",
+                                    "#text": "FULL"
+                                },
+                                "encryptionEnabled": {
+                                    "@locked": "true",
+                                    "#text": "true"
+                                },
+                                "scanInterval": {
+                                    "@locked": "true",
+                                    "#text": "86400000"
+                                },
+                                "scanTime": {
+                                    "@locked": "true",
+                                    "#text": "03:00"
+                                },
+                                "watchFiles": {
+                                    "@locked": "true",
+                                    "#text": "true"
+                                },
+                                "retentionPolicy": {
+                                    "backupFrequency": {
+                                        "@locked": "true",
+                                        "#text": "900000"
+                                    },
+                                    "keepDeleted": {
+                                        "@locked": "true",
+                                        "#text": "true"
+                                    },
+                                    "keepDeletedMinutes": {
+                                        "@locked": "true",
+                                        "#text": "0"
+                                    },
+                                    "lastModified": {
+                                        "@locked": "true",
+                                        "#text": "1600273646974"
+                                    },
+                                    "versionLastNinetyDaysInterval": {
+                                        "@locked": "true",
+                                        "#text": "1440"
+                                    },
+                                    "versionLastWeekInterval": {
+                                        "@locked": "true",
+                                        "#text": "15"
+                                    },
+                                    "versionLastYearInterval": {
+                                        "@locked": "true",
+                                        "#text": "10080"
+                                    },
+                                    "versionPrevYearsInterval": {
+                                        "@locked": "true",
+                                        "#text": "43200"
+                                    }
+                                },
+                                "visible": {
+                                    "@locked": "true",
+                                    "#text": "true"
+                                }
+                            },
+                            {
+                                "@id": "1",
+                                "name": "Next-Gen Platinum Support Test Environment - Backup Backup Set",
+                                "priority": "2",
+                                "backupPaths": {
+                                    "lastModified": "1",
+                                    "pathset": [
+                                        {
+                                            "@cleared": "true",
+                                            "@os": "Linux"
+                                        }
+                                    ],
+                                    "excludeUser": [
+                                        {
+                                            "windows": [],
+                                            "macintosh": [],
+                                            "linux": []
+                                        }
+                                    ]
+                                },
+                                "destinations": [
+                                    {
+                                        "@id": "43"
+                                    },
+                                    {
+                                        "@id": "632540230984925185"
+                                    }
+                                ],
+                                "backupRunWindow": [
+                                    {
+                                        "@always": "true",
+                                        "@days": "SMTWHFS",
+                                        "@endTimeOfDay": "06:00",
+                                        "@startTimeOfDay": "01:00"
+                                    }
+                                ],
+                                "backupOpenFiles": "true",
+                                "compression": "ON",
+                                "dataDeDupAutoMaxFileSize": "1073741824",
+                                "dataDeDupAutoMaxFileSizeForWan": "0",
+                                "dataDeDuplication": "AUTOMATIC",
+                                "encryptionEnabled": "true",
+                                "scanInterval": "86400000",
+                                "scanTime": "03:00",
+                                "watchFiles": "true",
+                                "retentionPolicy": {
+                                    "backupFrequency": "900000",
+                                    "keepDeleted": "true",
+                                    "keepDeletedMinutes": "0",
+                                    "lastModified": "1268168797613",
+                                    "versionLastNinetyDaysInterval": "129600",
+                                    "versionLastWeekInterval": "15",
+                                    "versionLastYearInterval": "129600",
+                                    "versionPrevYearsInterval": "129600"
+                                },
+                                "visible": "true"
+                            }
+                        ]
+                    },
+                    "cachePath": "cache",
+                    "manifestPath": "manifest",
+                    "softDeleteOfFiles": "false",
+                    "smallBlockSize": "4096",
+                    "blockSize": "32768",
+                    "largeBlockSize": "131072",
+                    "veryLargeBlockSize": "524288",
+                    "noCompressBlockSize": "524288",
+                    "largeFileBytes": "10485760",
+                    "veryLargeFileBytes": "1073741824",
+                    "maintenanceInterval": "604800000",
+                    "maintenanceLoadWorkerDelay": "300000",
+                    "maintenanceLoadWorkerStartupDelay": "60000",
+                    "numMaintenanceWorkers": "1",
+                    "verifyBlocksEnabled": "true",
+                    "verifyBlocksInterval": "2419200000",
+                    "checksumBlocksEnabled": "true",
+                    "verifyRestoreEnabled": "false",
+                    "reduceEnabled": "true",
+                    "scrapPercentAllowed": "10",
+                    "numBackupWorkers": "4",
+                    "numReplaceWorkers": "2",
+                    "numValidateWorkers": "100",
+                    "numCloseWorkers": "10",
+                    "idleThrottleRate": "80",
+                    "activeThrottleRate": "20",
+                    "shouldThrottleFFS": {
+                        "@locked": "true",
+                        "#text": "true"
+                    },
+                    "checksumIncomingBackupData": "true",
+                    "checksumIncomingRestoreData": "true",
+                    "blockArchiveDataFileSize": "4242538496",
+                    "weakBlockCacheLoadFactor": "0.8",
+                    "strongBlockCacheLoadFactor": "0.8",
+                    "strongBlockCacheMaxSize": "30000",
+                    "verifyBlocksLoadFactor": "0.8",
+                    "forceFileChannelDuringClose": "false",
+                    "noCompressionPatterns": [
+                        {
+                            "windows": [],
+                            "macintosh": [],
+                            "linux": []
+                        }
+                    ],
+                    "excludeSystem": [
+                        {
+                            "windows": [],
+                            "macintosh": [],
+                            "linux": []
+                        }
+                    ],
+                    "hostSystemExcludes": [
+                        {
+                            "windows": [],
+                            "macintosh": [],
+                            "linux": []
+                        }
+                    ]
+                }
+            },
+            "socialNetworkConfig": {
+                "computerConfigs": [],
+                "userConfigs": []
+            },
+            "migrationConfig": {
+                "migrationEnabled": "false",
+                "migrationFrequency": "7",
+                "migrationCmdLineArgsLoadState": [],
+                "migrationCmdLineArgsScanState": [],
+                "migrationToolType": "USMT"
+            }
+        },
+        "windowsUsmtFiles": {
+            "USER": {
+                "filename": ""
+            },
+            "APP": {
+                "filename": ""
+            },
+            "DOCS": {
+                "filename": ""
+            },
+            "CONFIG": {
+                "filename": ""
+            },
+            "CUSTOM": {
+                "filename": ""
+            }
+        }
+    }
+}

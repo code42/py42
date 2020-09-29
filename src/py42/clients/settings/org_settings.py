@@ -60,7 +60,9 @@ class OrgSettings(UserDict, object):
     """
 
     archive_hold_days = SettingProperty(
-        u"archive_hold_days", [u"settings", u"archiveHoldDays"]
+        u"archive_hold_days",
+        [u"settings", u"archiveHoldDays"],
+        inheritance_attr=u"quota_settings_inherited",
     )
     """Number of days backup archives are held in cold storage after deactivation or
     destination removal from any devices in this Org.

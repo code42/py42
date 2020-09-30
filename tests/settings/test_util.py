@@ -2,8 +2,8 @@ import json
 
 import pytest
 
-from py42.response import Py42Response
 import py42.settings as settings
+from py42.response import Py42Response
 from py42.services.util import get_all_pages
 
 
@@ -36,7 +36,9 @@ def verify_calls(func, page_size):
     assert func.call_count == 4
 
 
-def test_get_all_pages_with_no_input_page_size_calls_callback_expected_number_of_times(get_three_three_item_pages):
+def test_get_all_pages_with_no_input_page_size_calls_callback_expected_number_of_times(
+    get_three_three_item_pages,
+):
     settings.items_per_page = 3
     for _ in get_all_pages(get_three_three_item_pages, "items"):
         pass
@@ -45,7 +47,9 @@ def test_get_all_pages_with_no_input_page_size_calls_callback_expected_number_of
     verify_calls(get_three_three_item_pages, 3)
 
 
-def test_get_all_pages_with_input_page_size_less_than_default_calls_callback_expected_number_of_times(get_three_three_item_pages):
+def test_get_all_pages_with_input_page_size_less_than_default_calls_callback_expected_number_of_times(
+    get_three_three_item_pages,
+):
     settings.items_per_page = 100
     for _ in get_all_pages(get_three_three_item_pages, "items", page_size=3):
         pass
@@ -54,11 +58,12 @@ def test_get_all_pages_with_input_page_size_less_than_default_calls_callback_exp
     verify_calls(get_three_three_item_pages, 3)
 
 
-def test_get_all_pages_with_input_page_size_greater_than_default_calls_callback_expected_number_of_times(get_three_three_item_pages):
+def test_get_all_pages_with_input_page_size_greater_than_default_calls_callback_expected_number_of_times(
+    get_three_three_item_pages,
+):
     settings.items_per_page = 1
     for _ in get_all_pages(get_three_three_item_pages, "items", page_size=3):
         pass
 
     settings.items_per_page = 500
     verify_calls(get_three_three_item_pages, 3)
-

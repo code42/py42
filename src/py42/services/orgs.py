@@ -203,7 +203,9 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.clients._settings_managers.OrgSettings`: A class to help manage org settings.
                 """
-        org_settings = self.get_by_id(org_id, incSettings=True, incDeviceDefaults=True)
+        org_settings = self.get_by_id(
+            org_id, incSettings=True, incDeviceDefaults=True, incInheritedOrgInfo=True
+        )
         uri = u"/api/OrgSetting/{}".format(org_id)
         t_settings = self._connection.get(uri)
         return OrgSettings(org_settings.data, t_settings.data)

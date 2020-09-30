@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 1.8.2 - 2020-09-29
+
+### Fixed
+
+- Corrected an issue that caused `sdk.detectionlists.departing_employee.get_all()`
+  and `sdk.detectionslists.high_risk_employee.get_all()` to only return the first page (first 100) records. This same issue also caused other `get_all_X()` methods to only return the first page if the requested `page_size` was less than `settings.items_per_page`.
+
+
 ## 1.8.1 - 2020-08-28
 
 ### Fixed

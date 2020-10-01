@@ -22,6 +22,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Corrected error logic for trying to add or remove users from a system rule.
 
+### Added
+
+- `page_size` parameter to:
+  - `sdk.detectionlists.departing_employee.get_all()`
+  - `sdk.detectionlists.high_rsik_employee.get_all()`
+
 ## 1.8.0 - 2020-08-27
 
 ### Removed

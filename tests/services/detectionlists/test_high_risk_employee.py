@@ -196,7 +196,10 @@ class TestHighRiskEmployeeClient(object):
             mock_connection, user_context, mock_detection_list_user_client
         )
         for _ in high_risk_employee_client.get_all(
-            filter_type="NEW_FILTER", sort_direction="DESC", sort_key="DISPLAY_NAME", page_size=200
+            filter_type="NEW_FILTER",
+            sort_direction="DESC",
+            sort_key="DISPLAY_NAME",
+            page_size=200,
         ):
             break
 

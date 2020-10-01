@@ -97,7 +97,7 @@ class DepartingEmployeeService(BaseService):
         filter_type=DepartingEmployeeFilters.OPEN,
         sort_key=_CREATED_AT,
         sort_direction=u"DESC",
-        page_size=_PAGE_SIZE
+        page_size=_PAGE_SIZE,
     ):
         """Gets all Departing Employees.
 

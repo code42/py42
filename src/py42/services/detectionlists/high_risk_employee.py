@@ -115,7 +115,7 @@ class HighRiskEmployeeService(BaseService):
         filter_type=HighRiskEmployeeFilters.OPEN,
         sort_key=None,
         sort_direction=None,
-        page_size=_PAGE_SIZE
+        page_size=_PAGE_SIZE,
     ):
         """Searches High Risk Employee list. Filter results by filter_type.
 

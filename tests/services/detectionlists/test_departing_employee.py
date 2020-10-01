@@ -250,7 +250,10 @@ class TestDepartingEmployeeClient(object):
         )
 
         for _ in client.get_all(
-            filter_type="NEW_FILTER", sort_direction="DESC", sort_key="DISPLAY_NAME", page_size=200
+            filter_type="NEW_FILTER",
+            sort_direction="DESC",
+            sort_key="DISPLAY_NAME",
+            page_size=200,
         ):
             break
 

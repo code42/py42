@@ -196,7 +196,7 @@ class TestHighRiskEmployeeClient(object):
             mock_connection, user_context, mock_detection_list_user_client
         )
         for _ in high_risk_employee_client.get_all(
-            filter_type="NEW_FILTER", sort_direction="DESC", sort_key="DISPLAY_NAME"
+            filter_type="NEW_FILTER", sort_direction="DESC", sort_key="DISPLAY_NAME", page_size=200
         ):
             break
 
@@ -210,7 +210,7 @@ class TestHighRiskEmployeeClient(object):
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "NEW_FILTER"
             and posted_data["pgNum"] == 1
-            and posted_data["pgSize"] == 100
+            and posted_data["pgSize"] == 200
             and posted_data["srtKey"] == "DISPLAY_NAME"
             and posted_data["srtDirection"] == "DESC"
         )

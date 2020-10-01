@@ -115,6 +115,7 @@ class HighRiskEmployeeService(BaseService):
         filter_type=HighRiskEmployeeFilters.OPEN,
         sort_key=None,
         sort_direction=None,
+        page_size=_PAGE_SIZE,
     ):
         """Searches High Risk Employee list. Filter results by filter_type.
 
@@ -126,6 +127,8 @@ class HighRiskEmployeeService(BaseService):
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
                 :class:`py42.constants.SortDirection`. Defaults to None.
+            page_size (int, optional): The number of high risk employees to return
+                per page. Defaults to 100.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -138,7 +141,7 @@ class HighRiskEmployeeService(BaseService):
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
-            page_size=_PAGE_SIZE,
+            page_size=page_size or _PAGE_SIZE,
         )
 
     def get_page(

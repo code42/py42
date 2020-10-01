@@ -58,6 +58,19 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Changed
 - `py42.sdk.queries.query_filter.filter_attributes` renamed to `py42.util.get_attribute_keys_from_class`
 
+## 1.8.2 - 2020-09-30
+
+### Fixed
+
+- Corrected an issue that caused `sdk.detectionlists.departing_employee.get_all()`
+  and `sdk.detectionslists.high_risk_employee.get_all()` to only return the first page (first 100) records. This same issue also caused other `get_all_X()` methods to only return the first page if the requested `page_size` was less than `settings.items_per_page`.
+
+### Added
+
+- `page_size` parameter to:
+  - `sdk.detectionlists.departing_employee.get_all()`
+  - `sdk.detectionlists.high_rsik_employee.get_all()`
+
 ## 1.8.1 - 2020-08-28
 
 ### Fixed

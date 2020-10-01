@@ -36,7 +36,7 @@ def verify_calls(func, page_size):
     assert func.call_count == 4
 
 
-def test_get_all_pages_with_no_input_page_size_calls_callback_expected_number_of_times(
+def test_get_all_pages_with_no_input_page_size_calls_callback_with_expected_values(
     get_three_three_item_pages,
 ):
     settings.items_per_page = 3
@@ -47,7 +47,7 @@ def test_get_all_pages_with_no_input_page_size_calls_callback_expected_number_of
     verify_calls(get_three_three_item_pages, 3)
 
 
-def test_get_all_pages_with_input_page_size_less_than_default_calls_callback_expected_number_of_times(
+def test_get_all_pages_with_input_page_size_less_than_default_calls_callback_with_expected_values(
     get_three_three_item_pages,
 ):
     settings.items_per_page = 100
@@ -58,7 +58,7 @@ def test_get_all_pages_with_input_page_size_less_than_default_calls_callback_exp
     verify_calls(get_three_three_item_pages, 3)
 
 
-def test_get_all_pages_with_input_page_size_greater_than_default_calls_callback_expected_number_of_times(
+def test_get_all_pages_with_input_page_size_greater_than_default_calls_callback_with_expected_values(
     get_three_three_item_pages,
 ):
     settings.items_per_page = 1

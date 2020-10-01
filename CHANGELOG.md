@@ -8,6 +8,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Changed
+
+- The following methods now support string timestamp formats (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `sdk.auditlogs.get_page()`, arguments `begin_time` and `end_time`.
+    - `sdk.auditlogs.get_all()`, arguments `begin_time` and `end_time`.
+    - `sdk.securitydata.get_all_plan_security_events()`, arguments `min_timestamp` and `max_timestamp`.
+    - `sdk.securitydata.get_all_user_security_events()`, arguments `min_timestamp` and `max_timestamp`.
+
+- The `departure_date` parameter for methods:
+    - `sdk.detectionlists.departing_employee.add()`
+    - `sdk.detectionlists.departing_employee.update_departure_date()`
+    now support a `datetime` instance.
+
+- The following methods on timestamp-based query filters (e.g. `EventTimestamp`, `DateObserved`) now support string timestamp format (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `on_or_before()`
+    - `or_or_after()`
+    - `in_range()`
+
+### Removed
+
+- Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
+
+### Added
+
+- Added additional user-adjustable setting for security events page size:
+    - `py42.settings.security_events_per_page`
+
+- Page page_number and page_size parameters for saved search queries:
+    - `py42.securitydata.savedsearches.get_query()`
+    - `py42.securitydata.savedsearches.execute()`
+
+- `sdk.alerts.update_state()` method to update state.
+
+- Support for two-factor authentication in `sdk.from_local_account()`
+
+- `OrgSettings` and `DeviceSettings` classes to help with Org and Device setting management.
+    - `sdk.orgs.get_settings(org_id)` now returns an instance of `OrgSettings` which can be used to view
+        existing Org settings and modify them by passing the updated `OrgSettings` object to `sdk.orgs.update_settings()`
+    - `sdk.devices.get_settings(org_id)` now returns an instance of `DeviceSettings` which can be used to view
+        existing Device settings and modify them by passing the updated `DeviceSettings` object to `sdk.devices.update_settings()`
+
+- `sdk.auditlogs` method:
+    - `sdk.auditlogs.get_page()`
+    - `sdk.auditlogs.get_all()`
+
+### Changed
+- `py42.sdk.queries.query_filter.filter_attributes` renamed to `py42.util.get_attribute_keys_from_class`
+
 ## 1.8.2 - 2020-09-30
 
 ### Fixed

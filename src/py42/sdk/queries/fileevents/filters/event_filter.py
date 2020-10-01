@@ -1,10 +1,10 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.query_filter import filter_attributes
+from py42.sdk.queries.fileevents.file_event_query import FileEventFilterTimestampField
 from py42.sdk.queries.query_filter import QueryFilterBooleanField
-from py42.sdk.queries.query_filter import QueryFilterTimestampField
+from py42.util import get_attribute_keys_from_class
 
 
-class EventTimestamp(QueryFilterTimestampField):
+class EventTimestamp(FileEventFilterTimestampField):
     """Class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These
@@ -38,7 +38,7 @@ class EventTimestamp(QueryFilterTimestampField):
 
     @staticmethod
     def choices():
-        return filter_attributes(EventTimestamp)
+        return get_attribute_keys_from_class(EventTimestamp)
 
 
 class EventType(FileEventFilterStringField):
@@ -70,10 +70,10 @@ class EventType(FileEventFilterStringField):
 
     @staticmethod
     def choices():
-        return filter_attributes(EventType)
+        return get_attribute_keys_from_class(EventType)
 
 
-class InsertionTimestamp(QueryFilterTimestampField):
+class InsertionTimestamp(FileEventFilterTimestampField):
     """Class that filters events based on the timestamp of when the event was actually added to the
     event store (which can be after the event occurred on the device itself).
 
@@ -112,7 +112,7 @@ class Source(FileEventFilterStringField):
 
     @staticmethod
     def choices():
-        return filter_attributes(Source)
+        return get_attribute_keys_from_class(Source)
 
 
 class MimeTypeMismatch(QueryFilterBooleanField):

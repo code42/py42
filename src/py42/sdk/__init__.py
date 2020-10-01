@@ -5,17 +5,19 @@ from py42.clients._archive_access import ArchiveAccessorManager
 from py42.clients.alertrules import AlertRulesClient
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
+from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.authority import AuthorityClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
 from py42.services import Services
 from py42.services._auth import V3Auth
 from py42.services._connection import Connection
-from py42.services._keyvaluestore import KeyValueStoreClient
+from py42.services._keyvaluestore import KeyValueStoreService
 from py42.services.administration import AdministrationService
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
 from py42.services.archive import ArchiveService
+from py42.services.auditlogs import AuditLogsService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.detectionlists.user_profile import DetectionListUserService
@@ -32,7 +34,7 @@ from py42.services.users import UserService
 from py42.usercontext import UserContext
 
 
-def from_local_account(host_address, username, password):
+def from_local_account(host_address, username, password, totp=None):
     """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using the
     supplied credentials. Currently, only accounts created within the Code42 console or using the
     APIs (including py42) are supported. Username/passwords that are based on Active Directory,
@@ -43,11 +45,13 @@ def from_local_account(host_address, username, password):
             console.us.code42.com
         username (str): The username of the authenticating account.
         password (str): The password of the authenticating account.
+        totp (callable or str, optional): The time-based one-time password of the authenticating account. Include only
+            if the account uses Code42's two-factor authentication. Defaults to None.
 
     Returns:
         :class:`py42.sdk.SDKClient`
     """
-    client = SDKClient.from_local_account(host_address, username, password)
+    client = SDKClient.from_local_account(host_address, username, password, totp)
 
     # test credentials
     client.users.get_current()
@@ -61,7 +65,7 @@ class SDKClient(object):
         self._user_ctx = user_ctx
 
     @classmethod
-    def from_local_account(cls, host_address, username, password):
+    def from_local_account(cls, host_address, username, password, totp=None):
         """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
         the supplied credentials. Currently, only accounts created within the Code42 console or
         using the APIs (including py42) are supported. Username/passwords that are based on Active
@@ -72,7 +76,8 @@ class SDKClient(object):
                 console.us.code42.com
             username (str): The username of the authenticating account.
             password (str): The password of the authenticating account.
-
+            totp (callable or str, optional): The time-based one-time password of the authenticating account. Include only
+                if the account uses Code42's two-factor authentication. Defaults to None.
         Returns:
             :class:`py42.sdk.SDKClient`
         """
@@ -80,7 +85,7 @@ class SDKClient(object):
         if username and password:
             basic_auth = HTTPBasicAuth(username, password)
         auth_connection = Connection.from_host_address(host_address, auth=basic_auth)
-        v3_auth = V3Auth(auth_connection)
+        v3_auth = V3Auth(auth_connection, totp)
         main_connection = Connection.from_host_address(host_address, auth=v3_auth)
 
         return cls(main_connection, v3_auth)
@@ -186,6 +191,15 @@ class SDKClient(object):
         """
         return self._clients.alerts
 
+    @property
+    def auditlogs(self):
+        """A collections of methods for retrieving audit logs.
+
+        Returns:
+            :class:`py42.services.auditlogs.AuditLogsService`
+        """
+        return self._clients.auditlogs
+
 
 def _init_services(main_connection, main_auth):
     alert_rules_key = u"FedObserver-API_URL"
@@ -194,9 +208,10 @@ def _init_services(main_connection, main_auth):
     preservation_data_key = u"PRESERVATION-DATA-SERVICE_API-URL"
     employee_case_mgmt_key = u"employeecasemanagement-API_URL"
     kv_prefix = u"simple-key-value-store"
+    audit_logs_key = u"AUDIT-LOG_API-URL"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
-    kv_service = KeyValueStoreClient(kv_connection)
+    kv_service = KeyValueStoreService(kv_connection)
 
     alert_rules_conn = Connection.from_microservice_key(
         kv_service, alert_rules_key, auth=main_auth
@@ -213,7 +228,9 @@ def _init_services(main_connection, main_auth):
     ecm_conn = Connection.from_microservice_key(
         kv_service, employee_case_mgmt_key, auth=main_auth
     )
-
+    audit_logs_conn = Connection.from_microservice_key(
+        kv_service, audit_logs_key, auth=main_auth
+    )
     user_svc = UserService(main_connection)
     administration_svc = AdministrationService(main_connection)
     file_event_svc = FileEventService(file_events_conn)
@@ -238,6 +255,7 @@ def _init_services(main_connection, main_auth):
         ),
         highriskemployee=HighRiskEmployeeService(ecm_conn, user_ctx, user_profile_svc),
         userprofile=user_profile_svc,
+        auditlogs=AuditLogsService(audit_logs_conn),
     )
 
     return services, user_ctx
@@ -273,11 +291,13 @@ def _init_clients(services, connection):
         services.archive, storage_service_factory
     )
     archive = ArchiveClient(archive_accessor_mgr, services.archive)
+    auditlogs = AuditLogsClient(services.auditlogs)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
         alerts=alerts,
         securitydata=securitydata,
         archive=archive,
+        auditlogs=auditlogs,
     )
     return clients

@@ -1,10 +1,10 @@
 from py42.exceptions import Py42BadRequestError
-from py42.sdk.queries.query_filter import filter_attributes
 from py42.services import BaseService
 from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
+from py42.util import get_attribute_keys_from_class
 
 
 class HighRiskEmployeeFilters(_DetectionListFilters):
@@ -12,7 +12,7 @@ class HighRiskEmployeeFilters(_DetectionListFilters):
 
     @staticmethod
     def choices():
-        return filter_attributes(HighRiskEmployeeFilters)
+        return get_attribute_keys_from_class(HighRiskEmployeeFilters)
 
 
 class HighRiskEmployeeService(BaseService):

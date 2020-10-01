@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 import pytest
 
 from py42._compat import str
@@ -11,14 +13,16 @@ from py42.sdk.queries.query_filter import create_not_in_filter_group
 from py42.sdk.queries.query_filter import create_on_or_after_filter_group
 from py42.sdk.queries.query_filter import create_on_or_before_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
-from py42.sdk.queries.query_filter import filter_attributes
 from py42.sdk.queries.query_filter import FilterGroup
 from py42.sdk.queries.query_filter import QueryFilter
+from py42.sdk.queries.query_filter import QueryFilterTimestampField
+
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
 VALUE_UNICODE = u"您已经发现了秘密信息"
+TEST_TIMESTAMP = u"2020-09-10 11:12:13"
 
 JSON_QUERY_FILTER = '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
     OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
@@ -417,15 +421,163 @@ def test_filter_group_when_changed_filter_clause_has_correct_json_representation
     )
 
 
-class FilterClassTest(object):
-    _private = "test"
-    CONSTANT1 = "value1"
-    CONSTANT2 = "value2"
+class TestQueryFilterTimestampField:
+    @pytest.mark.parametrize(
+        "timestamp",
+        [
+            (TEST_TIMESTAMP),
+            (1599736333.0),
+            (1599736333),
+            datetime.strptime(TEST_TIMESTAMP, "%Y-%m-%d %H:%M:%S"),
+        ],
+    )
+    def test_on_or_after(self, timestamp):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_AFTER",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T11:12:13.000Z",
+                }
+            ],
+        }
 
-    def method(self):
-        pass
+        qf = QueryFilterTimestampField.on_or_after(timestamp)
+        assert dict(qf) == filter_query
 
+    @pytest.mark.parametrize(
+        "timestamp",
+        [
+            (TEST_TIMESTAMP),
+            (1599736333.0),
+            (1599736333),
+            datetime.strptime(TEST_TIMESTAMP, "%Y-%m-%d %H:%M:%S"),
+        ],
+    )
+    def test_on_or_before(self, timestamp):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_BEFORE",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T11:12:13.000Z",
+                }
+            ],
+        }
+        assert dict(QueryFilterTimestampField.on_or_before(timestamp)) == filter_query
 
-def test_filter_attributes_returns_public_class_variables():
-    public_attributes = filter_attributes(FilterClassTest)
-    assert set(public_attributes) == {"value1", "value2"}
+    @pytest.mark.parametrize(
+        "start_timestamp, end_timestamp",
+        [
+            (TEST_TIMESTAMP, u"2020-09-10 12:13:14"),
+            (1599736333.0, 1599739994.0),
+            (1599736333, 1599739994),
+            (
+                datetime.strptime(TEST_TIMESTAMP, "%Y-%m-%d %H:%M:%S"),
+                datetime.strptime(u"2020-09-10 12:13:14", "%Y-%m-%d %H:%M:%S"),
+            ),
+        ],
+    )
+    def test_in_range(self, start_timestamp, end_timestamp):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_AFTER",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T11:12:13.000Z",
+                },
+                {
+                    "operator": "ON_OR_BEFORE",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T12:13:14.000Z",
+                },
+            ],
+        }
+
+        assert (
+            dict(QueryFilterTimestampField.in_range(start_timestamp, end_timestamp))
+            == filter_query
+        )
+
+    @pytest.mark.parametrize(
+        "timestamp",
+        [
+            (TEST_TIMESTAMP),
+            (1599736333.0),
+            (1599736333),
+            datetime.strptime(TEST_TIMESTAMP, "%Y-%m-%d %H:%M:%S"),
+        ],
+    )
+    def test_on_same_day(self, timestamp):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_AFTER",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T00:00:00.000Z",
+                },
+                {
+                    "operator": "ON_OR_BEFORE",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T23:59:59.000Z",
+                },
+            ],
+        }
+        assert dict(QueryFilterTimestampField.on_same_day(timestamp)) == filter_query
+
+    def test_on_or_after_with_decimals(self):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_AFTER",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T11:12:13.123Z",
+                }
+            ],
+        }
+
+        qf = QueryFilterTimestampField.on_or_after(1599736333.123456)
+        assert dict(qf) == filter_query
+
+    def test_on_or_before_with_decimals(self):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_BEFORE",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T11:12:13.123Z",
+                }
+            ],
+        }
+        assert (
+            dict(QueryFilterTimestampField.on_or_before(1599736333.123456))
+            == filter_query
+        )
+
+    def test_in_range_with_decimals(self):
+        filter_query = {
+            "filterClause": "AND",
+            "filters": [
+                {
+                    "operator": "ON_OR_AFTER",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T11:12:13.123Z",
+                },
+                {
+                    "operator": "ON_OR_BEFORE",
+                    "term": "override_timestamp_field_name",
+                    "value": "2020-09-10T12:13:14.678Z",
+                },
+            ],
+        }
+
+        assert (
+            dict(QueryFilterTimestampField.in_range(1599736333.123456, 1599739994.6789))
+            == filter_query
+        )

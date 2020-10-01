@@ -14,7 +14,7 @@ from py42.services._connection import HostResolver
 from py42.services._connection import KnownUrlHostResolver
 from py42.services._connection import MicroserviceKeyHostResolver
 from py42.services._connection import MicroservicePrefixHostResolver
-from py42.services._keyvaluestore import KeyValueStoreClient
+from py42.services._keyvaluestore import KeyValueStoreService
 
 default_kwargs = {
     "timeout": 60,
@@ -46,7 +46,7 @@ def mock_auth(mocker):
 
 @pytest.fixture
 def mock_key_value_service(mocker):
-    return mocker.MagicMock(spec=KeyValueStoreClient)
+    return mocker.MagicMock(spec=KeyValueStoreService)
 
 
 @pytest.fixture

@@ -1,10 +1,14 @@
+from datetime import datetime
+
 from py42.exceptions import Py42BadRequestError
-from py42.sdk.queries.query_filter import filter_attributes
 from py42.services import BaseService
 from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
+from py42.util import get_attribute_keys_from_class
+
+_DATE_FORMAT = "%Y-%m-%d"
 
 
 class DepartingEmployeeFilters(_DetectionListFilters):
@@ -14,7 +18,7 @@ class DepartingEmployeeFilters(_DetectionListFilters):
 
     @staticmethod
     def choices():
-        return filter_attributes(DepartingEmployeeFilters)
+        return get_attribute_keys_from_class(DepartingEmployeeFilters)
 
 
 class DepartingEmployeeService(BaseService):
@@ -40,11 +44,14 @@ class DepartingEmployeeService(BaseService):
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the departing \
                 employees list.
-            departure_date (str, optional): Date in yyyy-MM-dd format. Date is treated as UTC. Defaults to None.
+            departure_date (str or datetime, optional): Date in yyyy-MM-dd format or instance of datetime.
+                Date is treated as UTC. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
+        if isinstance(departure_date, datetime):
+            departure_date = departure_date.strftime(_DATE_FORMAT)
         if self._user_profile_service.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
             data = {
@@ -181,14 +188,16 @@ class DepartingEmployeeService(BaseService):
 
         Args:
             user_id (str): The Code42 userUid of the user.
-            departure_date (date): Date in yyyy-MM-dd format. Date is treated as UTC.
+            departure_date (str or datetime): Date in yyyy-MM-dd format or instance of datetime.
+                Date is treated as UTC.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
         """
 
         tenant_id = self._user_context.get_current_tenant_id()
-
+        if isinstance(departure_date, datetime):
+            departure_date = departure_date.strftime(_DATE_FORMAT)
         uri = self._uri_prefix.format(u"update")
         data = {
             u"tenantId": tenant_id,

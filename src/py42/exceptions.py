@@ -140,6 +140,14 @@ class Py42InvalidRuleOperationError(Py42HTTPError):
         )
 
 
+class Py42MFARequiredError(Py42UnauthorizedError):
+    """An exception raised when a request requires multi-factor authentication"""
+
+    def __init__(self, exception, message=None):
+        message = message or u"User requires multi-factor authentication."
+        super(Py42MFARequiredError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.
@@ -147,6 +155,12 @@ def raise_py42_error(raised_error):
     if raised_error.response.status_code == 400:
         raise Py42BadRequestError(raised_error)
     elif raised_error.response.status_code == 401:
+        if raised_error.response.text:
+            if (
+                "TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER"
+                or "TIME_BASED_ONE_TIME_PASSWORD_REQUIRED" in raised_error.response.text
+            ):
+                raise Py42MFARequiredError(raised_error)
         raise Py42UnauthorizedError(raised_error)
     elif raised_error.response.status_code == 403:
         raise Py42ForbiddenError(raised_error)

@@ -242,6 +242,36 @@ class TestDepartingEmployeeClient(object):
         )
         assert mock_connection.post.call_count == 1
 
+    def test_get_all_posts_expected_data_with_non_default_values(
+        self, user_context, mock_connection, mock_detection_list_user_client
+    ):
+        client = DepartingEmployeeService(
+            mock_connection, user_context, mock_detection_list_user_client
+        )
+
+        for _ in client.get_all(
+            filter_type="NEW_FILTER",
+            sort_direction="DESC",
+            sort_key="DISPLAY_NAME",
+            page_size=200,
+        ):
+            break
+
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert (
+            mock_connection.post.call_args[0][0]
+            == "/svc/api/v2/departingemployee/search"
+        )
+        assert (
+            posted_data["tenantId"] == user_context.get_current_tenant_id()
+            and posted_data["filterType"] == "NEW_FILTER"
+            and posted_data["pgNum"] == 1
+            and posted_data["pgSize"] == 200
+            and posted_data["srtKey"] == "DISPLAY_NAME"
+            and posted_data["srtDirection"] == "DESC"
+        )
+
     def test_set_alerts_enabled_posts_expected_data(
         self,
         mock_connection,

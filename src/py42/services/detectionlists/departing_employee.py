@@ -97,6 +97,7 @@ class DepartingEmployeeService(BaseService):
         filter_type=DepartingEmployeeFilters.OPEN,
         sort_key=_CREATED_AT,
         sort_direction=u"DESC",
+        page_size=_PAGE_SIZE,
     ):
         """Gets all Departing Employees.
 
@@ -106,7 +107,9 @@ class DepartingEmployeeService(BaseService):
                 :class:`py42.services.detectionlists.departing_employee.DepartingEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
-            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
+            sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to "DESC".
+            page_size (int, optional): The number of departing employees to return
+                per page. Defaults to 100.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -118,7 +121,7 @@ class DepartingEmployeeService(BaseService):
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
-            page_size=_PAGE_SIZE,
+            page_size=page_size or _PAGE_SIZE,
         )
 
     def get_page(

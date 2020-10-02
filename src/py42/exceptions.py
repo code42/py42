@@ -60,7 +60,8 @@ class Py42SecurityPlanConnectionError(Py42HTTPError):
     """An exception raised when the user is not authorized to access the requested resource."""
 
     def __init__(self, exception, error_message):
-        super(Py42SecurityPlanConnectionError, self).__init__(exception, error_message)
+        super(Py42SecurityPlanConnectionError, self).__init__(
+            exception, error_message)
 
 
 class Py42StorageSessionInitializationError(Py42HTTPError):
@@ -82,9 +83,11 @@ class Py42SessionInitializationError(Py42Error):
     def __init__(self, exception):
         error_message = (
             u"An error occurred while requesting "
-            u"server environment information, caused by {}".format(str(exception))
+            u"server environment information, caused by {}".format(
+                str(exception))
         )
-        super(Py42SessionInitializationError, self).__init__(exception, error_message)
+        super(Py42SessionInitializationError, self).__init__(
+            exception, error_message)
 
 
 class Py42BadRequestError(Py42HTTPError):
@@ -112,7 +115,8 @@ class Py42UserAlreadyAddedError(Py42BadRequestError):
     Departing Employee list."""
 
     def __init__(self, exception, user_id, list_name):
-        msg = u"User with ID {} is already on the {}.".format(user_id, list_name)
+        msg = u"User with ID {} is already on the {}.".format(
+            user_id, list_name)
         super(Py42UserAlreadyAddedError, self).__init__(exception, msg)
 
 
@@ -148,6 +152,14 @@ class Py42MFARequiredError(Py42UnauthorizedError):
         super(Py42MFARequiredError, self).__init__(exception, message)
 
 
+class Py42UserAlreadyExistsError(Py42InternalServerError):
+    """An exception raised when a user already exists"""
+
+    def __init__(self, exception, message=None):
+        message = message or u"User already exists."
+        super(Py42UserAlreadyExistsError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.
@@ -157,8 +169,8 @@ def raise_py42_error(raised_error):
     elif raised_error.response.status_code == 401:
         if raised_error.response.text:
             if (
-                "TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER"
-                or "TIME_BASED_ONE_TIME_PASSWORD_REQUIRED" in raised_error.response.text
+                "TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER" or
+                "TIME_BASED_ONE_TIME_PASSWORD_REQUIRED" in raised_error.response.text
             ):
                 raise Py42MFARequiredError(raised_error)
         raise Py42UnauthorizedError(raised_error)
@@ -166,6 +178,8 @@ def raise_py42_error(raised_error):
         raise Py42ForbiddenError(raised_error)
     elif raised_error.response.status_code == 404:
         raise Py42NotFoundError(raised_error)
+    elif raised_error.response.status_code == 500 and raised_error.response.text == "USER_DUPLICATE":
+        raise Py42UserAlreadyExistsError(raised_error)
     elif 500 <= raised_error.response.status_code < 600:
         raise Py42InternalServerError(raised_error)
     else:

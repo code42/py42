@@ -7,6 +7,7 @@ from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42MFARequiredError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UnauthorizedError
+from py42.exceptions import Py42UserAlreadyExistsError
 from py42.exceptions import raise_py42_error
 
 
@@ -42,6 +43,12 @@ class TestPy42Errors(object):
     def test_raise_py42_error_raises_internal_server_error(self, error_response):
         error_response.response.status_code = 500
         with pytest.raises(Py42InternalServerError):
+            raise_py42_error(error_response)
+
+    def test_raise_py42_error_raises_duplicate_user_error(self, error_response):
+        error_response.response.status_code = 500
+        error_response.response.text = "USER_DUPLICATE"
+        with pytest.raises(Py42UserAlreadyExistsError):
             raise_py42_error(error_response)
 
     def test_raise_py42_error_raises_py42_http_error(self, error_response):

@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.8.3 - 2020-10-02
 
 ### Changed
 
@@ -56,6 +56,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.auditlogs.get_all()`
 
 ### Changed
+
 - `py42.sdk.queries.query_filter.filter_attributes` renamed to `py42.util.get_attribute_keys_from_class`
 
 ## 1.8.2 - 2020-09-30

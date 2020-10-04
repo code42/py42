@@ -33,6 +33,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
 
 ### Added
+- Added new exception `Py42UserAlreadyExistsError` to throw if `add_user()` throws `500` and body contains
+`USER_DUPLICATE`
 
 - Added additional user-adjustable setting for security events page size:
     - `py42.settings.security_events_per_page`

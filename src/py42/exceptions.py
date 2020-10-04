@@ -82,11 +82,9 @@ class Py42SessionInitializationError(Py42Error):
     def __init__(self, exception):
         error_message = (
             u"An error occurred while requesting "
-            u"server environment information, caused by {}".format(
-                str(exception))
+            u"server environment information, caused by {}".format(str(exception))
         )
-        super(Py42SessionInitializationError, self).__init__(
-            exception, error_message)
+        super(Py42SessionInitializationError, self).__init__(exception, error_message)
 
 
 class Py42BadRequestError(Py42HTTPError):

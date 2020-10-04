@@ -82,8 +82,11 @@ class Py42SessionInitializationError(Py42Error):
     def __init__(self, exception):
         error_message = (
             u"An error occurred while requesting "
-            u"server environment information, caused by {}".format(str(exception)))
-        super(Py42SessionInitializationError, self).__init__(exception, error_message)
+            u"server environment information, caused by {}".format(
+                str(exception))
+        )
+        super(Py42SessionInitializationError, self).__init__(
+            exception, error_message)
 
 
 class Py42BadRequestError(Py42HTTPError):
@@ -173,7 +176,10 @@ def raise_py42_error(raised_error):
         raise Py42ForbiddenError(raised_error)
     elif raised_error.response.status_code == 404:
         raise Py42NotFoundError(raised_error)
-    elif raised_error.response.status_code == 500 and raised_error.response.text == "USER_DUPLICATE":
+    elif (
+        raised_error.response.status_code == 500
+        and raised_error.response.text == "USER_DUPLICATE"
+    ):
         raise Py42UserAlreadyExistsError(raised_error)
     elif 500 <= raised_error.response.status_code < 600:
         raise Py42InternalServerError(raised_error)

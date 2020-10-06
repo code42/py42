@@ -140,7 +140,7 @@ class TestDeviceService(object):
         self, mocker, mock_connection
     ):
         def side_effect(url, json):
-            if "computer-deactivation" in url:
+            if u"computer-deactivation" in url:
                 base_err = mocker.MagicMock(spec=HTTPError)
                 base_err.response = mocker.MagicMock(spec=Response)
                 base_err.response.text = u"ACTIVE_LEGAL_HOLD"
@@ -151,5 +151,5 @@ class TestDeviceService(object):
         with pytest.raises(Py42ActiveLegalHoldError) as err:
             client.deactivate(1234)
 
-        expected = "Cannot deactivate the device with ID 1234 as the device is involved in a legal hold matter."
+        expected = u"Cannot deactivate the device with ID 1234 as the device is involved in a legal hold matter."
         assert str(err.value) == expected

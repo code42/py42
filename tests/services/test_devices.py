@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 import pytest
+from requests import HTTPError
 from requests import Response
 
 import py42
+from py42.exceptions import Py42ActiveLegalHoldError
+from py42.exceptions import Py42BadRequestError
 from py42.response import Py42Response
 from py42.services.devices import DeviceService
 
@@ -132,3 +135,21 @@ class TestDeviceService(object):
         service.get_agent_state = mocker.Mock()
         service.get_agent_full_disk_access_state("DEVICE_ID")
         service.get_agent_state.assert_called_once_with("DEVICE_ID", "fullDiskAccess")
+
+    def test_deactivate_when_user_in_legal_hold_raises_active_legal_hold_error(
+        self, mocker, mock_connection
+    ):
+        def side_effect(url, json):
+            if "computer-deactivation" in url:
+                base_err = mocker.MagicMock(spec=HTTPError)
+                base_err.response = mocker.MagicMock(spec=Response)
+                base_err.response.text = u"ACTIVE_LEGAL_HOLD"
+                raise Py42BadRequestError(base_err)
+
+        mock_connection.post.side_effect = side_effect
+        client = DeviceService(mock_connection)
+        with pytest.raises(Py42ActiveLegalHoldError) as err:
+            client.deactivate(1234)
+
+        expected = "Cannot deactivate the device with ID 1234 as the device is involved in a legal hold matter."
+        assert str(err.value) == expected

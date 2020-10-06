@@ -239,7 +239,7 @@ class UserService(BaseService):
         try:
             return self._connection.put(uri, json=data)
         except Py42BadRequestError as ex:
-            handle_active_legal_hold_error(ex, "user", user_id)
+            handle_active_legal_hold_error(ex, u"user", user_id)
             raise
 
     def reactivate(self, user_id, unblock_user=None):

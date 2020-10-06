@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 import pytest
+from requests import HTTPError
 from requests import Response
 
 import py42.settings
+from py42.exceptions import Py42ActiveLegalHoldError
+from py42.exceptions import Py42BadRequestError
 from py42.response import Py42Response
 from py42.services.users import UserService
+
 
 USER_URI = "/api/User"
 
@@ -171,3 +175,21 @@ class TestUserService(object):
                 "q": "q",
             },
         )
+
+    def test_deactivate_when_user_in_legal_hold_raises_active_legal_hold_error(
+        self, mocker, mock_connection
+    ):
+        def side_effect(url, json):
+            if "UserDeactivation" in url:
+                base_err = mocker.MagicMock(spec=HTTPError)
+                base_err.response = mocker.MagicMock(spec=Response)
+                base_err.response.text = u"ACTIVE_LEGAL_HOLD"
+                raise Py42BadRequestError(base_err)
+
+        mock_connection.put.side_effect = side_effect
+        client = UserService(mock_connection)
+        with pytest.raises(Py42ActiveLegalHoldError) as err:
+            client.deactivate(1234)
+
+        expected = "Cannot deactivate the user with ID 1234 as the user is involved in a legal hold matter."
+        assert str(err.value) == expected

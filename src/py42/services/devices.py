@@ -206,7 +206,7 @@ class DeviceService(BaseService):
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as ex:
-            handle_active_legal_hold_error(ex, "device", device_id)
+            handle_active_legal_hold_error(ex, u"device", device_id)
             raise
 
     def reactivate(self, device_id):

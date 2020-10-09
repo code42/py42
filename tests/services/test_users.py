@@ -3,9 +3,9 @@ import pytest
 from requests import Response
 
 import py42.settings
+from py42.exceptions import Py42UserAlreadyExistsError
 from py42.response import Py42Response
 from py42.services.users import UserService
-from py42.exceptions import Py42UserAlreadyExistsError
 
 USER_URI = "/api/User"
 

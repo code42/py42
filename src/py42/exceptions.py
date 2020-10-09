@@ -174,11 +174,6 @@ def raise_py42_error(raised_error):
         raise Py42ForbiddenError(raised_error)
     elif raised_error.response.status_code == 404:
         raise Py42NotFoundError(raised_error)
-    elif (
-        raised_error.response.status_code == 500
-        and raised_error.response.text == "USER_DUPLICATE"
-    ):
-        raise Py42UserAlreadyExistsError(raised_error)
     elif 500 <= raised_error.response.status_code < 600:
         raise Py42InternalServerError(raised_error)
     else:

@@ -1,8 +1,8 @@
 from py42 import settings
 from py42._compat import quote
+from py42.exceptions import Py42UserAlreadyExistsError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
-from py42.exceptions import Py42UserAlreadyExistsError
 
 
 class UserService(BaseService):

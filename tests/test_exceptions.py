@@ -45,12 +45,6 @@ class TestPy42Errors(object):
         with pytest.raises(Py42InternalServerError):
             raise_py42_error(error_response)
 
-    def test_raise_py42_error_raises_duplicate_user_error(self, error_response):
-        error_response.response.status_code = 500
-        error_response.response.text = "USER_DUPLICATE"
-        with pytest.raises(Py42UserAlreadyExistsError):
-            raise_py42_error(error_response)
-
     def test_raise_py42_error_raises_py42_http_error(self, error_response):
         error_response.response.status_code = 600
         with pytest.raises(Py42HTTPError):

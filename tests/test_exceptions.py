@@ -7,7 +7,6 @@ from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42MFARequiredError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UnauthorizedError
-from py42.exceptions import Py42UserAlreadyExistsError
 from py42.exceptions import raise_py42_error
 
 

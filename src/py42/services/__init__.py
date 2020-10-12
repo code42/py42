@@ -1,5 +1,12 @@
 from collections import namedtuple
 
+from py42.exceptions import Py42ActiveLegalHoldError
+
+
+def handle_active_legal_hold_error(bad_request_err, resource, resource_id):
+    if u"ACTIVE_LEGAL_HOLD" in bad_request_err.response.text:
+        raise Py42ActiveLegalHoldError(bad_request_err, resource, resource_id)
+
 
 class BaseService(object):
 

@@ -34,6 +34,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- Added `Py42ActiveLegalHoldError` exception when attempting to deactivate a user or device in an active legal hold.
+    - `py42.sdk.users.deactivate()`
+    - `py42.sdk.devices.deactivate()`
+
 - Added additional user-adjustable setting for security events page size:
     - `py42.settings.security_events_per_page`
 

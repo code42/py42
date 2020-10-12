@@ -4,7 +4,9 @@ from time import time
 from py42 import settings
 from py42._compat import str
 from py42.clients.settings.device_settings import DeviceSettings
+from py42.exceptions import Py42BadRequestError
 from py42.services import BaseService
+from py42.services import handle_active_legal_hold_error
 from py42.services.util import get_all_pages
 
 DeviceSettingsResponse = namedtuple(
@@ -201,7 +203,11 @@ class DeviceService(BaseService):
         """
         uri = u"/api/v4/computer-deactivation/update"
         data = {u"id": device_id}
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42BadRequestError as ex:
+            handle_active_legal_hold_error(ex, u"device", device_id)
+            raise
 
     def reactivate(self, device_id):
         """Activates a previously deactivated device.

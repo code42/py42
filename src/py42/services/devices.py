@@ -191,7 +191,7 @@ class DeviceService(BaseService):
 
     def deactivate(self, device_id):
         """Deactivates a device, causing backups to stop and archives to go to cold storage.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
+        `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v4#/computer-deactivation/ComputerDeactivation_Update>`__
 
         Args:
             device_id (int): The identification number of the device.

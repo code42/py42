@@ -1,6 +1,6 @@
 from py42 import settings
 from py42._compat import quote
-from py42.exceptions import Py42UserAlreadyExistsError
+from py42.exceptions import Py42InternalServerError, Py42UserAlreadyExistsError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 
@@ -49,11 +49,11 @@ class UserService(BaseService):
             u"notes": notes,
         }
 
-        response = self._connection.post(uri, json=data)
-        if response.status_code == 500 and response.text == "USER_DUPLICATE":
-            raise Py42UserAlreadyExistsError(response)
-
-        return response
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42InternalServerError as err:
+            if u"USER_DUPLICATE" in err.response.text:
+                raise Py42UserAlreadyExistsError(err)
 
     def get_by_id(self, user_id, **kwargs):
         """Gets the user with the given ID.

@@ -4,7 +4,9 @@ from requests import HTTPError
 from requests import Response
 
 import py42.settings
-from py42.exceptions import Py42ActiveLegalHoldError, Py42BadRequestError, Py42UserAlreadyExistsError
+from py42.exceptions import Py42ActiveLegalHoldError
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UserAlreadyExistsError
 from py42.response import Py42Response
 from py42.services.users import UserService
 

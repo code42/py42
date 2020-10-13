@@ -107,6 +107,17 @@ class Py42InternalServerError(Py42HTTPError):
     """A wrapper to represent an HTTP 500 error."""
 
 
+class Py42ActiveLegalHoldError(Py42BadRequestError):
+    """An exception raised when attempting to deactivate a user or device that is in an
+    active legal hold."""
+
+    def __init__(self, exception, resource, resource_id):
+        msg = u"Cannot deactivate the {0} with ID {1} as the {0} is involved in a legal hold matter.".format(
+            resource, resource_id,
+        )
+        super(Py42ActiveLegalHoldError, self).__init__(exception, msg)
+
+
 class Py42UserAlreadyAddedError(Py42BadRequestError):
     """An exception raised when the user is already added to group or list, such as the
     Departing Employee list."""

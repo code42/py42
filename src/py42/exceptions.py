@@ -159,6 +159,14 @@ class Py42MFARequiredError(Py42UnauthorizedError):
         super(Py42MFARequiredError, self).__init__(exception, message)
 
 
+class Py42UserAlreadyExistsError(Py42InternalServerError):
+    """An exception raised when a user already exists"""
+
+    def __init__(self, exception, message=None):
+        message = message or u"User already exists."
+        super(Py42UserAlreadyExistsError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

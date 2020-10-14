@@ -6,6 +6,7 @@ from requests import Response
 import py42.settings
 from py42.exceptions import Py42ActiveLegalHoldError
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UserAlreadyExistsError
 from py42.response import Py42Response
 from py42.services.users import UserService
 
@@ -27,6 +28,8 @@ MOCK_GET_USER_RESPONSE = """{"totalCount": 3000, "users": ["foo"]}"""
 MOCK_EMPTY_GET_USER_RESPONSE = """{"totalCount": 3000, "users": []}"""
 
 MOCK_text = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
+
+MOCK_ERROR_text = '{"body": "USER_DUPLICATE"}'
 
 
 class TestUserService(object):
@@ -54,6 +57,14 @@ class TestUserService(object):
         response.text = MOCK_text
         return Py42Response(response)
 
+    @pytest.fixture
+    def post_api_mock_error_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 500
+        response.encoding = "utf-8"
+        response.text = MOCK_ERROR_text
+        return Py42Response(response)
+
     def test_create_user_calls_post_with_expected_url_and_params(
         self, mock_connection, post_api_mock_response
     ):
@@ -78,6 +89,22 @@ class TestUserService(object):
         }
 
         mock_connection.post.assert_called_once_with(USER_URI, json=expected_params)
+
+    def test_create_user_calls_post_and_returns_user_duplicate_error(
+        self, mock_connection, post_api_mock_error_response
+    ):
+        user_service = UserService(mock_connection)
+        mock_connection.post.return_value = post_api_mock_error_response
+        org_uid = "TEST_ORG_ID"
+        username = "TEST_ORG@TEST.COM"
+        password = "password"
+        name = "TESTNAME"
+        note = "Test Note"
+        user_service.create_user(
+            org_uid, username, username, password, name, name, note
+        )
+
+        pytest.raises(Py42UserAlreadyExistsError)
 
     def test_get_all_calls_get_with_uri_and_params(
         self, mock_connection, mock_get_users_response

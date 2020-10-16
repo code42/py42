@@ -8,15 +8,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.9.0 - 2020-10-02
+
+### Changed
+
+- The following methods now support string timestamp formats (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `sdk.auditlogs.get_page()`, arguments `begin_time` and `end_time`.
+    - `sdk.auditlogs.get_all()`, arguments `begin_time` and `end_time`.
+    - `sdk.securitydata.get_all_plan_security_events()`, arguments `min_timestamp` and `max_timestamp`.
+    - `sdk.securitydata.get_all_user_security_events()`, arguments `min_timestamp` and `max_timestamp`.
+
+- The `departure_date` parameter for methods:
+    - `sdk.detectionlists.departing_employee.add()`
+    - `sdk.detectionlists.departing_employee.update_departure_date()`
+    now support a `datetime` instance.
+
+- The following methods on timestamp-based query filters (e.g. `EventTimestamp`, `DateObserved`) now support string timestamp format (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `on_or_before()`
+    - `or_or_after()`
+    - `in_range()`
 
 ### Removed
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
 
 ### Added
+- Added new exception `Py42UserAlreadyExistsError` to throw if `create_user()` throws `500` and body contains
+`USER_DUPLICATE`
+
+- Added `Py42ActiveLegalHoldError` exception when attempting to deactivate a user or device in an active legal hold.
+    - `py42.sdk.users.deactivate()`
+    - `py42.sdk.devices.deactivate()`
+
+- Added additional user-adjustable setting for security events page size:
+    - `py42.settings.security_events_per_page`
+
+- Page page_number and page_size parameters for saved search queries:
+    - `py42.securitydata.savedsearches.get_query()`
+    - `py42.securitydata.savedsearches.execute()`
 
 - `sdk.alerts.update_state()` method to update state.
+
+- Support for two-factor authentication in `sdk.from_local_account()`
+
 - `OrgSettings` and `DeviceSettings` classes to help with Org and Device setting management.
     - `sdk.orgs.get_settings(org_id)` now returns an instance of `OrgSettings` which can be used to view
         existing Org settings and modify them by passing the updated `OrgSettings` object to `sdk.orgs.update_settings()`
@@ -26,6 +60,23 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `sdk.auditlogs` method:
     - `sdk.auditlogs.get_page()`
     - `sdk.auditlogs.get_all()`
+
+### Changed
+
+- `py42.sdk.queries.query_filter.filter_attributes` renamed to `py42.util.get_attribute_keys_from_class`
+
+## 1.8.2 - 2020-09-30
+
+### Fixed
+
+- Corrected an issue that caused `sdk.detectionlists.departing_employee.get_all()`
+  and `sdk.detectionslists.high_risk_employee.get_all()` to only return the first page (first 100) records. This same issue also caused other `get_all_X()` methods to only return the first page if the requested `page_size` was less than `settings.items_per_page`.
+
+### Added
+
+- `page_size` parameter to:
+  - `sdk.detectionlists.departing_employee.get_all()`
+  - `sdk.detectionlists.high_rsik_employee.get_all()`
 
 ## 1.8.1 - 2020-08-28
 
@@ -47,13 +98,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Issue that in rare circumstance could cause py42 to exhaust network sockets. This could sometimes occur if you were running a multi-threaded program that communicated with many Code42 storage nodes.
 
 ### Added
-
-- Added additional user-adjustable setting for security events page size:
-    - `py42.settings.security_events_per_page`
-
-- Page page_number and page_size parameters for saved search queries:
-    - `py42.securitydata.savedsearches.get_query()`
-    - `py42.securitydata.savedsearches.execute()`
 
 - Methods for obtaining archive information:
     - `sdk.archive.get_by_archive_guid`
@@ -123,7 +167,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- `py42.sdk.queries.query_filter.filter_attributes` renamed to `py42.util.get_attribute_keys_from_class`
 - `sdk.archive.stream_from_backup()` now calculates file sizes and accepts a `file_size_calc_timeout` parameter.
 - Parameter `file_path` on `sdk.archive.stream_from_backup()` renamed to `file_paths` and can now take a list of file paths to restore.
 - `sdk.detectionlists.departing_employee.add()` now raises `Py42UserAlreadyAddedError` when the user is already on the list.

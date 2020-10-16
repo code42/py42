@@ -1,6 +1,10 @@
 from py42 import settings
 from py42._compat import quote
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42UserAlreadyExistsError
 from py42.services import BaseService
+from py42.services import handle_active_legal_hold_error
 from py42.services.util import get_all_pages
 
 
@@ -47,7 +51,12 @@ class UserService(BaseService):
             u"lastName": last_name,
             u"notes": notes,
         }
-        return self._connection.post(uri, json=data)
+
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42InternalServerError as err:
+            if u"USER_DUPLICATE" in err.response.text:
+                raise Py42UserAlreadyExistsError(err)
 
     def get_by_id(self, user_id, **kwargs):
         """Gets the user with the given ID.
@@ -234,7 +243,11 @@ class UserService(BaseService):
         """
         uri = u"/api/UserDeactivation/{}".format(user_id)
         data = {u"blockUser": block_user}
-        return self._connection.put(uri, json=data)
+        try:
+            return self._connection.put(uri, json=data)
+        except Py42BadRequestError as ex:
+            handle_active_legal_hold_error(ex, u"user", user_id)
+            raise
 
     def reactivate(self, user_id, unblock_user=None):
         """Reactivates the user with the given ID.

@@ -37,7 +37,25 @@ class TestV3Auth(object):
         auth = V3Auth(mock_v3_conn)
         auth(mock_request)
         params = {"useBody": True}
-        mock_v3_conn.get.assert_called_once_with("/c42api/v3/auth/jwt", params=params)
+        headers = None
+        mock_v3_conn.get.assert_called_once_with(
+            "/c42api/v3/auth/jwt", params=params, headers=headers
+        )
+
+    @pytest.mark.parametrize(
+        "totp,expected",
+        [("123456", "123456"), (lambda: "654321", "654321"), (999999, "999999")],
+    )
+    def test_call_calls_auth_api_with_totp_header(
+        self, mock_v3_conn, mock_request, totp, expected
+    ):
+        auth = V3Auth(mock_v3_conn, totp)
+        auth(mock_request)
+        params = {"useBody": True}
+        headers = {"totp-auth": expected}
+        mock_v3_conn.get.assert_called_once_with(
+            "/c42api/v3/auth/jwt", params=params, headers=headers
+        )
 
     def test_clear_credentials_causes_auth_api_to_be_called_on_subsequent_calls(
         self, mock_v3_conn, mock_request

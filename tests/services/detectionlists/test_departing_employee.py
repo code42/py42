@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 import pytest
 from requests import HTTPError
 from requests import Response
@@ -105,12 +107,17 @@ class TestDepartingEmployeeClient(object):
 
         return py42_response
 
+    @pytest.mark.parametrize(
+        "departing_date",
+        [("2022-12-20"), (datetime.strptime("2022-12-20", "%Y-%m-%d"))],
+    )
     def test_add_posts_expected_data_and_to_expected_url(
         self,
         mock_connection,
         user_context,
         mock_get_all_cases_response,
         mock_detection_list_user_client,
+        departing_date,
     ):
         client = DepartingEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
@@ -119,7 +126,7 @@ class TestDepartingEmployeeClient(object):
         # Return value should have been set based on the arguments passed
         # in add, here however as we are mocking it, it doesn't matter. Can be refactored
         mock_connection.post.return_value = mock_get_all_cases_response
-        client.add(_USER_ID, "2022-12-20")
+        client.add(_USER_ID, departing_date)
 
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
@@ -242,6 +249,36 @@ class TestDepartingEmployeeClient(object):
         )
         assert mock_connection.post.call_count == 1
 
+    def test_get_all_posts_expected_data_with_non_default_values(
+        self, user_context, mock_connection, mock_detection_list_user_client
+    ):
+        client = DepartingEmployeeService(
+            mock_connection, user_context, mock_detection_list_user_client
+        )
+
+        for _ in client.get_all(
+            filter_type="NEW_FILTER",
+            sort_direction="DESC",
+            sort_key="DISPLAY_NAME",
+            page_size=200,
+        ):
+            break
+
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert (
+            mock_connection.post.call_args[0][0]
+            == "/svc/api/v2/departingemployee/search"
+        )
+        assert (
+            posted_data["tenantId"] == user_context.get_current_tenant_id()
+            and posted_data["filterType"] == "NEW_FILTER"
+            and posted_data["pgNum"] == 1
+            and posted_data["pgSize"] == 200
+            and posted_data["srtKey"] == "DISPLAY_NAME"
+            and posted_data["srtDirection"] == "DESC"
+        )
+
     def test_set_alerts_enabled_posts_expected_data(
         self,
         mock_connection,
@@ -345,4 +382,27 @@ class TestDepartingEmployeeClient(object):
         assert (
             mock_connection.post.call_args[0][0]
             == "/svc/api/v2/departingemployee/update"
+        )
+
+    def test_update_posts_expected_data_with_datetime_instance(
+        self,
+        mock_connection,
+        user_context,
+        mock_get_all_cases_response,
+        mock_detection_list_user_client,
+    ):
+        client = DepartingEmployeeService(
+            mock_connection, user_context, mock_detection_list_user_client
+        )
+        mock_connection.post.return_value = mock_get_all_cases_response
+        dt = datetime.strptime("2020-12-20", "%Y-%m-%d")
+        client.update_departure_date(_USER_ID, dt)
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert (
+            posted_data["userId"] == _USER_ID
+            and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and posted_data["departureDate"] == "2020-12-20"
         )

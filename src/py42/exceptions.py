@@ -107,6 +107,17 @@ class Py42InternalServerError(Py42HTTPError):
     """A wrapper to represent an HTTP 500 error."""
 
 
+class Py42ActiveLegalHoldError(Py42BadRequestError):
+    """An exception raised when attempting to deactivate a user or device that is in an
+    active legal hold."""
+
+    def __init__(self, exception, resource, resource_id):
+        msg = u"Cannot deactivate the {0} with ID {1} as the {0} is involved in a legal hold matter.".format(
+            resource, resource_id,
+        )
+        super(Py42ActiveLegalHoldError, self).__init__(exception, msg)
+
+
 class Py42UserAlreadyAddedError(Py42BadRequestError):
     """An exception raised when the user is already added to group or list, such as the
     Departing Employee list."""
@@ -140,6 +151,22 @@ class Py42InvalidRuleOperationError(Py42HTTPError):
         )
 
 
+class Py42MFARequiredError(Py42UnauthorizedError):
+    """An exception raised when a request requires multi-factor authentication"""
+
+    def __init__(self, exception, message=None):
+        message = message or u"User requires multi-factor authentication."
+        super(Py42MFARequiredError, self).__init__(exception, message)
+
+
+class Py42UserAlreadyExistsError(Py42InternalServerError):
+    """An exception raised when a user already exists"""
+
+    def __init__(self, exception, message=None):
+        message = message or u"User already exists."
+        super(Py42UserAlreadyExistsError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.
@@ -147,6 +174,12 @@ def raise_py42_error(raised_error):
     if raised_error.response.status_code == 400:
         raise Py42BadRequestError(raised_error)
     elif raised_error.response.status_code == 401:
+        if raised_error.response.text:
+            if (
+                "TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER"
+                or "TIME_BASED_ONE_TIME_PASSWORD_REQUIRED" in raised_error.response.text
+            ):
+                raise Py42MFARequiredError(raised_error)
         raise Py42UnauthorizedError(raised_error)
     elif raised_error.response.status_code == 403:
         raise Py42ForbiddenError(raised_error)

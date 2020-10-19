@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Fixed
+
+- Bug where an empty destination list in a device's backup set broke creation of DeviceSettings objects for that device.
+
 ## 1.9.0 - 2020-10-02
 
 ### Changed

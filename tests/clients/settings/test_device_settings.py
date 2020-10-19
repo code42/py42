@@ -652,7 +652,7 @@ class TestDeviceSettingsBackupSets(object):
             == expected_empty_destination_dict
         )
 
-    def test_backup_set_add_destination_from_empyt_state_converts_cleared_dict_to_destination_list(
+    def test_backup_set_add_destination_from_empty_state_converts_cleared_dict_to_destination_list(
         self,
     ):
         expected_empty_destination_dict = {"@cleared": "true"}

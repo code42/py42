@@ -346,6 +346,8 @@ class BackupSet(UserDict, object):
         keys are the destination guids, values are the destination names.
         """
         destination_dict = {}
+        if u"@cleared" in self.data[u"destinations"]:
+            return destination_dict
         for d in self.data[u"destinations"]:
             guid = d[u"@id"]
             dest_name = self._manager.available_destinations[guid]
@@ -365,7 +367,10 @@ class BackupSet(UserDict, object):
         destination_guid = str(destination_guid)
         if destination_guid in self._manager.available_destinations:
             if destination_guid not in self.destinations:
-                self.data[u"destinations"].append({u"@id": destination_guid})
+                if not self.destinations:  # no destinations
+                    self.data[u"destinations"] = [{u"@id": destination_guid}]
+                else:
+                    self.data[u"destinations"].append({u"@id": destination_guid})
                 self._changes[u"destinations"] = show_change(
                     self._orig_destinations, self.destinations
                 )
@@ -385,6 +390,8 @@ class BackupSet(UserDict, object):
             for d in self.data[u"destinations"]:
                 if d[u"@id"] == destination_guid:
                     self.data[u"destinations"].remove(d)
+            if not self.data[u"destinations"]:  # all destinations removed
+                self.data[u"destinations"] = {u"@cleared": u"true"}
             self._changes[u"destinations"] = show_change(
                 self._orig_destinations, self.destinations
             )

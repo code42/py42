@@ -15,7 +15,11 @@ param = namedtuple("param", "name new_val expected_stored_val dict_location")
 
 PHOTOS_REGEX = ".*/Photos/"
 PICTURES_REGEX = ".*/Pictures/"
-
+TEST_HOME_DIR = "C:/Users/TestUser/"
+TEST_EXTERNAL_DOCUMENTS_DIR = "D:/Documents/"
+TEST_PHOTOS_DIR = "C:/Users/TestUser/Pictures/"
+TEST_ADDED_PATH = "E:/"
+TEST_ADDED_EXCLUDED_PATH = "C:/Users/TestUser/Downloads/"
 
 @pytest.fixture
 def archive_service(mocker):

@@ -10,21 +10,41 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Fixed
+
+- Bug where an empty destination list in a device's backup set broke creation of DeviceSettings objects for that device.
+
+## 1.9.0 - 2020-10-02
+
 ### Changed
 
-- Timestamp argument accepts input in string type( format `yyyy-MM-dd HH:MM:SS` ), int or float type( epoch time ) as well as a datetime instance for following:
-    - `sdk.auditlogs.get_page()` arguments `begin_time` and `end_time`
-    - `sdk.auditlogs.get_all()` arguments `begin_time` and `end_time`
-    - `sdk.securitydata.get_all_plan_security_events()` arguments `min_timestamp` and `max_timestamp`
-    - `sdk.securitydata.get_all_user_security_events()` arguments `min_timestamp` and `max_timestamp`
-    - `sdk.detectionlists.departing_employee.add()` argument `departure_date`
-    - `sdk.detectionlists.departing_employee.update_departure_date()` argument `departure_date`
+- The following methods now support string timestamp formats (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `sdk.auditlogs.get_page()`, arguments `begin_time` and `end_time`.
+    - `sdk.auditlogs.get_all()`, arguments `begin_time` and `end_time`.
+    - `sdk.securitydata.get_all_plan_security_events()`, arguments `min_timestamp` and `max_timestamp`.
+    - `sdk.securitydata.get_all_user_security_events()`, arguments `min_timestamp` and `max_timestamp`.
+
+- The `departure_date` parameter for methods:
+    - `sdk.detectionlists.departing_employee.add()`
+    - `sdk.detectionlists.departing_employee.update_departure_date()`
+    now support a `datetime` instance.
+
+- The following methods on timestamp-based query filters (e.g. `EventTimestamp`, `DateObserved`) now support string timestamp format (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `on_or_before()`
+    - `or_or_after()`
+    - `in_range()`
 
 ### Removed
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
 
 ### Added
+- Added new exception `Py42UserAlreadyExistsError` to throw if `create_user()` throws `500` and body contains
+`USER_DUPLICATE`
+
+- Added `Py42ActiveLegalHoldError` exception when attempting to deactivate a user or device in an active legal hold.
+    - `py42.sdk.users.deactivate()`
+    - `py42.sdk.devices.deactivate()`
 
 - `sdk.archive.stream_to_device()` for pushing a restore to another device.
 - Added additional user-adjustable setting for security events page size:
@@ -49,7 +69,21 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.auditlogs.get_all()`
 
 ### Changed
+
 - `py42.sdk.queries.query_filter.filter_attributes` renamed to `py42.util.get_attribute_keys_from_class`
+
+## 1.8.2 - 2020-09-30
+
+### Fixed
+
+- Corrected an issue that caused `sdk.detectionlists.departing_employee.get_all()`
+  and `sdk.detectionslists.high_risk_employee.get_all()` to only return the first page (first 100) records. This same issue also caused other `get_all_X()` methods to only return the first page if the requested `page_size` was less than `settings.items_per_page`.
+
+### Added
+
+- `page_size` parameter to:
+  - `sdk.detectionlists.departing_employee.get_all()`
+  - `sdk.detectionlists.high_rsik_employee.get_all()`
 
 ## 1.8.1 - 2020-08-28
 

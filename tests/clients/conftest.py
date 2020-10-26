@@ -21,6 +21,7 @@ TEST_PHOTOS_DIR = "C:/Users/TestUser/Pictures/"
 TEST_ADDED_PATH = "E:/"
 TEST_ADDED_EXCLUDED_PATH = "C:/Users/TestUser/Downloads/"
 
+
 @pytest.fixture
 def archive_service(mocker):
     service = mocker.MagicMock(spec=ArchiveService)

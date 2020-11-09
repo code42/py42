@@ -46,7 +46,7 @@ class TestDetectionListUserClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/create"
+        assert mock_connection.post.call_args[0][0] == "v2/user/create"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userName"] == "942897397520289999"
@@ -65,7 +65,7 @@ class TestDetectionListUserClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/getbyusername"
+        assert mock_connection.post.call_args[0][0] == "v2/user/getbyusername"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["username"] == "942897397520289999"
@@ -81,7 +81,7 @@ class TestDetectionListUserClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
+        assert mock_connection.post.call_args[0][0] == "v2/user/getbyid"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -97,7 +97,7 @@ class TestDetectionListUserClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/updatenotes"
+        assert mock_connection.post.call_args[0][0] == "v2/user/updatenotes"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -115,7 +115,7 @@ class TestDetectionListUserClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/addriskfactors"
+        assert mock_connection.post.call_args[0][0] == "v2/user/addriskfactors"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -134,7 +134,7 @@ class TestDetectionListUserClient(object):
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
         assert (
-            mock_connection.post.call_args[0][0] == "/svc/api/v2/user/removeriskfactors"
+            mock_connection.post.call_args[0][0] == "v2/user/removeriskfactors"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -153,7 +153,7 @@ class TestDetectionListUserClient(object):
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
         assert (
-            mock_connection.post.call_args[0][0] == "/svc/api/v2/user/addcloudusernames"
+            mock_connection.post.call_args[0][0] == "v2/user/addcloudusernames"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -173,7 +173,7 @@ class TestDetectionListUserClient(object):
         assert mock_connection.post.call_count == 1
         assert (
             mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/user/removecloudusernames"
+            == "v2/user/removecloudusernames"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -193,7 +193,7 @@ class TestDetectionListUserClient(object):
         )
 
         posted_data = mock_connection.post.call_args[1]["json"]
-        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/getbyid"
+        assert mock_connection.post.call_args[0][0] == "v2/user/getbyid"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -215,7 +215,7 @@ class TestDetectionListUserClient(object):
             detection_list_user_client.create_if_not_exists("942897397520289999")
 
         posted_data = mock_get_by_id_fails.post.call_args[1]["json"]
-        assert mock_get_by_id_fails.post.call_args[0][0] == "/svc/api/v2/user/create"
+        assert mock_get_by_id_fails.post.call_args[0][0] == "v2/user/create"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userName"] == "username"
@@ -237,7 +237,7 @@ class TestDetectionListUserClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert mock_connection.post.call_args[0][0] == "/svc/api/v2/user/refresh"
+        assert mock_connection.post.call_args[0][0] == "v2/user/refresh"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"

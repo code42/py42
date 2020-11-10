@@ -1,4 +1,5 @@
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UserDoesNotExist
 from py42.services import BaseService
 from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
@@ -89,7 +90,12 @@ class HighRiskEmployeeService(BaseService):
             u"userId": user_id,
         }
         uri = self._make_uri(u"/remove")
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42BadRequestError as err:
+            message = "User {} is not currently on the high-risk-employee " \
+                      "detection list.".format(user_id)
+            raise Py42UserDoesNotExist(err, message=message)
 
     def get(self, user_id):
         """Gets user information.

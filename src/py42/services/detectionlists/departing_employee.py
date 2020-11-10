@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UserDoesNotExist
 from py42.services import BaseService
 from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
@@ -97,7 +98,12 @@ class DepartingEmployeeService(BaseService):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"remove")
         data = {u"userId": user_id, u"tenantId": tenant_id}
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42BadRequestError as err:
+            message = "User {} is not currently on the departing-employee " \
+                      "detection list.".format(user_id)
+            raise Py42UserDoesNotExist(err, message=message)
 
     def get_all(
         self,

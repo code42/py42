@@ -102,8 +102,7 @@ class TestHighRiskEmployeeClient(object):
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
         assert (
-            mock_connection.post.call_args[0][0]
-            == "v2/highriskemployee/setalertstate"
+            mock_connection.post.call_args[0][0] == "v2/highriskemployee/setalertstate"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -121,8 +120,7 @@ class TestHighRiskEmployeeClient(object):
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
         assert (
-            mock_connection.post.call_args[0][0]
-            == "v2/highriskemployee/setalertstate"
+            mock_connection.post.call_args[0][0] == "v2/highriskemployee/setalertstate"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -140,10 +138,7 @@ class TestHighRiskEmployeeClient(object):
         posted_data = mock_connection.post.call_args[1]["json"]
 
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "v2/highriskemployee/remove"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/remove"
         assert posted_data["tenantId"] == user_context.get_current_tenant_id()
         assert posted_data["userId"] == "942897397520289999"
 
@@ -157,9 +152,7 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0] == "v2/highriskemployee/get"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/get"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -176,10 +169,7 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "v2/highriskemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/search"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "OPEN"
@@ -205,10 +195,7 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "v2/highriskemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/search"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "NEW_FILTER"
@@ -233,10 +220,7 @@ class TestHighRiskEmployeeClient(object):
         )
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "v2/highriskemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/search"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "NEW_FILTER"

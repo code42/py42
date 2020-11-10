@@ -167,6 +167,14 @@ class Py42UserAlreadyExistsError(Py42InternalServerError):
         super(Py42UserAlreadyExistsError, self).__init__(exception, message)
 
 
+class Py42CloudAliasLimitExceeded(Py42BadRequestError):
+    """An exception raised when a user already has 2 cloud aliases set."""
+
+    def __init__(self, exception, message=None):
+        message = message or u"Cloud alias limit exceeded."
+        super(Py42BadRequestError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

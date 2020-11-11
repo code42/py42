@@ -183,11 +183,11 @@ class Py42UserNotAssignedToRule(Py42BadRequestError):
         super(Py42BadRequestError, self).__init__(exception, message)
 
 
-class Py42UserDoesNotExist(Py42BadRequestError):
+class Py42UserDoesNotExist(Py42NotFoundError):
     """An exception raised when user does not exist in the detection list."""
 
     def __init__(self, exception, message=None):
-        super(Py42BadRequestError, self).__init__(exception, message)
+        super(Py42NotFoundError, self).__init__(exception, message)
 
 
 def raise_py42_error(raised_error):

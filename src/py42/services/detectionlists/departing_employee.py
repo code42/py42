@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserDoesNotExist
 from py42.services import BaseService
 from py42.services.detectionlists import _DetectionListFilters
@@ -100,9 +101,11 @@ class DepartingEmployeeService(BaseService):
         data = {u"userId": user_id, u"tenantId": tenant_id}
         try:
             return self._connection.post(uri, json=data)
-        except Py42BadRequestError as err:
-            message = "User {} is not currently on the departing-employee " \
-                      "detection list.".format(user_id)
+        except Py42NotFoundError as err:
+            message = (
+                "User {} is not currently on the departing-employee "
+                "detection list.".format(user_id)
+            )
             raise Py42UserDoesNotExist(err, message=message)
 
     def get_all(

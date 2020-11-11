@@ -1,6 +1,4 @@
 from py42.services import BaseService
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42UserNotAssignedToRule
 
 
 class AlertRulesService(BaseService):
@@ -60,11 +58,7 @@ class AlertRulesService(BaseService):
         tenant_id = self._user_context.get_current_tenant_id()
         data = {u"tenantId": tenant_id, u"ruleId": rule_id, u"userIdList": user_ids}
         uri = u"{}{}".format(self._api_prefix, u"remove-users")
-        try:
-            return self._connection.post(uri, json=data)
-        except Py42BadRequestError as err:
-            message = "User is not currently assigned to rule-id {}.".format(rule_id)
-            raise Py42UserNotAssignedToRule(err, message=message)
+        return self._connection.post(uri, json=data)
 
     def remove_all_users(self, rule_id):
         tenant_id = self._user_context.get_current_tenant_id()

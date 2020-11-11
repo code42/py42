@@ -6,6 +6,7 @@ from requests import HTTPError
 from requests import Response
 from requests import Session
 
+from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UnauthorizedError
 from py42.response import Py42Response
 from py42.sdk.queries.query_filter import QueryFilter
@@ -165,4 +166,14 @@ def mock_connection(mocker):
 @pytest.fixture
 def mock_successful_connection(mock_connection, successful_response):
     mock_connection.get.return_value = successful_response
+    return mock_connection
+
+
+@pytest.fixture
+def mock_connection_post_failure(mocker, mock_connection):
+    response = mocker.MagicMock(spec=Response)
+    response.status_code = 404
+    exception = mocker.MagicMock(spec=HTTPError)
+    exception.response = response
+    mock_connection.post.side_effect = Py42NotFoundError(exception)
     return mock_connection

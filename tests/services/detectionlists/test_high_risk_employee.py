@@ -3,6 +3,7 @@ from requests import HTTPError
 from requests import Response
 
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeFilters
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
@@ -228,4 +229,22 @@ class TestHighRiskEmployeeClient(object):
             and posted_data["pgSize"] == 10
             and posted_data["srtKey"] == "DISPLAY_NAME"
             and posted_data["srtDirection"] == "DESC"
+        )
+
+    def test_remove_raises_error_when_user_id_does_not_exist(
+        self,
+        user_context,
+        mock_connection_post_failure,
+        mock_detection_list_user_client,
+    ):
+        high_risk_employee_client = HighRiskEmployeeService(
+            mock_connection_post_failure, user_context, mock_detection_list_user_client
+        )
+        user_id = "942897397520289999"
+        with pytest.raises(Py42NotFoundError) as err:
+            high_risk_employee_client.remove(user_id)
+        assert "User {} is not currently on the high-risk-employee detection list.".format(
+            user_id
+        ) in str(
+            err.value
         )

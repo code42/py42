@@ -176,13 +176,6 @@ class Py42CloudAliasLimitExceededError(Py42BadRequestError):
         super(Py42BadRequestError, self).__init__(exception, message)
 
 
-class Py42UserNotAssignedToRule(Py42BadRequestError):
-    """An exception raised when user is not associated to the rule."""
-
-    def __init__(self, exception, message=None):
-        super(Py42BadRequestError, self).__init__(exception, message)
-
-
 class Py42UserDoesNotExist(Py42NotFoundError):
     """An exception raised when user does not exist in the detection list."""
 

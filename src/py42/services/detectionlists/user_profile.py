@@ -173,7 +173,7 @@ class DetectionListUserService(BaseService):
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
-            if "Cloud usernames must be less than or equal to 2" in err.response.text:
+            if "Cloud usernames must be less than or equal to" in err.response.text:
                 raise Py42CloudAliasLimitExceeded(err)
             raise err
 

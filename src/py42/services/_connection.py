@@ -11,6 +11,7 @@ from requests.sessions import Session
 import py42.settings as settings
 from py42._compat import urljoin
 from py42._compat import urlparse
+from py42.exceptions import Py42DeviceNotConnectedError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42FeatureUnavailableError
 from py42.exceptions import raise_py42_error
@@ -89,6 +90,8 @@ class ConnectedServerHostResolver(HostResolver):
         response = self._connection.get(
             u"api/connectedServerUrl", params={u"guid": self._device_guid}
         )
+        if response[u"serverUrl"] is None:
+            raise Py42DeviceNotConnectedError(response, self._device_guid)
         return response[u"serverUrl"]
 
 

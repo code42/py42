@@ -4,6 +4,7 @@ import pytest
 from requests import Response
 from tests.conftest import TEST_DEVICE_GUID
 
+from py42.exceptions import Py42DeviceNotConnectedError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42FeatureUnavailableError
 from py42.exceptions import Py42InternalServerError
@@ -78,6 +79,15 @@ def mock_connected_server_conn(mocker):
     return mock_conn
 
 
+@pytest.fixture
+def mock_not_connected_server_conn(mocker):
+    mock_conn = mocker.MagicMock(spec=Connection)
+    mock_response = mocker.MagicMock(spec=Response)
+    mock_response.text = '{"serverUrl": null}'
+    mock_conn.get.return_value = Py42Response(mock_response)
+    return mock_conn
+
+
 class MockPreparedRequest(object):
     def __init__(self, method, url, data=None):
         self._method = method
@@ -131,7 +141,7 @@ class TestMicroservicePrefixHostResolver(object):
 
 
 class TestConnectedServerHostResolver(object):
-    def test_get_hot_address_returns_expected_value(self, mock_connected_server_conn):
+    def test_get_host_address_returns_expected_value(self, mock_connected_server_conn):
         resolver = ConnectedServerHostResolver(
             mock_connected_server_conn, TEST_DEVICE_GUID
         )
@@ -140,6 +150,21 @@ class TestConnectedServerHostResolver(object):
         mock_connected_server_conn.get.assert_called_once_with(
             "api/connectedServerUrl", params={"guid": TEST_DEVICE_GUID}
         )
+
+    def test_get_host_address_when_server_returns_none_raises_expected_error(
+        self, mock_not_connected_server_conn
+    ):
+        resolver = ConnectedServerHostResolver(
+            mock_not_connected_server_conn, TEST_DEVICE_GUID
+        )
+        with pytest.raises(Py42DeviceNotConnectedError) as err:
+            resolver.get_host_address()
+
+        expected_message = (
+            "Device with GUID 'device-guid' is not currently connected "
+            "to the Authority server."
+        )
+        assert str(err.value) == expected_message
 
 
 class TestConnection(object):

@@ -64,8 +64,8 @@ class Py42SecurityPlanConnectionError(Py42HTTPError):
 
 
 class Py42DeviceNotConnectedError(Py42ResponseError):
-    """An exception raised when trying to do a push restore on a device that is not
-    connected to the authority."""
+    """An exception raised when trying to push a restore to a device that is not
+    connected to an Authority server."""
 
     def __init__(self, response, device_guid):
         message = (

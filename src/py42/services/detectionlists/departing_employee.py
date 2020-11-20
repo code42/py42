@@ -24,7 +24,7 @@ class DepartingEmployeeFilters(_DetectionListFilters):
 class DepartingEmployeeService(BaseService):
     """A service for interacting with Code42 Departing Employee APIs."""
 
-    _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
+    _uri_prefix = u"v2/departingemployee/{0}"
 
     _CREATED_AT = u"CREATED_AT"
 

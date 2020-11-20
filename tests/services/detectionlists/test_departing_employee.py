@@ -136,9 +136,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["tenantId"] == _TENANT_ID_PARAM
             and posted_data["departureDate"] == "2022-12-20"
         )
-        assert (
-            mock_connection.post.call_args[0][0] == "/svc/api/v2/departingemployee/add"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/add"
         assert mock_connection.post.call_count == 2
 
     def test_add_when_user_already_on_list_raises_user_already_added_error(
@@ -181,10 +179,7 @@ class TestDepartingEmployeeClient(object):
             posted_data["userId"] == "999"
             and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
         )
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/remove"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/remove"
 
     def test_get_all_posts_expected_data_to_expected_url(
         self,
@@ -209,10 +204,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["srtKey"] == "CREATED_AT"
             and posted_data["srtDirection"] == "DESC"
         )
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/search"
         assert mock_connection.post.call_count == 1
 
     def test_get_page_posts_data_to_expected_url(
@@ -243,10 +235,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["srtKey"] == "CREATED_AT"
             and posted_data["srtDirection"] == "DESC"
         )
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/search"
         assert mock_connection.post.call_count == 1
 
     def test_get_all_posts_expected_data_with_non_default_values(
@@ -266,10 +255,7 @@ class TestDepartingEmployeeClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/search"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "NEW_FILTER"
@@ -311,8 +297,7 @@ class TestDepartingEmployeeClient(object):
         mock_connection.post.return_value = mock_get_all_cases_response_empty
         client.set_alerts_enabled()
         assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/setalertstate"
+            mock_connection.post.call_args[0][0] == "v2/departingemployee/setalertstate"
         )
 
     def test_get_posts_expected_data(
@@ -346,9 +331,7 @@ class TestDepartingEmployeeClient(object):
         )
         mock_connection.post.return_value = mock_get_all_cases_response_empty
         client.get("999")
-        assert (
-            mock_connection.post.call_args[0][0] == "/svc/api/v2/departingemployee/get"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/get"
 
     def test_update_posts_expected_data(
         self,
@@ -379,10 +362,7 @@ class TestDepartingEmployeeClient(object):
             mock_connection, user_context, mock_detection_list_user_client
         )
         client.update_departure_date(_USER_ID, "2022-12-20")
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/update"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/update"
 
     def test_update_posts_expected_data_with_datetime_instance(
         self,

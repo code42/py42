@@ -18,9 +18,7 @@ class HighRiskEmployeeFilters(_DetectionListFilters):
 class HighRiskEmployeeService(BaseService):
     """A service for interacting with High Risk Employee APIs."""
 
-    _api_version = u"v2"
-    _uri_prefix = u"/svc/api/{}".format(_api_version)
-    _resource = u"/highriskemployee"
+    _resource = u"v2/highriskemployee"
 
     def __init__(self, connection, user_context, user_profile_service):
         super(HighRiskEmployeeService, self).__init__(connection)
@@ -28,7 +26,7 @@ class HighRiskEmployeeService(BaseService):
         self._user_profile_service = user_profile_service
 
     def _make_uri(self, action):
-        return u"{}{}{}".format(self._uri_prefix, self._resource, action)
+        return u"{}{}".format(self._resource, action)
 
     def _add_high_risk_employee(self, tenant_id, user_id):
 

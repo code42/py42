@@ -3,7 +3,7 @@ from requests import Response
 from requests.exceptions import HTTPError
 
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42CloudAliasLimitExceeded
+from py42.exceptions import Py42CloudAliasLimitExceededError
 from py42.services.detectionlists.user_profile import DetectionListUserService
 from py42.services.users import UserService
 
@@ -271,6 +271,6 @@ class TestDetectionListUserClient(object):
             user_context,
             mock_user_client_error_on_adding_cloud_aliases,
         )
-        with pytest.raises(Py42CloudAliasLimitExceeded) as err:
+        with pytest.raises(Py42CloudAliasLimitExceededError) as err:
             detection_list_user_client.add_cloud_alias("942897397520289999", "Test")
         assert "Cloud alias limit exceeded." in str(err.value)

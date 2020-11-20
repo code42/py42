@@ -1,5 +1,5 @@
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42CloudAliasLimitExceeded
+from py42.exceptions import Py42CloudAliasLimitExceededError
 from py42.exceptions import Py42NotFoundError
 from py42.services import BaseService
 
@@ -174,7 +174,7 @@ class DetectionListUserService(BaseService):
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
             if "Cloud usernames must be less than or equal to" in err.response.text:
-                raise Py42CloudAliasLimitExceeded(err)
+                raise Py42CloudAliasLimitExceededError(err)
             raise err
 
     def remove_cloud_alias(self, user_id, alias):

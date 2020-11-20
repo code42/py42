@@ -8,7 +8,7 @@ from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UserAlreadyAddedError
-from py42.exceptions import Py42UserDoesNotExist
+from py42.exceptions import Py42UserNotOnListError
 from py42.services.detectionlists.departing_employee import DepartingEmployeeFilters
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.user_profile import DetectionListUserService
@@ -107,18 +107,6 @@ class TestDepartingEmployeeClient(object):
         py42_response.test = mock_get_case_details_function.text
 
         return py42_response
-
-    @pytest.fixture
-    def mock_detection_list_user_client_failure(
-        self, mock_connection, user_context, mock_user_client, mocker
-    ):
-        user_client = DetectionListUserService(
-            mock_connection, user_context, mock_user_client
-        )
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 400
-        mock_connection.post.return_value = response
-        return user_client
 
     @pytest.mark.parametrize(
         "departing_date",
@@ -403,16 +391,16 @@ class TestDepartingEmployeeClient(object):
     def test_remove_raises_error_when_user_id_does_not_exist(
         self,
         user_context,
-        mock_connection_post_failure,
+        mock_post_not_found_session,
         mock_detection_list_user_client,
     ):
         departing_employee_client = DepartingEmployeeService(
-            mock_connection_post_failure, user_context, mock_detection_list_user_client
+            mock_post_not_found_session, user_context, mock_detection_list_user_client
         )
         user_id = "942897397520289999"
-        with pytest.raises(Py42UserDoesNotExist) as err:
+        with pytest.raises(Py42UserNotOnListError) as err:
             departing_employee_client.remove(user_id)
-        assert "User {} is not currently on the departing-employee detection list.".format(
+        assert "User with ID '{}' is not currently on the departing-employee detection list.".format(
             user_id
         ) in str(
             err.value

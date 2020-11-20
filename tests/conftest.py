@@ -170,7 +170,7 @@ def mock_successful_connection(mock_connection, successful_response):
 
 
 @pytest.fixture
-def mock_connection_post_failure(mocker, mock_connection):
+def mock_post_not_found_session(mocker, mock_connection):
     response = mocker.MagicMock(spec=Response)
     response.status_code = 404
     exception = mocker.MagicMock(spec=HTTPError)

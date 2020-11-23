@@ -176,6 +176,13 @@ class Py42CloudAliasLimitExceededError(Py42BadRequestError):
         super(Py42BadRequestError, self).__init__(exception, message)
 
 
+class Py42UserNotOnListError(Py42NotFoundError):
+    """An exception raised when the user is not on a detection list."""
+
+    def __init__(self, exception, message=None):
+        super(Py42NotFoundError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

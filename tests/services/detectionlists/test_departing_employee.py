@@ -8,6 +8,7 @@ from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UserAlreadyAddedError
+from py42.exceptions import Py42UserNotOnListError
 from py42.services.detectionlists.departing_employee import DepartingEmployeeFilters
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.user_profile import DetectionListUserService
@@ -385,4 +386,22 @@ class TestDepartingEmployeeClient(object):
             posted_data["userId"] == _USER_ID
             and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and posted_data["departureDate"] == "2020-12-20"
+        )
+
+    def test_remove_raises_error_when_user_id_does_not_exist(
+        self,
+        user_context,
+        mock_post_not_found_session,
+        mock_detection_list_user_client,
+    ):
+        departing_employee_client = DepartingEmployeeService(
+            mock_post_not_found_session, user_context, mock_detection_list_user_client
+        )
+        user_id = "942897397520289999"
+        with pytest.raises(Py42UserNotOnListError) as err:
+            departing_employee_client.remove(user_id)
+        assert "User with ID '{}' is not currently on the departing-employee detection list.".format(
+            user_id
+        ) in str(
+            err.value
         )

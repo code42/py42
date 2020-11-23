@@ -6,6 +6,7 @@ from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42MFARequiredError
 from py42.exceptions import Py42NotFoundError
+from py42.exceptions import Py42TooManyRequestsError
 from py42.exceptions import Py42UnauthorizedError
 from py42.exceptions import raise_py42_error
 
@@ -49,7 +50,12 @@ class TestPy42Errors(object):
         with pytest.raises(Py42HTTPError):
             raise_py42_error(error_response)
 
-    @pytest.mark.parametrize("status_code", [400, 401, 403, 404, 500, 600])
+    def test_raise_py42_error_raises_too_many_requests_error(self, error_response):
+        error_response.response.status_code = 429
+        with pytest.raises(Py42TooManyRequestsError):
+            raise_py42_error(error_response)
+
+    @pytest.mark.parametrize("status_code", [400, 401, 403, 404, 429, 500, 600])
     def test_raise_py42_http_error_has_correct_response_type(
         self, error_response, status_code
     ):

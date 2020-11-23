@@ -19,6 +19,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Added new exception `Py42CloudAliasLimitExceededError` to throw if `add_cloud_alias()` throws `400` and body contains
 reason `Cloud usernames must be less than or equal to`.
 
+- Added new exception `Py42TooManyRequestsError` to raise errors with 429 HTTP status code.
+
 ## 1.9.0 - 2020-10-02
 
 ### Changed

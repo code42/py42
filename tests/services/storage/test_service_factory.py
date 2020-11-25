@@ -50,8 +50,8 @@ class TestStorageServiceFactory(object):
         factory = StorageServiceFactory(
             mock_successful_connection, mock_device_service, mock_connection_manager
         )
-        service = factory.create_archive_service("testguid")
-        mock_device_service.get_by_guid.call_count == 0
+        service = factory.create_archive_service("testguid", destination_guid=42)
+        assert mock_device_service.get_by_guid.call_count == 0
         assert type(service) == StorageArchiveService
 
     def test_create_archive_service_when_device_has_no_destination_raises_exception(

@@ -1,3 +1,5 @@
+import re
+
 from py42._compat import str
 
 
@@ -194,12 +196,11 @@ def raise_py42_error(raised_error):
     if raised_error.response.status_code == 400:
         raise Py42BadRequestError(raised_error)
     elif raised_error.response.status_code == 401:
-        if raised_error.response.text:
-            if (
-                "TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER"
-                or "TIME_BASED_ONE_TIME_PASSWORD_REQUIRED" in raised_error.response.text
-            ):
-                raise Py42MFARequiredError(raised_error)
+        if raised_error.response.text and re.search(
+            "(TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER|TIME_BASED_ONE_TIME_PASSWORD_REQUIRED)",
+            raised_error.response.text,
+        ):
+            raise Py42MFARequiredError(raised_error)
         raise Py42UnauthorizedError(raised_error)
     elif raised_error.response.status_code == 403:
         raise Py42ForbiddenError(raised_error)

@@ -13,6 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Fixed
 
 - Bug where an empty destination list in a device's backup set broke creation of DeviceSettings objects for that device.
+- Bug where all 401 Unauthorized error responses were being raised as Py42MFARequired exceptions.
 
 ### Added
 

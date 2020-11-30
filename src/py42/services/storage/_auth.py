@@ -1,28 +1,40 @@
 from py42.services._auth import C42RenewableAuth
+from py42.services._connection import Connection
 
 
-class StorageTmpAuth(C42RenewableAuth):
+class StorageAuth(C42RenewableAuth):
     def __init__(self):
-        super(StorageTmpAuth, self).__init__()
+        super(StorageAuth, self).__init__()
         self._storage_url = None
+        self._storage_connection = None
 
     def get_storage_url(self):
         self.get_credentials()
-        return self._server_url
+        return self._storage_url
 
     def get_tmp_auth(self):
         raise NotImplementedError()
 
+    def _get_auth_token(self, login_token):
+        uri = u"api/AuthToken"
+        response = self._storage_connection.post(
+            uri, headers={"Authorization": "login_token {}".format(login_token)}
+        )
+        token1, token2 = response.data
+        return u"token {}-{}".format(token1, token2)
+
     def _get_credentials(self):
-        login_info = self.get_tmp_auth()
-        login_token = login_info[u"loginToken"]
-        self._server_url = login_info[u"serverUrl"]
-        return u"login_token {}".format(login_token)
+        storage_url, login_token = self.get_tmp_auth()
+        self._storage_url = storage_url
+        self._storage_connection = (
+            self._storage_connection or _get_new_storage_connection(self._storage_url)
+        )
+        return self._get_auth_token(login_token)
 
 
-class FileArchiveTmpAuth(StorageTmpAuth):
+class FileArchiveAuth(StorageAuth):
     def __init__(self, connection, user_id, device_guid, destination_guid):
-        super(FileArchiveTmpAuth, self).__init__()
+        super(FileArchiveAuth, self).__init__()
         self._connection = connection
         self._user_id = user_id
         self._device_guid = device_guid
@@ -36,12 +48,14 @@ class FileArchiveTmpAuth(StorageTmpAuth):
             u"destinationGuid": self._destination_guid,
         }
         response = self._connection.post(uri, json=data)
-        return response
+        storage_url = response[u"serverUrl"]
+        login_token = response[u"loginToken"]
+        return storage_url, login_token
 
 
-class SecurityArchiveTmpAuth(StorageTmpAuth):
+class SecurityArchiveAuth(StorageAuth):
     def __init__(self, connection, plan_uid, destination_guid):
-        super(SecurityArchiveTmpAuth, self).__init__()
+        super(SecurityArchiveAuth, self).__init__()
         self._connection = connection
         self._plan_uid = plan_uid
         self._destination_guid = destination_guid
@@ -50,15 +64,10 @@ class SecurityArchiveTmpAuth(StorageTmpAuth):
         uri = u"/api/StorageAuthToken"
         data = {u"planUid": self._plan_uid, u"destinationGuid": self._destination_guid}
         response = self._connection.post(uri, json=data)
-        return response
+        storage_url = response[u"serverUrl"]
+        login_token = response[u"loginToken"]
+        return storage_url, login_token
 
 
-class V1Auth(C42RenewableAuth):
-    def __init__(self, storage_tmp_session):
-        super(V1Auth, self).__init__()
-        self._auth_session = storage_tmp_session
-
-    def _get_credentials(self):
-        uri = u"/api/AuthToken"
-        response = self._auth_session.post(uri)
-        return u"token {}-{}".format(response[0], response[1])
+def _get_new_storage_connection(storage_url):
+    return Connection.from_host_address(storage_url)

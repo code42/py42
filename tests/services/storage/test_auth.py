@@ -1,9 +1,12 @@
+import json
+
 import pytest
 from requests import Request
 
-from py42.services.storage._auth import FileArchiveTmpAuth
-from py42.services.storage._auth import SecurityArchiveTmpAuth
-from py42.services.storage._auth import V1Auth
+from py42.response import Py42Response
+from py42.services._connection import Connection
+from py42.services.storage._auth import FileArchiveAuth
+from py42.services.storage._auth import SecurityArchiveAuth
 
 TEST_USER_ID = "0123456789"
 TEST_DEVICE_GUID = "testdeviceguid"
@@ -28,37 +31,52 @@ def mock_tmp_auth_conn(mock_connection, py42_response):
 
 
 @pytest.fixture
-def mock_v1_auth_conn(mock_connection, py42_response):
-    py42_response.text = '["TEST_V1", "TOKEN_VALUE"]'
-    mock_connection.post.return_value = py42_response
-    return mock_connection
+def mock_storage_auth_token_conn(mocker):
+    response = mocker.MagicMock(spec=Py42Response)
+    response.status_code = 200
+    response.encoding = None
+    response.__getitem__ = lambda _, key: json.loads(response.text)[key]
+    response.text = '["TEST_V1", "TOKEN_VALUE"]'
+    response.data = json.loads(response.text)
+
+    connection = mocker.MagicMock(spec=Connection)
+    connection.headers = {}
+    connection.post.return_value = response
+
+    mocker.patch(
+        "py42.services.storage._auth._get_new_storage_connection",
+        return_value=connection,
+    )
+    return connection
 
 
 class TestFileArchiveTmpAuth(object):
     def test_call_returns_request_with_expected_header(
-        self, mock_tmp_auth_conn, mock_request
+        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
-        auth = FileArchiveTmpAuth(
+        auth = FileArchiveAuth(
             mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
         )
         request = auth(mock_request)
-        assert request.headers["Authorization"] == "login_token TEST_TMP_TOKEN_VALUE"
+        assert request.headers["Authorization"] == "token TEST_V1-TOKEN_VALUE"
 
-    def test_call_only_calls_auth_api_first_time(
-        self, mock_tmp_auth_conn, mock_request
+    def test_call_only_calls_auth_apis_first_time(
+        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
-        auth = FileArchiveTmpAuth(
+        auth = FileArchiveAuth(
             mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
         )
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 1
+        assert mock_storage_auth_token_conn.post.call_count == 1
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 1
+        assert mock_storage_auth_token_conn.post.call_count == 1
 
-    def test_call_calls_auth_api_with_expected_url(
-        self, mock_tmp_auth_conn, mock_request
+    def test_call_calls_auth_apis_with_expected_urls(
+        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
-        auth = FileArchiveTmpAuth(
+        auth = FileArchiveAuth(
             mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
         )
         auth(mock_request)
@@ -68,60 +86,74 @@ class TestFileArchiveTmpAuth(object):
             u"destinationGuid": TEST_DESTINATION_GUID,
         }
         mock_tmp_auth_conn.post.assert_called_once_with("/api/LoginToken", json=data)
+        mock_storage_auth_token_conn.post.assert_called_once_with(
+            "api/AuthToken",
+            headers={"Authorization": "login_token TEST_TMP_TOKEN_VALUE"},
+        )
 
     def test_clear_credentials_causes_auth_api_to_be_called_on_subsequent_calls(
-        self, mock_tmp_auth_conn, mock_request
+        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
-        auth = FileArchiveTmpAuth(
+        auth = FileArchiveAuth(
             mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
         )
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 1
+        assert mock_storage_auth_token_conn.post.call_count == 1
         auth.clear_credentials()
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 2
+        assert mock_storage_auth_token_conn.post.call_count == 2
 
-    def test_get_storage_url_returns_expected_value(self, mock_tmp_auth_conn):
-        auth = FileArchiveTmpAuth(
+    def test_get_storage_url_returns_expected_value(
+        self, mock_tmp_auth_conn, mock_storage_auth_token_conn
+    ):
+        auth = FileArchiveAuth(
             mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
         )
         assert auth.get_storage_url() == "testhost.com"
 
-    def test_get_storage_url_only_calls_auth_api_first_time(self, mock_tmp_auth_conn):
-        auth = FileArchiveTmpAuth(
+    def test_get_storage_url_only_calls_auth_api_first_time(
+        self, mock_tmp_auth_conn, mock_storage_auth_token_conn
+    ):
+        auth = FileArchiveAuth(
             mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
         )
         auth.get_storage_url()
         assert mock_tmp_auth_conn.post.call_count == 1
+        assert mock_storage_auth_token_conn.post.call_count == 1
         auth.get_storage_url()
         assert mock_tmp_auth_conn.post.call_count == 1
+        assert mock_storage_auth_token_conn.post.call_count == 1
 
 
 class TestSecurityArchiveTmpAuth(object):
     def test_call_returns_request_with_expected_header(
-        self, mock_tmp_auth_conn, mock_request
+        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
-        auth = SecurityArchiveTmpAuth(
+        auth = SecurityArchiveAuth(
             mock_tmp_auth_conn, TEST_PLAN_UID, TEST_DESTINATION_GUID
         )
         request = auth(mock_request)
-        assert request.headers["Authorization"] == "login_token TEST_TMP_TOKEN_VALUE"
+        assert request.headers["Authorization"] == "token TEST_V1-TOKEN_VALUE"
 
-    def test_call_only_calls_auth_api_first_time(
-        self, mock_tmp_auth_conn, mock_request
+    def test_call_only_calls_auth_apis_first_time(
+        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
-        auth = SecurityArchiveTmpAuth(
+        auth = SecurityArchiveAuth(
             mock_tmp_auth_conn, TEST_PLAN_UID, TEST_DESTINATION_GUID
         )
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 1
+        assert mock_storage_auth_token_conn.post.call_count == 1
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 1
+        assert mock_storage_auth_token_conn.post.call_count == 1
 
-    def test_call_calls_auth_api_with_expected_url(
-        self, mock_tmp_auth_conn, mock_request
+    def test_call_calls_auth_apis_with_expected_urls(
+        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
-        auth = SecurityArchiveTmpAuth(
+        auth = SecurityArchiveAuth(
             mock_tmp_auth_conn, TEST_PLAN_UID, TEST_DESTINATION_GUID
         )
         auth(mock_request)
@@ -129,63 +161,42 @@ class TestSecurityArchiveTmpAuth(object):
         mock_tmp_auth_conn.post.assert_called_once_with(
             "/api/StorageAuthToken", json=data
         )
+        mock_storage_auth_token_conn.post.assert_called_once_with(
+            u"api/AuthToken",
+            headers={"Authorization": "login_token TEST_TMP_TOKEN_VALUE"},
+        )
 
-    def test_clear_credentials_causes_auth_api_to_be_called_on_subsequent_calls(
-        self, mock_tmp_auth_conn, mock_request
+    def test_clear_credentials_causes_auth_apis_to_be_called_on_subsequent_calls(
+        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
-        auth = SecurityArchiveTmpAuth(
+        auth = SecurityArchiveAuth(
             mock_tmp_auth_conn, TEST_PLAN_UID, TEST_DESTINATION_GUID
         )
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 1
+        assert mock_storage_auth_token_conn.post.call_count == 1
         auth.clear_credentials()
         auth(mock_request)
         assert mock_tmp_auth_conn.post.call_count == 2
+        assert mock_storage_auth_token_conn.post.call_count == 2
 
-    def test_get_storage_url_returns_expected_value(self, mock_tmp_auth_conn):
-        auth = SecurityArchiveTmpAuth(
+    def test_get_storage_url_returns_expected_value(
+        self, mock_tmp_auth_conn, mock_storage_auth_token_conn
+    ):
+        auth = SecurityArchiveAuth(
             mock_tmp_auth_conn, TEST_PLAN_UID, TEST_DESTINATION_GUID
         )
         assert auth.get_storage_url() == "testhost.com"
 
-    def test_get_storage_url_only_calls_auth_api_first_time(self, mock_tmp_auth_conn):
-        auth = SecurityArchiveTmpAuth(
+    def test_get_storage_url_only_calls_auth_apis_first_time(
+        self, mock_tmp_auth_conn, mock_storage_auth_token_conn
+    ):
+        auth = SecurityArchiveAuth(
             mock_tmp_auth_conn, TEST_PLAN_UID, TEST_DESTINATION_GUID
         )
         auth.get_storage_url()
         assert mock_tmp_auth_conn.post.call_count == 1
+        assert mock_storage_auth_token_conn.post.call_count == 1
         auth.get_storage_url()
         assert mock_tmp_auth_conn.post.call_count == 1
-
-
-class TestV1Auth(object):
-    def test_call_returns_request_with_expected_header(
-        self, mock_v1_auth_conn, mock_request
-    ):
-        auth = V1Auth(mock_v1_auth_conn)
-        request = auth(mock_request)
-        assert request.headers["Authorization"] == "token TEST_V1-TOKEN_VALUE"
-
-    def test_call_only_calls_auth_api_first_time(self, mock_v1_auth_conn, mock_request):
-        auth = V1Auth(mock_v1_auth_conn)
-        auth(mock_request)
-        assert mock_v1_auth_conn.post.call_count == 1
-        auth(mock_request)
-        assert mock_v1_auth_conn.post.call_count == 1
-
-    def test_call_calls_auth_api_with_expected_url(
-        self, mock_v1_auth_conn, mock_request
-    ):
-        auth = V1Auth(mock_v1_auth_conn)
-        auth(mock_request)
-        mock_v1_auth_conn.post.assert_called_once_with("/api/AuthToken")
-
-    def test_clear_credentials_causes_auth_api_to_be_called_on_subsequent_calls(
-        self, mock_v1_auth_conn, mock_request
-    ):
-        auth = V1Auth(mock_v1_auth_conn)
-        auth(mock_request)
-        assert mock_v1_auth_conn.post.call_count == 1
-        auth.clear_credentials()
-        auth(mock_request)
-        assert mock_v1_auth_conn.post.call_count == 2
+        assert mock_storage_auth_token_conn.post.call_count == 1

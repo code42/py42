@@ -15,6 +15,9 @@ def create_file_size_poller(storage_archive_service, device_guid):
 
 
 class _RestorePoller(object):
+    """Base class for observing web/push restore calculation processes, such as polling
+    for file sizes or the restore itself."""
+
     JOB_POLLING_INTERVAL_SECONDS = 1
 
     def __init__(self, storage_archive_service, device_guid, job_polling_interval=None):
@@ -26,6 +29,10 @@ class _RestorePoller(object):
 
 
 class FileSizePoller(_RestorePoller):
+    """Monitors the status of a poll-job; the bytes and number of files needed for a
+    restore. This affords py42 users a chance to observe the progress of a web/push
+    restore."""
+
     def __init__(self, storage_archive_service, device_guid, job_polling_interval=None):
         super(FileSizePoller, self).__init__(
             storage_archive_service, device_guid, job_polling_interval
@@ -78,6 +85,8 @@ class FileSizePoller(_RestorePoller):
 
 
 class RestoreJobManager(_RestorePoller):
+    """Monitors and manages the status of a web/push restore."""
+
     def __init__(
         self,
         storage_archive_service,

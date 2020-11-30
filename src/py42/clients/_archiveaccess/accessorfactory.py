@@ -4,6 +4,9 @@ from py42.clients._archiveaccess.restoremanager import create_restore_job_manage
 
 
 class ArchiveAccessorFactory(object):
+    """Creates different types of :class:`py42.clients._archiveaccess.ArchiveAccessor`
+    for use in a web/push restore."""
+
     def __init__(self, archive_service, storage_service_factory):
         self._archive_service = archive_service
         self._storage_service_factory = storage_service_factory

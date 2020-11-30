@@ -4,15 +4,20 @@ from collections import namedtuple
 from py42.exceptions import Py42ArchiveFileNotFoundError
 
 
+# Data for initiating a web or push restore.
 FileSelection = namedtuple(u"FileSelection", u"file, num_files, num_dirs, num_bytes")
 
 
 class FileType(object):
+    """The different file-types in an archive."""
+
     DIRECTORY = u"DIRECTORY"
     FILE = u"FILE"
 
 
 class ArchiveAccessor(object):
+    """Base class for certain archive operations, such file-exploring or restoring."""
+
     DEFAULT_DIRECTORY_DOWNLOAD_NAME = u"download"
     JOB_POLLING_INTERVAL = 1
 
@@ -34,6 +39,8 @@ class ArchiveAccessor(object):
 
 
 class ArchiveExplorer(ArchiveAccessor):
+    """Abstracts file exploring / tree-navigation in the context of a restore."""
+
     def create_file_selections(self, backup_set_id, file_paths, file_size_calc_timeout):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
@@ -99,6 +106,8 @@ class ArchiveExplorer(ArchiveAccessor):
 
 
 class ArchiveContentStreamer(ArchiveExplorer):
+    """A class with methods for restoring files from backup."""
+
     def stream_from_backup(
         self, backup_set_id, file_paths, file_size_calc_timeout=None, show_deleted=None,
     ):
@@ -111,6 +120,9 @@ class ArchiveContentStreamer(ArchiveExplorer):
 
 
 class ArchiveContentPusher(ArchiveAccessor):
+    """A class with methods for restoring files from backup and pushing them to a device
+    (push restore)."""
+
     def __init__(
         self,
         device_guid,

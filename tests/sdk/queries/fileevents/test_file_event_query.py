@@ -2,7 +2,7 @@ from py42._compat import str
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 
 
-JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'
+JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "srtDir":"{4}", "srtKey":"{5}", "pgNum":{2}, "pgSize":{3}}}'
 
 
 def build_query_json(group_clause, group_list):

@@ -185,6 +185,28 @@ class SecurityDataClient(object):
         """
         return self._file_event_service.search(query)
 
+    def get_all_file_events(self, query):
+        """Searches for file events.
+        `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
+
+        Args:
+            query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`): Also
+                accepts a raw JSON str.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing the first 10,000
+            events.
+        """
+
+        response = self._file_event_service.search(query)
+        yield response
+        query.pgToken = response["nextPgToken"]
+        query.pgToken = "abc"
+        while query.pgToken is not None:
+            response = self._file_event_service.search(query)
+            yield response
+            query.pgToken = response["nextPgToken"]
+
     def stream_file_by_sha256(self, checksum):
         """Stream file based on SHA256 checksum.
 

@@ -17,6 +17,15 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Fixed
 
 - Bug where an empty destination list in a device's backup set broke creation of DeviceSettings objects for that device.
+- Bug where all 401 Unauthorized error responses were being raised as Py42MFARequired exceptions.
+
+### Added
+
+- Added new exception `Py42CloudAliasLimitExceededError` to throw if `add_cloud_alias()` throws `400` and body contains
+reason `Cloud usernames must be less than or equal to`.
+- Added new exception `Py42UserNotOnListError` to throw error if `remove()` throws `404` when the user is not on a detection list.
+
+- Added new exception `Py42TooManyRequestsError` to raise errors with 429 HTTP status code.
 
 ## 1.9.0 - 2020-10-02
 

@@ -588,24 +588,25 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         self, org_settings_dict
     ):
         org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
-        org_settings.device_defaults.backup_sets[0].add_destination(632540230984925185)
+        org_settings.device_defaults.backup_sets[1].add_destination(632540230984925185)
         expected_destinations_property = {
             "43": "PROe Cloud, US <LOCKED>",
             "673679195225718785": "PROe Cloud, AMS",
+            "632540230984925185": "PROe Cloud, US - West",
         }
         expected_destinations_list = [
             {"@id": "43", "@locked": "true"},
-            {"@id": "632540230984925185"},
             {"@id": "673679195225718785"},
+            {"@id": "632540230984925185"},
         ]
         assert (
             org_settings.device_defaults.backup_sets[1].destinations
             == expected_destinations_property
         )
-        for destination in expected_destinations_list:
-            destination in org_settings.device_defaults["settings"][
-                "serviceBackupConfig"
-            ]["backupConfig"]["backupSets"]["backupSet"][1]["destinations"]
+        assert (
+            org_settings.device_defaults.backup_sets[1]["destinations"]
+            == expected_destinations_list
+        )
 
     def test_backup_set_add_destination_when_destination_not_available_raises(
         self, org_settings_dict

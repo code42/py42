@@ -1,3 +1,5 @@
+import re
+
 from py42._compat import str
 
 
@@ -119,6 +121,10 @@ class Py42InternalServerError(Py42HTTPError):
     """A wrapper to represent an HTTP 500 error."""
 
 
+class Py42TooManyRequestsError(Py42HTTPError):
+    """A wrapper to represent an HTTP 429 error."""
+
+
 class Py42ActiveLegalHoldError(Py42BadRequestError):
     """An exception raised when attempting to deactivate a user or device that is in an
     active legal hold."""
@@ -179,6 +185,22 @@ class Py42UserAlreadyExistsError(Py42InternalServerError):
         super(Py42UserAlreadyExistsError, self).__init__(exception, message)
 
 
+class Py42CloudAliasLimitExceededError(Py42BadRequestError):
+    """An Exception raised when trying to add a cloud alias to a user when that user
+    already has the max amount of supported cloud aliases."""
+
+    def __init__(self, exception, message=None):
+        message = message or u"Cloud alias limit exceeded."
+        super(Py42BadRequestError, self).__init__(exception, message)
+
+
+class Py42UserNotOnListError(Py42NotFoundError):
+    """An exception raised when the user is not on a detection list."""
+
+    def __init__(self, exception, message=None):
+        super(Py42NotFoundError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.
@@ -186,17 +208,18 @@ def raise_py42_error(raised_error):
     if raised_error.response.status_code == 400:
         raise Py42BadRequestError(raised_error)
     elif raised_error.response.status_code == 401:
-        if raised_error.response.text:
-            if (
-                "TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER"
-                or "TIME_BASED_ONE_TIME_PASSWORD_REQUIRED" in raised_error.response.text
-            ):
-                raise Py42MFARequiredError(raised_error)
+        if raised_error.response.text and re.search(
+            "(TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER|TIME_BASED_ONE_TIME_PASSWORD_REQUIRED)",
+            raised_error.response.text,
+        ):
+            raise Py42MFARequiredError(raised_error)
         raise Py42UnauthorizedError(raised_error)
     elif raised_error.response.status_code == 403:
         raise Py42ForbiddenError(raised_error)
     elif raised_error.response.status_code == 404:
         raise Py42NotFoundError(raised_error)
+    elif raised_error.response.status_code == 429:
+        raise Py42TooManyRequestsError(raised_error)
     elif 500 <= raised_error.response.status_code < 600:
         raise Py42InternalServerError(raised_error)
     else:

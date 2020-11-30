@@ -49,6 +49,16 @@ class TestStorageServiceFactory(object):
         service = factory.create_archive_service("testguid", None)
         assert type(service) == StorageArchiveService
 
+    def test_create_archive_service_when_given_destination_guid_does_not_call_device_service(
+        self, mock_successful_connection, mock_device_service, mock_connection_manager
+    ):
+        factory = StorageServiceFactory(
+            mock_successful_connection, mock_device_service, mock_connection_manager
+        )
+        service = factory.create_archive_service("testguid", destination_guid=42)
+        assert mock_device_service.get_by_guid.call_count == 0
+        assert type(service) == StorageArchiveService
+
     def test_auto_select_destination_guid_when_device_has_no_destination_raises_exception(
         self,
         mock_successful_connection,

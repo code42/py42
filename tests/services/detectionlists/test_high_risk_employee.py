@@ -3,6 +3,7 @@ from requests import HTTPError
 from requests import Response
 
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeFilters
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
@@ -64,7 +65,7 @@ class TestHighRiskEmployeeClient(object):
         assert mock_connection_post_success.post.call_count == 2
         assert (
             mock_connection_post_success.post.call_args[0][0]
-            == "/svc/api/v2/highriskemployee/add"
+            == "v2/highriskemployee/add"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -102,8 +103,7 @@ class TestHighRiskEmployeeClient(object):
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
         assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/highriskemployee/setalertstate"
+            mock_connection.post.call_args[0][0] == "v2/highriskemployee/setalertstate"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -121,8 +121,7 @@ class TestHighRiskEmployeeClient(object):
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
         assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/highriskemployee/setalertstate"
+            mock_connection.post.call_args[0][0] == "v2/highriskemployee/setalertstate"
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
@@ -140,10 +139,7 @@ class TestHighRiskEmployeeClient(object):
         posted_data = mock_connection.post.call_args[1]["json"]
 
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/highriskemployee/remove"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/remove"
         assert posted_data["tenantId"] == user_context.get_current_tenant_id()
         assert posted_data["userId"] == "942897397520289999"
 
@@ -157,9 +153,7 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0] == "/svc/api/v2/highriskemployee/get"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/get"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["userId"] == "942897397520289999"
@@ -176,10 +170,7 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/highriskemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/search"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "OPEN"
@@ -205,10 +196,7 @@ class TestHighRiskEmployeeClient(object):
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/highriskemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/search"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "NEW_FILTER"
@@ -233,10 +221,7 @@ class TestHighRiskEmployeeClient(object):
         )
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/highriskemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/highriskemployee/search"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["filterType"] == "NEW_FILTER"
@@ -244,4 +229,22 @@ class TestHighRiskEmployeeClient(object):
             and posted_data["pgSize"] == 10
             and posted_data["srtKey"] == "DISPLAY_NAME"
             and posted_data["srtDirection"] == "DESC"
+        )
+
+    def test_remove_raises_error_when_user_id_does_not_exist(
+        self,
+        user_context,
+        mock_post_not_found_session,
+        mock_detection_list_user_client,
+    ):
+        high_risk_employee_client = HighRiskEmployeeService(
+            mock_post_not_found_session, user_context, mock_detection_list_user_client
+        )
+        user_id = "942897397520289999"
+        with pytest.raises(Py42NotFoundError) as err:
+            high_risk_employee_client.remove(user_id)
+        assert "User with ID '{}' is not currently on the high-risk-employee detection list.".format(
+            user_id
+        ) in str(
+            err.value
         )

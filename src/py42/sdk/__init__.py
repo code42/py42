@@ -205,7 +205,7 @@ def _init_services(main_connection, main_auth):
     alerts_key = u"AlertService-API_URL"
     file_events_key = u"FORENSIC_SEARCH-API_URL"
     preservation_data_key = u"PRESERVATION-DATA-SERVICE_API-URL"
-    employee_case_mgmt_key = u"employeecasemanagement-API_URL"
+    employee_case_mgmt_key = u"employeecasemanagementV2-API_URL"
     kv_prefix = u"simple-key-value-store"
     audit_logs_key = u"AUDIT-LOG_API-URL"
 

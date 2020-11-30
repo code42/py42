@@ -102,7 +102,7 @@ To execute the search, use the `alerts.AlertClient.search()` method:
 
 ```python
 # Prints the actor property from each search result
-response = sdk.securitydata.alerts.search(query)
+response = sdk.alerts.search(query)
 alerts = response["alerts"]
 for alert in alerts:
     print(alert["actor"])

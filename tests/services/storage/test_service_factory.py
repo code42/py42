@@ -5,7 +5,7 @@ from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
 from py42.services.devices import DeviceService
-from py42.services.storage._auth import StorageTmpAuth
+from py42.services.storage._auth import StorageAuth
 from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.archive import StorageArchiveService
@@ -15,7 +15,7 @@ from py42.services.storage.securitydata import StorageSecurityDataService
 
 @pytest.fixture
 def mock_tmp_auth(mocker):
-    mock = mocker.MagicMock(spec=StorageTmpAuth)
+    mock = mocker.MagicMock(spec=StorageAuth)
     mock.get_storage_url.return_value = "testhost.com"
     return mock
 

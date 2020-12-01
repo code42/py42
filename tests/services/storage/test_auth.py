@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from requests import Request
 
@@ -32,22 +30,16 @@ def mock_tmp_auth_conn(mock_connection, py42_response):
 
 @pytest.fixture
 def mock_storage_auth_token_conn(mocker):
-    response = mocker.MagicMock(spec=Py42Response)
-    response.status_code = 200
-    response.encoding = None
-    response.__getitem__ = lambda _, key: json.loads(response.text)[key]
-    response.text = '["TEST_V1", "TOKEN_VALUE"]'
-    response.data = json.loads(response.text)
-
-    connection = mocker.MagicMock(spec=Connection)
-    connection.headers = {}
-    connection.post.return_value = response
-
+    mock_request = mocker.MagicMock(spec=Request)
+    mock_request.text = '["TEST_V1", "TOKEN_VALUE"]'
+    mock_connection = mocker.MagicMock(spec=Connection)
+    mock_connection.headers = {}
+    mock_connection.post.return_value = Py42Response(mock_request)
     mocker.patch(
         "py42.services.storage._auth._get_new_storage_connection",
-        return_value=connection,
+        return_value=mock_connection,
     )
-    return connection
+    return mock_connection
 
 
 class TestFileArchiveTmpAuth(object):

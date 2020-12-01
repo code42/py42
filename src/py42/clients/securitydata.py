@@ -198,9 +198,7 @@ class SecurityDataClient(object):
             events.
         """
 
-        response = self._file_event_service.search(query)
-        yield response
-        query.pgToken = response["nextPgToken"]
+        query.pgToken = ""
         while query.pgToken is not None:
             response = self._file_event_service.search(query)
             yield response

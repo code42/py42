@@ -40,7 +40,7 @@ class FileEventQuery(BaseQuery):
         items.append(u'"groups":[{}]'.format(groups_string))
         items.append(u'"srtDir":"{}"'.format(self.sort_direction))
         items.append(u'"srtKey":"{}"'.format(self.sort_key))
-        if self.pgToken:
+        if self.pgToken is not None:
             items.append(u'"pgToken":"{}"'.format(self.pgToken))
         else:
             items.append(u'"pgNum":{}'.format(self.page_number))

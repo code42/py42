@@ -148,10 +148,16 @@ def test_file_event_query_dict_gives_expected_dict_representation(event_filter_g
 
 
 def test_file_event_str_gives_correct_json_representation_when_pg_token_is_set(
-     event_filter_group
+    event_filter_group,
 ):
     query = FileEventQuery()
     assert query.pgToken is None
-    assert str(query) == u'{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgNum":1, "pgSize":10000}'
+    assert (
+        str(query)
+        == u'{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgNum":1, "pgSize":10000}'
+    )
     query.pgToken = "abc"
-    assert str(query) == u'{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc"}'
+    assert (
+        str(query)
+        == u'{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc"}'
+    )

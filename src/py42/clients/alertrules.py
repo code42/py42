@@ -86,7 +86,7 @@ class AlertRulesClient(object):
             raise
 
     def get_page(
-        self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None,
+        self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None
     ):
         """Gets a page of alert rules. Note that you can use page_size here the same
         way as other methods that have a `page_size` parameter in py42. However, under

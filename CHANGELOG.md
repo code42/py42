@@ -10,6 +10,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
+
+- `sdk.archive.stream_to_device()` for pushing a restore to another device.
+
 ### Fixed
 
 - Bug where an empty destination list in a device's backup set broke creation of DeviceSettings objects for that device.

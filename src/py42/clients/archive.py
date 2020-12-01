@@ -1,3 +1,7 @@
+from py42.clients._archiveaccess import ArchiveContentStreamer
+from py42.clients._archiveaccess import ArchiveExplorer
+
+
 _FILE_SIZE_CALC_TIMEOUT = 10
 
 
@@ -6,8 +10,8 @@ class ArchiveClient(object):
     functionality for streaming a file from backup.
     """
 
-    def __init__(self, archive_accessor_manager, archive_service):
-        self._archive_accessor_manager = archive_accessor_manager
+    def __init__(self, archive_accessor_factory, archive_service):
+        self._archive_accessor_factory = archive_accessor_factory
         self._archive_service = archive_service
 
     def get_by_archive_guid(self, archive_guid):
@@ -45,6 +49,7 @@ class ArchiveClient(object):
         destination_guid=None,
         archive_password=None,
         encryption_key=None,
+        show_deleted=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         """Streams a file from a backup archive to memory. If streaming multiple files, the
@@ -53,7 +58,7 @@ class ArchiveClient(object):
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in
-                your archive.
+                the archive.
             device_guid (str): The GUID of the device the file belongs to.
             destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your
@@ -65,6 +70,8 @@ class ArchiveClient(object):
             encryption_key (str or None, optional): A custom encryption key for decrypting an archive's
                 file contents, necessary for restoring files. This is only relevant to users with custom
                 key archive security. Defaults to None.
+            show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
+                Defaults to None.
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
@@ -86,15 +93,101 @@ class ArchiveClient(object):
             with zipfile.ZipFile("downloaded_directory.zip", "r") as zf:
                 zf.extractall(".")
         """
-        archive_accessor = self._archive_accessor_manager.get_archive_accessor(
+        archive_accessor = self._archive_accessor_factory.create_archive_accessor(
             device_guid,
+            ArchiveContentStreamer,
             destination_guid=destination_guid,
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        return archive_accessor.stream_from_backup(
-            file_paths, file_size_calc_timeout=file_size_calc_timeout
+        backup_set_id = self._select_backup_set_id(
+            device_guid, archive_accessor.destination_guid
         )
+        return archive_accessor.stream_from_backup(
+            backup_set_id,
+            file_paths,
+            file_size_calc_timeout=file_size_calc_timeout,
+            show_deleted=show_deleted,
+        )
+
+    def stream_to_device(
+        self,
+        file_paths,
+        device_guid,
+        accepting_device_guid,
+        restore_path,
+        destination_guid=None,
+        archive_password=None,
+        encryption_key=None,
+        show_deleted=None,
+        file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
+    ):
+        """Streams a file from a backup archive to a specified device.
+
+        Args:
+            file_paths (str or list of str): The path or list of paths to the files or directories in
+                the archive.
+            device_guid (str): The GUID of the device the file belongs to.
+            accepting_device_guid (str): The GUID of the device accepting the restore.
+            restore_path (str): The path on the accepting device where the restore will be saved.
+            destination_guid (str, optional): The GUID of the destination that stores the backup
+                of the file. If None, it will use the first destination GUID it finds for your
+                device. 'destination_guid' may be useful if the file is missing from one of your
+                destinations or if you want to optimize performance. Defaults to None.
+            archive_password (str or None, optional): The password for the archive, if password-
+                protected. This is only relevant to users with archive key password security. Defaults
+                to None.
+            encryption_key (str or None, optional): A custom encryption key for decrypting an archive's
+                file contents, necessary for restoring files. This is only relevant to users with custom
+                key archive security. Defaults to None.
+            show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
+                Defaults to None.
+            file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
+                file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
+                Defaults to 10.
+
+        Returns:
+            :class:`py42.response.Py42Response`.
+        """
+        explorer = self._archive_accessor_factory.create_archive_accessor(
+            device_guid,
+            ArchiveExplorer,
+            destination_guid=destination_guid,
+            private_password=archive_password,
+            encryption_key=encryption_key,
+        )
+        backup_set_id = self._select_backup_set_id(
+            device_guid, explorer.destination_guid
+        )
+        file_selections = explorer.create_file_selections(
+            backup_set_id, file_paths, file_size_calc_timeout
+        )
+        pusher = self._archive_accessor_factory.create_archive_content_pusher(
+            device_guid,
+            accepting_device_guid,
+            private_password=archive_password,
+            encryption_key=encryption_key,
+            destination_guid=explorer.destination_guid,
+        )
+        return pusher.stream_to_device(
+            restore_path,
+            accepting_device_guid,
+            file_selections,
+            backup_set_id,
+            show_deleted,
+        )
+
+    def _select_backup_set_id(self, device_guid, destination_guid):
+        backup_sets = self.get_backup_sets(device_guid, destination_guid)[u"backupSets"]
+        if not backup_sets:
+            return None
+        for backup_set in backup_sets:
+            backup_set_id = backup_set[u"backupSetId"]
+            # 1 is the default backup set ID and is preferred.
+            if str(backup_set_id) == "1":
+                return backup_set_id
+
+        return backup_sets[0][u"backupSetId"]
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific
@@ -174,8 +267,8 @@ class ArchiveClient(object):
         self,
         org_id,
         include_child_orgs=True,
-        sort_key="archiveHoldExpireDate",
-        sort_dir="asc",
+        sort_key=u"archiveHoldExpireDate",
+        sort_dir=u"asc",
     ):
         """Returns a detailed list of cold storage archive information for a given org ID.
 

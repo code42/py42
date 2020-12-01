@@ -31,7 +31,6 @@ class HighRiskEmployeeService(BaseService):
         return u"{}{}".format(self._resource, action)
 
     def _add_high_risk_employee(self, tenant_id, user_id):
-
         data = {u"tenantId": tenant_id, u"userId": user_id}
         uri = self._make_uri(u"/add")
         return self._connection.post(uri, json=data)

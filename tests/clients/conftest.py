@@ -1,25 +1,53 @@
 from collections import namedtuple
 
+import pytest
+from tests.conftest import create_mock_response
+from tests.conftest import TEST_BACKUP_SET_ID
+from tests.conftest import TEST_DATA_KEY_TOKEN
+from tests.conftest import TEST_DESTINATION_GUID_1
+from tests.conftest import TEST_DEVICE_GUID
+from tests.conftest import TEST_NODE_GUID
+
+from py42.clients._archiveaccess import FileSelection
+from py42.services.archive import ArchiveService
 
 param = namedtuple("param", "name new_val expected_stored_val dict_location")
 
-TEST_USER_ID = 13548744
-TEST_COMPUTER_ID = 4290210
-TEST_COMPUTER_GUID = 42000000
-TEST_COMPUTER_ORG_ID = 424242
-TEST_COMPUTER_NAME = "Settings Test Device"
-TEST_DESTINATION_GUID_1 = "4200"
-TEST_DESTINATION_GUID_2 = "4300"
-TEST_DESTINATION_GUID_3 = "4400"
-TEST_DESTINATION_NAME_1 = "Dest42"
-TEST_DESTINATION_NAME_2 = "Dest43"
-TEST_DESTINATION_NAME_3 = "Dest44"
-TEST_CONFIG_DATE_MS = "1577858400000"  # Jan 1, 2020
+PHOTOS_REGEX = ".*/Photos/"
+PICTURES_REGEX = ".*/Pictures/"
 TEST_HOME_DIR = "C:/Users/TestUser/"
 TEST_EXTERNAL_DOCUMENTS_DIR = "D:/Documents/"
 TEST_PHOTOS_DIR = "C:/Users/TestUser/Pictures/"
 TEST_ADDED_PATH = "E:/"
 TEST_ADDED_EXCLUDED_PATH = "C:/Users/TestUser/Downloads/"
-TEST_DEVICE_VERSION = 1525200006800
-PHOTOS_REGEX = ".*/Photos/"
-PICTURES_REGEX = ".*/Pictures/"
+
+
+@pytest.fixture
+def archive_service(mocker):
+    service = mocker.MagicMock(spec=ArchiveService)
+    data_key_text = '{{"dataKeyToken": "{0}"}}'.format(TEST_DATA_KEY_TOKEN)
+    data_key_response = create_mock_response(mocker, data_key_text)
+    service.get_data_key_token.return_value = data_key_response
+    backup_set_text = '{{"backupSets": [{{"backupSetId": "{0}"}}]}}'.format(
+        TEST_BACKUP_SET_ID
+    )
+    backup_set_response = create_mock_response(mocker, backup_set_text)
+    service.get_backup_sets.return_value = backup_set_response
+    restore_info_text = '{{"nodeGuid": "{0}"}}'.format(TEST_NODE_GUID)
+    restore_info_resp = create_mock_response(mocker, restore_info_text)
+
+    def get_web_restore_info_side_effect(src_guid, dest_guid):
+        if src_guid == TEST_DEVICE_GUID and dest_guid == TEST_DESTINATION_GUID_1:
+            return restore_info_resp
+
+    service.get_web_restore_info.side_effect = get_web_restore_info_side_effect
+    return service
+
+
+def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, num_bytes=1):
+    return FileSelection(
+        {"fileType": file_type, "path": file_path, "selected": True},
+        num_files,
+        num_dirs,
+        num_bytes,
+    )

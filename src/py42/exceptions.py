@@ -65,6 +65,34 @@ class Py42SecurityPlanConnectionError(Py42HTTPError):
         super(Py42SecurityPlanConnectionError, self).__init__(exception, error_message)
 
 
+class Py42DeviceNotConnectedError(Py42ResponseError):
+    """An exception raised when trying to push a restore to a device that is not
+    connected to an Authority server."""
+
+    def __init__(self, response, device_guid):
+        message = (
+            u"Device with GUID '{}' is not currently connected to the Authority "
+            u"server.".format(device_guid)
+        )
+        super(Py42DeviceNotConnectedError, self).__init__(response, message)
+
+
+class Py42InvalidArchivePassword(Py42HTTPError):
+    """An exception raised when the password for unlocking an archive is invalid."""
+
+    def __init__(self, exception):
+        message = "Invalid archive password."
+        super(Py42InvalidArchivePassword, self).__init__(exception, message)
+
+
+class Py42InvalidArchiveEncryptionKey(Py42HTTPError):
+    """An exception raised the encryption key for an archive is invalid."""
+
+    def __init__(self, exception):
+        message = "Invalid archive encryption key."
+        super(Py42InvalidArchiveEncryptionKey, self).__init__(exception, message)
+
+
 class Py42StorageSessionInitializationError(Py42HTTPError):
     """An exception raised when the user is not authorized to initialize a storage session. This
     may occur when trying to restore a file or trying to get events for file activity on removable

@@ -15,11 +15,7 @@ class PreservationDataService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        data = {
-            u"fileSHA256": file_sha256,
-            u"fileMD5": file_md5,
-            u"devicePaths": paths,
-        }
+        data = {u"fileSHA256": file_sha256, u"fileMD5": file_md5, u"devicePaths": paths}
         uri = u"/api/v1/FindAvailableVersion"
         return self._connection.post(uri, json=data)
 

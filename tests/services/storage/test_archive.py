@@ -1,60 +1,55 @@
 import pytest
+from requests import HTTPError
+from requests import Response
+from tests.conftest import TEST_BACKUP_SET_ID
+from tests.conftest import TEST_DATA_KEY_TOKEN
+from tests.conftest import TEST_DESTINATION_GUID_1
+from tests.conftest import TEST_DEVICE_GUID
+from tests.conftest import TEST_ENCRYPTION_KEY
+from tests.conftest import TEST_PASSWORD
+from tests.conftest import TEST_SESSION_ID
 
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidArchiveEncryptionKey
+from py42.exceptions import Py42InvalidArchivePassword
 from py42.response import Py42Response
 from py42.services._connection import Connection
 from py42.services.storage.archive import StorageArchiveService
 
-DATA_KEYWORD = "data"
+
 JSON_KEYWORD = "json"
 ARGS_INDEX = 0
 KWARGS_INDEX = 1
 
 WEB_RESTORE_SESSION_URL = "/api/WebRestoreSession"
+START_WEB_RESTORE_JOB_URL = "/api/v9/restore/web"
 WEB_RESTORE_JOB_URL = "/api/WebRestoreJob"
 WEB_RESTORE_JOB_RESULT_URL = "/api/WebRestoreJobResult"
 
-COMPUTER_GUID_KEY = "computerGuid"
-DATA_KEY_TOKEN_KEY = "dataKeyToken"
-PRIVATE_PASSWORD_KEY = "privatePassword"
-ENCRYPTION_KEY_KEY = "encryptionKey"
 
-GUID_KEY = "guid"
-WEB_RESTORE_SESSION_ID_KEY = "webRestoreSessionId"
-PATH_SET_KEY = "pathSet"
-NUM_FILES_KEY = "numFiles"
-NUM_DIRS_KEY = "numDirs"
-SIZE_KEY = "size"
-ZIP_RESULT_KEY = "zipResult"
-EXPIRE_JOB_KEY = "expireJob"
-SHOW_DELETED_KEY = "showDeleted"
-RESTORE_FULL_PATH_KEY = "restoreFullPath"
-TIMESTAMP_KEY = "timestamp"
-BACKUP_SET_ID_KEY = "backupSetId"
-JOB_ID_KEY = "jobId"
-
-DEVICE_GUID = "device-guid"
-DATA_KEY_TOKEN = "data-key-token"
-ENCRYPTION_KEY = "1234567890"
-PRIVATE_PASSWORD = "password123"
-WEB_RESTORE_SESSION_ID = "56729164827"
 FILE_PATH = "/directory/file.txt"
-PATH_SET = [{"type": "file", "path": FILE_PATH, "selected": True}]
-NUM_FILES = 1
-NUM_DIRS = 0
-SIZE = 3
-ZIP_RESULT = True
-TIMESTAMP = 1557139716
-BACKUP_SET_ID = "12345"
-WEB_RESTORE_JOB_ID = "46289723"
+RESTORE_GROUPS = [
+    {
+        "backupSetId": "BACKUP_SET_ID",
+        "files": [{"fileType": "FILE", "path": "some/path", "selected": "true"}],
+    }
+]
+
+
+TEST_NUM_FILES = 1
+TEST_NUM_DIRS = 0
+TEST_NUM_BYTES = 3
+TEST_JOB_ID = "46289723"
 
 
 @pytest.fixture
 def connection(mocker, py42_response):
-    py_session = mocker.MagicMock(spec=Connection)
+    py_connection = mocker.MagicMock(spec=Connection)
     py42_response.text = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
-
-    py_session.post.return_value = py42_response
-    return py_session
+    py_connection._auth = mocker.MagicMock()
+    py_connection._auth.destination_guid = TEST_DESTINATION_GUID_1
+    py_connection.post.return_value = py42_response
+    return py_connection
 
 
 @pytest.fixture
@@ -120,27 +115,27 @@ class TestStorageArchiveService(object):
     def test_get_file_path_metadata_calls_get_with_expected_params(self, connection):
         storage_archive_service = StorageArchiveService(connection)
         storage_archive_service.get_file_path_metadata(
-            "session",
-            "guid",
-            "file_id",
-            "timestamp",
-            True,
-            "batch_size",
-            "lastBatchId",
-            "backupset_id",
-            True,
+            TEST_SESSION_ID,
+            TEST_DEVICE_GUID,
+            TEST_BACKUP_SET_ID,
+            file_id="file_id",
+            timestamp="timestamp",
+            show_deleted=True,
+            batch_size="batch_size",
+            last_batch_file_id="lastBatchId",
+            include_os_metadata=True,
         )
         connection.get.assert_called_once_with(
             u"/api/WebRestoreTreeNode",
             params={
-                "webRestoreSessionId": "session",
-                "guid": "guid",
+                "webRestoreSessionId": TEST_SESSION_ID,
+                "guid": TEST_DEVICE_GUID,
                 "fileId": "file_id",
                 "timestamp": "timestamp",
                 "showDeleted": True,
                 "batchSize": "batch_size",
                 "lastBatchFileId": "lastBatchId",
-                "backupSetId": "backupset_id",
+                "backupSetId": TEST_BACKUP_SET_ID,
                 "includeOsMetadata": True,
             },
         )
@@ -149,7 +144,7 @@ class TestStorageArchiveService(object):
         self, mocker, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.create_restore_session(DEVICE_GUID)
+        storage_archive_service.create_restore_session(TEST_DEVICE_GUID)
         connection.post.assert_called_once_with(
             WEB_RESTORE_SESSION_URL, json=mocker.ANY
         )
@@ -159,9 +154,9 @@ class TestStorageArchiveService(object):
     ):
         storage_archive_service = StorageArchiveService(connection)
 
-        storage_archive_service.create_restore_session(DEVICE_GUID)
+        storage_archive_service.create_restore_session(TEST_DEVICE_GUID)
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(COMPUTER_GUID_KEY) == DEVICE_GUID
+        assert json_arg.get("computerGuid") == TEST_DEVICE_GUID
 
     def test_create_restore_session_with_data_key_token_calls_post_with_data_key_token_in_json(
         self, connection
@@ -169,10 +164,10 @@ class TestStorageArchiveService(object):
         storage_archive_service = StorageArchiveService(connection)
 
         storage_archive_service.create_restore_session(
-            DEVICE_GUID, data_key_token=DATA_KEY_TOKEN
+            TEST_DEVICE_GUID, data_key_token=TEST_DATA_KEY_TOKEN
         )
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(DATA_KEY_TOKEN_KEY) == DATA_KEY_TOKEN
+        assert json_arg.get("dataKeyToken") == TEST_DATA_KEY_TOKEN
 
     def test_create_restore_session_with_private_password_calls_post_with_private_password_in_json(
         self, connection
@@ -180,10 +175,32 @@ class TestStorageArchiveService(object):
         storage_archive_service = StorageArchiveService(connection)
 
         storage_archive_service.create_restore_session(
-            DEVICE_GUID, private_password=PRIVATE_PASSWORD
+            TEST_DEVICE_GUID, private_password=TEST_PASSWORD
         )
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(PRIVATE_PASSWORD_KEY) == PRIVATE_PASSWORD
+        assert json_arg.get("privatePassword") == TEST_PASSWORD
+
+    def test_create_restore_session_when_invalid_password_raises_expected_error(
+        self, mocker, connection
+    ):
+        def side_effect(*args, **kwargs):
+            base_err = HTTPError()
+            base_err.response = mocker.MagicMock(spec=Response)
+            base_err.response.text = """
+                [{"name":"PRIVATE_PASSWORD_INVALID","description":"An error has
+                occurred. See server logs for more information.","objects":[]}]
+            """
+            raise Py42InternalServerError(base_err)
+
+        connection.post.side_effect = side_effect
+        storage_archive_service = StorageArchiveService(connection)
+
+        with pytest.raises(Py42InvalidArchivePassword) as err:
+            storage_archive_service.create_restore_session(
+                TEST_DEVICE_GUID, private_password=TEST_PASSWORD
+            )
+
+        assert "Invalid archive password." in str(err.value)
 
     def test_create_restore_session_with_encryption_key_calls_post_with_encryption_key_in_json(
         self, connection
@@ -191,268 +208,97 @@ class TestStorageArchiveService(object):
         storage_archive_service = StorageArchiveService(connection)
 
         storage_archive_service.create_restore_session(
-            DEVICE_GUID, encryption_key=ENCRYPTION_KEY
+            TEST_DEVICE_GUID, encryption_key=TEST_ENCRYPTION_KEY
         )
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(ENCRYPTION_KEY_KEY) == ENCRYPTION_KEY
+        assert json_arg.get("encryptionKey") == TEST_ENCRYPTION_KEY
+
+    def test_create_restore_session_when_invalid_encryption_key_raises_expected_error(
+        self, mocker, connection
+    ):
+        def side_effect(*args, **kwargs):
+            base_err = HTTPError()
+            base_err.response = mocker.MagicMock(spec=Response)
+            base_err.response.text = """
+                [{"name":"CUSTOM_KEY_INVALID","description":"An error has
+                occurred. See server logs for more information.","objects":[]}]
+            """
+            raise Py42InternalServerError(base_err)
+
+        connection.post.side_effect = side_effect
+        storage_archive_service = StorageArchiveService(connection)
+
+        with pytest.raises(Py42InvalidArchiveEncryptionKey) as err:
+            storage_archive_service.create_restore_session(
+                TEST_DEVICE_GUID, encryption_key=TEST_ENCRYPTION_KEY
+            )
+
+        assert "Invalid archive encryption key." in str(err.value)
 
     def test_start_restore_calls_post_with_correct_url(self, connection):
         storage_archive_service = StorageArchiveService(connection)
 
         storage_archive_service.start_restore(
-            DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES, NUM_DIRS, SIZE
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            RESTORE_GROUPS,
+            TEST_NUM_FILES,
+            TEST_NUM_DIRS,
+            TEST_NUM_BYTES,
         )
-        assert connection.post.call_args[ARGS_INDEX][ARGS_INDEX] == WEB_RESTORE_JOB_URL
+        assert (
+            connection.post.call_args[ARGS_INDEX][ARGS_INDEX]
+            == START_WEB_RESTORE_JOB_URL
+        )
 
-    def test_start_restore_with_required_args_calls_post_with_all_args_in_json(
-        self, connection
-    ):
+    def test_start_restore_posts_expected_data_to_expected_url(self, connection):
         storage_archive_service = StorageArchiveService(connection)
         storage_archive_service.start_restore(
-            DEVICE_GUID, WEB_RESTORE_SESSION_ID, PATH_SET, NUM_FILES, NUM_DIRS, SIZE
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            RESTORE_GROUPS,
+            TEST_NUM_FILES,
+            TEST_NUM_DIRS,
+            TEST_NUM_BYTES,
+            True,
+            True,
+            True,
+            True,
         )
-
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-
-        keys = [
-            GUID_KEY,
-            WEB_RESTORE_SESSION_ID_KEY,
-            PATH_SET_KEY,
-            NUM_FILES_KEY,
-            NUM_DIRS_KEY,
-            SIZE_KEY,
-            ZIP_RESULT_KEY,
-            EXPIRE_JOB_KEY,
-            SHOW_DELETED_KEY,
-            RESTORE_FULL_PATH_KEY,
-            TIMESTAMP_KEY,
-            BACKUP_SET_ID_KEY,
-        ]
-
-        assert sorted(json_arg.keys()) == sorted(keys)
-
-    def test_start_restore_with_opt_zip_result_as_false_calls_post_with_zip_result_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            zip_result=False,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(ZIP_RESULT_KEY) is False
-
-    def test_start_restore_with_opt_zip_result_as_true_calls_post_with_zip_result_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            zip_result=True,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(ZIP_RESULT_KEY) is True
-
-    def test_start_restore_with_expire_job_as_true_calls_post_with_expire_job_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            expire_job=True,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(EXPIRE_JOB_KEY) is True
-
-    def test_start_restore_with_expire_job_as_false_calls_post_with_expire_job_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            expire_job=False,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(EXPIRE_JOB_KEY) is False
-
-    def test_start_restore_with_show_deleted_true_calls_post_with_show_deleted_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            show_deleted=True,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(SHOW_DELETED_KEY) is True
-
-    def test_start_restore_with_show_deleted_false_calls_post_with_show_deleted_false_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            show_deleted=False,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(SHOW_DELETED_KEY) is False
-
-    def test_start_restore_with_restore_full_path_true_calls_post_with_restore_full_path_true_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            restore_full_path=True,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(RESTORE_FULL_PATH_KEY) is True
-
-    def test_start_restore_with_restore_full_path_false_calls_post_with_restore_full_path_true_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            restore_full_path=False,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(RESTORE_FULL_PATH_KEY) is False
-
-    def test_start_restore_with_timestamp_calls_post_with_timestamp_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            timestamp=TIMESTAMP,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(TIMESTAMP_KEY) == TIMESTAMP
-
-    def test_start_restore_with_backup_set_id_calls_post_with_backup_set_id_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            backup_set_id=BACKUP_SET_ID,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        assert json_arg.get(BACKUP_SET_ID_KEY) == BACKUP_SET_ID
-
-    def test_start_restore_with_all_args_calls_post_with_all_args_in_data(
-        self, connection
-    ):
-        storage_archive_service = StorageArchiveService(connection)
-        storage_archive_service.start_restore(
-            DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID,
-            PATH_SET,
-            NUM_FILES,
-            NUM_DIRS,
-            SIZE,
-            zip_result=True,
-            expire_job=True,
-            show_deleted=True,
-            restore_full_path=True,
-            timestamp=TIMESTAMP,
-            backup_set_id=BACKUP_SET_ID,
-        )
-        json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         expected_data = {
-            GUID_KEY: DEVICE_GUID,
-            WEB_RESTORE_SESSION_ID_KEY: WEB_RESTORE_SESSION_ID,
-            PATH_SET_KEY: PATH_SET,
-            NUM_FILES_KEY: NUM_FILES,
-            NUM_DIRS_KEY: NUM_DIRS,
-            SIZE_KEY: SIZE,
-            ZIP_RESULT_KEY: True,
-            EXPIRE_JOB_KEY: True,
-            SHOW_DELETED_KEY: True,
-            RESTORE_FULL_PATH_KEY: True,
-            TIMESTAMP_KEY: TIMESTAMP,
-            BACKUP_SET_ID_KEY: BACKUP_SET_ID,
+            "sourceComputerGuid": TEST_DEVICE_GUID,
+            "webRestoreSessionId": TEST_SESSION_ID,
+            "restoreGroups": RESTORE_GROUPS,
+            "numFiles": TEST_NUM_FILES,
+            "numDirs": TEST_NUM_DIRS,
+            "numBytes": TEST_NUM_BYTES,
+            "expireJob": True,
+            "showDeleted": True,
+            "restoreFullPath": True,
+            "restoreToServer": True,
         }
-        assert json_arg == expected_data
+        connection.post.assert_called_once_with(
+            START_WEB_RESTORE_JOB_URL, json=expected_data
+        )
 
     def test_get_restore_status_calls_get_with_correct_url(self, mocker, connection):
         storage_archive_service = StorageArchiveService(connection)
         api_response = mocker.MagicMock(spec=Py42Response)
         connection.get.return_value = api_response
-        storage_archive_service.get_restore_status(WEB_RESTORE_JOB_ID)
-        expected_url = WEB_RESTORE_JOB_URL + "/" + WEB_RESTORE_JOB_ID
+        storage_archive_service.get_restore_status(TEST_JOB_ID)
+        expected_url = WEB_RESTORE_JOB_URL + "/" + TEST_JOB_ID
         connection.get.assert_called_once_with(expected_url)
 
-    def test_cancel_restore_calls_delete_with_correct_url(self, mocker, connection):
+    def test_cancel_restore_calls_delete_with_correct_url_and_data(
+        self, mocker, connection
+    ):
         storage_archive_service = StorageArchiveService(connection)
         api_response = mocker.MagicMock(spec=Py42Response)
         connection.delete.return_value = api_response
-        storage_archive_service.cancel_restore(WEB_RESTORE_JOB_ID)
-        connection.delete.assert_called_once_with(WEB_RESTORE_JOB_URL, json=mocker.ANY)
-
-    def test_cancel_restore_calls_delete_with_job_id_in_data(self, mocker, connection):
-        storage_archive_service = StorageArchiveService(connection)
-        api_response = mocker.MagicMock(spec=Py42Response)
-        connection.delete.return_value = api_response
-        storage_archive_service.cancel_restore(WEB_RESTORE_JOB_ID)
-        json_arg = connection.delete.call_args[KWARGS_INDEX][JSON_KEYWORD]
-        expected_data = {JOB_ID_KEY: WEB_RESTORE_JOB_ID}
-        assert json_arg == expected_data
+        storage_archive_service.cancel_restore(TEST_JOB_ID)
+        connection.delete.assert_called_once_with(
+            WEB_RESTORE_JOB_URL, json={"jobId": TEST_JOB_ID}
+        )
 
     def test_stream_restore_result_status_calls_get_with_correct_url(
         self, mocker, connection
@@ -460,6 +306,6 @@ class TestStorageArchiveService(object):
         storage_archive_service = StorageArchiveService(connection)
         api_response = mocker.MagicMock(spec=Py42Response)
         connection.get.return_value = api_response
-        storage_archive_service.stream_restore_result(WEB_RESTORE_JOB_ID)
-        expected_url = WEB_RESTORE_JOB_RESULT_URL + "/" + WEB_RESTORE_JOB_ID
+        storage_archive_service.stream_restore_result(TEST_JOB_ID)
+        expected_url = WEB_RESTORE_JOB_RESULT_URL + "/" + TEST_JOB_ID
         connection.get.assert_called_once_with(expected_url, stream=True)

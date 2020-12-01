@@ -1,4 +1,6 @@
 import pytest
+from requests import HTTPError
+from requests import Response
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DATA_KEY_TOKEN
 from tests.conftest import TEST_DESTINATION_GUID_1
@@ -7,6 +9,9 @@ from tests.conftest import TEST_ENCRYPTION_KEY
 from tests.conftest import TEST_PASSWORD
 from tests.conftest import TEST_SESSION_ID
 
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidArchiveEncryptionKey
+from py42.exceptions import Py42InvalidArchivePassword
 from py42.response import Py42Response
 from py42.services._connection import Connection
 from py42.services.storage.archive import StorageArchiveService
@@ -175,6 +180,28 @@ class TestStorageArchiveService(object):
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get("privatePassword") == TEST_PASSWORD
 
+    def test_create_restore_session_when_invalid_password_raises_expected_error(
+        self, mocker, connection
+    ):
+        def side_effect(*args, **kwargs):
+            base_err = HTTPError()
+            base_err.response = mocker.MagicMock(spec=Response)
+            base_err.response.text = """
+                [{"name":"PRIVATE_PASSWORD_INVALID","description":"An error has
+                occurred. See server logs for more information.","objects":[]}]
+            """
+            raise Py42InternalServerError(base_err)
+
+        connection.post.side_effect = side_effect
+        storage_archive_service = StorageArchiveService(connection)
+
+        with pytest.raises(Py42InvalidArchivePassword) as err:
+            storage_archive_service.create_restore_session(
+                TEST_DEVICE_GUID, private_password=TEST_PASSWORD
+            )
+
+        assert "Invalid archive password." in str(err.value)
+
     def test_create_restore_session_with_encryption_key_calls_post_with_encryption_key_in_json(
         self, connection
     ):
@@ -185,6 +212,28 @@ class TestStorageArchiveService(object):
         )
         json_arg = connection.post.call_args[KWARGS_INDEX][JSON_KEYWORD]
         assert json_arg.get("encryptionKey") == TEST_ENCRYPTION_KEY
+
+    def test_create_restore_session_when_invalid_encryption_key_raises_expected_error(
+        self, mocker, connection
+    ):
+        def side_effect(*args, **kwargs):
+            base_err = HTTPError()
+            base_err.response = mocker.MagicMock(spec=Response)
+            base_err.response.text = """
+                [{"name":"CUSTOM_KEY_INVALID","description":"An error has
+                occurred. See server logs for more information.","objects":[]}]
+            """
+            raise Py42InternalServerError(base_err)
+
+        connection.post.side_effect = side_effect
+        storage_archive_service = StorageArchiveService(connection)
+
+        with pytest.raises(Py42InvalidArchiveEncryptionKey) as err:
+            storage_archive_service.create_restore_session(
+                TEST_DEVICE_GUID, encryption_key=TEST_ENCRYPTION_KEY
+            )
+
+        assert "Invalid archive encryption key." in str(err.value)
 
     def test_start_restore_calls_post_with_correct_url(self, connection):
         storage_archive_service = StorageArchiveService(connection)

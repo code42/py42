@@ -71,10 +71,26 @@ class Py42DeviceNotConnectedError(Py42ResponseError):
 
     def __init__(self, response, device_guid):
         message = (
-            "Device with GUID '{}' is not currently connected to the Authority "
-            "server.".format(device_guid)
+            u"Device with GUID '{}' is not currently connected to the Authority "
+            u"server.".format(device_guid)
         )
         super(Py42DeviceNotConnectedError, self).__init__(response, message)
+
+
+class Py42InvalidArchivePassword(Py42HTTPError):
+    """An exception raised when the password for unlocking an archive is invalid."""
+
+    def __init__(self, exception):
+        message = "Invalid archive password."
+        super(Py42InvalidArchivePassword, self).__init__(exception, message)
+
+
+class Py42InvalidArchiveEncryptionKey(Py42HTTPError):
+    """An exception raised the encryption key for an archive is invalid."""
+
+    def __init__(self, exception):
+        message = "Invalid archive encryption key."
+        super(Py42InvalidArchiveEncryptionKey, self).__init__(exception, message)
 
 
 class Py42StorageSessionInitializationError(Py42HTTPError):

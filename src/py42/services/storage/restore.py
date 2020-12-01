@@ -1,3 +1,6 @@
+from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidArchiveEncryptionKey
+from py42.exceptions import Py42InvalidArchivePassword
 from py42.services import BaseService
 
 
@@ -19,7 +22,14 @@ class RestoreService(BaseService):
             u"privatePassword": private_password,
             u"encryptionKey": encryption_key,
         }
-        return self._connection.post(uri, json=json_dict)
+        try:
+            return self._connection.post(uri, json=json_dict)
+        except Py42InternalServerError as err:
+            if u"PRIVATE_PASSWORD_INVALID" in err.response.text:
+                raise Py42InvalidArchivePassword(err)
+            elif u"CUSTOM_KEY_INVALID" in err.response.text:
+                raise Py42InvalidArchiveEncryptionKey(err)
+            raise
 
     def get_restore_status(self, job_id):
         uri = u"/api/WebRestoreJob/{}".format(job_id)

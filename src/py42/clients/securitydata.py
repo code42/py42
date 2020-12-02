@@ -172,7 +172,7 @@ class SecurityDataClient(object):
         )
 
     def search_file_events(self, query):
-        """Searches for file events.
+        """Searches for file events, returns first 10,000 events.
         `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
@@ -185,24 +185,23 @@ class SecurityDataClient(object):
         """
         return self._file_event_service.search(query)
 
-    def get_all_file_events(self, query):
-        """Searches for file events.
+    def get_all_file_events(self, query, pg_token=""):
+        """Searches for all file events.
         `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
             query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`): Also
                 accepts a raw JSON str.
+            pg_token (str): A token used to indicate the starting point for additional page results. Defaults to empty string.
+                For the first page do not pass pg_token, for all consecutive pages pass the token returned from previous response.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the first 10,000
-            events.
+            tuple (str, :class:`py42.response.Py42Response`): A tuple of token, to fetch remaining events, and response containing events.
         """
 
-        query.pgToken = ""
-        while query.pgToken is not None:
-            response = self._file_event_service.search(query)
-            yield response
-            query.pgToken = response["nextPgToken"]
+        query.pgToken = pg_token
+        response = self._file_event_service.search(query)
+        return response["nextPgToken"], response
 
     def stream_file_by_sha256(self, checksum):
         """Stream file based on SHA256 checksum.

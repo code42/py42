@@ -120,7 +120,6 @@ class ArchiveClient(object):
         archive_password=None,
         encryption_key=None,
         show_deleted=None,
-        file_location=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         """Streams a file from a backup archive to a specified device.
@@ -132,7 +131,7 @@ class ArchiveClient(object):
             accepting_device_guid (str): The GUID of the device accepting the restore.
             restore_path (str, optional): The path on the accepting device where the restore will be
                 saved. Alternatively, pass in the value ``ORIGINAL_LOCATION`` to restore the file
-                to the original location, which may be the case if you are replacing a device
+                to the original location, which may be the case if you are replacing a device.
             destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your

@@ -1,5 +1,5 @@
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42BadRestoreError
+from py42.exceptions import Py42BadRestoreRequestError
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidArchiveEncryptionKey
 from py42.exceptions import Py42InvalidArchivePassword
@@ -95,5 +95,5 @@ class PushRestoreService(RestoreService):
                         "'{}'.".format(accepting_device_guid, device_guid)
                     )
 
-                raise Py42BadRestoreError(err, additional_message=additional_message)
+                raise Py42BadRestoreRequestError(err, additional_message=additional_message)
             raise

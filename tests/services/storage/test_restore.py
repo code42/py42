@@ -11,7 +11,7 @@ from tests.services.storage.test_archive import TEST_NUM_BYTES
 from tests.services.storage.test_archive import TEST_NUM_FILES
 
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42BadRestoreError
+from py42.exceptions import Py42BadRestoreRequestError
 from py42.services.storage.restore import PushRestoreLocation
 from py42.services.storage.restore import PushRestoreService
 
@@ -82,7 +82,7 @@ class TestPushRestoreService:
     ):
         service = PushRestoreService(mock_restore_connection_with_bad_request)
         restore_groups = _create_expected_restore_groups(single_file_selection[0].file)
-        with pytest.raises(Py42BadRestoreError) as err:
+        with pytest.raises(Py42BadRestoreRequestError) as err:
             service.start_push_restore(
                 TEST_DEVICE_GUID,
                 TEST_ACCEPTING_GUID,
@@ -109,7 +109,7 @@ class TestPushRestoreService:
     ):
         service = PushRestoreService(mock_restore_connection_with_bad_request)
         restore_groups = _create_expected_restore_groups(single_file_selection[0].file)
-        with pytest.raises(Py42BadRestoreError) as err:
+        with pytest.raises(Py42BadRestoreRequestError) as err:
             service.start_push_restore(
                 TEST_DEVICE_GUID,
                 TEST_ACCEPTING_GUID,

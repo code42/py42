@@ -93,11 +93,7 @@ class HighRiskEmployeeService(BaseService):
         try:
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
-            message = (
-                "User with ID '{}' is not currently on the high-risk-employee "
-                "detection list.".format(user_id)
-            )
-            raise Py42UserNotOnListError(err, message=message)
+            raise Py42UserNotOnListError(err, user_id, u"high-risk-employee")
 
     def get(self, user_id):
         """Gets user information.

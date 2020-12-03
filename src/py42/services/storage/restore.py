@@ -95,5 +95,7 @@ class PushRestoreService(RestoreService):
                         "'{}'.".format(accepting_device_guid, device_guid)
                     )
 
-                raise Py42BadRestoreRequestError(err, additional_message=additional_message)
+                raise Py42BadRestoreRequestError(
+                    err, additional_message=additional_message
+                )
             raise

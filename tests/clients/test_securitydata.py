@@ -1346,12 +1346,11 @@ class TestSecurityClient(object):
             storage_service_factory,
         )
         query = FileEventQuery.all()
-        next_token, response = security_client.get_all_file_events(query)
+        response = security_client.get_all_file_events(query)
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
             data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"", "pgSize":10000}',
         )
-        assert next_token is None
         assert response is successful_response
 
     def test_get_all_file_events_calls_search_with_expected_params_when_pg_token_is_passed(
@@ -1379,10 +1378,9 @@ class TestSecurityClient(object):
             storage_service_factory,
         )
         query = FileEventQuery.all()
-        next_token, response = security_client.get_all_file_events(query, "abc")
+        response = security_client.get_all_file_events(query, "abc")
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
             data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}',
         )
-        assert next_token == "pqr"
         assert response is successful_response

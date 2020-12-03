@@ -193,7 +193,8 @@ class SecurityDataClient(object):
             query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`): Also
                 accepts a raw JSON str.
             page_token (str): A token used to indicate the starting point for additional page results. Defaults to empty string.
-                For the first page do not pass page_token, for all consecutive pages pass the token returned from previous response.
+                For the first page do not pass page_token, for all consecutive pages pass the token returned from previous response,
+                from field `nextPgToken`.
 
         Returns:
             tuple (str, :class:`py42.response.Py42Response`): A tuple of token, to fetch remaining events, and response containing events.
@@ -201,7 +202,7 @@ class SecurityDataClient(object):
 
         query.page_token = page_token
         response = self._file_event_service.search(query)
-        return response["nextPgToken"], response
+        return response
 
     def stream_file_by_sha256(self, checksum):
         """Stream file based on SHA256 checksum.

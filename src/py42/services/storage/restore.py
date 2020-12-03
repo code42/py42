@@ -4,6 +4,11 @@ from py42.exceptions import Py42InvalidArchivePassword
 from py42.services import BaseService
 
 
+class PushRestoreLocation:
+    ORIGINAL = "ORIGINAL_LOCATION"
+    TARGET_DIRECTORY = "TTARGET_DIRECTORY"
+
+
 class RestoreService(BaseService):
     def create_restore_session(
         self,
@@ -53,6 +58,7 @@ class PushRestoreService(RestoreService):
         permit_restore_to_different_os_version=None,
         file_permissions=None,
         restore_full_path=None,
+        file_location=None,
     ):
         """Submits a push restore job."""
         uri = u"/api/v9/restore/push"
@@ -69,5 +75,6 @@ class PushRestoreService(RestoreService):
             u"permitRestoreToDifferentOsVersion": permit_restore_to_different_os_version,
             u"filePermissions": file_permissions,
             u"restoreFullPath": restore_full_path,
+            u"fileLocation": file_location
         }
         return self._connection.post(uri, json=json_dict)

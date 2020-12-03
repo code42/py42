@@ -1349,7 +1349,7 @@ class TestSecurityClient(object):
         next_token, response = security_client.get_all_file_events(query)
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":""}',
+            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"", "pgSize":10000}',
         )
         assert next_token is None
         assert response is successful_response
@@ -1382,7 +1382,7 @@ class TestSecurityClient(object):
         next_token, response = security_client.get_all_file_events(query, "abc")
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc"}',
+            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}',
         )
         assert next_token == "pqr"
         assert response is successful_response

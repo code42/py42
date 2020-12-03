@@ -151,13 +151,13 @@ def test_file_event_str_gives_correct_json_representation_when_pg_token_is_set(
     event_filter_group,
 ):
     query = FileEventQuery()
-    assert query.pgToken is None
+    assert query.page_token is None
     assert (
         str(query)
         == u'{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgNum":1, "pgSize":10000}'
     )
-    query.pgToken = "abc"
+    query.page_token = "abc"
     assert (
         str(query)
-        == u'{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc"}'
+        == u'{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}'
     )

@@ -8,7 +8,7 @@ class BaseQuery(object):
         self._group_clause = kwargs.get(u"group_clause", u"AND")
         self.page_number = kwargs.get(u"page_number") or 1
         self.page_size = kwargs.get(u"page_size") or settings.security_events_per_page
-        self.pgToken = kwargs.get(u"pg_token") or None
+        self.page_token = kwargs.get(u"page_token") or None
         self.sort_direction = u"asc"
 
         # Override

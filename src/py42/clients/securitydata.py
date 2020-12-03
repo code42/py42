@@ -185,21 +185,21 @@ class SecurityDataClient(object):
         """
         return self._file_event_service.search(query)
 
-    def get_all_file_events(self, query, pg_token=""):
+    def get_all_file_events(self, query, page_token=""):
         """Searches for all file events.
         `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
             query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`): Also
                 accepts a raw JSON str.
-            pg_token (str): A token used to indicate the starting point for additional page results. Defaults to empty string.
-                For the first page do not pass pg_token, for all consecutive pages pass the token returned from previous response.
+            page_token (str): A token used to indicate the starting point for additional page results. Defaults to empty string.
+                For the first page do not pass page_token, for all consecutive pages pass the token returned from previous response.
 
         Returns:
             tuple (str, :class:`py42.response.Py42Response`): A tuple of token, to fetch remaining events, and response containing events.
         """
 
-        query.pgToken = pg_token
+        query.page_token = page_token
         response = self._file_event_service.search(query)
         return response["nextPgToken"], response
 

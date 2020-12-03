@@ -2,7 +2,9 @@ import posixpath
 from collections import namedtuple
 
 from py42.exceptions import Py42ArchiveFileNotFoundError
-
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42BadRestoreError
+from py42.services.storage.restore import PushRestoreLocation
 
 # Data for initiating a web or push restore.
 FileSelection = namedtuple(u"FileSelection", u"file, num_files, num_dirs, num_bytes")
@@ -144,16 +146,40 @@ class ArchiveContentPusher(ArchiveAccessor):
         )
 
     def stream_to_device(
-        self, restore_path, accepting_guid, file_selections, backup_set_id, show_deleted
+        self,
+        restore_path,
+        accepting_guid,
+        file_selections,
+        backup_set_id,
+        show_deleted,
+        file_location,
     ):
-        return self._restore_job_manager.send_stream(
-            restore_path,
-            self._node_guid,
-            accepting_guid,
-            file_selections,
-            backup_set_id,
-            show_deleted,
-        )
+        try:
+            return self._restore_job_manager.send_stream(
+                restore_path,
+                self._node_guid,
+                accepting_guid,
+                file_selections,
+                backup_set_id,
+                show_deleted,
+                file_location,
+            )
+        except Py42BadRequestError as err:
+            if u"CREATE_FAILED" in err.response.text:
+                additional_message = None
+                if (
+                    self._device_guid != accepting_guid
+                    and file_location == PushRestoreLocation.ORIGINAL
+                ):
+                    additional_message = (
+                        "Warning: Trying to restore to original "
+                        "location when the accepting GUID '{}' is "
+                        "different from the archive source GUID "
+                        "'{}'.".format(accepting_guid, self._device_guid)
+                    )
+
+                raise Py42BadRestoreError(err, additional_message=additional_message)
+            raise
 
 
 def _create_file_selections(file_paths, metadata_list, file_sizes=None):

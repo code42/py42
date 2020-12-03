@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
+from requests import HTTPError
 from requests import Response
 from tests.clients._archiveaccess.conftest import get_file_selection
 from tests.conftest import TEST_ACCEPTING_GUID
@@ -18,7 +19,10 @@ from py42.clients._archiveaccess import ArchiveContentPusher
 from py42.clients._archiveaccess import ArchiveContentStreamer
 from py42.clients._archiveaccess import FileType
 from py42.exceptions import Py42ArchiveFileNotFoundError
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42BadRestoreError
 from py42.response import Py42Response
+from py42.services.storage.restore import PushRestoreLocation
 
 
 USERS_DIR = "/Users"
@@ -39,6 +43,19 @@ def mock_walking_to_downloads_folder(mocker, storage_archive_service):
 def mock_walking_tree_for_windows_path(mocker, storage_archive_service):
     responses = [GetFilePathMetadataResponses.WINDOWS_NULL_ID]
     mock_get_file_path_metadata_responses(mocker, storage_archive_service, responses)
+
+
+@pytest.fixture
+def restore_job_manager_with_bad_request(mocker, restore_job_manager):
+    def side_effect(*args, **kwargs):
+        err = mocker.MagicMock(spec=HTTPError)
+        resp = mocker.MagicMock(spec=Response)
+        resp.text = "CREATE_FAILED"
+        err.response = resp
+        raise Py42BadRequestError(err)
+
+    restore_job_manager.send_stream.side_effect = side_effect
+    return restore_job_manager
 
 
 class GetFilePathMetadataResponses(object):
@@ -610,6 +627,7 @@ class TestArchiveContentPusher(object):
             TEST_DOWNLOADS_DIR,
             TEST_BACKUP_SET_ID,
             True,
+            PushRestoreLocation.TARGET_DIRECTORY,
         )
         restore_job_manager.send_stream.assert_called_once_with(
             TEST_RESTORE_PATH,
@@ -618,4 +636,63 @@ class TestArchiveContentPusher(object):
             TEST_DOWNLOADS_DIR,
             TEST_BACKUP_SET_ID,
             True,
+            PushRestoreLocation.TARGET_DIRECTORY,
         )
+
+    def test_stream_to_device_when_bad_request_raised_with_create_failed_text_raises_bad_restore_error(
+        self, push_service, restore_job_manager_with_bad_request, file_size_poller,
+    ):
+        accessor = ArchiveContentPusher(
+            TEST_DEVICE_GUID,
+            TEST_DESTINATION_GUID_1,
+            TEST_NODE_GUID,
+            TEST_SESSION_ID,
+            push_service,
+            restore_job_manager_with_bad_request,
+            file_size_poller,
+        )
+        with pytest.raises(Py42BadRestoreError) as err:
+            accessor.stream_to_device(
+                TEST_RESTORE_PATH,
+                TEST_ACCEPTING_GUID,
+                TEST_DOWNLOADS_DIR,
+                TEST_BACKUP_SET_ID,
+                True,
+                PushRestoreLocation.TARGET_DIRECTORY,
+            )
+
+        assert (
+            str(err.value)
+            == "Unable to create restore session because of the given arguments."
+        )
+
+    def test_stream_to_device_when_bad_request_raised_with_create_failed_text_and_unequal_guids_and_restoring_to_original_location_raises_bad_restore_error_with_additional_message(
+        self, push_service, restore_job_manager_with_bad_request, file_size_poller,
+    ):
+        accessor = ArchiveContentPusher(
+            TEST_DEVICE_GUID,
+            TEST_DESTINATION_GUID_1,
+            TEST_NODE_GUID,
+            TEST_SESSION_ID,
+            push_service,
+            restore_job_manager_with_bad_request,
+            file_size_poller,
+        )
+        with pytest.raises(Py42BadRestoreError) as err:
+            accessor.stream_to_device(
+                TEST_RESTORE_PATH,
+                TEST_ACCEPTING_GUID,
+                TEST_DOWNLOADS_DIR,
+                TEST_BACKUP_SET_ID,
+                True,
+                PushRestoreLocation.ORIGINAL,
+            )
+
+        expected = (
+            "Unable to create restore session because of the given arguments. "
+            "Warning: Trying to restore to original location when the accepting GUID "
+            "'{}' is different from the archive source GUID '{}'.".format(
+                TEST_ACCEPTING_GUID, TEST_DEVICE_GUID
+            )
+        )
+        assert str(err.value) == expected

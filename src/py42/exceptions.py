@@ -210,6 +210,17 @@ class Py42CloudAliasLimitExceededError(Py42BadRequestError):
         super(Py42BadRequestError, self).__init__(exception, message)
 
 
+class Py42BadRestoreError(Py42BadRequestError):
+    """An error raised when the given restore arguments are not comptible and cause
+    a bad request."""
+
+    def __init__(self, exception, additional_message=None):
+        message = u"Unable to create restore session because of the given arguments."
+        if additional_message:
+            message = "{} {}".format(message, additional_message)
+        super(Py42BadRestoreError, self).__init__(exception, message)
+
+
 class Py42UserNotOnListError(Py42NotFoundError):
     """An exception raised when the user is not on a detection list."""
 

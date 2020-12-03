@@ -120,6 +120,7 @@ class ArchiveClient(object):
         archive_password=None,
         encryption_key=None,
         show_deleted=None,
+        file_location=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         """Streams a file from a backup archive to a specified device.
@@ -142,6 +143,9 @@ class ArchiveClient(object):
                 key archive security. Defaults to None.
             show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
                 Defaults to None.
+            file_location (string or None, optional): Either ``ORIGINAL_LOCATION`` or ``TARGET_DIRECTORY``,
+                as defined in :class:`py42.services.storage.restore.PushRestoreLocation`, that indicates
+                where to restore files to.
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
@@ -175,6 +179,7 @@ class ArchiveClient(object):
             file_selections,
             backup_set_id,
             show_deleted,
+            file_location,
         )
 
     def _select_backup_set_id(self, device_guid, destination_guid):

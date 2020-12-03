@@ -114,6 +114,7 @@ class RestoreJobManager(_RestorePoller):
         file_selections,
         backup_set_id,
         show_deleted,
+        file_location,
     ):
         num_files = sum([fs.num_files for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
@@ -132,6 +133,7 @@ class RestoreJobManager(_RestorePoller):
             num_files,
             num_bytes,
             show_deleted=show_deleted,
+            file_location=file_location,
         )
 
     def _wait_for_job(self, response):

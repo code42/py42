@@ -14,6 +14,7 @@ from tests.conftest import TEST_SESSION_ID
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
 from py42.response import Py42Response
+from py42.services.storage.restore import PushRestoreLocation
 
 
 class GetWebRestoreJobResponses(object):
@@ -385,6 +386,7 @@ class TestRestoreJobManager(object):
             single_file_selection,
             TEST_BACKUP_SET_ID,
             False,
+            PushRestoreLocation.TARGET_DIRECTORY,
         )
         push_service.start_push_restore.assert_called_once_with(
             TEST_DEVICE_GUID,
@@ -401,4 +403,5 @@ class TestRestoreJobManager(object):
             1,
             1,
             show_deleted=False,
+            file_location=PushRestoreLocation.TARGET_DIRECTORY,
         )

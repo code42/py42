@@ -5,8 +5,11 @@ from py42.services import BaseService
 
 
 class PushRestoreLocation:
+    """Options for method :meth:`py42.clients.archive.ArchiveClient.stream_to_device()`
+    parameter ``file_location``, representing the strategy for where to restore files to."""
+
     ORIGINAL = "ORIGINAL_LOCATION"
-    TARGET_DIRECTORY = "TTARGET_DIRECTORY"
+    TARGET_DIRECTORY = "TARGET_DIRECTORY"
 
 
 class RestoreService(BaseService):
@@ -75,6 +78,6 @@ class PushRestoreService(RestoreService):
             u"permitRestoreToDifferentOsVersion": permit_restore_to_different_os_version,
             u"filePermissions": file_permissions,
             u"restoreFullPath": restore_full_path,
-            u"fileLocation": file_location
+            u"fileLocation": file_location,
         }
         return self._connection.post(uri, json=json_dict)

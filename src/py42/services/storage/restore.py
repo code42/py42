@@ -89,7 +89,7 @@ class PushRestoreService(RestoreService):
                     and file_location == PushRestoreLocation.ORIGINAL
                 ):
                     additional_message = (
-                        u"Warning: Trying to restore to original "
+                        u"Warning: Trying to restore to the original "
                         "location when the accepting GUID '{}' is "
                         "different from the archive source GUID "
                         "'{}'.".format(accepting_device_guid, device_guid)

@@ -127,7 +127,7 @@ class TestPushRestoreService:
             )
         expected = (
             "Unable to create restore session because of the given arguments. "
-            "Warning: Trying to restore to original location when the accepting GUID "
+            "Warning: Trying to restore to the original location when the accepting GUID "
             "'{}' is different from the archive source GUID '{}'.".format(
                 TEST_ACCEPTING_GUID, TEST_DEVICE_GUID
             )

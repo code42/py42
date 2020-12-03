@@ -386,7 +386,6 @@ class TestRestoreJobManager(object):
             single_file_selection,
             TEST_BACKUP_SET_ID,
             False,
-            PushRestoreLocation.TARGET_DIRECTORY,
         )
         push_service.start_push_restore.assert_called_once_with(
             TEST_DEVICE_GUID,
@@ -403,5 +402,37 @@ class TestRestoreJobManager(object):
             1,
             1,
             show_deleted=False,
-            file_location=PushRestoreLocation.TARGET_DIRECTORY,
+            file_location=None,
+        )
+
+    def test_send_stream_when_using_original_directory_for_restore_path_calls_start_push_restore_with_expected_args(
+        self, push_service, single_file_selection
+    ):
+        restore_job_manager = RestoreJobManager(
+            push_service, TEST_DEVICE_GUID, TEST_SESSION_ID
+        )
+        restore_job_manager.send_stream(
+            PushRestoreLocation.ORIGINAL,
+            TEST_NODE_GUID,
+            TEST_ACCEPTING_GUID,
+            single_file_selection,
+            TEST_BACKUP_SET_ID,
+            False,
+        )
+        push_service.start_push_restore.assert_called_once_with(
+            TEST_DEVICE_GUID,
+            TEST_ACCEPTING_GUID,
+            TEST_SESSION_ID,
+            TEST_NODE_GUID,
+            "",
+            [
+                {
+                    u"backupSetId": TEST_BACKUP_SET_ID,
+                    u"files": [single_file_selection[0].file],
+                }
+            ],
+            1,
+            1,
+            show_deleted=False,
+            file_location=PushRestoreLocation.ORIGINAL,
         )

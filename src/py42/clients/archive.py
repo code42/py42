@@ -130,7 +130,9 @@ class ArchiveClient(object):
                 the archive.
             device_guid (str): The GUID of the device the file belongs to.
             accepting_device_guid (str): The GUID of the device accepting the restore.
-            restore_path (str): The path on the accepting device where the restore will be saved.
+            restore_path (str, optional): The path on the accepting device where the restore will be
+                saved. Alternatively, pass in the value ``ORIGINAL_LOCATION`` to restore the file
+                to the original location, which may be the case if you are replacing a device
             destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your
@@ -143,9 +145,6 @@ class ArchiveClient(object):
                 key archive security. Defaults to None.
             show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
                 Defaults to None.
-            file_location (string or None, optional): Either ``ORIGINAL_LOCATION`` or ``TARGET_DIRECTORY``,
-                as defined in :class:`py42.services.storage.restore.PushRestoreLocation`, that indicates
-                where to restore files to.
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
@@ -179,7 +178,6 @@ class ArchiveClient(object):
             file_selections,
             backup_set_id,
             show_deleted,
-            file_location,
         )
 
     def _select_backup_set_id(self, device_guid, destination_guid):

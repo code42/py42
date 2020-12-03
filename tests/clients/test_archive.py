@@ -1,6 +1,6 @@
 import pytest
-from tests.clients.conftest import get_file_selection
 from tests.conftest import create_mock_response
+from tests.conftest import get_file_selection
 from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DESTINATION_GUID_1
@@ -15,7 +15,6 @@ from py42.clients._archiveaccess import ArchiveExplorer
 from py42.clients._archiveaccess import FileType
 from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
 from py42.clients.archive import ArchiveClient
-from py42.services.storage.restore import PushRestoreLocation
 
 
 TEST_ARCHIVE_GUID = "4224"
@@ -138,7 +137,6 @@ class TestArchiveClient(object):
             encryption_key=TEST_ENCRYPTION_KEY,
             file_size_calc_timeout=100,
             show_deleted=True,
-            file_location=PushRestoreLocation.ORIGINAL,
         )
         archive_content_pusher.stream_to_device.assert_called_once_with(
             TEST_RESTORE_PATH,
@@ -146,7 +144,6 @@ class TestArchiveClient(object):
             TEST_FILE_SELECTIONS,
             TEST_BACKUP_SET_ID,
             True,
-            PushRestoreLocation.ORIGINAL,
         )
 
     def test_stream_to_device_prefers_backup_set_id_of_1(
@@ -177,15 +174,9 @@ class TestArchiveClient(object):
             encryption_key=TEST_ENCRYPTION_KEY,
             file_size_calc_timeout=100,
             show_deleted=True,
-            file_location=PushRestoreLocation.TARGET_DIRECTORY,
         )
         archive_content_pusher.stream_to_device.assert_called_once_with(
-            TEST_RESTORE_PATH,
-            TEST_ACCEPTING_GUID,
-            TEST_FILE_SELECTIONS,
-            "1",
-            True,
-            PushRestoreLocation.TARGET_DIRECTORY,
+            TEST_RESTORE_PATH, TEST_ACCEPTING_GUID, TEST_FILE_SELECTIONS, "1", True,
         )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(

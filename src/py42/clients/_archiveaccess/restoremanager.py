@@ -1,5 +1,6 @@
 import time
 
+from py42.services.storage.restore import PushRestoreLocation
 from py42.settings import debug
 from py42.util import format_dict
 
@@ -114,10 +115,16 @@ class RestoreJobManager(_RestorePoller):
         file_selections,
         backup_set_id,
         show_deleted,
-        file_location,
     ):
         num_files = sum([fs.num_files for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
+        file_location = None
+
+        # Use expected request parameters for restoring to the original location.
+        if restore_path == PushRestoreLocation.ORIGINAL:
+            file_location = restore_path
+            restore_path = u""
+
         return self._storage_archive_service.start_push_restore(
             self._device_guid,
             accepting_guid,

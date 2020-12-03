@@ -1,3 +1,5 @@
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42BadRestoreError
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidArchiveEncryptionKey
 from py42.exceptions import Py42InvalidArchivePassword
@@ -80,4 +82,21 @@ class PushRestoreService(RestoreService):
             u"restoreFullPath": restore_full_path,
             u"fileLocation": file_location,
         }
-        return self._connection.post(uri, json=json_dict)
+        try:
+            return self._connection.post(uri, json=json_dict)
+        except Py42BadRequestError as err:
+            if u"CREATE_FAILED" in err.response.text:
+                additional_message = None
+                if (
+                    self._device_guid != accepting_device_guid
+                    and file_location == PushRestoreLocation.ORIGINAL
+                ):
+                    additional_message = (
+                        u"Warning: Trying to restore to original "
+                        "location when the accepting GUID '{}' is "
+                        "different from the archive source GUID "
+                        "'{}'.".format(accepting_device_guid, self._device_guid)
+                    )
+
+                raise Py42BadRestoreError(err, additional_message=additional_message)
+            raise

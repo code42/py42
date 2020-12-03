@@ -102,11 +102,7 @@ class DepartingEmployeeService(BaseService):
         try:
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
-            message = (
-                "User with ID '{}' is not currently on the departing-employee "
-                "detection list.".format(user_id)
-            )
-            raise Py42UserNotOnListError(err, message=message)
+            raise Py42UserNotOnListError(err, user_id, u"departing-employee")
 
     def get_all(
         self,

@@ -243,7 +243,7 @@ class TestHighRiskEmployeeClient(object):
         user_id = "942897397520289999"
         with pytest.raises(Py42NotFoundError) as err:
             high_risk_employee_client.remove(user_id)
-        assert "User with ID '{}' is not currently on the high-risk-employee detection list.".format(
+        assert "User with ID '{}' is not currently on the high-risk-employee list.".format(
             user_id
         ) in str(
             err.value

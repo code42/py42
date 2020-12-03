@@ -213,7 +213,10 @@ class Py42CloudAliasLimitExceededError(Py42BadRequestError):
 class Py42UserNotOnListError(Py42NotFoundError):
     """An exception raised when the user is not on a detection list."""
 
-    def __init__(self, exception, message=None):
+    def __init__(self, exception, user_id, list_name):
+        message = u"User with ID '{}' is not currently on the {} list.".format(
+            user_id, list_name
+        )
         super(Py42NotFoundError, self).__init__(exception, message)
 
 

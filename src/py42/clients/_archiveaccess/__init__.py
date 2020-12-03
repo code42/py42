@@ -172,7 +172,7 @@ class ArchiveContentPusher(ArchiveAccessor):
                     and file_location == PushRestoreLocation.ORIGINAL
                 ):
                     additional_message = (
-                        "Warning: Trying to restore to original "
+                        u"Warning: Trying to restore to original "
                         "location when the accepting GUID '{}' is "
                         "different from the archive source GUID "
                         "'{}'.".format(accepting_guid, self._device_guid)

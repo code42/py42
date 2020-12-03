@@ -88,14 +88,14 @@ class PushRestoreService(RestoreService):
             if u"CREATE_FAILED" in err.response.text:
                 additional_message = None
                 if (
-                    self._device_guid != accepting_device_guid
+                    device_guid != accepting_device_guid
                     and file_location == PushRestoreLocation.ORIGINAL
                 ):
                     additional_message = (
                         u"Warning: Trying to restore to original "
                         "location when the accepting GUID '{}' is "
                         "different from the archive source GUID "
-                        "'{}'.".format(accepting_device_guid, self._device_guid)
+                        "'{}'.".format(accepting_device_guid, device_guid)
                     )
 
                 raise Py42BadRestoreError(err, additional_message=additional_message)

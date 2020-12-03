@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import pytest
-from requests import HTTPError
 from requests import Response
 from tests.conftest import get_file_selection
 from tests.conftest import TEST_ACCEPTING_GUID
@@ -19,7 +18,6 @@ from py42.clients._archiveaccess import ArchiveContentPusher
 from py42.clients._archiveaccess import ArchiveContentStreamer
 from py42.clients._archiveaccess import FileType
 from py42.exceptions import Py42ArchiveFileNotFoundError
-from py42.exceptions import Py42BadRequestError
 from py42.response import Py42Response
 
 
@@ -41,19 +39,6 @@ def mock_walking_to_downloads_folder(mocker, storage_archive_service):
 def mock_walking_tree_for_windows_path(mocker, storage_archive_service):
     responses = [GetFilePathMetadataResponses.WINDOWS_NULL_ID]
     mock_get_file_path_metadata_responses(mocker, storage_archive_service, responses)
-
-
-@pytest.fixture
-def restore_job_manager_with_bad_request(mocker, restore_job_manager):
-    def side_effect(*args, **kwargs):
-        err = mocker.MagicMock(spec=HTTPError)
-        resp = mocker.MagicMock(spec=Response)
-        resp.text = "CREATE_FAILED"
-        err.response = resp
-        raise Py42BadRequestError(err)
-
-    restore_job_manager.send_stream.side_effect = side_effect
-    return restore_job_manager
 
 
 class GetFilePathMetadataResponses(object):

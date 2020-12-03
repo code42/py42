@@ -211,7 +211,7 @@ class Py42CloudAliasLimitExceededError(Py42BadRequestError):
 
 
 class Py42BadRestoreError(Py42BadRequestError):
-    """An error raised when the given restore arguments are not comptible and cause
+    """An error raised when the given restore arguments are not compatible and cause
     a bad request."""
 
     def __init__(self, exception, additional_message=None):

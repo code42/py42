@@ -215,9 +215,7 @@ class Py42BadRestoreRequestError(Py42BadRequestError):
     a bad request."""
 
     def __init__(self, exception, additional_message=None):
-        message = u"Unable to create restore session because of the given arguments."
-        if additional_message:
-            message = u"{} {}".format(message, additional_message)
+        message = u"Unable to create restore session."
         super(Py42BadRestoreRequestError, self).__init__(exception, message)
 
 

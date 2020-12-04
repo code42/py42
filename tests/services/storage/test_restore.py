@@ -98,38 +98,4 @@ class TestPushRestoreService:
                 restore_full_path=True,
                 file_location=PushRestoreLocation.TARGET_DIRECTORY,
             )
-
-        assert (
-            str(err.value)
-            == "Unable to create restore session because of the given arguments."
-        )
-
-    def test_start_push_restore_when_bad_request_raised_with_create_failed_text_and_unequal_guids_and_restoring_to_original_location_raises_bad_restore_error_with_additional_message(
-        self, mock_restore_connection_with_bad_request, single_file_selection
-    ):
-        service = PushRestoreService(mock_restore_connection_with_bad_request)
-        restore_groups = _create_expected_restore_groups(single_file_selection[0].file)
-        with pytest.raises(Py42BadRestoreRequestError) as err:
-            service.start_push_restore(
-                TEST_DEVICE_GUID,
-                TEST_ACCEPTING_GUID,
-                TEST_SESSION_ID,
-                TEST_NODE_GUID,
-                TEST_RESTORE_PATH,
-                restore_groups,
-                TEST_NUM_FILES,
-                TEST_NUM_BYTES,
-                show_deleted=False,
-                permit_restore_to_different_os_version=True,
-                file_permissions=self.TEST_PERMISSIONS,
-                restore_full_path=True,
-                file_location=PushRestoreLocation.ORIGINAL,
-            )
-        expected = (
-            "Unable to create restore session because of the given arguments. "
-            "Warning: Trying to restore to the original location when the accepting GUID "
-            "'{}' is different from the archive source GUID '{}'.".format(
-                TEST_ACCEPTING_GUID, TEST_DEVICE_GUID
-            )
-        )
-        assert str(err.value) == expected
+        assert str(err.value) == "Unable to create restore session."

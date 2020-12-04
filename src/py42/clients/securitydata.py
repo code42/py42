@@ -191,7 +191,7 @@ class SecurityDataClient(object):
 
         Args:
             query query (`:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str): The file event query
-            to filter search results.
+                to filter search results.
             page_token (str): A token used to indicate the starting point for additional page results. Defaults to empty string.
                 For the first page do not pass page_token, for all consecutive pages pass the token returned from previous response,
                 from field `nextPgToken`.

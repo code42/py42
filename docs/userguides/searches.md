@@ -79,6 +79,22 @@ for event in file_events:
     print(event["md5Checksum"])
 ```
 
+If the number of events exceeds 10,000 against a query, use `securitydata.SecurityModule.search_all_file_events()`:
+
+```python
+
+query = FileEventQuery(ExposureType.eq(ExposureType.REMOVABLE_MEDIA))
+token = ""
+while True:
+    response = sdk.securitydata.search_all_file_events(query, page_token=token)
+    file_events = response["fileEvents"]
+    for event in file_events:
+        print(event["md5Checksum"])
+    token = response["nextPgToken"]
+    if token is None:
+        break
+```
+
 ```eval_rst
 .. _anchor_search_alerts:
 ```

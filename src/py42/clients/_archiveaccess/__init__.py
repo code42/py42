@@ -3,7 +3,6 @@ from collections import namedtuple
 
 from py42.exceptions import Py42ArchiveFileNotFoundError
 
-
 # Data for initiating a web or push restore.
 FileSelection = namedtuple(u"FileSelection", u"file, num_files, num_dirs, num_bytes")
 

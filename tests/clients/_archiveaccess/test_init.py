@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 from requests import Response
-from tests.clients._archiveaccess.conftest import get_file_selection
+from tests.conftest import get_file_selection
 from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DESTINATION_GUID_1

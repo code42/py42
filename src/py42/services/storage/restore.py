@@ -1,7 +1,14 @@
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42BadRestoreRequestError
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidArchiveEncryptionKey
 from py42.exceptions import Py42InvalidArchivePassword
 from py42.services import BaseService
+
+
+class PushRestoreLocation:
+    ORIGINAL = u"ORIGINAL_LOCATION"
+    TARGET_DIRECTORY = u"TARGET_DIRECTORY"
 
 
 class RestoreService(BaseService):
@@ -53,6 +60,7 @@ class PushRestoreService(RestoreService):
         permit_restore_to_different_os_version=None,
         file_permissions=None,
         restore_full_path=None,
+        file_location=None,
     ):
         """Submits a push restore job."""
         uri = u"/api/v9/restore/push"
@@ -69,5 +77,11 @@ class PushRestoreService(RestoreService):
             u"permitRestoreToDifferentOsVersion": permit_restore_to_different_os_version,
             u"filePermissions": file_permissions,
             u"restoreFullPath": restore_full_path,
+            u"fileLocation": file_location,
         }
-        return self._connection.post(uri, json=json_dict)
+        try:
+            return self._connection.post(uri, json=json_dict)
+        except Py42BadRequestError as err:
+            if u"CREATE_FAILED" in err.response.text:
+                raise Py42BadRestoreRequestError(err)
+            raise

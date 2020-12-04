@@ -6,6 +6,8 @@ from requests import HTTPError
 from requests import Response
 from requests import Session
 
+from py42.clients._archiveaccess import FileSelection
+from py42.clients._archiveaccess import FileType
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UnauthorizedError
 from py42.response import Py42Response
@@ -217,3 +219,25 @@ def mock_post_not_found_session(mocker, mock_connection):
     exception.response = response
     mock_connection.post.side_effect = Py42NotFoundError(exception)
     return mock_connection
+
+
+@pytest.fixture
+def single_file_selection():
+    return [get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR)]
+
+
+@pytest.fixture
+def double_file_selection():
+    return [
+        get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, 1, 2, 3),
+        get_file_selection(FileType.DIRECTORY, TEST_DOWNLOADS_DIR, 4, 5, 6),
+    ]
+
+
+def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, num_bytes=1):
+    return FileSelection(
+        {"fileType": file_type, "path": file_path, "selected": True},
+        num_files,
+        num_dirs,
+        num_bytes,
+    )

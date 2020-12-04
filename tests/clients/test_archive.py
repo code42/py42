@@ -1,6 +1,6 @@
 import pytest
-from tests.clients.conftest import get_file_selection
 from tests.conftest import create_mock_response
+from tests.conftest import get_file_selection
 from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DESTINATION_GUID_1

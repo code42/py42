@@ -8,7 +8,6 @@ from tests.conftest import TEST_DESTINATION_GUID_1
 from tests.conftest import TEST_DEVICE_GUID
 from tests.conftest import TEST_NODE_GUID
 
-from py42.clients._archiveaccess import FileSelection
 from py42.services.archive import ArchiveService
 
 param = namedtuple("param", "name new_val expected_stored_val dict_location")
@@ -42,12 +41,3 @@ def archive_service(mocker):
 
     service.get_web_restore_info.side_effect = get_web_restore_info_side_effect
     return service
-
-
-def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, num_bytes=1):
-    return FileSelection(
-        {"fileType": file_type, "path": file_path, "selected": True},
-        num_files,
-        num_dirs,
-        num_bytes,
-    )

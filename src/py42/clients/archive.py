@@ -129,7 +129,9 @@ class ArchiveClient(object):
                 the archive.
             device_guid (str): The GUID of the device the file belongs to.
             accepting_device_guid (str): The GUID of the device accepting the restore.
-            restore_path (str): The path on the accepting device where the restore will be saved.
+            restore_path (str, optional): The path on the accepting device where the restore will be
+                saved. Alternatively, pass in the value ``ORIGINAL_LOCATION`` to restore the file
+                to the original location, which may be the case if you are replacing a device.
             destination_guid (str, optional): The GUID of the destination that stores the backup
                 of the file. If None, it will use the first destination GUID it finds for your
                 device. 'destination_guid' may be useful if the file is missing from one of your

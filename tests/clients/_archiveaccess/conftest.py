@@ -1,12 +1,8 @@
 import json
 
 import pytest
-from tests.clients.conftest import get_file_selection
-from tests.conftest import TEST_DOWNLOADS_DIR
-from tests.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
 from tests.conftest import TEST_SESSION_ID
 
-from py42.clients._archiveaccess import FileType
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
 from py42.response import Py42Response
@@ -47,16 +43,3 @@ def file_size_poller(mocker):
 @pytest.fixture
 def file_content_chunks():
     return list("file contents")
-
-
-@pytest.fixture
-def single_file_selection():
-    return [get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR)]
-
-
-@pytest.fixture
-def double_file_selection():
-    return [
-        get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, 1, 2, 3),
-        get_file_selection(FileType.DIRECTORY, TEST_DOWNLOADS_DIR, 4, 5, 6),
-    ]

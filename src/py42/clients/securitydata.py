@@ -172,12 +172,11 @@ class SecurityDataClient(object):
         )
 
     def search_file_events(self, query):
-        """Searches for file events, returns first 10,000 events.
+        """Searches for file events, returns up to the first 10,000 events.
         `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
-            query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`): Also
-                accepts a raw JSON str.
+            query query (`:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str): The file event query to filter search results.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the first 10,000
@@ -185,19 +184,20 @@ class SecurityDataClient(object):
         """
         return self._file_event_service.search(query)
 
-    def get_all_file_events(self, query, page_token=""):
-        """Searches for all file events.
+    def search_all_file_events(self, query, page_token=""):
+        """Searches for all file events, returning a page of response with a token in the response to retrieve next page.
+
         `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
-            query (:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`): Also
-                accepts a raw JSON str.
+            query query (`:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str): The file event query
+            to filter search results.
             page_token (str): A token used to indicate the starting point for additional page results. Defaults to empty string.
                 For the first page do not pass page_token, for all consecutive pages pass the token returned from previous response,
                 from field `nextPgToken`.
 
         Returns:
-            tuple (str, :class:`py42.response.Py42Response`): A tuple of token, to fetch remaining events, and response containing events.
+            :class:`py42.response.Py42Response`: A response containing page of events.
         """
 
         query.page_token = page_token

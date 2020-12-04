@@ -36,9 +36,9 @@ class FileEventQuery(BaseQuery):
         )
 
         if self.page_token is not None:
-            paging_prop = '"pgToken":"{}"'.format(self.page_token)
+            paging_prop = u'"pgToken":"{}"'.format(self.page_token)
         else:
-            paging_prop = '"pgNum":{}'.format(self.page_number)
+            paging_prop = u'"pgNum":{}'.format(self.page_number)
 
         json = (
             u'{{"groupClause":"{0}", "groups":[{1}], "srtDir":"{2}", '

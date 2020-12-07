@@ -143,7 +143,13 @@ class ArchiveContentPusher(ArchiveAccessor):
         )
 
     def stream_to_device(
-        self, restore_path, accepting_guid, file_selections, backup_set_id, show_deleted
+        self,
+        restore_path,
+        accepting_guid,
+        file_selections,
+        backup_set_id,
+        show_deleted,
+        overwrite_existing_files,
     ):
         return self._restore_job_manager.send_stream(
             restore_path,
@@ -152,6 +158,7 @@ class ArchiveContentPusher(ArchiveAccessor):
             file_selections,
             backup_set_id,
             show_deleted,
+            overwrite_existing_files,
         )
 
 

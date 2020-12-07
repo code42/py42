@@ -3,6 +3,7 @@ from py42.clients._archiveaccess import ArchiveExplorer
 
 
 _FILE_SIZE_CALC_TIMEOUT = 10
+_DEFAULT_BACKUP_SET_ID = u"1"
 
 
 class ArchiveClient(object):
@@ -54,7 +55,6 @@ class ArchiveClient(object):
     ):
         """Streams a file from a backup archive to memory. If streaming multiple files, the
         results will be zipped.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in
@@ -120,6 +120,7 @@ class ArchiveClient(object):
         archive_password=None,
         encryption_key=None,
         show_deleted=None,
+        overwrite_existing_files=False,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         """Streams a file from a backup archive to a specified device.
@@ -144,6 +145,9 @@ class ArchiveClient(object):
                 key archive security. Defaults to None.
             show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
                 Defaults to None.
+            overwrite_existing_files (bool, optional): to overwrite any existing files with the restored
+                data. If False (the default), any existing files that match a path being restored will
+                first get renamed.
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
@@ -177,6 +181,7 @@ class ArchiveClient(object):
             file_selections,
             backup_set_id,
             show_deleted,
+            overwrite_existing_files,
         )
 
     def _select_backup_set_id(self, device_guid, destination_guid):
@@ -185,8 +190,7 @@ class ArchiveClient(object):
             return None
         for backup_set in backup_sets:
             backup_set_id = backup_set[u"backupSetId"]
-            # 1 is the default backup set ID and is preferred.
-            if str(backup_set_id) == "1":
+            if str(backup_set_id) == _DEFAULT_BACKUP_SET_ID:
                 return backup_set_id
 
         return backup_sets[0][u"backupSetId"]

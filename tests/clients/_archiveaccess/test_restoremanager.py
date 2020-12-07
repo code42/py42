@@ -14,6 +14,7 @@ from tests.conftest import TEST_SESSION_ID
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
 from py42.response import Py42Response
+from py42.services.storage.restore import PushRestoreExistingFiles
 from py42.services.storage.restore import PushRestoreLocation
 
 
@@ -386,6 +387,7 @@ class TestRestoreJobManager(object):
             single_file_selection,
             TEST_BACKUP_SET_ID,
             False,
+            False,
         )
         push_service.start_push_restore.assert_called_once_with(
             TEST_DEVICE_GUID,
@@ -403,20 +405,23 @@ class TestRestoreJobManager(object):
             1,
             show_deleted=False,
             file_location=None,
+            existing_files=PushRestoreExistingFiles.RENAME_ORIGINAL,
+            permit_restore_to_different_os_version=False,
         )
 
-    def test_send_stream_when_using_original_directory_for_restore_path_calls_start_push_restore_with_expected_args(
+    def test_send_stream_when_using_original_directory_and_not_overwriting_calls_start_push_restore_with_expected_args(
         self, push_service, single_file_selection
     ):
         restore_job_manager = RestoreJobManager(
             push_service, TEST_DEVICE_GUID, TEST_SESSION_ID
         )
         restore_job_manager.send_stream(
-            PushRestoreLocation.ORIGINAL,
+            PushRestoreLocation.ORIGINAL_LOCATION,
             TEST_NODE_GUID,
             TEST_ACCEPTING_GUID,
             single_file_selection,
             TEST_BACKUP_SET_ID,
+            False,
             False,
         )
         push_service.start_push_restore.assert_called_once_with(
@@ -434,5 +439,77 @@ class TestRestoreJobManager(object):
             1,
             1,
             show_deleted=False,
-            file_location=PushRestoreLocation.ORIGINAL,
+            file_location=PushRestoreLocation.ORIGINAL_LOCATION,
+            existing_files=PushRestoreExistingFiles.RENAME_ORIGINAL,
+            permit_restore_to_different_os_version=True,
+        )
+
+    def test_send_stream_when_using_original_directory_and_overwriting_calls_start_push_restore_with_expected_args(
+        self, push_service, single_file_selection
+    ):
+        restore_job_manager = RestoreJobManager(
+            push_service, TEST_DEVICE_GUID, TEST_SESSION_ID
+        )
+        restore_job_manager.send_stream(
+            PushRestoreLocation.ORIGINAL_LOCATION,
+            TEST_NODE_GUID,
+            TEST_ACCEPTING_GUID,
+            single_file_selection,
+            TEST_BACKUP_SET_ID,
+            False,
+            True,
+        )
+        push_service.start_push_restore.assert_called_once_with(
+            TEST_DEVICE_GUID,
+            TEST_ACCEPTING_GUID,
+            TEST_SESSION_ID,
+            TEST_NODE_GUID,
+            "",
+            [
+                {
+                    u"backupSetId": TEST_BACKUP_SET_ID,
+                    u"files": [single_file_selection[0].file],
+                }
+            ],
+            1,
+            1,
+            show_deleted=False,
+            file_location=PushRestoreLocation.ORIGINAL_LOCATION,
+            existing_files=PushRestoreExistingFiles.OVERWRITE_ORIGINAL,
+            permit_restore_to_different_os_version=True,
+        )
+
+    def test_send_stream_when_using_original_directory_and_the_same_device_guid_start_push_restore_with_expected_args(
+        self, push_service, single_file_selection
+    ):
+        restore_job_manager = RestoreJobManager(
+            push_service, TEST_DEVICE_GUID, TEST_SESSION_ID
+        )
+        restore_job_manager.send_stream(
+            PushRestoreLocation.ORIGINAL_LOCATION,
+            TEST_NODE_GUID,
+            TEST_DEVICE_GUID,
+            single_file_selection,
+            TEST_BACKUP_SET_ID,
+            False,
+            True,
+        )
+        push_service.start_push_restore.assert_called_once_with(
+            TEST_DEVICE_GUID,
+            TEST_DEVICE_GUID,
+            TEST_SESSION_ID,
+            TEST_NODE_GUID,
+            "",
+            [
+                {
+                    u"backupSetId": TEST_BACKUP_SET_ID,
+                    u"files": [single_file_selection[0].file],
+                }
+            ],
+            1,
+            1,
+            show_deleted=False,
+            file_location=PushRestoreLocation.ORIGINAL_LOCATION,
+            existing_files=PushRestoreExistingFiles.OVERWRITE_ORIGINAL,
+            permit_restore_to_different_os_version=False,
         )

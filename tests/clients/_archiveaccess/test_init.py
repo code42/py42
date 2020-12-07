@@ -610,6 +610,7 @@ class TestArchiveContentPusher(object):
             TEST_DOWNLOADS_DIR,
             TEST_BACKUP_SET_ID,
             True,
+            True,
         )
         restore_job_manager.send_stream.assert_called_once_with(
             TEST_RESTORE_PATH,
@@ -617,5 +618,6 @@ class TestArchiveContentPusher(object):
             TEST_ACCEPTING_GUID,
             TEST_DOWNLOADS_DIR,
             TEST_BACKUP_SET_ID,
+            True,
             True,
         )

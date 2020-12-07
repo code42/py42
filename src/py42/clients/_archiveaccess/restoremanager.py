@@ -1,5 +1,6 @@
 import time
 
+from py42.services.storage.restore import PushRestoreExistingFiles
 from py42.services.storage.restore import PushRestoreLocation
 from py42.settings import debug
 from py42.util import format_dict
@@ -115,15 +116,22 @@ class RestoreJobManager(_RestorePoller):
         file_selections,
         backup_set_id,
         show_deleted,
+        overwrite_existing_files,
     ):
         num_files = sum([fs.num_files for fs in file_selections])
         num_bytes = sum([fs.num_bytes for fs in file_selections])
         file_location = None
+        permit_restore_to_different_os_version = False
+        existing_files = PushRestoreExistingFiles.RENAME_ORIGINAL
 
         # Use expected request parameters for restoring to the original location.
-        if restore_path == PushRestoreLocation.ORIGINAL:
+        if restore_path == PushRestoreLocation.ORIGINAL_LOCATION:
             file_location = restore_path
             restore_path = u""
+            if self._device_guid != accepting_guid:
+                permit_restore_to_different_os_version = True
+            if overwrite_existing_files:
+                existing_files = PushRestoreExistingFiles.OVERWRITE_ORIGINAL
 
         return self._storage_archive_service.start_push_restore(
             self._device_guid,
@@ -141,6 +149,8 @@ class RestoreJobManager(_RestorePoller):
             num_bytes,
             show_deleted=show_deleted,
             file_location=file_location,
+            permit_restore_to_different_os_version=permit_restore_to_different_os_version,
+            existing_files=existing_files,
         )
 
     def _wait_for_job(self, response):

@@ -7,8 +7,13 @@ from py42.services import BaseService
 
 
 class PushRestoreLocation:
-    ORIGINAL = u"ORIGINAL_LOCATION"
+    ORIGINAL_LOCATION = u"ORIGINAL_LOCATION"
     TARGET_DIRECTORY = u"TARGET_DIRECTORY"
+
+
+class PushRestoreExistingFiles:
+    OVERWRITE_ORIGINAL = u"OVERWRITE_ORIGINAL"
+    RENAME_ORIGINAL = u"RENAME_ORIGINAL"
 
 
 class RestoreService(BaseService):
@@ -61,6 +66,7 @@ class PushRestoreService(RestoreService):
         file_permissions=None,
         restore_full_path=None,
         file_location=None,
+        existing_files=None,
     ):
         """Submits a push restore job."""
         uri = u"/api/v9/restore/push"
@@ -78,6 +84,7 @@ class PushRestoreService(RestoreService):
             u"filePermissions": file_permissions,
             u"restoreFullPath": restore_full_path,
             u"fileLocation": file_location,
+            u"existingFiles": existing_files,
         }
         try:
             return self._connection.post(uri, json=json_dict)

@@ -406,6 +406,7 @@ class TestRestoreJobManager(object):
             show_deleted=False,
             file_location=None,
             existing_files=PushRestoreExistingFiles.RENAME_ORIGINAL,
+            permit_restore_to_different_os_version=False,
         )
 
     def test_send_stream_when_using_original_directory_and_not_overwriting_calls_start_push_restore_with_expected_args(

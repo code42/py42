@@ -100,7 +100,6 @@ class StorageArchiveService(RestoreService):
         show_deleted=None,
         restore_full_path=None,
         restore_to_server=None,
-        existing_files=None,
     ):
         """Submits a web restore job."""
         uri = u"/api/v9/restore/web"
@@ -115,7 +114,6 @@ class StorageArchiveService(RestoreService):
             u"showDeleted": show_deleted,
             u"restoreFullPath": restore_full_path,
             u"restoreToServer": restore_to_server,
-            u"existingFiles": existing_files,
         }
         return self._connection.post(uri, json=json_dict)
 

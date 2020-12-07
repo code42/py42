@@ -15,7 +15,6 @@ from py42.exceptions import Py42InvalidArchivePassword
 from py42.response import Py42Response
 from py42.services._connection import Connection
 from py42.services.storage.archive import StorageArchiveService
-from py42.services.storage.restore import PushRestoreExistingFiles
 
 
 JSON_KEYWORD = "json"
@@ -265,7 +264,6 @@ class TestStorageArchiveService(object):
             True,
             True,
             True,
-            PushRestoreExistingFiles.OVERWRITE_ORIGINAL,
         )
         expected_data = {
             "sourceComputerGuid": TEST_DEVICE_GUID,
@@ -278,7 +276,6 @@ class TestStorageArchiveService(object):
             "showDeleted": True,
             "restoreFullPath": True,
             "restoreToServer": True,
-            "existingFiles": PushRestoreExistingFiles.OVERWRITE_ORIGINAL,
         }
         connection.post.assert_called_once_with(
             START_WEB_RESTORE_JOB_URL, json=expected_data

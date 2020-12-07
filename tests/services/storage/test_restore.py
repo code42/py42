@@ -12,6 +12,7 @@ from tests.services.storage.test_archive import TEST_NUM_FILES
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42BadRestoreRequestError
+from py42.services.storage.restore import PushRestoreExistingFiles
 from py42.services.storage.restore import PushRestoreLocation
 from py42.services.storage.restore import PushRestoreService
 
@@ -57,6 +58,7 @@ class TestPushRestoreService:
             file_permissions=self.TEST_PERMISSIONS,
             restore_full_path=True,
             file_location=PushRestoreLocation.TARGET_DIRECTORY,
+            existing_files=PushRestoreExistingFiles.OVERWRITE_ORIGINAL,
         )
         expected_params = {
             "sourceComputerGuid": TEST_DEVICE_GUID,
@@ -72,6 +74,7 @@ class TestPushRestoreService:
             "filePermissions": self.TEST_PERMISSIONS,
             "restoreFullPath": True,
             "fileLocation": PushRestoreLocation.TARGET_DIRECTORY,
+            "existingFiles": PushRestoreExistingFiles.OVERWRITE_ORIGINAL,
         }
         mock_successful_connection.post.assert_called_once_with(
             self.EXPECTED_URL, json=expected_params

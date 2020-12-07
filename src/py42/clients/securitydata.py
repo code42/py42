@@ -185,15 +185,15 @@ class SecurityDataClient(object):
         return self._file_event_service.search(query)
 
     def search_all_file_events(self, query, page_token=""):
-        """Searches for all file events, returning a page of response with a token in the response to retrieve next page.
+        """Searches for all file events, returning a page of events with a token in the response to retrieve next page.
 
         `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
             query query (`:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str): The file event query
                 to filter search results.
-            page_token (str): A token used to indicate the starting point for additional page results. Defaults to empty string.
-                For the first page do not pass page_token, for all consecutive pages pass the token returned from previous response,
+            page_token (str, optional): A token used to indicate the starting point for additional page results. Defaults to empty string.
+                For the first page, do not pass page_token. For all consecutive pages, pass the token from the previous response
                 from field `nextPgToken`.
 
         Returns:

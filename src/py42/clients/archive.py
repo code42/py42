@@ -3,6 +3,7 @@ from py42.clients._archiveaccess import ArchiveExplorer
 
 
 _FILE_SIZE_CALC_TIMEOUT = 10
+_DEFAULT_BACKUP_SET_ID = u"1"
 
 
 class ArchiveClient(object):
@@ -188,8 +189,7 @@ class ArchiveClient(object):
             return None
         for backup_set in backup_sets:
             backup_set_id = backup_set[u"backupSetId"]
-            # 1 is the default backup set ID and is preferred.
-            if str(backup_set_id) == u"1":
+            if str(backup_set_id) == _DEFAULT_BACKUP_SET_ID:
                 return backup_set_id
 
         return backup_sets[0][u"backupSetId"]

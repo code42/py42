@@ -137,12 +137,14 @@ class TestArchiveClient(object):
             encryption_key=TEST_ENCRYPTION_KEY,
             file_size_calc_timeout=100,
             show_deleted=True,
+            overwrite_existing_files=True,
         )
         archive_content_pusher.stream_to_device.assert_called_once_with(
             TEST_RESTORE_PATH,
             TEST_ACCEPTING_GUID,
             TEST_FILE_SELECTIONS,
             TEST_BACKUP_SET_ID,
+            True,
             True,
         )
 
@@ -176,7 +178,12 @@ class TestArchiveClient(object):
             show_deleted=True,
         )
         archive_content_pusher.stream_to_device.assert_called_once_with(
-            TEST_RESTORE_PATH, TEST_ACCEPTING_GUID, TEST_FILE_SELECTIONS, "1", True,
+            TEST_RESTORE_PATH,
+            TEST_ACCEPTING_GUID,
+            TEST_FILE_SELECTIONS,
+            "1",
+            True,
+            False,
         )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(

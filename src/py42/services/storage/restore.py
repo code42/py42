@@ -7,8 +7,13 @@ from py42.services import BaseService
 
 
 class PushRestoreLocation:
-    ORIGINAL = u"ORIGINAL_LOCATION"
+    ORIGINAL_LOCATION = u"ORIGINAL_LOCATION"
     TARGET_DIRECTORY = u"TARGET_DIRECTORY"
+
+
+class PushRestoreExistingFiles:
+    OVERWRITE_ORIGINAL = u"OVERWRITE_ORIGINAL"
+    RENAME_ORIGINAL = u"RENAME_ORIGINAL"
 
 
 class RestoreService(BaseService):

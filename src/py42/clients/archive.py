@@ -120,9 +120,11 @@ class ArchiveClient(object):
         archive_password=None,
         encryption_key=None,
         show_deleted=None,
+        overwrite_existing_files=False,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         """Streams a file from a backup archive to a specified device.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#PushRestoreJobResult-get>`__
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in
@@ -144,6 +146,8 @@ class ArchiveClient(object):
                 key archive security. Defaults to None.
             show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
                 Defaults to None.
+            overwrite_existing_files (bool, optional): Set to True when using ORIGINAL_LOCATION for the
+                restore_path argument to overwrite any existing files part of the restore.
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
@@ -177,6 +181,7 @@ class ArchiveClient(object):
             file_selections,
             backup_set_id,
             show_deleted,
+            overwrite_existing_files,
         )
 
     def _select_backup_set_id(self, device_guid, destination_guid):
@@ -186,7 +191,7 @@ class ArchiveClient(object):
         for backup_set in backup_sets:
             backup_set_id = backup_set[u"backupSetId"]
             # 1 is the default backup set ID and is preferred.
-            if str(backup_set_id) == "1":
+            if str(backup_set_id) == u"1":
                 return backup_set_id
 
         return backup_sets[0][u"backupSetId"]

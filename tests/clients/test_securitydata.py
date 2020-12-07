@@ -1321,7 +1321,7 @@ class TestSecurityClient(object):
 
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("mdhash")
 
-    def test_get_all_file_events_calls_search_with_expected_params_when_pg_token_is_not_passed(
+    def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_not_passed(
         self,
         security_service,
         connection,
@@ -1353,7 +1353,7 @@ class TestSecurityClient(object):
         )
         assert response is successful_response
 
-    def test_get_all_file_events_calls_search_with_expected_params_when_pg_token_is_passed(
+    def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_passed(
         self,
         security_service,
         connection,

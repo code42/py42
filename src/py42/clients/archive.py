@@ -54,7 +54,6 @@ class ArchiveClient(object):
     ):
         """Streams a file from a backup archive to memory. If streaming multiple files, the
         results will be zipped.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#WebRestoreJobResult-get>`__
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in
@@ -124,7 +123,6 @@ class ArchiveClient(object):
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
         """Streams a file from a backup archive to a specified device.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#PushRestoreJobResult-get>`__
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in

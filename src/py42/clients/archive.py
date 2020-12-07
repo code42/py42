@@ -145,8 +145,9 @@ class ArchiveClient(object):
                 key archive security. Defaults to None.
             show_deleted (bool, optional): Set to True to include deleted files when restoring a directory.
                 Defaults to None.
-            overwrite_existing_files (bool, optional): Set to True when using ORIGINAL_LOCATION for the
-                restore_path argument to overwrite any existing files part of the restore.
+            overwrite_existing_files (bool, optional): to overwrite any existing files with the restored
+                data. If False (the default), any existing files that match a path being restored will
+                first get renamed.
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.

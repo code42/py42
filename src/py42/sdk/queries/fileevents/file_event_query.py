@@ -34,13 +34,22 @@ class FileEventQuery(BaseQuery):
         groups_string = u",".join(
             str(group_item) for group_item in self._filter_group_list
         )
-        json = u'{{"groupClause":"{0}", "groups":[{1}], "pgNum":{2}, "pgSize":{3}, "srtDir":"{4}", "srtKey":"{5}"}}'.format(
-            self._group_clause,
-            groups_string,
-            self.page_number,
-            self.page_size,
-            self.sort_direction,
-            self.sort_key,
+
+        if self.page_token is not None:
+            paging_prop = u'"pgToken":"{}"'.format(self.page_token)
+        else:
+            paging_prop = u'"pgNum":{}'.format(self.page_number)
+
+        json = (
+            u'{{"groupClause":"{0}", "groups":[{1}], "srtDir":"{2}", '
+            u'"srtKey":"{3}", {5}, "pgSize":{4}}}'.format(
+                self._group_clause,
+                groups_string,
+                self.sort_direction,
+                self.sort_key,
+                self.page_size,
+                paging_prop,
+            )
         )
         return json
 
@@ -53,6 +62,7 @@ class FileEventQuery(BaseQuery):
             u"pgSize": self.page_size,
             u"srtDir": self.sort_direction,
             u"srtKey": self.sort_key,
+            u"pgToken": self.page_token,
         }
         for key in output_dict:
             yield key, output_dict[key]

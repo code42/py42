@@ -28,6 +28,8 @@ reason `Cloud usernames must be less than or equal to`.
 
 - Added new exception `Py42TooManyRequestsError` to raise errors with 429 HTTP status code.
 
+- Added new method `sdk.securitydata.search_all_file_events()` to retrieve all events when events are more than 10,000.
+
 ## 1.9.0 - 2020-10-02
 
 ### Changed

@@ -66,6 +66,7 @@ class PushRestoreService(RestoreService):
         file_permissions=None,
         restore_full_path=None,
         file_location=None,
+        existing_files=None,
     ):
         """Submits a push restore job."""
         uri = u"/api/v9/restore/push"
@@ -83,6 +84,7 @@ class PushRestoreService(RestoreService):
             u"filePermissions": file_permissions,
             u"restoreFullPath": restore_full_path,
             u"fileLocation": file_location,
+            u"existingFiles": existing_files,
         }
         try:
             return self._connection.post(uri, json=json_dict)

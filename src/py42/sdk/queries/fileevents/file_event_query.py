@@ -41,8 +41,8 @@ class FileEventQuery(BaseQuery):
             paging_prop = u'"srtDir":"{}", "srtKey":"{}", "pgNum":{}'.format(
                 self.sort_direction, self.sort_key, self.page_number,
             )
-        json = u'{{"groupClause":"{0}", "groups":[{1}], {3}, "pgSize":{2}}}'.format(
-            self._group_clause, groups_string, self.page_size, paging_prop,
+        json = u'{{"groupClause":"{0}", "groups":[{1}], {2}, "pgSize":{3}}}'.format(
+            self._group_clause, groups_string, paging_prop, self.page_size
         )
         return json
 

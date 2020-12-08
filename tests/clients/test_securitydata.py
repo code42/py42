@@ -1349,7 +1349,7 @@ class TestSecurityClient(object):
         response = security_client.search_all_file_events(query)
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"", "pgSize":10000}',
+            data='{"groupClause":"AND", "groups":[], "pgToken":"", "pgSize":10000}',
         )
         assert response is successful_response
 
@@ -1381,6 +1381,6 @@ class TestSecurityClient(object):
         response = security_client.search_all_file_events(query, "abc")
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}',
+            data='{"groupClause":"AND", "groups":[], "pgToken":"abc", "pgSize":10000}',
         )
         assert response is successful_response

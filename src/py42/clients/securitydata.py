@@ -176,7 +176,8 @@ class SecurityDataClient(object):
         `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
-            query query (`:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str): The file event query to filter search results.
+            query (str or :class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`):
+                The file event query to filter search results.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the first 10,000
@@ -190,11 +191,13 @@ class SecurityDataClient(object):
         `REST Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Forensic_File_Search_API>`__
 
         Args:
-            query query (`:class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str): The file event query
-                to filter search results.
-            page_token (str, optional): A token used to indicate the starting point for additional page results. Defaults to empty string.
-                For the first page, do not pass page_token. For all consecutive pages, pass the token from the previous response
-                from field `nextPgToken`.
+            query (str or :class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`):
+                The file event query to filter search results.
+            page_token (str, optional): A token used to indicate the starting point for
+                additional page results. For the first page, do not pass ``page_token``. For
+                all consecutive pages, pass the token from the previous response from
+                field ``nextPgToken``. When using ``page_token``, any sorting parameters from
+                the `FileEventQuery` will be ignored. Defaults to empty string.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing page of events.

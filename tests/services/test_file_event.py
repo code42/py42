@@ -3,6 +3,7 @@ import pytest
 from requests import HTTPError
 from requests import Response
 
+from py42._compat import str
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
@@ -13,7 +14,7 @@ from py42.services.fileevent import FileEventService
 FILE_EVENT_URI = u"/forensic-search/queryservice/api/v1/fileevent"
 
 
-def _create_test_query(test_filename="*"):
+def _create_test_query(test_filename=u"*"):
     return FileEventQuery(FileName.eq(test_filename))
 
 
@@ -87,8 +88,9 @@ class TestFileEventService(object):
         service = FileEventService(connection)
         connection.post.return_value = successful_response
         query = _create_test_query(u"我能吞")
+        expected = str(query)
         service.search(query)
-        connection.post.assert_called_once_with(FILE_EVENT_URI, data=str(query))
+        connection.post.assert_called_once_with(FILE_EVENT_URI, data=expected)
 
     def test_get_file_location_detail_by_sha256_calls_get_with_hash(
         self, connection, successful_response

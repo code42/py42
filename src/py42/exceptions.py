@@ -223,7 +223,7 @@ class Py42InvalidPageTokenError(Py42BadRequestError):
     """An error raised when the page token given is invalid."""
 
     def __init__(self, exception, page_token):
-        message = "Invalid page token: {}".format(page_token)
+        message = u"Invalid page token: {}".format(page_token)
         super(Py42InvalidPageTokenError, self).__init__(exception, message)
 
 

@@ -220,7 +220,7 @@ class Py42BadRestoreRequestError(Py42BadRequestError):
 
 
 class Py42InvalidPageTokenError(Py42BadRequestError):
-    """An error raise when the page token given is invalid."""
+    """An error raised when the page token given is invalid."""
 
     def __init__(self, exception, page_token):
         message = "Invalid page token: {}".format(page_token)

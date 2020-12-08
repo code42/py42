@@ -214,9 +214,17 @@ class Py42BadRestoreRequestError(Py42BadRequestError):
     """An error raised when the given restore arguments are not compatible and cause
     a bad request."""
 
-    def __init__(self, exception, additional_message=None):
+    def __init__(self, exception):
         message = u"Unable to create restore session."
         super(Py42BadRestoreRequestError, self).__init__(exception, message)
+
+
+class Py42InvalidPageTokenError(Py42BadRequestError):
+    """An error raise when the page token given is invalid."""
+
+    def __init__(self, exception, page_token):
+        message = "Invalid page token: {}".format(page_token)
+        super(Py42InvalidPageTokenError, self).__init__(exception, message)
 
 
 class Py42UserNotOnListError(Py42NotFoundError):

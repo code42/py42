@@ -64,7 +64,6 @@ class TestFileEventService(object):
         with pytest.raises(Py42BadRequestError):
             service.search(query)
 
-
     def test_search_when_bad_request_raised_with_token_but_has_not_invalid_token_text_raises_bad_request(
         self, mocker, connection
     ):
@@ -81,7 +80,6 @@ class TestFileEventService(object):
         service = FileEventService(connection)
         with pytest.raises(Py42BadRequestError):
             service.search(query)
-
 
     def test_unicode_query_search_calls_post_with_query(
         self, connection, successful_response

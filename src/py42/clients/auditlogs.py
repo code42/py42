@@ -27,9 +27,9 @@ class AuditLogsClient(object):
             page_num (int, optional): The page number to get. Defaults to 1.
             page_size (int, optional): The number of items per page. Defaults to `py42.settings.items_per_page`.
             begin_time (int or float or str or datetime, optional): Timestamp in milliseconds or
-                str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+                str format "yyyy-MM-dd HH:MM:SS" or a datetime instance. Defaults to None.
             end_time (int or float or str or datetime, optional): Timestamp in milliseconds or
-                str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+                str format "yyyy-MM-dd HH:MM:SS" or a datetime instance. Defaults to None.
             event_types (str or list, optional): A str or list of str of valid event types. Defaults to None.
             user_ids (str or list, optional): A str or list of str of Code42 userUids. Defaults to None.
             usernames (str or list, optional): A str or list of str of Code42 usernames. Defaults to None.
@@ -70,9 +70,9 @@ class AuditLogsClient(object):
 
         Args:
             begin_time (int or float or str or datetime, optional): Timestamp in milliseconds or
-                str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+                str format "yyyy-MM-dd HH:MM:SS" or a datetime instance. Defaults to None.
             end_time (int or float or str or datetime, optional): Timestamp in milliseconds or
-                str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
+                str format "yyyy-MM-dd HH:MM:SS" or a datetime instance. Defaults to None.
             event_types (str or list, optional): A str or list of str of valid event types. Defaults to None.
             user_ids (str or list, optional): A str or list of str of Code42 userUids. Defaults to None.
             usernames (str or list, optional): A str or list of str of Code42 usernames. Defaults to None.

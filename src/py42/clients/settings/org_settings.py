@@ -21,7 +21,7 @@ class OrgSettings(UserDict, object):
         self._packets = {}
         self.changes = {}
         self.device_defaults = DeviceSettingsDefaults(
-            self.data[u"deviceDefaults"], org_settings=self,
+            self.data[u"deviceDefaults"], org_settings=self
         )
 
     @property
@@ -50,33 +50,49 @@ class OrgSettings(UserDict, object):
     notes = SettingProperty(u"notes", [u"notes"])
     """Notes field for this Org."""
 
+    quota_settings_inherited = SettingProperty(
+        u"quota_settings_inherited", [u"settings", u"isUsingQuotaDefaults"],
+    )
+    """Determines if Org Quota settings (`maximum_user_subscriptions`, `org_backup_quota`,
+    `user_backup_quota`, `archive_hold_days`) are inherited from parent organization.
+
+    Modifying one of the Org Quota attributes automatically sets this attribute to `False`.
+    """
+
     archive_hold_days = SettingProperty(
-        u"archive_hold_days", [u"settings", u"archiveHoldDays"]
+        u"archive_hold_days",
+        [u"settings", u"archiveHoldDays"],
+        inheritance_attr=u"quota_settings_inherited",
     )
     """Number of days backup archives are held in cold storage after deactivation or
     destination removal from any devices in this Org.
     """
 
     maximum_user_subscriptions = SettingProperty(
-        u"maximum_user_subscriptions", [u"settings", u"maxSeats"]
+        u"maximum_user_subscriptions",
+        [u"settings", u"maxSeats"],
+        inheritance_attr=u"quota_settings_inherited",
     )
-    """Number of users allowed to consume a license in this Org."""
+    """Number of users allowed to consume a license in this Org. Set to -1 for unlimited."""
 
     org_backup_quota = SettingProperty(
         u"org_backup_quota",
         [u"settings", u"maxBytes"],
         get_converter=bytes_to_gb,
         set_converter=gb_to_bytes,
+        inheritance_attr=u"quota_settings_inherited",
     )
-    """Backup storage quota (in GB) for this organization."""
+    """Backup storage quota (in GB) for this organization. Set to -1 for unlimited."""
 
     user_backup_quota = SettingProperty(
         u"user_backup_quota",
         [u"settings", u"defaultUserMaxBytes"],
         get_converter=bytes_to_gb,
         set_converter=gb_to_bytes,
+        inheritance_attr=u"quota_settings_inherited",
     )
-    """Backup storage quota (in GB) for each user in this organization."""
+    """Backup storage quota (in GB) for each user in this organization. Set to -1 for
+    unlimited."""
 
     web_restore_admin_limit = SettingProperty(
         u"web_restore_admin_limit", [u"settings", u"webRestoreAdminLimitMb"]
@@ -88,15 +104,30 @@ class OrgSettings(UserDict, object):
     )
     """Limit (in MB) to amount of data restorable by non-admin users via web restore."""
 
+    reporting_settings_inherited = SettingProperty(
+        u"reporting_settings_inherited", [u"settings", u"isUsingReportingDefaults"],
+    )
+    """Determines if Org Reporting settings (`backup_warning_email_days`,
+    `backup_critical_email_days', `backup_alert_recipient_emails`) are inherited from
+    parent organization.
+
+    Modifying one of the Org Reporting attributes automatically sets this attribute to
+    `False`.
+    """
+
     backup_warning_email_days = SettingProperty(
-        u"backup_warning_email_days", [u"settings", u"warnInDays"]
+        u"backup_warning_email_days",
+        [u"settings", u"warnInDays"],
+        inheritance_attr=u"reporting_settings_inherited",
     )
     """The number of days devices in this org can go without any backup before "warning"
     alerts get sent to org admins.
     """
 
     backup_critical_email_days = SettingProperty(
-        u"backup_critical_email_days", [u"settings", u"alertInDays"]
+        u"backup_critical_email_days",
+        [u"settings", u"alertInDays"],
+        inheritance_attr=u"reporting_settings_inherited",
     )
     """The number of days devices in this org can go without any backup before "critical"
     alerts get sent to org admins.
@@ -106,6 +137,7 @@ class OrgSettings(UserDict, object):
         u"backup_alert_recipient_emails",
         [u"settings", u"recipients"],
         set_converter=to_list,
+        inheritance_attr=u"reporting_settings_inherited",
     )
     """List of email addresses that organization backup alert emails get sent to (org
     admin users get these automatically).

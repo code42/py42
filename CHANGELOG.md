@@ -10,11 +10,61 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Fixed
+
+- Bug where an empty destination list in a device's backup set broke creation of DeviceSettings objects for that device.
+
+- Bug where all 401 Unauthorized error responses were being raised as Py42MFARequired exceptions.
+
+- Bug where requests to storage nodes were only using single-use tokens for authentication, causing many extraneous requests.
+
+### Added
+
+- `sdk.archive.stream_to_device()` for pushing a restore to another device.
+
+- Added new exception `Py42CloudAliasLimitExceededError` to throw if `add_cloud_alias()` throws `400` and body contains
+reason `Cloud usernames must be less than or equal to`.
+
+- Added new exception `Py42UserNotOnListError` to throw error if `remove()` throws `404` when the user is not on a detection list.
+
+- Added new exception `Py42TooManyRequestsError` to raise errors with 429 HTTP status code.
+
+- Added new method `sdk.securitydata.search_all_file_events()` to retrieve all events when events are more than 10,000.
+
+- Added new custom exception `sdk.exceptions.Py42InvalidPageToken` that gets raised when the page token from
+  `sdk.securitydata.search_all_file_events()` causes a specific bad request error.
+
+## 1.9.0 - 2020-10-02
+
+### Changed
+
+- The following methods now support string timestamp formats (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `sdk.auditlogs.get_page()`, arguments `begin_time` and `end_time`.
+    - `sdk.auditlogs.get_all()`, arguments `begin_time` and `end_time`.
+    - `sdk.securitydata.get_all_plan_security_events()`, arguments `min_timestamp` and `max_timestamp`.
+    - `sdk.securitydata.get_all_user_security_events()`, arguments `min_timestamp` and `max_timestamp`.
+
+- The `departure_date` parameter for methods:
+    - `sdk.detectionlists.departing_employee.add()`
+    - `sdk.detectionlists.departing_employee.update_departure_date()`
+    now support a `datetime` instance.
+
+- The following methods on timestamp-based query filters (e.g. `EventTimestamp`, `DateObserved`) now support string timestamp format (`yyyy-MM-dd HH:MM:SS`) as well as a `datetime` instance:
+    - `on_or_before()`
+    - `or_or_after()`
+    - `in_range()`
+
 ### Removed
 
 - Removed faulty `within_the_last()` method from `sdk.queries.alerts.filters.alert_filter.DateObserved`.
 
 ### Added
+- Added new exception `Py42UserAlreadyExistsError` to throw if `create_user()` throws `500` and body contains
+`USER_DUPLICATE`
+
+- Added `Py42ActiveLegalHoldError` exception when attempting to deactivate a user or device in an active legal hold.
+    - `py42.sdk.users.deactivate()`
+    - `py42.sdk.devices.deactivate()`
 
 - Added additional user-adjustable setting for security events page size:
     - `py42.settings.security_events_per_page`
@@ -38,7 +88,21 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.auditlogs.get_all()`
 
 ### Changed
+
 - `py42.sdk.queries.query_filter.filter_attributes` renamed to `py42.util.get_attribute_keys_from_class`
+
+## 1.8.2 - 2020-09-30
+
+### Fixed
+
+- Corrected an issue that caused `sdk.detectionlists.departing_employee.get_all()`
+  and `sdk.detectionslists.high_risk_employee.get_all()` to only return the first page (first 100) records. This same issue also caused other `get_all_X()` methods to only return the first page if the requested `page_size` was less than `settings.items_per_page`.
+
+### Added
+
+- `page_size` parameter to:
+  - `sdk.detectionlists.departing_employee.get_all()`
+  - `sdk.detectionlists.high_rsik_employee.get_all()`
 
 ## 1.8.1 - 2020-08-28
 

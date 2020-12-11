@@ -50,10 +50,18 @@ class SettingProperty(BaseSettingProperty):
         set_converter (func, optional): function to convert values being set to preferred format. Defaults to no conversion.
     """
 
-    def __init__(self, name, location, get_converter=None, set_converter=None):
+    def __init__(
+        self,
+        name,
+        location,
+        get_converter=None,
+        set_converter=None,
+        inheritance_attr=None,
+    ):
         super(SettingProperty, self).__init__(name, location)
         self.get_converter = get_converter
         self.set_converter = set_converter
+        self.inheritance_attr = inheritance_attr
 
     def __get__(self, instance, owner):
         val = get_val(instance.data, self.location)
@@ -75,6 +83,10 @@ class SettingProperty(BaseSettingProperty):
             location = self.location
 
         self._register_change(instance, orig_val, converted_new_val)
+        if self.inheritance_attr is not None and getattr(
+            instance, self.inheritance_attr
+        ):
+            setattr(instance, self.inheritance_attr, False)
         set_val(instance.data, location, converted_new_val)
 
 

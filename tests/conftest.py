@@ -6,6 +6,9 @@ from requests import HTTPError
 from requests import Response
 from requests import Session
 
+from py42.clients._archiveaccess import FileSelection
+from py42.clients._archiveaccess import FileType
+from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UnauthorizedError
 from py42.response import Py42Response
 from py42.sdk.queries.query_filter import QueryFilter
@@ -42,6 +45,38 @@ EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
 VALUE_UNICODE = u"您已经发现了秘密信息"
+
+TEST_ACCEPTING_GUID = "accepting-device-guid"
+TEST_ADDED_PATH = "E:/"
+TEST_ADDED_EXCLUDED_PATH = "C:/Users/TestUser/Downloads/"
+TEST_BACKUP_SET_ID = "backup-set-id"
+TEST_COMPUTER_ID = 4290210
+TEST_COMPUTER_GUID = 42000000
+TEST_COMPUTER_ORG_ID = 424242
+TEST_COMPUTER_NAME = "Settings Test Device"
+TEST_DATA_KEY_TOKEN = "FAKE_DATA_KEY_TOKEN"
+TEST_DEVICE_GUID = "device-guid"
+TEST_DESTINATION_GUID_1 = "4200"
+TEST_DESTINATION_GUID_2 = "4300"
+TEST_DESTINATION_GUID_3 = "4400"
+TEST_DESTINATION_NAME_1 = "Dest42"
+TEST_DESTINATION_NAME_2 = "Dest43"
+TEST_DESTINATION_NAME_3 = "Dest44"
+TEST_DEVICE_VERSION = 1525200006800
+TEST_DOWNLOADS_FILE_ID = "69e930e774cbc1ee6d0c0ff2ba5804ee"
+TEST_CONFIG_DATE_MS = "1577858400000"  # Jan 1, 2020
+TEST_DOWNLOADS_DIR = "/Users/qa/Downloads"
+TEST_DOWNLOADS_DIR_ID = "f939cfc4d476ec5535ccb0f6c0377ef4"
+TEST_ENCRYPTION_KEY = "encryption-key"
+TEST_EXTERNAL_DOCUMENTS_DIR = "D:/Documents/"
+TEST_FILE_ID = "file-id"
+TEST_NODE_GUID = "server-node-guid"
+TEST_PASSWORD = "password"
+TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR = "/Users/qa/Downloads/terminator-genisys.jpg"
+TEST_PHOTOS_DIR = "C:/Users/TestUser/Pictures/"
+TEST_RESTORE_PATH = "C:/store/here/"
+TEST_SESSION_ID = "FAKE_SESSION_ID"
+TEST_USER_ID = 13548744
 
 
 @pytest.fixture
@@ -166,3 +201,43 @@ def mock_connection(mocker):
 def mock_successful_connection(mock_connection, successful_response):
     mock_connection.get.return_value = successful_response
     return mock_connection
+
+
+def create_mock_response(mocker, text):
+    response = mocker.MagicMock(spec=Response)
+    response.text = text
+    response.status_code = 200
+    response.encoding = None
+    return Py42Response(response)
+
+
+@pytest.fixture
+def mock_post_not_found_session(mocker, mock_connection):
+    response = mocker.MagicMock(spec=Response)
+    response.status_code = 404
+    exception = mocker.MagicMock(spec=HTTPError)
+    exception.response = response
+    mock_connection.post.side_effect = Py42NotFoundError(exception)
+    return mock_connection
+
+
+@pytest.fixture
+def single_file_selection():
+    return [get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR)]
+
+
+@pytest.fixture
+def double_file_selection():
+    return [
+        get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, 1, 2, 3),
+        get_file_selection(FileType.DIRECTORY, TEST_DOWNLOADS_DIR, 4, 5, 6),
+    ]
+
+
+def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, num_bytes=1):
+    return FileSelection(
+        {"fileType": file_type, "path": file_path, "selected": True},
+        num_files,
+        num_dirs,
+        num_bytes,
+    )

@@ -1,3 +1,4 @@
+import json
 from copy import deepcopy
 
 import pytest
@@ -6,174 +7,15 @@ from tests.clients.conftest import PHOTOS_REGEX
 from tests.clients.conftest import PICTURES_REGEX
 from tests.clients.conftest import TEST_ADDED_EXCLUDED_PATH
 from tests.clients.conftest import TEST_ADDED_PATH
-from tests.clients.conftest import TEST_DESTINATION_GUID_1
-from tests.clients.conftest import TEST_DESTINATION_GUID_2
-from tests.clients.conftest import TEST_DESTINATION_GUID_3
-from tests.clients.conftest import TEST_DESTINATION_NAME_1
-from tests.clients.conftest import TEST_DESTINATION_NAME_2
-from tests.clients.conftest import TEST_DESTINATION_NAME_3
 from tests.clients.conftest import TEST_EXTERNAL_DOCUMENTS_DIR
 from tests.clients.conftest import TEST_HOME_DIR
 from tests.clients.conftest import TEST_PHOTOS_DIR
-from tests.clients.test_device_settings import DEVICE_DICT_W_SETTINGS
 
 from py42.clients.settings import get_val
 from py42.clients.settings.org_settings import OrgSettings
 from py42.exceptions import Py42Error
 
 ONEGB = 1000000000
-TEST_ORG_ID = 42
-TEST_ORG_NAME = "Test Org"
-TEST_REG_KEY = "XXXX-XXXX-XXXX-XXXX"
-TEST_NOTE = "Test Note"
-TEST_EXTERNAL_REFERENCE = "Test Ref"
-TEST_ARCHIVE_HOLD_DAYS = 30
-TEST_MAX_SUBSCRIPTIONS = 100
-TEST_ORG_QUOTA_BYTES = 1000 * ONEGB
-TEST_USER_QUOTA_BYTES = 100 * ONEGB
-TEST_WEB_RESTORE_USER_LIMIT = 25
-TEST_WEB_RESTORE_ADMIN_LIMIT = 1000
-TEST_BACKUP_WARNING_EMAIL_DAYS = 5
-TEST_BACKUP_CRITICAL_EMAIL_DAYS = 10
-
-TEST_UNOFFERED_DESTINATION_GUID = "4500"
-TEST_UNOFFERED_DESTINATION_NAME = "Dest45"
-
-TEST_ORG_SETTINGS_DICT = {
-    "orgId": TEST_ORG_ID,
-    "orgUid": "944755074379520217",
-    "orgName": TEST_ORG_NAME,
-    "orgExtRef": TEST_EXTERNAL_REFERENCE,
-    "notes": TEST_NOTE,
-    "status": "Active",
-    "active": True,
-    "blocked": False,
-    "parentOrgId": 510853,
-    "parentOrgUid": "917669379999168715",
-    "type": "ENTERPRISE",
-    "classification": "BASIC",
-    "externalId": "944755074379520217",
-    "hierarchyCounts": {},
-    "configInheritanceCounts": {},
-    "creationDate": "2020-03-10T13:38:26.222-05:00",
-    "modificationDate": "2020-09-01T15:36:35.872-05:00",
-    "deactivationDate": None,
-    "registrationKey": TEST_REG_KEY,
-    "reporting": {"orgManagers": []},
-    "customConfig": True,
-    "settings": {
-        "maxSeats": TEST_MAX_SUBSCRIPTIONS,
-        "maxBytes": TEST_ORG_QUOTA_BYTES,
-        "archiveHoldDays": TEST_ARCHIVE_HOLD_DAYS,
-        "defaultUserMaxBytes": TEST_USER_QUOTA_BYTES,
-        "defaultUserMobileQuota": -1,
-        "webRestoreUserLimitMb": TEST_WEB_RESTORE_USER_LIMIT,
-        "webRestoreAdminLimitMb": TEST_WEB_RESTORE_ADMIN_LIMIT,
-        "warnInDays": TEST_BACKUP_WARNING_EMAIL_DAYS,
-        "alertInDays": TEST_BACKUP_CRITICAL_EMAIL_DAYS,
-        "recipients": [],
-        "reportLastSent": None,
-        "reportSchedule": "_______",
-        "sendReports": False,
-        "usernameIsAnEmail": True,
-        "ldapServerIds": None,
-        "radiusServerIds": None,
-        "ssoIdentityProviderUids": None,
-        "securityKeyType": "AccountPassword",
-        "securityKeyLocked": True,
-        "autoOfferSelf": False,
-        "allowLocalFolders": True,
-        "defaultRoles": [],
-        "isSimpleOrg": False,
-        "isDefaultRolesInherited": True,
-        "destinations": [
-            {
-                "destinationId": int(TEST_DESTINATION_GUID_1),
-                "guid": TEST_DESTINATION_GUID_1,
-                "destinationName": TEST_DESTINATION_NAME_1,
-                "type": "CLUSTER",
-            },
-            {
-                "destinationId": int(TEST_DESTINATION_GUID_2),
-                "guid": TEST_DESTINATION_GUID_2,
-                "destinationName": TEST_DESTINATION_NAME_2,
-                "type": "CLUSTER",
-            },
-            {
-                "destinationId": int(TEST_DESTINATION_GUID_3),
-                "guid": TEST_DESTINATION_GUID_3,
-                "destinationName": TEST_DESTINATION_NAME_3,
-                "type": "CLUSTER",
-            },
-        ],
-        "allDestinations": [
-            {
-                "destinationId": int(TEST_DESTINATION_GUID_1),
-                "guid": TEST_DESTINATION_GUID_1,
-                "destinationName": TEST_DESTINATION_NAME_1,
-                "type": "CLUSTER",
-            },
-            {
-                "destinationId": int(TEST_DESTINATION_GUID_2),
-                "guid": TEST_DESTINATION_GUID_2,
-                "destinationName": TEST_DESTINATION_NAME_2,
-                "type": "CLUSTER",
-            },
-            {
-                "destinationId": int(TEST_UNOFFERED_DESTINATION_GUID),
-                "guid": TEST_UNOFFERED_DESTINATION_GUID,
-                "destinationName": TEST_UNOFFERED_DESTINATION_NAME,
-                "type": "CLUSTER",
-            },
-        ],
-        "isUsingDestinationDefaults": True,
-        "isUsingQuotaDefaults": False,
-        "isUsingReportingDefaults": True,
-        "isNativeClientsEnabled": True,
-        "securityKeyInherit": True,
-    },
-    "settingsInherited": {
-        "maxSeats": "",
-        "maxBytes": "",
-        "archiveHoldDays": 21,
-        "defaultUserMaxBytes": -1,
-        "defaultUserMobileQuota": -1,
-        "webRestoreUserLimitMb": 250,
-        "webRestoreAdminLimitMb": 250,
-        "warnInDays": 7,
-        "alertInDays": 14,
-        "recipients": [],
-        "reportSchedule": "_______",
-        "sendReports": False,
-        "usernameIsAnEmail": True,
-        "ldapServerIds": [0],
-        "radiusServerIds": [0],
-        "ssoIdentityProviderUids": ["0"],
-        "securityKeyType": "AccountPassword",
-        "securityKeyLocked": True,
-        "autoOfferSelf": False,
-        "allowLocalFolders": True,
-        "defaultRoles": [],
-        "isSimpleOrg": False,
-        "destinations": [
-            [
-                {
-                    "destinationId": int(TEST_DESTINATION_GUID_1),
-                    "guid": TEST_DESTINATION_GUID_1,
-                    "destinationName": TEST_DESTINATION_NAME_1,
-                    "type": "CLUSTER",
-                },
-                {
-                    "destinationId": int(TEST_DESTINATION_GUID_2),
-                    "guid": TEST_DESTINATION_GUID_2,
-                    "destinationName": TEST_DESTINATION_NAME_2,
-                    "type": "CLUSTER",
-                },
-            ],
-        ],
-    },
-    "deviceDefaults": DEVICE_DICT_W_SETTINGS["settings"],
-}
 
 TEST_T_SETTINGS_DICT = {
     "device_upgrade_delay": {
@@ -282,36 +124,50 @@ TEST_T_SETTINGS_DICT = {
 
 
 @pytest.fixture
-def org_device_defaults_with_empty_values():
-    org_settings_dict = deepcopy(TEST_ORG_SETTINGS_DICT)
+def org_settings_dict():
+    with open("tests/clients/settings/org_settings_not_inherited.json", "r") as f:
+        data = json.load(f)
+    return data["data"]
+
+
+@pytest.fixture
+def org_settings_inherited_dict():
+    with open("tests/clients/settings/org_settings_inherited.json", "r") as f:
+        data = json.load(f)
+    return data["data"]
+
+
+@pytest.fixture
+def org_device_defaults_with_empty_values(org_settings_dict):
+    org_settings_dict = deepcopy(org_settings_dict)
     # set empty file selection
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
-    ][0]["backupPaths"]["pathset"] = [
+    ]["backupSet"][0]["backupPaths"]["pathset"] = [
         {"paths": {"@os": "Linux", "path": [], "@cleared": "true"}}
     ]
     # set empty filename exclusions
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
-    ][0]["backupPaths"]["excludeUser"] = [
+    ]["backupSet"][0]["backupPaths"]["excludeUser"] = [
         {u"windows": [], u"linux": [], u"macintosh": []}
     ]
     return org_settings_dict
 
 
 @pytest.fixture
-def org_device_defaults_with_single_values():
-    org_settings_dict = deepcopy(TEST_ORG_SETTINGS_DICT)
+def org_device_defaults_with_single_values(org_settings_dict):
+    org_settings_dict = deepcopy(org_settings_dict)
     # set single path file selection
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
-    ][0]["backupPaths"]["pathset"] = [
+    ]["backupSet"][0]["backupPaths"]["pathset"] = [
         {"path": {"@include": TEST_HOME_DIR}, "@os": "Linux"}
     ]
     # set single filename exclusions
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
-    ][0]["backupPaths"]["excludeUser"] = [
+    ]["backupSet"][0]["backupPaths"]["excludeUser"] = [
         {
             "windows": [],
             "pattern": {"@regex": PHOTOS_REGEX},
@@ -323,11 +179,11 @@ def org_device_defaults_with_single_values():
 
 
 @pytest.fixture
-def org_device_defaults_with_multiple_values():
-    org_settings_dict = deepcopy(TEST_ORG_SETTINGS_DICT)
+def org_device_defaults_with_multiple_values(org_settings_dict):
+    org_settings_dict = deepcopy(org_settings_dict)
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
-    ][0]["backupPaths"]["pathset"] = [
+    ]["backupSet"][0]["backupPaths"]["pathset"] = [
         {
             "path": [
                 {"@include": TEST_HOME_DIR},
@@ -339,7 +195,7 @@ def org_device_defaults_with_multiple_values():
     ]
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
-    ][0]["backupPaths"]["excludeUser"] = [
+    ]["backupSet"][0]["backupPaths"]["excludeUser"] = [
         {
             "windows": [],
             "pattern": [{"@regex": PHOTOS_REGEX}, {"@regex": PICTURES_REGEX}],
@@ -351,66 +207,120 @@ def org_device_defaults_with_multiple_values():
 
 
 class TestOrgSettings(object):
-    org_settings = OrgSettings(
-        deepcopy(TEST_ORG_SETTINGS_DICT), deepcopy(TEST_T_SETTINGS_DICT)
+    @pytest.mark.parametrize(
+        "param",
+        [
+            ("org_name", "TEST_ORG"),
+            ("external_reference", "test_ref"),
+            ("notes", "test_note"),
+            ("archive_hold_days", 365),
+            ("maximum_user_subscriptions", 99),
+            ("org_backup_quota", -1),
+            ("user_backup_quota", -1),
+            ("web_restore_admin_limit", 500),
+            ("web_restore_user_limit", 250),
+            ("backup_warning_email_days", 3),
+            ("backup_critical_email_days", 14),
+            ("backup_alert_recipient_emails", ["test@example.com"]),
+        ],
     )
+    def test_org_settings_properties_retrieve_expected_results(
+        self, param, org_settings_dict
+    ):
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
+        attr, expected = param
+        assert getattr(org_settings, attr) == expected
+
+    def test_inherited_org_settings_inheritance_flags_return_true(
+        self, org_settings_inherited_dict
+    ):
+        org_settings = OrgSettings(org_settings_inherited_dict, TEST_T_SETTINGS_DICT)
+        assert org_settings.quota_settings_inherited
+        assert org_settings.reporting_settings_inherited
 
     @pytest.mark.parametrize(
         "param",
         [
-            ("org_name", TEST_ORG_NAME),
-            ("external_reference", TEST_EXTERNAL_REFERENCE),
-            ("notes", TEST_NOTE),
-            ("archive_hold_days", TEST_ARCHIVE_HOLD_DAYS),
-            ("maximum_user_subscriptions", TEST_MAX_SUBSCRIPTIONS),
-            ("org_backup_quota", 1000),
-            ("user_backup_quota", 100),
-            ("web_restore_admin_limit", TEST_WEB_RESTORE_ADMIN_LIMIT),
-            ("web_restore_user_limit", TEST_WEB_RESTORE_USER_LIMIT),
-            ("backup_warning_email_days", TEST_BACKUP_WARNING_EMAIL_DAYS),
-            ("backup_critical_email_days", TEST_BACKUP_CRITICAL_EMAIL_DAYS),
+            ("archive_hold_days", 14),
+            ("maximum_user_subscriptions", -1),
+            ("org_backup_quota", -1),
+            ("user_backup_quota", -1),
+            ("web_restore_admin_limit", 250),
+            ("web_restore_user_limit", 250),
+            ("backup_warning_email_days", 7),
+            ("backup_critical_email_days", 14),
             ("backup_alert_recipient_emails", []),
         ],
     )
-    def test_org_settings_properties_retrieve_expected_results(self, param):
+    def test_inherited_org_settings_properties_retrieve_expected_results(
+        self, param, org_settings_inherited_dict
+    ):
+        org_settings = OrgSettings(org_settings_inherited_dict, TEST_T_SETTINGS_DICT)
         attr, expected = param
-        assert getattr(self.org_settings, attr) == expected
+        assert getattr(org_settings, attr) == expected
+
+    @pytest.mark.parametrize(
+        "param",
+        [
+            ("archive_hold_days", 15),
+            ("maximum_user_subscriptions", 100),
+            ("org_backup_quota", 10000),
+            ("user_backup_quota", 10000),
+        ],
+    )
+    def test_inherited_org_quota_settings_setattr_removes_inheritance(
+        self, param, org_settings_inherited_dict
+    ):
+        org_settings = OrgSettings(org_settings_inherited_dict, TEST_T_SETTINGS_DICT)
+        attr, val = param
+        setattr(org_settings, attr, val)
+        assert not org_settings.quota_settings_inherited
 
     @pytest.mark.parametrize(
         "param",
         [
             (
                 "available_destinations",
-                {"4200": "Dest42", "4300": "Dest43", "4400": "Dest44"},
+                {
+                    "632540230984925185": "PROe Cloud, US - West",
+                    "43": "PROe Cloud, US",
+                    "673679195225718785": "PROe Cloud, AMS",
+                    "587738803578339329": "PROe Cloud, SIN",
+                },
             ),
-            ("warning_email_enabled", True),
-            ("critical_email_enabled", True),
-            ("warning_alert_days", 5),
-            ("critical_alert_days", 10),
+            ("warning_email_enabled", False),
+            ("critical_email_enabled", False),
+            ("warning_alert_days", 3),
+            ("critical_alert_days", 5),
             ("backup_status_email_enabled", False),
             ("backup_status_email_frequency_days", 7),
         ],
     )
-    def test_org_settings_device_defaults_retrieve_expected_results(self, param):
+    def test_org_settings_device_defaults_retrieve_expected_results(
+        self, param, org_settings_dict
+    ):
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
         attr, expected = param
-        assert getattr(self.org_settings.device_defaults, attr) == expected
+        assert getattr(org_settings.device_defaults, attr) == expected
 
-    def test_org_settings_endpoint_monitoring_enabled_returns_expected_results(self):
-        t_setting = deepcopy(TEST_T_SETTINGS_DICT)
-        t_setting["org-securityTools-enable"]["value"] = "true"
-        org_settings = OrgSettings(TEST_ORG_SETTINGS_DICT, t_setting)
-        assert org_settings.endpoint_monitoring_enabled is True
-
-        t_setting["org-securityTools-enable"]["value"] = "false"
-        org_settings = OrgSettings(TEST_ORG_SETTINGS_DICT, t_setting)
-        assert org_settings.endpoint_monitoring_enabled is False
-
-    def test_org_settings_set_endpoint_monitoring_enabled_to_true_from_false_creates_expected_packets(
-        self,
+    def test_org_settings_endpoint_monitoring_enabled_returns_expected_results(
+        self, org_settings_dict
     ):
         t_setting = deepcopy(TEST_T_SETTINGS_DICT)
         t_setting["org-securityTools-enable"]["value"] = "true"
-        org_settings = OrgSettings(TEST_ORG_SETTINGS_DICT, t_setting)
+        org_settings = OrgSettings(org_settings_dict, t_setting)
+        assert org_settings.endpoint_monitoring_enabled is True
+
+        t_setting["org-securityTools-enable"]["value"] = "false"
+        org_settings = OrgSettings(org_settings_dict, t_setting)
+        assert org_settings.endpoint_monitoring_enabled is False
+
+    def test_org_settings_set_endpoint_monitoring_enabled_to_true_from_false_creates_expected_packets(
+        self, org_settings_dict
+    ):
+        t_setting = deepcopy(TEST_T_SETTINGS_DICT)
+        t_setting["org-securityTools-enable"]["value"] = "true"
+        org_settings = OrgSettings(org_settings_dict, t_setting)
         org_settings.endpoint_monitoring_enabled = False
         assert {
             "key": "org-securityTools-enable",
@@ -445,11 +355,11 @@ class TestOrgSettings(object):
         assert len(org_settings.packets) == 6
 
     def test_org_settings_set_endpoint_monitoring_enabled_to_false_from_true_creates_expected_packets(
-        self,
+        self, org_settings_dict
     ):
         t_setting = deepcopy(TEST_T_SETTINGS_DICT)
         t_setting["org-securityTools-enable"]["value"] = "false"
-        org_settings = OrgSettings(TEST_ORG_SETTINGS_DICT, t_setting)
+        org_settings = OrgSettings(org_settings_dict, t_setting)
         org_settings.endpoint_monitoring_enabled = True
         assert {
             "key": "org-securityTools-enable",
@@ -485,11 +395,11 @@ class TestOrgSettings(object):
         ],
     )
     def test_org_settings_set_endpoint_monitoring_sub_categories_when_endpoint_monitoring_disabled_sets_endpoint_monitoring_enabled(
-        self, param
+        self, param, org_settings_dict
     ):
         attr, key = param
         t_setting = deepcopy(TEST_T_SETTINGS_DICT)
-        settings = deepcopy(TEST_ORG_SETTINGS_DICT)
+        settings = deepcopy(org_settings_dict)
         t_setting["org-securityTools-enable"]["value"] = "false"
         org_settings = OrgSettings(settings, t_setting)
         setattr(org_settings, attr, True)
@@ -531,9 +441,11 @@ class TestOrgSettings(object):
             ),
         ],
     )
-    def test_org_settings_set_independent_t_setting_properties(self, param):
+    def test_org_settings_set_independent_t_setting_properties(
+        self, param, org_settings_dict
+    ):
         t_setting = deepcopy(TEST_T_SETTINGS_DICT)
-        settings = deepcopy(TEST_ORG_SETTINGS_DICT)
+        settings = deepcopy(org_settings_dict)
         org_settings = OrgSettings(settings, t_setting)
 
         setattr(org_settings, param.name, param.new_val)
@@ -550,18 +462,19 @@ class TestOrgSettings(object):
             if packet["key"] == param.dict_location:
                 assert packet["value"] == "false"
 
-    def test_missing_t_settings_return_none_when_accessed_by_property(self):
-        assert self.org_settings.endpoint_monitoring_file_metadata_scan_enabled is None
+    def test_missing_t_settings_return_none_when_accessed_by_property(
+        self, org_settings_dict
+    ):
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
+        assert org_settings.endpoint_monitoring_file_metadata_scan_enabled is None
         assert (
-            self.org_settings.endpoint_monitoring_file_metadata_ingest_scan_enabled
-            is None
+            org_settings.endpoint_monitoring_file_metadata_ingest_scan_enabled is None
         )
-        assert self.org_settings.endpoint_monitoring_background_priority_enabled is None
-        assert self.org_settings.endpoint_monitoring_custom_applications_win is None
-        assert self.org_settings.endpoint_monitoring_custom_applications_mac is None
+        assert org_settings.endpoint_monitoring_background_priority_enabled is None
+        assert org_settings.endpoint_monitoring_custom_applications_win is None
+        assert org_settings.endpoint_monitoring_custom_applications_mac is None
         assert (
-            self.org_settings.endpoint_monitoring_file_metadata_collection_exclusions
-            is None
+            org_settings.endpoint_monitoring_file_metadata_collection_exclusions is None
         )
 
     @pytest.mark.parametrize(
@@ -629,8 +542,8 @@ class TestOrgSettings(object):
             ),
             param(
                 name="backup_alert_recipient_emails",
-                new_val="test@example.com",  # test string input
-                expected_stored_val=["test@example.com"],
+                new_val="test2@example.com",  # test string input
+                expected_stored_val=["test2@example.com"],
                 dict_location=["settings", "recipients"],
             ),
             param(
@@ -642,136 +555,148 @@ class TestOrgSettings(object):
         ],
     )
     def test_org_settings_setting_mutable_property_updates_dict_correctly_and_registers_changes(
-        self, param,
+        self, param, org_settings_dict
     ):
-        setattr(self.org_settings, param.name, param.new_val)
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
+        setattr(org_settings, param.name, param.new_val)
         assert (
-            get_val(self.org_settings.data, param.dict_location)
-            == param.expected_stored_val
+            get_val(org_settings.data, param.dict_location) == param.expected_stored_val
         )
-        assert param.name in self.org_settings.changes
+        assert param.name in org_settings.changes
 
 
 class TestOrgDeviceSettingsDefaultsBackupSets(object):
-    org_settings = OrgSettings(
-        deepcopy(TEST_ORG_SETTINGS_DICT), deepcopy(TEST_T_SETTINGS_DICT)
-    )
-
-    def test_backup_set_destinations_property_returns_expected_value(self,):
-        expected_destinations = {"4200": "Dest42 <LOCKED>", "4300": "Dest43"}
+    def test_backup_set_destinations_property_returns_expected_value(
+        self, org_settings_dict
+    ):
+        backup_set_0_expected_destinations = {}
+        backup_set_1_expected_destinations = {
+            "43": "PROe Cloud, US <LOCKED>",
+            "673679195225718785": "PROe Cloud, AMS",
+        }
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
         assert (
-            self.org_settings.device_defaults.backup_sets[0].destinations
-            == expected_destinations
+            org_settings.device_defaults.backup_sets[0].destinations
+            == backup_set_0_expected_destinations
+        )
+        assert (
+            org_settings.device_defaults.backup_sets[1].destinations
+            == backup_set_1_expected_destinations
         )
 
-    def test_backup_set_add_destination_when_destination_available(self,):
-        self.org_settings.device_defaults.backup_sets[0].add_destination(4400)
+    def test_backup_set_add_destination_when_destination_available(
+        self, org_settings_dict
+    ):
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
+        org_settings.device_defaults.backup_sets[1].add_destination(632540230984925185)
         expected_destinations_property = {
-            "4200": "Dest42 <LOCKED>",
-            "4300": "Dest43",
-            "4400": "Dest44",
+            "43": "PROe Cloud, US <LOCKED>",
+            "673679195225718785": "PROe Cloud, AMS",
+            "632540230984925185": "PROe Cloud, US - West",
         }
-        expected_destinations_dict = [
-            {"@id": TEST_DESTINATION_GUID_1, "@locked": "true"},
-            {"@id": TEST_DESTINATION_GUID_2},
-            {"@id": TEST_DESTINATION_GUID_3},
+        expected_destinations_list = [
+            {"@id": "43", "@locked": "true"},
+            {"@id": "673679195225718785"},
+            {"@id": "632540230984925185"},
         ]
         assert (
-            self.org_settings.device_defaults.backup_sets[0].destinations
+            org_settings.device_defaults.backup_sets[1].destinations
             == expected_destinations_property
         )
         assert (
-            self.org_settings.device_defaults["settings"]["serviceBackupConfig"][
-                "backupConfig"
-            ]["backupSets"][0]["destinations"]
-            == expected_destinations_dict
+            org_settings.device_defaults.backup_sets[1]["destinations"]
+            == expected_destinations_list
         )
 
-    def test_backup_set_add_destination_when_destination_not_available_raises(self,):
+    def test_backup_set_add_destination_when_destination_not_available_raises(
+        self, org_settings_dict
+    ):
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
         expected_destinations_property = {
-            "4200": "Dest42 <LOCKED>",
-            "4300": "Dest43",
-            "4400": "Dest44",
+            "43": "PROe Cloud, US <LOCKED>",
+            "673679195225718785": "PROe Cloud, AMS",
         }
         with pytest.raises(Py42Error):
-            self.org_settings.device_defaults.backup_sets[0].add_destination(404)
+            org_settings.device_defaults.backup_sets[1].add_destination(404)
         assert (
-            self.org_settings.device_defaults.backup_sets[0].destinations
+            org_settings.device_defaults.backup_sets[1].destinations
             == expected_destinations_property
         )
 
-    def test_backup_set_remove_destination_when_destination_available(self,):
-        expected_destinations_property = {
-            "4200": "Dest42 <LOCKED>",
-            "4300": "Dest43",
-        }
-        expected_destinations_dict = [
-            {"@id": TEST_DESTINATION_GUID_1, "@locked": "true"},
-            {"@id": TEST_DESTINATION_GUID_2},
-        ]
-        self.org_settings.device_defaults.backup_sets[0].remove_destination(4400)
+    def test_backup_set_remove_destination_when_destination_available(
+        self, org_settings_dict
+    ):
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
+        expected_destinations_property = {"673679195225718785": "PROe Cloud, AMS"}
+        expected_destinations_dict = [{"@id": "673679195225718785"}]
+        org_settings.device_defaults.backup_sets[1].remove_destination(43)
         assert (
-            self.org_settings.device_defaults.backup_sets[0].destinations
+            org_settings.device_defaults.backup_sets[1].destinations
             == expected_destinations_property
         )
         assert (
-            self.org_settings.device_defaults["settings"]["serviceBackupConfig"][
+            org_settings.device_defaults["settings"]["serviceBackupConfig"][
                 "backupConfig"
-            ]["backupSets"][0]["destinations"]
+            ]["backupSets"]["backupSet"][1]["destinations"]
             == expected_destinations_dict
         )
 
-    def test_backup_set_remove_destination_when_destination_not_available_raises(self,):
+    def test_backup_set_remove_destination_when_destination_not_available_raises(
+        self, org_settings_dict
+    ):
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
         expected_destinations_property = {
-            "4200": "Dest42 <LOCKED>",
-            "4300": "Dest43",
+            "43": "PROe Cloud, US <LOCKED>",
+            "673679195225718785": "PROe Cloud, AMS",
         }
         with pytest.raises(Py42Error):
-            self.org_settings.device_defaults.backup_sets[0].remove_destination(404)
+            org_settings.device_defaults.backup_sets[1].remove_destination(404)
         assert (
-            self.org_settings.device_defaults.backup_sets[0].destinations
+            org_settings.device_defaults.backup_sets[1].destinations
             == expected_destinations_property
         )
 
-    def test_backup_set_lock_destination(self):
+    def test_backup_set_lock_destination(self, org_settings_dict):
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
         expected_destinations_property = {
-            "4200": "Dest42 <LOCKED>",
-            "4300": "Dest43 <LOCKED>",
+            "43": "PROe Cloud, US <LOCKED>",
+            "673679195225718785": "PROe Cloud, AMS <LOCKED>",
         }
         expected_destinations_dict = [
-            {"@id": TEST_DESTINATION_GUID_1, "@locked": "true"},
-            {"@id": TEST_DESTINATION_GUID_2, "@locked": "true"},
+            {"@id": "43", "@locked": "true"},
+            {"@id": "673679195225718785", "@locked": "true"},
         ]
-        self.org_settings.device_defaults.backup_sets[0].lock_destination(4300)
+        org_settings.device_defaults.backup_sets[1].lock_destination(673679195225718785)
         assert (
-            self.org_settings.device_defaults.backup_sets[0].destinations
+            org_settings.device_defaults.backup_sets[1].destinations
             == expected_destinations_property
         )
         assert (
-            self.org_settings.device_defaults["settings"]["serviceBackupConfig"][
+            org_settings.device_defaults["settings"]["serviceBackupConfig"][
                 "backupConfig"
-            ]["backupSets"][0]["destinations"]
+            ]["backupSets"]["backupSet"][1]["destinations"]
             == expected_destinations_dict
         )
 
-    def test_backup_set_unlock_destination(self):
+    def test_backup_set_unlock_destination(self, org_settings_dict):
+        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
         expected_destinations_property = {
-            "4200": "Dest42",
-            "4300": "Dest43 <LOCKED>",
+            "43": "PROe Cloud, US",
+            "673679195225718785": "PROe Cloud, AMS",
         }
         expected_destinations_dict = [
-            {"@id": TEST_DESTINATION_GUID_1},
-            {"@id": TEST_DESTINATION_GUID_2, "@locked": "true"},
+            {"@id": "43"},
+            {"@id": "673679195225718785"},
         ]
-        self.org_settings.device_defaults.backup_sets[0].unlock_destination(4200)
+        org_settings.device_defaults.backup_sets[1].unlock_destination(43)
         assert (
-            self.org_settings.device_defaults.backup_sets[0].destinations
+            org_settings.device_defaults.backup_sets[1].destinations
             == expected_destinations_property
         )
         assert (
-            self.org_settings.device_defaults["settings"]["serviceBackupConfig"][
+            org_settings.device_defaults["settings"]["serviceBackupConfig"][
                 "backupConfig"
-            ]["backupSets"][0]["destinations"]
+            ]["backupSets"]["backupSet"][1]["destinations"]
             == expected_destinations_dict
         )
 
@@ -805,8 +730,12 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         ]
 
     def test_backup_set_included_files_append_produces_expected_pathset_value_and_registers_change(
-        self,
+        self, org_device_defaults_with_multiple_values
     ):
+        org_settings = OrgSettings(
+            org_device_defaults_with_multiple_values, TEST_T_SETTINGS_DICT
+        )
+        org_settings.device_defaults.backup_sets[0].pop("@locked")
         expected_path_list = [
             {"@include": TEST_HOME_DIR, "@und": "false"},
             {"@include": TEST_EXTERNAL_DOCUMENTS_DIR, "@und": "false"},
@@ -814,39 +743,52 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
             {"@exclude": TEST_PHOTOS_DIR, "@und": "false"},
         ]
 
-        self.org_settings.device_defaults.backup_sets[0].included_files.append(
+        org_settings.device_defaults.backup_sets[0].included_files.append(
             TEST_ADDED_PATH
         )
-        actual_path_list = self.org_settings.device_defaults["settings"][
+        actual_path_list = org_settings.device_defaults["settings"][
             "serviceBackupConfig"
-        ]["backupConfig"]["backupSets"][0]["backupPaths"]["pathset"]["paths"]["path"]
+        ]["backupConfig"]["backupSets"]["backupSet"][0]["backupPaths"]["pathset"][
+            "paths"
+        ][
+            "path"
+        ]
         assert actual_path_list == expected_path_list
-        assert "included_files" in self.org_settings.device_defaults.changes
+        assert "included_files" in org_settings.device_defaults.changes
         assert (
             "-> {}".format(
                 [TEST_HOME_DIR, TEST_EXTERNAL_DOCUMENTS_DIR, TEST_ADDED_PATH]
             )
-            in self.org_settings.device_defaults.changes["included_files"]
+            in org_settings.device_defaults.changes["included_files"]
         )
 
-    def test_backup_set_included_files_remove_produces_expected_pathset_value(self):
+    def test_backup_set_included_files_remove_produces_expected_pathset_value(
+        self, org_device_defaults_with_multiple_values
+    ):
+        org_settings = OrgSettings(
+            org_device_defaults_with_multiple_values, TEST_T_SETTINGS_DICT
+        )
+        org_settings.device_defaults.backup_sets[0].pop("@locked")
         expected_path_list = [
             {"@include": TEST_HOME_DIR, "@und": "false"},
-            {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_PHOTOS_DIR, "@und": "false"},
         ]
 
-        self.org_settings.device_defaults.backup_sets[0].included_files.remove(
+        org_settings.device_defaults.backup_sets[0].included_files.remove(
             TEST_EXTERNAL_DOCUMENTS_DIR
         )
-        actual_path_list = self.org_settings.device_defaults["settings"][
+        actual_path_list = org_settings.device_defaults["settings"][
             "serviceBackupConfig"
-        ]["backupConfig"]["backupSets"][0]["backupPaths"]["pathset"]["paths"]["path"]
+        ]["backupConfig"]["backupSets"]["backupSet"][0]["backupPaths"]["pathset"][
+            "paths"
+        ][
+            "path"
+        ]
         assert actual_path_list == expected_path_list
-        assert "included_files" in self.org_settings.device_defaults.changes
+        assert "included_files" in org_settings.device_defaults.changes
         assert (
-            "-> {}".format([TEST_HOME_DIR, TEST_ADDED_PATH])
-            in self.org_settings.device_defaults.changes["included_files"]
+            "-> {}".format([TEST_HOME_DIR])
+            in org_settings.device_defaults.changes["included_files"]
         )
 
     def test_backup_set_excluded_files_returns_expected_values(
@@ -869,44 +811,60 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         ]
 
     def test_backup_set_excluded_files_append_produces_expected_pathset_value_and_registers_change(
-        self,
+        self, org_device_defaults_with_multiple_values
     ):
-        self.org_settings.device_defaults.backup_sets[0].excluded_files.append(
+        org_settings = OrgSettings(
+            org_device_defaults_with_multiple_values, TEST_T_SETTINGS_DICT
+        )
+        org_settings.device_defaults.backup_sets[0].pop("@locked")
+        org_settings.device_defaults.backup_sets[0].excluded_files.append(
             TEST_ADDED_EXCLUDED_PATH
         )
         expected_path_list = [
             {"@include": TEST_HOME_DIR, "@und": "false"},
-            {"@include": TEST_ADDED_PATH, "@und": "false"},
             {"@exclude": TEST_PHOTOS_DIR, "@und": "false"},
             {"@exclude": TEST_ADDED_EXCLUDED_PATH, "@und": "false"},
         ]
-        actual_path_list = self.org_settings.device_defaults["settings"][
+        actual_path_list = org_settings.device_defaults["settings"][
             "serviceBackupConfig"
-        ]["backupConfig"]["backupSets"][0]["backupPaths"]["pathset"]["paths"]["path"]
-        assert actual_path_list == expected_path_list
-        assert "excluded_files" in self.org_settings.device_defaults.changes
+        ]["backupConfig"]["backupSets"]["backupSet"][0]["backupPaths"]["pathset"][
+            "paths"
+        ][
+            "path"
+        ]
+        for path in expected_path_list:
+            assert path in actual_path_list
+        assert "excluded_files" in org_settings.device_defaults.changes
         assert (
             "-> {}".format([TEST_PHOTOS_DIR, TEST_ADDED_EXCLUDED_PATH])
-            in self.org_settings.device_defaults.changes["excluded_files"]
+            in org_settings.device_defaults.changes["excluded_files"]
         )
 
-    def test_backup_set_excluded_files_remove_produces_expected_pathset_value(self):
+    def test_backup_set_excluded_files_remove_produces_expected_pathset_value(
+        self, org_device_defaults_with_multiple_values
+    ):
+        org_settings = OrgSettings(
+            org_device_defaults_with_multiple_values, TEST_T_SETTINGS_DICT
+        )
+        org_settings.device_defaults.backup_sets[0].pop("@locked")
         expected_path_list = [
             {"@include": TEST_HOME_DIR, "@und": "false"},
-            {"@include": TEST_ADDED_PATH, "@und": "false"},
-            {"@exclude": TEST_ADDED_EXCLUDED_PATH, "@und": "false"},
         ]
-        self.org_settings.device_defaults.backup_sets[0].excluded_files.remove(
+        org_settings.device_defaults.backup_sets[0].excluded_files.remove(
             TEST_PHOTOS_DIR
         )
-        actual_path_list = self.org_settings.device_defaults["settings"][
+        actual_path_list = org_settings.device_defaults["settings"][
             "serviceBackupConfig"
-        ]["backupConfig"]["backupSets"][0]["backupPaths"]["pathset"]["paths"]["path"]
-        assert actual_path_list == expected_path_list
-        assert "excluded_files" in self.org_settings.device_defaults.changes
+        ]["backupConfig"]["backupSets"]["backupSet"][0]["backupPaths"]["pathset"][
+            "paths"
+        ][
+            "path"
+        ]
+        for path in expected_path_list:
+            assert path in actual_path_list
+        assert "excluded_files" in org_settings.device_defaults.changes
         assert (
-            "-> {}".format([TEST_ADDED_EXCLUDED_PATH])
-            in self.org_settings.device_defaults.changes["excluded_files"]
+            "-> {}".format([]) in org_settings.device_defaults.changes["excluded_files"]
         )
 
     def test_backup_set_filename_exclusions_returns_expected_list_results(
@@ -948,12 +906,13 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         org_settings = OrgSettings(
             org_device_defaults_with_empty_values, TEST_T_SETTINGS_DICT
         )
+        org_settings.device_defaults.backup_sets[0].pop("@locked")
         org_settings.device_defaults.backup_sets[0].filename_exclusions.append(
             PHOTOS_REGEX
         )
         assert org_settings["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
             "backupSets"
-        ][0]["backupPaths"]["excludeUser"]["patternList"]["pattern"] == [
+        ]["backupSet"][0]["backupPaths"]["excludeUser"]["patternList"]["pattern"] == [
             {"@regex": PHOTOS_REGEX}
         ]
         assert "filename_exclusions" in org_settings.changes
@@ -963,12 +922,13 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         org_settings = OrgSettings(
             org_device_defaults_with_single_values, TEST_T_SETTINGS_DICT
         )
+        org_settings.device_defaults.backup_sets[0].pop("@locked")
         org_settings.device_defaults.backup_sets[0].filename_exclusions.append(
             PICTURES_REGEX
         )
         assert org_settings["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
             "backupSets"
-        ][0]["backupPaths"]["excludeUser"]["patternList"]["pattern"] == [
+        ]["backupSet"][0]["backupPaths"]["excludeUser"]["patternList"]["pattern"] == [
             {"@regex": PHOTOS_REGEX},
             {"@regex": PICTURES_REGEX},
         ]
@@ -981,12 +941,13 @@ class TestOrgDeviceSettingsDefaultsBackupSets(object):
         org_settings = OrgSettings(
             org_device_defaults_with_multiple_values, TEST_T_SETTINGS_DICT
         )
+        org_settings.device_defaults.backup_sets[0].pop("@locked")
         org_settings.device_defaults.backup_sets[0].filename_exclusions.append(
             NEW_REGEX
         )
         assert org_settings["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
             "backupSets"
-        ][0]["backupPaths"]["excludeUser"]["patternList"]["pattern"] == [
+        ]["backupSet"][0]["backupPaths"]["excludeUser"]["patternList"]["pattern"] == [
             {"@regex": PHOTOS_REGEX},
             {"@regex": PICTURES_REGEX},
             {"@regex": NEW_REGEX},

@@ -7,6 +7,8 @@ from py42.clients.securitydata import SecurityDataClient
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
 from py42.response import Py42Response
+from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
+from py42.services._connection import Connection
 from py42.services.fileevent import FileEventService
 from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
@@ -15,6 +17,7 @@ from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.preservationdata import StoragePreservationDataService
 from py42.services.storage.securitydata import StorageSecurityDataService
 
+FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 RAW_QUERY = "RAW JSON QUERY"
 USER_UID = "user-uid"
 PDS_EXCEPTION_MESSAGE = (
@@ -230,6 +233,10 @@ AVAILABLE_VERSION_RESPONSE = """{
 
 
 class TestSecurityClient(object):
+    @pytest.fixture
+    def connection(self, mocker):
+        return mocker.MagicMock(spec=Connection)
+
     @pytest.fixture
     def security_service(self, mocker):
         return mocker.MagicMock(spec=SecurityDataService)
@@ -1313,3 +1320,67 @@ class TestSecurityClient(object):
             security_client.stream_file_by_md5("mdhash")
 
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("mdhash")
+
+    def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_not_passed(
+        self,
+        security_service,
+        connection,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+    ):
+        file_event_service = FileEventService(connection)
+        successful_response = {
+            "totalCount": None,
+            "fileEvents": None,
+            "nextPgToken": None,
+            "problems": None,
+        }
+        connection.post.return_value = successful_response
+
+        security_client = SecurityDataClient(
+            security_service,
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        query = FileEventQuery.all()
+        response = security_client.search_all_file_events(query)
+        connection.post.assert_called_once_with(
+            FILE_EVENT_URI,
+            data='{"groupClause":"AND", "groups":[], "pgToken":"", "pgSize":10000}',
+        )
+        assert response is successful_response
+
+    def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_passed(
+        self,
+        security_service,
+        connection,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+    ):
+
+        file_event_service = FileEventService(connection)
+        successful_response = {
+            "totalCount": None,
+            "fileEvents": None,
+            "nextPgToken": "pqr",
+            "problems": None,
+        }
+        connection.post.return_value = successful_response
+        security_client = SecurityDataClient(
+            security_service,
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        query = FileEventQuery.all()
+        response = security_client.search_all_file_events(query, "abc")
+        connection.post.assert_called_once_with(
+            FILE_EVENT_URI,
+            data='{"groupClause":"AND", "groups":[], "pgToken":"abc", "pgSize":10000}',
+        )
+        assert response is successful_response

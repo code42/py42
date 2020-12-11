@@ -55,7 +55,7 @@ class AlertService(BaseService):
             return str(query)
 
     def get_rules_page(
-        self, page_num, groups=None, sort_key=None, sort_direction=None, page_size=None,
+        self, page_num, groups=None, sort_key=None, sort_direction=None, page_size=None
     ):
         # This API expects the first page to start with zero.
         page_num = page_num - 1

@@ -1,7 +1,7 @@
 from requests.auth import HTTPBasicAuth
 
 from py42.clients import Clients
-from py42.clients._archive_access import ArchiveAccessorManager
+from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
 from py42.clients.alertrules import AlertRulesClient
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
@@ -164,7 +164,6 @@ class SDKClient(object):
     def securitydata(self):
         """A collection of methods and properties for getting security data such as:
             * File events
-            * Alerts
             * Security plan information
 
         Returns:
@@ -206,7 +205,7 @@ def _init_services(main_connection, main_auth):
     alerts_key = u"AlertService-API_URL"
     file_events_key = u"FORENSIC_SEARCH-API_URL"
     preservation_data_key = u"PRESERVATION-DATA-SERVICE_API-URL"
-    employee_case_mgmt_key = u"employeecasemanagement-API_URL"
+    employee_case_mgmt_key = u"employeecasemanagementV2-API_URL"
     kv_prefix = u"simple-key-value-store"
     audit_logs_key = u"AUDIT-LOG_API-URL"
 
@@ -274,7 +273,6 @@ def _init_clients(services, connection):
     detectionlists = DetectionListsClient(
         services.userprofile, services.departingemployee, services.highriskemployee
     )
-
     storage_service_factory = StorageServiceFactory(
         connection, services.devices, ConnectionManager()
     )
@@ -287,10 +285,10 @@ def _init_clients(services, connection):
         storage_service_factory,
     )
     alerts = AlertsClient(services.alerts, alertrules)
-    archive_accessor_mgr = ArchiveAccessorManager(
+    archive_accessor_factory = ArchiveAccessorFactory(
         services.archive, storage_service_factory
     )
-    archive = ArchiveClient(archive_accessor_mgr, services.archive)
+    archive = ArchiveClient(archive_accessor_factory, services.archive)
     auditlogs = AuditLogsClient(services.auditlogs)
     clients = Clients(
         authority=authority,

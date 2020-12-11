@@ -1,4 +1,6 @@
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42NotFoundError
+from py42.exceptions import Py42UserNotOnListError
 from py42.services import BaseService
 from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
@@ -18,9 +20,7 @@ class HighRiskEmployeeFilters(_DetectionListFilters):
 class HighRiskEmployeeService(BaseService):
     """A service for interacting with High Risk Employee APIs."""
 
-    _api_version = u"v2"
-    _uri_prefix = u"/svc/api/{}".format(_api_version)
-    _resource = u"/highriskemployee"
+    _resource = u"v2/highriskemployee"
 
     def __init__(self, connection, user_context, user_profile_service):
         super(HighRiskEmployeeService, self).__init__(connection)
@@ -28,10 +28,9 @@ class HighRiskEmployeeService(BaseService):
         self._user_profile_service = user_profile_service
 
     def _make_uri(self, action):
-        return u"{}{}{}".format(self._uri_prefix, self._resource, action)
+        return u"{}{}".format(self._resource, action)
 
     def _add_high_risk_employee(self, tenant_id, user_id):
-
         data = {u"tenantId": tenant_id, u"userId": user_id}
         uri = self._make_uri(u"/add")
         return self._connection.post(uri, json=data)
@@ -91,7 +90,10 @@ class HighRiskEmployeeService(BaseService):
             u"userId": user_id,
         }
         uri = self._make_uri(u"/remove")
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42NotFoundError as err:
+            raise Py42UserNotOnListError(err, user_id, u"high-risk-employee")
 
     def get(self, user_id):
         """Gets user information.
@@ -115,6 +117,7 @@ class HighRiskEmployeeService(BaseService):
         filter_type=HighRiskEmployeeFilters.OPEN,
         sort_key=None,
         sort_direction=None,
+        page_size=_PAGE_SIZE,
     ):
         """Searches High Risk Employee list. Filter results by filter_type.
 
@@ -126,6 +129,8 @@ class HighRiskEmployeeService(BaseService):
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
                 :class:`py42.constants.SortDirection`. Defaults to None.
+            page_size (int, optional): The number of high risk employees to return
+                per page. Defaults to 100.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -138,7 +143,7 @@ class HighRiskEmployeeService(BaseService):
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
-            page_size=_PAGE_SIZE,
+            page_size=page_size or _PAGE_SIZE,
         )
 
     def get_page(

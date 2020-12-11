@@ -11,6 +11,7 @@ from requests.sessions import Session
 import py42.settings as settings
 from py42._compat import urljoin
 from py42._compat import urlparse
+from py42.exceptions import Py42DeviceNotConnectedError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42FeatureUnavailableError
 from py42.exceptions import raise_py42_error
@@ -76,6 +77,24 @@ class MicroserviceKeyHostResolver(HostResolver):
         return self._kv_service.get_stored_value(self._key).text
 
 
+class ConnectedServerHostResolver(HostResolver):
+    """A connection used in Push Restores to verify the accepting device is connected
+    to the Authority server."""
+
+    def __init__(self, connection, device_guid):
+        self._connection = connection
+        self._device_guid = device_guid
+        super(ConnectedServerHostResolver, self).__init__()
+
+    def get_host_address(self):
+        response = self._connection.get(
+            u"api/connectedServerUrl", params={u"guid": self._device_guid}
+        )
+        if response[u"serverUrl"] is None:
+            raise Py42DeviceNotConnectedError(response, self._device_guid)
+        return response[u"serverUrl"]
+
+
 class Connection(object):
     def __init__(self, host_resolver, auth=None, session=None):
         self._host_resolver = host_resolver
@@ -99,6 +118,11 @@ class Connection(object):
     def from_microservice_prefix(cls, connection, prefix, auth=None, session=None):
         host_resolver = MicroservicePrefixHostResolver(connection, prefix)
         return cls(host_resolver, auth=auth, session=session)
+
+    @classmethod
+    def from_device_connection(cls, connection, device_guid):
+        host_resolver = ConnectedServerHostResolver(connection, device_guid)
+        return cls(host_resolver, auth=connection._auth)
 
     @property
     def host_address(self):

@@ -1,10 +1,16 @@
+from datetime import datetime
+
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42NotFoundError
+from py42.exceptions import Py42UserNotOnListError
 from py42.services import BaseService
 from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
 from py42.util import get_attribute_keys_from_class
+
+_DATE_FORMAT = "%Y-%m-%d"
 
 
 class DepartingEmployeeFilters(_DetectionListFilters):
@@ -20,7 +26,7 @@ class DepartingEmployeeFilters(_DetectionListFilters):
 class DepartingEmployeeService(BaseService):
     """A service for interacting with Code42 Departing Employee APIs."""
 
-    _uri_prefix = u"/svc/api/v2/departingemployee/{0}"
+    _uri_prefix = u"v2/departingemployee/{0}"
 
     _CREATED_AT = u"CREATED_AT"
 
@@ -40,11 +46,14 @@ class DepartingEmployeeService(BaseService):
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the departing \
                 employees list.
-            departure_date (str, optional): Date in yyyy-MM-dd format. Date is treated as UTC. Defaults to None.
+            departure_date (str or datetime, optional): Date in yyyy-MM-dd format or instance of datetime.
+                Date is treated as UTC. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
+        if isinstance(departure_date, datetime):
+            departure_date = departure_date.strftime(_DATE_FORMAT)
         if self._user_profile_service.create_if_not_exists(user_id):
             tenant_id = self._user_context.get_current_tenant_id()
             data = {
@@ -90,13 +99,17 @@ class DepartingEmployeeService(BaseService):
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"remove")
         data = {u"userId": user_id, u"tenantId": tenant_id}
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42NotFoundError as err:
+            raise Py42UserNotOnListError(err, user_id, u"departing-employee")
 
     def get_all(
         self,
         filter_type=DepartingEmployeeFilters.OPEN,
         sort_key=_CREATED_AT,
         sort_direction=u"DESC",
+        page_size=_PAGE_SIZE,
     ):
         """Gets all Departing Employees.
 
@@ -106,7 +119,9 @@ class DepartingEmployeeService(BaseService):
                 :class:`py42.services.detectionlists.departing_employee.DepartingEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
-            sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".
+            sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to "DESC".
+            page_size (int, optional): The number of departing employees to return
+                per page. Defaults to 100.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -118,7 +133,7 @@ class DepartingEmployeeService(BaseService):
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
-            page_size=_PAGE_SIZE,
+            page_size=page_size or _PAGE_SIZE,
         )
 
     def get_page(
@@ -178,14 +193,16 @@ class DepartingEmployeeService(BaseService):
 
         Args:
             user_id (str): The Code42 userUid of the user.
-            departure_date (date): Date in yyyy-MM-dd format. Date is treated as UTC.
+            departure_date (str or datetime): Date in yyyy-MM-dd format or instance of datetime.
+                Date is treated as UTC.
 
         Returns:
             :class:`py42.sdk.response.Py42Response`
         """
 
         tenant_id = self._user_context.get_current_tenant_id()
-
+        if isinstance(departure_date, datetime):
+            departure_date = departure_date.strftime(_DATE_FORMAT)
         uri = self._uri_prefix.format(u"update")
         data = {
             u"tenantId": tenant_id,

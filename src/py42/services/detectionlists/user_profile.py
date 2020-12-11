@@ -1,4 +1,5 @@
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42CloudAliasLimitExceededError
 from py42.exceptions import Py42NotFoundError
 from py42.services import BaseService
 
@@ -9,9 +10,7 @@ class DetectionListUserService(BaseService):
     `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
     """
 
-    _api_version = u"v2"
-    _uri_prefix = u"/svc/api/{}".format(_api_version)
-    _resource = u"/user"
+    _resource = u"v2/user"
 
     def __init__(self, connection, user_context, user_service):
         super(DetectionListUserService, self).__init__(connection)
@@ -19,7 +18,7 @@ class DetectionListUserService(BaseService):
         self._user_service = user_service
 
     def _make_uri(self, action):
-        return u"{}{}{}".format(self._uri_prefix, self._resource, action)
+        return u"{}{}".format(self._resource, action)
 
     def create_if_not_exists(self, user_id):
         """Find out whether the detection list profile exists for a given uid. If not,
@@ -171,7 +170,12 @@ class DetectionListUserService(BaseService):
             u"cloudUsernames": [alias],
         }
         uri = self._make_uri(u"/addcloudusernames")
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42BadRequestError as err:
+            if "Cloud usernames must be less than or equal to" in err.response.text:
+                raise Py42CloudAliasLimitExceededError(err)
+            raise err
 
     def remove_cloud_alias(self, user_id, alias):
         """Remove one or more cloud alias.

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 import pytest
 from requests import HTTPError
 from requests import Response
@@ -6,6 +8,7 @@ from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UserAlreadyAddedError
+from py42.exceptions import Py42UserNotOnListError
 from py42.services.detectionlists.departing_employee import DepartingEmployeeFilters
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.user_profile import DetectionListUserService
@@ -105,12 +108,17 @@ class TestDepartingEmployeeClient(object):
 
         return py42_response
 
+    @pytest.mark.parametrize(
+        "departing_date",
+        [("2022-12-20"), (datetime.strptime("2022-12-20", "%Y-%m-%d"))],
+    )
     def test_add_posts_expected_data_and_to_expected_url(
         self,
         mock_connection,
         user_context,
         mock_get_all_cases_response,
         mock_detection_list_user_client,
+        departing_date,
     ):
         client = DepartingEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
@@ -119,7 +127,7 @@ class TestDepartingEmployeeClient(object):
         # Return value should have been set based on the arguments passed
         # in add, here however as we are mocking it, it doesn't matter. Can be refactored
         mock_connection.post.return_value = mock_get_all_cases_response
-        client.add(_USER_ID, "2022-12-20")
+        client.add(_USER_ID, departing_date)
 
         # Have to convert the request data to a dict because
         # older versions of Python don't have deterministic order.
@@ -129,9 +137,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["tenantId"] == _TENANT_ID_PARAM
             and posted_data["departureDate"] == "2022-12-20"
         )
-        assert (
-            mock_connection.post.call_args[0][0] == "/svc/api/v2/departingemployee/add"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/add"
         assert mock_connection.post.call_count == 2
 
     def test_add_when_user_already_on_list_raises_user_already_added_error(
@@ -174,10 +180,7 @@ class TestDepartingEmployeeClient(object):
             posted_data["userId"] == "999"
             and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
         )
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/remove"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/remove"
 
     def test_get_all_posts_expected_data_to_expected_url(
         self,
@@ -202,10 +205,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["srtKey"] == "CREATED_AT"
             and posted_data["srtDirection"] == "DESC"
         )
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/search"
         assert mock_connection.post.call_count == 1
 
     def test_get_page_posts_data_to_expected_url(
@@ -236,11 +236,35 @@ class TestDepartingEmployeeClient(object):
             and posted_data["srtKey"] == "CREATED_AT"
             and posted_data["srtDirection"] == "DESC"
         )
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/search"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/search"
         assert mock_connection.post.call_count == 1
+
+    def test_get_all_posts_expected_data_with_non_default_values(
+        self, user_context, mock_connection, mock_detection_list_user_client
+    ):
+        client = DepartingEmployeeService(
+            mock_connection, user_context, mock_detection_list_user_client
+        )
+
+        for _ in client.get_all(
+            filter_type="NEW_FILTER",
+            sort_direction="DESC",
+            sort_key="DISPLAY_NAME",
+            page_size=200,
+        ):
+            break
+
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_count == 1
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/search"
+        assert (
+            posted_data["tenantId"] == user_context.get_current_tenant_id()
+            and posted_data["filterType"] == "NEW_FILTER"
+            and posted_data["pgNum"] == 1
+            and posted_data["pgSize"] == 200
+            and posted_data["srtKey"] == "DISPLAY_NAME"
+            and posted_data["srtDirection"] == "DESC"
+        )
 
     def test_set_alerts_enabled_posts_expected_data(
         self,
@@ -274,8 +298,7 @@ class TestDepartingEmployeeClient(object):
         mock_connection.post.return_value = mock_get_all_cases_response_empty
         client.set_alerts_enabled()
         assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/setalertstate"
+            mock_connection.post.call_args[0][0] == "v2/departingemployee/setalertstate"
         )
 
     def test_get_posts_expected_data(
@@ -309,9 +332,7 @@ class TestDepartingEmployeeClient(object):
         )
         mock_connection.post.return_value = mock_get_all_cases_response_empty
         client.get("999")
-        assert (
-            mock_connection.post.call_args[0][0] == "/svc/api/v2/departingemployee/get"
-        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/get"
 
     def test_update_posts_expected_data(
         self,
@@ -342,7 +363,45 @@ class TestDepartingEmployeeClient(object):
             mock_connection, user_context, mock_detection_list_user_client
         )
         client.update_departure_date(_USER_ID, "2022-12-20")
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/update"
+
+    def test_update_posts_expected_data_with_datetime_instance(
+        self,
+        mock_connection,
+        user_context,
+        mock_get_all_cases_response,
+        mock_detection_list_user_client,
+    ):
+        client = DepartingEmployeeService(
+            mock_connection, user_context, mock_detection_list_user_client
+        )
+        mock_connection.post.return_value = mock_get_all_cases_response
+        dt = datetime.strptime("2020-12-20", "%Y-%m-%d")
+        client.update_departure_date(_USER_ID, dt)
+
+        # Have to convert the request data to a dict because
+        # older versions of Python don't have deterministic order.
+        posted_data = mock_connection.post.call_args[1]["json"]
         assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v2/departingemployee/update"
+            posted_data["userId"] == _USER_ID
+            and posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and posted_data["departureDate"] == "2020-12-20"
+        )
+
+    def test_remove_raises_error_when_user_id_does_not_exist(
+        self,
+        user_context,
+        mock_post_not_found_session,
+        mock_detection_list_user_client,
+    ):
+        departing_employee_client = DepartingEmployeeService(
+            mock_post_not_found_session, user_context, mock_detection_list_user_client
+        )
+        user_id = "942897397520289999"
+        with pytest.raises(Py42UserNotOnListError) as err:
+            departing_employee_client.remove(user_id)
+        assert "User with ID '{}' is not currently on the departing-employee list.".format(
+            user_id
+        ) in str(
+            err.value
         )

@@ -349,6 +349,10 @@ def device_settings_with_empty_values():
     ][0]["backupPaths"]["excludeUser"] = [
         {u"windows": [], u"linux": [], u"macintosh": []}
     ]
+    # set empty destinations
+    device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
+        "backupSets"
+    ][0]["destinations"] = {"@cleared": "true"}
     return device_settings_dict
 
 
@@ -640,6 +644,49 @@ class TestDeviceSettingsBackupSets(object):
             == expected_destinations_property
         )
 
+    def test_backup_set_remove_all_destinations_sets_expected_cleared_dict(self):
+        expected_empty_destination_dict = {"@cleared": "true"}
+        self.device_settings.backup_sets[0].remove_destination(4200)
+        self.device_settings.backup_sets[0].remove_destination(4300)
+        assert self.device_settings.backup_sets[0].destinations == {}
+        assert (
+            self.device_settings["settings"]["serviceBackupConfig"]["backupConfig"][
+                "backupSets"
+            ][0]["destinations"]
+            == expected_empty_destination_dict
+        )
+
+    def test_backup_set_add_destination_from_empty_state_converts_cleared_dict_to_destination_list(
+        self,
+    ):
+        expected_empty_destination_dict = {"@cleared": "true"}
+        assert (
+            self.device_settings["settings"]["serviceBackupConfig"]["backupConfig"][
+                "backupSets"
+            ][0]["destinations"]
+            == expected_empty_destination_dict
+        )
+        expected_destinations_property = {
+            "4200": "Dest42",
+            "4300": "Dest43",
+        }
+        expected_destinations_dict = [
+            {"@id": TEST_DESTINATION_GUID_1},
+            {"@id": TEST_DESTINATION_GUID_2},
+        ]
+        self.device_settings.backup_sets[0].add_destination(4200)
+        self.device_settings.backup_sets[0].add_destination(4300)
+        assert (
+            self.device_settings.backup_sets[0].destinations
+            == expected_destinations_property
+        )
+        assert (
+            self.device_settings["settings"]["serviceBackupConfig"]["backupConfig"][
+                "backupSets"
+            ][0]["destinations"]
+            == expected_destinations_dict
+        )
+
     def test_backup_set_lock_destination(self):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
@@ -649,6 +696,7 @@ class TestDeviceSettingsBackupSets(object):
             {"@id": TEST_DESTINATION_GUID_1, "@locked": "true"},
             {"@id": TEST_DESTINATION_GUID_2, "@locked": "true"},
         ]
+        self.device_settings.backup_sets[0].lock_destination(4200)
         self.device_settings.backup_sets[0].lock_destination(4300)
         assert (
             self.device_settings.backup_sets[0].destinations

@@ -79,6 +79,22 @@ for event in file_events:
     print(event["md5Checksum"])
 ```
 
+If the number of events exceeds 10,000 against a query, use `securitydata.SecurityModule.search_all_file_events()`:
+
+```python
+
+query = FileEventQuery(ExposureType.eq(ExposureType.REMOVABLE_MEDIA))
+response = sdk.securitydata.search_all_file_events(query)
+file_events = response["fileEvents"]
+for event in file_events:
+    print(event["md5Checksum"])
+while response["nextPgToken"] is not None:
+    response = sdk.securitydata.search_all_file_events(query, page_token=response["nextPgToken"])
+    file_events = response["fileEvents"]
+    for event in file_events:
+        print(event["md5Checksum"])
+```
+
 ```eval_rst
 .. _anchor_search_alerts:
 ```
@@ -102,7 +118,7 @@ To execute the search, use the `alerts.AlertClient.search()` method:
 
 ```python
 # Prints the actor property from each search result
-response = sdk.securitydata.alerts.search(query)
+response = sdk.alerts.search(query)
 alerts = response["alerts"]
 for alert in alerts:
     print(alert["actor"])

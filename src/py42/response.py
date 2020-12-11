@@ -15,8 +15,9 @@ class Py42Response(object):
             return self._data_root[key]
         except TypeError:
             data_root_type = type(self._data_root)
-            message = u"The Py42Response root is of type {}, but __getitem__ got a key of {}, which is incompatible.".format(
-                data_root_type, key
+            message = (
+                u"The Py42Response root is of type {}, but __getitem__ "
+                u"got a key of {}, which is incompatible.".format(data_root_type, key)
             )
             raise Py42Error(message)
 
@@ -25,8 +26,11 @@ class Py42Response(object):
             self._data_root[key] = value
         except TypeError:
             data_root_type = type(self._data_root)
-            message = u"The Py42Response root is of type {}, but __setitem__ got a key of {} and value of {}, which is incompatible.".format(
-                data_root_type, key, value
+            message = (
+                u"The Py42Response root is of type {}, but __setitem__ got a key "
+                u"of {} and value of {}, which is incompatible.".format(
+                    data_root_type, key, value
+                )
             )
             raise Py42Error(message)
 

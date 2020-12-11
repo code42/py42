@@ -3,10 +3,11 @@ from threading import Lock
 from py42._compat import str
 from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
-from py42.services.storage._auth import FileArchiveTmpAuth
-from py42.services.storage._auth import SecurityArchiveTmpAuth
+from py42.services.storage._auth import FileArchiveAuth
+from py42.services.storage._auth import SecurityArchiveAuth
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.preservationdata import StoragePreservationDataService
+from py42.services.storage.restore import PushRestoreService
 from py42.services.storage.securitydata import StorageSecurityDataService
 
 
@@ -16,27 +17,26 @@ class StorageServiceFactory(object):
         self._device_service = device_service
         self._connection_manager = connection_manager
 
-    def create_archive_service(self, device_guid, destination_guid=None):
-        if destination_guid is None:
-            destination_guid = self._auto_select_destination_guid(device_guid)
+    def create_push_restore_service(self, device_guid):
+        conn = Connection.from_device_connection(self._connection, device_guid)
+        return PushRestoreService(conn)
 
-        auth = FileArchiveTmpAuth(
-            self._connection, u"my", device_guid, destination_guid
-        )
-        connection = self._connection_manager.get_storage_connection(auth)
-        return StorageArchiveService(connection)
+    def create_archive_service(self, device_guid, destination_guid):
+        auth = FileArchiveAuth(self._connection, u"my", device_guid, destination_guid)
+        conn = self._connection_manager.get_storage_connection(auth)
+        return StorageArchiveService(conn)
 
     def create_security_data_service(self, plan_uid, destination_guid):
-        auth = SecurityArchiveTmpAuth(self._connection, plan_uid, destination_guid)
-        connection = self._connection_manager.get_storage_connection(auth)
-        return StorageSecurityDataService(connection)
+        auth = SecurityArchiveAuth(self._connection, plan_uid, destination_guid)
+        conn = self._connection_manager.get_storage_connection(auth)
+        return StorageSecurityDataService(conn)
 
     def create_preservation_data_service(self, host_address):
         main_connection = self._connection.clone(host_address)
         streaming_connection = Connection.from_host_address(host_address)
         return StoragePreservationDataService(main_connection, streaming_connection)
 
-    def _auto_select_destination_guid(self, device_guid):
+    def auto_select_destination_guid(self, device_guid):
         response = self._device_service.get_by_guid(
             device_guid, include_backup_usage=True
         )
@@ -57,15 +57,17 @@ class ConnectionManager(object):
     def get_saved_connection_for_url(self, url):
         return self._session_cache.get(url.lower())
 
-    def get_storage_connection(self, tmp_auth):
+    def get_storage_connection(self, storage_auth):
         try:
-            url = tmp_auth.get_storage_url()
+            url = storage_auth.get_storage_url()
             connection = self.get_saved_connection_for_url(url)
             if connection is None:
                 with self._list_update_lock:
                     connection = self.get_saved_connection_for_url(url)
                     if connection is None:
-                        connection = Connection.from_host_address(url, auth=tmp_auth)
+                        connection = Connection.from_host_address(
+                            url, auth=storage_auth
+                        )
                         self._session_cache[url.lower()] = connection
         except Exception as ex:
             message = u"Failed to create or retrieve connection, caused by: {}".format(

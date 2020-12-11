@@ -1,11 +1,14 @@
 import pytest
+from requests import Response
 from requests.exceptions import HTTPError
+from tests.conftest import TEST_DEVICE_GUID
 
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42StorageSessionInitializationError
+from py42.response import Py42Response
 from py42.services._connection import Connection
 from py42.services.devices import DeviceService
-from py42.services.storage._auth import StorageTmpAuth
+from py42.services.storage._auth import StorageAuth
 from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.archive import StorageArchiveService
@@ -15,14 +18,19 @@ from py42.services.storage.securitydata import StorageSecurityDataService
 
 @pytest.fixture
 def mock_tmp_auth(mocker):
-    mock = mocker.MagicMock(spec=StorageTmpAuth)
+    mock = mocker.MagicMock(spec=StorageAuth)
     mock.get_storage_url.return_value = "testhost.com"
     return mock
 
 
 @pytest.fixture
 def mock_device_service(mocker):
-    return mocker.MagicMock(spec=DeviceService)
+    service = mocker.MagicMock(spec=DeviceService)
+    return_value = mocker.MagicMock(spec=Response)
+    return_value.text = """{"backupUsage": [{"targetComputerGuid": "123"}]}"""
+    response = Py42Response(return_value)
+    service.get_by_guid.return_value = response
+    return service
 
 
 @pytest.fixture
@@ -38,10 +46,7 @@ class TestStorageServiceFactory(object):
         factory = StorageServiceFactory(
             mock_successful_connection, mock_device_service, mock_connection_manager
         )
-        service = factory.create_archive_service("testguid")
-        mock_device_service.get_by_guid.assert_called_once_with(
-            "testguid", include_backup_usage=True
-        )
+        service = factory.create_archive_service("testguid", None)
         assert type(service) == StorageArchiveService
 
     def test_create_archive_service_when_given_destination_guid_does_not_call_device_service(
@@ -50,11 +55,11 @@ class TestStorageServiceFactory(object):
         factory = StorageServiceFactory(
             mock_successful_connection, mock_device_service, mock_connection_manager
         )
-        service = factory.create_archive_service("testguid")
-        mock_device_service.get_by_guid.call_count == 0
+        service = factory.create_archive_service("testguid", destination_guid=42)
+        assert mock_device_service.get_by_guid.call_count == 0
         assert type(service) == StorageArchiveService
 
-    def test_create_archive_service_when_device_has_no_destination_raises_exception(
+    def test_auto_select_destination_guid_when_device_has_no_destination_raises_exception(
         self,
         mock_successful_connection,
         mock_device_service,
@@ -67,7 +72,7 @@ class TestStorageServiceFactory(object):
         py42_response.text = '{"backupUsage": []}'
         mock_device_service.get_by_guid.return_value = py42_response
         with pytest.raises(Exception):
-            factory.create_archive_service("testguid")
+            factory.auto_select_destination_guid(TEST_DEVICE_GUID)
 
     def test_create_security_data_service(
         self, mock_successful_connection, mock_device_service, mock_connection_manager

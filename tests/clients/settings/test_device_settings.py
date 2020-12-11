@@ -27,6 +27,7 @@ TEST_ADDED_EXCLUDED_PATH = "C:/Users/TestUser/Downloads/"
 TEST_DEVICE_VERSION = 1525200006800
 PHOTOS_REGEX = ".*/Photos/"
 PICTURES_REGEX = ".*/Pictures/"
+TEST_NIL_PARAM = {"@nil": True}
 
 
 DEVICE_DICT_W_SETTINGS = {
@@ -562,6 +563,9 @@ class TestDeviceSettings(object):
             == param.expected_stored_val
         )
         assert param.name in self.device_settings.changes
+
+    def test_device_settings_property_with_nil_true_structure_returns_correctly(self):
+        assert self.device_settings.java_memory_heap_max == {"@nil": "true"}
 
 
 class TestDeviceSettingsBackupSets(object):

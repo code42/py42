@@ -53,8 +53,10 @@ class ArchiveClient(object):
         show_deleted=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
     ):
-        """Streams a file from a backup archive to memory. If streaming multiple files, the
-        results will be zipped.
+        """Streams a file from a backup archive to memory. This method uses the same endpoint
+        as restoring from Console and therefore has all the same considerations.
+
+        `Support Documentation <https://support.code42.com/Administrator/6/Monitoring_and_managing/Restore_files_from_the_Code42_console#Troubleshooting>`__
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in
@@ -87,7 +89,7 @@ class ArchiveClient(object):
                     if chunk:
                         f.write(chunk)
 
-        If downloading multiple files, you will need to unzip the results::
+        In certain cases, you will have to unzip the results::
 
             import zipfile
             with zipfile.ZipFile("downloaded_directory.zip", "r") as zf:

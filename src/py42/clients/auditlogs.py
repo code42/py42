@@ -35,7 +35,7 @@ class AuditLogsClient(object):
             usernames (str or list, optional): A str or list of str of Code42 usernames. Defaults to None.
             user_ip_addresses (str or list, optional): A str or list of str of user ip addresses. Defaults to None.
             affected_user_ids (str or list, optional): A str or list of str of affected Code42 userUids. Defaults to None.
-            affected_usernames  (str or list, optional): A str or list of str of affected Code42 usernames. Defaults to None.
+            affected_usernames (str or list, optional): A str or list of str of affected Code42 usernames. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -78,7 +78,7 @@ class AuditLogsClient(object):
             usernames (str or list, optional): A str or list of str of Code42 usernames. Defaults to None.
             user_ip_addresses (str or list, optional): A str or list of str of user ip addresses. Defaults to None.
             affected_user_ids (str or list, optional): A str or list of str of affected Code42 userUids. Defaults to None.
-            affected_usernames  (str or list, optional): A str or list of str of affected Code42 usernames. Defaults to None.
+            affected_usernames (str or list, optional): A str or list of str of affected Code42 usernames. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

@@ -65,7 +65,7 @@ class SettingProperty(BaseSettingProperty):
 
     def __get__(self, instance, owner):
         val = get_val(instance.data, self.location)
-        if isinstance(val, dict):
+        if isinstance(val, dict) and u"#text" in val.keys():
             val = val[u"#text"]
         return self.get_converter(val) if self.get_converter is not None else val
 
@@ -75,8 +75,8 @@ class SettingProperty(BaseSettingProperty):
         )
         orig_val = get_val(instance.data, self.location)
 
-        # if locked, value is a dict with '#text' as the _real_ value key
-        if isinstance(orig_val, dict):
+        # if locked, value is a dict with '#text' as the _real_ value key. Some properties will have dicts with @nil: true, these should stay dicts, as the whole dict is the property value.
+        if isinstance(orig_val, dict) and u"#text" in orig_val.keys():
             location = self.location + [u"#text"]
             orig_val = orig_val[u"#text"]
         else:

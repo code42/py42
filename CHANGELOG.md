@@ -20,6 +20,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- Python 3.9 support.
+
 - `sdk.archive.stream_to_device()` for pushing a restore to another device.
 
 - Added new exception `Py42CloudAliasLimitExceededError` to throw if `add_cloud_alias()` throws `400` and body contains

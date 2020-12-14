@@ -81,7 +81,7 @@ class SecurityDataClient(object):
         `Support Article <https://support.code42.com/Administrator/6/Configuring/Endpoint_monitoring>`__
 
         Args:
-            plan_storage_info (:class:`py42.sdk.clients.securitydata.PlanStorageInfo`):
+            plan_storage_info (:class:`py42.clients.securitydata.PlanStorageInfo`):
                 Information about storage nodes for a plan to get file event activity for.
             cursor (str, optional): A cursor position for only getting file events you did not
                 previously get. Defaults to None.

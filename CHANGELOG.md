@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- Python 3.9 support.
+
 ## 1.10.0 - 2020-12-14
 
 ### Fixed
@@ -19,8 +25,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Bug where requests to storage nodes were only using single-use tokens for authentication, causing many extraneous requests.
 
 ### Added
-
-- Python 3.9 support.
 
 - `sdk.archive.stream_to_device()` for pushing a restore to another device.
 

@@ -1,12 +1,13 @@
 import pytest
 
 
-@pytest.mark.skip("Changes device state.")
-def test_block():
-    pass
+@pytest.mark.skip("Failing with 403.")
+def test_block(connection):
+    response = connection.devices.block(891804948033320117)
+    assert response.status_code == 201
 
 
-@pytest.mark.skip("Failing")
+@pytest.mark.skip("Failing with 404.")
 def test_get_agent_full_disk_access_state(connection):
     response = connection.devices.get_agent_full_disk_access_state(891804948033320117)
     assert response.status_code == 200
@@ -17,16 +18,17 @@ def test_get_by_guid(connection):
     assert response.status_code == 200
 
 
-def test_get_settings():
-    pass
+def test_get_settings(connection):
+    response = connection.devices.get_settings(891804948033320117)
+    assert response.status_code == 200
 
 
-@pytest.mark.skip("Changes device state.")
-def test_deactivate():
-    pass
+def test_deactivate(connection):
+    response = connection.devices.get_settings(891804948033320117)
+    assert response.status_code == 200
 
 
-@pytest.mark.skip("Failing")
+@pytest.mark.skip("Failing with 404.")
 def test_get_agent_state(connection):
     response = connection.devices.get_agent_state(891804948033320117, "fullDiskAccess")
     assert response.status_code == 200
@@ -37,14 +39,16 @@ def test_get_by_id(connection):
     assert response.status_code == 200
 
 
-@pytest.mark.skip("Changes device state.")
-def test_reactivate():
-    pass
+@pytest.mark.skip("Failing with 403.")
+def test_deauthorize(connection):
+    response = connection.devices.deauthorize(891804948033320117)
+    assert response.status_code == 201
 
 
-@pytest.mark.skip("Changes device state.")
-def test_deauthorize():
-    pass
+@pytest.mark.skip("Failing with 403.")
+def test_reactivate(connection):
+    response = connection.devices.reactivate(891804948033320117)
+    assert response.status_code == 201
 
 
 def test_get_all(connection):
@@ -59,5 +63,7 @@ def test_get_page(connection):
     assert response.status_code == 200
 
 
-def test_unblock():
-    pass
+@pytest.mark.skip("Failing with 403.")
+def test_unblock(connection):
+    response = connection.devices.unblock(891804948033320117)
+    assert response.status_code == 201

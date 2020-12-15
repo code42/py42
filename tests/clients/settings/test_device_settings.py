@@ -28,6 +28,7 @@ TEST_DEVICE_VERSION = 1525200006800
 PHOTOS_REGEX = ".*/Photos/"
 PICTURES_REGEX = ".*/Pictures/"
 TEST_NIL_PARAM = {"@nil": True}
+TEST_LEGAL_HOLD_BACKUP_SET_ID = "9999"
 
 
 DEVICE_DICT_W_SETTINGS = {
@@ -414,6 +415,69 @@ def device_settings_with_locked_backup_set():
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
     ][0]["@locked"] = "true"
+    return device_settings_dict
+
+
+@pytest.fixture
+def device_settings_legal_hold():
+    legal_hold_bs = {
+        "@id": TEST_LEGAL_HOLD_BACKUP_SET_ID,
+        "backupOpenFiles": "true",
+        "backupPaths": {
+            "excludeUser": [{"linux": [], "macintosh": [], "windows": []}],
+            "lastModified": "1598370521065",
+            "pathset": [
+                {
+                    "@os": "Linux",
+                    "path": [
+                        {"@include": TEST_HOME_DIR},
+                        {"@include": TEST_EXTERNAL_DOCUMENTS_DIR},
+                        {"@exclude": TEST_PHOTOS_DIR},
+                    ],
+                },
+            ],
+        },
+        "backupRunWindow": [
+            {
+                "@always": "true",
+                "@days": "SMTWHFS",
+                "@endTimeOfDay": "06:00",
+                "@startTimeOfDay": "01:00",
+            }
+        ],
+        "compression": "ON",
+        "dataDeDupAutoMaxFileSize": "1073741824",
+        "dataDeDupAutoMaxFileSizeForWan": "0",
+        "dataDeDuplication": "AUTOMATIC",
+        "destinations": {
+            "@locked": "true",
+            "destination": [
+                {"@id": TEST_DESTINATION_GUID_1, "@locked": "true"},
+                {"@id": TEST_DESTINATION_GUID_2, "@locked": "true"},
+            ],
+        },
+        "encryptionEnabled": "true",
+        "name": "BackupSet 1",
+        "priority": "1",
+        "retentionPolicy": {
+            "backupFrequency": "900000",
+            "keepDeleted": "true",
+            "keepDeletedMinutes": "0",
+            "lastModified": "1268168797613",
+            "versionLastNinetyDaysInterval": "1440",
+            "versionLastWeekInterval": "15",
+            "versionLastYearInterval": "10080",
+            "versionPrevYearsInterval": "43200",
+        },
+        "scanInterval": "86400000",
+        "scanTime": "03:00",
+        "visible": "true",
+        "watchFiles": "true",
+    }
+    device_settings_dict = deepcopy(DEVICE_DICT_W_SETTINGS)
+    device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
+        "backupSets"
+    ].insert(0, legal_hold_bs)
     return device_settings_dict
 
 
@@ -930,3 +994,11 @@ class TestDeviceSettingsBackupSets(object):
             destination_guid_to_remove
             not in device_settings.backup_sets[0].destinations
         )
+
+    def test_backup_set_when_device_on_legal_hold_hides_legal_hold_set(
+        self, device_settings_legal_hold
+    ):
+        device_settings = DeviceSettings(device_settings_legal_hold)
+        assert len(device_settings.backup_sets) == 1
+        for bs in device_settings.backup_sets:
+            assert bs["@id"] != TEST_LEGAL_HOLD_BACKUP_SET_ID

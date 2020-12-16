@@ -39,11 +39,19 @@ class DeviceSettingsDefaults(UserDict, object):
             if isinstance(backup_sets, dict):  # there's only one set configured
                 return [BackupSet(self, backup_sets)]
             elif isinstance(backup_sets, list):
-                return [BackupSet(self, bs) for bs in backup_sets]
+                return [
+                    BackupSet(self, bs)
+                    for bs in backup_sets
+                    if not _backup_set_is_legal_hold(bs)
+                ]
             else:
                 raise Py42Error("Unable to extract backup sets: {}".format(backup_sets))
         else:
-            return [BackupSet(self, bs) for bs in backup_sets]
+            return [
+                BackupSet(self, bs)
+                for bs in backup_sets
+                if not _backup_set_is_legal_hold(bs)
+            ]
 
     @property
     def available_destinations(self):
@@ -500,3 +508,15 @@ class TrackedFileSelectionList(UserList, object):
     def remove(self, value):
         self.data.remove(value)
         self.register_change()
+
+
+def _backup_set_is_legal_hold(bs):
+    """A legal hold backup set has 'destinations' locked since it enforces backup to
+    _all_ offered destinations for the legal hold set. This transforms the parent
+    'destinations' object from a list to a dict and adds the '@locked':'true' key/value
+    pair, then the actual destinations list is under a new 'destination' key.
+
+    '@locked' also has to be present as 'destinations' also can be a dict if _no_
+    destinations have been added to the set; it becomes {'@cleared': 'true'}.
+    """
+    return isinstance(bs["destinations"], dict) and "@locked" in bs["destinations"]

@@ -1,12 +1,8 @@
-import pytest
-
-
-@pytest.mark.skip("Failing with 404.")
 def test_rules_add_user(connection):
     response = connection.alerts.rules.add_user(
-        "1cae9f92-5fd7-4504-b363-9bc45015adaa", 912249223544144039
+        "d52cbfe0-f9de-468e-afbe-3c91037322da", 912249223544144039
     )
-    assert response.status_code == 201
+    assert response.status_code == 200
 
 
 def test_rules_get_all(connection):
@@ -34,20 +30,18 @@ def test_rules_get_page(connection):
     assert response.status_code == 200
 
 
-@pytest.mark.skip("Failing with 404.")
 def test_rules_remove_user(connection):
     response = connection.alerts.rules.remove_user(
-        "1cae9f92-5fd7-4504-b363-9bc45015adaa", 912249223544144039
+        "d52cbfe0-f9de-468e-afbe-3c91037322da", 912249223544144039
     )
-    assert response.status_code == 204
+    assert response.status_code == 200
 
 
-@pytest.mark.skip("Failing with 404.")
 def test_rules_remove_all_users(connection):
     response = connection.alerts.rules.remove_all_users(
-        "1cae9f92-5fd7-4504-b363-9bc45015adaa"
+        "d52cbfe0-f9de-468e-afbe-3c91037322da"
     )
-    assert response.status_code == 204
+    assert response.status_code == 200
 
 
 def test_rules_exfiltration_get(connection):

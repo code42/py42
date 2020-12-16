@@ -8,6 +8,6 @@ if __name__ == "__main__":
         rc = os.system("pytest ./integration -v -rsxX -l --tb=short --strict")
         sys.exit(rc)
     else:
-        print(
+        raise Exception(
             "username and password were not supplied. Integration tests will be skipped."
         )

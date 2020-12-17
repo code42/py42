@@ -1,20 +1,29 @@
+from datetime import datetime
+
 import pytest
 
-SKIP_TEST_MESSAGE = "Changes system state."
+from py42.exceptions import Py42ForbiddenError
+from py42.exceptions import Py42InternalServerError
 
 
-@pytest.mark.skip(SKIP_TEST_MESSAGE)
-def test_block():
-    pass
+timestamp = str(int(datetime.now().timestamp()))
+new_org = "integration test org {}".format(timestamp)
+org_id = 2689
+org_uid = 890854247383106706
+
+
+def test_create_org(connection):
+    with pytest.raises(Py42ForbiddenError):
+        connection.orgs.create_org(new_org)
 
 
 def test_get_agent_full_disk_access_states(connection):
-    response = connection.orgs.get_agent_full_disk_access_states(2689)
+    response = connection.orgs.get_agent_full_disk_access_states(org_id)
     assert response.status_code == 200
 
 
 def test_get_by_id(connection):
-    response = connection.orgs.get_by_id(2689)
+    response = connection.orgs.get_by_id(org_id)
     assert response.status_code == 200
 
 
@@ -23,29 +32,24 @@ def test_get_page(connection):
     assert response.status_code == 200
 
 
-@pytest.mark.skip("Changes system state.")
-def test_create_org():
-    pass
-
-
 def test_get_agent_state(connection):
-    response = connection.orgs.get_agent_state(2689, "fullDiskAccess")
+    response = connection.orgs.get_agent_state(org_id, "fullDiskAccess")
     assert response.status_code == 200
 
 
 def test_get_by_uid(connection):
-    response = connection.orgs.get_by_uid(890854247383106706)
+    response = connection.orgs.get_by_uid(org_uid)
     assert response.status_code == 200
 
 
-@pytest.mark.skip(SKIP_TEST_MESSAGE)
-def test_reactivate():
-    pass
+def test_deactivate(connection):
+    with pytest.raises(Py42ForbiddenError):
+        connection.orgs.deactivate(org_id)
 
 
-@pytest.mark.skip(SKIP_TEST_MESSAGE)
-def test_deactivate():
-    pass
+def test_reactivate(connection):
+    with pytest.raises(Py42ForbiddenError):
+        connection.orgs.reactivate(org_id)
 
 
 def test_get_all(connection):
@@ -59,6 +63,11 @@ def test_get_current(connection):
     assert response.status_code == 200
 
 
-@pytest.mark.skip(SKIP_TEST_MESSAGE)
-def test_unblock():
-    pass
+def test_block(connection):
+    with pytest.raises(Py42InternalServerError):
+        connection.orgs.block(org_id)
+
+
+def test_unblock(connection):
+    with pytest.raises(Py42ForbiddenError):
+        connection.orgs.unblock(org_id)

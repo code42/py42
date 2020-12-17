@@ -1,9 +1,22 @@
-def test_add_role():
-    pass
 
 
-def test_deactivate():
-    pass
+new_user = ""
+role = ""
+
+
+def test_create_user(connection):
+    response = connection.users.create_user(new_user)
+    assert response.status_code == 200
+
+
+def test_add_role(connection):
+    response = connection.users.add_role(313294, role)
+    assert response.status_code == 200
+
+
+def test_deactivate(connection):
+    response = connection.users.deactivate(313294)
+    assert response.status_code == 200
 
 
 def test_get_by_uid(connection):
@@ -16,12 +29,14 @@ def test_get_roles(connection):
     assert response.status_code == 200
 
 
-def test_unblock():
-    pass
+def test_unblock(connection):
+    response = connection.users.unblock(313294)
+    assert response.status_code == 200
 
 
-def test_block():
-    pass
+def test_block(connection):
+    response = connection.users.block(313294)
+    assert response.status_code == 200
 
 
 def test_get_all(connection):
@@ -55,12 +70,9 @@ def test_get_current(connection):
     assert response.status_code == 200
 
 
-def test_reactivate():
-    pass
-
-
-def test_create_user():
-    pass
+def test_reactivate(connection):
+    response = connection.users.get_roles(313294)
+    assert response.status_code == 200
 
 
 def test_get_by_id(connection):
@@ -73,5 +85,6 @@ def test_get_page(connection):
     assert response.status_code == 200
 
 
-def test_remove_role():
-    pass
+def test_remove_role(connection):
+    response = connection.users.remove_role(313294, role)
+    assert response.status_code == 200

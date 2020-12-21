@@ -1,7 +1,10 @@
+rule_id = "1cae9f92-5fd7-4504-b363-9bc45015adaa"
+observer_id = "d52cbfe0-f9de-468e-afbe-3c91037322da"
+user_uid = "912249223544144039"
+
+
 def test_rules_add_user(connection):
-    response = connection.alerts.rules.add_user(
-        "d52cbfe0-f9de-468e-afbe-3c91037322da", 912249223544144039
-    )
+    response = connection.alerts.rules.add_user(observer_id, user_uid)
     assert response.status_code == 200
 
 
@@ -13,7 +16,6 @@ def test_rules_get_all(connection):
 
 
 def test_rules_get_by_observer_id(connection):
-    observer_id = "d52cbfe0-f9de-468e-afbe-3c91037322da"
     response = connection.alerts.rules.get_by_observer_id(observer_id)
     assert response.status_code == 200
 
@@ -31,32 +33,25 @@ def test_rules_get_page(connection):
 
 
 def test_rules_remove_user(connection):
-    response = connection.alerts.rules.remove_user(
-        "d52cbfe0-f9de-468e-afbe-3c91037322da", 912249223544144039
-    )
+    response = connection.alerts.rules.remove_user(observer_id, user_uid)
     assert response.status_code == 200
 
 
 def test_rules_remove_all_users(connection):
-    response = connection.alerts.rules.remove_all_users(
-        "d52cbfe0-f9de-468e-afbe-3c91037322da"
-    )
+    response = connection.alerts.rules.remove_all_users(observer_id)
     assert response.status_code == 200
 
 
 def test_rules_exfiltration_get(connection):
-    rule_id = "1cae9f92-5fd7-4504-b363-9bc45015adaa"
     response = connection.alerts.rules.exfiltration.get(rule_id)
     assert response.status_code == 200
 
 
 def test_rules_cloudshare_get(connection):
-    rule_id = "1cae9f92-5fd7-4504-b363-9bc45015adaa"
     response = connection.alerts.rules.cloudshare.get(rule_id)
     assert response.status_code == 200
 
 
 def test_file_type_mismatch_get(connection):
-    rule_id = "1cae9f92-5fd7-4504-b363-9bc45015adaa"
     response = connection.alerts.rules.filetypemismatch.get(rule_id)
     assert response.status_code == 200

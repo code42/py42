@@ -4,6 +4,7 @@ from requests import Response
 
 import py42
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42Error
 from py42.exceptions import Py42ForbiddenError
 from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
@@ -164,6 +165,13 @@ class TestLegalHoldService(object):
                 "pgSize": 200,
             },
         )
+
+    def test_get_custodians_page_raises_error_when_required_option_missing(
+        self, mock_connection
+    ):
+        service = LegalHoldService(mock_connection)
+        with pytest.raises(Py42Error):
+            service.get_custodians_page(20)
 
     def test_add_to_matter_calls_post_with_expected_url_and_params(
         self, mock_connection

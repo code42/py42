@@ -6,7 +6,7 @@ from py42.exceptions import Py42ForbiddenError
 from py42.exceptions import Py42InternalServerError
 
 
-timestamp = str(int(datetime.now().timestamp()))
+timestamp = str(int(datetime.utcnow().timestamp()))
 new_org = "integration test org {}".format(timestamp)
 org_id = 2689
 org_uid = 890854247383106706

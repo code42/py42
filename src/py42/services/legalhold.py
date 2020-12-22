@@ -3,6 +3,7 @@ from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42ForbiddenError
 from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
+from py42.exceptions import Py42LegalHoldCriteriaMissingError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
@@ -219,10 +220,10 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`:
         """
-        if not any((legal_hold_membership_uid, legal_hold_uid, user_uid, user)):
-            raise Py42Error(
-                u"missing one of the following options: legal_hold_membership_uid, legal_hold_uid, user_uid, user"
-            )
+        # if not any((legal_hold_membership_uid, legal_hold_uid, user_uid, user)):
+        #     raise Py42Error(
+        #         u"missing one of the following options: legal_hold_membership_uid, legal_hold_uid, user_uid, user"
+        #     )
         active_state = _active_state_map(active)
         page_size = page_size or settings.items_per_page
         params = {
@@ -235,7 +236,13 @@ class LegalHoldService(BaseService):
             u"pgSize": page_size,
         }
         uri = u"/api/LegalHoldMembership"
-        return self._connection.get(uri, params=params)
+        try:
+            return self._connection.get(uri, params=params)
+        except Py42BadRequestError as ex:
+            if u"At least one criteria must be specified" in ex.response.text:
+                raise Py42LegalHoldCriteriaMissingError(ex)
+            else:
+                raise
 
     def get_all_matter_custodians(
         self, legal_hold_uid=None, user_uid=None, user=None, active=True

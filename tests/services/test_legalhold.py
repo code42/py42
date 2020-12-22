@@ -4,7 +4,7 @@ from requests import Response
 
 import py42
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42Error
+from py42.exceptions import Py42LegalHoldCriteriaMissingError
 from py42.exceptions import Py42ForbiddenError
 from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
@@ -167,11 +167,18 @@ class TestLegalHoldService(object):
         )
 
     def test_get_custodians_page_raises_error_when_required_option_missing(
-        self, mock_connection
+        self, mocker, mock_connection
     ):
+        def side_effect(*args, **kwargs):
+            base_err = mocker.MagicMock(spec=HTTPError)
+            base_err.response = mocker.MagicMock(spec=Response)
+            base_err.response.text = "At least one criteria must be specified; holdMembershipUid, holdUid, userUid, or userSearch"
+            raise Py42BadRequestError(base_err)
+
+        mock_connection.get.side_effect = side_effect
         service = LegalHoldService(mock_connection)
-        with pytest.raises(Py42Error):
-            service.get_custodians_page(20)
+        with pytest.raises(Py42LegalHoldCriteriaMissingError):
+            service.get_custodians_page(1)
 
     def test_add_to_matter_calls_post_with_expected_url_and_params(
         self, mock_connection

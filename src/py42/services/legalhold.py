@@ -2,8 +2,8 @@ from py42 import settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42ForbiddenError
-from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42LegalHoldCriteriaMissingError
+from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services import BaseService
 from py42.services.util import get_all_pages

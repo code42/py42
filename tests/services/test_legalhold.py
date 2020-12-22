@@ -4,8 +4,8 @@ from requests import Response
 
 import py42
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42LegalHoldCriteriaMissingError
 from py42.exceptions import Py42ForbiddenError
+from py42.exceptions import Py42LegalHoldCriteriaMissingError
 from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.response import Py42Response

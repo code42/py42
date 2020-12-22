@@ -1,10 +1,10 @@
+
 rule_id = "1cae9f92-5fd7-4504-b363-9bc45015adaa"
 observer_id = "d52cbfe0-f9de-468e-afbe-3c91037322da"
-user_uid = "912249223544144039"
 
 
-def test_rules_add_user(connection):
-    response = connection.alerts.rules.add_user(observer_id, user_uid)
+def test_rules_add_user(connection, new_user):
+    response = connection.alerts.rules.add_user(observer_id, new_user['userId'])
     assert response.status_code == 200
 
 
@@ -32,8 +32,8 @@ def test_rules_get_page(connection):
     assert response.status_code == 200
 
 
-def test_rules_remove_user(connection):
-    response = connection.alerts.rules.remove_user(observer_id, user_uid)
+def test_rules_remove_user(connection, new_user):
+    response = connection.alerts.rules.remove_user(observer_id, new_user['userId'])
     assert response.status_code == 200
 
 

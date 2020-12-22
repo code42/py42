@@ -3,8 +3,7 @@ from datetime import datetime
 import pytest
 
 user_uid = 977335752891390447
-policy_uid = 894163190167359978941631901673599755
-timestamp = str(int(datetime.now().timestamp()))
+timestamp = str(int(datetime.utcnow().timestamp()))
 matter_name = "integration test matter {}".format(timestamp)
 policy_name = "integration test policy {}".format(timestamp)
 
@@ -64,9 +63,10 @@ def test_get_all_matters(connection):
         break
 
 
-@pytest.mark.skip("Failing with 400 bad request error")
-def test_get_custodians_page(connection):
-    response = connection.legalhold.get_custodians_page(1)
+def test_get_custodians_page(connection, membership):
+    response = connection.legalhold.get_custodians_page(
+        1, legal_hold_membership_uid=membership
+    )
     assert response.status_code == 200
 
 

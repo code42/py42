@@ -220,10 +220,6 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`:
         """
-        # if not any((legal_hold_membership_uid, legal_hold_uid, user_uid, user)):
-        #     raise Py42Error(
-        #         u"missing one of the following options: legal_hold_membership_uid, legal_hold_uid, user_uid, user"
-        #     )
         active_state = _active_state_map(active)
         page_size = page_size or settings.items_per_page
         params = {

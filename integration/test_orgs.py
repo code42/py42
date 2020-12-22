@@ -2,28 +2,28 @@ from datetime import datetime
 
 import pytest
 
-from py42.exceptions import Py42ForbiddenError
-from py42.exceptions import Py42InternalServerError
-
-
 timestamp = str(int(datetime.utcnow().timestamp()))
 new_org = "integration test org {}".format(timestamp)
-org_id = 2689
-org_uid = 890854247383106706
 
 
-def test_create_org(connection):
-    with pytest.raises(Py42ForbiddenError):
-        connection.orgs.create_org(new_org)
+@pytest.fixture(scope="module")
+def org(connection):
+    orgs_gen = connection.orgs.get_all()
+    orgs = next(orgs_gen)
+    # Assumption: Parent org always exists.
+    org = orgs["orgs"][0]  # The first record is always the parent org
+    response = connection.orgs.create_org(new_org, parent_org_uid=org["orgUid"])
+    assert response.status_code == 200
+    return response
 
 
-def test_get_agent_full_disk_access_states(connection):
-    response = connection.orgs.get_agent_full_disk_access_states(org_id)
+def test_get_agent_full_disk_access_states(connection, org):
+    response = connection.orgs.get_agent_full_disk_access_states(org["orgId"])
     assert response.status_code == 200
 
 
-def test_get_by_id(connection):
-    response = connection.orgs.get_by_id(org_id)
+def test_get_by_id(connection, org):
+    response = connection.orgs.get_by_id(org["orgId"])
     assert response.status_code == 200
 
 
@@ -32,24 +32,24 @@ def test_get_page(connection):
     assert response.status_code == 200
 
 
-def test_get_agent_state(connection):
-    response = connection.orgs.get_agent_state(org_id, "fullDiskAccess")
+def test_get_agent_state(connection, org):
+    response = connection.orgs.get_agent_state(org["orgId"], "fullDiskAccess")
     assert response.status_code == 200
 
 
-def test_get_by_uid(connection):
-    response = connection.orgs.get_by_uid(org_uid)
+def test_get_by_uid(connection, org):
+    response = connection.orgs.get_by_uid(org["orgUid"])
     assert response.status_code == 200
 
 
-def test_deactivate(connection):
-    with pytest.raises(Py42ForbiddenError):
-        connection.orgs.deactivate(org_id)
+def test_deactivate(connection, org):
+    response = connection.orgs.deactivate(org["orgId"])
+    assert response.status_code == 201
 
 
-def test_reactivate(connection):
-    with pytest.raises(Py42ForbiddenError):
-        connection.orgs.reactivate(org_id)
+def test_reactivate(connection, org):
+    response = connection.orgs.reactivate(org["orgId"])
+    assert response.status_code == 204
 
 
 def test_get_all(connection):
@@ -63,11 +63,11 @@ def test_get_current(connection):
     assert response.status_code == 200
 
 
-def test_block(connection):
-    with pytest.raises(Py42InternalServerError):
-        connection.orgs.block(org_id)
+def test_block(connection, org):
+    response = connection.orgs.block(org["orgId"])
+    assert response.status_code == 201
 
 
-def test_unblock(connection):
-    with pytest.raises(Py42ForbiddenError):
-        connection.orgs.unblock(org_id)
+def test_unblock(connection, org):
+    response = connection.orgs.unblock(org["orgId"])
+    assert response.status_code == 204

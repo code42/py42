@@ -123,7 +123,7 @@ class TestLegalHoldService(object):
             mock_get_all_matter_custodians_response,
             mock_get_all_matter_custodians_empty_response,
         ]
-        for _ in service.get_all_matter_custodians():
+        for _ in service.get_all_matter_custodians(user="test"):
             pass
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3

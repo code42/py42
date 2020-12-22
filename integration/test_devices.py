@@ -1,6 +1,5 @@
 import pytest
 
-
 device_uid = "891804948033320117"
 
 

@@ -2,7 +2,7 @@ from datetime import datetime
 from datetime import timedelta
 
 
-new_user = "integration_" + str(int(datetime.now().timestamp())) + "@test.com"
+new_user = "integration_" + str(int(datetime.utcnow().timestamp())) + "@test.com"
 existing_user = "test1-test@test.com"
 alias_user = "test_user@test.com"
 user_departure_date = datetime.now() + timedelta(days=10)

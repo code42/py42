@@ -10,6 +10,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+- `sdk.legalhold.get_custodians_page()` now raises `Py42Error` when missing on of the required options.
+
 ### Added
 
 - Python 3.9 support.

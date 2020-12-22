@@ -1,15 +1,14 @@
 from datetime import datetime
-from datetime import timezone
+from datetime import timedelta
 
 import pytest
 
-from py42.exceptions import Py42Error
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters import EventTimestamp
 
 user_uid = 984118686188300065
-md5_hash = "fe78649ad786c2fa1fd66b6a6db00030"
-sha256_hash = "9d777e0031bfb10a15128ebcd01eeb062c373f69229058774ca2d596744475ac"
+md5_hash = "202cb962ac59075b964b07152d234b70"
+sha256_hash = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
 
 
 @pytest.fixture
@@ -33,7 +32,7 @@ def test_get_all_user_security_events(connection):
 
 
 def test_search_file_events(connection):
-    start_date = datetime(2020, 9, 13, tzinfo=timezone.utc)
+    start_date = datetime.utcnow() - timedelta(1)
     end_date = datetime.utcnow()
     date_query = EventTimestamp.in_range(start_date.timestamp(), end_date.timestamp())
     query = FileEventQuery.all(date_query)
@@ -42,14 +41,10 @@ def test_search_file_events(connection):
 
 
 def test_stream_file_by_md5(connection):
-    with pytest.raises(Py42Error):
-        response = connection.securitydata.stream_file_by_md5(md5_hash)
-        for _ in response:
-            break
+    response = connection.securitydata.stream_file_by_md5(md5_hash)
+    assert str(response) == "123"
 
 
 def test_stream_file_by_sha256(connection):
-    with pytest.raises(Py42Error):
-        response = connection.securitydata.stream_file_by_sha256(sha256_hash)
-        for _ in response:
-            break
+    response = connection.securitydata.stream_file_by_sha256(sha256_hash)
+    assert str(response) == "123"

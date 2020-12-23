@@ -10,7 +10,7 @@ org_id = "2689"
 user_id = "176457"
 destination_device_guid = "673679195225718785"
 archive_guid = "912100293346985227"
-path = "C:/Users/QA/Downloads/spatel_add.csv"
+path = "C:/Users/QA/Downloads/users_to_add.csv"
 purge_date = datetime.now().strftime("%Y-%m-%d")
 
 

@@ -38,7 +38,7 @@ def connection(host):
     return _sdk.from_local_account(host, os.environ["C42_USER"], os.environ["C42_PW"])
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def timestamp():
     return str(int(datetime.utcnow().timestamp()))
 

@@ -41,6 +41,7 @@ class AlertRulesService(BaseService):
 
     def add_user(self, rule_id, user_id):
         tenant_id = self._user_context.get_current_tenant_id()
+        self._user_profile_service.create_if_not_exists(user_id)
         user_details = self._user_profile_service.get_by_id(user_id)
         user_aliases = user_details.data.get(u"cloudUsernames") or []
         data = {

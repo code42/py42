@@ -1,21 +1,17 @@
-from datetime import datetime
-
 import pytest
-
-timestamp = str(int(datetime.utcnow().timestamp()))
-matter_name = "integration test matter {}".format(timestamp)
-policy_name = "integration test policy {}".format(timestamp)
 
 
 @pytest.fixture(scope="module")
-def policy(connection):
+def policy(connection, timestamp):
+    policy_name = "integration test policy {}".format(timestamp)
     response = connection.legalhold.create_policy(policy_name)
     assert response.status_code == 200
     return response["legalHoldPolicyUid"]
 
 
 @pytest.fixture(scope="module")
-def matter(connection, policy):
+def matter(connection, policy, timestamp):
+    matter_name = "integration test matter {}".format(timestamp)
     response = connection.legalhold.create_matter(matter_name, policy)
     assert response.status_code == 201
     return response["legalHoldUid"]

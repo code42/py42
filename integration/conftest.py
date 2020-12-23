@@ -5,8 +5,6 @@ import pytest
 
 import py42.sdk as _sdk
 
-timestamp = str(int(datetime.utcnow().timestamp()))
-
 
 def pytest_addoption(parser):
     parser.addini("host_url", "Application/enviroment to connect to.")
@@ -40,8 +38,13 @@ def connection(host):
     return _sdk.from_local_account(host, os.environ["C42_USER"], os.environ["C42_PW"])
 
 
+@pytest.fixture
+def timestamp():
+    return str(int(datetime.utcnow().timestamp()))
+
+
 @pytest.fixture(scope="session")
-def org(connection):
+def org(connection, timestamp):
     orgs_gen = connection.orgs.get_all()
     orgs = next(orgs_gen)
     # Assumption: Parent org always exists.
@@ -53,7 +56,7 @@ def org(connection):
 
 
 @pytest.fixture(scope="session")
-def new_user(connection, org):
+def new_user(connection, org, timestamp):
     new_user = "integration_user_{}_@test.com".format(timestamp)
     response = connection.users.create_user(org["orgUid"], new_user, new_user)
     assert response.status_code == 200

@@ -56,9 +56,7 @@ class TestDetectionLists:
         assert response.status_code == 200
 
     def test_departing_employee_add(self, connection, new_user):
-        response = connection.detectionlists.departing_employee.add(
-            new_user['userUid']
-        )
+        response = connection.detectionlists.departing_employee.add(new_user["userUid"])
         assert response.status_code == 200
 
     def test_departing_employee_get(self, connection, new_user):
@@ -100,9 +98,7 @@ class TestDetectionLists:
         assert response.status_code == 200
 
     def test_high_risk_employee_add(self, connection, new_user):
-        response = connection.detectionlists.high_risk_employee.add(
-            new_user["userUid"]
-        )
+        response = connection.detectionlists.high_risk_employee.add(new_user["userUid"])
         assert response.status_code == 200
 
     def test_high_risk_employee_get(self, connection, new_user):

@@ -23,7 +23,7 @@ def user_uid(request):
 
 
 @pytest.fixture
-def plan_info(self, connection, user_uid):
+def plan_info(connection, user_uid):
     plans = connection.securitydata.get_security_plan_storage_info_list(user_uid)
     return plans[0]
 

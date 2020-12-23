@@ -5,13 +5,20 @@ import pytest
 
 import py42.sdk as _sdk
 
-HOST_URL = "https://console.us.code42.com"
+
+def pytest_addoption(parser):
+    parser.addini("host_url", "Application/enviroment to connect to")
+
+
+@pytest.fixture
+def host(request):
+    return request.config.getini("host_url")
 
 
 @pytest.fixture(scope="session")
-def connection():
+def connection(host):
     return _sdk.from_local_account(
-        HOST_URL, os.environ["C42_USER"], os.environ["C42_PW"]
+        host, os.environ["C42_USER"], os.environ["C42_PW"]
     )
 
 

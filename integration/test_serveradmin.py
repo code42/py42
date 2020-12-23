@@ -2,8 +2,7 @@ import pytest
 
 
 @pytest.mark.integration
-class TestServerAdmin():
-
+class TestServerAdmin:
     @pytest.mark.skip("Requires on prem connection.")
     def test_get_alert_log(self, connection):
         response = connection.serveradmin.get_alert_log()

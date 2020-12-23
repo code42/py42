@@ -2,7 +2,7 @@ import pytest
 
 
 @pytest.mark.integration
-class TestDevices():
+class TestDevices:
     @pytest.mark.skip("Skip special case.")
     def test_get_agent_full_disk_access_state(self, connection, device):
         response = connection.devices.get_agent_full_disk_access_state(device["guid"])

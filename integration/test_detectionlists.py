@@ -1,13 +1,14 @@
-import pytest
 from datetime import datetime
 from datetime import timedelta
+
+import pytest
 
 alias_user = "test_user@test.com"
 user_departure_date = datetime.now() + timedelta(days=10)
 
 
 @pytest.mark.integration
-class TestDetectionLists():
+class TestDetectionLists:
     def test_create_user(self, connection, new_user):
         response = connection.detectionlists.create_user(new_user["username"])
         assert response.status_code == 200
@@ -55,7 +56,9 @@ class TestDetectionLists():
         assert response.status_code == 200
 
     def test_departing_employee_add(self, connection, new_user):
-        response = connection.detectionlists.departing_employee.add(new_user["username"])
+        response = connection.detectionlists.departing_employee.add(
+            new_user["username"]
+        )
         assert response.status_code == 200
 
     def test_departing_employee_get(self, connection, new_user):
@@ -87,7 +90,9 @@ class TestDetectionLists():
         assert response.status_code == 200
 
     def test_departing_employee_remove(self, connection, new_user):
-        response = connection.detectionlists.departing_employee.remove(new_user["username"])
+        response = connection.detectionlists.departing_employee.remove(
+            new_user["username"]
+        )
         assert response.status_code == 200
 
     def test_departing_employee_set_alerts_enabled(self, connection):
@@ -95,7 +100,9 @@ class TestDetectionLists():
         assert response.status_code == 200
 
     def test_high_risk_employee_add(self, connection, new_user):
-        response = connection.detectionlists.high_risk_employee.add(new_user["username"])
+        response = connection.detectionlists.high_risk_employee.add(
+            new_user["username"]
+        )
         assert response.status_code == 200
 
     def test_high_risk_employee_get(self, connection, new_user):
@@ -103,7 +110,9 @@ class TestDetectionLists():
         assert response.status_code == 200
 
     def test_high_risk_employee_remove(self, connection, new_user):
-        response = connection.detectionlists.high_risk_employee.remove(new_user["username"])
+        response = connection.detectionlists.high_risk_employee.remove(
+            new_user["username"]
+        )
         assert response.status_code == 200
 
     def test_high_risk_employee_get_page(self, connection):

@@ -29,7 +29,7 @@ def plan_info(self, connection, user_uid):
 
 
 @pytest.mark.integration
-class TestSecurityData():
+class TestSecurityData:
     def test_get_all_plan_security_events(self, connection, plan_info):
         response_gen = connection.securitydata.get_all_plan_security_events(plan_info)
         for response in response_gen:
@@ -45,7 +45,9 @@ class TestSecurityData():
     def test_search_file_events(self, connection):
         start_date = datetime.utcnow() - timedelta(1)
         end_date = datetime.utcnow()
-        date_query = EventTimestamp.in_range(start_date.timestamp(), end_date.timestamp())
+        date_query = EventTimestamp.in_range(
+            start_date.timestamp(), end_date.timestamp()
+        )
         query = FileEventQuery.all(date_query)
         response = connection.securitydata.search_file_events(query)
         assert response.status_code == 200

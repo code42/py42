@@ -1,9 +1,10 @@
 import pytest
+
 role = "Desktop User"
 
 
 @pytest.mark.integration
-class TestUser():
+class TestUser:
     def test_add_role(self, connection, new_user):
         response = connection.users.add_role(new_user["userId"], role)
         assert response.status_code == 200

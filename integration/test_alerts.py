@@ -1,4 +1,5 @@
 import pytest
+
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.sdk.queries.alerts.filters import AlertState
 from py42.sdk.queries.alerts.filters import Severity

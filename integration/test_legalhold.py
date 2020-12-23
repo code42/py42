@@ -29,7 +29,7 @@ def membership(connection, matter, new_user):
 
 
 @pytest.mark.integration
-class TestLegalhold():
+class TestLegalhold:
     def test_get_policy_by_uid(self, connection, policy):
         response = connection.legalhold.get_policy_by_uid(policy)
         assert response.status_code == 200

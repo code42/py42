@@ -8,7 +8,7 @@ def rule_id(connection, observer_id):
 
 
 @pytest.mark.integration
-class TestAlertRules():
+class TestAlertRules:
     def test_rules_add_user(self, connection, new_user, observer_id):
         response = connection.alerts.rules.add_user(observer_id, new_user["userId"])
         assert response.status_code == 200

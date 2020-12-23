@@ -2,7 +2,6 @@ from datetime import datetime
 
 import pytest
 
-user_uid = 977335752891390447
 timestamp = str(int(datetime.utcnow().timestamp()))
 matter_name = "integration test matter {}".format(timestamp)
 policy_name = "integration test policy {}".format(timestamp)
@@ -33,8 +32,8 @@ def test_get_policy_list(connection):
 
 
 @pytest.fixture
-def membership(connection, matter):
-    response = connection.legalhold.add_to_matter(user_uid, matter)
+def membership(connection, matter, new_user):
+    response = connection.legalhold.add_to_matter(new_user['userUid'], matter)
     assert response.status_code == 201
     return response["legalHoldMembershipUid"]
 

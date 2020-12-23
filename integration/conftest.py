@@ -15,29 +15,29 @@ def pytest_addoption(parser):
     parser.addini("observer_rule_id", "Observer rule id.")
     parser.addini("md5_hash", "MD5 hash of a file that exists on the device.")
     parser.addini("sha256_hash", "SHA256 hash of a file that exists on the device.")
-    parser.addini("user_uid", "The UID of the user to get plan storage information for.")
+    parser.addini(
+        "user_uid", "The UID of the user to get plan storage information for."
+    )
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def host(request):
     return request.config.getini("host_url")
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def alert_id(request):
     return request.config.getini("alert_id")
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def observer_id(request):
     return request.config.getini("observer_rule_id")
 
 
 @pytest.fixture(scope="session")
 def connection(host):
-    return _sdk.from_local_account(
-        host, os.environ["C42_USER"], os.environ["C42_PW"]
-    )
+    return _sdk.from_local_account(host, os.environ["C42_USER"], os.environ["C42_PW"])
 
 
 @pytest.fixture(scope="session")
@@ -55,12 +55,12 @@ def org(connection):
 @pytest.fixture(scope="session")
 def new_user(connection, org):
     new_user = "integration_user_{}_@test.com".format(timestamp)
-    response = connection.users.create_user(org['orgUid'], new_user, new_user)
+    response = connection.users.create_user(org["orgUid"], new_user, new_user)
     assert response.status_code == 200
     return response
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def device(request, connection):
-    device_id = request.config.getini('device_id')
+    device_id = request.config.getini("device_id")
     return connection.devices.get_by_id(device_id)

@@ -1,14 +1,14 @@
 import pytest
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def rule_id(connection, observer_id):
     response = connection.alerts.rules.get_by_observer_id(observer_id)
-    return response['ruleMetadata'][0]['id']
+    return response["ruleMetadata"][0]["id"]
 
 
 def test_rules_add_user(connection, new_user, observer_id):
-    response = connection.alerts.rules.add_user(observer_id, new_user['userId'])
+    response = connection.alerts.rules.add_user(observer_id, new_user["userId"])
     assert response.status_code == 200
 
 
@@ -37,7 +37,7 @@ def test_rules_get_page(connection):
 
 
 def test_rules_remove_user(connection, new_user, observer_id):
-    response = connection.alerts.rules.remove_user(observer_id, new_user['userId'])
+    response = connection.alerts.rules.remove_user(observer_id, new_user["userId"])
     assert response.status_code == 200
 
 

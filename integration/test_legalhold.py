@@ -33,7 +33,7 @@ def test_get_policy_list(connection):
 
 @pytest.fixture
 def membership(connection, matter, new_user):
-    response = connection.legalhold.add_to_matter(new_user['userUid'], matter)
+    response = connection.legalhold.add_to_matter(new_user["userUid"], matter)
     assert response.status_code == 201
     return response["legalHoldMembershipUid"]
 

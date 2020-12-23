@@ -1,4 +1,3 @@
-
 def test_get_agent_full_disk_access_states(connection, org):
     response = connection.orgs.get_agent_full_disk_access_states(org["orgId"])
     assert response.status_code == 200

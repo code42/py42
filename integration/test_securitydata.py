@@ -7,17 +7,17 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters import EventTimestamp
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def md5_hash(request):
     return request.config.getini("md5_hash")
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def sha256_hash(request):
     return request.config.getini("sha256_hash")
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def user_uid(request):
     return request.config.getini("user_uid")
 

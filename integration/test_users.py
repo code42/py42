@@ -48,7 +48,9 @@ def test_get_scim_data_by_uid(connection, new_user):
 
 
 def test_change_org_assignment(connection, new_user, org):
-    response = connection.users.change_org_assignment(new_user["userId"], org['parentOrgId'])
+    response = connection.users.change_org_assignment(
+        new_user["userId"], org["parentOrgId"]
+    )
     assert response.status_code == 204
 
 

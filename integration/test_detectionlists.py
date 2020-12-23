@@ -57,7 +57,7 @@ class TestDetectionLists:
 
     def test_departing_employee_add(self, connection, new_user):
         response = connection.detectionlists.departing_employee.add(
-            new_user["username"]
+            new_user['userUid']
         )
         assert response.status_code == 200
 
@@ -73,13 +73,13 @@ class TestDetectionLists:
 
     def test_add_user_risk_tags(self, connection, new_user):
         response = connection.detectionlists.add_user_risk_tags(
-            new_user["userUid"], "Flight Risk"
+            new_user["userUid"], "Flight_Risk"
         )
         assert response.status_code == 200
 
     def test_remove_user_risk_tags(self, connection, new_user):
         response = connection.detectionlists.remove_user_risk_tags(
-            new_user["userUid"], "Flight Risk"
+            new_user["userUid"], "Flight_Risk"
         )
         assert response.status_code == 200
 
@@ -91,7 +91,7 @@ class TestDetectionLists:
 
     def test_departing_employee_remove(self, connection, new_user):
         response = connection.detectionlists.departing_employee.remove(
-            new_user["username"]
+            new_user["userUid"]
         )
         assert response.status_code == 200
 
@@ -101,7 +101,7 @@ class TestDetectionLists:
 
     def test_high_risk_employee_add(self, connection, new_user):
         response = connection.detectionlists.high_risk_employee.add(
-            new_user["username"]
+            new_user["userUid"]
         )
         assert response.status_code == 200
 
@@ -111,7 +111,7 @@ class TestDetectionLists:
 
     def test_high_risk_employee_remove(self, connection, new_user):
         response = connection.detectionlists.high_risk_employee.remove(
-            new_user["username"]
+            new_user["userUid"]
         )
         assert response.status_code == 200
 

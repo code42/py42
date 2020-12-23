@@ -1,5 +1,4 @@
 role = "Desktop User"
-update_org_id = 2689
 
 
 def test_add_role(connection, new_user):
@@ -48,8 +47,8 @@ def test_get_scim_data_by_uid(connection, new_user):
     assert response.status_code == 200
 
 
-def test_change_org_assignment(connection, new_user):
-    response = connection.users.change_org_assignment(new_user["userId"], update_org_id)
+def test_change_org_assignment(connection, new_user, org):
+    response = connection.users.change_org_assignment(new_user["userId"], org['parentOrgId'])
     assert response.status_code == 204
 
 

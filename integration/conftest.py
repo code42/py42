@@ -25,15 +25,6 @@ def connection(host):
 
 
 @pytest.fixture(scope="session")
-def new_user(connection):
-    new_user = "integration_user_{}_@test.com".format(timestamp)
-    org_uid = "890854247383106706"
-    response = connection.users.create_user(org_uid, new_user, new_user)
-    assert response.status_code == 200
-    return response
-
-
-@pytest.fixture(scope="session")
 def org(connection):
     orgs_gen = connection.orgs.get_all()
     orgs = next(orgs_gen)
@@ -41,5 +32,13 @@ def org(connection):
     org = orgs["orgs"][0]  # The first record is always the parent org
     new_org = "integration test org {}".format(timestamp)
     response = connection.orgs.create_org(new_org, parent_org_uid=org["orgUid"])
+    assert response.status_code == 200
+    return response
+
+
+@pytest.fixture(scope="session")
+def new_user(connection, org):
+    new_user = "integration_user_{}_@test.com".format(timestamp)
+    response = connection.users.create_user(org['orgUid'], new_user, new_user)
     assert response.status_code == 200
     return response

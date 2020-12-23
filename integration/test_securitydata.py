@@ -6,13 +6,24 @@ import pytest
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters import EventTimestamp
 
-user_uid = 984118686188300065
-md5_hash = "202cb962ac59075b964b07152d234b70"
-sha256_hash = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+
+@pytest.fixture(scope='module')
+def md5_hash(request):
+    return request.config.getini("md5_hash")
+
+
+@pytest.fixture(scope='module')
+def sha256_hash(request):
+    return request.config.getini("sha256_hash")
+
+
+@pytest.fixture(scope='module')
+def user_uid(request):
+    return request.config.getini("user_uid")
 
 
 @pytest.fixture
-def plan_info(connection):
+def plan_info(connection, user_uid):
     plans = connection.securitydata.get_security_plan_storage_info_list(user_uid)
     return plans[0]
 
@@ -24,7 +35,7 @@ def test_get_all_plan_security_events(connection, plan_info):
         break
 
 
-def test_get_all_user_security_events(connection):
+def test_get_all_user_security_events(connection, user_uid):
     response_gen = connection.securitydata.get_all_user_security_events(user_uid)
     for response in response_gen:
         assert response[0].status_code == 200
@@ -40,11 +51,11 @@ def test_search_file_events(connection):
     assert response.status_code == 200
 
 
-def test_stream_file_by_md5(connection):
+def test_stream_file_by_md5(connection, md5_hash):
     response = connection.securitydata.stream_file_by_md5(md5_hash)
     assert str(response) == "123"
 
 
-def test_stream_file_by_sha256(connection):
+def test_stream_file_by_sha256(connection, sha256_hash):
     response = connection.securitydata.stream_file_by_sha256(sha256_hash)
     assert str(response) == "123"

@@ -13,7 +13,9 @@ def pytest_addoption(parser):
     parser.addini("alert_id", "Alert id that exists in the system.")
     parser.addini("device_id", "Device id that exists in the system.")
     parser.addini("observer_rule_id", "Observer rule id.")
-
+    parser.addini("md5_hash", "MD5 hash of a file that exists on the device.")
+    parser.addini("sha256_hash", "SHA256 hash of a file that exists on the device.")
+    parser.addini("user_uid", "The UID of the user to get plan storage information for.")
 
 
 @pytest.fixture(scope='session')

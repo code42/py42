@@ -1,21 +1,3 @@
-from datetime import datetime
-
-import pytest
-
-timestamp = str(int(datetime.utcnow().timestamp()))
-new_org = "integration test org {}".format(timestamp)
-
-
-@pytest.fixture(scope="module")
-def org(connection):
-    orgs_gen = connection.orgs.get_all()
-    orgs = next(orgs_gen)
-    # Assumption: Parent org always exists.
-    org = orgs["orgs"][0]  # The first record is always the parent org
-    response = connection.orgs.create_org(new_org, parent_org_uid=org["orgUid"])
-    assert response.status_code == 200
-    return response
-
 
 def test_get_agent_full_disk_access_states(connection, org):
     response = connection.orgs.get_agent_full_disk_access_states(org["orgId"])

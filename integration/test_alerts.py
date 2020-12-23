@@ -13,19 +13,16 @@ def test_search(connection):
     assert response.status_code == 200
 
 
-def test_get_details(connection):
-    alert_id = "1cae9f92-5fd7-4504-b363-9bc45015adaa"
+def test_get_details(connection, alert_id):
     response = connection.alerts.get_details(alert_id)
     assert response.status_code == 200
 
 
-def test_resolve(connection):
-    alert_id = "1cae9f92-5fd7-4504-b363-9bc45015adaa"
+def test_resolve(connection, alert_id):
     response = connection.alerts.resolve(alert_id)
     assert response.status_code == 200
 
 
-def test_reopen(connection):
-    alert_id = "1cae9f92-5fd7-4504-b363-9bc45015adaa"
+def test_reopen(connection, alert_id):
     response = connection.alerts.reopen(alert_id)
     assert response.status_code == 200

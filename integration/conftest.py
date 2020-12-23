@@ -10,11 +10,17 @@ timestamp = str(int(datetime.utcnow().timestamp()))
 
 def pytest_addoption(parser):
     parser.addini("host_url", "Application/enviroment to connect to")
+    parser.addini("alert_id", "Alert id that exists in the system")
 
 
 @pytest.fixture(scope='session')
 def host(request):
     return request.config.getini("host_url")
+
+
+@pytest.fixture(scope='session')
+def alert_id(request):
+    return request.config.getini("alert_id")
 
 
 @pytest.fixture(scope="session")

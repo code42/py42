@@ -11,6 +11,7 @@ timestamp = str(int(datetime.utcnow().timestamp()))
 def pytest_addoption(parser):
     parser.addini("host_url", "Application/enviroment to connect to")
     parser.addini("alert_id", "Alert id that exists in the system")
+    parser.addini("device_id", "Device id that exists in the system")
 
 
 @pytest.fixture(scope='session')
@@ -48,3 +49,9 @@ def new_user(connection, org):
     response = connection.users.create_user(org['orgUid'], new_user, new_user)
     assert response.status_code == 200
     return response
+
+
+@pytest.fixture(scope='session')
+def device(request, connection):
+    device_id = request.config.getini('device_id')
+    return connection.devices.get_by_id(device_id)

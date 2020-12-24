@@ -3,12 +3,16 @@ from datetime import timedelta
 
 import pytest
 
+from py42.clients.detectionlists import RiskTags
+
 alias_user = "test_user@test.com"
 user_departure_date = datetime.now() + timedelta(days=10)
 
 
 @pytest.mark.integration
 class TestDetectionLists:
+
+    # During individual file execution, below test should be executed.
     @pytest.mark.skip(
         "Fails when whole test suite is executed, as multiple execution of create_user results in failure."
     )
@@ -75,13 +79,13 @@ class TestDetectionLists:
 
     def test_add_user_risk_tags(self, connection, new_user):
         response = connection.detectionlists.add_user_risk_tags(
-            new_user["userUid"], "Flight_Risk"
+            new_user["userUid"], RiskTags.FLIGHT_RISK
         )
         assert response.status_code == 200
 
     def test_remove_user_risk_tags(self, connection, new_user):
         response = connection.detectionlists.remove_user_risk_tags(
-            new_user["userUid"], "Flight_Risk"
+            new_user["userUid"], RiskTags.FLIGHT_RISK
         )
         assert response.status_code == 200
 

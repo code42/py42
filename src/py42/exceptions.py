@@ -237,6 +237,14 @@ class Py42UserNotOnListError(Py42NotFoundError):
         super(Py42NotFoundError, self).__init__(exception, message)
 
 
+class Py42InvalidRule(Py42NotFoundError):
+    """An exception raised when the user is not on a detection list."""
+
+    def __init__(self, exception, rule_id):
+        message = u"Invalid Observer Rule ID '{}'.".format(rule_id)
+        super(Py42NotFoundError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

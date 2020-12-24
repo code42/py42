@@ -4,9 +4,9 @@ import pytest
 from requests import Response
 from requests.exceptions import HTTPError
 
+from py42.exceptions import Py42BadRequestError
 from py42.services.alertrules import AlertRulesService
 from py42.services.detectionlists.user_profile import DetectionListUserService
-from py42.exceptions import Py42BadRequestError
 
 
 MOCK_DETECTION_LIST_GET_RESPONSE = """
@@ -93,10 +93,13 @@ class TestAlertRulesService(object):
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["ruleId"] == u"rule-id"
         )
-    
+
     def test_add_user_posts_expected_data_when_user_does_not_exist_in_detectionlist(
-            self, mock_connection, user_context, mock_detection_list_user_service_create_user
-        ):
+        self,
+        mock_connection,
+        user_context,
+        mock_detection_list_user_service_create_user,
+    ):
         alert_rule_service = AlertRulesService(
             mock_connection, user_context, mock_detection_list_user_service_create_user
         )

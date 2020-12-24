@@ -1,6 +1,6 @@
+from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidRule
 from py42.exceptions import Py42NotFoundError
-from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UserNotOnListError
 from py42.services import BaseService
 

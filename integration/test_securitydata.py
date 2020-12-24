@@ -24,7 +24,7 @@ def user_uid(request):
 
 @pytest.fixture
 def file_data(request):
-    return request.config.getini('file_data')
+    return request.config.getini("file_data")
 
 
 @pytest.fixture
@@ -61,6 +61,6 @@ class TestSecurityData:
         response = connection.securitydata.stream_file_by_md5(md5_hash)
         assert str(response) == file_data
 
-    def test_stream_file_by_sha256(self, connection, sha256_hash):
+    def test_stream_file_by_sha256(self, connection, sha256_hash, file_data):
         response = connection.securitydata.stream_file_by_sha256(sha256_hash)
         assert str(response) == file_data

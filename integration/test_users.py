@@ -1,47 +1,34 @@
-from datetime import datetime
-
-
-new_user = "integration_" + str(int(datetime.now().timestamp())) + "_@test.com"
-org_uid = "890854247383106706"
-new_user_email = new_user
 role = "Desktop User"
-user_uid = 977332095391193583
-user_id = 313294
 update_org_id = 2689
 
 
-def test_create_user(connection):
-    response = connection.users.create_user(org_uid, new_user, new_user_email)
+def test_add_role(connection, new_user):
+    response = connection.users.add_role(new_user["userId"], role)
     assert response.status_code == 200
 
 
-def test_add_role(connection):
-    response = connection.users.add_role(user_id, role)
-    assert response.status_code == 200
-
-
-def test_deactivate(connection):
-    response = connection.users.deactivate(user_id)
+def test_deactivate(connection, new_user):
+    response = connection.users.deactivate(new_user["userId"])
     assert response.status_code == 201
 
 
-def test_get_by_uid(connection):
-    response = connection.users.get_by_uid(user_uid)
+def test_get_by_uid(connection, new_user):
+    response = connection.users.get_by_uid(new_user["userUid"])
     assert response.status_code == 200
 
 
-def test_get_roles(connection):
-    response = connection.users.get_roles(user_id)
+def test_get_roles(connection, new_user):
+    response = connection.users.get_roles(new_user["userId"])
     assert response.status_code == 200
 
 
-def test_unblock(connection):
-    response = connection.users.unblock(user_id)
+def test_unblock(connection, new_user):
+    response = connection.users.unblock(new_user["userId"])
     assert response.status_code == 204
 
 
-def test_block(connection):
-    response = connection.users.block(user_id)
+def test_block(connection, new_user):
+    response = connection.users.block(new_user["userId"])
     assert response.status_code == 201
 
 
@@ -51,18 +38,18 @@ def test_get_all(connection):
         assert response.status_code == 200
 
 
-def test_get_by_username(connection):
-    response = connection.users.get_by_username(new_user)
+def test_get_by_username(connection, new_user):
+    response = connection.users.get_by_username(new_user["username"])
     assert response.status_code == 200
 
 
-def test_get_scim_data_by_uid(connection):
-    response = connection.users.get_scim_data_by_uid(user_uid)
+def test_get_scim_data_by_uid(connection, new_user):
+    response = connection.users.get_scim_data_by_uid(new_user["userUid"])
     assert response.status_code == 200
 
 
-def test_change_org_assignment(connection):
-    response = connection.users.change_org_assignment(user_id, update_org_id)
+def test_change_org_assignment(connection, new_user):
+    response = connection.users.change_org_assignment(new_user["userId"], update_org_id)
     assert response.status_code == 204
 
 
@@ -76,13 +63,13 @@ def test_get_current(connection):
     assert response.status_code == 200
 
 
-def test_reactivate(connection):
-    response = connection.users.get_roles(user_id)
+def test_reactivate(connection, new_user):
+    response = connection.users.get_roles(new_user["userId"])
     assert response.status_code == 200
 
 
-def test_get_by_id(connection):
-    response = connection.users.get_by_id(user_id)
+def test_get_by_id(connection, new_user):
+    response = connection.users.get_by_id(new_user["userId"])
     assert response.status_code == 200
 
 
@@ -91,6 +78,6 @@ def test_get_page(connection):
     assert response.status_code == 200
 
 
-def test_remove_role(connection):
-    response = connection.users.remove_role(user_id, role)
+def test_remove_role(connection, new_user):
+    response = connection.users.remove_role(new_user["userId"], role)
     assert response.status_code == 204

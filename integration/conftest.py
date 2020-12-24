@@ -16,6 +16,11 @@ def pytest_addoption(parser):
     parser.addini(
         "user_uid", "The UID of the user to get plan storage information for."
     )
+    parser.addini("device_guid", "Device guid from which archival was done.")
+    parser.addini("destination_device_guid", "Device guid to which archival was done.")
+    parser.addini("archive_guid", "Guid of the archival.")
+    parser.addini("path", "Complete path of the file with filename which was archived.")
+    parser.addini("file_data", "Content of the file during archival.")
 
 
 @pytest.fixture(scope="session")

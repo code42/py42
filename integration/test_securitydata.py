@@ -23,6 +23,11 @@ def user_uid(request):
 
 
 @pytest.fixture
+def file_data(request):
+    return request.config.getini('file_data')
+
+
+@pytest.fixture
 def plan_info(connection, user_uid):
     plans = connection.securitydata.get_security_plan_storage_info_list(user_uid)
     return plans[0]
@@ -52,10 +57,10 @@ class TestSecurityData:
         response = connection.securitydata.search_file_events(query)
         assert response.status_code == 200
 
-    def test_stream_file_by_md5(self, connection, md5_hash):
+    def test_stream_file_by_md5(self, connection, md5_hash, file_data):
         response = connection.securitydata.stream_file_by_md5(md5_hash)
-        assert str(response) == "123"
+        assert str(response) == file_data
 
     def test_stream_file_by_sha256(self, connection, sha256_hash):
         response = connection.securitydata.stream_file_by_sha256(sha256_hash)
-        assert str(response) == "123"
+        assert str(response) == file_data

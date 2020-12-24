@@ -1,9 +1,13 @@
 import json
 
 import pytest
+from requests import Response
+from requests.exceptions import HTTPError
 
 from py42.services.alertrules import AlertRulesService
 from py42.services.detectionlists.user_profile import DetectionListUserService
+from py42.exceptions import Py42BadRequestError
+
 
 MOCK_DETECTION_LIST_GET_RESPONSE = """
 {"type$": "USER_V2", "tenantId": "1d71796f-af5b-4231-9d8e-df6434da4663",
@@ -24,6 +28,14 @@ def mock_detection_list_user_service(mocker, py42_response):
     py42_response.data = json.loads(MOCK_DETECTION_LIST_GET_RESPONSE)
     detection_list_user_service = mocker.MagicMock(spec=DetectionListUserService)
     detection_list_user_service.get_by_id.return_value = py42_response
+    return detection_list_user_service
+
+
+@pytest.fixture
+def mock_detection_list_user_service_create_user(mocker, py42_response, http_error):
+    detection_list_user_service = mocker.MagicMock(spec=DetectionListUserService)
+    detection_list_user_service.get_by_id.side_effect = [http_error, py42_response]
+    detection_list_user_service.create_if_not_exists.return_value = py42_response
     return detection_list_user_service
 
 
@@ -80,4 +92,23 @@ class TestAlertRulesService(object):
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
             and posted_data["ruleId"] == u"rule-id"
+        )
+    
+    def test_add_user_posts_expected_data_when_user_does_not_exist_in_detectionlist(
+            self, mock_connection, user_context, mock_detection_list_user_service_create_user
+        ):
+        alert_rule_service = AlertRulesService(
+            mock_connection, user_context, mock_detection_list_user_service_create_user
+        )
+        alert_rule_service.add_user(u"rule-id", u"user-id")
+
+        assert mock_connection.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/Rules/add-users"
+        assert (
+            posted_data["tenantId"] == user_context.get_current_tenant_id()
+            and posted_data["ruleId"] == u"rule-id"
+            and posted_data["userList"][0]["userIdFromAuthority"] == u"user-id"
+            and posted_data["userList"][0]["userAliasList"]
+            == [u"user.aliases@code42.com"]
         )

@@ -154,6 +154,13 @@ Example:
 def test_add_one_and_one_equals_two():
 ```
 
+#### Integration tests
+
+Set environment variables C42_USERNAME and C42_PW with CCA credentials. To execute integration tests:
+```bash
+$ pytest -m integration
+```
+
 ## Documentation
 
 Public functions, classes, and methods should have docstrings.

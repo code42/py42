@@ -237,8 +237,7 @@ class LegalHoldService(BaseService):
         except Py42BadRequestError as ex:
             if u"At least one criteria must be specified" in ex.response.text:
                 raise Py42LegalHoldCriteriaMissingError(ex)
-            else:
-                raise
+            raise
 
     def get_all_matter_custodians(
         self, legal_hold_uid=None, user_uid=None, user=None, active=True

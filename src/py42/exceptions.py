@@ -174,6 +174,16 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
         )
 
 
+class Py42LegalHoldCriteriaMissingError(Py42BadRequestError):
+    """An exception raised when a bad request was made to a Legal Hold endpoint."""
+
+    def __init__(self, exception):
+        super(Py42LegalHoldCriteriaMissingError, self).__init__(
+            exception,
+            u"At least one criteria must be specified; hold_membership_uid, hold_uid, user_uid, or user.",
+        )
+
+
 class Py42InvalidRuleOperationError(Py42HTTPError):
     """An exception raised when trying to add or remove users to a system rule."""
 

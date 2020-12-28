@@ -2,6 +2,7 @@ from py42 import settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42ForbiddenError
+from py42.exceptions import Py42LegalHoldCriteriaMissingError
 from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services import BaseService
@@ -194,7 +195,11 @@ class LegalHoldService(BaseService):
         active=True,
         page_size=None,
     ):
-        """Gets an individual page of Legal Hold memberships.
+        """Gets an individual page of Legal Hold memberships. One of the following
+        optional args is required to determine which custodians to retrieve:
+
+        `legal_hold_membership_uid`, `legal_hold_uid`, `user_uid`, `user`
+
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-get>`__
 
         Args:
@@ -227,7 +232,12 @@ class LegalHoldService(BaseService):
             u"pgSize": page_size,
         }
         uri = u"/api/LegalHoldMembership"
-        return self._connection.get(uri, params=params)
+        try:
+            return self._connection.get(uri, params=params)
+        except Py42BadRequestError as ex:
+            if u"At least one criteria must be specified" in ex.response.text:
+                raise Py42LegalHoldCriteriaMissingError(ex)
+            raise
 
     def get_all_matter_custodians(
         self, legal_hold_uid=None, user_uid=None, user=None, active=True

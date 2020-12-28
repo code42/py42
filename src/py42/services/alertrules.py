@@ -1,5 +1,5 @@
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42InvalidRule
+from py42.exceptions import Py42InvalidRuleError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserNotOnListError
 from py42.services import BaseService
@@ -62,7 +62,7 @@ class AlertRulesService(BaseService):
         try:
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
-            raise Py42InvalidRule(err, rule_id)
+            raise Py42InvalidRuleError(err, rule_id)
 
     def remove_user(self, rule_id, user_id):
         user_ids = [user_id]

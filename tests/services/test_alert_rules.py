@@ -4,7 +4,7 @@ import pytest
 from requests import Response
 
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42InvalidRule
+from py42.exceptions import Py42InvalidRuleError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserNotOnListError
 from py42.services.alertrules import AlertRulesService
@@ -165,7 +165,7 @@ class TestAlertRulesService(object):
             user_context,
             mock_detection_list_post_failure_when_invalid_rule_id,
         )
-        with pytest.raises(Py42InvalidRule) as e:
+        with pytest.raises(Py42InvalidRuleError) as e:
             alert_rule_service.add_user("invalid-rule-id", "user-id")
         assert "Invalid Observer Rule ID 'invalid-rule-id'." in e.value.args[0]
 

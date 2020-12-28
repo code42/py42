@@ -237,8 +237,8 @@ class Py42UserNotOnListError(Py42NotFoundError):
         super(Py42NotFoundError, self).__init__(exception, message)
 
 
-class Py42InvalidRule(Py42NotFoundError):
-    """An exception raised when the user is not on a detection list."""
+class Py42InvalidRuleError(Py42NotFoundError):
+    """An exception raised when the observer rule ID does not exist."""
 
     def __init__(self, exception, rule_id):
         message = u"Invalid Observer Rule ID '{}'.".format(rule_id)

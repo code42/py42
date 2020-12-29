@@ -60,10 +60,10 @@ class DetectionListUserService(BaseService):
         return self._connection.post(uri, json=data)
 
     def get_by_id(self, user_id):
-        """Get user details by user id.
+        """Get user details by user UID.
 
         Args:
-            user_id (str or int): Id of the user.
+            user_id (str or int): UID of the user.
 
         Returns:
             :class:`py42.response.Py42Response`

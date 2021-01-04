@@ -1,8 +1,9 @@
 class CasesClient(object):
     """A client to expose cases API.
 
-    `Rest documenation <https://default-cases.core-int.cloud.code42.com/swagger-ui.html#/Cases>`__ 
+    `Rest documenation <https://default-cases.core-int.cloud.code42.com/swagger-ui.html#/Cases>`__
     """
+
     def __init__(self, cases_service, cases_file_event_service):
         self._cases_service = cases_service
         self._file_events = cases_file_event_service

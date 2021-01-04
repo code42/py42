@@ -1,4 +1,5 @@
 import pytest
+
 from py42.clients.cases import CasesClient
 from py42.services.cases import CasesService
 from py42.services.casesfileevents import CasesFileEventsService
@@ -14,8 +15,7 @@ def mock_cases_file_event_service(mocker):
     return mocker.MagicMock(spec=CasesFileEventsService)
 
 
-class TestCasesClient():
-
+class TestCasesClient:
     def test_file_events_returns_cases_file_events_service(
         self, mock_cases_service, mock_cases_file_event_service
     ):
@@ -57,4 +57,6 @@ class TestCasesClient():
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
         cases_client.update(123456, name="new name")
-        mock_cases_service.update.assert_called_once_with(123456, "new name", "", "", "", "")
+        mock_cases_service.update.assert_called_once_with(
+            123456, "new name", "", "", "", ""
+        )

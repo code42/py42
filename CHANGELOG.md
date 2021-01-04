@@ -18,6 +18,19 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Python 3.9 support.
 
+- `sdk.cases` methods:
+    - `sdk.cases.create()`
+    - `sdk.cases.get_all()`
+    - `sdk.cases.export_summary()`
+    - `sdk.cases.get_case_by_case_number()`
+    - `sdk.case.update()`
+
+- `sdk.cases.file_events` methods for managing cases file events:
+    - `sdk.cases.file_events.add_event`
+    - `sdk.cases.file_events.delete_event`
+    - `sdk.cases.file_events.get_event`
+    - `sdk.cases.file_events.get_all_events`
+
 ## 1.10.1 - 2020-12-16
 
 ### Fixed

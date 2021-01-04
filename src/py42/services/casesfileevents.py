@@ -2,7 +2,6 @@ from py42.services import BaseService
 
 
 class CasesFileEventsService(BaseService):
-    """`Rest documenation https://default-cases.core-int.cloud.code42.com/swagger-ui.html#/Cases`__ ."""
 
     _uri_prefix = "/api/v1/case/{0}/fileevent/"
 

@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 from py42.settings import items_per_page
@@ -65,18 +67,24 @@ class CasesService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        param_dict = {
-            "assignee": assignee,
-            "createAt": created_at,
-            "updatedAt": updated_at,
-            "status": status,
-            "subject": subject,
-            "name": name,
-            "pgNum": page_number,
-            "pgSize": page_size,
-            "srtDir": sort_direction,
-            "srtKey": sort_key,
-        }
+        param_dict = OrderedDict()
+        optional_fields = [
+            ("name", name),
+            ("subject", subject),
+            ("assignee", assignee),
+            ("createdAt", created_at),
+            ("updatedAt", updated_at),
+            ("status", status),
+        ]
+        for key, value in optional_fields:
+            if value is not None:
+                param_dict[key] = value
+
+        param_dict["pgNum"] = page_number
+        param_dict["pgSize"] = page_size
+        param_dict["srtDir"] = sort_direction
+        param_dict["srtKey"] = sort_key
+
         params = "&".join(
             [
                 "{}={}".format(key, value)
@@ -127,6 +135,7 @@ class CasesService(BaseService):
             status=status,
             created_at=created_at,
             updated_at=updated_at,
+            assignee=assignee,
             subject=subject,
             page_number=page_number,
             page_size=page_size,

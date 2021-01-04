@@ -39,7 +39,7 @@ class TestCasesService:
             and post_data["findings"] == u"findings"
         )
 
-    def test_get_all_called_with_expected_url_and_params(self, mock_connection):
+    def test_get_all_called_with_expected_url_and_default_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         mock_connection.get.side_effect = [
             DUMMY_GET_ALL_TEST_RESPONSE,
@@ -52,6 +52,45 @@ class TestCasesService:
         assert (
             mock_connection.get.call_args[0][0]
             == u"/api/v1/case?pgNum=1&pgSize=500&srtDir=asc&srtKey=number"
+        )
+
+    def test_get_all_called_with_expected_url_and_params(self, mock_connection):
+        cases_service = CasesService(mock_connection)
+        mock_connection.get.side_effect = [
+            DUMMY_GET_ALL_TEST_RESPONSE,
+            DUMMY_GET_ALL_TEST_RESPONSE,
+        ]
+        for _ in cases_service.get_all(name="test-case"):
+            continue
+
+        mock_connection.get.call_count == 2
+        assert (
+            mock_connection.get.call_args[0][0]
+            == u"/api/v1/case?name=test-case&pgNum=1&pgSize=500&srtDir=asc&srtKey=number"
+        )
+
+    def test_get_all_called_with_expected_url_and_all_optional_params(
+        self, mock_connection
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.get.side_effect = [
+            DUMMY_GET_ALL_TEST_RESPONSE,
+            DUMMY_GET_ALL_TEST_RESPONSE,
+        ]
+        for _ in cases_service.get_all(
+            name="test-case",
+            subject="test",
+            assignee="user-uid",
+            updated_at="2010-04-30T001",
+            created_at="2010-01-03T002",
+            status="open",
+        ):
+            continue
+
+        mock_connection.get.call_count == 2
+        assert (
+            mock_connection.get.call_args[0][0]
+            == u"/api/v1/case?name=test-case&subject=test&assignee=user-uid&createdAt=2010-01-03T002&updatedAt=2010-04-30T001&status=open&pgNum=1&pgSize=500&srtDir=asc&srtKey=number"
         )
 
     def test_export_called_with_expected_url_and_params(self, mock_connection):

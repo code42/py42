@@ -1,9 +1,9 @@
 
 class CasesClient(object):
 
-    def __init__(self, cases_service, cases_file_event_client):
+    def __init__(self, cases_service, cases_file_event_service):
         self._cases_service = cases_service
-        self._file_events = cases_file_event_client
+        self._file_events = cases_file_event_service
 
     @property
     def file_events(self):
@@ -12,13 +12,13 @@ class CasesClient(object):
         Returns :
             :class:`py42.services.casesfileevents.FileEventsService`
         """
-        self.file_events = self._file_events
+        return self._file_events
 
     def create(self, name, subject, assignee, description, findings):
         """Creates a new case.
 
         Args:
-            name (str): Name of the case. 
+            name (str): Name of the case.
             subject (str): A subject of the case.
             assignee (str): User UID of the assignee.
             description (str): Description of the case
@@ -27,8 +27,7 @@ class CasesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-
-        self._cases_service.create(name, subject, assignee, description, findings)
+        return self._cases_service.create(name, subject, assignee, description, findings)
 
     def get_all(
         self,
@@ -63,7 +62,7 @@ class CasesClient(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cases.
         """
-        self._cases_service.get_all()
+        return self._cases_service.get_all()
 
     def get_case_by_case_number(self, case_number):
         """Retrieve case details by case number.
@@ -74,7 +73,7 @@ class CasesClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._cases_service.get_case(case_number)
+        return self._cases_service.get_case(case_number)
 
     def export(self, case_number):
         """Provides case summary to download as a PDF file.
@@ -85,7 +84,7 @@ class CasesClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._cases_service.export(case_number)
+        return self._cases_service.export(case_number)
 
     def update(self, case_number, name, subject, assignee, description, findings):
         """Updates case details for the given case number.
@@ -101,4 +100,4 @@ class CasesClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        self._cases_service.update(case_number, name, subject, assignee, description, findings)
+        return self._cases_service.update(case_number, name, subject, assignee, description, findings)

@@ -1,5 +1,5 @@
 from py42.services import BaseService
-from py42.util import get_all_pages
+from py42.services.util import get_all_pages
 
 
 class CasesService(BaseService):

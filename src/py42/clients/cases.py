@@ -75,7 +75,7 @@ class CasesClient(object):
         """
         return self._cases_service.get_case(case_number)
 
-    def export(self, case_number):
+    def export_summary(self, case_number):
         """Provides case summary to download as a PDF file.
 
         Args:
@@ -84,18 +84,20 @@ class CasesClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._cases_service.export(case_number)
+        return self._cases_service.export_summary(case_number)
 
-    def update(self, case_number, name, subject, assignee, description, findings):
+    def update(
+        self, case_number, name="", subject="", assignee="", description="", findings=""
+    ):
         """Updates case details for the given case number.
 
         Args:
             case_number (int): Case number of the case.
-            name (str): Name of the case.
-            subject (str): A subject of the case.
-            assignee (str): User UID of the assignee.
-            description (str): Description of the case
-            findings (str): Observations of the case.
+            name (str, optional): Name of the case. Defaults to empty string.
+            subject (str, optional): A subject of the case. Defaults to empty string.
+            assignee (str, optional): User UID of the assignee. Defaults to empty string.
+            description (str, optional): Description of the case. Defaults to empty string.
+            findings (str, optional): Observations of the case. Defaults to empty string.
 
         Returns:
             :class:`py42.response.Py42Response`

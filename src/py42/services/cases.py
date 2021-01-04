@@ -1,5 +1,6 @@
 from py42.services import BaseService
 from py42.services.util import get_all_pages
+from py42.settings import items_per_page
 
 
 class CasesService(BaseService):
@@ -41,7 +42,7 @@ class CasesService(BaseService):
         subject=None,
         assignee=None,
         page_number=1,
-        page_size=100,
+        page_size=items_per_page,
         sort_direction="asc",
         sort_key="number",
         **kwargs
@@ -56,7 +57,7 @@ class CasesService(BaseService):
             subject (str, optional): Filter results based on User UID of a subject of a case. Defaults to None.
             assignee (str, optional): Filter results based on User UID of an assignee of a case. Defaults to None.
             page_number (int, optional): Page number of the results. Defaults to 1.
-            page_size (int, optional): Number of results to return per page. Defaults to 100.
+            page_size (int, optional): Number of results to return per page. Defaults to 500.
             sort_direction (str, optional): The direction on which to sort the response, based on the corresponding sort key. "asc" or "desc" Defaults to "asc".
             sort_key (str, optional): Values on which the response will be sorted. Defaults to "number". Available options are
              name, number, createdAt, updatedAt, status, assigneeUsername, subjectUsername
@@ -75,7 +76,6 @@ class CasesService(BaseService):
             "pgSize": page_size,
             "srtDir": sort_direction,
             "srtKey": sort_key,
-            **kwargs,
         }
         params = "&".join(
             [
@@ -95,7 +95,7 @@ class CasesService(BaseService):
         subject=None,
         assignee=None,
         page_number=1,
-        page_size=100,
+        page_size=items_per_page,
         sort_direction="asc",
         sort_key="number",
         **kwargs
@@ -110,7 +110,7 @@ class CasesService(BaseService):
             subject (str, optional): Filter results based on User UID of a subject of a case. Defaults to None.
             assignee (str, optional): Filter results based on User UID of an assignee of a case. Defaults to None.
             page_number (int, optional): Page number of the results. Defaults to 1.
-            page_size (int, optional): Number of results to return per page. Defaults to 100.
+            page_size (int, optional): Number of results to return per page. Defaults to 500.
             sort_direction (str, optional): The direction on which to sort the response, based on the corresponding sort key. "asc" or "desc" Defaults to "asc".
             sort_key (str, optional): Values on which the response will be sorted. Defaults to "number". Available options are
              name, number, createdAt, updatedAt, status, assigneeUsername, subjectUsername
@@ -146,7 +146,7 @@ class CasesService(BaseService):
         """
         return self._connection.get("{}/{}".format(self._uri_prefix, case_number))
 
-    def export(self, case_number):
+    def export_summary(self, case_number):
         """Download case summary in a PDF file.
 
         Args:
@@ -156,18 +156,20 @@ class CasesService(BaseService):
             :class:`py42.response.Py42Response`
         """
         uri_prefix = "{}/{}/{}".format(self._uri_prefix, case_number, "export")
-        return self._connection.post(uri_prefix)
+        return self._connection.get(uri_prefix)
 
-    def update(self, case_number, name, subject, assignee, description, findings):
+    def update(
+        self, case_number, name="", subject="", assignee="", description="", findings=""
+    ):
         """Update case details for the given case number.
 
         Args:
             case_number (int): Case number of the case.
-            name (str): Name of the case.
-            subject (str): A subject of the case.
-            assignee (str): User UID of the assignee.
-            description (str): Description of the case
-            findings (str): Observations of the case.
+            name (str, optional): Name of the case. Defaults to empty string.
+            subject (str, optional): A subject of the case. Defaults to empty string.
+            assignee (str, optional): User UID of the assignee. Defaults to empty string.
+            description (str, optional): Description of the case. Defaults to empty string.
+            findings (str, optional): Observations of the case. Defaults to empty string.
 
         Returns:
             :class:`py42.response.Py42Response`

@@ -14,7 +14,7 @@ class CasesService(BaseService):
         """Creates a new case.
 
         Args:
-            name (str): Name of the case. 
+            name (str): Name of the case.
             subject (str): A subject of the case.
             assignee (str): User UID of the assignee.
             description (str): Description of the case
@@ -75,15 +75,16 @@ class CasesService(BaseService):
             "pgSize": page_size,
             "srtDir": sort_direction,
             "srtKey": sort_key,
-            **kwargs
+            **kwargs,
         }
         params = "&".join(
-            ["{0}={1}".format(key, value)
-             for key, value in zip(param_dict.keys(), param_dict.values())
-             if param_dict[key] is not None
-             ]
+            [
+                "{}={}".format(key, value)
+                for key, value in zip(param_dict.keys(), param_dict.values())
+                if param_dict[key] is not None
+            ]
         )
-        return self._connection.get("{0}?{1}".format(self._uri_prefix, params))
+        return self._connection.get("{}?{}".format(self._uri_prefix, params))
 
     def get_all(
         self,
@@ -143,7 +144,7 @@ class CasesService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._connection.get("{0}/{1}".format(self._uri_prefix, case_number))
+        return self._connection.get("{}/{}".format(self._uri_prefix, case_number))
 
     def export(self, case_number):
         """Download case summary in a PDF file.
@@ -154,7 +155,7 @@ class CasesService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri_prefix = "{0}/{1}/{2}".format(self._uri_prefix, case_number, "export")
+        uri_prefix = "{}/{}/{}".format(self._uri_prefix, case_number, "export")
         return self._connection.post(uri_prefix)
 
     def update(self, case_number, name, subject, assignee, description, findings):
@@ -179,4 +180,4 @@ class CasesService(BaseService):
             "name": name,
             "subject": subject,
         }
-        return self._connection.put("{0}/{1}".format(self._uri_prefix, case_number), data)
+        return self._connection.put("{}/{}".format(self._uri_prefix, case_number), data)

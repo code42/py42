@@ -268,7 +268,7 @@ def _init_services(main_connection, main_auth):
         userprofile=user_profile_svc,
         auditlogs=AuditLogsService(audit_logs_conn),
         cases=CasesService(main_connection),
-        casesfileevents=CasesFileEventsService(main_connection)
+        casesfileevents=CasesFileEventsService(main_connection),
     )
 
     return services, user_ctx
@@ -311,6 +311,6 @@ def _init_clients(services, connection):
         securitydata=securitydata,
         archive=archive,
         auditlogs=auditlogs,
-        cases=CasesClient(services.cases, services.casesfileevents)
+        cases=CasesClient(services.cases, services.casesfileevents),
     )
     return clients

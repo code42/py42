@@ -1,6 +1,4 @@
-
 class CasesClient(object):
-
     def __init__(self, cases_service, cases_file_event_service):
         self._cases_service = cases_service
         self._file_events = cases_file_event_service
@@ -27,7 +25,9 @@ class CasesClient(object):
         Returns
             :class:`py42.response.Py42Response`
         """
-        return self._cases_service.create(name, subject, assignee, description, findings)
+        return self._cases_service.create(
+            name, subject, assignee, description, findings
+        )
 
     def get_all(
         self,
@@ -91,7 +91,7 @@ class CasesClient(object):
 
         Args:
             case_number (int): Case number of the case.
-            name (str): Name of the case. 
+            name (str): Name of the case.
             subject (str): A subject of the case.
             assignee (str): User UID of the assignee.
             description (str): Description of the case
@@ -100,4 +100,6 @@ class CasesClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._cases_service.update(case_number, name, subject, assignee, description, findings)
+        return self._cases_service.update(
+            case_number, name, subject, assignee, description, findings
+        )

@@ -3,6 +3,7 @@ from py42.services import BaseService
 
 class CasesFileEventsService(BaseService):
     """`Rest documenation https://default-cases.core-int.cloud.code42.com/swagger-ui.html#/Cases`__ ."""
+
     _uri_prefix = "/api/v1/case/{0}/fileevent/"
 
     def __init__(self, connection):
@@ -18,7 +19,9 @@ class CasesFileEventsService(BaseService):
         Returns
             :class:`py42.response.Py42Response`
         """
-        return self._connection.post("{0}{1}".format(self._uri_prefix.format(case_number), event_id))
+        return self._connection.post(
+            "{}{}".format(self._uri_prefix.format(case_number), event_id)
+        )
 
     def get_event(self, case_number, event_id):
         """Gets information of a specified event from the case.
@@ -30,7 +33,9 @@ class CasesFileEventsService(BaseService):
         Returns
             :class:`py42.response.Py42Response`
         """
-        return self._connection.get("{0}{1}".format(self._uri_prefix.format(case_number), event_id))
+        return self._connection.get(
+            "{}{}".format(self._uri_prefix.format(case_number), event_id)
+        )
 
     def get_all_events(self, case_number):
         """Gets all events associated to the case.
@@ -53,4 +58,6 @@ class CasesFileEventsService(BaseService):
         Returns
             :class:`py42.response.Py42Response`
         """
-        return self._connection.delete("{0}{1}".format(self._uri_prefix.format(case_number), event_id))
+        return self._connection.delete(
+            "{}{}".format(self._uri_prefix.format(case_number), event_id)
+        )

@@ -17,7 +17,7 @@ from py42.services.users import UserService
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
 _USER_ID = "890973079883949999"
 
-_GET_CASE_DETAILS_RESPONSE = """
+_GET_DE_DETAILS_RESPONSE = """
 {{
     "tenantId":"{0}",
     "caseId":"697",
@@ -36,7 +36,7 @@ _GET_CASE_DETAILS_RESPONSE = """
 )
 
 
-_GET_ALL_CASES_RESPONSE = """
+_GET_ALL_RESPONSE = """
 {{
 "items": [
  {{"type$": "DEPARTING_EMPLOYEE_V2",
@@ -57,7 +57,7 @@ _GET_ALL_CASES_RESPONSE = """
     _TENANT_ID_PARAM
 )
 
-_GET_ALL_CASES_EMPTY_RESPONSE = """
+_GET_ALL_EMPTY_RESPONSE = """
 {"type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE","cases":[],"totalCount":0}
 """
 
@@ -77,13 +77,13 @@ class TestDepartingEmployeeFilters(object):
 class TestDepartingEmployeeClient(object):
     @pytest.fixture
     def mock_get_all_cases_response(self, mocker, py42_response):
-        py42_response.text = _GET_ALL_CASES_RESPONSE
+        py42_response.text = _GET_ALL_RESPONSE
 
         return py42_response
 
     @pytest.fixture
     def mock_get_all_cases_response_empty(self, mocker, py42_response):
-        py42_response.text = _GET_ALL_CASES_EMPTY_RESPONSE
+        py42_response.text = _GET_ALL_EMPTY_RESPONSE
         return py42_response
 
     @pytest.fixture

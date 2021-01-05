@@ -53,17 +53,17 @@ class CasesService(BaseService):
             name (str, optional): Filter results by case name, matches partial names. Defaults to None.
             status (str, optional): Filter results by case status, `OPEN` or `CLOSED`. Defaults to None.
             created_at (str, optional): Filter results by case creation time range, format ISO interval.
-            Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
+                Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
             updated_at (str, optional): Filter results by last updated time range, format ISO interval.
-            Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
+                Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
             subject (str, optional): Filter results based on User UID of a subject of a case. Defaults to None.
             assignee (str, optional): Filter results based on User UID of an assignee of a case. Defaults to None.
             page_number (int, optional): Page number of the results. Defaults to 1.
             page_size (int, optional): Number of results to return per page. Defaults to 500.
             sort_direction (str, optional): The direction on which to sort the response,
-            based on the corresponding sort key. `asc` or `desc`. Defaults to `asc`.
+                based on the corresponding sort key. `asc` or `desc`. Defaults to `asc`.
             sort_key (str, optional): Values on which the response will be sorted. Defaults to "number".
-            Available options are name, number, createdAt, updatedAt, status, assigneeUsername, subjectUsername.
+                Available options are name, number, createdAt, updatedAt, status, assigneeUsername, subjectUsername.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -103,17 +103,17 @@ class CasesService(BaseService):
             name (str, optional): Filter results by case name, matches partial names. Defaults to None.
             status (str, optional): Filter results by case status, `OPEN` or `CLOSED`. Defaults to None.
             created_at (str, optional): Filter results by case creation time range, format ISO interval.
-            Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
+                Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
             updated_at (str, optional): Filter results by last updated time range, format ISO interval.
-            Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
+                Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
             subject (str, optional): Filter results based on User UID of a subject of a case. Defaults to None.
             assignee (str, optional): Filter results based on User UID of an assignee of a case. Defaults to None.
             page_number (int, optional): Page number of the results. Defaults to 1.
             page_size (int, optional): Number of results to return per page. Defaults to 500.
             sort_direction (str, optional): The direction on which to sort the response,
-            based on the corresponding sort key. `asc` or `desc`. Defaults to `asc`.
+                based on the corresponding sort key. `asc` or `desc`. Defaults to `asc`.
             sort_key (str, optional): Values on which the response will be sorted. Defaults to "number".
-            Available options are name, number, createdAt, updatedAt, status, assigneeUsername, subjectUsername.
+                Available options are name, number, createdAt, updatedAt, status, assigneeUsername, subjectUsername.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -176,7 +176,7 @@ class CasesService(BaseService):
             subject (str, optional): A subject of the case. Defaults to empty string.
             assignee (str, optional): User UID of the assignee. Defaults to empty string.
             description (str, optional): Description of the case. Defaults to empty string.
-            findings (str, optional): Observations of the case. Defaults to empty string.
+            findings (str, optional): Notes on the case. Defaults to empty string.
 
         Returns:
             :class:`py42.response.Py42Response`

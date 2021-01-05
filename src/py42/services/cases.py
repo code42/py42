@@ -6,7 +6,7 @@ from py42.settings import items_per_page
 class CasesService(BaseService):
     """`Rest documentation https://default-cases.core-int.cloud.code42.com/swagger-ui.html#/Cases`__ ."""
 
-    _uri_prefix = "/api/v1/case"
+    _uri_prefix = u"/api/v1/case"
 
     def __init__(self, connection):
         super(CasesService, self).__init__(connection)
@@ -25,11 +25,11 @@ class CasesService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "assignee": assignee,
-            "description": description,
-            "findings": findings,
-            "name": name,
-            "subject": subject,
+            u"assignee": assignee,
+            u"description": description,
+            u"findings": findings,
+            u"name": name,
+            u"subject": subject,
         }
         return self._connection.post(self._uri_prefix, data)
 
@@ -43,8 +43,8 @@ class CasesService(BaseService):
         assignee=None,
         page_number=1,
         page_size=items_per_page,
-        sort_direction="asc",
-        sort_key="number",
+        sort_direction=u"asc",
+        sort_key=u"number",
         **kwargs
     ):
         """Gets an individual page of cases.
@@ -66,16 +66,16 @@ class CasesService(BaseService):
             :class:`py42.response.Py42Response`
         """
         params = {
-            "name": name,
-            "subject": subject,
-            "assignee": assignee,
-            "createdAt": created_at,
-            "updatedAt": updated_at,
-            "status": status,
-            "pgNum": page_number,
-            "pgSize": page_size,
-            "srtDir": sort_direction,
-            "srtKey": sort_key,
+            u"name": name,
+            u"subject": subject,
+            u"assignee": assignee,
+            u"createdAt": created_at,
+            u"updatedAt": updated_at,
+            u"status": status,
+            u"pgNum": page_number,
+            u"pgSize": page_size,
+            u"srtDir": sort_direction,
+            u"srtKey": sort_key,
         }
 
         return self._connection.get(self._uri_prefix, params)
@@ -90,8 +90,8 @@ class CasesService(BaseService):
         assignee=None,
         page_number=1,
         page_size=items_per_page,
-        sort_direction="asc",
-        sort_key="number",
+        sort_direction=u"asc",
+        sort_key=u"number",
         **kwargs
     ):
         """Gets all cases.
@@ -150,11 +150,11 @@ class CasesService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri_prefix = "{}/{}/{}".format(self._uri_prefix, case_number, "export")
+        uri_prefix = u"{}/{}/{}".format(self._uri_prefix, case_number, u"export")
         return self._connection.get(uri_prefix)
 
     def update(
-        self, case_number, name="", subject="", assignee="", description="", findings=""
+        self, case_number, name=u"", subject=u"", assignee=u"", description=u"", findings=u""
     ):
         """Update case details for the given case number.
 
@@ -171,10 +171,10 @@ class CasesService(BaseService):
         """
 
         data = {
-            "assignee": assignee,
-            "description": description,
-            "findings": findings,
-            "name": name,
-            "subject": subject,
+            u"assignee": assignee,
+            u"description": description,
+            u"findings": findings,
+            u"name": name,
+            u"subject": subject,
         }
-        return self._connection.put("{}/{}".format(self._uri_prefix, case_number), data)
+        return self._connection.put(u"{}/{}".format(self._uri_prefix, case_number), data)

@@ -3,7 +3,7 @@ from py42.services import BaseService
 
 class CasesFileEventsService(BaseService):
 
-    _uri_prefix = "/api/v1/case/{0}/fileevent/"
+    _uri_prefix = u"/api/v1/case/{0}/fileevent/"
 
     def __init__(self, connection):
         super(CasesFileEventsService, self).__init__(connection)
@@ -19,7 +19,7 @@ class CasesFileEventsService(BaseService):
             :class:`py42.response.Py42Response`
         """
         return self._connection.post(
-            "{}{}".format(self._uri_prefix.format(case_number), event_id)
+            u"{}{}".format(self._uri_prefix.format(case_number), event_id)
         )
 
     def get_event(self, case_number, event_id):
@@ -33,7 +33,7 @@ class CasesFileEventsService(BaseService):
             :class:`py42.response.Py42Response`
         """
         return self._connection.get(
-            "{}{}".format(self._uri_prefix.format(case_number), event_id)
+            u"{}{}".format(self._uri_prefix.format(case_number), event_id)
         )
 
     def get_all_events(self, case_number):
@@ -58,5 +58,5 @@ class CasesFileEventsService(BaseService):
             :class:`py42.response.Py42Response`
         """
         return self._connection.delete(
-            "{}{}".format(self._uri_prefix.format(case_number), event_id)
+            u"{}{}".format(self._uri_prefix.format(case_number), event_id)
         )

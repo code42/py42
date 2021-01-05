@@ -1,7 +1,7 @@
 class CasesClient(object):
     """A client to expose cases API.
 
-    `Rest documenation <https://default-cases.core-int.cloud.code42.com/swagger-ui.html#/Cases>`__
+    `Rest documentation <https://default-cases.core-int.cloud.code42.com/swagger-ui.html#/Cases>`__
     """
 
     def __init__(self, cases_service, cases_file_event_service):
@@ -10,7 +10,7 @@ class CasesClient(object):
 
     @property
     def file_events(self):
-        """A collection of method for managing cases file events.
+        """A collection of methods for managing file events associated with a given case.
 
         Returns :
             :class:`py42.services.casesfileevents.FileEventsService`
@@ -22,7 +22,7 @@ class CasesClient(object):
 
         Args:
             name (str): Name of the case.
-            subject (str): A subject of the case.
+            subject (str): User UID of a subject of a case.
             assignee (str): User UID of the assignee.
             description (str): Description of the case
             findings (str): Observations of the case.
@@ -69,7 +69,7 @@ class CasesClient(object):
         """
         return self._cases_service.get_all()
 
-    def get_case_by_case_number(self, case_number):
+    def get_case(self, case_number):
         """Retrieve case details by case number.
 
         Args:

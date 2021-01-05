@@ -29,7 +29,6 @@ class TestCasesService:
             u"name", u"subject", u"user uid", u"description", u"findings"
         )
         assert mock_connection.post.call_args[0][0] == u"/api/v1/case"
-        print(mock_connection.post.call_args[0][1])
         post_data = mock_connection.post.call_args[0][1]
         assert (
             post_data["name"] == u"name"
@@ -49,9 +48,19 @@ class TestCasesService:
             continue
 
         mock_connection.get.call_count == 2
+        assert mock_connection.get.call_args[0][0] == u"/api/v1/case"
+        params = mock_connection.get.call_args[0][1]
         assert (
-            mock_connection.get.call_args[0][0]
-            == u"/api/v1/case?pgNum=1&pgSize=500&srtDir=asc&srtKey=number"
+            params["name"] is None
+            and params["subject"] is None
+            and params["assignee"] is None
+            and params["createdAt"] is None
+            and params["updatedAt"] is None
+            and params["status"] is None
+            and params["pgNum"] == 1
+            and params["pgSize"] == 500
+            and params["srtDir"] == "asc"
+            and params["srtKey"] == "number"
         )
 
     def test_get_all_called_with_expected_url_and_params(self, mock_connection):
@@ -64,9 +73,19 @@ class TestCasesService:
             continue
 
         mock_connection.get.call_count == 2
+        assert mock_connection.get.call_args[0][0] == u"/api/v1/case"
+        params = mock_connection.get.call_args[0][1]
         assert (
-            mock_connection.get.call_args[0][0]
-            == u"/api/v1/case?name=test-case&pgNum=1&pgSize=500&srtDir=asc&srtKey=number"
+            params["name"] == "test-case"
+            and params["subject"] is None
+            and params["assignee"] is None
+            and params["createdAt"] is None
+            and params["updatedAt"] is None
+            and params["status"] is None
+            and params["pgNum"] == 1
+            and params["pgSize"] == 500
+            and params["srtDir"] == "asc"
+            and params["srtKey"] == "number"
         )
 
     def test_get_all_called_with_expected_url_and_all_optional_params(
@@ -88,9 +107,19 @@ class TestCasesService:
             continue
 
         mock_connection.get.call_count == 2
+        assert mock_connection.get.call_args[0][0] == u"/api/v1/case"
+        params = mock_connection.get.call_args[0][1]
         assert (
-            mock_connection.get.call_args[0][0]
-            == u"/api/v1/case?name=test-case&subject=test&assignee=user-uid&createdAt=2010-01-03T002&updatedAt=2010-04-30T001&status=open&pgNum=1&pgSize=500&srtDir=asc&srtKey=number"
+            params["name"] == "test-case"
+            and params["subject"] == "test"
+            and params["assignee"] == "user-uid"
+            and params["createdAt"] == "2010-01-03T002"
+            and params["updatedAt"] == "2010-04-30T001"
+            and params["status"] == "open"
+            and params["pgNum"] == 1
+            and params["pgSize"] == 500
+            and params["srtDir"] == "asc"
+            and params["srtKey"] == "number"
         )
 
     def test_export_called_with_expected_url_and_params(self, mock_connection):

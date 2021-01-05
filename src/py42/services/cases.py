@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 from py42.settings import items_per_page
@@ -18,7 +16,7 @@ class CasesService(BaseService):
 
         Args:
             name (str): Name of the case.
-            subject (str): A subject of the case.
+            subject (str): User UID of the subject of the case.
             assignee (str): User UID of the assignee.
             description (str): Description of the case
             findings (str): Observations of the case.
@@ -67,32 +65,20 @@ class CasesService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        param_dict = OrderedDict()
-        optional_fields = [
-            ("name", name),
-            ("subject", subject),
-            ("assignee", assignee),
-            ("createdAt", created_at),
-            ("updatedAt", updated_at),
-            ("status", status),
-        ]
-        for key, value in optional_fields:
-            if value is not None:
-                param_dict[key] = value
+        params = {
+            "name": name,
+            "subject": subject,
+            "assignee": assignee,
+            "createdAt": created_at,
+            "updatedAt": updated_at,
+            "status": status,
+            "pgNum": page_number,
+            "pgSize": page_size,
+            "srtDir": sort_direction,
+            "srtKey": sort_key,
+        }
 
-        param_dict["pgNum"] = page_number
-        param_dict["pgSize"] = page_size
-        param_dict["srtDir"] = sort_direction
-        param_dict["srtKey"] = sort_key
-
-        params = "&".join(
-            [
-                "{}={}".format(key, value)
-                for key, value in zip(param_dict.keys(), param_dict.values())
-                if param_dict[key] is not None
-            ]
-        )
-        return self._connection.get("{}?{}".format(self._uri_prefix, params))
+        return self._connection.get(self._uri_prefix, params)
 
     def get_all(
         self,

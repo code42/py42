@@ -37,7 +37,7 @@ class CasesFileEventsService(BaseService):
         )
 
     def get_all_events(self, case_number):
-        """Gets all events associated to the case.
+        """Gets all events associated with the given case.
 
         Args:
             case_number (int): Case number of the case.

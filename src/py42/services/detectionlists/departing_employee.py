@@ -70,21 +70,6 @@ class DepartingEmployeeService(BaseService):
                 )
                 raise
 
-    def get(self, user_id):
-        """Gets departing employee data of a user.
-        `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
-
-        Args:
-            user_id (str or int): The Code42 userUid of the user.
-
-        Returns:
-            :class:`py42.sdk.response.Py42Response`
-        """
-        tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format(u"get")
-        data = {u"userId": user_id, u"tenantId": tenant_id}
-        return self._connection.post(uri, json=data)
-
     def remove(self, user_id):
         """Removes a user from the Departing Employees list.
         `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
@@ -103,6 +88,21 @@ class DepartingEmployeeService(BaseService):
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
             raise Py42UserNotOnListError(err, user_id, u"departing-employee")
+
+    def get(self, user_id):
+        """Gets departing employee data of a user.
+        `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
+
+        Args:
+            user_id (str or int): The Code42 userUid of the user.
+
+        Returns:
+            :class:`py42.sdk.response.Py42Response`
+        """
+        tenant_id = self._user_context.get_current_tenant_id()
+        uri = self._uri_prefix.format(u"get")
+        data = {u"userId": user_id, u"tenantId": tenant_id}
+        return self._connection.post(uri, json=data)
 
     def get_all(
         self,

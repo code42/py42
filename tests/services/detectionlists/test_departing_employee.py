@@ -76,13 +76,12 @@ class TestDepartingEmployeeFilters(object):
 
 class TestDepartingEmployeeClient(object):
     @pytest.fixture
-    def mock_get_all_cases_response(self, mocker, py42_response):
+    def mock_get_all_cases_response(self, py42_response):
         py42_response.text = _GET_ALL_RESPONSE
-
         return py42_response
 
     @pytest.fixture
-    def mock_get_all_cases_response_empty(self, mocker, py42_response):
+    def mock_get_all_cases_response_empty(self, py42_response):
         py42_response.text = _GET_ALL_EMPTY_RESPONSE
         return py42_response
 
@@ -103,7 +102,7 @@ class TestDepartingEmployeeClient(object):
         return user_client
 
     @pytest.fixture
-    def mock_py42_response(self, mocker, mock_get_case_details_function, py42_response):
+    def mock_py42_response(self, mock_get_case_details_function, py42_response):
         py42_response.test = mock_get_case_details_function.text
 
         return py42_response

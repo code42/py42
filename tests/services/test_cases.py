@@ -47,7 +47,7 @@ class TestCasesService:
         for _ in cases_service.get_all():
             continue
 
-        mock_connection.get.call_count == 2
+        assert mock_connection.get.call_count == 2
         assert mock_connection.get.call_args[0][0] == u"/api/v1/case"
         params = mock_connection.get.call_args[0][1]
         assert (
@@ -72,7 +72,7 @@ class TestCasesService:
         for _ in cases_service.get_all(name="test-case"):
             continue
 
-        mock_connection.get.call_count == 2
+        assert mock_connection.get.call_count == 2
         assert mock_connection.get.call_args[0][0] == u"/api/v1/case"
         params = mock_connection.get.call_args[0][1]
         assert (
@@ -106,7 +106,7 @@ class TestCasesService:
         ):
             continue
 
-        mock_connection.get.call_count == 2
+        assert mock_connection.get.call_count == 2
         assert mock_connection.get.call_args[0][0] == u"/api/v1/case"
         params = mock_connection.get.call_args[0][1]
         assert (

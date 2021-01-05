@@ -36,7 +36,7 @@ class TestCasesClient:
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
         cases_client.get_all()
-        mock_cases_service.get_all.call_count == 1
+        assert mock_cases_service.get_all.call_count == 1
 
     def test_get_case_calls_cases_service_with_expected_params(
         self, mock_cases_service, mock_cases_file_event_service

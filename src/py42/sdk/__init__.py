@@ -195,7 +195,7 @@ class SDKClient(object):
 
     @property
     def auditlogs(self):
-        """A collections of methods for retrieving audit logs.
+        """A collection of methods for retrieving audit logs.
 
         Returns:
             :class:`py42.services.auditlogs.AuditLogsService`
@@ -204,7 +204,8 @@ class SDKClient(object):
 
     @property
     def cases(self):
-        """A collection of methods and properties for managing cases and cases events.
+        """A collection of methods and properties for managing cases and file events
+        associated with the case.
 
         Returns:
             :class:`py42.clients.cases.CaseClient`

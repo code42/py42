@@ -4,6 +4,8 @@ from py42.clients.cases import CasesClient
 from py42.services.cases import CasesService
 from py42.services.casesfileevents import CasesFileEventsService
 
+_TEST_CASE_NUMBER = 123456
+
 
 @pytest.fixture
 def mock_cases_service(mocker):
@@ -42,21 +44,21 @@ class TestCasesClient:
         self, mock_cases_service, mock_cases_file_event_service
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
-        cases_client.get_case(123456)
-        mock_cases_service.get_case.assert_called_once_with(123456)
+        cases_client.get_case(_TEST_CASE_NUMBER)
+        mock_cases_service.get_case.assert_called_once_with(_TEST_CASE_NUMBER)
 
     def test_export_calls_cases_service_with_expected_params(
         self, mock_cases_service, mock_cases_file_event_service
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
-        cases_client.export_summary(123456)
-        mock_cases_service.export_summary.assert_called_once_with(123456)
+        cases_client.export_summary(_TEST_CASE_NUMBER)
+        mock_cases_service.export_summary.assert_called_once_with(_TEST_CASE_NUMBER)
 
     def test_update_calls_cases_service_with_expected_params(
         self, mock_cases_service, mock_cases_file_event_service
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
-        cases_client.update(123456, name="new name")
+        cases_client.update(_TEST_CASE_NUMBER, name="new name")
         mock_cases_service.update.assert_called_once_with(
-            123456, "new name", "", "", "", ""
+            _TEST_CASE_NUMBER, "new name", "", "", "", ""
         )

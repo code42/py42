@@ -1,6 +1,12 @@
+import pytest
+from requests import Response
+
+from py42.response import Py42Response
 from py42.services.cases import CasesService
 
-DUMMY_GET_ALL_TEST_RESPONSE = {
+
+GET_ALL_TEST_RESPONSE = """{"cases":["test"], "totalCount":10000}"""
+DUMMY_GET_ALL_TEST_RESPONSE = """{
     "cases": [
         {
             "assignee": "string",
@@ -18,11 +24,21 @@ DUMMY_GET_ALL_TEST_RESPONSE = {
             "updatedAt": "2021-01-04T08:09:58.832Z",
         }
     ],
-    "totalCount": 0,
-}
+    "totalCount": 1000,
+}"""
+
+_TEST_CASE_NUMBER = 123456
+_BASE_URI = u"/api/v1/case"
 
 
 class TestCasesService:
+    @pytest.fixture
+    def mock_case_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.text = GET_ALL_TEST_RESPONSE
+        return Py42Response(response)
+
     def test_create_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         cases_service.create(
@@ -38,63 +54,67 @@ class TestCasesService:
             and post_data["findings"] == u"findings"
         )
 
-    def test_get_all_called_with_expected_url_and_default_params(self, mock_connection):
+    def test_get_all_called_with_expected_url_and_default_params(
+        self, mock_connection, mock_case_response
+    ):
         cases_service = CasesService(mock_connection)
+
         mock_connection.get.side_effect = [
-            DUMMY_GET_ALL_TEST_RESPONSE,
-            DUMMY_GET_ALL_TEST_RESPONSE,
+            mock_case_response,
+            mock_case_response,
         ]
         for _ in cases_service.get_all():
-            continue
+            pass
 
-        assert mock_connection.get.call_count == 2
-        assert mock_connection.get.call_args[0][0] == u"/api/v1/case"
-        params = mock_connection.get.call_args[0][1]
-        assert (
-            params["name"] is None
-            and params["subject"] is None
-            and params["assignee"] is None
-            and params["createdAt"] is None
-            and params["updatedAt"] is None
-            and params["status"] is None
-            and params["pgNum"] == 1
-            and params["pgSize"] == 500
-            and params["srtDir"] == "asc"
-            and params["srtKey"] == "number"
-        )
+        # assert mock_connection.get.call_count == 2
+        assert mock_connection.get.call_args[0][0] == _BASE_URI
+        expected_params = {
+            "name": None,
+            "subject": None,
+            "assignee": None,
+            "createdAt": None,
+            "updatedAt": None,
+            "status": None,
+            "pgNum": 1,
+            "pgSize": 500,
+            "srtDir": "asc",
+            "srtKey": "number",
+        }
+        mock_connection.get.assert_called_once_with(_BASE_URI, params=expected_params)
 
-    def test_get_all_called_with_expected_url_and_params(self, mock_connection):
+    def test_get_all_called_with_expected_url_and_params(
+        self, mock_connection, mock_case_response
+    ):
         cases_service = CasesService(mock_connection)
         mock_connection.get.side_effect = [
-            DUMMY_GET_ALL_TEST_RESPONSE,
-            DUMMY_GET_ALL_TEST_RESPONSE,
+            mock_case_response,
+            mock_case_response,
         ]
         for _ in cases_service.get_all(name="test-case"):
             continue
 
-        assert mock_connection.get.call_count == 2
-        assert mock_connection.get.call_args[0][0] == u"/api/v1/case"
-        params = mock_connection.get.call_args[0][1]
-        assert (
-            params["name"] == "test-case"
-            and params["subject"] is None
-            and params["assignee"] is None
-            and params["createdAt"] is None
-            and params["updatedAt"] is None
-            and params["status"] is None
-            and params["pgNum"] == 1
-            and params["pgSize"] == 500
-            and params["srtDir"] == "asc"
-            and params["srtKey"] == "number"
-        )
+        # assert mock_connection.get.call_count == 2
+        expected_params = {
+            "name": "test-case",
+            "subject": None,
+            "assignee": None,
+            "createdAt": None,
+            "updatedAt": None,
+            "status": None,
+            "pgNum": 1,
+            "pgSize": 500,
+            "srtDir": "asc",
+            "srtKey": "number",
+        }
+        mock_connection.get.assert_called_once_with(_BASE_URI, params=expected_params)
 
     def test_get_all_called_with_expected_url_and_all_optional_params(
-        self, mock_connection
+        self, mock_connection, mock_case_response
     ):
         cases_service = CasesService(mock_connection)
         mock_connection.get.side_effect = [
-            DUMMY_GET_ALL_TEST_RESPONSE,
-            DUMMY_GET_ALL_TEST_RESPONSE,
+            mock_case_response,
+            mock_case_response,
         ]
         for _ in cases_service.get_all(
             name="test-case",
@@ -106,38 +126,43 @@ class TestCasesService:
         ):
             continue
 
-        assert mock_connection.get.call_count == 2
-        assert mock_connection.get.call_args[0][0] == u"/api/v1/case"
-        params = mock_connection.get.call_args[0][1]
-        assert (
-            params["name"] == "test-case"
-            and params["subject"] == "test"
-            and params["assignee"] == "user-uid"
-            and params["createdAt"] == "2010-01-03T002"
-            and params["updatedAt"] == "2010-04-30T001"
-            and params["status"] == "open"
-            and params["pgNum"] == 1
-            and params["pgSize"] == 500
-            and params["srtDir"] == "asc"
-            and params["srtKey"] == "number"
-        )
+        # assert mock_connection.get.call_count == 2
+        expected_params = {
+            "name": "test-case",
+            "subject": "test",
+            "assignee": "user-uid",
+            "createdAt": "2010-01-03T002",
+            "updatedAt": "2010-04-30T001",
+            "status": "open",
+            "pgNum": 1,
+            "pgSize": 500,
+            "srtDir": "asc",
+            "srtKey": "number",
+        }
+        mock_connection.get.assert_called_once_with(_BASE_URI, params=expected_params)
 
     def test_export_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
-        cases_service.export_summary(123456)
-        assert mock_connection.get.call_args[0][0] == u"/api/v1/case/123456/export"
+        cases_service.export_summary(_TEST_CASE_NUMBER)
+        assert mock_connection.get.call_args[0][0] == u"/api/v1/case/{}/export".format(
+            _TEST_CASE_NUMBER
+        )
 
     def test_get_case_by_case_number_called_with_expected_url_and_params(
         self, mock_connection
     ):
         cases_service = CasesService(mock_connection)
-        cases_service.get_case(123456)
-        assert mock_connection.get.call_args[0][0] == u"/api/v1/case/123456"
+        cases_service.get_case(_TEST_CASE_NUMBER)
+        assert mock_connection.get.call_args[0][0] == u"/api/v1/case/{}".format(
+            _TEST_CASE_NUMBER
+        )
 
     def test_update_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
-        cases_service.update(123456, findings=u"x")
-        assert mock_connection.put.call_args[0][0] == u"/api/v1/case/123456"
+        cases_service.update(_TEST_CASE_NUMBER, findings=u"x")
+        assert mock_connection.put.call_args[0][0] == u"/api/v1/case/{}".format(
+            _TEST_CASE_NUMBER
+        )
         post_data = mock_connection.put.call_args[0][1]
         assert (
             post_data["name"] == u""

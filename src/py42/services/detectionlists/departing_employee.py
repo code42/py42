@@ -97,7 +97,7 @@ class DepartingEmployeeService(BaseService):
             user_id (str or int): The Code42 userUid of the user.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"get")
@@ -197,7 +197,7 @@ class DepartingEmployeeService(BaseService):
                 Date is treated as UTC.
 
         Returns:
-            :class:`py42.sdk.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
 
         tenant_id = self._user_context.get_current_tenant_id()

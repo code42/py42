@@ -17,48 +17,38 @@ from py42.services.users import UserService
 _TENANT_ID_PARAM = "22222222-2222-2222-2222-222222222222"
 _USER_ID = "890973079883949999"
 
-_GET_CASE_DETAILS_RESPONSE = """
-{{
-    "tenantId":"{0}",
-    "caseId":"697",
-    "userUid":"921286907298179098",
-    "userName":"test.example@example.com",
-    "displayName":"Test Testerson",
-    "notes":"notes notes notes",
-    "createdAt":"2020-02-14T20:11:29.5563480Z",
-    "status":"OPEN",
-    "cloudUsernames":["test.testerson+partners@example.com","test.s@example.com"],
-    "departureDate":"2020-02-13",
-    "alertsEnabled":true
-}}
-""".format(
-    TENANT_ID_FROM_RESPONSE
-)
 
-
-_GET_ALL_CASES_RESPONSE = """
+_GET_ALL_RESPONSE = """
 {{
-"items": [
- {{"type$": "DEPARTING_EMPLOYEE_V2",
- "tenantId": {0},
- "userId": "890973079883949999",
- "userName": "test@example.com",
- "displayName": "Name",
- "notes": "",
- "createdAt": "2019-10-25T13:31:14.1199010Z",
- "status": "OPEN",
- "cloudUsernames": ["test@example.com"],
- "totalBytes": 139856482,
- "numEvents": 11
-}}],
-"totalCount": 1
+  "items": [
+    {{
+      "type$": "DEPARTING_EMPLOYEE_V2",
+      "tenantId": "{0}",
+      "userId": "890973079883949999",
+      "userName": "test@example.com",
+      "displayName": "Name",
+      "notes": "",
+      "createdAt": "2019-10-25T13:31:14.1199010Z",
+      "status": "OPEN",
+      "cloudUsernames": [
+        "test@example.com"
+      ],
+      "totalBytes": 139856482,
+      "numEvents": 11
+    }}
+  ],
+  "totalCount": 1
 }}
 """.format(
     _TENANT_ID_PARAM
 )
 
-_GET_ALL_CASES_EMPTY_RESPONSE = """
-{"type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE","cases":[],"totalCount":0}
+_GET_ALL_EMPTY_RESPONSE = """
+{
+    "type$":"DEPARTING_EMPLOYEE_SEARCH_RESPONSE",
+    "items":[],
+    "totalCount":0
+}
 """
 
 
@@ -76,14 +66,13 @@ class TestDepartingEmployeeFilters(object):
 
 class TestDepartingEmployeeClient(object):
     @pytest.fixture
-    def mock_get_all_cases_response(self, mocker, py42_response):
-        py42_response.text = _GET_ALL_CASES_RESPONSE
-
+    def mock_get_all_response(self, py42_response):
+        py42_response.text = _GET_ALL_RESPONSE
         return py42_response
 
     @pytest.fixture
-    def mock_get_all_cases_response_empty(self, mocker, py42_response):
-        py42_response.text = _GET_ALL_CASES_EMPTY_RESPONSE
+    def mock_get_all_response_empty(self, py42_response):
+        py42_response.text = _GET_ALL_EMPTY_RESPONSE
         return py42_response
 
     @pytest.fixture
@@ -102,12 +91,6 @@ class TestDepartingEmployeeClient(object):
         mock_connection.post.return_value = py42_response
         return user_client
 
-    @pytest.fixture
-    def mock_py42_response(self, mocker, mock_get_case_details_function, py42_response):
-        py42_response.test = mock_get_case_details_function.text
-
-        return py42_response
-
     @pytest.mark.parametrize(
         "departing_date",
         [("2022-12-20"), (datetime.strptime("2022-12-20", "%Y-%m-%d"))],
@@ -116,7 +99,7 @@ class TestDepartingEmployeeClient(object):
         self,
         mock_connection,
         user_context,
-        mock_get_all_cases_response,
+        mock_get_all_response,
         mock_detection_list_user_client,
         departing_date,
     ):
@@ -126,7 +109,7 @@ class TestDepartingEmployeeClient(object):
         user_context.get_current_tenant_id.return_value = _TENANT_ID_PARAM
         # Return value should have been set based on the arguments passed
         # in add, here however as we are mocking it, it doesn't matter. Can be refactored
-        mock_connection.post.return_value = mock_get_all_cases_response
+        mock_connection.post.return_value = mock_get_all_response
         client.add(_USER_ID, departing_date)
 
         # Have to convert the request data to a dict because
@@ -164,13 +147,13 @@ class TestDepartingEmployeeClient(object):
         self,
         mock_connection,
         user_context,
-        mock_get_all_cases_response_empty,
+        mock_get_all_response_empty,
         mock_detection_list_user_client,
     ):
         client = DepartingEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
         )
-        mock_connection.post.return_value = mock_get_all_cases_response_empty
+        mock_connection.post.return_value = mock_get_all_response_empty
         client.remove("999")
 
         # Have to convert the request data to a dict because
@@ -186,46 +169,15 @@ class TestDepartingEmployeeClient(object):
         self,
         mock_connection,
         user_context,
-        mock_get_all_cases_response,
+        mock_get_all_response,
         mock_detection_list_user_client,
     ):
         client = DepartingEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
         )
-        mock_connection.post.return_value = mock_get_all_cases_response
+        mock_connection.post.return_value = mock_get_all_response
         for _ in client.get_all():
             break
-        first_call = mock_connection.post.call_args_list[0]
-        posted_data = first_call[1]["json"]
-        assert (
-            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
-            and posted_data["pgSize"] == 100
-            and posted_data["pgNum"] == 1
-            and posted_data["filterType"] == "OPEN"
-            and posted_data["srtKey"] == "CREATED_AT"
-            and posted_data["srtDirection"] == "DESC"
-        )
-        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/search"
-        assert mock_connection.post.call_count == 1
-
-    def test_get_page_posts_data_to_expected_url(
-        self,
-        mock_connection,
-        user_context,
-        mock_get_all_cases_response,
-        mock_detection_list_user_client,
-    ):
-        client = DepartingEmployeeService(
-            mock_connection, user_context, mock_detection_list_user_client
-        )
-        client.get_page(
-            filter_type="OPEN",
-            sort_key="CREATED_AT",
-            sort_direction="DESC",
-            page_num=1,
-            page_size=100,
-        )
-        mock_connection.post.return_value = mock_get_all_cases_response
         first_call = mock_connection.post.call_args_list[0]
         posted_data = first_call[1]["json"]
         assert (
@@ -266,17 +218,68 @@ class TestDepartingEmployeeClient(object):
             and posted_data["srtDirection"] == "DESC"
         )
 
-    def test_set_alerts_enabled_posts_expected_data(
+    def test_get_posts_expected_data_to_expected_url(
         self,
         mock_connection,
         user_context,
-        mock_get_all_cases_response_empty,
+        mock_get_all_response_empty,
         mock_detection_list_user_client,
     ):
         client = DepartingEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
         )
-        mock_connection.post.return_value = mock_get_all_cases_response_empty
+        mock_connection.post.return_value = mock_get_all_response_empty
+        client.get("999")
+
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/get"
+        assert (
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and posted_data["userId"] == "999"
+        )
+
+    def test_get_page_posts_data_to_expected_url(
+        self,
+        mock_connection,
+        user_context,
+        mock_get_all_response,
+        mock_detection_list_user_client,
+    ):
+        client = DepartingEmployeeService(
+            mock_connection, user_context, mock_detection_list_user_client
+        )
+        client.get_page(
+            filter_type="OPEN",
+            sort_key="CREATED_AT",
+            sort_direction="DESC",
+            page_num=1,
+            page_size=100,
+        )
+        mock_connection.post.return_value = mock_get_all_response
+        first_call = mock_connection.post.call_args_list[0]
+        posted_data = first_call[1]["json"]
+        assert (
+            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and posted_data["pgSize"] == 100
+            and posted_data["pgNum"] == 1
+            and posted_data["filterType"] == "OPEN"
+            and posted_data["srtKey"] == "CREATED_AT"
+            and posted_data["srtDirection"] == "DESC"
+        )
+        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/search"
+        assert mock_connection.post.call_count == 1
+
+    def test_set_alerts_enabled_posts_expected_data(
+        self,
+        mock_connection,
+        user_context,
+        mock_get_all_response_empty,
+        mock_detection_list_user_client,
+    ):
+        client = DepartingEmployeeService(
+            mock_connection, user_context, mock_detection_list_user_client
+        )
+        mock_connection.post.return_value = mock_get_all_response_empty
         client.set_alerts_enabled()
 
         posted_data = mock_connection.post.call_args[1]["json"]
@@ -289,62 +292,29 @@ class TestDepartingEmployeeClient(object):
         self,
         mock_connection,
         user_context,
-        mock_get_all_cases_response_empty,
+        mock_get_all_response_empty,
         mock_detection_list_user_client,
     ):
         client = DepartingEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
         )
-        mock_connection.post.return_value = mock_get_all_cases_response_empty
+        mock_connection.post.return_value = mock_get_all_response_empty
         client.set_alerts_enabled()
         assert (
             mock_connection.post.call_args[0][0] == "v2/departingemployee/setalertstate"
         )
 
-    def test_get_posts_expected_data(
-        self,
-        mock_connection,
-        user_context,
-        mock_get_all_cases_response_empty,
-        mock_detection_list_user_client,
-    ):
-        client = DepartingEmployeeService(
-            mock_connection, user_context, mock_detection_list_user_client
-        )
-        mock_connection.post.return_value = mock_get_all_cases_response_empty
-        client.get("999")
-
-        posted_data = mock_connection.post.call_args[1]["json"]
-        assert (
-            posted_data["tenantId"] == TENANT_ID_FROM_RESPONSE
-            and posted_data["userId"] == "999"
-        )
-
-    def test_get_posts_to_expected_url(
-        self,
-        mock_connection,
-        user_context,
-        mock_get_all_cases_response_empty,
-        mock_detection_list_user_client,
-    ):
-        client = DepartingEmployeeService(
-            mock_connection, user_context, mock_detection_list_user_client
-        )
-        mock_connection.post.return_value = mock_get_all_cases_response_empty
-        client.get("999")
-        assert mock_connection.post.call_args[0][0] == "v2/departingemployee/get"
-
     def test_update_posts_expected_data(
         self,
         mock_connection,
         user_context,
-        mock_get_all_cases_response,
+        mock_get_all_response,
         mock_detection_list_user_client,
     ):
         client = DepartingEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
         )
-        mock_connection.post.return_value = mock_get_all_cases_response
+        mock_connection.post.return_value = mock_get_all_response
         client.update_departure_date(_USER_ID, "2020-12-20")
 
         # Have to convert the request data to a dict because
@@ -369,13 +339,13 @@ class TestDepartingEmployeeClient(object):
         self,
         mock_connection,
         user_context,
-        mock_get_all_cases_response,
+        mock_get_all_response,
         mock_detection_list_user_client,
     ):
         client = DepartingEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
         )
-        mock_connection.post.return_value = mock_get_all_cases_response
+        mock_connection.post.return_value = mock_get_all_response
         dt = datetime.strptime("2020-12-20", "%Y-%m-%d")
         client.update_departure_date(_USER_ID, dt)
 

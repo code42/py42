@@ -72,7 +72,19 @@ class CasesClient(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cases.
         """
-        return self._cases_service.get_all()
+        return self._cases_service.get_all(
+            name=name,
+            status=status,
+            created_at=created_at,
+            updated_at=updated_at,
+            subject=subject,
+            assignee=assignee,
+            page_number=page_number,
+            page_size=page_size,
+            sort_direction=sort_direction,
+            sort_key=sort_key,
+            **kwargs
+        )
 
     def get_case(self, case_number):
         """Retrieve case details by case number.

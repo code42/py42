@@ -43,7 +43,7 @@ class CasesService(BaseService):
         updated_at=None,
         subject=None,
         assignee=None,
-        page_number=1,
+        page_num=1,
         page_size=items_per_page,
         sort_direction=u"asc",
         sort_key=u"number",
@@ -60,7 +60,7 @@ class CasesService(BaseService):
                 Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
             subject (str, optional): Filter results based on User UID of a subject of a case. Defaults to None.
             assignee (str, optional): Filter results based on User UID of an assignee of a case. Defaults to None.
-            page_number (int, optional): Page number of the results. Defaults to 1.
+            page_num (int, optional): Page number of the results. Defaults to 1.
             page_size (int, optional): Number of results to return per page. Defaults to 500.
             sort_direction (str, optional): The direction on which to sort the response,
                 based on the corresponding sort key. `asc` or `desc`. Defaults to `asc`.
@@ -77,7 +77,7 @@ class CasesService(BaseService):
             u"createdAt": created_at,
             u"updatedAt": updated_at,
             u"status": status,
-            u"pgNum": page_number,
+            u"pgNum": page_num,
             u"pgSize": page_size,
             u"srtDir": sort_direction,
             u"srtKey": sort_key,
@@ -121,7 +121,6 @@ class CasesService(BaseService):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cases.
         """
-
         return get_all_pages(
             self.get_page,
             u"cases",
@@ -133,7 +132,7 @@ class CasesService(BaseService):
             subject=subject,
             page_number=page_number,
             page_size=page_size,
-            sort_dir=sort_direction,
+            sort_direction=sort_direction,
             sort_key=sort_key,
             **kwargs
         )

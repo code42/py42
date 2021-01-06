@@ -221,6 +221,7 @@ def _init_services(main_connection, main_auth):
     employee_case_mgmt_key = u"employeecasemanagementV2-API_URL"
     kv_prefix = u"simple-key-value-store"
     audit_logs_key = u"AUDIT-LOG_API-URL"
+    cases_key = u"CASES_API-URL"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
     kv_service = KeyValueStoreService(kv_connection)
@@ -248,6 +249,7 @@ def _init_services(main_connection, main_auth):
     file_event_svc = FileEventService(file_events_conn)
     user_ctx = UserContext(administration_svc)
     user_profile_svc = DetectionListUserService(ecm_conn, user_ctx, user_svc)
+    cases_conn = Connection.from_microservice_key(kv_service, cases_key, auth=main_auth)
 
     services = Services(
         administration=administration_svc,
@@ -268,7 +270,7 @@ def _init_services(main_connection, main_auth):
         highriskemployee=HighRiskEmployeeService(ecm_conn, user_ctx, user_profile_svc),
         userprofile=user_profile_svc,
         auditlogs=AuditLogsService(audit_logs_conn),
-        cases=CasesService(main_connection),
+        cases=CasesService(cases_conn),
         casesfileevents=CasesFileEventsService(main_connection),
     )
 

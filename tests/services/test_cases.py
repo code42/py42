@@ -1,31 +1,13 @@
 import pytest
 from requests import Response
 
+import py42.settings
 from py42.response import Py42Response
 from py42.services.cases import CasesService
 
 
-GET_ALL_TEST_RESPONSE = """{"cases":["test"], "totalCount":10000}"""
-DUMMY_GET_ALL_TEST_RESPONSE = """{
-    "cases": [
-        {
-            "assignee": "string",
-            "assigneeUsername": "string",
-            "createdAt": "2021-01-04T08:09:58.832Z",
-            "createdByUserUid": "string",
-            "createdByUsername": "string",
-            "lastModifiedByUserUid": "string",
-            "lastModifiedByUsername": "string",
-            "name": "string",
-            "number": 0,
-            "status": "OPEN",
-            "subject": "string",
-            "subjectUsername": "string",
-            "updatedAt": "2021-01-04T08:09:58.832Z",
-        }
-    ],
-    "totalCount": 1000,
-}"""
+GET_ALL_TEST_RESPONSE = """{"cases":["test"], "totalCount":1}"""
+EMPTY_GET_ALL_TEST_RESPONSE = """{"cases": [], "totalCount":0}"""
 
 _TEST_CASE_NUMBER = 123456
 _BASE_URI = u"/api/v1/case"
@@ -39,35 +21,54 @@ class TestCasesService:
         response.text = GET_ALL_TEST_RESPONSE
         return Py42Response(response)
 
+    @pytest.fixture
+    def mock_case_empty_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.text = EMPTY_GET_ALL_TEST_RESPONSE
+        return Py42Response(response)
+
     def test_create_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         cases_service.create(
             u"name", u"subject", u"user uid", u"description", u"findings"
         )
         assert mock_connection.post.call_args[0][0] == u"/api/v1/case"
-        post_data = mock_connection.post.call_args[0][1]
-        assert (
-            post_data["name"] == u"name"
-            and post_data["subject"] == u"subject"
-            and post_data["assignee"] == u"user uid"
-            and post_data["description"] == u"description"
-            and post_data["findings"] == u"findings"
-        )
+        data = {
+            "name": u"name",
+            "subject": u"subject",
+            "assignee": u"user uid",
+            "description": u"description",
+            "findings": u"findings",
+        }
+        mock_connection.post.assert_called_once_with(_BASE_URI, json=data)
 
-    def test_get_all_called_with_expected_url_and_default_params(
-        self, mock_connection, mock_case_response
+    def test_get_all_called_expected_number_of_times(
+        self, mock_connection, mock_case_response, mock_case_empty_response
     ):
         cases_service = CasesService(mock_connection)
+        py42.settings.items_per_page = 1
+        items = [mock_case_response, mock_case_empty_response]
 
-        mock_connection.get.side_effect = [
-            mock_case_response,
-            mock_case_response,
-        ]
+        mock_connection.get.side_effect = items
         for _ in cases_service.get_all():
             pass
 
-        # assert mock_connection.get.call_count == 2
-        assert mock_connection.get.call_args[0][0] == _BASE_URI
+        assert mock_connection.get.call_count == 2
+        py42.settings.items_per_page = 500
+
+    def test_get_all_called_with_expected_url_and_default_params(
+        self, mock_connection, mock_case_response, mock_case_empty_response
+    ):
+        cases_service = CasesService(mock_connection)
+        items = [
+            mock_case_response,
+        ]
+
+        mock_connection.get.side_effect = items
+        for _ in cases_service.get_all():
+            pass
+
         expected_params = {
             "name": None,
             "subject": None,
@@ -93,7 +94,6 @@ class TestCasesService:
         for _ in cases_service.get_all(name="test-case"):
             continue
 
-        # assert mock_connection.get.call_count == 2
         expected_params = {
             "name": "test-case",
             "subject": None,
@@ -126,7 +126,6 @@ class TestCasesService:
         ):
             continue
 
-        # assert mock_connection.get.call_count == 2
         expected_params = {
             "name": "test-case",
             "subject": "test",
@@ -158,14 +157,13 @@ class TestCasesService:
     def test_update_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         cases_service.update(_TEST_CASE_NUMBER, findings=u"x")
-        assert mock_connection.put.call_args[0][0] == u"/api/v1/case/{}".format(
-            _TEST_CASE_NUMBER
-        )
-        post_data = mock_connection.put.call_args[0][1]
-        assert (
-            post_data["name"] is None
-            and post_data["subject"] is None
-            and post_data["assignee"] is None
-            and post_data["description"] is None
-            and post_data["findings"] == u"x"
+        data = {
+            "name": None,
+            "subject": None,
+            "assignee": None,
+            "description": None,
+            "findings": u"x",
+        }
+        mock_connection.put.assert_called_once_with(
+            u"/api/v1/case/{}".format(_TEST_CASE_NUMBER), json=data
         )

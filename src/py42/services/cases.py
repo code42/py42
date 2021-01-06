@@ -1,6 +1,6 @@
+from py42 import settings
 from py42.services import BaseService
 from py42.services.util import get_all_pages
-from py42.settings import items_per_page
 
 
 class CasesService(BaseService):
@@ -20,7 +20,7 @@ class CasesService(BaseService):
             name (str): Name of the case.
             subject (str, optional): User UID of the subject of the case.
             assignee (str, optional): User UID of the assignee.
-            description (str, optional): Description of the case
+            description (str, optional): Description of the case.
             findings (str, optional): Notes on the case.
 
         Returns
@@ -33,7 +33,7 @@ class CasesService(BaseService):
             u"name": name,
             u"subject": subject,
         }
-        return self._connection.post(self._uri_prefix, data)
+        return self._connection.post(self._uri_prefix, json=data)
 
     def get_page(
         self,
@@ -44,7 +44,7 @@ class CasesService(BaseService):
         subject=None,
         assignee=None,
         page_num=1,
-        page_size=items_per_page,
+        page_size=None,
         sort_direction=u"asc",
         sort_key=u"number",
         **kwargs
@@ -70,6 +70,7 @@ class CasesService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        page_size = page_size or settings.items_per_page
         params = {
             u"name": name,
             u"subject": subject,
@@ -94,7 +95,7 @@ class CasesService(BaseService):
         subject=None,
         assignee=None,
         page_number=1,
-        page_size=items_per_page,
+        page_size=None,
         sort_direction=u"asc",
         sort_key=u"number",
         **kwargs
@@ -184,12 +185,12 @@ class CasesService(BaseService):
         """
 
         data = {
+            u"name": name,
             u"assignee": assignee,
             u"description": description,
             u"findings": findings,
-            u"name": name,
             u"subject": subject,
         }
         return self._connection.put(
-            u"{}/{}".format(self._uri_prefix, case_number), data
+            u"{}/{}".format(self._uri_prefix, case_number), json=data
         )

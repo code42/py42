@@ -11,15 +11,17 @@ class CasesService(BaseService):
     def __init__(self, connection):
         super(CasesService, self).__init__(connection)
 
-    def create(self, name, subject, assignee, description, findings):
+    def create(
+        self, name, subject=None, assignee=None, description=None, findings=None
+    ):
         """Creates a new case.
 
         Args:
             name (str): Name of the case.
-            subject (str): User UID of the subject of the case.
-            assignee (str): User UID of the assignee.
-            description (str): Description of the case
-            findings (str): Notes on the case.
+            subject (str, optional): User UID of the subject of the case.
+            assignee (str, optional): User UID of the assignee.
+            description (str, optional): Description of the case
+            findings (str, optional): Notes on the case.
 
         Returns
             :class:`py42.response.Py42Response`
@@ -162,11 +164,11 @@ class CasesService(BaseService):
     def update(
         self,
         case_number,
-        name=u"",
-        subject=u"",
-        assignee=u"",
-        description=u"",
-        findings=u"",
+        name=None,
+        subject=None,
+        assignee=None,
+        description=None,
+        findings=None,
     ):
         """Update case details for the given case number.
 

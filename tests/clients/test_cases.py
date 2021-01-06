@@ -60,5 +60,5 @@ class TestCasesClient:
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
         cases_client.update(_TEST_CASE_NUMBER, name="new name")
         mock_cases_service.update.assert_called_once_with(
-            _TEST_CASE_NUMBER, "new name", "", "", "", ""
+            _TEST_CASE_NUMBER, "new name", None, None, None, None
         )

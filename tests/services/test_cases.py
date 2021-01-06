@@ -165,9 +165,9 @@ class TestCasesService:
         )
         post_data = mock_connection.put.call_args[0][1]
         assert (
-            post_data["name"] == u""
-            and post_data["subject"] == u""
-            and post_data["assignee"] == u""
-            and post_data["description"] == u""
+            post_data["name"] is None
+            and post_data["subject"] is None
+            and post_data["assignee"] is None
+            and post_data["description"] is None
             and post_data["findings"] == u"x"
         )

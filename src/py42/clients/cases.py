@@ -17,15 +17,17 @@ class CasesClient(object):
         """
         return self._file_events
 
-    def create(self, name, subject, assignee, description, findings):
+    def create(
+        self, name, subject=None, assignee=None, description=None, findings=None
+    ):
         """Creates a new case.
 
         Args:
             name (str): Name of the case.
-            subject (str): User UID of a subject of a case.
-            assignee (str): User UID of the assignee.
-            description (str): Description of the case
-            findings (str): Observations of the case.
+            subject (str, optional): User UID of a subject of a case.
+            assignee (str, optional): User UID of the assignee.
+            description (str, optional): Description of the case
+            findings (str, optional): Observations of the case.
 
         Returns
             :class:`py42.response.Py42Response`
@@ -95,7 +97,13 @@ class CasesClient(object):
         return self._cases_service.export_summary(case_number)
 
     def update(
-        self, case_number, name="", subject="", assignee="", description="", findings=""
+        self,
+        case_number,
+        name=None,
+        subject=None,
+        assignee=None,
+        description=None,
+        findings=None,
     ):
         """Updates case details for the given case number.
 

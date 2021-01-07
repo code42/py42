@@ -28,7 +28,13 @@ class TestCasesClient:
         self, mock_cases_service, mock_cases_file_event_service
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
-        cases_client.create("name", "subject", "assignee", "description", "observation")
+        cases_client.create(
+            "name",
+            subject="subject",
+            assignee="assignee",
+            description="description",
+            findings="observation",
+        )
         mock_cases_service.create.assert_called_once_with(
             "name",
             subject="subject",
@@ -71,4 +77,30 @@ class TestCasesClient:
             status=None,
             description=None,
             findings=None,
+        )
+
+    def test_get_all_converts_datetime_to_ranges_and_calls_service_with_expected_params(
+        self, mock_cases_service, mock_cases_file_event_service
+    ):
+        cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
+        cases_client.get_all(
+            created_at_begin_time="2021-01-01 00:00:00",
+            updated_at_begin_time="2021-02-01 00:00:00",
+            created_at_end_time="2021-01-31 00:00:00",
+            updated_at_end_time="2021-02-20 00:00:00",
+        )
+        created_at_range = "2021-01-01T00:00:00.000Z/2021-01-31T00:00:00.000Z"
+        updated_at_range = "2021-02-01T00:00:00.000Z/2021-02-20T00:00:00.000Z"
+
+        mock_cases_service.get_all.assert_called_once_with(
+            name=None,
+            status=None,
+            created_at=created_at_range,
+            updated_at=updated_at_range,
+            subject=None,
+            assignee=None,
+            page_number=1,
+            page_size=100,
+            sort_direction="asc",
+            sort_key="number",
         )

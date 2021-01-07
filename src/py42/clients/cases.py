@@ -1,5 +1,7 @@
 from enum import Enum
 
+from py42.util import parse_timestamp_to_milliseconds_precision
+
 
 class CaseStatus(Enum):
     OPEN = u"OPEN"
@@ -48,12 +50,22 @@ class CasesClient(object):
             findings=findings,
         )
 
+    @staticmethod
+    def _make_range(begin_time, end_time):
+        if not begin_time or not end_time:
+            return None
+        end = parse_timestamp_to_milliseconds_precision(end_time)
+        start = parse_timestamp_to_milliseconds_precision(begin_time)
+        return "{}/{}".format(start, end)
+
     def get_all(
         self,
         name=None,
         status=None,
-        created_at=None,
-        updated_at=None,
+        created_at_begin_time=None,
+        created_at_end_time=None,
+        updated_at_begin_time=None,
+        updated_at_end_time=None,
         subject=None,
         assignee=None,
         page_number=1,
@@ -68,10 +80,14 @@ class CasesClient(object):
             name (str, optional): Filter results by case name, matches partial names. Defaults to None.
             status (enum, optional): Filter results by case status. Defaults to None.
                 e.g `CaseStatus.OPEN.value` or `CaseStatus.CLOSED.value`.
-            created_at (str, optional): Filter results by case creation time range, format ISO interval.
-                Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
-            updated_at (str, optional): Filter results by last updated time range, format ISO interval.
-                Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
+            created_at_begin_time (str or int or float or datetime, optional): Filter results by case creation time, start time.
+                Defaults to None. Begin time should be specified with end time. str format %Y-%m-%d %H:%M:%S
+            created_at_end_time (str, optional): Filter results by case creation time, end time.
+                Defaults to None. End time should be specified with begin time. str format %Y-%m-%d %H:%M:%S
+            updated_at_begin_time (str, optional): Filter results by last updated time, start time.
+                Defaults to None. Begin time should be specified with end time. str format %Y-%m-%d %H:%M:%S
+            updated_at_end_time (str, optional): Filter results by last updated time, end time.
+                Defaults to None. End time should be specified with begin time. str format %Y-%m-%d %H:%M:%S
             subject (str, optional): Filter results based on User UID of a subject of a case. Defaults to None.
             assignee (str, optional): Filter results based on User UID of an assignee of a case. Defaults to None.
             page_number (int, optional): Page number of the results. Defaults to 1.
@@ -85,6 +101,9 @@ class CasesClient(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cases.
         """
+        created_at = CasesClient._make_range(created_at_begin_time, created_at_end_time)
+        updated_at = CasesClient._make_range(updated_at_begin_time, updated_at_end_time)
+
         return self._cases_service.get_all(
             name=name,
             status=status,

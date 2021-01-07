@@ -30,7 +30,11 @@ class TestCasesClient:
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
         cases_client.create("name", "subject", "assignee", "description", "observation")
         mock_cases_service.create.assert_called_once_with(
-            "name", "subject", "assignee", "description", "observation"
+            "name",
+            subject="subject",
+            assignee="assignee",
+            description="description",
+            findings="observation",
         )
 
     def test_get_all_calls_cases_service_with_expected_params(
@@ -60,5 +64,11 @@ class TestCasesClient:
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
         cases_client.update(_TEST_CASE_NUMBER, name="new name")
         mock_cases_service.update.assert_called_once_with(
-            _TEST_CASE_NUMBER, "new name", None, None, None, None
+            _TEST_CASE_NUMBER,
+            name="new name",
+            assignee=None,
+            subject=None,
+            status=None,
+            description=None,
+            findings=None,
         )

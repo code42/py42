@@ -33,7 +33,11 @@ class CasesClient(object):
             :class:`py42.response.Py42Response`
         """
         return self._cases_service.create(
-            name, subject, assignee, description, findings
+            name,
+            subject=subject,
+            assignee=assignee,
+            description=description,
+            findings=findings,
         )
 
     def get_all(
@@ -116,6 +120,7 @@ class CasesClient(object):
         assignee=None,
         description=None,
         findings=None,
+        status=None,
     ):
         """Updates case details for the given case number.
 
@@ -126,10 +131,16 @@ class CasesClient(object):
             assignee (str, optional): User UID of the assignee. Defaults to empty string.
             description (str, optional): Description of the case. Defaults to empty string.
             findings (str, optional): Notes on the case. Defaults to empty string.
-
+            status (str, optional): Status of the case.
         Returns:
             :class:`py42.response.Py42Response`
         """
         return self._cases_service.update(
-            case_number, name, subject, assignee, description, findings
+            case_number,
+            name=name,
+            subject=subject,
+            assignee=assignee,
+            description=description,
+            findings=findings,
+            status=status,
         )

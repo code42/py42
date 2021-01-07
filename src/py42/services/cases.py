@@ -1,4 +1,6 @@
 from py42 import settings
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42InvalidActionError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 
@@ -169,6 +171,7 @@ class CasesService(BaseService):
         assignee=None,
         description=None,
         findings=None,
+        status=None,
     ):
         """Update case details for the given case number.
 
@@ -179,18 +182,26 @@ class CasesService(BaseService):
             assignee (str, optional): User UID of the assignee. Defaults to empty string.
             description (str, optional): Description of the case. Defaults to empty string.
             findings (str, optional): Notes on the case. Defaults to empty string.
-
+            status (str, optional): Status of the case.
         Returns:
             :class:`py42.response.Py42Response`
         """
 
+        current_case_data = self.get_case(case_number).data
         data = {
-            u"name": name,
-            u"assignee": assignee,
-            u"description": description,
-            u"findings": findings,
-            u"subject": subject,
+            u"assignee": assignee or current_case_data.get(u"assignee"),
+            u"description": description or current_case_data.get(u"description"),
+            u"findings": findings or current_case_data.get(u"findings"),
+            u"name": name or current_case_data.get(u"name"),
+            u"subject": subject or current_case_data.get(u"subject"),
+            u"status": status or current_case_data.get("status"),
         }
-        return self._connection.put(
-            u"{}/{}".format(self._uri_prefix, case_number), json=data
-        )
+        try:
+            self._connection.put(
+                u"{}/{}".format(self._uri_prefix, case_number), json=data
+            )
+        except Py42BadRequestError as err:
+            if u"NO_EDITS_ONCE_CLOSED" in err.response.text:
+                raise Py42InvalidActionError(
+                    err, message=u"Cannot update a closed case."
+                )

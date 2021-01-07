@@ -255,6 +255,13 @@ class Py42InvalidRuleError(Py42NotFoundError):
         super(Py42NotFoundError, self).__init__(exception, message)
 
 
+class Py42InvalidActionError(Py42BadRequestError):
+    """An error raised when the the operation/action is not permitted."""
+
+    def __init__(self, exception, message=None):
+        super(Py42InvalidActionError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

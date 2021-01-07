@@ -1,14 +1,27 @@
+import json
+
 import pytest
+from requests import HTTPError
 from requests import Response
 
 import py42.settings
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42InvalidActionError
 from py42.response import Py42Response
 from py42.services.cases import CasesService
 
 
 GET_ALL_TEST_RESPONSE = """{"cases":["test"], "totalCount":1}"""
 EMPTY_GET_ALL_TEST_RESPONSE = """{"cases": [], "totalCount":0}"""
-
+UPDATE_ERROR_RESPONSE = """{"timestamp":"2021-01-06T16:54:44.668+00:00","status":400,"error":"Bad Request","message":"NO_EDITS_ONCE_CLOSED","path":"/api/v1/case"}"""
+GET_CASE_RESPONSE = """
+{"assignee": "string", "assigneeUsername": "string",
+"createdAt": "2021-01-04T08:09:58.832Z", "createdByUserUid": "string",
+"createdByUsername": "string", "lastModifiedByUserUid": "string",
+"lastModifiedByUsername": "string", "name": "string", "number": 0, "status": "OPEN",
+"subject": "string", "subjectUsername": "string",
+"updatedAt": "2021-01-04T08:09:58.832Z"}
+"""
 _TEST_CASE_NUMBER = 123456
 _BASE_URI = u"/api/v1/case"
 
@@ -22,11 +35,27 @@ class TestCasesService:
         return Py42Response(response)
 
     @pytest.fixture
+    def mock_get_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.text = GET_CASE_RESPONSE
+        response.data = json.loads(GET_CASE_RESPONSE)
+        return Py42Response(response)
+
+    @pytest.fixture
     def mock_case_empty_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 200
         response.text = EMPTY_GET_ALL_TEST_RESPONSE
         return Py42Response(response)
+
+    @pytest.fixture
+    def mock_update_failed_response(self, mocker, http_error):
+        http_error = HTTPError(UPDATE_ERROR_RESPONSE)
+        http_error.response = mocker.MagicMock(sepc=Response)
+        http_error.response.status_code = 400
+        http_error.response.text = UPDATE_ERROR_RESPONSE
+        return http_error
 
     def test_create_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
@@ -154,16 +183,33 @@ class TestCasesService:
             _TEST_CASE_NUMBER
         )
 
-    def test_update_called_with_expected_url_and_params(self, mock_connection):
+    def test_update_called_with_expected_url_and_params(
+        self, mock_connection, mock_get_response
+    ):
         cases_service = CasesService(mock_connection)
+        mock_connection.get.return_value = mock_get_response
         cases_service.update(_TEST_CASE_NUMBER, findings=u"x")
         data = {
-            "name": None,
-            "subject": None,
-            "assignee": None,
+            "name": "string",
+            "subject": "string",
+            "assignee": "string",
             "description": None,
+            "status": "OPEN",
             "findings": u"x",
         }
         mock_connection.put.assert_called_once_with(
             u"/api/v1/case/{}".format(_TEST_CASE_NUMBER), json=data
         )
+
+    def test_update_failure_raised_appropriate_custom_exception(
+        self, mock_connection, mock_get_response, mock_update_failed_response
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.get.return_value = mock_get_response
+        mock_connection.put.side_effect = Py42BadRequestError(
+            mock_update_failed_response
+        )
+        with pytest.raises(Py42InvalidActionError) as e:
+            cases_service.update(_TEST_CASE_NUMBER, findings=u"x")
+
+        assert e.value.args[0] == u"Cannot update a closed case."

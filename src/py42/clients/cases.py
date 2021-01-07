@@ -1,3 +1,11 @@
+from enum import Enum
+
+
+class CaseStatus(Enum):
+    OPEN = u"OPEN"
+    CLOSED = u"CLOSED"
+
+
 class CasesClient(object):
     """A client to expose cases API.
 
@@ -58,7 +66,8 @@ class CasesClient(object):
 
         Args:
             name (str, optional): Filter results by case name, matches partial names. Defaults to None.
-            status (str, optional): Filter results by case status, `OPEN` or `CLOSED`. Defaults to None.
+            status (enum, optional): Filter results by case status. Defaults to None.
+                e.g `CaseStatus.OPEN.value` or `CaseStatus.CLOSED.value`.
             created_at (str, optional): Filter results by case creation time range, format ISO interval.
                 Defaults to None. e.g 2020-08-31T11:00:00Z/2020-09-01T15:30:00Z
             updated_at (str, optional): Filter results by last updated time range, format ISO interval.
@@ -131,7 +140,8 @@ class CasesClient(object):
             assignee (str, optional): User UID of the assignee. Defaults to empty string.
             description (str, optional): Description of the case. Defaults to empty string.
             findings (str, optional): Notes on the case. Defaults to empty string.
-            status (str, optional): Status of the case.
+            status (enum, optional): Status of the case. Defaults to None.
+                `CaseStatus.OPEN.value` or `CaseStatus.CLOSED.value`.
         Returns:
             :class:`py42.response.Py42Response`
         """

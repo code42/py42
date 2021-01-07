@@ -182,12 +182,13 @@ class CasesService(BaseService):
             assignee (str, optional): User UID of the assignee. Defaults to empty string.
             description (str, optional): Description of the case. Defaults to empty string.
             findings (str, optional): Notes on the case. Defaults to empty string.
-            status (str, optional): Status of the case.
+            status (str, optional): Status of the case. `OPEN` or `CLOSED`. Defaults to None.
         Returns:
             :class:`py42.response.Py42Response`
         """
 
         current_case_data = self.get_case(case_number).data
+
         data = {
             u"assignee": assignee or current_case_data.get(u"assignee"),
             u"description": description or current_case_data.get(u"description"),
@@ -197,7 +198,7 @@ class CasesService(BaseService):
             u"status": status or current_case_data.get("status"),
         }
         try:
-            self._connection.put(
+            return self._connection.put(
                 u"{}/{}".format(self._uri_prefix, case_number), json=data
             )
         except Py42BadRequestError as err:

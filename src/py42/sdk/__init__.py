@@ -271,7 +271,7 @@ def _init_services(main_connection, main_auth):
         userprofile=user_profile_svc,
         auditlogs=AuditLogsService(audit_logs_conn),
         cases=CasesService(cases_conn),
-        casesfileevents=CasesFileEventsService(main_connection),
+        casesfileevents=CasesFileEventsService(cases_conn),
     )
 
     return services, user_ctx

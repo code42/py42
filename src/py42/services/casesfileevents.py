@@ -36,7 +36,7 @@ class CasesFileEventsService(BaseService):
             u"{}{}".format(self._uri_prefix.format(case_number), event_id)
         )
 
-    def get_all_events(self, case_number):
+    def get_all(self, case_number):
         """Gets all events associated with the given case.
 
         Args:

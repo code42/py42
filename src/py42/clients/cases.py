@@ -79,7 +79,7 @@ class CasesClient(object):
             sort_direction (str, optional): The direction on which to sort the response,
                 based on the corresponding sort key. `asc` or `desc`. Defaults to `asc`.
             sort_key (str, optional): Values on which the response will be sorted. Defaults to "number".
-                Available options are name, number, createdAt, updatedAt, status, assigneeUsername, subjectUsername.
+                Available options are `name`, `number`, `createdAt`, `updatedAt`, `status`, `assigneeUsername`, `subjectUsername`.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

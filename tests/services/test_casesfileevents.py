@@ -25,9 +25,9 @@ class TestCasesFileEventService:
             0
         ] == u"/api/v1/case/{}/fileevent/event-id".format(_TEST_CASE_NUMBER)
 
-    def test_get_all_events_called_with_expected_url_and_params(self, mock_connection):
+    def test_get_all_called_with_expected_url_and_params(self, mock_connection):
         case_file_event_service = CasesFileEventsService(mock_connection)
-        case_file_event_service.get_all_events(_TEST_CASE_NUMBER)
+        case_file_event_service.get_all(_TEST_CASE_NUMBER)
         assert mock_connection.get.call_args[0][
             0
         ] == u"/api/v1/case/{}/fileevent/".format(_TEST_CASE_NUMBER)

@@ -9,7 +9,7 @@ class CaseStatus(Enum):
 class CasesClient(object):
     """A client to expose cases API.
 
-    `Rest documentation <https://default-cases.core-int.cloud.code42.com/swagger-ui.html#/Cases>`__
+    `Rest documentation <https://developer.code42.com/api/#tag/Cases>`__
     """
 
     def __init__(self, cases_service, cases_file_event_service):

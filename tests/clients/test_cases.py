@@ -3,7 +3,6 @@ from datetime import datetime
 import pytest
 
 from py42.clients.cases import CasesClient
-from py42.clients.cases import Py42InvalidCaseStatus
 from py42.services.cases import CasesService
 from py42.services.casesfileevents import CasesFileEventsService
 
@@ -175,12 +174,3 @@ class TestCasesClient:
             and service_args["sort_key"] == "number"
         )
         assert service_args["created_at"][:-3] == created_at_range[:-2]
-
-    def test_get_all_raises_exception_when_invalid_case_status(
-        self, mock_cases_service, mock_cases_file_event_service
-    ):
-        cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
-        with pytest.raises(Py42InvalidCaseStatus) as err:
-            cases_client.get_all(status="status")
-
-        assert "Invalid case status: status." in err.value.args[0]

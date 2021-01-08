@@ -13,16 +13,6 @@ class CaseStatus(object):
         return get_attribute_keys_from_class(CaseStatus)
 
 
-class Py42InvalidCaseStatus(Exception):
-    """An error raised when status passed in the argument isn't valid."""
-
-    def __init__(self, status):
-        msg = "Invalid case status: {}. Valid choices are {}".format(
-            status, CaseStatus.choices()
-        )
-        super(Py42InvalidCaseStatus, self).__init__(msg)
-
-
 class CasesClient(object):
     """A client to expose cases API.
 
@@ -97,7 +87,7 @@ class CasesClient(object):
 
         Args:
             name (str, optional): Filter results by case name, matches partial names. Defaults to None.
-            status (str, optional): Filter results by case status. `OPEN` or `CLOSED` Defaults to None.
+            status (str, optional): Filter results by case status. `CaseStatus.OPEN` or `CaseStatus.CLOSED` Defaults to None.
             min_create_time (str or int or float or datetime, optional): Filter results by case creation time, start time.
                  str format %Y-%m-%d %H:%M:%S. Defaults to None.
             max_create_time (str or int or float or datetime, optional): Filter results by case creation time, end time.
@@ -119,8 +109,6 @@ class CasesClient(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cases.
         """
-        if status and status.upper() not in CaseStatus.choices():
-            raise Py42InvalidCaseStatus(status)
 
         created_at = CasesClient._make_range(min_create_time, max_create_time)
         updated_at = CasesClient._make_range(min_update_time, max_update_time)
@@ -175,13 +163,14 @@ class CasesClient(object):
 
         Args:
             case_number (int): Case number of the case.
-            name (str, optional): Name of the case. Defaults to empty string.
-            subject (str, optional): A subject of the case. Defaults to empty string.
-            assignee (str, optional): User UID of the assignee. Defaults to empty string.
-            description (str, optional): Description of the case. Defaults to empty string.
-            findings (str, optional): Notes on the case. Defaults to empty string.
-            status (enum, optional): Status of the case. Defaults to None.
-                `CaseStatus.OPEN.value` or `CaseStatus.CLOSED.value`.
+            name (str, optional): Name of the case. Defaults to None.
+            subject (str, optional): A subject of the case. Defaults to None.
+            assignee (str, optional): User UID of the assignee. Defaults to None.
+            description (str, optional): Description of the case. Defaults to None.
+            findings (str, optional): Notes on the case. Defaults to None.
+            status (str, optional): Status of the case. `CaseStatus.OPEN` or `CaseStatus.CLOSED`.
+                Defaults to None.
+
         Returns:
             :class:`py42.response.Py42Response`
         """

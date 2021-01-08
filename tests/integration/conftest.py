@@ -21,6 +21,7 @@ def pytest_addoption(parser):
     parser.addini("archive_guid", "Guid of the archival.")
     parser.addini("path", "Complete path of the file with filename which was archived.")
     parser.addini("file_data", "Content of the file during archival.")
+    parser.addini("case_event_id", "Event id to associate to a case.")
 
 
 @pytest.fixture(scope="session")
@@ -46,6 +47,11 @@ def connection(host):
 @pytest.fixture(scope="session")
 def timestamp():
     return str(int(datetime.utcnow().timestamp()))
+
+
+@pytest.fixture(scope="session")
+def event_id(request):
+    return request.config.getini("case_event_id")
 
 
 @pytest.fixture(scope="session")

@@ -3,38 +3,44 @@ import pytest
 
 @pytest.mark.integration
 class TestCases:
-    def test_create_case(self, connection):
-        response = connection.cases.create_case()
+    @pytest.fixture(scope="module")
+    def case(self, connection, timestamp):
+        return connection.cases.create("integration_test_{}".format(timestamp))
+
+    def test_get_all_cases(
+        self, connection,
+    ):
+        page_gen = connection.cases.get_all()
+        for response in page_gen:
+            assert response.status_code == 200
+            break
+
+    def test_get_case_by_case_number(self, connection, case):
+        response = connection.cases.get_case(case["number"])
         assert response.status_code == 200
 
-    def test_get_all_cases(self, connection):
-        response = connection.cases.get_all()
+    def test_update_case(self, connection, case):
+        response = connection.cases.update(
+            case["number"], findings="integration test case"
+        )
         assert response.status_code == 200
 
-    def test_get_case_by_case_number(self, connection):
-        response = connection.cases.get_case_by_case_number()
+    def test_export_summary(self, connection, case):
+        response = connection.cases.export_summary(case["number"])
         assert response.status_code == 200
 
-    def test_update_case(self, connection):
-        response = connection.cases.update()
+    def test_add_file_event(self, connection, case, event_id):
+        response = connection.cases.file_events.add_event(case["number"], event_id)
+        assert response.status_code == 204
+
+    def test_get_file_event(self, connection, case, event_id):
+        response = connection.cases.file_events.get_event(case["number"], event_id)
         assert response.status_code == 200
 
-    def test_export_summary(self, connection):
-        response = connection.cases.export_summary()
-        assert response.status_code == 200
+    def test_delete_file_event(self, connection, case, event_id):
+        response = connection.cases.file_events.delete_event(case["number"], event_id)
+        assert response.status_code == 204
 
-    def test_add_file_event(self, connection):
-        response = connection.cases.file_events.add_event()
-        assert response.status_code == 200
-
-    def test_delete_file_event(self, connection):
-        response = connection.cases.file_events.delete_event()
-        assert response.status_code == 200
-
-    def test_get_file_event(self, connection):
-        response = connection.cases.file_events.get_event()
-        assert response.status_code == 200
-
-    def test_get_all_file_events(self, connection):
-        response = connection.cases.file_events.get_all_events()
+    def test_get_all_file_events(self, connection, case):
+        response = connection.cases.file_events.get_all(case["number"])
         assert response.status_code == 200

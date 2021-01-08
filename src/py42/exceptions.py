@@ -255,11 +255,12 @@ class Py42InvalidRuleError(Py42NotFoundError):
         super(Py42NotFoundError, self).__init__(exception, message)
 
 
-class Py42InvalidActionError(Py42BadRequestError):
-    """An error raised when the the operation/action is not permitted."""
+class Py42UpdateClosedCaseError(Py42BadRequestError):
+    """An error raised when trying to update a closed case."""
 
-    def __init__(self, exception, message=None):
-        super(Py42InvalidActionError, self).__init__(exception, message)
+    def __init__(self, exception):
+        msg = "Cannot update a closed case."
+        super(Py42UpdateClosedCaseError, self).__init__(exception, msg)
 
 
 def raise_py42_error(raised_error):

@@ -1,11 +1,26 @@
-from enum import Enum
+from datetime import datetime
 
+from py42.util import get_attribute_keys_from_class
 from py42.util import parse_timestamp_to_milliseconds_precision
 
 
-class CaseStatus(Enum):
+class CaseStatus(object):
     OPEN = u"OPEN"
     CLOSED = u"CLOSED"
+
+    @staticmethod
+    def choices():
+        return get_attribute_keys_from_class(CaseStatus)
+
+
+class Py42InvalidCaseStatus(Exception):
+    """An error raised when status passed in the argument isn't valid."""
+
+    def __init__(self, status):
+        msg = "Invalid case status: {}. Valid choices are {}".format(
+            status, CaseStatus.choices()
+        )
+        super(Py42InvalidCaseStatus, self).__init__(msg)
 
 
 class CasesClient(object):
@@ -52,8 +67,12 @@ class CasesClient(object):
 
     @staticmethod
     def _make_range(begin_time, end_time):
-        if not begin_time or not end_time:
+        if not begin_time and not end_time:
             return None
+        if not begin_time:
+            begin_time = datetime.utcfromtimestamp(0)
+        if not end_time:
+            end_time = datetime.utcnow()
         end = parse_timestamp_to_milliseconds_precision(end_time)
         start = parse_timestamp_to_milliseconds_precision(begin_time)
         return "{}/{}".format(start, end)
@@ -62,10 +81,10 @@ class CasesClient(object):
         self,
         name=None,
         status=None,
-        created_at_begin_time=None,
-        created_at_end_time=None,
-        updated_at_begin_time=None,
-        updated_at_end_time=None,
+        min_create_time=None,
+        max_create_time=None,
+        min_update_time=None,
+        max_update_time=None,
         subject=None,
         assignee=None,
         page_number=1,
@@ -78,16 +97,15 @@ class CasesClient(object):
 
         Args:
             name (str, optional): Filter results by case name, matches partial names. Defaults to None.
-            status (enum, optional): Filter results by case status. Defaults to None.
-                e.g `CaseStatus.OPEN.value` or `CaseStatus.CLOSED.value`.
-            created_at_begin_time (str or int or float or datetime, optional): Filter results by case creation time, start time.
-                Defaults to None. Begin time should be specified with end time. str format %Y-%m-%d %H:%M:%S
-            created_at_end_time (str, optional): Filter results by case creation time, end time.
-                Defaults to None. End time should be specified with begin time. str format %Y-%m-%d %H:%M:%S
-            updated_at_begin_time (str, optional): Filter results by last updated time, start time.
-                Defaults to None. Begin time should be specified with end time. str format %Y-%m-%d %H:%M:%S
-            updated_at_end_time (str, optional): Filter results by last updated time, end time.
-                Defaults to None. End time should be specified with begin time. str format %Y-%m-%d %H:%M:%S
+            status (str, optional): Filter results by case status. `OPEN` or `CLOSED` Defaults to None.
+            min_create_time (str or int or float or datetime, optional): Filter results by case creation time, start time.
+                 str format %Y-%m-%d %H:%M:%S. Defaults to None.
+            max_create_time (str or int or float or datetime, optional): Filter results by case creation time, end time.
+                 str format %Y-%m-%d %H:%M:%S. Defaults to None.
+            min_update_time (str or int or float or datetime, optional): Filter results by last updated time, start time.
+                 str format %Y-%m-%d %H:%M:%S. Defaults to None.
+            max_update_time (str or int or float or datetime, optional): Filter results by last updated time, end time.
+                 str format %Y-%m-%d %H:%M:%S. Defaults to None.
             subject (str, optional): Filter results based on User UID of a subject of a case. Defaults to None.
             assignee (str, optional): Filter results based on User UID of an assignee of a case. Defaults to None.
             page_number (int, optional): Page number of the results. Defaults to 1.
@@ -101,8 +119,11 @@ class CasesClient(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cases.
         """
-        created_at = CasesClient._make_range(created_at_begin_time, created_at_end_time)
-        updated_at = CasesClient._make_range(updated_at_begin_time, updated_at_end_time)
+        if status and status.upper() not in CaseStatus.choices():
+            raise Py42InvalidCaseStatus(status)
+
+        created_at = CasesClient._make_range(min_create_time, max_create_time)
+        updated_at = CasesClient._make_range(min_update_time, max_update_time)
 
         return self._cases_service.get_all(
             name=name,

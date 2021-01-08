@@ -6,7 +6,7 @@ from requests import Response
 
 import py42.settings
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42InvalidActionError
+from py42.exceptions import Py42UpdateClosedCaseError
 from py42.response import Py42Response
 from py42.services.cases import CasesService
 
@@ -209,7 +209,7 @@ class TestCasesService:
         mock_connection.put.side_effect = Py42BadRequestError(
             mock_update_failed_response
         )
-        with pytest.raises(Py42InvalidActionError) as e:
+        with pytest.raises(Py42UpdateClosedCaseError) as e:
             cases_service.update(_TEST_CASE_NUMBER, findings=u"x")
 
         assert e.value.args[0] == u"Cannot update a closed case."

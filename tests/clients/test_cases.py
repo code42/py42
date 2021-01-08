@@ -144,6 +144,7 @@ class TestCasesClient:
     def test_get_all_sets_default_min_max_in_ranges_when_either_of_begin_or_end_time_is_specified(
         self, mock_cases_service, mock_cases_file_event_service
     ):
+
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
 
         cases_client.get_all(
@@ -159,20 +160,21 @@ class TestCasesClient:
             status="closed",
         )
         max_time = datetime.utcnow().isoformat()[:-3]
-        created_at_range = "2020-12-31T18:30:00.000Z/{}Z".format(max_time)
+        created_at_range = "2020-12-31T18:30:00.000Z/{}".format(max_time)
         updated_at_range = "1970-01-01T00:00:00.000Z/2021-02-20T00:00:00.000Z"
-        mock_cases_service.get_all.assert_called_once_with(
-            name="test",
-            status="closed",
-            created_at=created_at_range,
-            updated_at=updated_at_range,
-            subject="subject",
-            assignee="a",
-            page_number=1,
-            page_size=100,
-            sort_direction="asc",
-            sort_key="number",
+        service_args = mock_cases_service.get_all.call_args[1]
+        assert (
+            service_args["name"] == "test"
+            and service_args["status"] == "closed"
+            and service_args["subject"] == "subject"
+            and service_args["updated_at"] == updated_at_range
+            and service_args["assignee"] == "a"
+            and service_args["page_number"] == 1
+            and service_args["page_size"] == 100
+            and service_args["sort_direction"] == "asc"
+            and service_args["sort_key"] == "number"
         )
+        assert service_args["created_at"][:-3] == created_at_range[:-2]
 
     def test_get_all_raises_exception_when_invalid_case_status(
         self, mock_cases_service, mock_cases_file_event_service

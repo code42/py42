@@ -22,13 +22,13 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `sdk.cases.create()`
     - `sdk.cases.get_all()`
     - `sdk.cases.export_summary()`
-    - `sdk.cases.get_case()`
+    - `sdk.cases.get()`
     - `sdk.case.update()`
 
 - `sdk.cases.file_events` methods for managing file events associated with a given case:
-    - `sdk.cases.file_events.add_event()`
-    - `sdk.cases.file_events.delete_event()`
-    - `sdk.cases.file_events.get_event()`
+    - `sdk.cases.file_events.add()`
+    - `sdk.cases.file_events.delete()`
+    - `sdk.cases.file_events.get()`
     - `sdk.cases.file_events.get_all()`
 
 ## 1.10.1 - 2020-12-16

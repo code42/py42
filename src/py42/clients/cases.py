@@ -127,7 +127,7 @@ class CasesClient(object):
             **kwargs
         )
 
-    def get_case(self, case_number):
+    def get(self, case_number):
         """Retrieve case details by case number.
 
         Args:
@@ -136,7 +136,7 @@ class CasesClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._cases_service.get_case(case_number)
+        return self._cases_service.get(case_number)
 
     def export_summary(self, case_number):
         """Provides case summary to download as a PDF file.

@@ -16,7 +16,7 @@ class TestCases:
             break
 
     def test_get_case_by_case_number(self, connection, case):
-        response = connection.cases.get_case(case["number"])
+        response = connection.cases.get(case["number"])
         assert response.status_code == 200
 
     def test_update_case(self, connection, case):
@@ -30,15 +30,15 @@ class TestCases:
         assert response.status_code == 200
 
     def test_add_file_event(self, connection, case, event_id):
-        response = connection.cases.file_events.add_event(case["number"], event_id)
+        response = connection.cases.file_events.add(case["number"], event_id)
         assert response.status_code == 204
 
     def test_get_file_event(self, connection, case, event_id):
-        response = connection.cases.file_events.get_event(case["number"], event_id)
+        response = connection.cases.file_events.get(case["number"], event_id)
         assert response.status_code == 200
 
     def test_delete_file_event(self, connection, case, event_id):
-        response = connection.cases.file_events.delete_event(case["number"], event_id)
+        response = connection.cases.file_events.delete(case["number"], event_id)
         assert response.status_code == 204
 
     def test_get_all_file_events(self, connection, case):

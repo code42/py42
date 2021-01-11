@@ -176,9 +176,9 @@ class TestCasesService:
             _TEST_CASE_NUMBER
         )
 
-    def test_get_case_called_with_expected_url_and_params(self, mock_connection):
+    def test_get_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
-        cases_service.get_case(_TEST_CASE_NUMBER)
+        cases_service.get(_TEST_CASE_NUMBER)
         assert mock_connection.get.call_args[0][0] == u"/api/v1/case/{}".format(
             _TEST_CASE_NUMBER
         )

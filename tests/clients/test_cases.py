@@ -53,12 +53,12 @@ class TestCasesClient:
         cases_client.get_all()
         assert mock_cases_service.get_all.call_count == 1
 
-    def test_get_case_calls_cases_service_with_expected_params(
+    def test_get_calls_cases_service_with_expected_params(
         self, mock_cases_service, mock_cases_file_event_service
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
-        cases_client.get_case(_TEST_CASE_NUMBER)
-        mock_cases_service.get_case.assert_called_once_with(_TEST_CASE_NUMBER)
+        cases_client.get(_TEST_CASE_NUMBER)
+        mock_cases_service.get.assert_called_once_with(_TEST_CASE_NUMBER)
 
     def test_export_calls_cases_service_with_expected_params(
         self, mock_cases_service, mock_cases_file_event_service

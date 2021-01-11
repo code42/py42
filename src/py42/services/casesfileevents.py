@@ -8,7 +8,7 @@ class CasesFileEventsService(BaseService):
     def __init__(self, connection):
         super(CasesFileEventsService, self).__init__(connection)
 
-    def add_event(self, case_number, event_id):
+    def add(self, case_number, event_id):
         """Adds an event to the case.
 
         Args:
@@ -22,7 +22,7 @@ class CasesFileEventsService(BaseService):
             u"{}{}".format(self._uri_prefix.format(case_number), event_id)
         )
 
-    def get_event(self, case_number, event_id):
+    def get(self, case_number, event_id):
         """Gets information of a specified event from the case.
 
         Args:
@@ -47,7 +47,7 @@ class CasesFileEventsService(BaseService):
         """
         return self._connection.get(self._uri_prefix.format(case_number))
 
-    def delete_event(self, case_number, event_id):
+    def delete(self, case_number, event_id):
         """Deletes an event from the case.
 
         Args:

@@ -85,7 +85,7 @@ class CasesService(BaseService):
             **kwargs
         )
 
-    def get_case(self, case_number):
+    def get(self, case_number):
         return self._connection.get("{}/{}".format(self._uri_prefix, case_number))
 
     def export_summary(self, case_number):
@@ -102,7 +102,7 @@ class CasesService(BaseService):
         findings=None,
         status=None,
     ):
-        current_case_data = self.get_case(case_number).data
+        current_case_data = self.get(case_number).data
 
         data = {
             u"assignee": assignee or current_case_data.get(u"assignee"),

@@ -51,6 +51,7 @@ class CasesService(BaseService):
             u"pgSize": page_size,
             u"srtDir": sort_direction,
             u"srtKey": sort_key,
+            **kwargs
         }
 
         return self._connection.get(self._uri_prefix, params=params)

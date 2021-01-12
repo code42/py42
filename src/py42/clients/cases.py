@@ -27,8 +27,8 @@ class CasesClient(object):
     def file_events(self):
         """A collection of methods for managing file events associated with a given case.
 
-        Returns :
-            :class:`py42.services.casesfileevents.FileEventsService`
+        Returns:
+            :class:`py42.services.casesfileevents.CasesFileEventsService`
         """
         return self._file_events
 
@@ -44,7 +44,7 @@ class CasesClient(object):
             description (str, optional): Description of the case
             findings (str, optional): Observations of the case.
 
-        Returns
+        Returns:
             :class:`py42.response.Py42Response`
         """
         return self._cases_service.create(

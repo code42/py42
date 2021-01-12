@@ -15,7 +15,7 @@ class CasesFileEventsService(BaseService):
             case_number (int): Case number of the case.
             event_id (str): Event id to add to the case.
 
-        Returns
+        Returns:
             :class:`py42.response.Py42Response`
         """
         return self._connection.post(
@@ -29,7 +29,7 @@ class CasesFileEventsService(BaseService):
             case_number (int): Case number of the case.
             event_id (str): Event id to fetch from the case.
 
-        Returns
+        Returns:
             :class:`py42.response.Py42Response`
         """
         return self._connection.get(
@@ -42,7 +42,7 @@ class CasesFileEventsService(BaseService):
         Args:
             case_number (int): Case number of the case.
 
-        Returns
+        Returns:
             :class:`py42.response.Py42Response`
         """
         return self._connection.get(self._uri_prefix.format(case_number))
@@ -54,7 +54,7 @@ class CasesFileEventsService(BaseService):
             case_number (int): Case number of the case.
             event_id (str): Event id to remove from case.
 
-        Returns
+        Returns:
             :class:`py42.response.Py42Response`
         """
         return self._connection.delete(

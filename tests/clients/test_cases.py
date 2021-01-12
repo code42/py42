@@ -171,3 +171,10 @@ class TestCasesClient:
             and service_args["sort_key"] == "number"
         )
         assert service_args["created_at"][:-3] == created_at_range[:-2]
+
+    def test_get_page_calls_service_with_expected_params(
+        self, mock_cases_service, mock_cases_file_event_service
+    ):
+        cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
+        cases_client.get(1)
+        mock_cases_service.get.assert_called_once_with(1)

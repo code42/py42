@@ -21,6 +21,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `sdk.cases` methods:
     - `sdk.cases.create()`
     - `sdk.cases.get_all()`
+    - `sdk.cases.get_page()`
     - `sdk.cases.export_summary()`
     - `sdk.cases.get()`
     - `sdk.case.update()`

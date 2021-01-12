@@ -67,6 +67,65 @@ class CasesClient(object):
         start = parse_timestamp_to_milliseconds_precision(begin_time)
         return "{}/{}".format(start, end)
 
+    def get_page(
+        self,
+        page_num,
+        name=None,
+        status=None,
+        min_create_time=None,
+        max_create_time=None,
+        min_update_time=None,
+        max_update_time=None,
+        subject=None,
+        assignee=None,
+        page_size=100,
+        sort_direction=u"asc",
+        sort_key=u"number",
+        **kwargs
+    ):
+        """Gets individual page of cases.
+
+        Args:
+            page_num (int): The page number to request.
+            name (str, optional): Filter results by case name, matches partial names. Defaults to None.
+            status (str, optional): Filter results by case status. `CaseStatus.OPEN` or `CaseStatus.CLOSED` Defaults to None.
+            min_create_time (str or int or float or datetime, optional): Filter results by case creation time, start time.
+                 str format %Y-%m-%d %H:%M:%S. Defaults to None.
+            max_create_time (str or int or float or datetime, optional): Filter results by case creation time, end time.
+                 str format %Y-%m-%d %H:%M:%S. Defaults to None.
+            min_update_time (str or int or float or datetime, optional): Filter results by last updated time, start time.
+                 str format %Y-%m-%d %H:%M:%S. Defaults to None.
+            max_update_time (str or int or float or datetime, optional): Filter results by last updated time, end time.
+                 str format %Y-%m-%d %H:%M:%S. Defaults to None.
+            subject (str, optional): Filter results based on User UID of a subject of a case. Defaults to None.
+            assignee (str, optional): Filter results based on User UID of an assignee of a case. Defaults to None.
+            page_size (int, optional): Number of results to return per page. Defaults to 100.
+            sort_direction (str, optional): The direction on which to sort the response,
+                based on the corresponding sort key. `asc` or `desc`. Defaults to `asc`.
+            sort_key (str, optional): Values on which the response will be sorted. Defaults to "number".
+                Available options are `name`, `number`, `createdAt`, `updatedAt`, `status`, `assigneeUsername`, `subjectUsername`.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+
+        created_at = CasesClient._make_range(min_create_time, max_create_time)
+        updated_at = CasesClient._make_range(min_update_time, max_update_time)
+
+        return self._cases_service.get_page(
+            page_num,
+            name=name,
+            status=status,
+            created_at=created_at,
+            updated_at=updated_at,
+            subject=subject,
+            assignee=assignee,
+            page_size=page_size,
+            sort_direction=sort_direction,
+            sort_key=sort_key,
+            **kwargs
+        )
+
     def get_all(
         self,
         name=None,

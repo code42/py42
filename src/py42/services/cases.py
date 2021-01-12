@@ -26,13 +26,13 @@ class CasesService(BaseService):
 
     def get_page(
         self,
+        page_num,
         name=None,
         status=None,
         created_at=None,
         updated_at=None,
         subject=None,
         assignee=None,
-        page_num=1,
         page_size=None,
         sort_direction=u"asc",
         sort_key=u"number",

@@ -102,7 +102,6 @@ class TestCasesClient:
             updated_at=updated_at_range,
             subject=None,
             assignee=None,
-            page_number=1,
             page_size=100,
             sort_direction="asc",
             sort_key="number",
@@ -134,7 +133,6 @@ class TestCasesClient:
             updated_at=updated_at_range,
             subject="subject",
             assignee="a",
-            page_number=1,
             page_size=100,
             sort_direction="asc",
             sort_key="number",
@@ -168,7 +166,6 @@ class TestCasesClient:
             and service_args["subject"] == "subject"
             and service_args["updated_at"] == updated_at_range
             and service_args["assignee"] == "a"
-            and service_args["page_number"] == 1
             and service_args["page_size"] == 100
             and service_args["sort_direction"] == "asc"
             and service_args["sort_key"] == "number"

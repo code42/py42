@@ -77,7 +77,6 @@ class CasesClient(object):
         max_update_time=None,
         subject=None,
         assignee=None,
-        page_number=1,
         page_size=100,
         sort_direction=u"asc",
         sort_key=u"number",
@@ -98,7 +97,6 @@ class CasesClient(object):
                  str format %Y-%m-%d %H:%M:%S. Defaults to None.
             subject (str, optional): Filter results based on User UID of a subject of a case. Defaults to None.
             assignee (str, optional): Filter results based on User UID of an assignee of a case. Defaults to None.
-            page_number (int, optional): Page number of the results. Defaults to 1.
             page_size (int, optional): Number of results to return per page. Defaults to 100.
             sort_direction (str, optional): The direction on which to sort the response,
                 based on the corresponding sort key. `asc` or `desc`. Defaults to `asc`.
@@ -120,7 +118,6 @@ class CasesClient(object):
             updated_at=updated_at,
             subject=subject,
             assignee=assignee,
-            page_number=page_number,
             page_size=page_size,
             sort_direction=sort_direction,
             sort_key=sort_key,

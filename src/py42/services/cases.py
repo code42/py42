@@ -51,8 +51,8 @@ class CasesService(BaseService):
             u"pgSize": page_size,
             u"srtDir": sort_direction,
             u"srtKey": sort_key,
-            **kwargs
         }
+        params.update(**kwargs)
 
         return self._connection.get(self._uri_prefix, params=params)
 
@@ -64,7 +64,6 @@ class CasesService(BaseService):
         updated_at=None,
         subject=None,
         assignee=None,
-        page_number=1,
         page_size=None,
         sort_direction=u"asc",
         sort_key=u"number",
@@ -79,7 +78,6 @@ class CasesService(BaseService):
             updated_at=updated_at,
             assignee=assignee,
             subject=subject,
-            page_number=page_number,
             page_size=page_size,
             sort_direction=sort_direction,
             sort_key=sort_key,

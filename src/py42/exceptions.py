@@ -255,6 +255,14 @@ class Py42InvalidRuleError(Py42NotFoundError):
         super(Py42NotFoundError, self).__init__(exception, message)
 
 
+class Py42UpdateClosedCaseError(Py42BadRequestError):
+    """An error raised when trying to update a closed case."""
+
+    def __init__(self, exception):
+        msg = "Cannot update a closed case."
+        super(Py42UpdateClosedCaseError, self).__init__(exception, msg)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

@@ -7,6 +7,7 @@ from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
 from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.authority import AuthorityClient
+from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
 from py42.services import Services
@@ -18,6 +19,8 @@ from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
 from py42.services.archive import ArchiveService
 from py42.services.auditlogs import AuditLogsService
+from py42.services.cases import CasesService
+from py42.services.casesfileevents import CasesFileEventsService
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.detectionlists.user_profile import DetectionListUserService
@@ -192,12 +195,22 @@ class SDKClient(object):
 
     @property
     def auditlogs(self):
-        """A collections of methods for retrieving audit logs.
+        """A collection of methods for retrieving audit logs.
 
         Returns:
             :class:`py42.services.auditlogs.AuditLogsService`
         """
         return self._clients.auditlogs
+
+    @property
+    def cases(self):
+        """A collection of methods and properties for managing cases and file events
+        associated with the case.
+
+        Returns:
+            :class:`py42.clients.cases.CaseClient`
+        """
+        return self._clients.cases
 
 
 def _init_services(main_connection, main_auth):
@@ -208,6 +221,7 @@ def _init_services(main_connection, main_auth):
     employee_case_mgmt_key = u"employeecasemanagementV2-API_URL"
     kv_prefix = u"simple-key-value-store"
     audit_logs_key = u"AUDIT-LOG_API-URL"
+    cases_key = u"CASES_API-URL"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
     kv_service = KeyValueStoreService(kv_connection)
@@ -235,6 +249,7 @@ def _init_services(main_connection, main_auth):
     file_event_svc = FileEventService(file_events_conn)
     user_ctx = UserContext(administration_svc)
     user_profile_svc = DetectionListUserService(ecm_conn, user_ctx, user_svc)
+    cases_conn = Connection.from_microservice_key(kv_service, cases_key, auth=main_auth)
 
     services = Services(
         administration=administration_svc,
@@ -255,6 +270,8 @@ def _init_services(main_connection, main_auth):
         highriskemployee=HighRiskEmployeeService(ecm_conn, user_ctx, user_profile_svc),
         userprofile=user_profile_svc,
         auditlogs=AuditLogsService(audit_logs_conn),
+        cases=CasesService(cases_conn),
+        casesfileevents=CasesFileEventsService(cases_conn),
     )
 
     return services, user_ctx
@@ -297,5 +314,6 @@ def _init_clients(services, connection):
         securitydata=securitydata,
         archive=archive,
         auditlogs=auditlogs,
+        cases=CasesClient(services.cases, services.casesfileevents),
     )
     return clients

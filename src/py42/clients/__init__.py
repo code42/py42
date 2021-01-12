@@ -9,5 +9,6 @@ Clients = namedtuple(
         u"detectionlists",
         u"securitydata",
         u"auditlogs",
+        u"cases",
     ],
 )

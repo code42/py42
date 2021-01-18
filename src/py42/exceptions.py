@@ -263,6 +263,22 @@ class Py42UpdateClosedCaseError(Py42BadRequestError):
         super(Py42UpdateClosedCaseError, self).__init__(exception, msg)
 
 
+class Py42CaseNameExistsError(Py42BadRequestError):
+    """An error raised when trying to create a case with a name that already exists."""
+
+    def __init__(self, exception, case_name):
+        msg = "Case name '{}' already exists, please set another name".format(case_name)
+        super(Py42CaseNameExistsError, self).__init__(exception, msg)
+
+
+class Py42DescriptionLimitExceededError(Py42BadRequestError):
+    """An error raised when description of a case exceeds allowed char length limit."""
+
+    def __init__(self, exception):
+        msg = "Description limit exceeded, max 254 characters allowed."
+        super(Py42DescriptionLimitExceededError, self).__init__(exception, msg)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

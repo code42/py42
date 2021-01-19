@@ -279,6 +279,14 @@ class Py42DescriptionLimitExceededError(Py42BadRequestError):
         super(Py42DescriptionLimitExceededError, self).__init__(exception, msg)
 
 
+class Py42CaseAlreadyHasEventError(Py42BadRequestError):
+    """An error raised when event is already associated to the case."""
+
+    def __init__(self, exception):
+        msg = "Event is already associated to the case."
+        super(Py42CaseAlreadyHasEventError, self).__init__(exception, msg)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

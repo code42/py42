@@ -8,7 +8,7 @@ import py42.sdk as _sdk
 
 # pytest plugin method
 def pytest_addoption(parser):
-    parser.addini("host_url", "Application/enviroment to connect to.")
+    parser.addini("host_url", "Application/environment to connect to.")
     parser.addini("alert_id", "Alert id that exists in the system.")
     parser.addini("device_id", "Device id that exists in the system.")
     parser.addini("observer_rule_id", "Observer rule id.")

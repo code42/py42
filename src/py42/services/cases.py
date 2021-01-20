@@ -29,9 +29,10 @@ class CasesService(BaseService):
         except Py42BadRequestError as err:
             if u"NAME_EXISTS" in err.response.text:
                 raise Py42CaseNameExistsError(err, name)
-            if u"DESCRIPTION_TOO_LONG" in err.response.text:
+            elif u"DESCRIPTION_TOO_LONG" in err.response.text:
                 raise Py42DescriptionLimitExceededError(err)
-            raise
+            else:
+                raise
 
     def get_page(
         self,
@@ -127,6 +128,7 @@ class CasesService(BaseService):
         except Py42BadRequestError as err:
             if u"NO_EDITS_ONCE_CLOSED" in err.response.text:
                 raise Py42UpdateClosedCaseError(err)
-            if u"DESCRIPTION_TOO_LONG" in err.response.text:
+            elif u"DESCRIPTION_TOO_LONG" in err.response.text:
                 raise Py42DescriptionLimitExceededError(err)
-            raise
+            else:
+                raise

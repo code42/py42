@@ -272,10 +272,10 @@ class Py42CaseNameExistsError(Py42BadRequestError):
 
 
 class Py42DescriptionLimitExceededError(Py42BadRequestError):
-    """An error raised when description of a case exceeds allowed char length limit."""
+    """An error raised when description of a case exceeds the allowed char length limit."""
 
     def __init__(self, exception):
-        msg = "Description limit exceeded, max 254 characters allowed."
+        msg = "Description limit exceeded, max 250 characters allowed."
         super(Py42DescriptionLimitExceededError, self).__init__(exception, msg)
 
 

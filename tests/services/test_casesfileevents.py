@@ -1,6 +1,5 @@
 import pytest
 from requests import HTTPError
-from requests import Response
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42CaseAlreadyHasEventError
@@ -10,23 +9,29 @@ from py42.services.casesfileevents import CasesFileEventsService
 _TEST_CASE_NUMBER = 123456
 UPDATE_ERROR_RESPONSE = """{"problem":"CASE_IS_CLOSED"}"""
 ADDED_SAME_EVENT_AGAIN_ERROR = """{"problem":"CASE_ALREADY_HAS_EVENT"}"""
+UNKNOWN_ERROR = """{"problem":"SURPRISE!"}"""
 
 
 class TestCasesFileEventService:
     @pytest.fixture
-    def mock_update_failed_response(self, mocker, http_error):
+    def mock_update_failed_response(self, mock_error_response):
         http_error = HTTPError(UPDATE_ERROR_RESPONSE)
-        http_error.response = mocker.MagicMock(sepc=Response)
-        http_error.response.status_code = 400
+        http_error.response = mock_error_response
         http_error.response.text = UPDATE_ERROR_RESPONSE
         return http_error
 
     @pytest.fixture
-    def mock_add_same_event_multiple_times(self, mocker, http_error):
+    def mock_add_same_event_multiple_times(self, mock_error_response):
         http_error = HTTPError(ADDED_SAME_EVENT_AGAIN_ERROR)
-        http_error.response = mocker.MagicMock(sepc=Response)
-        http_error.response.status_code = 400
+        http_error.response = mock_error_response
         http_error.response.text = ADDED_SAME_EVENT_AGAIN_ERROR
+        return http_error
+
+    @pytest.fixture
+    def mock_unknown_error(self, mock_error_response):
+        http_error = HTTPError(UNKNOWN_ERROR)
+        http_error.response = mock_error_response
+        http_error.response.text = UNKNOWN_ERROR
         return http_error
 
     def test_add_called_with_expected_url_and_params(self, mock_connection):
@@ -92,3 +97,19 @@ class TestCasesFileEventService:
             case_file_event_service.add(_TEST_CASE_NUMBER, event_id=u"x")
 
         assert e.value.args[0] == u"Event is already associated to the case."
+
+    def test_add_when_unknown_error_raises_error(
+        self, mock_connection, mock_unknown_error
+    ):
+        case_file_event_service = CasesFileEventsService(mock_connection)
+        mock_connection.post.side_effect = Py42BadRequestError(mock_unknown_error)
+        with pytest.raises(Py42BadRequestError):
+            case_file_event_service.add(_TEST_CASE_NUMBER, event_id=u"x")
+
+    def test_delete_when_unknown_error_raises_error(
+        self, mock_connection, mock_unknown_error
+    ):
+        case_file_event_service = CasesFileEventsService(mock_connection)
+        mock_connection.post.side_effect = Py42BadRequestError(mock_unknown_error)
+        with pytest.raises(Py42BadRequestError):
+            case_file_event_service.add(_TEST_CASE_NUMBER, event_id=u"x")

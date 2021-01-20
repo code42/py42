@@ -14,6 +14,18 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `sdk.legalhold.get_custodians_page()` now raises `Py42LegalHoldCriteriaMissingError` when missing one of the required options.
 
+- `sdk.cases.create()` now raises `Py42CaseNameExistsError` when case name already exists in the system.
+
+- `sdk.cases.create()` now raises `Py42DescriptionLimitExceededError` when the description is more than 250 charachters.
+
+- `sdk.cases.update()` now raises `Py42DescriptionLimitExceededError` when the description is more than 250 charachters.
+
+- `sdk.cases.file_events.add()` now raises `Py42CaseAlreadyHasEventError` when the same event is added to a case more than once.
+
+- `sdk.cases.file_events.add()` now raises `Py42UpdateClosedCaseError` when the event is added to a closed case.
+
+- `sdk.cases.file_events.delete()` now raises `Py42UpdateClosedCaseError` when the event is deleted from a closed case.
+
 ### Added
 
 - Python 3.9 support.

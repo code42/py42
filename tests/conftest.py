@@ -241,3 +241,10 @@ def get_file_selection(file_type, file_path, num_files=1, num_dirs=1, num_bytes=
         num_dirs,
         num_bytes,
     )
+
+
+@pytest.fixture
+def mock_error_response(mocker):
+    response = mocker.MagicMock(sepc=Response)
+    response.status_code = 400
+    return response

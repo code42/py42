@@ -103,13 +103,15 @@ class TestCasesFileEventService:
     ):
         case_file_event_service = CasesFileEventsService(mock_connection)
         mock_connection.post.side_effect = Py42BadRequestError(mock_unknown_error)
-        with pytest.raises(Py42BadRequestError):
+        with pytest.raises(Py42BadRequestError) as e:
             case_file_event_service.add(_TEST_CASE_NUMBER, event_id=u"x")
+        assert e.value.response.status_code == 400
 
     def test_delete_when_unknown_error_raises_error(
         self, mock_connection, mock_unknown_error
     ):
         case_file_event_service = CasesFileEventsService(mock_connection)
         mock_connection.post.side_effect = Py42BadRequestError(mock_unknown_error)
-        with pytest.raises(Py42BadRequestError):
+        with pytest.raises(Py42BadRequestError) as e:
             case_file_event_service.add(_TEST_CASE_NUMBER, event_id=u"x")
+        assert e.value.response.status_code == 400

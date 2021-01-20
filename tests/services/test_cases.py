@@ -293,5 +293,6 @@ class TestCasesService:
     ):
         cases_service = CasesService(mock_connection)
         mock_connection.post.side_effect = Py42BadRequestError(mock_unknown_error)
-        with pytest.raises(Py42BadRequestError):
+        with pytest.raises(Py42BadRequestError) as e:
             cases_service.create("Case")
+        assert e.value.response.status_code == 400

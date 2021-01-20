@@ -10,7 +10,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
-- `sdk.cases.create()` now raises `Py42CaseNameExistsError` when case name already exists in the system.
+- `sdk.cases.create()` now raises `Py42CaseNameExistsError` when the case name already exists in the system.
 
 - `sdk.cases.create()` now raises `Py42DescriptionLimitExceededError` when the description is more than 250 charachters.
 

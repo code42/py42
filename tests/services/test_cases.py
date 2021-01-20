@@ -6,6 +6,8 @@ from requests import Response
 
 import py42.settings
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42CaseNameExistsError
+from py42.exceptions import Py42DescriptionLimitExceededError
 from py42.exceptions import Py42UpdateClosedCaseError
 from py42.response import Py42Response
 from py42.services.cases import CasesService
@@ -22,6 +24,12 @@ GET_CASE_RESPONSE = """
 "subject": "string", "subjectUsername": "string",
 "updatedAt": "2021-01-04T08:09:58.832Z"}
 """
+
+NAME_EXISTS_ERROR_MSG = """{"problem":"NAME_EXISTS","description":null}"""
+DESCRIPTION_TOO_LONG_ERROR_MSG = (
+    """{"problem":"DESCRIPTION_TOO_LONG","description":null}"""
+)
+UNKNOWN_ERROR_MSG = """{"problem":"SURPRISE!"}"""
 _TEST_CASE_NUMBER = 123456
 _BASE_URI = u"/api/v1/case"
 
@@ -50,11 +58,31 @@ class TestCasesService:
         return Py42Response(response)
 
     @pytest.fixture
-    def mock_update_failed_response(self, mocker, http_error):
+    def mock_update_failed_response(self, mock_error_response):
         http_error = HTTPError(UPDATE_ERROR_RESPONSE)
-        http_error.response = mocker.MagicMock(sepc=Response)
-        http_error.response.status_code = 400
+        http_error.response = mock_error_response
         http_error.response.text = UPDATE_ERROR_RESPONSE
+        return http_error
+
+    @pytest.fixture
+    def mock_description_too_long_response(self, mock_error_response):
+        http_error = HTTPError(DESCRIPTION_TOO_LONG_ERROR_MSG)
+        http_error.response = mock_error_response
+        http_error.response.text = DESCRIPTION_TOO_LONG_ERROR_MSG
+        return http_error
+
+    @pytest.fixture
+    def mock_name_exists_response(self, mock_error_response):
+        http_error = HTTPError(NAME_EXISTS_ERROR_MSG)
+        http_error.response = mock_error_response
+        http_error.response.text = NAME_EXISTS_ERROR_MSG
+        return http_error
+
+    @pytest.fixture
+    def mock_unknown_error(self, mock_error_response):
+        http_error = HTTPError(UNKNOWN_ERROR_MSG)
+        http_error.response = mock_error_response
+        http_error.response.text = UNKNOWN_ERROR_MSG
         return http_error
 
     def test_create_called_with_expected_url_and_params(self, mock_connection):
@@ -213,3 +241,58 @@ class TestCasesService:
             cases_service.update(_TEST_CASE_NUMBER, findings=u"x")
 
         assert e.value.args[0] == u"Cannot update a closed case."
+
+    def test_create_when_fails_with_name_exists_error_raises_custom_exception(
+        self, mock_connection, mock_name_exists_response
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.post.side_effect = Py42BadRequestError(
+            mock_name_exists_response
+        )
+        with pytest.raises(Py42CaseNameExistsError) as e:
+            cases_service.create("Duplicate")
+
+        assert (
+            e.value.args[0]
+            == u"Case name 'Duplicate' already exists, please set another name"
+        )
+
+    def test_create_when_fails_with_description_too_long_error_raises_custom_exception(
+        self, mock_connection, mock_description_too_long_response
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.post.side_effect = Py42BadRequestError(
+            mock_description_too_long_response
+        )
+        with pytest.raises(Py42DescriptionLimitExceededError) as e:
+            cases_service.create("test", description=u"supposedly too long")
+
+        assert (
+            e.value.args[0]
+            == u"Description limit exceeded, max 250 characters allowed."
+        )
+
+    def test_update_when_fails_with_description_too_long_error_raises_custom_exception(
+        self, mock_connection, mock_get_response, mock_description_too_long_response
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.get.return_value = mock_get_response
+        mock_connection.put.side_effect = Py42BadRequestError(
+            mock_description_too_long_response
+        )
+        with pytest.raises(Py42DescriptionLimitExceededError) as e:
+            cases_service.update(_TEST_CASE_NUMBER, description=u"supposedly too long")
+
+        assert (
+            e.value.args[0]
+            == u"Description limit exceeded, max 250 characters allowed."
+        )
+
+    def test_create_when_fails_with_unknown_error_raises_custom_exception(
+        self, mock_connection, mock_unknown_error
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.post.side_effect = Py42BadRequestError(mock_unknown_error)
+        with pytest.raises(Py42BadRequestError) as e:
+            cases_service.create("Case")
+        assert e.value.response.status_code == 400

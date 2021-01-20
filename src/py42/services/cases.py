@@ -1,5 +1,7 @@
 from py42 import settings
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42CaseNameExistsError
+from py42.exceptions import Py42DescriptionLimitExceededError
 from py42.exceptions import Py42UpdateClosedCaseError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
@@ -22,7 +24,15 @@ class CasesService(BaseService):
             u"name": name,
             u"subject": subject,
         }
-        return self._connection.post(self._uri_prefix, json=data)
+        try:
+            return self._connection.post(self._uri_prefix, json=data)
+        except Py42BadRequestError as err:
+            if u"NAME_EXISTS" in err.response.text:
+                raise Py42CaseNameExistsError(err, name)
+            elif u"DESCRIPTION_TOO_LONG" in err.response.text:
+                raise Py42DescriptionLimitExceededError(err)
+            else:
+                raise
 
     def get_page(
         self,
@@ -118,4 +128,7 @@ class CasesService(BaseService):
         except Py42BadRequestError as err:
             if u"NO_EDITS_ONCE_CLOSED" in err.response.text:
                 raise Py42UpdateClosedCaseError(err)
-            raise
+            elif u"DESCRIPTION_TOO_LONG" in err.response.text:
+                raise Py42DescriptionLimitExceededError(err)
+            else:
+                raise

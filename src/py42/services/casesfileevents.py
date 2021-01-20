@@ -28,9 +28,10 @@ class CasesFileEventsService(BaseService):
         except Py42BadRequestError as err:
             if "CASE_IS_CLOSED" in err.response.text:
                 raise Py42UpdateClosedCaseError(err)
-            if "CASE_ALREADY_HAS_EVENT" in err.response.text:
+            elif "CASE_ALREADY_HAS_EVENT" in err.response.text:
                 raise Py42CaseAlreadyHasEventError(err)
-            raise
+            else:
+                raise
 
     def get(self, case_number, event_id):
         """Gets information of a specified event from the case.

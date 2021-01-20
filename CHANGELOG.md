@@ -8,11 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## 1.11.0 - 2021-01-20
-
-### Changed
-
-- `sdk.legalhold.get_custodians_page()` now raises `Py42LegalHoldCriteriaMissingError` when missing one of the required options.
+## Unreleased
 
 - `sdk.cases.create()` now raises `Py42CaseNameExistsError` when case name already exists in the system.
 
@@ -25,6 +21,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - `sdk.cases.file_events.add()` now raises `Py42UpdateClosedCaseError` when the event is added to a closed case.
 
 - `sdk.cases.file_events.delete()` now raises `Py42UpdateClosedCaseError` when the event is deleted from a closed case.
+
+## 1.11.0 - 2021-01-20
+
+### Changed
+
+- `sdk.legalhold.get_custodians_page()` now raises `Py42LegalHoldCriteriaMissingError` when missing one of the required options.
 
 ### Added
 

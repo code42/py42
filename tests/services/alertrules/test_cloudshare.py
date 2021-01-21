@@ -6,7 +6,7 @@ class TestCloudShareClient(object):
         self, mock_connection
     ):
         alert_rule_client = CloudShareService(mock_connection, u"tenant-id")
-        alert_rule_client.get(u"rule-id")
+        alert_rule_client.get("rule-id")
         url = mock_connection.post.call_args[0][0]
         assert url == "/svc/api/v1/Rules/query-cloud-share-permissions-rule"
         posted_data = mock_connection.post.call_args[1]["json"]

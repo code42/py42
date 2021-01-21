@@ -42,7 +42,9 @@ def observer_id(request):
 
 @pytest.fixture(scope="session")
 def connection(host):
-    return _sdk.from_local_account(host, os.environ["C42_USER"], os.environ["C42_PW"])
+    user = os.environ.get("C42_USER") or "test.user@example.com"
+    pw = os.environ.get("C42_PW") or "password"
+    return _sdk.from_local_account(host, user, pw)
 
 
 @pytest.fixture(scope="session")

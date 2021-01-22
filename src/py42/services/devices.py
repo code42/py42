@@ -211,7 +211,7 @@ class DeviceService(BaseService):
 
     def reactivate(self, device_id):
         """Activates a previously deactivated device.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeactivation>`__
+        `REST Documentation <https://console.us.code42.com/swagger/?urls.primaryName=v4#/computer-deactivation/ComputerDeactivation_Remove>`__
 
         Args:
             device_id (int): The identification number of the device.

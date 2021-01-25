@@ -4,9 +4,9 @@ from datetime import datetime
 import pytest
 
 import py42.sdk as _sdk
+from py42.util import convert_datetime_to_epoch
 
 
-# pytest plugin method
 def pytest_addoption(parser):
     parser.addini("host_url", "Application/environment to connect to.")
     parser.addini("alert_id", "Alert id that exists in the system.")
@@ -49,7 +49,7 @@ def connection(host):
 
 @pytest.fixture(scope="session")
 def timestamp():
-    return str(int(datetime.utcnow().timestamp()))
+    return convert_datetime_to_epoch(datetime.utcnow())
 
 
 @pytest.fixture(scope="session")

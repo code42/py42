@@ -7,6 +7,7 @@ from py42.services import BaseService
 
 class AlertRulesService(BaseService):
     """A service to manage Alert Rules."""
+
     _api_prefix = u"/svc/api/v1/Rules/"
 
     def __init__(self, connection, user_context, user_profile_service):

@@ -36,7 +36,7 @@ def observer_id(request):
 
 @pytest.fixture(scope="session")
 def connection():
-    host = os.environ.get("C42_HOST") or "127.0.0.1:4200"
+    host = os.environ.get("C42_HOST") or "http://127.0.0.1:4200"
     user = os.environ.get("C42_USER") or "test.user@example.com"
     pw = os.environ.get("C42_PW") or "password"
     return _get_sdk(host, user, pw)

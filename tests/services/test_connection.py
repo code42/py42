@@ -350,3 +350,11 @@ class TestConnection(object):
         connection.get(URL)
         request = success_requests_session.prepare_request.call_args[0][0]
         assert request.headers.get("Foo") is None
+
+    def test_connection_request_includes_user_agent_header(
+        self, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
+        connection.put(URL)
+        request = success_requests_session.prepare_request.call_args[0][0]
+        assert request.headers["User-Agent"] is not None

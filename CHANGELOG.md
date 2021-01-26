@@ -13,7 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Changed
 
 - The request header `Content-Type: application/json` is no longer sent when there is no
-  request data.
+  request data.tox
 
 - `sdk.cases.create()` now raises `Py42CaseNameExistsError` when the case name already
   exists in the system.

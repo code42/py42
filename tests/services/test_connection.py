@@ -337,7 +337,9 @@ class TestConnection(object):
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        connection.put(URL, data='{"foo":"bar"}', headers={"Header1": "Foo", "Header2": "Bar"})
+        connection.put(
+            URL, data='{"foo":"bar"}', headers={"Header1": "Foo", "Header2": "Bar"}
+        )
         request = success_requests_session.prepare_request.call_args[0][0]
         assert request.headers["Header1"] == "Foo"
         assert request.headers["Header2"] == "Bar"

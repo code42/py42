@@ -2,10 +2,10 @@ from datetime import datetime
 from datetime import timedelta
 
 import pytest
+from tests.integration.conftest import assert_successful_response
 
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters import EventTimestamp
-from tests.integration.conftest import assert_successful_response
 
 
 @pytest.fixture(scope="module")

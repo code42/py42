@@ -1,9 +1,9 @@
 from datetime import datetime
 
 import pytest
+from tests.integration.conftest import assert_successful_response
 
 from py42.exceptions import Py42ForbiddenError
-from tests.integration.conftest import assert_successful_response
 
 
 @pytest.fixture
@@ -83,5 +83,7 @@ class TestArchive:
     def test_update_cold_storage_purge_date(self, connection, archive_guid):
         purge_date = datetime.now().strftime("%Y-%m-%d")
         with pytest.raises(Py42ForbiddenError):
-            response = connection.archive.update_cold_storage_purge_date(archive_guid, purge_date)
+            response = connection.archive.update_cold_storage_purge_date(
+                archive_guid, purge_date
+            )
             assert_successful_response(response)

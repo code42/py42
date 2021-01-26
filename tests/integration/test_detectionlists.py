@@ -2,9 +2,9 @@ from datetime import datetime
 from datetime import timedelta
 
 import pytest
+from tests.integration.conftest import assert_successful_response
 
 from py42.clients.detectionlists import RiskTags
-from tests.integration.conftest import assert_successful_response
 
 alias_user = "test_user@test.com"
 user_departure_date = datetime.now() + timedelta(days=10)

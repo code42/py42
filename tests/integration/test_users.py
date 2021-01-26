@@ -1,5 +1,4 @@
 import pytest
-
 from tests.integration.conftest import assert_successful_response
 
 role = "Desktop User"

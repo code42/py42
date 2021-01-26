@@ -10,17 +10,28 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
-- `sdk.cases.create()` now raises `Py42CaseNameExistsError` when the case name already exists in the system.
+### Changed
 
-- `sdk.cases.create()` now raises `Py42DescriptionLimitExceededError` when the description is more than 250 charachters.
+- The request header `Content-Type: application/json` is no longer sent when there is no
+  request data.
 
-- `sdk.cases.update()` now raises `Py42DescriptionLimitExceededError` when the description is more than 250 charachters.
+- `sdk.cases.create()` now raises `Py42CaseNameExistsError` when the case name already
+  exists in the system.
 
-- `sdk.cases.file_events.add()` now raises `Py42CaseAlreadyHasEventError` when the same event is added to a case more than once.
+- `sdk.cases.create()` now raises `Py42DescriptionLimitExceededError` when the description
+  is more than 250 characters.
 
-- `sdk.cases.file_events.add()` now raises `Py42UpdateClosedCaseError` when the event is added to a closed case.
+- `sdk.cases.update()` now raises `Py42DescriptionLimitExceededError` when the description
+  is more than 250 characters.
 
-- `sdk.cases.file_events.delete()` now raises `Py42UpdateClosedCaseError` when the event is deleted from a closed case.
+- `sdk.cases.file_events.add()` now raises `Py42CaseAlreadyHasEventError` when the same
+  event is added to a case more than once.
+
+- `sdk.cases.file_events.add()` now raises `Py42UpdateClosedCaseError` when the event is
+  added to a closed case.
+
+- `sdk.cases.file_events.delete()` now raises `Py42UpdateClosedCaseError` when the event
+  is deleted from a closed case.
 
 ## 1.11.0 - 2021-01-20
 

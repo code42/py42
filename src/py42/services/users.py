@@ -90,7 +90,7 @@ class UserService(BaseService):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
-            username (str): A username for a user.
+            username (str or unicode): A username for a user.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.

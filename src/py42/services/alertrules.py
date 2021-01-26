@@ -8,9 +8,7 @@ from py42.services import BaseService
 class AlertRulesService(BaseService):
     """A service to manage Alert Rules."""
 
-    _version = u"v1"
-    _resource = u"Rules/"
-    _api_prefix = u"/svc/api/{}/{}".format(_version, _resource)
+    _api_prefix = u"/svc/api/v1/Rules/"
 
     def __init__(self, connection, user_context, user_profile_service):
         super(AlertRulesService, self).__init__(connection)
@@ -79,10 +77,7 @@ class AlertRulesService(BaseService):
 
 
 class CloudShareService(BaseService):
-
-    _version = u"v1"
-    _resource = u"query-cloud-share-permissions-rule"
-    _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
+    _endpoint = u"/svc/api/v1/Rules/query-cloud-share-permissions-rule"
 
     def __init__(self, connection, tenant_id):
         super(CloudShareService, self).__init__(connection)
@@ -98,14 +93,11 @@ class CloudShareService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
-        return self._connection.post(self._api_prefix, json=data)
+        return self._connection.post(self._endpoint, json=data)
 
 
 class ExfiltrationService(BaseService):
-
-    _version = u"v1"
-    _resource = u"query-endpoint-exfiltration-rule"
-    _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
+    _endpoint = u"/svc/api/v1/Rules/query-endpoint-exfiltration-rule"
 
     def __init__(self, connection, tenant_id):
         super(ExfiltrationService, self).__init__(connection)
@@ -121,14 +113,11 @@ class ExfiltrationService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
-        return self._connection.post(self._api_prefix, json=data)
+        return self._connection.post(self._endpoint, json=data)
 
 
 class FileTypeMismatchService(BaseService):
-
-    _version = u"v1"
-    _resource = u"query-file-type-mismatch-rule"
-    _api_prefix = u"/svc/api/{}/Rules/{}".format(_version, _resource)
+    _endpoint = u"/svc/api/v1/Rules/query-file-type-mismatch-rule"
 
     def __init__(self, connection, tenant_id):
         super(FileTypeMismatchService, self).__init__(connection)
@@ -144,4 +133,4 @@ class FileTypeMismatchService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {u"tenantId": self._tenant_id, u"ruleIds": [rule_id]}
-        return self._connection.post(self._api_prefix, json=data)
+        return self._connection.post(self._endpoint, json=data)

@@ -27,7 +27,6 @@ ROOT_SESSION.mount(u"https://", SESSION_ADAPTER)
 ROOT_SESSION.mount(u"http://", SESSION_ADAPTER)
 ROOT_SESSION.headers = {
     u"Accept": u"application/json",
-    u"Content-Type": u"application/json",
     u"Accept-Encoding": u"gzip, deflate",
     u"Connection": u"keep-alive",
 }
@@ -228,9 +227,7 @@ class Connection(object):
         if json is not None:
             data = json_lib.dumps(json)
 
-        user_headers = {u"User-Agent": settings.get_user_agent_string()}
-        if headers:
-            user_headers.update(headers)
+        user_headers = _create_user_headers(headers, data)
         self._headers.update(user_headers)
         request = Request(
             method=method,
@@ -261,6 +258,16 @@ class Connection(object):
         parsed_host = urlparse(host)
         self._headers[u"Host"] = parsed_host.netloc
         self._host_address = host
+
+
+def _create_user_headers(headers, data):
+    user_headers = {u"User-Agent": settings.get_user_agent_string()}
+    if headers:
+        user_headers.update(headers)
+    if data:
+        content_header = {u"Content-Type": u"application/json"}
+        user_headers.update(content_header)
+    return user_headers
 
 
 def _handle_error(method, url, response):

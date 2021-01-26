@@ -307,3 +307,19 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         with pytest.raises(Py42Error):
             connection.get(URL)
+
+    def test_connection_request_when_no_data_does_not_include_content_type_header(
+        self, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
+        connection.put(URL)
+        request = success_requests_session.prepare_request.call_args[0][0]
+        assert request.headers.get("Content-Type") is None
+
+    def test_connection_request_when_has_data_includes_content_type_header(
+        self, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
+        connection.put(URL, data='{"foo":"bar"}')
+        request = success_requests_session.prepare_request.call_args[0][0]
+        assert request.headers["Content-Type"] == "application/json"

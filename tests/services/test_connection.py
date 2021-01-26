@@ -332,3 +332,21 @@ class TestConnection(object):
         connection.get(URL)
         request = success_requests_session.prepare_request.call_args[0][0]
         assert request.headers.get("Content-Type") is None
+
+    def test_connection_request_uses_given_headers(
+        self, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
+        connection.put(URL, data='{"foo":"bar"}', headers={"Header1": "Foo", "Header2": "Bar"})
+        request = success_requests_session.prepare_request.call_args[0][0]
+        assert request.headers["Header1"] == "Foo"
+        assert request.headers["Header2"] == "Bar"
+
+    def test_connection_request_when_given_header_as_param_does_not_persist_header(
+        self, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
+        connection.put(URL, data='{"foo":"bar"}', headers={"Foo": "Bar"})
+        connection.get(URL)
+        request = success_requests_session.prepare_request.call_args[0][0]
+        assert request.headers.get("Foo") is None

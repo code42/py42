@@ -183,7 +183,6 @@ class Connection(object):
                 auth=auth,
                 hooks=hooks,
             )
-
             response = self._session.send(
                 request,
                 stream=stream,
@@ -227,13 +226,14 @@ class Connection(object):
         if json is not None:
             data = json_lib.dumps(json)
 
-        user_headers = _create_user_headers(headers, data)
-        self._set_content_header(data)
-        self._headers.update(user_headers)
+        headers = _create_user_headers(headers, data)
+        headers.update(self._headers)
+        if data:
+            headers.update({u"Content-Type": u"application/json"})
         request = Request(
             method=method,
             url=url,
-            headers=self._headers,
+            headers=headers,
             files=files,
             data=data,
             params=params,
@@ -244,14 +244,6 @@ class Connection(object):
 
         _print_request(method, url, params=params, data=data)
         return self._session.prepare_request(request)
-
-    def _set_content_header(self, data):
-        content_key = u"Content-Type"
-        content_header = {content_key: u"application/json"}
-        if data:
-            self._headers.update(content_header)
-        elif content_key in self._headers:
-            del self._headers[content_key]
 
     def _get_host_address(self):
         if not self._host_address:

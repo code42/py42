@@ -158,7 +158,7 @@ def test_add_one_and_one_equals_two():
 
 If not using the mock server, set the environment variables `C42_HOST`, `C42_USER`,
 and `C42_PW` with CCA credentials. Otherwise, the integration tests default to using
-`127.0.0.1:4200`, which is the same address that the mock server is set to run on.
+`http://127.0.0.1:4200`, which is the same address that the mock server is set to run on.
 
 To execute integration tests:
 

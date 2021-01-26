@@ -328,7 +328,7 @@ class TestConnection(object):
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        connection.put(URL, data='{"foo":"bar"}')  # Uses data and Content-Type: application/json
+        connection.put(URL, data='{"foo":"bar"}')  # Content-Type: application/json
         connection.get(URL)
         request = success_requests_session.prepare_request.call_args[0][0]
         assert request.headers.get("Content-Type") is None

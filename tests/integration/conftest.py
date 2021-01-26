@@ -86,3 +86,7 @@ def new_user(connection, org, timestamp):
 def device(request, connection):
     device_id = request.config.getini("device_id")
     return connection.devices.get_by_id(device_id)
+
+
+def assert_successful_response(response):
+    assert 200 <= response.status_code < 300

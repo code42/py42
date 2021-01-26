@@ -5,6 +5,7 @@ import pytest
 
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters import EventTimestamp
+from tests.integration.conftest import assert_successful_response
 
 
 @pytest.fixture(scope="module")
@@ -38,13 +39,13 @@ class TestSecurityData:
     def test_get_all_plan_security_events(self, connection, plan_info):
         response_gen = connection.securitydata.get_all_plan_security_events(plan_info)
         for response in response_gen:
-            assert response[0].status_code == 200
+            assert_successful_response(response)
             break
 
     def test_get_all_user_security_events(self, connection, user_uid):
         response_gen = connection.securitydata.get_all_user_security_events(user_uid)
         for response in response_gen:
-            assert response[0].status_code == 200
+            assert_successful_response(response)
             break
 
     def test_search_file_events(self, connection):
@@ -55,7 +56,7 @@ class TestSecurityData:
         )
         query = FileEventQuery.all(date_query)
         response = connection.securitydata.search_file_events(query)
-        assert response.status_code == 200
+        assert_successful_response(response)
 
     def test_stream_file_by_md5(self, connection, md5_hash, file_data):
         response = connection.securitydata.stream_file_by_md5(md5_hash)

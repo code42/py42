@@ -44,7 +44,17 @@ def observer_id(request):
 def connection(host):
     user = os.environ.get("C42_USER") or "test.user@example.com"
     pw = os.environ.get("C42_PW") or "password"
-    return _sdk.from_local_account(host, user, pw)
+    return _get_sdk(host, user, pw)
+
+
+def _get_sdk(host, user, pw):
+    try:
+        return _sdk.from_local_account(host, user, pw)
+    except Exception as err:
+        pytest.exit(
+            "Failed to init SDK for integration tests: {}".format(str(err)),
+            returncode=1,
+        )
 
 
 @pytest.fixture(scope="session")

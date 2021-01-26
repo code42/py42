@@ -12,7 +12,6 @@ from py42.services.users import UserService
 
 
 USER_URI = "/api/User"
-
 DEFAULT_GET_ALL_PARAMS = {
     "active": None,
     "email": None,
@@ -22,13 +21,9 @@ DEFAULT_GET_ALL_PARAMS = {
     "pgSize": 500,
     "q": None,
 }
-
 MOCK_GET_USER_RESPONSE = """{"totalCount": 3000, "users": ["foo"]}"""
-
 MOCK_EMPTY_GET_USER_RESPONSE = """{"totalCount": 3000, "users": []}"""
-
 MOCK_text = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
-
 MOCK_ERROR_text = '{"body": "USER_DUPLICATE"}'
 
 

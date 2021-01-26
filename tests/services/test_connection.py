@@ -323,3 +323,12 @@ class TestConnection(object):
         connection.put(URL, data='{"foo":"bar"}')
         request = success_requests_session.prepare_request.call_args[0][0]
         assert request.headers["Content-Type"] == "application/json"
+
+    def test_connection_request_when_has_data_does_not_use_header_on_following_request_that_does_not_have_data(
+        self, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
+        connection.put(URL, data='{"foo":"bar"}')  # Uses data and Content-Type: application/json
+        connection.get(URL)
+        request = success_requests_session.prepare_request.call_args[0][0]
+        assert request.headers.get("Content-Type") is None

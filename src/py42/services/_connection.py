@@ -228,6 +228,7 @@ class Connection(object):
             data = json_lib.dumps(json)
 
         user_headers = _create_user_headers(headers, data)
+        self._set_content_header(data)
         self._headers.update(user_headers)
         request = Request(
             method=method,
@@ -243,6 +244,14 @@ class Connection(object):
 
         _print_request(method, url, params=params, data=data)
         return self._session.prepare_request(request)
+
+    def _set_content_header(self, data):
+        content_key = u"Content-Type"
+        content_header = {content_key: u"application/json"}
+        if data:
+            self._headers.update(content_header)
+        elif content_key in self._headers:
+            del self._headers[content_key]
 
     def _get_host_address(self):
         if not self._host_address:
@@ -264,9 +273,6 @@ def _create_user_headers(headers, data):
     user_headers = {u"User-Agent": settings.get_user_agent_string()}
     if headers:
         user_headers.update(headers)
-    if data:
-        content_header = {u"Content-Type": u"application/json"}
-        user_headers.update(content_header)
     return user_headers
 
 

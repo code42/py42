@@ -189,7 +189,7 @@ class UserService(BaseService):
 
     def get_scim_data_by_uid(self, user_uid):
         """Returns SCIM data such as division, department, and title for a given user.
-        `REST Documentation <https://console.us.code42.com/swagger/#/scim-user-data/ScimUserData_CollatedView>`__
+        `REST Documentation <https://console.us.code42.com/swagger/?urls.primaryName=v7#/scim-user-data>`__
 
         Args:
             user_uid (str): A Code42 user uid.

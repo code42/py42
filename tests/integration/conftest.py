@@ -8,7 +8,6 @@ from py42.util import convert_datetime_to_epoch
 
 
 def pytest_addoption(parser):
-    parser.addini("host_url", "Application/environment to connect to.")
     parser.addini("alert_id", "Alert id that exists in the system.")
     parser.addini("device_id", "Device id that exists in the system.")
     parser.addini("observer_rule_id", "Observer rule id.")
@@ -26,11 +25,6 @@ def pytest_addoption(parser):
 
 
 @pytest.fixture(scope="session")
-def host(request):
-    return request.config.getini("host_url")
-
-
-@pytest.fixture(scope="session")
 def alert_id(request):
     return request.config.getini("alert_id")
 
@@ -41,7 +35,8 @@ def observer_id(request):
 
 
 @pytest.fixture(scope="session")
-def connection(host):
+def connection():
+    host = os.environ.get("C42_HOST") or "127.0.0.1:4200"
     user = os.environ.get("C42_USER") or "test.user@example.com"
     pw = os.environ.get("C42_PW") or "password"
     return _get_sdk(host, user, pw)

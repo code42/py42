@@ -53,7 +53,6 @@ class TestUser:
         response = connection.users.get_current()
         assert_successful_response(response)
 
-    @pytest.mark.skip("Fails when whole test suite is executed.")
     def test_deactivate(self, connection, new_user):
         response = connection.users.deactivate(new_user["userId"])
         assert_successful_response(response)

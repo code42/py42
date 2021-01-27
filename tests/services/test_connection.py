@@ -366,7 +366,7 @@ class TestConnection(object):
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.put(
-            URL, headers={"Content-Type": "*/*"}
+            URL, data='{"foo":"bar"}', headers={"Content-Type": "*/*"}
         )
         request = success_requests_session.prepare_request.call_args[0][0]
         assert request.headers["Content-Type"] == "*/*"

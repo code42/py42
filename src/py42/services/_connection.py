@@ -226,6 +226,7 @@ class Connection(object):
         if json is not None:
             data = json_lib.dumps(json)
 
+        headers = headers or {}
         headers.update(self._headers)
         if data:
             headers.update({u"Content-Type": u"application/json"})

@@ -228,7 +228,7 @@ class Connection(object):
 
         headers = headers or {}
         headers.update(self._headers)
-        if data:
+        if data and u"Content-Type" not in headers:
             headers.update({u"Content-Type": u"application/json"})
         headers = _create_user_headers(headers)
         request = Request(

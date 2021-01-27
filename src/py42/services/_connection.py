@@ -226,10 +226,10 @@ class Connection(object):
         if json is not None:
             data = json_lib.dumps(json)
 
-        headers = _create_user_headers(headers, data)
         headers.update(self._headers)
         if data:
             headers.update({u"Content-Type": u"application/json"})
+        headers = _create_user_headers(headers)
         request = Request(
             method=method,
             url=url,
@@ -261,7 +261,7 @@ class Connection(object):
         self._host_address = host
 
 
-def _create_user_headers(headers, data):
+def _create_user_headers(headers):
     user_headers = {u"User-Agent": settings.get_user_agent_string()}
     if headers:
         user_headers.update(headers)

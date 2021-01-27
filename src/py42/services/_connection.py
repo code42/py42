@@ -226,15 +226,16 @@ class Connection(object):
         if json is not None:
             data = json_lib.dumps(json)
 
-        headers = headers or {}
-        headers.update(self._headers)
+        request_headers = dict(self._headers)
+        if headers:
+            request_headers.update(headers)
         if data:
-            headers.update({u"Content-Type": u"application/json"})
-        headers = _create_user_headers(headers)
+            request_headers.update({u"Content-Type": u"application/json"})
+        request_headers = _create_user_headers(request_headers)
         request = Request(
             method=method,
             url=url,
-            headers=headers,
+            headers=request_headers,
             files=files,
             data=data,
             params=params,

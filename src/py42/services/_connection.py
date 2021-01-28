@@ -26,7 +26,6 @@ ROOT_SESSION = Session()
 ROOT_SESSION.mount(u"https://", SESSION_ADAPTER)
 ROOT_SESSION.mount(u"http://", SESSION_ADAPTER)
 ROOT_SESSION.headers = {
-    u"Accept": u"application/json",
     u"Accept-Encoding": u"gzip, deflate",
     u"Connection": u"keep-alive",
 }
@@ -230,6 +229,8 @@ class Connection(object):
         headers.update(self._headers)
         if data and u"Content-Type" not in headers:
             headers.update({u"Content-Type": u"application/json"})
+        if u"Accept" not in headers:
+            headers.update({u"Accept": u"application/json"})
         headers = _create_user_headers(headers)
         request = Request(
             method=method,

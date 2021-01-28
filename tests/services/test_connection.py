@@ -368,3 +368,19 @@ class TestConnection(object):
         connection.put(URL, data='{"foo":"bar"}', headers={"Content-Type": "*/*"})
         request = success_requests_session.prepare_request.call_args[0][0]
         assert request.headers["Content-Type"] == "*/*"
+
+    def test_connection_request_is_able_to_accept_accept_header(
+        self, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
+        connection.put(URL, data='{"foo":"bar"}', headers={"Accept": "*/*"})
+        request = success_requests_session.prepare_request.call_args[0][0]
+        assert request.headers["Accept"] == "*/*"
+
+    def test_connection_request_when_not_give_accept_header_sets_accept_to_application_json(
+        self, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
+        connection.put(URL, data='{"foo":"bar"}')
+        request = success_requests_session.prepare_request.call_args[0][0]
+        assert request.headers["Accept"] == "application/json"

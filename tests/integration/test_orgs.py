@@ -24,7 +24,6 @@ class TestOrg:
         response = connection.orgs.get_by_uid(org["orgUid"])
         assert_successful_response(response)
 
-    @pytest.mark.skip("Fails when whole test suite is executed.")
     def test_deactivate(self, connection, org):
         response = connection.orgs.deactivate(org["orgId"])
         assert_successful_response(response)

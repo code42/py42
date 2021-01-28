@@ -12,11 +12,7 @@ user_departure_date = datetime.now() + timedelta(days=10)
 
 @pytest.mark.integration
 class TestDetectionLists:
-
     # During individual file execution, below test should be executed.
-    @pytest.mark.skip(
-        "Fails when whole test suite is executed, as multiple execution of create_user results in failure."
-    )
     def test_create_user(self, connection, new_user):
         username = new_user["username"]
         response = connection.detectionlists.create_user(username)

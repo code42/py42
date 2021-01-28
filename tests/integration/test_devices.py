@@ -4,7 +4,6 @@ from tests.integration.conftest import assert_successful_response
 
 @pytest.mark.integration
 class TestDevices:
-    @pytest.mark.skip("Skip special case.")
     def test_get_agent_full_disk_access_state(self, connection, device):
         response = connection.devices.get_agent_full_disk_access_state(device["guid"])
         assert_successful_response(response)
@@ -21,7 +20,6 @@ class TestDevices:
         response = connection.devices.deactivate(device["computerId"])
         assert_successful_response(response)
 
-    @pytest.mark.skip("Skip special case.")
     def test_get_agent_state(self, connection, device):
         response = connection.devices.get_agent_state(device["guid"], "fullDiskAccess")
         assert_successful_response(response)

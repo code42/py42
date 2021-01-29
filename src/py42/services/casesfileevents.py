@@ -6,7 +6,7 @@ from py42.services import BaseService
 
 class CasesFileEventsService(BaseService):
 
-    _uri_prefix = u"/api/v1/case/{0}/fileevent/"
+    _uri_prefix = u"/api/v1/case/{0}/fileevent"
 
     def __init__(self, connection):
         super(CasesFileEventsService, self).__init__(connection)
@@ -23,7 +23,7 @@ class CasesFileEventsService(BaseService):
         """
         try:
             return self._connection.post(
-                u"{}{}".format(self._uri_prefix.format(case_number), event_id)
+                u"{}/{}".format(self._uri_prefix.format(case_number), event_id)
             )
         except Py42BadRequestError as err:
             if "CASE_IS_CLOSED" in err.response.text:
@@ -44,7 +44,7 @@ class CasesFileEventsService(BaseService):
             :class:`py42.response.Py42Response`
         """
         return self._connection.get(
-            u"{}{}".format(self._uri_prefix.format(case_number), event_id)
+            u"{}/{}".format(self._uri_prefix.format(case_number), event_id)
         )
 
     def get_all(self, case_number):
@@ -70,7 +70,7 @@ class CasesFileEventsService(BaseService):
         """
         try:
             return self._connection.delete(
-                u"{}{}".format(self._uri_prefix.format(case_number), event_id)
+                u"{}/{}".format(self._uri_prefix.format(case_number), event_id)
             )
         except Py42BadRequestError as err:
             if "CASE_IS_CLOSED" in err.response.text:

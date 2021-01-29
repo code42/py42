@@ -60,7 +60,7 @@ class TestCasesFileEventService:
         case_file_event_service.get_all(_TEST_CASE_NUMBER)
         assert mock_connection.get.call_args[0][
             0
-        ] == u"/api/v1/case/{}/fileevent/".format(_TEST_CASE_NUMBER)
+        ] == u"/api/v1/case/{}/fileevent".format(_TEST_CASE_NUMBER)
 
     def test_add_on_a_closed_case_raises_error(
         self, mock_connection, mock_update_failed_response

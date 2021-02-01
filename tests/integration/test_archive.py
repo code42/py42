@@ -79,8 +79,8 @@ class TestArchive:
         response = connection.archive.stream_from_backup(path, device_guid)
         assert_successful_response(response)
 
-    def test_stream_to_destination(self, connection, device_guid, path):
-        response = connection.archive.stream_to_destination(
+    def test_stream_to_device(self, connection, device_guid, path):
+        response = connection.archive.stream_to_device(
             path, device_guid, device_guid, os.getcwd()
         )
         assert_successful_response(response)

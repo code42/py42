@@ -21,6 +21,6 @@ class PreservationDataService(BaseService):
 
     def get_file_version_list(self, deviceGuid, file_md5, file_sha256, path):
         params = u"fileSHA256={}&fileMD5={}&deviceGuid={}&path={}"
-        params = params.format( file_sha256, file_md5, deviceGuid, quote(path))
+        params = params.format(file_sha256, file_md5, deviceGuid, quote(path))
         uri = u"/api/v1/FileVersionListing?{}".format(params)
         return self._connection.get(uri)

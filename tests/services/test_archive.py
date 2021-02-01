@@ -133,6 +133,14 @@ class TestArchiveService(object):
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
+    def test_get_web_restore_info_uses_expected_url_and_params(self, mock_connection):
+        service = ArchiveService(mock_connection)
+        service.get_web_restore_info("src", "dest")
+        expected_params = {"srcGuid": "src", "destGuid": "dest"}
+        mock_connection.get.assert_called_once_with(
+            "/api/WebRestoreInfo", params=expected_params
+        )
+
     def test_update_cold_storage_purge_date_calls_coldstorage_with_expected_data(
         self, mock_connection
     ):

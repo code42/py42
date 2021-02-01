@@ -308,4 +308,6 @@ class TestStorageArchiveService(object):
         connection.get.return_value = api_response
         storage_archive_service.stream_restore_result(TEST_JOB_ID)
         expected_url = WEB_RESTORE_JOB_RESULT_URL + "/" + TEST_JOB_ID
-        connection.get.assert_called_once_with(expected_url, stream=True)
+        connection.get.assert_called_once_with(
+            expected_url, stream=True, headers={"Accept": "application/octet-stream"}
+        )

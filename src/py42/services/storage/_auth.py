@@ -18,7 +18,7 @@ class StorageAuth(C42RenewableAuth):
     def _get_auth_token(self, login_token):
         uri = u"api/AuthToken"
         response = self._storage_connection.post(
-            uri, headers={"Authorization": "login_token {}".format(login_token)}
+            uri, headers={u"Authorization": u"login_token {}".format(login_token)}
         )
         token1, token2 = response.data
         return u"token {}-{}".format(token1, token2)

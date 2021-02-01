@@ -133,7 +133,7 @@ class TestArchiveService(object):
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
-    def test_get_web_restore_info_uses_expected_url_and_params(self, mock_connection):
+    def test_get_web_restore_info_calls_get_with_expected_url_and_params(self, mock_connection):
         service = ArchiveService(mock_connection)
         service.get_web_restore_info("src", "dest")
         expected_params = {"srcGuid": "src", "destGuid": "dest"}

@@ -54,7 +54,12 @@ class Py42HTTPError(Py42ResponseError):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
     def __init__(self, exception, message=None):
-        message = message or u"Failure in HTTP call {}".format(str(exception))
+        error_message = ""
+        if hasattr(exception.response, "text"):
+            error_message = "\n Error message: {}".format(exception.response.text)
+        message = message or u"Failure in HTTP call {}.{}".format(
+            str(exception), error_message
+        )
         super(Py42HTTPError, self).__init__(exception.response, message)
 
 

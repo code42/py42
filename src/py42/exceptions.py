@@ -1,6 +1,7 @@
 import re
 
 from py42._compat import str
+from py42.settings import debug
 
 
 class Py42Error(Exception):
@@ -58,6 +59,7 @@ class Py42HTTPError(Py42ResponseError):
         message = message or u"Failure in HTTP call {}.{}".format(
             str(exception), response_content
         )
+        debug.logger.error(message)
         super(Py42HTTPError, self).__init__(exception.response, message)
 
 

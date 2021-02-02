@@ -105,11 +105,13 @@ def error_response(mocker, http_error):
 
 @pytest.fixture
 def unauthorized_response(mocker, http_error):
+    error = http_error
     response = mocker.MagicMock(spec=Response)
     response.text = TEST_RESPONSE_CONTENT
     response.status_code = 401
     response.encoding = None
-    response.raise_for_status.side_effect = [Py42UnauthorizedError(http_error)]
+    error.response = response
+    response.raise_for_status.side_effect = [Py42UnauthorizedError(error)]
     return response
 
 

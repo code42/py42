@@ -83,11 +83,10 @@ class TestPy42Errors(object):
             Py42ResponseError, "__init__", return_value=None
         ) as mock_method:
             with pytest.raises(Py42HTTPError):
-                print(mock_error_response.response.status_code)
                 raise_py42_error(mock_error_response)
         mock_method.assert_called_once_with(
             mock_error_response.response,
-            "Failure in HTTP call {}.\n Error message: {}".format(
+            "Failure in HTTP call {}.\n Response content: {}".format(
                 mock_error_response, error_message
             ),
         )

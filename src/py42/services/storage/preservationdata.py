@@ -26,7 +26,7 @@ class StoragePreservationDataService(BaseService):
             u"versionTimestamp": timestamp,
         }
         resource = u"FileDownloadToken"
-        uri = "{}{}".format(self._base_uri, resource)
+        uri = u"{}{}".format(self._base_uri, resource)
         return self._connection.get(uri, params=params)
 
     def get_file(self, token):
@@ -45,7 +45,7 @@ class StoragePreservationDataService(BaseService):
         else:
             replaced_token = token
         params = {u"PDSDownloadToken": replaced_token}
-        headers = {u"Accept": "*/*"}
+        headers = {u"Accept": u"*/*"}
         return self._streaming_session.get(
             uri, params=params, headers=headers, stream=True
         )

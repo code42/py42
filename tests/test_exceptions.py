@@ -83,7 +83,7 @@ class TestPy42Errors(object):
         mock_method.assert_called_with(
             Py42HTTPError(mock_error_response),
             mock_error_response.response,
-            "Failure in HTTP call {}.\n Response content: {}".format(
+            "Failure in HTTP call {}. Response content: {}".format(
                 str(mock_error_response), error_message
             ),
         )

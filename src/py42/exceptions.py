@@ -56,8 +56,8 @@ class Py42HTTPError(Py42ResponseError):
 
     def __init__(self, exception, message=None):
         if not message:
-            response_content = "\n Response content: {}".format(exception.response.text)
-            message = u"Failure in HTTP call {}.{}".format(
+            response_content = "Response content: {}".format(exception.response.text)
+            message = u"Failure in HTTP call {}. {}".format(
                 str(exception), response_content
             )
             debug.logger.error(message)

@@ -8,12 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.11.1 - 2021-02-02
 
 ### Changed
-
-- The request header `Content-Type: application/json` is no longer sent when there is no
-  request data.
 
 - `sdk.cases.create()` now raises `Py42CaseNameExistsError` when the case name already
   exists in the system.

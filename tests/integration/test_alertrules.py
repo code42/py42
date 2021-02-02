@@ -35,7 +35,7 @@ class TestAlertRules:
         assert_successful_response(response)
 
     def test_rules_remove_user(self, connection, new_user, observer_id):
-        response = connection.alerts.rules.remove_user(observer_id, new_user["userId"])
+        response = connection.alerts.rules.remove_user(observer_id, new_user["userUid"])
         assert_successful_response(response)
 
     def test_rules_remove_all_users(self, connection, observer_id):

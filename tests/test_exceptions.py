@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 import pytest
 from tests.conftest import REQUEST_EXCEPTION_MESSAGE
 
@@ -74,19 +72,18 @@ class TestPy42Errors(object):
             assert isinstance(e.response, type(error_response.response))
 
     def test_raise_py42_error_when_has_unexpected_error_returns_api_error_response(
-        self, mock_error_response
+        self, mock_error_response, mocker
     ):
         mock_error_response.response.status_code = 410
         error_message = '{"error": { "message": "error"}}'
         mock_error_response.response.text = error_message
-        with patch.object(
-            Py42ResponseError, "__init__", return_value=None
-        ) as mock_method:
-            with pytest.raises(Py42HTTPError):
-                raise_py42_error(mock_error_response)
-        mock_method.assert_called_once_with(
+        mock_method = mocker.patch.object(Py42ResponseError, "__init__", autospec=True)
+        with pytest.raises(Py42HTTPError):
+            raise_py42_error(mock_error_response)
+        mock_method.assert_called_with(
+            Py42HTTPError(mock_error_response),
             mock_error_response.response,
             "Failure in HTTP call {}.\n Response content: {}".format(
-                mock_error_response, error_message
+                str(mock_error_response), error_message
             ),
         )

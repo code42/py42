@@ -84,7 +84,7 @@ class ArchiveClient(object):
         Usage example::
 
             stream_response = sdk.archive.stream_from_backup("/full/path/to/file.txt", "1234567890")
-            with open("/path/to/my/file", "wb") as f:
+            with open("/path/to/save/file/to", "wb") as f:
                 for chunk in stream_response.iter_content(chunk_size=128):
                     if chunk:
                         f.write(chunk)

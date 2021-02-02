@@ -1,9 +1,8 @@
+import os
 from datetime import datetime
 
 import pytest
 from tests.integration.conftest import assert_successful_response
-
-from py42.exceptions import Py42ForbiddenError
 
 
 @pytest.fixture
@@ -80,10 +79,15 @@ class TestArchive:
         response = connection.archive.stream_from_backup(path, device_guid)
         assert_successful_response(response)
 
+    def test_stream_to_device(self, connection, device_guid, path):
+        response = connection.archive.stream_to_device(
+            path, device_guid, device_guid, os.getcwd()
+        )
+        assert_successful_response(response)
+
     def test_update_cold_storage_purge_date(self, connection, archive_guid):
         purge_date = datetime.now().strftime("%Y-%m-%d")
-        with pytest.raises(Py42ForbiddenError):
-            response = connection.archive.update_cold_storage_purge_date(
-                archive_guid, purge_date
-            )
-            assert_successful_response(response)
+        response = connection.archive.update_cold_storage_purge_date(
+            archive_guid, purge_date
+        )
+        assert_successful_response(response)

@@ -124,4 +124,5 @@ class StorageArchiveService(RestoreService):
 
     def stream_restore_result(self, job_id):
         uri = u"/api/WebRestoreJobResult/{}".format(job_id)
-        return self._connection.get(uri, stream=True)
+        headers = {u"Accept": u"application/octet-stream"}
+        return self._connection.get(uri, stream=True, headers=headers)

@@ -6,26 +6,27 @@ from py42.response import Py42Response
 from py42.services.archive import ArchiveService
 
 ARCHIVE_URI = "/api/Archive"
-
 DEFAULT_GET_ARCHIVES_PARAMS = {
     "pgNum": 1,
     "pgSize": 100,
 }
-
 MOCK_GET_ARCHIVE_RESPONSE = """{"totalCount": 3000, "archives": ["foo"]}"""
-
 MOCK_EMPTY_GET_ARCHIVE_RESPONSE = """{"totalCount": 3000, "archives": []}"""
-
-MOCK_GET_ORG_RESTORE_HISTORY_RESPONSE = """{"totalCount": 3000, "restoreEvents": [{"eventName": "foo", "eventUid": "123"}]}"""
-
+MOCK_GET_ORG_RESTORE_HISTORY_RESPONSE = """{
+    "totalCount": 3000,
+    "restoreEvents": [
+        {
+            "eventName": "foo",
+            "eventUid": "123"
+        }
+    ]
+}"""
 MOCK_EMPTY_GET_ORG_RESTORE_HISTORY_RESPONSE = (
     """{"totalCount": 3000, "restoreEvents": []}"""
 )
-
 MOCK_GET_ORG_COLD_STORAGE_RESPONSE = (
     """{"coldStorageRows": [{"archiveGuid": "fakeguid"}]}"""
 )
-
 MOCK_EMPTY_GET_ORG_COLD_STORAGE_RESPONSE = """{"coldStorageRows": []}"""
 
 
@@ -93,7 +94,7 @@ class TestArchiveService(object):
         mock_get_archives_response,
         mock_get_archives_empty_response,
     ):
-        device_guid = 42
+        device_guid = "42"
         py42.settings.items_per_page = 1
         service = ArchiveService(mock_connection)
         mock_connection.get.side_effect = [
@@ -101,15 +102,15 @@ class TestArchiveService(object):
             mock_get_archives_response,
             mock_get_archives_empty_response,
         ]
-        for _ in service.get_all_archives_from_value(device_guid, u"backupSourceGuid"):
+        for _ in service.get_all_archives_from_value(device_guid, "backupSourceGuid"):
             pass
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_by_value_calls_get_with_expected_uri_and_params(self, mock_connection):
-        device_guid = 42
+        device_guid = "42"
         service = ArchiveService(mock_connection)
-        for _ in service.get_all_archives_from_value(device_guid, u"backupSourceGuid"):
+        for _ in service.get_all_archives_from_value(device_guid, "backupSourceGuid"):
             pass
         expected_params = {"pgNum": 1, "pgSize": 500, "backupSourceGuid": "42"}
         mock_connection.get.assert_called_once_with(ARCHIVE_URI, params=expected_params)
@@ -132,15 +133,25 @@ class TestArchiveService(object):
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
+    def test_get_web_restore_info_calls_get_with_expected_url_and_params(
+        self, mock_connection
+    ):
+        service = ArchiveService(mock_connection)
+        service.get_web_restore_info("src", "dest")
+        expected_params = {"srcGuid": "src", "destGuid": "dest"}
+        mock_connection.get.assert_called_once_with(
+            "/api/WebRestoreInfo", params=expected_params
+        )
+
     def test_update_cold_storage_purge_date_calls_coldstorage_with_expected_data(
         self, mock_connection
     ):
         service = ArchiveService(mock_connection)
-        service.update_cold_storage_purge_date(u"123", u"2020-04-24")
+        service.update_cold_storage_purge_date("123", "2020-04-24")
         mock_connection.put.assert_called_once_with(
-            u"/api/coldStorage/123",
-            params={u"idType": u"guid"},
-            json={u"archiveHoldExpireDate": u"2020-04-24"},
+            "/api/coldStorage/123",
+            params={"idType": "guid"},
+            json={"archiveHoldExpireDate": "2020-04-24"},
         )
 
     def test_get_all_org_cold_storage_archives_calls_get_expected_number_of_times(

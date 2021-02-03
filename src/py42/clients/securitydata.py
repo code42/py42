@@ -109,7 +109,7 @@ class SecurityDataClient(object):
 
         Returns:
             generator: An object that iterates over tuples whose first element is a :class:`py42.response.Py42Response` object
-            containing a page of events, and whose second element is a cursor.
+            containing a page of events, and whose second element is a string cursor.
         """
         return self._get_security_detection_events(
             plan_storage_info,
@@ -159,7 +159,7 @@ class SecurityDataClient(object):
 
         Returns:
             generator: An object that iterates over tuples whose first element is a :class:`py42.response.Py42Response` object
-            containing a page of events, and whose second element is a cursor.
+            containing a page of events, and whose second element is a string cursor.
         """
         security_plan_storage_infos = self.get_security_plan_storage_info_list(user_uid)
         return self._get_security_detection_events(

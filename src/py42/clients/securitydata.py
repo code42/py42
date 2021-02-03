@@ -108,8 +108,8 @@ class SecurityDataClient(object):
                 str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of events.
+            generator: An object that iterates over tuples whose first element is a :class:`py42.response.Py42Response` object
+            containing a page of events, and whose second element is a cursor.
         """
         return self._get_security_detection_events(
             plan_storage_info,
@@ -158,8 +158,8 @@ class SecurityDataClient(object):
                 str format "yyyy-MM-DD HH:MM:SS" or a datetime instance. Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
-            that each contain a page of events.
+            generator: An object that iterates over tuples whose first element is a :class:`py42.response.Py42Response` object
+            containing a page of events, and whose second element is a cursor.
         """
         security_plan_storage_infos = self.get_security_plan_storage_info_list(user_uid)
         return self._get_security_detection_events(

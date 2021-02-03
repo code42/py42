@@ -7,6 +7,7 @@ from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42MFARequiredError
 from py42.exceptions import Py42NotFoundError
+from py42.exceptions import Py42ResponseError
 from py42.exceptions import Py42TooManyRequestsError
 from py42.exceptions import Py42UnauthorizedError
 from py42.exceptions import raise_py42_error
@@ -69,3 +70,20 @@ class TestPy42Errors(object):
             raise_py42_error(error_response)
         except Exception as e:
             assert isinstance(e.response, type(error_response.response))
+
+    def test_raise_py42_error_when_has_unexpected_error_returns_api_error_response(
+        self, mock_error_response, mocker
+    ):
+        mock_error_response.response.status_code = 410
+        error_message = '{"error": { "message": "error"}}'
+        mock_error_response.response.text = error_message
+        mock_method = mocker.patch.object(Py42ResponseError, "__init__", autospec=True)
+        with pytest.raises(Py42HTTPError):
+            raise_py42_error(mock_error_response)
+        mock_method.assert_called_with(
+            Py42HTTPError(mock_error_response),
+            mock_error_response.response,
+            "Failure in HTTP call {}. Response content: {}".format(
+                str(mock_error_response), error_message
+            ),
+        )

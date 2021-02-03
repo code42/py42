@@ -1,6 +1,5 @@
 import pytest
 from requests import Response
-from requests.exceptions import HTTPError
 from tests.conftest import TEST_DEVICE_GUID
 
 from py42.exceptions import Py42HTTPError
@@ -112,9 +111,12 @@ class TestStorageSessionManager(object):
         assert session1 is session2
 
     def test_get_storage_session_raises_session_init_error_when_tmp_auth_raises_http_error(
-        self, mock_tmp_auth
+        self, mock_tmp_auth, http_error, mocker
     ):
-        mock_tmp_auth.get_storage_url.side_effect = Py42HTTPError(HTTPError())
+        error = http_error
+        error.response = mocker.MagicMock(spec=Response)
+        error.response.text = ""
+        mock_tmp_auth.get_storage_url.side_effect = Py42HTTPError(error)
         storage_session_manager = ConnectionManager()
         with pytest.raises(Py42StorageSessionInitializationError):
             storage_session_manager.get_storage_connection(mock_tmp_auth)

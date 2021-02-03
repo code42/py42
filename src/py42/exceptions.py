@@ -1,6 +1,7 @@
 import re
 
 from py42._compat import str
+from py42.settings import debug
 
 
 class Py42Error(Exception):
@@ -54,7 +55,13 @@ class Py42HTTPError(Py42ResponseError):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
     def __init__(self, exception, message=None):
-        message = message or u"Failure in HTTP call {}".format(str(exception))
+        if not message:
+            response_content = "Response content: {}".format(exception.response.text)
+            message = u"Failure in HTTP call {}. {}".format(
+                str(exception), response_content
+            )
+            debug.logger.error(message)
+
         super(Py42HTTPError, self).__init__(exception.response, message)
 
 

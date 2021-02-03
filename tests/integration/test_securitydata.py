@@ -39,13 +39,13 @@ class TestSecurityData:
     def test_get_all_plan_security_events(self, connection, plan_info):
         response_gen = connection.securitydata.get_all_plan_security_events(plan_info)
         for response in response_gen:
-            assert_successful_response(response)
+            assert_successful_response(response[0])
             break
 
     def test_get_all_user_security_events(self, connection, user_uid):
         response_gen = connection.securitydata.get_all_user_security_events(user_uid)
         for response in response_gen:
-            assert_successful_response(response)
+            assert_successful_response(response[0])
             break
 
     def test_search_file_events(self, connection):

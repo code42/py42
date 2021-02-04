@@ -138,39 +138,31 @@ class TestCasesClient:
             sort_key="number",
         )
 
-    def test_get_all_sets_default_min_max_in_ranges_when_either_of_begin_or_end_time_is_specified(
+    def test_get_all_sets_default_min_when_max_specified(
         self, mock_cases_service, mock_cases_file_event_service
     ):
-
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
-
         cases_client.get_all(
-            min_create_time=1609439400,
-            min_update_time=None,
-            max_create_time=None,
             max_update_time=datetime.strptime(
                 u"2021-02-20 00:00:00", u"%Y-%m-%d %H:%M:%S"
-            ),
-            subject="subject",
-            assignee="a",
-            name="test",
-            status="closed",
+            )
         )
-        max_time = datetime.utcnow().isoformat()[:-3]
-        created_at_range = "2020-12-31T18:30:00.000Z/{}".format(max_time)
-        updated_at_range = "1970-01-01T00:00:00.000Z/2021-02-20T00:00:00.000Z"
+        expected_range = "1970-01-01T00:00:00.000Z/2021-02-20T00:00:00.000Z"
         service_args = mock_cases_service.get_all.call_args[1]
-        assert (
-            service_args["name"] == "test"
-            and service_args["status"] == "closed"
-            and service_args["subject"] == "subject"
-            and service_args["updated_at"] == updated_at_range
-            and service_args["assignee"] == "a"
-            and service_args["page_size"] == 100
-            and service_args["sort_direction"] == "asc"
-            and service_args["sort_key"] == "number"
+        assert service_args["updated_at"] == expected_range
+
+    def test_get_all_sets_default_max_when_begin_specified(
+        self, mock_cases_service, mock_cases_file_event_service
+    ):
+        cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
+        cases_client.get_all(min_create_time=1609439400)
+        expected_max_time = datetime.utcnow()
+        actual_range = mock_cases_service.get_all.call_args[1]["created_at"]
+        actual_max_time_string = actual_range.split("/")[1]
+        actual_max_time_obj = datetime.strptime(
+            actual_max_time_string, "%Y-%m-%dT%H:%M:%S.%fZ"
         )
-        assert service_args["created_at"][:-3] == created_at_range[:-2]
+        assert (expected_max_time - actual_max_time_obj).total_seconds() < 0.01
 
     def test_get_page_calls_service_with_expected_params(
         self, mock_cases_service, mock_cases_file_event_service

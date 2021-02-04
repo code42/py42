@@ -151,7 +151,7 @@ class TestCasesClient:
         service_args = mock_cases_service.get_all.call_args[1]
         assert service_args["updated_at"] == expected_range
 
-    def test_get_all_sets_default_max_when_begin_specified(
+    def test_get_all_sets_default_max_when_min_specified(
         self, mock_cases_service, mock_cases_file_event_service
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)

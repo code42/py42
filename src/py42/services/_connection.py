@@ -93,7 +93,6 @@ class ConnectedServerHostResolver(HostResolver):
         return response[u"serverUrl"]
 
 
-
 class Connection(object):
     def __init__(self, host_resolver, auth=None, session=None):
         self._host_resolver = host_resolver

@@ -37,6 +37,15 @@ def promptForPassword():
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password", totp=promptForPassword)
 ```
 
+Alternatively, define a function that returns the auth token based on user's authentication approach
+
+```
+def jwt_provider():
+    ...
+
+sdk = py42.sdk.from_jwt_provider(jwt_provider)
+```
+
 
 ## Paging
 

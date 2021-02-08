@@ -48,6 +48,10 @@ Initialize the client.
 ```python
 >>> sdk = py42.sdk.from_local_account("https://console.us.code42.com", "john.doe", "password")
 ```
+or alternatively
+```
+>>> sdk = py42.sdk.from_jwt_provider(jwt_provider_function)
+```
 
 Get and print your user information.
 

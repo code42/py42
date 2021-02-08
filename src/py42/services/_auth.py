@@ -41,3 +41,12 @@ class V3Auth(C42RenewableAuth):
         headers = {"totp-auth": str(current_token)} if current_token else None
         response = self._auth_connection.get(uri, params=params, headers=headers)
         return u"v3_user_token {}".format(response["v3_user_token"])
+
+
+class JWTAuth(C42RenewableAuth):
+    def __init__(self, jwt_provider):
+        super(JWTAuth, self).__init__()
+        self._jwt_provider = jwt_provider
+
+    def _get_credentials(self):
+        return u"v3_user_token {}".format(self._jwt_provider())

@@ -43,9 +43,9 @@ class V3Auth(C42RenewableAuth):
         return u"v3_user_token {}".format(response["v3_user_token"])
 
 
-class JWTAuth(C42RenewableAuth):
+class CustomJWTAuth(C42RenewableAuth):
     def __init__(self, jwt_provider):
-        super(JWTAuth, self).__init__()
+        super(CustomJWTAuth, self).__init__()
         self._jwt_provider = jwt_provider
 
     def _get_credentials(self):

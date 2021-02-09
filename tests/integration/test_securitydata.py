@@ -2,12 +2,11 @@ from datetime import datetime
 from datetime import timedelta
 
 import pytest
-
-from py42.util import convert_datetime_to_epoch
 from tests.integration.conftest import assert_successful_response
 
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters import EventTimestamp
+from py42.util import convert_datetime_to_epoch
 
 
 @pytest.fixture(scope="module")
@@ -55,9 +54,7 @@ class TestSecurityData:
         end_date = datetime.utcnow()
         start_timestamp = convert_datetime_to_epoch(start_date)
         end_timestamp = convert_datetime_to_epoch(end_date)
-        date_query = EventTimestamp.in_range(
-            start_timestamp, end_timestamp
-        )
+        date_query = EventTimestamp.in_range(start_timestamp, end_timestamp)
         query = FileEventQuery.all(date_query)
         response = connection.securitydata.search_file_events(query)
         assert_successful_response(response)

@@ -1,8 +1,10 @@
 import pytest
 
+from py42._compat import str
+
 
 @pytest.mark.integration
 def test_get_current_tenant(connection):
     response = connection.usercontext.get_current_tenant_id()
-    assert type(response) == str or type(response) == unicode
+    assert type(response) == str
     assert len(response) == 36

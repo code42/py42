@@ -1,7 +1,7 @@
 # Method Documentation
 
 The main SDK object by which all other methods are accessed is created by
-calling `py42.sdk.from_local_account`. For example:
+calling `py42.sdk.from_local_account` or `py42.sdk.from_jwt_provider`. For example:
 
 ```python
 import py42.sdk

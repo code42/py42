@@ -50,7 +50,7 @@ Initialize the client.
 ```
 or alternatively
 ```
->>> sdk = py42.sdk.from_jwt_provider(jwt_provider_function)
+>>> sdk = py42.sdk.from_jwt_provider("https://console.us.code42.com", jwt_provider_function)
 ```
 
 Get and print your user information.

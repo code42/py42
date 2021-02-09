@@ -40,8 +40,8 @@ from py42.usercontext import UserContext
 
 def from_local_account(host_address, username, password, totp=None):
     """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using the
-    supplied credentials. Currently, only accounts created within the Code42 console or using the
-    APIs (including py42) are supported. Username/passwords that are based on Active Directory,
+    supplied credentials. This method supports only accounts created within the Code42 console or using the
+    APIs (including py42). Username/passwords that are based on Active Directory,
     Okta, or other Identity providers cannot be used with this method.
 
     Args:
@@ -90,8 +90,8 @@ class SDKClient(object):
     @classmethod
     def from_local_account(cls, host_address, username, password, totp=None):
         """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
-        the supplied credentials. Currently, only accounts created within the Code42 console or
-        using the APIs (including py42) are supported. Username/passwords that are based on Active
+        the supplied credentials. This method supports only accounts created within the Code42 console or
+        using the APIs (including py42). Username/passwords that are based on Active
         Directory, Okta, or other Identity providers cannot be used with this method.
 
         Args:

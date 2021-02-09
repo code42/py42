@@ -41,9 +41,17 @@ Alternatively, define a function that returns the auth token based on user's aut
 
 ```
 def jwt_provider():
-    ...
+    import json
+    import requests
+    from requests.auth import HTTPBasicAuth
+    res = requests.get(
+            'https://console.us.code42.com/c42api/v3/auth/jwt?useBody=true',
+            auth=HTTPBasicAuth('username', 'password')
+          )
+    res_json = json.loads(res.text)
+    return res_json['data']['v3_user_token']
 
-sdk = py42.sdk.from_jwt_provider(jwt_provider)
+sdk_client = py42.sdk.from_jwt_provider("https://console.us.code42.com", jwt_provider)
 ```
 
 

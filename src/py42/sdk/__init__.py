@@ -11,6 +11,7 @@ from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
 from py42.services import Services
+from py42.services._auth import CustomJWTAuth
 from py42.services._auth import V3Auth
 from py42.services._connection import Connection
 from py42.services._keyvaluestore import KeyValueStoreService
@@ -61,6 +62,25 @@ def from_local_account(host_address, username, password, totp=None):
     return client
 
 
+def from_jwt_provider(host_address, jwt_provider):
+    """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using a custom
+    auth mechanism. User can use any authentication mechanism like that returns a JSON Web token on authentication
+    which would then be used for all subsequent requests.
+
+    Args:
+        host_address (str): The domain name of the Code42 instance being authenticated to, e.g.
+            console.us.code42.com
+        jwt_provider (function): A function that accepts no parameters and on execution returns a JSON web token string.
+
+    Returns:
+        :class:`py42.sdk.SDKClient`
+    """
+
+    client = SDKClient.from_jwt_provider(host_address, jwt_provider)
+    client.users.get_current()
+    return client
+
+
 class SDKClient(object):
     def __init__(self, main_connection, auth):
         services, user_ctx = _init_services(main_connection, auth)
@@ -92,6 +112,26 @@ class SDKClient(object):
         main_connection = Connection.from_host_address(host_address, auth=v3_auth)
 
         return cls(main_connection, v3_auth)
+
+    @classmethod
+    def from_jwt_provider(cls, host_address, jwt_provider):
+        """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using a custom
+            auth mechanism. User can use any authentication mechanism like that returns a JSON Web token
+            on authentication which would then be used for all subsequent requests.
+
+        Args:
+            host_address (str): The domain name of the Code42 instance being authenticated to, e.g.
+                console.us.code42.com
+            jwt_provider (function): A function that accepts no parameters and on execution returns a
+            JSON web token string.
+
+        Returns:
+            :class:`py42.sdk.SDKClient`
+        """
+        custom_auth = CustomJWTAuth(jwt_provider)
+        main_connection = Connection.from_host_address(host_address, auth=custom_auth)
+
+        return cls(main_connection, custom_auth)
 
     @property
     def serveradmin(self):

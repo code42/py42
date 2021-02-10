@@ -1,6 +1,7 @@
 import pytest
 from requests import Request
 
+from py42.services._auth import CustomJWTAuth
 from py42.services._auth import V3Auth
 
 
@@ -16,6 +17,14 @@ def mock_v3_conn(mock_connection, py42_response):
     py42_response.text = '{"v3_user_token": "TEST_TOKEN_VALUE"}'
     mock_connection.get.return_value = py42_response
     return mock_connection
+
+
+@pytest.fixture
+def mock_custom_auth_function():
+    def custom_function():
+        return "token-string"
+
+    return custom_function
 
 
 class TestV3Auth(object):
@@ -66,3 +75,10 @@ class TestV3Auth(object):
         auth.clear_credentials()
         auth(mock_request)
         assert mock_v3_conn.get.call_count == 2
+
+
+class TestCustomJWTAuth(object):
+    def test_get_credentials_returns_jwt_string(self, mock_custom_auth_function):
+        auth = CustomJWTAuth(mock_custom_auth_function)
+        jwt_string = auth.get_credentials()
+        assert jwt_string == "v3_user_token token-string"

@@ -1,5 +1,7 @@
 import pytest
 
+from py42._compat import str
+
 
 @pytest.mark.integration
 def test_get_current_tenant(connection):

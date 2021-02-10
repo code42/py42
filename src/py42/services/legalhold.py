@@ -31,7 +31,7 @@ class LegalHoldService(BaseService):
 
     def create_policy(self, name, policy=None):
         """Creates a new Legal Hold Preservation Policy.
-        `V4 REST Documentation <https://console.us.code42.com/swagger/#/legal-hold-policy/LegalHoldPolicy_Create>`__
+        `REST Documentation <https://console.us.code42.com/swagger/?urls.primaryName=v4#/legal-hold-policy/LegalHoldPolicy_Create>`__
 
         Args:
             name (str): The name of the new Policy.

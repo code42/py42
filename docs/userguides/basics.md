@@ -40,10 +40,10 @@ sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username"
 Alternatively, define a function that returns the auth token based on user's authentication approach
 
 ```
+import json
+import requests
+from requests.auth import HTTPBasicAuth
 def jwt_provider():
-    import json
-    import requests
-    from requests.auth import HTTPBasicAuth
     res = requests.get(
             'https://console.us.code42.com/c42api/v3/auth/jwt?useBody=true',
             auth=HTTPBasicAuth('username', 'password')

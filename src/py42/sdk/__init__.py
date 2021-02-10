@@ -92,7 +92,7 @@ class SDKClient(object):
         """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
         the supplied credentials. This method supports only accounts created within the Code42 console or
         using the APIs (including py42). Username/passwords that are based on Active
-        Directory, Okta, or other Identity providers cannot be used with this method.
+        Directory, Okta, or other Identity providers should use the `from_jwt_provider` method.
 
         Args:
             host_address (str): The domain name of the Code42 instance being authenticated to, e.g.

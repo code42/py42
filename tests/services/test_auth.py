@@ -78,7 +78,7 @@ class TestV3Auth(object):
 
 
 class TestCustomJWTAuth(object):
-    def test_call_returns_jwt_string(self, mock_custom_auth_function):
+    def test_get_credentials_returns_jwt_string(self, mock_custom_auth_function):
         auth = CustomJWTAuth(mock_custom_auth_function)
         jwt_string = auth.get_credentials()
         assert jwt_string == "v3_user_token token-string"

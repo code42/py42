@@ -70,3 +70,10 @@ class TestAlertsClient(object):
         mock_alerts_service.update_state.assert_called_once_with(
             "RESOLVED", self._alert_ids, note=None
         )
+
+    def test_alerts_client_calls_update_note_with_expected_value_and_param(
+        self, mock_alerts_service, mock_alert_rules_service,
+    ):
+        alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
+        alert_client.update_note("alert-id", "a note")
+        mock_alerts_service.update_note.assert_called_once_with("alert-id", "a note")

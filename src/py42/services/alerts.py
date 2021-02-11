@@ -106,6 +106,16 @@ class AlertService(BaseService):
         )
         return next(results)
 
+    def update_note(self, alert_id, note):
+        tenant_id = self._user_context.get_current_tenant_id()
+        uri = self._uri_prefix.format(u"add-note")
+        data = {
+            u"tenantId": tenant_id,
+            u"alertId": alert_id,
+            u"note": note,
+        }
+        return self._connection.post(uri, json=data)
+
 
 def _convert_observation_json_strings_to_objects(results):
     for alert in results[u"alerts"]:

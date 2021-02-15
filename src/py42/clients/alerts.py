@@ -82,10 +82,13 @@ class AlertsClient(object):
         return self._alert_service.update_state(status, alert_ids, note=note)
 
     def update_note(self, alert_id, note):
-        """Add/update  a note to an alert.
+        """Add/update a note to an alert.
 
         Args:
             alert_id (str): The identification number of an alert to add a note to.
             note (str): User note regarding the alert, in less than 2000 characters.
+
+        Returns:
+            :class:`py42.response.Py42Response`
         """
         return self._alert_service.update_note(alert_id, note)

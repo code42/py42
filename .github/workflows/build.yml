@@ -34,8 +34,8 @@ jobs:
       #     file: py42/coverage.xml
       - name: Checkout mock server 
         uses: actions/checkout@v2
-        ref: feature/make-containers-use-host
         with:
+          ref: feature/make-containers-use-host
           repository: code42/code42-mock-servers
           path: code42-mock-servers
       - name: Start up the mock servers

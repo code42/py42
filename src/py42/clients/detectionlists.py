@@ -19,6 +19,8 @@ class RiskTags(object):
 
 
 class DetectionListsClient(object):
+    """`Rest documentation <https://developer.code42.com/api/#tag/Detection-Lists>`__"""
+
     def __init__(
         self,
         user_profile_service,
@@ -136,7 +138,6 @@ class DetectionListsClient(object):
 
     def refresh_user_scim_attributes(self, user_id):
         """Refresh SCIM attributes of a user.
-        `REST documentation <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html?urls.primaryName=v2#/User/UserControllerV2_RefreshUser>`__
 
         Args:
             user_id (str or int): The userUid of the user whose attributes you wish to refresh.

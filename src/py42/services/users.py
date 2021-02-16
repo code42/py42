@@ -11,6 +11,8 @@ from py42.services.util import get_all_pages
 class UserService(BaseService):
     """A service for interacting with Code42 user APIs. Use the UserService to create and retrieve
     users. You can also use it to block and deactivate users.
+
+    `REST Documentation <https://developer.code42.com/api/#tag/User>`__
     """
 
     def create_user(
@@ -60,7 +62,6 @@ class UserService(BaseService):
 
     def get_by_id(self, user_id, **kwargs):
         """Gets the user with the given ID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
             user_id (int): An ID for a user.
@@ -73,7 +74,6 @@ class UserService(BaseService):
 
     def get_by_uid(self, user_uid, **kwargs):
         """Gets the user with the given UID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
             user_uid (str): A UID for a user.
@@ -87,7 +87,6 @@ class UserService(BaseService):
 
     def get_by_username(self, username, **kwargs):
         """Gets the user with the given username.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
             username (str or unicode): A username for a user.
@@ -101,7 +100,6 @@ class UserService(BaseService):
 
     def get_current(self, **kwargs):
         """Gets the currently signed in user.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
@@ -121,7 +119,6 @@ class UserService(BaseService):
         **kwargs
     ):
         """Gets an individual page of users.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
             page_num (int): The page number to request.
@@ -159,7 +156,6 @@ class UserService(BaseService):
         self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs
     ):
         """Gets all users.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-get>`__
 
         Args:
             active (bool, optional): True gets active users only,

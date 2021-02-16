@@ -4,6 +4,8 @@ from py42.exceptions import Py42InvalidRuleOperationError
 
 
 class AlertRulesClient(object):
+    """`Rest Documentation <https://developer.code42.com/api/#tag/Rules>`__"""
+
     def __init__(self, alerts_service, alert_rules_service):
         self._alerts_service = alerts_service
         self._alert_rules_service = alert_rules_service

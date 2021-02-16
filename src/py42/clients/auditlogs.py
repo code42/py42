@@ -1,4 +1,6 @@
 class AuditLogsClient(object):
+    """`Rest documentation <https://developer.code42.com/api/#tag/Audit-Log>`__"""
+
     def __init__(self, audit_log_service):
         self._audit_log_service = audit_log_service
 

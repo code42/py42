@@ -12,6 +12,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- `sdk.alerts.update_note()` to add or update note regarding an alert.
+
 - `sdk.from_jwt_provider()` method to create `SDKClient` that supports custom auth mechanism.
 
 ## 1.11.1 - 2021-02-02

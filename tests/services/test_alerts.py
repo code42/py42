@@ -354,3 +354,16 @@ class TestAlertService(object):
         mock_connection.post.assert_called_once_with(
             "/svc/api/v1/rules/query-rule-metadata", json=data
         )
+
+    def test_update_note_calls_post_with_expected_url_and_data(
+        self, mock_connection, user_context
+    ):
+        alert_service = AlertService(mock_connection, user_context)
+        alert_service.update_note("alert-id", note="Test Note")
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/add-note"
+        post_data = mock_connection.post.call_args[1]["json"]
+        assert (
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and post_data["alertId"] == "alert-id"
+            and post_data["note"] == "Test Note"
+        )

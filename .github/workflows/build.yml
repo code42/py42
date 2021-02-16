@@ -40,4 +40,4 @@ jobs:
       - name: Start up the mock servers
         run: cd code42-mock-servers; docker-compose up -d 
       - name: Curl against one of the containers
-        run: curl http://127.0.0.1/4200/api/User/asdfz
+        run: curl http://127.0.0.1:4200/api/User/asdfz

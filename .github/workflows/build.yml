@@ -18,6 +18,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: py42
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
@@ -34,6 +36,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: code42/code42-mock-servers
-          path: ../code42-mock-servers
+          path: code42-mock-servers
       - name: Start up the mock servers
-        run: pwd; cd ../code42-mock-servers; make
+        run: pwd; ls -lah; cd code42-mock-servers; make

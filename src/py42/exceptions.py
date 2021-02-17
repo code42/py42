@@ -187,7 +187,8 @@ class Py42LegalHoldCriteriaMissingError(Py42BadRequestError):
     def __init__(self, exception):
         super(Py42LegalHoldCriteriaMissingError, self).__init__(
             exception,
-            u"At least one criteria must be specified; hold_membership_uid, hold_uid, user_uid, or user.",
+            u"At least one criteria must be specified; legal_hold_membership_uid, "
+            u"legal_hold_uid, user_uid, or user.",
         )
 
 

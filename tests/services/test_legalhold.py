@@ -177,8 +177,13 @@ class TestLegalHoldService(object):
 
         mock_connection.get.side_effect = side_effect
         service = LegalHoldService(mock_connection)
-        with pytest.raises(Py42LegalHoldCriteriaMissingError):
+        with pytest.raises(Py42LegalHoldCriteriaMissingError) as err:
             service.get_custodians_page(1)
+
+        assert (
+            str(err.value) == "At least one criteria must be specified; "
+            "legal_hold_membership_uid, legal_hold_uid, user_uid, or user."
+        )
 
     def test_add_to_matter_calls_post_with_expected_url_and_params(
         self, mock_connection

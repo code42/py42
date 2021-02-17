@@ -41,4 +41,4 @@ jobs:
       - name: Start up the mock servers
         run: cd code42-mock-servers; docker-compose up -d --build
       - name: Curl against one of the containers 
-        run: docker ps -a; docker inspect mock_core; sleep 1; curl http://127.0.0.1:4200/api/User/asdfz; docker logs mock_core
+        run: docker ps -a; docker inspect mock_core; sleep 1; curl http://127.0.0.1:4200/api/User/asdfz && docker logs mock_core

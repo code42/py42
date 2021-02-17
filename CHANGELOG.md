@@ -10,10 +10,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## unreleased
 
-### Changed
-
-- Attribute value for `sdk.queries.fileevents.filters.file_filter.FileCategory.*` changed to "CamelCase" format.
-
 ### Added
 
 - `sdk.alerts.update_note()` to add or update note regarding an alert.

@@ -18,13 +18,13 @@ from py42.sdk.queries.fileevents.filters.file_filter import SHA256
 
 def test_file_category_eq_str_gives_correct_json_representation():
     _filter = FileCategory.eq(FileCategory.AUDIO)
-    expected = IS.format("fileCategory", "AUDIO")
+    expected = IS.format("fileCategory", "Audio")
     assert str(_filter) == expected
 
 
 def test_file_category_not_eq_str_gives_correct_json_representation():
     _filter = FileCategory.not_eq(FileCategory.DOCUMENT)
-    expected = IS_NOT.format("fileCategory", "DOCUMENT")
+    expected = IS_NOT.format("fileCategory", "Document")
     assert str(_filter) == expected
 
 
@@ -271,17 +271,17 @@ def test_sha256_not_in_str_gives_correct_json_representation():
 def test_file_category_choices_returns_valid_attributes():
     choices = FileCategory.choices()
     valid_set = {
-        "AUDIO",
-        "DOCUMENT",
-        "EXECUTABLE",
-        "IMAGE",
-        "PDF",
-        "PRESENTATION",
-        "SCRIPT",
-        "SOURCE_CODE",
-        "SPREADSHEET",
-        "VIDEO",
-        "VIRTUAL_DISK_IMAGE",
-        "ARCHIVE",
+        "Audio",
+        "Document",
+        "Executable",
+        "Image",
+        "Pdf",
+        "Presentation",
+        "Script",
+        "SourceCode",
+        "Spreadsheet",
+        "Video",
+        "VirtualDiskImage",
+        "Archive",
     }
     assert set(choices) == valid_set

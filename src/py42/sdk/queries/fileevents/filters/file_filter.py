@@ -24,18 +24,18 @@ class FileCategory(FileEventFilterStringField):
 
     _term = u"fileCategory"
 
-    AUDIO = u"AUDIO"
-    DOCUMENT = u"DOCUMENT"
-    EXECUTABLE = u"EXECUTABLE"
-    IMAGE = u"IMAGE"
-    PDF = u"PDF"
-    PRESENTATION = u"PRESENTATION"
-    SCRIPT = u"SCRIPT"
-    SOURCE_CODE = u"SOURCE_CODE"
-    SPREADSHEET = u"SPREADSHEET"
-    VIDEO = u"VIDEO"
-    VIRTUAL_DISK_IMAGE = u"VIRTUAL_DISK_IMAGE"
-    ZIP = u"ARCHIVE"
+    AUDIO = u"Audio"
+    DOCUMENT = u"Document"
+    EXECUTABLE = u"Executable"
+    IMAGE = u"Image"
+    PDF = u"Pdf"
+    PRESENTATION = u"Presentation"
+    SCRIPT = u"Script"
+    SOURCE_CODE = u"SourceCode"
+    SPREADSHEET = u"Spreadsheet"
+    VIDEO = u"Video"
+    VIRTUAL_DISK_IMAGE = u"VirtualDiskImage"
+    ZIP = u"Archive"
 
     @staticmethod
     def choices():

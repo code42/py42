@@ -24,8 +24,8 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
-      # - name: Install tox
-      #   run: pip install tox==3.17.1
+      - name: Install tox
+        run: pip install tox==3.17.1
       # - name: Run Unit tests
       #   run: cd py42; tox -e py  # Run tox using the version of Python in `PATH`
       # - name: Submit coverage report
@@ -43,4 +43,4 @@ jobs:
       # - name: Curl against one of the containers 
       #   run: docker ps -a; docker inspect --format "{{json .State.Health }}" mock_core | jq; curl http://127.0.0.1:4200/api/User/asdfz
       - name: Run the integration tests!!
-        run: tox -e integration
+        run: cd py42; tox -e integration

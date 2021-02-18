@@ -41,6 +41,7 @@ class HighRiskEmployeeService(BaseService):
 
         Raises a :class:`Py42BadRequestError` when a user already exists in the High Risk Employee
         detection list.
+        `REST Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_AddEmployee>`__
 
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the High Risk

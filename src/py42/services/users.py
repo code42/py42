@@ -12,7 +12,6 @@ class UserService(BaseService):
     """A service for interacting with Code42 user APIs. Use the UserService to create and retrieve
     users. You can also use it to block and deactivate users.
 
-    `REST Documentation <https://developer.code42.com/api/#tag/User>`__
     """
 
     def create_user(

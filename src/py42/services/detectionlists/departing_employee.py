@@ -38,7 +38,7 @@ class DepartingEmployeeService(BaseService):
     def add(self, user_id, departure_date=None):
         """Adds a user to the Departing Employees list. Creates a detection list user profile if one \
             didn't already exist.
-        `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
+        `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_AddEmployee>`__
 
         Raises a :class:`Py42BadRequestError` when a user already exists in the Departing Employee \
             detection list.
@@ -72,7 +72,7 @@ class DepartingEmployeeService(BaseService):
 
     def remove(self, user_id):
         """Removes a user from the Departing Employees list.
-        `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
+        `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_RemoveUser>`__
 
         Args:
             user_id (str or int): The Code42 userUid of the user.
@@ -91,7 +91,7 @@ class DepartingEmployeeService(BaseService):
 
     def get(self, user_id):
         """Gets departing employee data of a user.
-        `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
+        `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_GetEmployee>`__
 
         Args:
             user_id (str or int): The Code42 userUid of the user.
@@ -174,7 +174,7 @@ class DepartingEmployeeService(BaseService):
 
     def set_alerts_enabled(self, alerts_enabled=True):
         """Enable or disable email alerting on Departing Employee exposure events.
-        `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
+        `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_SetAlertState>`__
 
         Args:
             alerts_enabled (bool): Set alerting to on (True) or off (False). Defaults to True.
@@ -189,7 +189,7 @@ class DepartingEmployeeService(BaseService):
 
     def update_departure_date(self, user_id, departure_date):
         """Add or modify details of an existing Departing Employee case.
-        `REST Documentation <https://ecm-east.us.code42.com/svc/swagger/index.html?urls.primaryName=v2#/>`__
+        `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_UpdateDepartureDate>`__
 
         Args:
             user_id (str): The Code42 userUid of the user.

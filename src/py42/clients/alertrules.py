@@ -39,6 +39,7 @@ class AlertRulesClient(object):
 
     def add_user(self, rule_id, user_id):
         """Update alert rule to monitor user aliases against the Uid for the given rule id.
+        `Rest Documentation <https://developer.code42.com/api/#operation/Rules_AddUsersToRule>`__
 
         Args:
             rule_id (str): Observer Id of a rule to be updated.
@@ -56,6 +57,7 @@ class AlertRulesClient(object):
 
     def remove_user(self, rule_id, user_id):
         """Update alert rule criteria to remove a user and all its aliases from a rule.
+        `Rest Documentation <https://developer.code42.com/api/#operation/Rules_RemoveUsersFromRule>`__
 
         Args:
             rule_id (str): Observer rule Id of a rule to be updated.
@@ -73,6 +75,8 @@ class AlertRulesClient(object):
 
     def remove_all_users(self, rule_id):
         """Update alert rule criteria to remove all users the from the alert rule.
+
+        `Rest Documentation <https://developer.code42.com/api/#operation/Rules_RemoveAllUsersFromRule>`__
 
         Args:
             rule_id (str): Observer rule Id of a rule to be updated.

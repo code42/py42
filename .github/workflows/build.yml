@@ -40,5 +40,7 @@ jobs:
           path: code42-mock-servers
       - name: Start up the mock servers
         run: cd code42-mock-servers; docker-compose up -d --build
-      - name: Curl against one of the containers 
-        run: docker ps -a; docker inspect --format "{{json .State.Health }}" mock_core | jq; curl http://127.0.0.1:4200/api/User/asdfz
+      # - name: Curl against one of the containers 
+      #   run: docker ps -a; docker inspect --format "{{json .State.Health }}" mock_core | jq; curl http://127.0.0.1:4200/api/User/asdfz
+      - name: Run the integration tests!!
+        run: pytest -m integration

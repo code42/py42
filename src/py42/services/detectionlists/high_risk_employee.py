@@ -41,6 +41,7 @@ class HighRiskEmployeeService(BaseService):
 
         Raises a :class:`Py42BadRequestError` when a user already exists in the High Risk Employee
         detection list.
+        `REST Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_AddEmployee>`__
 
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the High Risk
@@ -61,6 +62,7 @@ class HighRiskEmployeeService(BaseService):
 
     def set_alerts_enabled(self, enabled=True):
         """Enables alerts.
+        `Rest Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_SetAlertState>`__
 
         Args:
             enabled (bool): Whether to enable alerts for all users.
@@ -77,6 +79,7 @@ class HighRiskEmployeeService(BaseService):
 
     def remove(self, user_id):
         """Removes a user from the High Risk Employee detection list.
+        `Rest Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_RemoveUser>`__
 
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the High Risk
@@ -97,6 +100,7 @@ class HighRiskEmployeeService(BaseService):
 
     def get(self, user_id):
         """Gets user information.
+        `Rest Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_GetEmployee>`__
 
         Args:
             user_id (str or int): The Code42 userUid of the user has been added to the High Risk
@@ -120,6 +124,7 @@ class HighRiskEmployeeService(BaseService):
         page_size=_PAGE_SIZE,
     ):
         """Searches High Risk Employee list. Filter results by filter_type.
+        `Rest Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_Search>`__
 
         Args:
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,

@@ -1,4 +1,6 @@
 class AuditLogsClient(object):
+    """`Rest documentation <https://developer.code42.com/api/#tag/Audit-Log>`__"""
+
     def __init__(self, audit_log_service):
         self._audit_log_service = audit_log_service
 
@@ -22,6 +24,7 @@ class AuditLogsClient(object):
         `page_num` parameter in py42. However, under the hood, it subtracts one from
         the given `page_num` in the implementation as the Code42 Audit-Logs API expects
         the start page to be zero.
+        `Rest Documentation <https://developer.code42.com/api/#operation/rpc/search/search-audit-log>`__
 
         Args:
             page_num (int, optional): The page number to get. Defaults to 1.
@@ -67,6 +70,7 @@ class AuditLogsClient(object):
         **kwargs
     ):
         """Retrieve audit logs, filtered based on given arguments.
+        `Rest Documentation <https://developer.code42.com/api/#operation/rpc/search/search-audit-log>`__
 
         Args:
             begin_time (int or float or str or datetime, optional): Timestamp in milliseconds or

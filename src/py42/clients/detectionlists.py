@@ -19,6 +19,8 @@ class RiskTags(object):
 
 
 class DetectionListsClient(object):
+    """`Rest documentation <https://developer.code42.com/api/#tag/Detection-Lists>`__"""
+
     def __init__(
         self,
         user_profile_service,
@@ -50,6 +52,7 @@ class DetectionListsClient(object):
 
     def get_user(self, username):
         """Get user details by username.
+        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_GetByUsername>`__
 
         Args:
             username (str): The Code42 username of the user.
@@ -61,6 +64,7 @@ class DetectionListsClient(object):
 
     def get_user_by_id(self, user_id):
         """Get user details by user_id.
+        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_GetByUserId>`__
 
         Args:
             user_id (str or int): The Code42 userId of the user.
@@ -136,7 +140,7 @@ class DetectionListsClient(object):
 
     def refresh_user_scim_attributes(self, user_id):
         """Refresh SCIM attributes of a user.
-        `REST documentation <https://ecm-default.prod.ffs.us2.code42.com/svc/swagger/index.html?urls.primaryName=v2#/User/UserControllerV2_RefreshUser>`__
+        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_RefreshUser>`__
 
         Args:
             user_id (str or int): The userUid of the user whose attributes you wish to refresh.

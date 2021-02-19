@@ -2,6 +2,11 @@ from py42.sdk.queries.alerts.filters import AlertState
 
 
 class AlertsClient(object):
+    """A client to expose alert API.
+
+    `Rest Documentation <https://developer.code42.com/api/#tag/Alerts>`__
+    """
+
     def __init__(self, alert_service, alert_rules_client):
         self._alert_service = alert_service
         self._alert_rules_client = alert_rules_client
@@ -18,6 +23,8 @@ class AlertsClient(object):
     def search(self, query):
         """Searches alerts using the given :class:`py42.sdk.queries.alerts.alert_query.AlertQuery`.
 
+        `Rest Documentation <https://developer.code42.com/api/#operation/Alerts_QueryAlert>`__
+
         Args:
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
                 See the :ref:`Executing Searches User Guide <anchor_search_alerts>` to learn more
@@ -32,6 +39,8 @@ class AlertsClient(object):
     def get_details(self, alert_ids):
         """Gets the details for the alerts with the given IDs, including the file event query that,
         when passed into a search, would result in events that could have triggered the alerts.
+
+        `Rest Documentation <https://developer.code42.com/api/#operation/Alerts_QueryAlertDetails>`__
 
         Args:
             alert_ids (iter[str]): The identification numbers of the alerts for which you want to

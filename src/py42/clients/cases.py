@@ -36,6 +36,7 @@ class CasesClient(object):
         self, name, subject=None, assignee=None, description=None, findings=None
     ):
         """Creates a new case.
+        `Rest documentation <https://developer.code42.com/api/#operation/createCaseUsingPOST>`__
 
         Args:
             name (str): Name of the case.
@@ -84,6 +85,7 @@ class CasesClient(object):
         **kwargs
     ):
         """Gets individual page of cases.
+        `Rest documentation <https://developer.code42.com/api/#operation/getCasesUsingGET>`__
 
         Args:
             page_num (int): The page number to request.
@@ -142,6 +144,7 @@ class CasesClient(object):
         **kwargs
     ):
         """Gets all cases.
+        `Rest documentation <https://developer.code42.com/api/#operation/getCasesUsingGET>`__
 
         Args:
             name (str, optional): Filter results by case name, matches partial names. Defaults to None.
@@ -185,6 +188,7 @@ class CasesClient(object):
 
     def get(self, case_number):
         """Retrieve case details by case number.
+        `Rest documentation <https://developer.code42.com/api/#operation/getCaseUsingGET>`__
 
         Args:
             case_number (int): Case number of the case.
@@ -196,6 +200,8 @@ class CasesClient(object):
 
     def export_summary(self, case_number):
         """Provides case summary to download as a PDF file.
+        `Rest documentation <https://developer.code42.com/api/#operation/pdfExportUsingGET>`__
+
 
         Args:
             case_number (int): Case number of the case.
@@ -216,6 +222,8 @@ class CasesClient(object):
         status=None,
     ):
         """Updates case details for the given case number.
+        `Rest documentation <https://developer.code42.com/api/#operation/updateCaseUsingPUT>`__
+
 
         Args:
             case_number (int): Case number of the case.

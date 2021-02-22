@@ -316,7 +316,7 @@ class UserService(BaseService):
 
     def remove_role(self, user_id, role_name):
         """Removes a role from a user.
-        REST Documentation <https://console.us.code42.com/apidocviewer/#UserRole-delete>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserRole-delete>`__
 
         Args:
             user_id (int): An ID for a user.

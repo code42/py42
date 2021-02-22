@@ -41,6 +41,7 @@ class DetectionListsClient(object):
 
     def create_user(self, username):
         """Create a detection list profile for a user.
+        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_Create>`__
 
         Args:
             username (str): The Code42 username of the user.
@@ -76,6 +77,7 @@ class DetectionListsClient(object):
 
     def update_user_notes(self, user_id, notes):
         """Add or update notes related to the user.
+        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_UpdateNotes>`__
 
         Args:
             user_id (str or int): The userUid of the user whose notes you want to update.
@@ -88,6 +90,7 @@ class DetectionListsClient(object):
 
     def add_user_risk_tags(self, user_id, tags):
         """Add one or more risk factor tags.
+        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_AddRiskFactors>`__
 
         Args:
             user_id (str or int): The userUid of the user whose risk factor tag(s) you want to update.
@@ -102,6 +105,7 @@ class DetectionListsClient(object):
 
     def remove_user_risk_tags(self, user_id, tags):
         """Remove one or more risk factor tags.
+        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_RemoveRiskFactors>`__
 
         Args:
             user_id (str or int): The userUid of the user whose risk factor tag(s) needs you want to remove.
@@ -116,6 +120,7 @@ class DetectionListsClient(object):
 
     def add_user_cloud_alias(self, user_id, alias):
         """Add a cloud alias to a user.
+        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_AddCloudUsernames>`__
 
         Args:
             user_id (str or int): The userUid of the user whose alias you want to update.
@@ -128,6 +133,7 @@ class DetectionListsClient(object):
 
     def remove_user_cloud_alias(self, user_id, alias):
         """Remove a cloud alias from a user.
+        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_RemoveCloudUsernames>`__
 
         Args:
             user_id (str or int): The userUid of the user whose alias needs to be removed.

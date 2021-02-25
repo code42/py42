@@ -8,13 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## unreleased
+## 1.12.0 - 2021-02-25
 
 ### Added
 
-- `sdk.alerts.update_note()` to add or update note regarding an alert.
+- `sdk.alerts.update_note()` to add or update a note regarding an alert.
 
-- `sdk.from_jwt_provider()` method to create `SDKClient` that supports custom auth mechanism.
+- `sdk.from_jwt_provider()` method to create an `SDKClient` that supports custom auth mechanism.
 
 ## 1.11.1 - 2021-02-02
 

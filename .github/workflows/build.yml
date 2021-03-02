@@ -38,6 +38,7 @@ jobs:
           repository: code42/code42-mock-servers
           path: code42-mock-servers
       - name: Add mock servers host addresses
+        run: |
           sudo tee -a /etc/hosts <<EOF
           127.0.0.1 core
           127.0.0.1 alerts

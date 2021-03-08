@@ -39,7 +39,7 @@ class DepartingEmployeeService(BaseService):
         """Adds a user to the Departing Employees list.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_AddEmployee>`__
 
-        Raises a :class:`Py42BadRequestError` when a user already exists in the Departing Employee \
+        Raises a :class:`Py42UserAlreadyAddedError` when a user already exists in the Departing Employee \
             detection list.
 
         Args:

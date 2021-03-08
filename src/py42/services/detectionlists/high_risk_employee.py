@@ -38,7 +38,7 @@ class HighRiskEmployeeService(BaseService):
     def add(self, user_id):
         """Adds a user to the High Risk Employee detection list.
 
-        Raises a :class:`Py42BadRequestError` when a user already exists in the High Risk Employee
+        Raises a :class:`Py42UserAlreadyAddedError` when a user already exists in the High Risk Employee
         detection list.
         `REST Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_AddEmployee>`__
 

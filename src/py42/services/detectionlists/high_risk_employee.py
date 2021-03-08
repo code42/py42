@@ -36,8 +36,7 @@ class HighRiskEmployeeService(BaseService):
         return self._connection.post(uri, json=data)
 
     def add(self, user_id):
-        """Adds a user to the High Risk Employee detection list. Creates a detection list user
-        profile if one didn't already exist.
+        """Adds a user to the High Risk Employee detection list.
 
         Raises a :class:`Py42BadRequestError` when a user already exists in the High Risk Employee
         detection list.
@@ -50,15 +49,12 @@ class HighRiskEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        if self._user_profile_service.create_if_not_exists(user_id):
-            tenant_id = self._user_context.get_current_tenant_id()
-            try:
-                return self._add_high_risk_employee(tenant_id, user_id)
-            except Py42BadRequestError as err:
-                handle_user_already_added_error(
-                    err, user_id, u"high-risk-employee list"
-                )
-                raise
+        tenant_id = self._user_context.get_current_tenant_id()
+        try:
+            return self._add_high_risk_employee(tenant_id, user_id)
+        except Py42BadRequestError as err:
+            handle_user_already_added_error(err, user_id, u"high-risk-employee list")
+            raise
 
     def set_alerts_enabled(self, enabled=True):
         """Enables alerts.

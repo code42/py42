@@ -62,7 +62,7 @@ class TestHighRiskEmployeeClient(object):
         high_risk_employee_client.add("942897397520289999")
 
         posted_data = mock_connection_post_success.post.call_args[1]["json"]
-        assert mock_connection_post_success.post.call_count == 2
+        assert mock_connection_post_success.post.call_count == 1
         assert (
             mock_connection_post_success.post.call_args[0][0]
             == "v2/highriskemployee/add"

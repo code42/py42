@@ -198,52 +198,6 @@ class TestDetectionListUserClient(object):
             and posted_data["cloudUsernames"] == ["Test"]
         )
 
-    def test_create_if_not_exists_posts_expected_data_when_user_exists(
-        self, mock_connection, user_context, mock_user_client
-    ):
-        detection_list_user_client = DetectionListUserService(
-            mock_connection, user_context, mock_user_client
-        )
-        assert (
-            detection_list_user_client.create_if_not_exists("942897397520289999")
-            is True
-        )
-
-        posted_data = mock_connection.post.call_args[1]["json"]
-        assert mock_connection.post.call_args[0][0] == "v2/user/getbyid"
-        assert (
-            posted_data["tenantId"] == user_context.get_current_tenant_id()
-            and posted_data["userId"] == "942897397520289999"
-        )
-        assert mock_connection.post.call_count == 1
-
-    def test_create_if_not_exists_posts_expected_data_when_user_does_not_exist(
-        self, mock_get_by_id_fails, user_context, mock_user_client
-    ):
-        # In this test case we can't verify create successful, hence we verified failure in create
-        # because same mock_connection instance
-        # 'mock_get_by_id_fails' will be called for get & create and its going to return failure.
-        # We verified create is being called and two times post method is called, also we
-        # verified user_client.get_by_uid is successfully called.
-        detection_list_user_client = DetectionListUserService(
-            mock_get_by_id_fails, user_context, mock_user_client
-        )
-        with pytest.raises(Py42BadRequestError):
-            detection_list_user_client.create_if_not_exists("942897397520289999")
-
-        posted_data = mock_get_by_id_fails.post.call_args[1]["json"]
-        assert mock_get_by_id_fails.post.call_args[0][0] == "v2/user/create"
-        assert (
-            posted_data["tenantId"] == user_context.get_current_tenant_id()
-            and posted_data["userName"] == "username"
-        )
-        assert mock_get_by_id_fails.post.call_count == 2
-        assert mock_user_client._connection.get.call_count == 1
-        assert (
-            mock_user_client._connection.get.call_args[0][0]
-            == "/api/User/942897397520289999"
-        )
-
     def test_refresh_posts_expected_data(
         self, mock_connection, user_context, mock_user_client
     ):

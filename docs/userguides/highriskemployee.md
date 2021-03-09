@@ -23,11 +23,8 @@ response = sdk.detectionlists.high_risk_employee.add(user_id)
 
 ```eval_rst
 .. important::
-    If the user is already in the High Risk Employee list, you will get a response indicating that it is a
-    bad request.
+    If the user is already in the High Risk Employee list, you will get a `py42.exceptions.Py42UserAlreadyAddedError`.
 
-    If a detection list user profile doesn't exist yet for this user, one will automatically be created before adding
-    the user to the High Risk Employee list.
 ```
 
 To remove a user from the High Risk Employee list:

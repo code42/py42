@@ -36,11 +36,10 @@ class DepartingEmployeeService(BaseService):
         self._user_profile_service = user_profile_service
 
     def add(self, user_id, departure_date=None):
-        """Adds a user to the Departing Employees list. Creates a detection list user profile if one \
-            didn't already exist.
+        """Adds a user to the Departing Employees list.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_AddEmployee>`__
 
-        Raises a :class:`Py42BadRequestError` when a user already exists in the Departing Employee \
+        Raises a :class:`Py42UserAlreadyAddedError` when a user already exists in the Departing Employee \
             detection list.
 
         Args:
@@ -54,21 +53,18 @@ class DepartingEmployeeService(BaseService):
         """
         if isinstance(departure_date, datetime):
             departure_date = departure_date.strftime(_DATE_FORMAT)
-        if self._user_profile_service.create_if_not_exists(user_id):
-            tenant_id = self._user_context.get_current_tenant_id()
-            data = {
-                u"tenantId": tenant_id,
-                u"userId": user_id,
-                u"departureDate": departure_date,
-            }
-            uri = self._uri_prefix.format(u"add")
-            try:
-                return self._connection.post(uri, json=data)
-            except Py42BadRequestError as err:
-                handle_user_already_added_error(
-                    err, user_id, u"departing-employee list"
-                )
-                raise
+        tenant_id = self._user_context.get_current_tenant_id()
+        data = {
+            u"tenantId": tenant_id,
+            u"userId": user_id,
+            u"departureDate": departure_date,
+        }
+        uri = self._uri_prefix.format(u"add")
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42BadRequestError as err:
+            handle_user_already_added_error(err, user_id, u"departing-employee list")
+            raise
 
     def remove(self, user_id):
         """Removes a user from the Departing Employees list.

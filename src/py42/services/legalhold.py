@@ -278,10 +278,10 @@ class LegalHoldService(BaseService):
 
     def get_events_page(
         self,
-        page_num,
         legal_hold_uid=None,
         min_event_date=None,
         max_event_date=None,
+        page_num=1,
         page_size=None,
     ):
         """Gets an individual page of Legal Hold events.
@@ -289,13 +289,13 @@ class LegalHoldService(BaseService):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldEventReport-get>`__
 
         Args:
-            page_num (int): The page number to request.
             legal_hold_uid (str, optional): Find LegalHoldEvents for the Legal Hold Matter
                 with this unique identifier. Defaults to None.
             min_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
                 eventDate is equal to or after this time. Defaults to None.
             max_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
                 eventDate is equal to or before this time. Defaults to None.
+            page_num (int): The page number to request. Defaults to 1.
             page_size (int, optional): The size of the page. Defaults to `py42.settings.items_per_page`.
 
         Returns:

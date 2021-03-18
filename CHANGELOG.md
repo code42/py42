@@ -12,7 +12,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- `sdk.legalhold.get_all_events` to search for legal hold events with optional parmeters of legal_hold_uid, min_event_date, and max_event_date
+- `sdk.legalhold.get_all_events` to search for legal hold events with optional
+  parameters of legal_hold_uid, min_event_date, and max_event_date
 
 ## 1.12.0 - 2021-02-25
 

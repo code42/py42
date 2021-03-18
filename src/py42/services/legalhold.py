@@ -286,16 +286,16 @@ class LegalHoldService(BaseService):
     ):
         """Gets an individual page of Legal Hold events.
 
-        `REST Documentation <https://www.crashplan.com/apidocviewer/#LegalHoldEvent-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldEventReport-get>`__
 
         Args:
             page_num (int): The page number to request.
             legal_hold_uid (str, optional): Find LegalHoldEvents for the Legal Hold Matter
                 with this unique identifier. Defaults to None.
             min_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
-                eventDate is equal to or after this time. Defaults to None
+                eventDate is equal to or after this time. Defaults to None.
             max_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
-                eventDate is equal to or before this time. Defaults to None
+                eventDate is equal to or before this time. Defaults to None.
             page_size (int, optional): The size of the page. Defaults to `py42.settings.items_per_page`.
 
         Returns:
@@ -321,17 +321,17 @@ class LegalHoldService(BaseService):
         self, legal_hold_uid=None, min_event_date=None, max_event_date=None
     ):
         """Gets an individual page of Legal Hold events.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldEvent-get>`__
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldEventReport-get>`__
 
         Args:
-            legal_hold_uid (str, optional): Find LegalHoldEvent for the Legal Hold Matter
+            legal_hold_uid (str, optional): Find LegalHoldEvents for the Legal Hold Matter
                 with this unique identifier. Defaults to None.
             min_event_date (date/time string, optional): Find LegalHoldEvents whose
                 eventDate is equal to or after this time. E.g. yyyy-MM-dd HH:MM:SS
-                Defaults to None
+                Defaults to None.
             max_event_date (date/time string, optional): Find LegalHoldEvents whose
                 eventDate is equal to or before this time. E.g. yyyy-MM-dd HH:MM:SS
-                Defaults to None
+                Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

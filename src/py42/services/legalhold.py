@@ -275,6 +275,75 @@ class LegalHoldService(BaseService):
             active=active,
         )
 
+    def get_events_page(
+        self,
+        page_num,
+        legal_hold_uid=None,
+        min_event_date=None,
+        max_event_date=None,
+        page_size=None,
+    ):
+        """Gets an individual page of Legal Hold events.
+
+        `REST Documentation <https://www.crashplan.com/apidocviewer/#LegalHoldEvent-get>`__
+
+        Args:
+            page_num (int): The page number to request.
+            legal_hold_uid (str, optional): Find LegalHoldEvents for the Legal Hold Matter
+                with this unique identifier. Defaults to None.
+            min_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
+                eventDate is equal to or after this time. Defaults to None
+            max_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
+                eventDate is equal to or before this time. Defaults to None
+            page_size (int, optional): The size of the page. Defaults to `py42.settings.items_per_page`.
+
+        Returns:
+            :class:`py42.response.Py42Response`:
+        """
+        page_size = page_size or settings.items_per_page
+        params = {
+            u"legalHoldUid": legal_hold_uid,
+            u"minEventDate": min_event_date,
+            u"maxEventDate": max_event_date,
+            u"pgNum": page_num,
+            u"pgSize": page_size,
+        }
+        uri = u"/api/LegalHoldEventReport"
+
+        return self._connection.get(uri, params=params)
+
+    def get_all_events(
+        self, legal_hold_uid=None, min_event_date=None, max_event_date=None
+    ):
+        """Gets an individual page of Legal Hold events.
+
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldEvent-get>`__
+
+        Args:
+            legal_hold_uid (str, optional): Find LegalHoldEvent for the Legal Hold Matter
+                with this unique identifier. Defaults to None.
+            min_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
+                eventDate is equal to or after this time. E.g. 2021-02-19T10:00:00.000-05:00
+                 Defaults to None
+            max_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
+                eventDate is equal to or before this time. E.g. 2021-02-19T10:00:00.000-05:00
+                Defaults to None
+
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of LegalHoldEvent objects.
+        """
+        return get_all_pages(
+            self.get_events_page,
+            u"legalHoldEvents",
+            legal_hold_uid=legal_hold_uid,
+            min_event_date=min_event_date,
+            max_event_date=max_event_date
+        )
+
+
+
     def add_to_matter(self, user_uid, legal_hold_uid):
         """Add a user (Custodian) to a Legal Hold Matter.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-post>`__

@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- `sdk.legalhold.get_all_events` to search for legal hold events with optional parmeters of legal_hold_uid, min_event_date, and max_event_date
+
 ## 1.12.0 - 2021-02-25
 
 ### Added

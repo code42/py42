@@ -34,6 +34,10 @@ MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{"legalHoldMemberships": ["foo"]}""
 
 MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{"legalHoldMemberships": []}"""
 
+MOCK_GET_ALL_EVENTS_RESPONSE = """{"legalHoldEvents":["foo"]}"""
+
+MOCK_EMPTY_GET_ALL_EVENTS_RESPONSE = """{"legalHoldEvents": []}"""
+
 
 class TestLegalHoldService(object):
     @pytest.fixture
@@ -66,6 +70,22 @@ class TestLegalHoldService(object):
         response.status_code = 200
         response.encoding = "utf-8"
         response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
+        return Py42Response(response)
+
+    @pytest.fixture
+    def mock_get_all_events_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_GET_ALL_EVENTS_RESPONSE
+        return Py42Response(response)
+
+    @pytest.fixture
+    def mock_get_all_events_empty_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_EMPTY_GET_ALL_EVENTS_RESPONSE
         return Py42Response(response)
 
     def test_get_matter_by_uid_calls_get_with_uri_and_params(
@@ -129,6 +149,24 @@ class TestLegalHoldService(object):
         py42.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
+    def test_get_all_events_calls_get_expected_number_of_times(
+        self,
+        mock_connection,
+        mock_get_all_events_response,
+        mock_get_all_events_empty_response,
+    ):
+        py42.settings.items_per_page = 1
+        service = LegalHoldService(mock_connection)
+        mock_connection.get.side_effect = [
+            mock_get_all_events_response,
+            mock_get_all_events_response,
+            mock_get_all_events_empty_response,
+        ]
+        for _ in service.get_all_events():
+            pass
+        py42.settings.items_per_page = 500
+        assert mock_connection.get.call_count == 3
+
     def test_get_matters_page_calls_get_with_expected_url_and_params(
         self, mock_connection
     ):
@@ -161,6 +199,22 @@ class TestLegalHoldService(object):
                 "userUid": "user ID",
                 "user": "username",
                 "activeState": "ACTIVE",
+                "pgNum": 20,
+                "pgSize": 200,
+            },
+        )
+
+    def test_get_events_page_calls_get_with_expected_url_and_params(
+        self, mock_connection
+    ):
+        service = LegalHoldService(mock_connection)
+        service.get_events_page(20, "legalhold", None, None, 200)
+        mock_connection.get.assert_called_once_with(
+            "/api/LegalHoldEventReport",
+            params={
+                "legalHoldUid": "legalhold",
+                "minEventDate": None,
+                "maxEventDate": None,
                 "pgNum": 20,
                 "pgSize": 200,
             },

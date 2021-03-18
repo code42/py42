@@ -38,6 +38,7 @@ MOCK_GET_ALL_EVENTS_RESPONSE = """{"legalHoldEvents":["foo"]}"""
 
 MOCK_EMPTY_GET_ALL_EVENTS_RESPONSE = """{"legalHoldEvents": []}"""
 
+
 class TestLegalHoldService(object):
     @pytest.fixture
     def mock_get_all_matters_response(self, mocker):
@@ -70,7 +71,6 @@ class TestLegalHoldService(object):
         response.encoding = "utf-8"
         response.text = MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE
         return Py42Response(response)
-
 
     @pytest.fixture
     def mock_get_all_events_response(self, mocker):
@@ -209,14 +209,14 @@ class TestLegalHoldService(object):
     ):
         service = LegalHoldService(mock_connection)
         service.get_events_page(
-            20, "legalhold", "min event date", "max event date", 200
+            20, "legalhold", "2021-03-01 00:00:00", "2021-03-01 00:00:00", 200
         )
         mock_connection.get.assert_called_once_with(
             "/api/LegalHoldEventReport",
             params={
                 "legalHoldUid": "legalhold",
-                "minEventDate": "min event date",
-                "maxEventDate": "max event date",
+                "minEventDate": "2021-03-01T00:00:00.000Z",
+                "maxEventDate": "2021-03-01T00:00:00.000Z",
                 "pgNum": 20,
                 "pgSize": 200,
             },

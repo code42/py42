@@ -7,6 +7,7 @@ from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
+from py42.util import parse_timestamp_to_milliseconds_precision
 
 
 def _active_state_map(active):
@@ -301,6 +302,10 @@ class LegalHoldService(BaseService):
             :class:`py42.response.Py42Response`:
         """
         page_size = page_size or settings.items_per_page
+        if min_event_date:
+            min_event_date = parse_timestamp_to_milliseconds_precision(min_event_date)
+        if max_event_date:
+            max_event_date = parse_timestamp_to_milliseconds_precision(max_event_date)
         params = {
             u"legalHoldUid": legal_hold_uid,
             u"minEventDate": min_event_date,
@@ -322,11 +327,11 @@ class LegalHoldService(BaseService):
         Args:
             legal_hold_uid (str, optional): Find LegalHoldEvent for the Legal Hold Matter
                 with this unique identifier. Defaults to None.
-            min_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
-                eventDate is equal to or after this time. E.g. 2021-02-19T10:00:00.000-05:00
+            min_event_date (date/time string, optional): Find LegalHoldEvents whose
+                eventDate is equal to or after this time. E.g. yyyy-MM-dd HH:MM:SS
                  Defaults to None
-            max_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
-                eventDate is equal to or before this time. E.g. 2021-02-19T10:00:00.000-05:00
+            max_event_date (date/time string, optional): Find LegalHoldEvents whose
+                eventDate is equal to or before this time. E.g. yyyy-MM-dd HH:MM:SS
                 Defaults to None
 
 
@@ -339,10 +344,8 @@ class LegalHoldService(BaseService):
             u"legalHoldEvents",
             legal_hold_uid=legal_hold_uid,
             min_event_date=min_event_date,
-            max_event_date=max_event_date
+            max_event_date=max_event_date,
         )
-
-
 
     def add_to_matter(self, user_uid, legal_hold_uid):
         """Add a user (Custodian) to a Legal Hold Matter.

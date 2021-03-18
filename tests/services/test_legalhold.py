@@ -208,15 +208,13 @@ class TestLegalHoldService(object):
         self, mock_connection
     ):
         service = LegalHoldService(mock_connection)
-        service.get_events_page(
-            20, "legalhold", "2021-03-01 00:00:00", "2021-03-01 00:00:00", 200
-        )
+        service.get_events_page(20, "legalhold", None, None, 200)
         mock_connection.get.assert_called_once_with(
             "/api/LegalHoldEventReport",
             params={
                 "legalHoldUid": "legalhold",
-                "minEventDate": "2021-03-01T00:00:00.000Z",
-                "maxEventDate": "2021-03-01T00:00:00.000Z",
+                "minEventDate": None,
+                "maxEventDate": None,
                 "pgNum": 20,
                 "pgSize": 200,
             },

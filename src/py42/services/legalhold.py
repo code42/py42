@@ -321,7 +321,6 @@ class LegalHoldService(BaseService):
         self, legal_hold_uid=None, min_event_date=None, max_event_date=None
     ):
         """Gets an individual page of Legal Hold events.
-
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldEvent-get>`__
 
         Args:
@@ -329,11 +328,10 @@ class LegalHoldService(BaseService):
                 with this unique identifier. Defaults to None.
             min_event_date (date/time string, optional): Find LegalHoldEvents whose
                 eventDate is equal to or after this time. E.g. yyyy-MM-dd HH:MM:SS
-                 Defaults to None
+                Defaults to None
             max_event_date (date/time string, optional): Find LegalHoldEvents whose
                 eventDate is equal to or before this time. E.g. yyyy-MM-dd HH:MM:SS
                 Defaults to None
-
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

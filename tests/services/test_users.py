@@ -230,13 +230,14 @@ class TestUserService(object):
         user_service = UserService(mock_connection)
         mock_connection.post.return_value = put_api_mock_response
         user_id = "TEST_USER_ID"
-        expected_uri = "{}/{}".format(USER_URI, user_id)
+        expected_uri = "{}/{}?idType=uid".format(USER_URI, user_id)
         username = "TEST_ORG@TEST.COM"
         email = "TEST_EMAIL@TEST.com"
         password = "password"
         first_name = "FIRSTNAME"
         last_name = "LASTNAME"
         note = "Test Note"
+        quota = 12345
         user_service.update_user(
             user_id,
             username=username,
@@ -245,6 +246,7 @@ class TestUserService(object):
             first_name=first_name,
             last_name=last_name,
             note=note,
+            quota=quota,
         )
         expected_params = {
             u"username": username,
@@ -253,6 +255,7 @@ class TestUserService(object):
             u"firstName": first_name,
             u"lastName": last_name,
             u"notes": note,
+            u"quota": quota,
         }
         mock_connection.put.assert_called_once_with(expected_uri, json=expected_params)
 
@@ -262,7 +265,7 @@ class TestUserService(object):
         user_service = UserService(mock_connection)
         mock_connection.post.return_value = put_api_mock_response
         user_id = "TEST_USER_ID"
-        expected_uri = "{}/{}".format(USER_URI, user_id)
+        expected_uri = "{}/{}?idType=uid".format(USER_URI, user_id)
         username = "TEST_ORG@TEST.COM"
         user_service.update_user(user_id, username=username)
         expected_params = {
@@ -272,5 +275,6 @@ class TestUserService(object):
             u"firstName": None,
             u"lastName": None,
             u"notes": None,
+            u"quota": None,
         }
         mock_connection.put.assert_called_once_with(expected_uri, json=expected_params)

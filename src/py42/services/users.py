@@ -333,7 +333,7 @@ class UserService(BaseService):
 
     def update_user(
         self,
-        user_id,
+        user_uid,
         username=None,
         email=None,
         password=None,
@@ -346,20 +346,20 @@ class UserService(BaseService):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-put>`__
 
         Args:
-            user_id (int): An ID for the user.
+            user_uid (int): An ID for the user.
             username (str, optional): The username to which the user's username will be changed. Defaults to None.
             email (str, optional): The email to which the user's email will be changed. Defaults to None.
             password (str, optional): The password to which the user's password will be changed. Defaults to None.
             first_name (str, optional): The first name to which the user's first name will be changed. Defaults to None.
             last_name (str, optional): The last name to which the user's last name will be changed. Defaults to None.
             note (str, optional): Descriptive information about the user. Defaults to None.
-            quota (int, optional): The quota in bytes that limits the user's archive size.
+            quota (int, optional): The quota in bytes that limits the user's archive size. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
 
-        uri = u"/api/User/{}".format(user_id)
+        uri = u"/api/User/{}?idType=uid".format(user_uid)
         data = {
             u"username": username,
             u"email": email,
@@ -367,6 +367,6 @@ class UserService(BaseService):
             u"firstName": first_name,
             u"lastName": last_name,
             u"notes": note,
+            u"quota": quota,
         }
-
         return self._connection.put(uri, json=data)

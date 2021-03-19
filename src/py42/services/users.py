@@ -346,7 +346,7 @@ class UserService(BaseService):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-put>`__
 
         Args:
-            user_uid (int): An ID for the user.
+            user_uid (int): The unique identifier for the user.
             username (str, optional): The username to which the user's username will be changed. Defaults to None.
             email (str, optional): The email to which the user's email will be changed. Defaults to None.
             password (str, optional): The password to which the user's password will be changed. Defaults to None.

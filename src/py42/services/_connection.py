@@ -188,7 +188,7 @@ class Connection(object):
                 timeout=timeout,
                 verify=settings.verify_ssl_certs,
                 cert=cert,
-                proxies=proxies,
+                proxies=proxies or settings.proxies,
             )
 
             if not stream and response is not None:

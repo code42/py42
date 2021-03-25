@@ -18,6 +18,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `sdk.users.update_user()` to update an existing user in Code42.
 
+### Fixed
+
+- Bug where proxy settings were not being applied correctly.
+
 ## 1.12.0 - 2021-02-25
 
 ### Added

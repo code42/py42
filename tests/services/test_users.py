@@ -246,7 +246,7 @@ class TestUserService(object):
             first_name=first_name,
             last_name=last_name,
             notes=note,
-            quota=quota,
+            archive_size_quota_bytes=quota,
         )
         expected_params = {
             u"username": username,
@@ -255,7 +255,7 @@ class TestUserService(object):
             u"firstName": first_name,
             u"lastName": last_name,
             u"notes": note,
-            u"quota": quota,
+            u"quotaInBytes": quota,
         }
         mock_connection.put.assert_called_once_with(expected_uri, json=expected_params)
 
@@ -275,6 +275,6 @@ class TestUserService(object):
             u"firstName": None,
             u"lastName": None,
             u"notes": None,
-            u"quota": None,
+            u"quotaInBytes": None,
         }
         mock_connection.put.assert_called_once_with(expected_uri, json=expected_params)

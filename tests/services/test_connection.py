@@ -4,6 +4,7 @@ import pytest
 from requests import Response
 from tests.conftest import TEST_DEVICE_GUID
 
+import py42.settings as settings
 from py42.exceptions import Py42DeviceNotConnectedError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42FeatureUnavailableError
@@ -86,6 +87,13 @@ def mock_not_connected_server_conn(mocker):
     mock_response.text = '{"serverUrl": null}'
     mock_conn.get.return_value = Py42Response(mock_response)
     return mock_conn
+
+
+@pytest.fixture
+def proxy_set():
+    settings.proxies = {"https": "http://localhost:9999"}
+    yield
+    settings.proxies = None
 
 
 class MockPreparedRequest(object):
@@ -384,3 +392,20 @@ class TestConnection(object):
         connection.put(URL, data='{"foo":"bar"}')
         request = success_requests_session.prepare_request.call_args[0][0]
         assert request.headers["Accept"] == "application/json"
+
+    def test_connection_request_when_proxies_set_passes_proxies_arg_to_session_send(
+        self, proxy_set, mock_host_resolver, mock_auth, success_requests_session
+    ):
+        connection = Connection(
+            mock_host_resolver, mock_auth, session=success_requests_session
+        )
+        url = "https://example.com"
+        connection.get(url)
+        connection.post(url)
+        connection.options(url)
+        connection.put(url)
+        connection.patch(url)
+        connection.head(url)
+        connection.delete(url)
+        for call in success_requests_session.send.call_args_list:
+            assert call[1]["proxies"] == {"https": "http://localhost:9999"}

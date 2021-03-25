@@ -16,6 +16,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `sdk.legalhold.get_all_events()` to search for legal hold events.
 
+### Fixed
+
+- Bug where proxy settings were not being applied correctly.
+
 ## 1.12.0 - 2021-02-25
 
 ### Added

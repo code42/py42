@@ -10,6 +10,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
+
+- `sdk.legalhold.get_events_page()` to get a page of legal hold events.
+
+- `sdk.legalhold.get_all_events()` to search for legal hold events.
+
 ### Fixed
 
 - Bug where proxy settings were not being applied correctly.

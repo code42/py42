@@ -121,7 +121,7 @@ class TestDepartingEmployeeClient(object):
             and posted_data["departureDate"] == "2022-12-20"
         )
         assert mock_connection.post.call_args[0][0] == "v2/departingemployee/add"
-        assert mock_connection.post.call_count == 2
+        assert mock_connection.post.call_count == 1
 
     def test_add_when_user_already_on_list_raises_user_already_added_error(
         self, mocker, mock_connection, user_context, mock_detection_list_user_client

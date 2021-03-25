@@ -340,13 +340,13 @@ class UserService(BaseService):
         first_name=None,
         last_name=None,
         notes=None,
-        quota=None,
+        archive_size_quota_bytes=None,
     ):
         """Updates an existing user.
         `REST Documentation <https://console.us.code42.com/apidocviewer/#User-put>`__
 
         Args:
-            user_uid (int): A Code42 user UID.
+            user_uid (str or int): A Code42 user UID.
             username (str, optional): The username to which the user's username will be changed. Defaults to None.
             email (str, optional): The email to which the user's email will be changed. Defaults to None.
             password (str, optional): The password to which the user's password will be changed. Defaults to None.
@@ -367,6 +367,6 @@ class UserService(BaseService):
             u"firstName": first_name,
             u"lastName": last_name,
             u"notes": notes,
-            u"quota": quota,
+            u"quotaInBytes": archive_size_quota_bytes,
         }
         return self._connection.put(uri, json=data)

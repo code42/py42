@@ -330,3 +330,43 @@ class UserService(BaseService):
         role_name = quote(role_name)
         uri = u"/api/UserRole?userId={}&roleName={}".format(user_id, role_name)
         return self._connection.delete(uri)
+
+    def update_user(
+        self,
+        user_uid,
+        username=None,
+        email=None,
+        password=None,
+        first_name=None,
+        last_name=None,
+        notes=None,
+        quota=None,
+    ):
+        """Updates an existing user.
+        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-put>`__
+
+        Args:
+            user_uid (int): A Code42 user UID.
+            username (str, optional): The username to which the user's username will be changed. Defaults to None.
+            email (str, optional): The email to which the user's email will be changed. Defaults to None.
+            password (str, optional): The password to which the user's password will be changed. Defaults to None.
+            first_name (str, optional): The first name to which the user's first name will be changed. Defaults to None.
+            last_name (str, optional): The last name to which the user's last name will be changed. Defaults to None.
+            notes (str, optional): Descriptive information about the user. Defaults to None.
+            quota (int, optional): The quota in bytes that limits the user's archive size. Defaults to None.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+
+        uri = u"/api/User/{}?idType=uid".format(user_uid)
+        data = {
+            u"username": username,
+            u"email": email,
+            u"password": password,
+            u"firstName": first_name,
+            u"lastName": last_name,
+            u"notes": notes,
+            u"quota": quota,
+        }
+        return self._connection.put(uri, json=data)

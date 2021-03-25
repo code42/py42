@@ -53,6 +53,14 @@ class TestUserService(object):
         return Py42Response(response)
 
     @pytest.fixture
+    def put_api_mock_response(self, mocker):
+        response = mocker.MagicMock(spec=Response)
+        response.status_code = 200
+        response.encoding = "utf-8"
+        response.text = MOCK_text
+        return Py42Response(response)
+
+    @pytest.fixture
     def post_api_mock_error_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 500
@@ -215,3 +223,58 @@ class TestUserService(object):
 
         expected = u"Cannot deactivate the user with ID 1234 as the user is involved in a legal hold matter."
         assert str(err.value) == expected
+
+    def test_update_user_calls_put_with_expected_url_and_params(
+        self, mock_connection, put_api_mock_response
+    ):
+        user_service = UserService(mock_connection)
+        mock_connection.post.return_value = put_api_mock_response
+        user_id = "TEST_USER_ID"
+        expected_uri = "{}/{}?idType=uid".format(USER_URI, user_id)
+        username = "TEST_ORG@TEST.COM"
+        email = "TEST_EMAIL@TEST.com"
+        password = "password"
+        first_name = "FIRSTNAME"
+        last_name = "LASTNAME"
+        note = "Test Note"
+        quota = 12345
+        user_service.update_user(
+            user_id,
+            username=username,
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            notes=note,
+            quota=quota,
+        )
+        expected_params = {
+            u"username": username,
+            u"email": email,
+            u"password": password,
+            u"firstName": first_name,
+            u"lastName": last_name,
+            u"notes": note,
+            u"quota": quota,
+        }
+        mock_connection.put.assert_called_once_with(expected_uri, json=expected_params)
+
+    def test_update_user_does_not_include_empty_params(
+        self, mock_connection, put_api_mock_response
+    ):
+        user_service = UserService(mock_connection)
+        mock_connection.post.return_value = put_api_mock_response
+        user_id = "TEST_USER_ID"
+        expected_uri = "{}/{}?idType=uid".format(USER_URI, user_id)
+        username = "TEST_ORG@TEST.COM"
+        user_service.update_user(user_id, username=username)
+        expected_params = {
+            u"username": username,
+            u"email": None,
+            u"password": None,
+            u"firstName": None,
+            u"lastName": None,
+            u"notes": None,
+            u"quota": None,
+        }
+        mock_connection.put.assert_called_once_with(expected_uri, json=expected_params)

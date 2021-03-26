@@ -43,8 +43,8 @@ class AlertsClient(object):
         `Rest Documentation <https://developer.code42.com/api/#operation/Alerts_QueryAlertDetails>`__
 
         Args:
-            alert_ids (iter[str]): The identification numbers of the alerts for which you want to
-                get details for.
+            alert_ids (str or list[str]): The identification number(s) of the alerts for which you want to
+                get details for. Note: The alerts backend accepts a maximum of 100 alerts per request.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the alert details.
@@ -55,7 +55,8 @@ class AlertsClient(object):
         """Resolves the alerts with the given IDs.
 
         Args:
-            alert_ids (iter[str]): The identification numbers for the alerts to resolve.
+            alert_ids (str or list[str]): The identification number(s) for the alerts to resolve.
+                Note: The alerts backend accepts a maximum of 100 alerts per request.
             reason (str, optional): The reason the alerts are now resolved. Defaults to None.
 
         Returns:
@@ -69,7 +70,8 @@ class AlertsClient(object):
         """Reopens the resolved alerts with the given IDs.
 
         Args:
-            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
+            alert_ids (str or list[str]): The identification number(s) for the alerts to reopen.
+                Note: The alerts backend accepts a maximum of 100 alerts per request.
             reason (str, optional): The reason the alerts are reopened. Defaults to None.
 
         Returns:
@@ -82,7 +84,8 @@ class AlertsClient(object):
 
         Args:
             status (str): Status to set from OPEN, RESOLVED, PENDING, IN_PROGRESS
-            alert_ids (iter[str]): The identification numbers for the alerts to reopen.
+            alert_ids (str or list[str]): The identification number(s) for the alerts to reopen.
+                Note: The alerts backend accepts a maximum of 100 alerts per request.
             note (str, optional): User note regarding the status. Defaults to None.
 
         Returns:

@@ -129,7 +129,7 @@ class TabURL(FileEventFilterStringField):
     contents were read by the browser (applies to ``read by browser or other app`` events only).
     """
 
-    _term = u"tabUrl"
+    _term = u"tabUrls"
 
 
 class WindowTitle(FileEventFilterStringField):
@@ -138,4 +138,4 @@ class WindowTitle(FileEventFilterStringField):
     events only).
     """
 
-    _term = u"windowTitle"
+    _term = u"tabTitles"

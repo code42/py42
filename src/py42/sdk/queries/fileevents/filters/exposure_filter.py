@@ -125,7 +125,7 @@ class SyncDestination(FileEventFilterStringField):
 
 
 class TabURL(FileEventFilterStringField):
-    """Class that filters events based on the URL of the active browser tab at the time the file
+    """Class that filters events based on all the URLs of the browser tabs at the time the file
     contents were read by the browser (applies to ``read by browser or other app`` events only).
     """
 
@@ -133,7 +133,7 @@ class TabURL(FileEventFilterStringField):
 
 
 class WindowTitle(FileEventFilterStringField):
-    """Class that filters events based on the name of the browser tab or application window that was
+    """Class that filters events based on the name of all the browser tabs or application windows that were
     open when a browser or other app event occurred (applies to ``read by browser or other app``
     events only).
     """

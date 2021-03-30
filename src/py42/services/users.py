@@ -353,7 +353,7 @@ class UserService(BaseService):
             first_name (str, optional): The first name to which the user's first name will be changed. Defaults to None.
             last_name (str, optional): The last name to which the user's last name will be changed. Defaults to None.
             notes (str, optional): Descriptive information about the user. Defaults to None.
-            quota (int, optional): The quota in bytes that limits the user's archive size. Defaults to None.
+            archive_size_quota_bytes (int, optional): The quota in bytes that limits the user's archive size. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`

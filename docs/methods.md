@@ -12,8 +12,7 @@ sdk = py42.sdk.from_local_account("console.us.code42.com", "john.doe@example.com
 
 ```eval_rst
 .. important::
-    `py42` cannot be used with SAML or Sigle Sign-On based
-    accounts such as Okta or Active Directory. Only accounts that are added by having an administrator create them within the Code42 console are currently supported.
+    `py42` only supports token-based authentication.
 ```
 
 Explore the complete public documentation for `py42` below.

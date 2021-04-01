@@ -22,6 +22,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Bug where proxy settings were not being applied correctly.
 
+- Bug where 500 errors would not raise during `sdk.users.create_user()`.
+
 ## 1.12.0 - 2021-02-25
 
 ### Added

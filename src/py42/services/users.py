@@ -3,6 +3,7 @@ from py42._compat import quote
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42UserAlreadyExistsError
+from py42.exceptions import Py42UsernameMustBeEmailError
 from py42.services import BaseService
 from py42.services import handle_active_legal_hold_error
 from py42.services.util import get_all_pages
@@ -58,6 +59,7 @@ class UserService(BaseService):
         except Py42InternalServerError as err:
             if u"USER_DUPLICATE" in err.response.text:
                 raise Py42UserAlreadyExistsError(err)
+            raise
 
     def get_by_id(self, user_id, **kwargs):
         """Gets the user with the given ID.
@@ -369,4 +371,9 @@ class UserService(BaseService):
             u"notes": notes,
             u"quotaInBytes": archive_size_quota_bytes,
         }
-        return self._connection.put(uri, json=data)
+        try:
+            return self._connection.put(uri, json=data)
+        except Py42InternalServerError as err:
+            if u"USERNAME_NOT_AN_EMAIL" in str(err.response.text):
+                raise Py42UsernameMustBeEmailError(err)
+            raise

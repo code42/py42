@@ -71,9 +71,6 @@ requests use JWT authentication.
 If your account uses [two-factor authentication](https://support.code42.com/Administrator/Cloud/Configuring/Two-factor_authentication_for_local_users), include the time-based one-time password (TOTP) when you initialize the `py42.sdk.SDKClient`.
 You can also provide a callable object that returns a TOTP. If you pass a callable, it will be called whenever a new TOTP is required to renew the authentication token.
 
-py42 currently does **not** support SSO login providers or any other identity providers such as Active Directory or
-Okta.
-
 ## Troubleshooting and support
 
 ### Debug mode

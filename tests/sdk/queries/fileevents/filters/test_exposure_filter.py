@@ -413,77 +413,77 @@ def test_sync_destination_name_not_in_str_gives_correct_json_representation():
 
 def test_tab_url_exists_str_gives_correct_json_representation():
     _filter = TabURL.exists()
-    expected = EXISTS.format("tabUrl")
+    expected = EXISTS.format("tabUrls")
     assert str(_filter) == expected
 
 
 def test_tab_url_not_exists_str_gives_correct_json_representation():
     _filter = TabURL.not_exists()
-    expected = NOT_EXISTS.format("tabUrl")
+    expected = NOT_EXISTS.format("tabUrls")
     assert str(_filter) == expected
 
 
 def test_tab_url_eq_str_gives_correct_json_representation():
     _filter = TabURL.eq("test_tab_url")
-    expected = IS.format("tabUrl", "test_tab_url")
+    expected = IS.format("tabUrls", "test_tab_url")
     assert str(_filter) == expected
 
 
 def test_tab_url_not_eq_str_gives_correct_json_representation():
     _filter = TabURL.not_eq("test_tab_url")
-    expected = IS_NOT.format("tabUrl", "test_tab_url")
+    expected = IS_NOT.format("tabUrls", "test_tab_url")
     assert str(_filter) == expected
 
 
 def test_tab_url_is_in_str_gives_correct_json_representation():
     items = ["tab1", "tab2", "tab3"]
     _filter = TabURL.is_in(items)
-    expected = IS_IN.format("tabUrl", *items)
+    expected = IS_IN.format("tabUrls", *items)
     assert str(_filter) == expected
 
 
 def test_tab_url_not_in_str_gives_correct_json_representation():
     items = ["tab1", "tab2", "tab3"]
     _filter = TabURL.not_in(items)
-    expected = NOT_IN.format("tabUrl", *items)
+    expected = NOT_IN.format("tabUrls", *items)
     assert str(_filter) == expected
 
 
 def test_window_title_exists_str_gives_correct_json_representation():
     _filter = WindowTitle.exists()
-    expected = EXISTS.format("windowTitle")
+    expected = EXISTS.format("tabTitles")
     assert str(_filter) == expected
 
 
 def test_window_title_not_exists_str_gives_correct_json_representation():
     _filter = WindowTitle.not_exists()
-    expected = NOT_EXISTS.format("windowTitle")
+    expected = NOT_EXISTS.format("tabTitles")
     assert str(_filter) == expected
 
 
 def test_window_title_eq_str_gives_correct_json_representation():
     _filter = WindowTitle.eq("test_window")
-    expected = IS.format("windowTitle", "test_window")
+    expected = IS.format("tabTitles", "test_window")
     assert str(_filter) == expected
 
 
 def test_window_title_not_eq_str_gives_correct_json_representation():
     _filter = WindowTitle.not_eq("test_window")
-    expected = IS_NOT.format("windowTitle", "test_window")
+    expected = IS_NOT.format("tabTitles", "test_window")
     assert str(_filter) == expected
 
 
 def test_window_title_is_in_str_gives_correct_json_representation():
     items = ["window1", "window2", "window3"]
     _filter = WindowTitle.is_in(items)
-    expected = IS_IN.format("windowTitle", *items)
+    expected = IS_IN.format("tabTitles", *items)
     assert str(_filter) == expected
 
 
 def test_window_title_not_in_str_gives_correct_json_representation():
     items = ["window1", "window2", "window3"]
     _filter = WindowTitle.not_in(items)
-    expected = NOT_IN.format("windowTitle", *items)
+    expected = NOT_IN.format("tabTitles", *items)
     assert str(_filter) == expected
 
 

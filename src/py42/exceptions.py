@@ -219,6 +219,15 @@ class Py42UserAlreadyExistsError(Py42InternalServerError):
         super(Py42UserAlreadyExistsError, self).__init__(exception, message)
 
 
+class Py42UsernameMustBeEmailError(Py42InternalServerError):
+    """An exception raised when trying to set a non-email as a user's username
+    in a cloud environment."""
+
+    def __init__(self, exception):
+        message = "Username must be an email address."
+        super(Py42UsernameMustBeEmailError, self).__init__(exception, message)
+
+
 class Py42CloudAliasLimitExceededError(Py42BadRequestError):
     """An Exception raised when trying to add a cloud alias to a user when that user
     already has the max amount of supported cloud aliases."""

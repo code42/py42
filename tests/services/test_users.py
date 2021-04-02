@@ -6,7 +6,9 @@ from requests import Response
 import py42.settings
 from py42.exceptions import Py42ActiveLegalHoldError
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42UserAlreadyExistsError
+from py42.exceptions import Py42UsernameMustBeEmailError
 from py42.response import Py42Response
 from py42.services.users import UserService
 
@@ -24,7 +26,8 @@ DEFAULT_GET_ALL_PARAMS = {
 MOCK_GET_USER_RESPONSE = """{"totalCount": 3000, "users": ["foo"]}"""
 MOCK_EMPTY_GET_USER_RESPONSE = """{"totalCount": 3000, "users": []}"""
 MOCK_text = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
-MOCK_ERROR_text = '{"body": "USER_DUPLICATE"}'
+MOCK_USER_DUPLICATE_ERROR_TEXT = '{"body": "USER_DUPLICATE"}'
+MOCK_USERNAME_MUST_BE_EMAIL_TEXT = '{"data": [{"name": "USERNAME_NOT_AN_EMAIL"}]}'
 
 
 class TestUserService(object):
@@ -61,12 +64,20 @@ class TestUserService(object):
         return Py42Response(response)
 
     @pytest.fixture
-    def post_api_mock_error_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 500
-        response.encoding = "utf-8"
-        response.text = MOCK_ERROR_text
-        return Py42Response(response)
+    def internal_server_error(self, mocker):
+        base_error = mocker.MagicMock(spec=HTTPError)
+        base_error.response = mocker.MagicMock(spec=Response)
+        return Py42InternalServerError(base_error)
+
+    @pytest.fixture
+    def post_user_duplicate_error_response(self, internal_server_error):
+        internal_server_error.response.text = MOCK_USER_DUPLICATE_ERROR_TEXT
+        return internal_server_error
+
+    @pytest.fixture
+    def post_username_must_be_email_error_response(self, internal_server_error):
+        internal_server_error.response.text = MOCK_USERNAME_MUST_BE_EMAIL_TEXT
+        return internal_server_error
 
     def test_create_user_calls_post_with_expected_url_and_params(
         self, mock_connection, post_api_mock_response
@@ -82,32 +93,39 @@ class TestUserService(object):
             org_uid, username, username, password, name, name, note
         )
         expected_params = {
-            u"orgUid": org_uid,
-            u"username": username,
-            u"email": username,
-            u"password": password,
-            u"firstName": name,
-            u"lastName": name,
-            u"notes": note,
+            "orgUid": org_uid,
+            "username": username,
+            "email": username,
+            "password": password,
+            "firstName": name,
+            "lastName": name,
+            "notes": note,
         }
 
         mock_connection.post.assert_called_once_with(USER_URI, json=expected_params)
 
     def test_create_user_calls_post_and_returns_user_duplicate_error(
-        self, mock_connection, post_api_mock_error_response
+        self, mock_connection, post_user_duplicate_error_response
     ):
         user_service = UserService(mock_connection)
-        mock_connection.post.return_value = post_api_mock_error_response
+        mock_connection.post.side_effect = post_user_duplicate_error_response
         org_uid = "TEST_ORG_ID"
         username = "TEST_ORG@TEST.COM"
         password = "password"
         name = "TESTNAME"
         note = "Test Note"
-        user_service.create_user(
-            org_uid, username, username, password, name, name, note
-        )
+        with pytest.raises(Py42UserAlreadyExistsError):
+            user_service.create_user(
+                org_uid, username, username, password, name, name, note
+            )
 
-        pytest.raises(Py42UserAlreadyExistsError)
+    def test_create_user_when_get_unhandled_internal_server_error_raises_base_error(
+        self, mock_connection, internal_server_error
+    ):
+        user_service = UserService(mock_connection)
+        mock_connection.post.side_effect = internal_server_error
+        with pytest.raises(Py42InternalServerError):
+            user_service.create_user("123", "123@example.com", "123@example.com")
 
     def test_get_all_calls_get_with_uri_and_params(
         self, mock_connection, mock_get_users_response
@@ -210,10 +228,10 @@ class TestUserService(object):
         self, mocker, mock_connection
     ):
         def side_effect(url, json):
-            if u"UserDeactivation" in url:
+            if "UserDeactivation" in url:
                 base_err = mocker.MagicMock(spec=HTTPError)
                 base_err.response = mocker.MagicMock(spec=Response)
-                base_err.response.text = u"ACTIVE_LEGAL_HOLD"
+                base_err.response.text = "ACTIVE_LEGAL_HOLD"
                 raise Py42BadRequestError(base_err)
 
         mock_connection.put.side_effect = side_effect
@@ -221,7 +239,7 @@ class TestUserService(object):
         with pytest.raises(Py42ActiveLegalHoldError) as err:
             client.deactivate(1234)
 
-        expected = u"Cannot deactivate the user with ID 1234 as the user is involved in a legal hold matter."
+        expected = "Cannot deactivate the user with ID 1234 as the user is involved in a legal hold matter."
         assert str(err.value) == expected
 
     def test_update_user_calls_put_with_expected_url_and_params(
@@ -249,13 +267,13 @@ class TestUserService(object):
             archive_size_quota_bytes=quota,
         )
         expected_params = {
-            u"username": username,
-            u"email": email,
-            u"password": password,
-            u"firstName": first_name,
-            u"lastName": last_name,
-            u"notes": note,
-            u"quotaInBytes": quota,
+            "username": username,
+            "email": email,
+            "password": password,
+            "firstName": first_name,
+            "lastName": last_name,
+            "notes": note,
+            "quotaInBytes": quota,
         }
         mock_connection.put.assert_called_once_with(expected_uri, json=expected_params)
 
@@ -269,12 +287,28 @@ class TestUserService(object):
         username = "TEST_ORG@TEST.COM"
         user_service.update_user(user_id, username=username)
         expected_params = {
-            u"username": username,
-            u"email": None,
-            u"password": None,
-            u"firstName": None,
-            u"lastName": None,
-            u"notes": None,
-            u"quotaInBytes": None,
+            "username": username,
+            "email": None,
+            "password": None,
+            "firstName": None,
+            "lastName": None,
+            "notes": None,
+            "quotaInBytes": None,
         }
         mock_connection.put.assert_called_once_with(expected_uri, json=expected_params)
+
+    def test_update_user_when_get_internal_server_error_containing_must_be_email_text_raises_expected_error(
+        self, mock_connection, post_username_must_be_email_error_response
+    ):
+        user_service = UserService(mock_connection)
+        mock_connection.put.side_effect = post_username_must_be_email_error_response
+        with pytest.raises(Py42UsernameMustBeEmailError):
+            user_service.update_user("123", username="foo")
+
+    def test_update_user_when_get_unhandled_internal_server_error_raises_base_error(
+        self, mock_connection, internal_server_error
+    ):
+        user_service = UserService(mock_connection)
+        mock_connection.put.side_effect = internal_server_error
+        with pytest.raises(Py42InternalServerError):
+            user_service.update_user("123", username="foo")

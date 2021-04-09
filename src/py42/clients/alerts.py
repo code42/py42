@@ -36,6 +36,22 @@ class AlertsClient(object):
         """
         return self._alert_service.search(query)
 
+    def search_all(self, query):
+        """Searches alerts using the given :class:`py42.sdk.queries.alerts.alert_query.AlertQuery`.
+
+        `Rest Documentation <https://developer.code42.com/api/#operation/Alerts_QueryAlert>`__
+
+        Args:
+            query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
+                See the :ref:`Executing Searches User Guide <anchor_search_alerts>` to learn more
+                about how to construct a query.
+
+        Returns:
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of alerts that match the given query.
+        """
+        return self._alert_service.search_all_pages(query)
+
     def get_details(self, alert_ids):
         """Gets the details for the alerts with the given IDs, including the file event query that,
         when passed into a search, would result in events that could have triggered the alerts.

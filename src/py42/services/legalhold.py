@@ -293,10 +293,10 @@ class LegalHoldService(BaseService):
                 Matter with this unique identifier. Defaults to None.
             min_event_date (str or int or float or datetime, optional): Find
                 LegalHoldEvents whose eventDate is equal to or after this time.
-                Defaults to None.
+                E.g. yyyy-MM-dd HH:MM:SS. Defaults to None.
             max_event_date (str or int or float or datetime, optional): Find
                 LegalHoldEvents whose eventDate is equal to or before this time.
-                Defaults to None.
+                E.g. yyyy-MM-dd HH:MM:SS. Defaults to None.
             page_num (int): The page number to request. Defaults to 1.
             page_size (int, optional): The size of the page.
                 Defaults to `py42.settings.items_per_page`.

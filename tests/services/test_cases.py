@@ -172,7 +172,7 @@ class TestCasesService:
             mock_invalid_assignee_response
         )
         with pytest.raises(Py42InvalidCaseUserError) as e:
-            cases_service.create("test", subject="Not a person")
+            cases_service.create("test", assignee="Not a person")
 
         assert e.value.args[0] == "The provided assignee is not a valid user."
 
@@ -376,6 +376,6 @@ class TestCasesService:
             mock_invalid_assignee_response
         )
         with pytest.raises(Py42InvalidCaseUserError) as e:
-            cases_service.update(_TEST_CASE_NUMBER, subject="Not a person")
+            cases_service.update(_TEST_CASE_NUMBER, assignee="Not a person")
 
         assert e.value.args[0] == "The provided assignee is not a valid user."

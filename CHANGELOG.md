@@ -10,6 +10,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+- `sdk.alerts.search_all_pages()` to retrieve all alert pages.
+
 ### Added
 
 - Custom exception `Py42InvalidCaseUserError` that raises when trying to

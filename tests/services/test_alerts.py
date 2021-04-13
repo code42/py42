@@ -368,7 +368,7 @@ class TestAlertService(object):
             and post_data["note"] == "Test Note"
         )
 
-    def test_search_all_calls_posts_expected_data(self, mock_connection, user_context):
+    def test_search_all_pages_posts_expected_data(self, mock_connection, user_context):
         alert_service = AlertService(mock_connection, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)

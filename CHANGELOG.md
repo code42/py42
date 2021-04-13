@@ -10,10 +10,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
-- `sdk.alerts.search_all_pages()` to retrieve all alert pages.
-
-- `sdk.alerts.search()` accepts optional `page_num` and `page_size` arguments.
-
 ### Added
 
 - Custom exception `Py42InvalidCaseUserError` that raises when trying to
@@ -21,6 +17,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `sdk.cases.update()` now raises `Py42CaseNameExistsError` when the case name already
   exists in the system.
+
+- `sdk.alerts.search_all_pages()` to retrieve all alert pages.
+
+- `sdk.alerts.search()` accepts optional `page_num` and `page_size` arguments.
 
 ## 1.13.0 - 2021-04-14
 

@@ -8,7 +8,7 @@ import py42.settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42CaseNameExistsError
 from py42.exceptions import Py42DescriptionLimitExceededError
-from py42.exceptions import Py42InvalidSubjectError
+from py42.exceptions import Py42InvalidCaseUserError
 from py42.exceptions import Py42UpdateClosedCaseError
 from py42.response import Py42Response
 from py42.services.cases import CasesService
@@ -30,12 +30,15 @@ NAME_EXISTS_ERROR_MSG = """{"problem":"NAME_EXISTS","description":null}"""
 DESCRIPTION_TOO_LONG_ERROR_MSG = (
     """{"problem":"DESCRIPTION_TOO_LONG","description":null}"""
 )
-INVALID_USER_RESPONSE = (
-    """{"problem":"INVALID_USER","description":"subject validation failed"}"""
-)
 UNKNOWN_ERROR_MSG = """{"problem":"SURPRISE!"}"""
 _TEST_CASE_NUMBER = 123456
 _BASE_URI = u"/api/v1/case"
+
+
+def _get_invalid_user_text(user_type):
+    return """{{"problem":"INVALID_USER","description":"{} validation failed"}}""".format(
+        user_type
+    )
 
 
 class TestCasesService:
@@ -76,10 +79,19 @@ class TestCasesService:
         return http_error
 
     @pytest.fixture
-    def mock_invalid_user_response(self, mock_error_response):
-        http_error = HTTPError(INVALID_USER_RESPONSE)
+    def mock_invalid_subject_response(self, mock_error_response):
+        text = _get_invalid_user_text("subject")
+        http_error = HTTPError(text)
         http_error.response = mock_error_response
-        http_error.response.text = INVALID_USER_RESPONSE
+        http_error.response.text = text
+        return http_error
+
+    @pytest.fixture
+    def mock_invalid_assignee_response(self, mock_error_response):
+        text = _get_invalid_user_text("assignee")
+        http_error = HTTPError(text)
+        http_error.response = mock_error_response
+        http_error.response.text = text
         return http_error
 
     @pytest.fixture
@@ -140,17 +152,29 @@ class TestCasesService:
             e.value.args[0] == "Description limit exceeded, max 250 characters allowed."
         )
 
-    def test_create_when_fails_with_invalid_user_raises_custom_exception(
-        self, mock_connection, mock_invalid_user_response
+    def test_create_when_fails_with_invalid_subject_raises_custom_exception(
+        self, mock_connection, mock_invalid_subject_response
     ):
         cases_service = CasesService(mock_connection)
         mock_connection.post.side_effect = Py42BadRequestError(
-            mock_invalid_user_response
+            mock_invalid_subject_response
         )
-        with pytest.raises(Py42InvalidSubjectError) as e:
+        with pytest.raises(Py42InvalidCaseUserError) as e:
             cases_service.create("test", subject="Not a person")
 
         assert e.value.args[0] == "The provided subject is not a valid user."
+
+    def test_create_when_fails_with_invalid_assignee_raises_custom_exception(
+        self, mock_connection, mock_invalid_assignee_response
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.post.side_effect = Py42BadRequestError(
+            mock_invalid_assignee_response
+        )
+        with pytest.raises(Py42InvalidCaseUserError) as e:
+            cases_service.create("test", subject="Not a person")
+
+        assert e.value.args[0] == "The provided assignee is not a valid user."
 
     def test_create_when_fails_with_unknown_error_raises_exception(
         self, mock_connection, mock_unknown_error
@@ -318,3 +342,27 @@ class TestCasesService:
             e.value.args[0]
             == u"Description limit exceeded, max 250 characters allowed."
         )
+
+    def test_update_when_fails_with_invalid_subject_raises_custom_exception(
+        self, mock_connection, mock_invalid_subject_response
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.put.side_effect = Py42BadRequestError(
+            mock_invalid_subject_response
+        )
+        with pytest.raises(Py42InvalidCaseUserError) as e:
+            cases_service.update(_TEST_CASE_NUMBER, subject="Not a person")
+
+        assert e.value.args[0] == "The provided subject is not a valid user."
+
+    def test_update_when_fails_with_invalid_assignee_raises_custom_exception(
+        self, mock_connection, mock_invalid_assignee_response
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.put.side_effect = Py42BadRequestError(
+            mock_invalid_assignee_response
+        )
+        with pytest.raises(Py42InvalidCaseUserError) as e:
+            cases_service.update(_TEST_CASE_NUMBER, subject="Not a person")
+
+        assert e.value.args[0] == "The provided assignee is not a valid user."

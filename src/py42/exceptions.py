@@ -298,12 +298,12 @@ class Py42DescriptionLimitExceededError(Py42BadRequestError):
         super(Py42DescriptionLimitExceededError, self).__init__(exception, msg)
 
 
-class Py42InvalidSubjectError(Py42BadRequestError):
+class Py42InvalidCaseUserError(Py42BadRequestError):
     """An error raised when a case-subject is not a valid user."""
 
-    def __init__(self, exception):
-        msg = u"The provided subject is not a valid user."
-        super(Py42InvalidSubjectError, self).__init__(exception, msg)
+    def __init__(self, exception, user_field):
+        msg = u"The provided {} is not a valid user.".format(user_field)
+        super(Py42InvalidCaseUserError, self).__init__(exception, msg)
 
 
 class Py42CaseAlreadyHasEventError(Py42BadRequestError):

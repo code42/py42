@@ -18,8 +18,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `sdk.users.update_user()` to update an existing user in Code42.
 
-- Custom exception `Py42InvalidSubjectError` that raises when trying to
-    add an invalid user as a subject of a case.
+- Custom exception `Py42InvalidCaseUserError` that raises when trying to
+    add an invalid user as a subject or an assignee of a case.
 
 ### Fixed
 

@@ -104,7 +104,7 @@ def to_list(value):
 
 
 def parse_timestamp_to_milliseconds_precision(timestamp):
-    if isinstance(timestamp, int) or isinstance(timestamp, float):
+    if isinstance(timestamp, (int, float)):
         return convert_timestamp_to_str(timestamp)
     elif isinstance(timestamp, datetime):
         return convert_datetime_to_timestamp_str(timestamp)
@@ -115,7 +115,7 @@ def parse_timestamp_to_milliseconds_precision(timestamp):
 
 
 def parse_timestamp_to_microseconds_precision(timestamp):
-    if isinstance(timestamp, int) or isinstance(timestamp, float):
+    if isinstance(timestamp, (int, float)):
         return datetime.utcfromtimestamp(timestamp).strftime(_MICROSECOND_FORMAT)
     elif isinstance(timestamp, datetime):
         return timestamp.strftime(_MICROSECOND_FORMAT)

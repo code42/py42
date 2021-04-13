@@ -224,7 +224,7 @@ class Py42UsernameMustBeEmailError(Py42InternalServerError):
     in a cloud environment."""
 
     def __init__(self, exception):
-        message = "Username must be an email address."
+        message = u"Username must be an email address."
         super(Py42UsernameMustBeEmailError, self).__init__(exception, message)
 
 
@@ -276,7 +276,7 @@ class Py42UpdateClosedCaseError(Py42BadRequestError):
     """An error raised when trying to update a closed case."""
 
     def __init__(self, exception):
-        msg = "Cannot update a closed case."
+        msg = u"Cannot update a closed case."
         super(Py42UpdateClosedCaseError, self).__init__(exception, msg)
 
 
@@ -284,7 +284,9 @@ class Py42CaseNameExistsError(Py42BadRequestError):
     """An error raised when trying to create a case with a name that already exists."""
 
     def __init__(self, exception, case_name):
-        msg = "Case name '{}' already exists, please set another name".format(case_name)
+        msg = u"Case name '{}' already exists, please set another name".format(
+            case_name
+        )
         super(Py42CaseNameExistsError, self).__init__(exception, msg)
 
 
@@ -292,15 +294,23 @@ class Py42DescriptionLimitExceededError(Py42BadRequestError):
     """An error raised when description of a case exceeds the allowed char length limit."""
 
     def __init__(self, exception):
-        msg = "Description limit exceeded, max 250 characters allowed."
+        msg = u"Description limit exceeded, max 250 characters allowed."
         super(Py42DescriptionLimitExceededError, self).__init__(exception, msg)
+
+
+class Py42InvalidSubjectError(Py42BadRequestError):
+    """An error raised when a case-subject is not a valid user."""
+
+    def __init__(self, exception):
+        msg = u"The provided subject is not a valid user."
+        super(Py42InvalidSubjectError, self).__init__(exception, msg)
 
 
 class Py42CaseAlreadyHasEventError(Py42BadRequestError):
     """An error raised when event is already associated to the case."""
 
     def __init__(self, exception):
-        msg = "Event is already associated to the case."
+        msg = u"Event is already associated to the case."
         super(Py42CaseAlreadyHasEventError, self).__init__(exception, msg)
 
 

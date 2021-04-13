@@ -2,6 +2,7 @@ from py42 import settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42CaseNameExistsError
 from py42.exceptions import Py42DescriptionLimitExceededError
+from py42.exceptions import Py42InvalidSubjectError
 from py42.exceptions import Py42UpdateClosedCaseError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
@@ -31,8 +32,9 @@ class CasesService(BaseService):
                 raise Py42CaseNameExistsError(err, name)
             elif u"DESCRIPTION_TOO_LONG" in err.response.text:
                 raise Py42DescriptionLimitExceededError(err)
-            else:
-                raise
+            elif u"INVALID_USER" in err.response.text:
+                raise Py42InvalidSubjectError(err)
+            raise
 
     def get_page(
         self,

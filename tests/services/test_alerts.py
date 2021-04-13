@@ -392,7 +392,9 @@ class TestAlertService(object):
             and post_data["groups"][0]["filters"][0]["value"] == "OPEN"
         )
 
-    def test_search_posts_expected_data_overwrites_default_option_when_passed_page_num_and_page_size(self, mock_connection, user_context):
+    def test_search_posts_expected_data_overwrites_default_option_when_passed_page_num_and_page_size(
+        self, mock_connection, user_context
+    ):
         alert_service = AlertService(mock_connection, user_context)
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)

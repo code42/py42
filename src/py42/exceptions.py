@@ -299,7 +299,7 @@ class Py42DescriptionLimitExceededError(Py42BadRequestError):
 
 
 class Py42InvalidCaseUserError(Py42BadRequestError):
-    """An error raised when a case-subject is not a valid user."""
+    """An error raised when a case subject or assignee is not a valid user."""
 
     def __init__(self, exception, user_field):
         msg = u"The provided {} is not a valid user.".format(user_field)

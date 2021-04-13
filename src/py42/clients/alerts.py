@@ -36,7 +36,7 @@ class AlertsClient(object):
         """
         return self._alert_service.search(query)
 
-    def search_all(self, query):
+    def search_all_pages(self, query):
         """Searches alerts using the given :class:`py42.sdk.queries.alerts.alert_query.AlertQuery`.
 
         `Rest Documentation <https://developer.code42.com/api/#operation/Alerts_QueryAlert>`__

@@ -28,9 +28,7 @@ class CasesService(BaseService):
         try:
             return self._connection.post(self._uri_prefix, json=data)
         except Py42BadRequestError as err:
-            if u"NAME_EXISTS" in err.response.text:
-                raise Py42CaseNameExistsError(err, name)
-            _handle_common_invalid_case_parameters_errors(err)
+            _handle_common_invalid_case_parameters_errors(err, name)
 
     def get_page(
         self,
@@ -126,11 +124,13 @@ class CasesService(BaseService):
         except Py42BadRequestError as err:
             if u"NO_EDITS_ONCE_CLOSED" in err.response.text:
                 raise Py42UpdateClosedCaseError(err)
-            _handle_common_invalid_case_parameters_errors(err)
+            _handle_common_invalid_case_parameters_errors(err, name)
 
 
-def _handle_common_invalid_case_parameters_errors(base_err):
-    if u"NO_EDITS_ONCE_CLOSED" in base_err.response.text:
+def _handle_common_invalid_case_parameters_errors(base_err, name):
+    if u"NAME_EXISTS" in base_err.response.text:
+        raise Py42CaseNameExistsError(base_err, name)
+    elif u"NO_EDITS_ONCE_CLOSED" in base_err.response.text:
         raise Py42UpdateClosedCaseError(base_err)
     elif u"DESCRIPTION_TOO_LONG" in base_err.response.text:
         raise Py42DescriptionLimitExceededError(base_err)

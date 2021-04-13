@@ -27,6 +27,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Bug where 500 errors would not raise during `sdk.users.create_user()`.
 
+### Changed
+
+- `sdk.cases.update()` now raises `Py42CaseNameExistsError` when the case name already
+  exists in the system.
+
 ## 1.12.0 - 2021-02-25
 
 ### Added

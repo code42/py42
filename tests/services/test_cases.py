@@ -314,7 +314,20 @@ class TestCasesService:
             u"/api/v1/case/{}".format(_TEST_CASE_NUMBER), json=data
         )
 
-    def test_update_failure_raised_appropriate_custom_exception(
+    def test_update_when_fails_with_name_exists_error_raises_custom_exception(
+        self, mock_connection, mock_name_exists_response
+    ):
+        cases_service = CasesService(mock_connection)
+        mock_connection.put.side_effect = Py42BadRequestError(mock_name_exists_response)
+        with pytest.raises(Py42CaseNameExistsError) as e:
+            cases_service.update(_TEST_CASE_NUMBER, "Duplicate")
+
+        assert (
+            e.value.args[0]
+            == u"Case name 'Duplicate' already exists, please set another name"
+        )
+
+    def test_update_when_case_is_closed_raises_custom_exception(
         self, mock_connection, mock_get_response, mock_update_failed_response
     ):
         cases_service = CasesService(mock_connection)

@@ -20,7 +20,7 @@ class AlertsClient(object):
         """
         return self._alert_rules_client
 
-    def search(self, query):
+    def search(self, query, page_num=1, page_size=None):
         """Searches alerts using the given :class:`py42.sdk.queries.alerts.alert_query.AlertQuery`.
 
         `Rest Documentation <https://developer.code42.com/api/#operation/Alerts_QueryAlert>`__
@@ -29,12 +29,15 @@ class AlertsClient(object):
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
                 See the :ref:`Executing Searches User Guide <anchor_search_alerts>` to learn more
                 about how to construct a query.
+            page_num (int, optional): The page number to get. Defaults to 1.
+            page_size (int, optional): The number of items per page. Defaults to `py42.settings.items_per_page`.
+
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the alerts that match the given
             query.
         """
-        return self._alert_service.search(query)
+        return self._alert_service.search(query, page_num, page_size)
 
     def search_all_pages(self, query):
         """Searches alerts using the given :class:`py42.sdk.queries.alerts.alert_query.AlertQuery`.

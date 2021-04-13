@@ -12,6 +12,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `sdk.alerts.search_all_pages()` to retrieve all alert pages.
 
+- `sdk.alerts.search()` accepts optional `page_num` and `page_size` arguments.
+
 ### Added
 
 - Custom exception `Py42InvalidCaseUserError` that raises when trying to

@@ -391,3 +391,26 @@ class TestAlertService(object):
             and post_data["groups"][0]["filters"][0]["term"] == "state"
             and post_data["groups"][0]["filters"][0]["value"] == "OPEN"
         )
+
+    def test_search_posts_expected_data_overwrites_default_option_when_passed_page_num_and_page_size(self, mock_connection, user_context):
+        alert_service = AlertService(mock_connection, user_context)
+        _filter = AlertState.eq("OPEN")
+        query = AlertQuery(_filter)
+
+        alert_service.search(query, 10, 20)
+
+        assert mock_connection.post.call_count == 1
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/query-alerts"
+        post_data = json.loads(mock_connection.post.call_args[1]["data"])
+        assert (
+            post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
+            and post_data["groupClause"] == "AND"
+            and post_data["srtKey"] == "CreatedAt"
+            and post_data["srtDirection"] == "desc"
+            and post_data["pgSize"] == 20
+            and post_data["pgNum"] == 9
+            and post_data["groups"][0]["filterClause"] == "AND"
+            and post_data["groups"][0]["filters"][0]["operator"] == "IS"
+            and post_data["groups"][0]["filters"][0]["term"] == "state"
+            and post_data["groups"][0]["filters"][0]["value"] == "OPEN"
+        )

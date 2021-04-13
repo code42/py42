@@ -18,7 +18,10 @@ class AlertService(BaseService):
         super(AlertService, self).__init__(connection)
         self._user_context = user_context
 
-    def search(self, query):
+    def search(self, query, page_num=1, page_size=None):
+        query.page_number = page_num - 1
+        if page_size:
+            query.page_size = page_size
         query = self._add_tenant_id_if_missing(query)
         uri = self._uri_prefix.format(u"query-alerts")
         return self._connection.post(uri, data=query)

@@ -35,7 +35,7 @@ class TestAlertsClient(object):
     ):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.search(mock_alert_query)
-        mock_alerts_service.search.assert_called_once_with(mock_alert_query)
+        mock_alerts_service.search.assert_called_once_with(mock_alert_query, 1, None)
 
     def test_alerts_client_calls_get_details_with_expected_value(
         self, mock_alerts_service, mock_alert_rules_service

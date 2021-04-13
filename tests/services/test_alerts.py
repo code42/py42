@@ -377,10 +377,7 @@ class TestAlertService(object):
             break
 
         assert mock_connection.post.call_count == 1
-        assert (
-            mock_connection.post.call_args[0][0]
-            == "/svc/api/v1/query-alerts"
-        )
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/query-alerts"
         post_data = json.loads(mock_connection.post.call_args[1]["data"])
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE

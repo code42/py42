@@ -56,18 +56,6 @@ class CasesClient(object):
             findings=findings,
         )
 
-    @staticmethod
-    def _make_range(begin_time, end_time):
-        if not begin_time and not end_time:
-            return None
-        if not begin_time:
-            begin_time = datetime.utcfromtimestamp(0)
-        if not end_time:
-            end_time = datetime.utcnow()
-        end = parse_timestamp_to_milliseconds_precision(end_time)
-        start = parse_timestamp_to_milliseconds_precision(begin_time)
-        return "{}/{}".format(start, end)
-
     def get_page(
         self,
         page_num,
@@ -111,8 +99,8 @@ class CasesClient(object):
             :class:`py42.response.Py42Response`
         """
 
-        created_at = CasesClient._make_range(min_create_time, max_create_time)
-        updated_at = CasesClient._make_range(min_update_time, max_update_time)
+        created_at = _make_range(min_create_time, max_create_time)
+        updated_at = _make_range(min_update_time, max_update_time)
 
         return self._cases_service.get_page(
             page_num,
@@ -170,8 +158,8 @@ class CasesClient(object):
             that each contain a page of cases.
         """
 
-        created_at = CasesClient._make_range(min_create_time, max_create_time)
-        updated_at = CasesClient._make_range(min_update_time, max_update_time)
+        created_at = _make_range(min_create_time, max_create_time)
+        updated_at = _make_range(min_update_time, max_update_time)
 
         return self._cases_service.get_all(
             name=name,
@@ -247,3 +235,15 @@ class CasesClient(object):
             findings=findings,
             status=status,
         )
+
+
+def _make_range(begin_time, end_time):
+    if not begin_time and not end_time:
+        return None
+    if not begin_time:
+        begin_time = datetime.utcfromtimestamp(0)
+    if not end_time:
+        end_time = datetime.utcnow()
+    end = parse_timestamp_to_milliseconds_precision(end_time)
+    start = parse_timestamp_to_milliseconds_precision(begin_time)
+    return "{}/{}".format(start, end)

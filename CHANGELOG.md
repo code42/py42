@@ -18,19 +18,15 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `sdk.users.update_user()` to update an existing user in Code42.
 
+- `sdk.alerts.update_note()` to add or update a note regarding an alert.
+
+- `sdk.from_jwt_provider()` method to create an `SDKClient` that supports custom auth mechanism.
+
 ### Fixed
 
 - Bug where proxy settings were not being applied correctly.
 
 - Bug where 500 errors would not raise during `sdk.users.create_user()`.
-
-## 1.12.0 - 2021-02-25
-
-### Added
-
-- `sdk.alerts.update_note()` to add or update a note regarding an alert.
-
-- `sdk.from_jwt_provider()` method to create an `SDKClient` that supports custom auth mechanism.
 
 ## 1.11.1 - 2021-02-02
 

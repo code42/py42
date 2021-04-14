@@ -289,14 +289,17 @@ class LegalHoldService(BaseService):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldEventReport-get>`__
 
         Args:
-            legal_hold_uid (str, optional): Find LegalHoldEvents for the Legal Hold Matter
-                with this unique identifier. Defaults to None.
-            min_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
-                eventDate is equal to or after this time. Defaults to None.
-            max_event_date (ISO date/time string, optional): Find LegalHoldEvents whose
-                eventDate is equal to or before this time. Defaults to None.
+            legal_hold_uid (str, optional): Find LegalHoldEvents for the Legal Hold
+                Matter with this unique identifier. Defaults to None.
+            min_event_date (str or int or float or datetime, optional): Find
+                LegalHoldEvents whose eventDate is equal to or after this time.
+                E.g. yyyy-MM-dd HH:MM:SS. Defaults to None.
+            max_event_date (str or int or float or datetime, optional): Find
+                LegalHoldEvents whose eventDate is equal to or before this time.
+                E.g. yyyy-MM-dd HH:MM:SS. Defaults to None.
             page_num (int): The page number to request. Defaults to 1.
-            page_size (int, optional): The size of the page. Defaults to `py42.settings.items_per_page`.
+            page_size (int, optional): The size of the page.
+                Defaults to `py42.settings.items_per_page`.
 
         Returns:
             :class:`py42.response.Py42Response`:
@@ -326,12 +329,12 @@ class LegalHoldService(BaseService):
         Args:
             legal_hold_uid (str, optional): Find LegalHoldEvents for the Legal Hold Matter
                 with this unique identifier. Defaults to None.
-            min_event_date (date/time string, optional): Find LegalHoldEvents whose
-                eventDate is equal to or after this time. E.g. yyyy-MM-dd HH:MM:SS
-                Defaults to None.
-            max_event_date (date/time string, optional): Find LegalHoldEvents whose
-                eventDate is equal to or before this time. E.g. yyyy-MM-dd HH:MM:SS
-                Defaults to None.
+            min_event_date (str or int or float or datetime, optional): Find
+                LegalHoldEvents whose eventDate is equal to or after this time.
+                E.g. yyyy-MM-dd HH:MM:SS. Defaults to None.
+            max_event_date (str or int or float or datetime, optional): Find
+                LegalHoldEvents whose eventDate is equal to or before this time.
+                E.g. yyyy-MM-dd HH:MM:SS. Defaults to None.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -374,8 +377,8 @@ class LegalHoldService(BaseService):
         `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembershipDeactivation-post>`__
 
         Args:
-            legal_hold_membership_uid (str): The identifier of the LegalHoldMembership representing
-                the Custodian to Matter relationship.
+            legal_hold_membership_uid (str): The identifier of the LegalHoldMembership
+                representing the Custodian to Matter relationship.
 
         Returns:
             :class:`py42.response.Py42Response`

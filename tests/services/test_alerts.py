@@ -428,4 +428,3 @@ class TestAlertService(object):
         )
         post_data = mock_connection.post.call_args[1]["json"]
         assert post_data["alertId"] == "alert-id"
-

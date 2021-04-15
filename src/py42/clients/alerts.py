@@ -125,7 +125,7 @@ class AlertsClient(object):
         return self._alert_service.update_note(alert_id, note)
 
     def get_aggregate_data(self, alert_id):
-        """Get alert summary with details about observations.
+        """Gets alert summary with details about observations.
 
         Args:
             alert_id (str): Gets the details for the alert with the given ID.

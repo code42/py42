@@ -12,15 +12,34 @@ class AlertService(BaseService):
 
     _CREATED_AT = u"CreatedAt"
     _RULE_METADATA = u"ruleMetadata"
+    _SEARCH_KEY = u"alerts"
 
     def __init__(self, connection, user_context):
         super(AlertService, self).__init__(connection)
         self._user_context = user_context
 
-    def search(self, query):
+    def search(self, query, page_num=1, page_size=None):
+        query.page_number = page_num - 1
+        if page_size:
+            query.page_size = page_size
         query = self._add_tenant_id_if_missing(query)
         uri = self._uri_prefix.format(u"query-alerts")
         return self._connection.post(uri, data=query)
+
+    def get_search_page(self, query, page_num, page_size):
+        query.page_number = page_num - 1
+        query.page_size = page_size
+        uri = self._uri_prefix.format(u"query-alerts")
+        query = self._add_tenant_id_if_missing(query)
+        return self._connection.post(uri, data=query)
+
+    def search_all_pages(self, query):
+        return get_all_pages(
+            self.get_search_page,
+            self._SEARCH_KEY,
+            query=query,
+            page_size=query.page_size,
+        )
 
     def get_details(self, alert_ids):
         if not isinstance(alert_ids, (list, tuple)):

@@ -195,6 +195,8 @@ class Connection(object):
                 # setting this manually speeds up read times
                 response.encoding = u"utf-8"
 
+            debug.logger.debug(u"Response\n", str(response))
+
             if response is not None and 200 <= response.status_code <= 399:
                 return Py42Response(response)
 
@@ -275,7 +277,6 @@ def _handle_error(method, url, response):
         msg = u"No response was returned for {} request to {}.".format(method, url)
         raise Py42Error(msg)
 
-    debug.logger.debug(u"Response\n", str(response))
     try:
         response.raise_for_status()
     except HTTPError as ex:

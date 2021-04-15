@@ -275,6 +275,7 @@ def _handle_error(method, url, response):
         msg = u"No response was returned for {} request to {}.".format(method, url)
         raise Py42Error(msg)
 
+    debug.logger.debug(u"Response\n", str(response))
     try:
         response.raise_for_status()
     except HTTPError as ex:

@@ -85,3 +85,10 @@ class TestAlertsClient(object):
         query = '{"test": "data"}}'
         alert_client.search_all_pages(query)
         mock_alerts_service.search_all_pages.assert_called_once_with(query)
+
+    def test_alerts_client_calls_get_aggregate_data_with_expected_value_and_param(
+        self, mock_alerts_service, mock_alert_rules_service,
+    ):
+        alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
+        alert_client.get_aggregate_data("alert-id")
+        mock_alerts_service.get_aggregate_data.assert_called_once_with("alert-id")

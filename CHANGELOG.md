@@ -22,6 +22,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `sdk.alerts.search()` accepts optional `page_num` and `page_size` arguments.
 
+- `sdk.alerts.get_aggregate_data()` to get alert summary and observations.
+
 ## 1.13.0 - 2021-04-14
 
 ### Added

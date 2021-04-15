@@ -123,3 +123,14 @@ class AlertsClient(object):
             :class:`py42.response.Py42Response`
         """
         return self._alert_service.update_note(alert_id, note)
+
+    def get_aggregate_data(self, alert_id):
+        """Gets alert summary with details about observations.
+
+        Args:
+            alert_id (str): Gets the details for the alert with the given ID.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        return self._alert_service.get_aggregate_data(alert_id)

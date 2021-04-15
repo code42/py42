@@ -135,6 +135,13 @@ class AlertService(BaseService):
         }
         return self._connection.post(uri, json=data)
 
+    def get_aggregate_data(self, alert_id):
+        uri = self._uri_prefix.format(u"query-details-aggregate")
+        data = {
+            u"alertId": alert_id,
+        }
+        return self._connection.post(uri, json=data)
+
 
 def _convert_observation_json_strings_to_objects(results):
     for alert in results[u"alerts"]:

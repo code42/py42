@@ -195,7 +195,7 @@ class Connection(object):
                 # setting this manually speeds up read times
                 response.encoding = u"utf-8"
 
-            debug.logger.debug(u"Response\n", str(response))
+            debug.logger.debug(u"Response\n {0}".format(str(response)))
 
             if response is not None and 200 <= response.status_code <= 399:
                 return Py42Response(response)

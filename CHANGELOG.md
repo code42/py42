@@ -8,21 +8,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.14.0 - 2021-04-20
 
 ### Added
 
-- Custom exception `Py42InvalidCaseUserError` that raises when trying to
-    add an invalid user as a subject or an assignee of a case.
+- New method `sdk.alerts.search_all_pages()` to retrieve all alert pages.
 
-- `sdk.cases.update()` now raises `Py42CaseNameExistsError` when the case name already
-  exists in the system.
+- New method `sdk.alerts.get_aggregate_data()` to get alert summary and observations.
 
-- `sdk.alerts.search_all_pages()` to retrieve all alert pages.
+### Changed
 
-- `sdk.alerts.search()` accepts optional `page_num` and `page_size` arguments.
+- Method `sdk.alerts.search()` now accepts optional arguments `page_num` and `page_size`.
 
-- `sdk.alerts.get_aggregate_data()` to get alert summary and observations.
+- Methods `sdk.cases.update()` and `sdk.cases.create()` now raise custom exception
+    `Py42InvalidCaseUserError` when trying to add an invalid user as a subject or an
+  assignee of a case.
+
+- `sdk.cases.update()` now raises `Py42CaseNameExistsError` when the name of the case
+  already exists in the system.
 
 ## 1.13.0 - 2021-04-14
 

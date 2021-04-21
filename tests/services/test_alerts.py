@@ -210,7 +210,7 @@ class TestAlertService(object):
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["state"] == "PENDING"
-            and post_data["note"] == ""
+            and post_data["note"] is None
         )
 
     def test_update_state_posts_expected_data(
@@ -249,7 +249,7 @@ class TestAlertService(object):
             and post_data["alertIds"][0] == "ALERT_ID_1"
             and post_data["alertIds"][1] == "ALERT_ID_2"
             and post_data["state"] == "RESOLVED"
-            and post_data["note"] == ""
+            and post_data["note"] is None
         )
 
     def test_get_all_rules_posts_expected_data(self, mock_connection, user_context):

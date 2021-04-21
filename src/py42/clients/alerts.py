@@ -114,7 +114,7 @@ class AlertsClient(object):
         return self._alert_service.update_state(status, alert_ids, note=note)
 
     def update_note(self, alert_id, note):
-        """Updates an alert's notes.
+        """Updates an alert's note.
 
         Args:
             alert_id (str): The identification number of an alert to add a note to.

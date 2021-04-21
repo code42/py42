@@ -13,7 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Fixed
 
 - Issue when calling `sdk.alerts.update_state()` without specifying a `note` parameter
-    would set the existing alert's note to the empty string.
+    would set the existing alert's note's message to the empty string.
 
 ## 1.14.0 - 2021-04-20
 

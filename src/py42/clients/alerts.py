@@ -105,7 +105,7 @@ class AlertsClient(object):
             status (str): Status to set from OPEN, RESOLVED, PENDING, IN_PROGRESS
             alert_ids (str or list[str]): The identification number(s) for the alerts to reopen.
                 Note: The alerts backend accepts a maximum of 100 alerts per request.
-            note (str, optional): A note attached to the alert. Must be less than 2000
+            note (str, optional): A note attached to the alerts. Must be less than 2000
                 characters. Defaults to None.
 
         Returns:

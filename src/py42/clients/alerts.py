@@ -99,7 +99,7 @@ class AlertsClient(object):
         return self._alert_service.update_state(AlertState.OPEN, alert_ids, note=reason)
 
     def update_state(self, status, alert_ids, note=None):
-        """Update status for given alert IDs.
+        """Updates the status of alerts.
 
         Args:
             status (str): Status to set from OPEN, RESOLVED, PENDING, IN_PROGRESS
@@ -113,7 +113,7 @@ class AlertsClient(object):
         return self._alert_service.update_state(status, alert_ids, note=note)
 
     def update_note(self, alert_id, note):
-        """Add/update a note to an alert.
+        """Updates an alert's notes.
 
         Args:
             alert_id (str): The identification number of an alert to add a note to.

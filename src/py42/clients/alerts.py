@@ -105,7 +105,8 @@ class AlertsClient(object):
             status (str): Status to set from OPEN, RESOLVED, PENDING, IN_PROGRESS
             alert_ids (str or list[str]): The identification number(s) for the alerts to reopen.
                 Note: The alerts backend accepts a maximum of 100 alerts per request.
-            note (str, optional): User note regarding the status. Defaults to None.
+            note (str, optional): A note attached to the alert. Must be less than 2000
+                characters.Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -117,7 +118,8 @@ class AlertsClient(object):
 
         Args:
             alert_id (str): The identification number of an alert to add a note to.
-            note (str): User note regarding the alert, in less than 2000 characters.
+            note (str): A note attached to the alert. Must be less than 2000
+                characters.Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`

@@ -118,7 +118,7 @@ class AlertsClient(object):
 
         Args:
             alert_id (str): The identification number of an alert to add a note to.
-            note (str): A note attached to the alert. Must be less than 2000
+            note (str): A note to attach to the alert. Must be less than 2000
                 characters.Defaults to None.
 
         Returns:

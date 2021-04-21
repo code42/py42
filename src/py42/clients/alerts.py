@@ -106,7 +106,7 @@ class AlertsClient(object):
             alert_ids (str or list[str]): The identification number(s) for the alerts to reopen.
                 Note: The alerts backend accepts a maximum of 100 alerts per request.
             note (str, optional): A note attached to the alert. Must be less than 2000
-                characters.Defaults to None.
+                characters. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`

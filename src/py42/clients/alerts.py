@@ -99,13 +99,14 @@ class AlertsClient(object):
         return self._alert_service.update_state(AlertState.OPEN, alert_ids, note=reason)
 
     def update_state(self, status, alert_ids, note=None):
-        """Update status for given alert IDs.
+        """Updates the status of alerts.
 
         Args:
             status (str): Status to set from OPEN, RESOLVED, PENDING, IN_PROGRESS
             alert_ids (str or list[str]): The identification number(s) for the alerts to reopen.
                 Note: The alerts backend accepts a maximum of 100 alerts per request.
-            note (str, optional): User note regarding the status. Defaults to None.
+            note (str, optional): A note to attach to the alerts. Must be less than 2000
+                characters. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -113,11 +114,12 @@ class AlertsClient(object):
         return self._alert_service.update_state(status, alert_ids, note=note)
 
     def update_note(self, alert_id, note):
-        """Add/update a note to an alert.
+        """Updates an alert's note.
 
         Args:
             alert_id (str): The identification number of an alert to add a note to.
-            note (str): User note regarding the alert, in less than 2000 characters.
+            note (str): A note to attach to the alert. Must be less than 2000
+                characters. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`

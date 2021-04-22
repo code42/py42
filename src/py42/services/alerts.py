@@ -50,10 +50,9 @@ class AlertService(BaseService):
         results = self._connection.post(uri, json=data)
         return _convert_observation_json_strings_to_objects(results)
 
-    def update_state(self, state, alert_ids, note=""):
+    def update_state(self, state, alert_ids, note=None):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
-        note = note or ""
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format(u"update-state")
         data = {

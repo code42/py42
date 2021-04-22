@@ -60,7 +60,7 @@ class Py42HTTPError(Py42ResponseError):
             message = u"Failure in HTTP call {}. {}".format(
                 str(exception), response_content
             )
-            debug.logger.error(message)
+            debug.logger.debug(message)
 
         super(Py42HTTPError, self).__init__(exception.response, message)
 

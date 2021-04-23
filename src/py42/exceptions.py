@@ -149,8 +149,8 @@ class Py42TooManyRequestsError(Py42HTTPError):
 
 
 class Py42OrgNotFoundError(Py42BadRequestError):
-    """An error raised when the message of a 400 HTTP error indicates that
-    a Code42 organization was not found."""
+    """An exception raised when a 400 HTTP error message indicates that an
+    organization was not found."""
 
     def __init__(self, exception, org_uid):
         msg = u"The organization with UID '{}' was not found.".format(org_uid)

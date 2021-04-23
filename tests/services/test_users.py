@@ -7,6 +7,7 @@ import py42.settings
 from py42.exceptions import Py42ActiveLegalHoldError
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42OrgNotFoundError
 from py42.exceptions import Py42UserAlreadyExistsError
 from py42.exceptions import Py42UsernameMustBeEmailError
 from py42.response import Py42Response
@@ -23,8 +24,8 @@ DEFAULT_GET_ALL_PARAMS = {
     "pgSize": 500,
     "q": None,
 }
-MOCK_GET_USER_RESPONSE = """{"totalCount": 3000, "users": ["foo"]}"""
-MOCK_EMPTY_GET_USER_RESPONSE = """{"totalCount": 3000, "users": []}"""
+MOCK_GET_USER_RESPONSE = '{"totalCount": 3000, "users": ["foo"]}'
+MOCK_EMPTY_GET_USER_RESPONSE = '{"totalCount": 3000, "users": []}'
 MOCK_text = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
 MOCK_USER_DUPLICATE_ERROR_TEXT = '{"body": "USER_DUPLICATE"}'
 MOCK_USERNAME_MUST_BE_EMAIL_TEXT = '{"data": [{"name": "USERNAME_NOT_AN_EMAIL"}]}'
@@ -223,6 +224,38 @@ class TestUserService(object):
                 "q": "q",
             },
         )
+
+    def test_get_page_when_org_not_found_raises_expected_error(
+        self, mocker, mock_connection
+    ):
+        def side_effect(*args, **kwargs):
+            base_err = mocker.MagicMock(spec=HTTPError)
+            base_err.response = mocker.MagicMock(spec=Response)
+            base_err.response.text = (
+                '[{"name":"SYSTEM","description":"Organization was not found"}]'
+            )
+            raise Py42BadRequestError(base_err)
+
+        mock_connection.get.side_effect = side_effect
+        service = UserService(mock_connection)
+
+        with pytest.raises(Py42OrgNotFoundError) as err:
+            service.get_page(1, org_uid="TestOrgUid")
+
+        assert str(err.value) == "The organization with UID 'TestOrgUid' was not found."
+
+    def test_get_page_when_bad_request_raises(self, mocker, mock_connection):
+        def side_effect(*args, **kwargs):
+            base_err = mocker.MagicMock(spec=HTTPError)
+            base_err.response = mocker.MagicMock(spec=Response)
+            base_err.response.text = "BAD REQUEST"
+            raise Py42BadRequestError(base_err)
+
+        mock_connection.get.side_effect = side_effect
+        service = UserService(mock_connection)
+
+        with pytest.raises(Py42BadRequestError):
+            service.get_page(1, org_uid="TestOrgUid")
 
     def test_deactivate_when_user_in_legal_hold_raises_active_legal_hold_error(
         self, mocker, mock_connection

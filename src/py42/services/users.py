@@ -2,6 +2,7 @@ from py42 import settings
 from py42._compat import quote
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42OrgNotFoundError
 from py42.exceptions import Py42UserAlreadyExistsError
 from py42.exceptions import Py42UsernameMustBeEmailError
 from py42.services import BaseService
@@ -151,8 +152,12 @@ class UserService(BaseService):
             q=q,
             **kwargs
         )
-
-        return self._connection.get(uri, params=params)
+        try:
+            return self._connection.get(uri, params=params)
+        except Py42BadRequestError as err:
+            if u"Organization was not found" in str(err.response.text):
+                raise Py42OrgNotFoundError(err, org_uid)
+            raise
 
     def get_all(
         self, active=None, email=None, org_uid=None, role_id=None, q=None, **kwargs

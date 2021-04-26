@@ -15,6 +15,18 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Issue when calling `sdk.alerts.update_state()` without specifying a `note` parameter
     would set the existing alert's note's message to the empty string.
 
+### Added
+
+- Custom exception `Py42OrgNotFoundError`.
+
+### Changed
+
+- `sdk.users.get_all()` now raises `Py42OrgNotFoundError` when the given `org_uid`
+    was not found.
+
+- `sdk.users.get_page()` now raises `Py42OrgNotFoundError` when the given `org_uid`
+    was not found.
+
 ## 1.14.0 - 2021-04-20
 
 ### Added

@@ -196,11 +196,11 @@ class Connection(object):
                     # setting this manually speeds up read times
                     response.encoding = u"utf-8"
 
-                debug.logger.error(
-                    u"Response: status={}, data={}".format(
-                        response.status_code, response.text
+                    debug.logger.error(
+                        u"Response: status={}, data={}".format(
+                            response.status_code, response.text
+                        )
                     )
-                )
 
                 if 200 <= response.status_code <= 399:
                     return Py42Response(response)

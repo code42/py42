@@ -201,6 +201,12 @@ class Connection(object):
                             response.status_code, response.text
                         )
                     )
+                else:
+                    debug.logger.error(
+                        u"Response: status={}, data=<streamed>".format(
+                            response.status_code
+                        )
+                    )
 
                 if 200 <= response.status_code <= 399:
                     return Py42Response(response)

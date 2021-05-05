@@ -148,6 +148,15 @@ class Py42TooManyRequestsError(Py42HTTPError):
     """A wrapper to represent an HTTP 429 error."""
 
 
+class Py42OrgNotFoundError(Py42BadRequestError):
+    """An exception raised when a 400 HTTP error message indicates that an
+    organization was not found."""
+
+    def __init__(self, exception, org_uid):
+        msg = u"The organization with UID '{}' was not found.".format(org_uid)
+        super(Py42OrgNotFoundError, self).__init__(exception, msg)
+
+
 class Py42ActiveLegalHoldError(Py42BadRequestError):
     """An exception raised when attempting to deactivate a user or device that is in an
     active legal hold."""

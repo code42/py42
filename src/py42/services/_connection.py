@@ -196,13 +196,13 @@ class Connection(object):
                     # setting this manually speeds up read times
                     response.encoding = u"utf-8"
 
-                    debug.logger.error(
+                    debug.logger.info(
                         u"Response: status={}, data={}".format(
                             response.status_code, response.text
                         )
                     )
                 else:
-                    debug.logger.error(
+                    debug.logger.info(
                         u"Response: status={}, data=<streamed>".format(
                             response.status_code
                         )

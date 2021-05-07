@@ -184,7 +184,7 @@ class TestUserService(object):
     def test_get_available_roles_calls_get_with_expected_uri(self, mock_connection):
         service = UserService(mock_connection)
         service.get_available_roles()
-        uri = "/api/v4/role"
+        uri = "/api/role"
         mock_connection.get.assert_called_once_with(uri)
 
     def test_get_roles_calls_get_with_expected_uri(self, mock_connection):

@@ -290,7 +290,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/v4/role"
+        uri = u"/api/role"
         return self._connection.get(uri)
 
     def get_roles(self, user_id):

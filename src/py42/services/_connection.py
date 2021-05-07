@@ -192,21 +192,13 @@ class Connection(object):
             )
 
             if response is not None:
+                debug.logger.info(u"Response status: {}".format(response.status_code))
                 if not stream:
                     # setting this manually speeds up read times
                     response.encoding = u"utf-8"
-
-                    debug.logger.info(
-                        u"Response: status={}, data={}".format(
-                            response.status_code, response.text
-                        )
-                    )
+                    debug.logger.debug(u"Response data: {}".format(response.text))
                 else:
-                    debug.logger.info(
-                        u"Response: status={}, data=<streamed>".format(
-                            response.status_code
-                        )
-                    )
+                    debug.logger.debug(u"Response data: <streamed>")
 
                 if 200 <= response.status_code <= 399:
                     return Py42Response(response)

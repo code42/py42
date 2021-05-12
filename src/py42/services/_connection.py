@@ -191,16 +191,23 @@ class Connection(object):
                 proxies=proxies or settings.proxies,
             )
 
-            if not stream and response is not None:
-                # setting this manually speeds up read times
-                response.encoding = u"utf-8"
+            if response is not None:
+                debug.logger.info(u"Response status: {}".format(response.status_code))
+                if not stream:
+                    # setting this manually speeds up read times
+                    response.encoding = u"utf-8"
+                    debug.logger.debug(u"Response data: {}".format(response.text))
+                else:
+                    debug.logger.debug(u"Response data: <streamed>")
 
-            if response is not None and 200 <= response.status_code <= 399:
-                return Py42Response(response)
+                if 200 <= response.status_code <= 399:
+                    return Py42Response(response)
 
-            if response is not None and response.status_code == 401:
-                if isinstance(self._auth, C42RenewableAuth):
-                    self._auth.clear_credentials()
+                if response.status_code == 401:
+                    if isinstance(self._auth, C42RenewableAuth):
+                        self._auth.clear_credentials()
+            else:
+                debug.logger.debug(u"Error! Could not retrieve response.")
 
         # if nothing has been returned after two attempts, something went wrong
         _handle_error(method, url, response)

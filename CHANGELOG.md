@@ -13,7 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Fixed
 
 - Issue where `sdk.detectionlists.create_user()` would always fail because of API changes.
-    The method has been deprecated now returns the response from `sdk.detectionlists.get()`.
+    The method has been deprecated and now returns the response from `sdk.detectionlists.get()`.
 
 ## 1.14.2 - 2021-05-07
 

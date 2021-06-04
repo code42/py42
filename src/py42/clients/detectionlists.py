@@ -40,8 +40,9 @@ class DetectionListsClient(object):
         return self._high_risk_employee_service
 
     def create_user(self, username):
-        """Create a detection list profile for a user.
-        `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_Create>`__
+        """Deprecated. Used to create a detection list profile for a user, but now that
+        happens automatically. Thus, this method instead returns the response from
+        an API call that gets the user's profile.
 
         Args:
             username (str): The Code42 username of the user.
@@ -49,7 +50,7 @@ class DetectionListsClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._user_profile_service.create(username)
+        return self._user_profile_service.get(username)
 
     def get_user(self, username):
         """Get user details by username.

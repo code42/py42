@@ -79,7 +79,7 @@ class TestDetectionListClient(object):
             mock_high_risk_employee_service,
         )
         client.create_user("testusername")
-        mock_detection_list_user_service.create.assert_called_once_with("testusername")
+        mock_detection_list_user_service.get.assert_called_once_with("testusername")
 
     def test_get_user_calls_user_client_with_expected_values(
         self,

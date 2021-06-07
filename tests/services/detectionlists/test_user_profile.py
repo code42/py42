@@ -60,25 +60,6 @@ class TestDetectionListUserClient(object):
         mock_connection.post.side_effect = Py42BadRequestError(exception)
         return user_client
 
-    def test_create_posts_expected_data(
-        self, mock_connection, user_context, mock_user_client
-    ):
-        detection_list_user_client = DetectionListUserService(
-            mock_connection, user_context, mock_user_client
-        )
-        detection_list_user_client.create("942897397520289999")
-
-        posted_data = mock_connection.post.call_args[1]["json"]
-        assert mock_connection.post.call_count == 1
-        assert mock_connection.post.call_args[0][0] == "v2/user/create"
-        assert (
-            posted_data["tenantId"] == user_context.get_current_tenant_id()
-            and posted_data["userName"] == "942897397520289999"
-            and posted_data["riskFactors"] == []
-            and posted_data["cloudUsernames"] == []
-            and posted_data["notes"] == ""
-        )
-
     def test_get_posts_expected_data(
         self, mock_connection, user_context, mock_user_client
     ):

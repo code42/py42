@@ -1,11 +1,10 @@
 import pytest
+from tests.conftest import create_mock_error
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42CaseAlreadyHasEventError
 from py42.exceptions import Py42UpdateClosedCaseError
 from py42.services.casesfileevents import CasesFileEventsService
-
-from tests.conftest import create_mock_error
 
 _TEST_CASE_NUMBER = 123456
 UPDATE_ERROR_RESPONSE = '{"problem":"CASE_IS_CLOSED"}'
@@ -42,9 +41,7 @@ class TestCasesFileEventService:
             0
         ] == u"/api/v1/case/{}/fileevent".format(_TEST_CASE_NUMBER)
 
-    def test_add_on_a_closed_case_raises_error(
-        self, mocker, mock_connection
-    ):
+    def test_add_on_a_closed_case_raises_error(self, mocker, mock_connection):
         mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, UPDATE_ERROR_RESPONSE
         )
@@ -54,9 +51,7 @@ class TestCasesFileEventService:
 
         assert err.value.args[0] == u"Cannot update a closed case."
 
-    def test_delete_on_a_closed_case_raises_error(
-        self, mocker, mock_connection
-    ):
+    def test_delete_on_a_closed_case_raises_error(self, mocker, mock_connection):
         case_file_event_service = CasesFileEventsService(mock_connection)
         mock_connection.delete.side_effect = create_mock_error(
             Py42BadRequestError, mocker, UPDATE_ERROR_RESPONSE
@@ -78,9 +73,7 @@ class TestCasesFileEventService:
 
         assert err.value.args[0] == u"Event is already associated to the case."
 
-    def test_add_when_unknown_error_raises_error(
-        self, mocker, mock_connection
-    ):
+    def test_add_when_unknown_error_raises_error(self, mocker, mock_connection):
         case_file_event_service = CasesFileEventsService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, UNKNOWN_ERROR
@@ -88,9 +81,7 @@ class TestCasesFileEventService:
         with pytest.raises(Py42BadRequestError):
             case_file_event_service.add(_TEST_CASE_NUMBER, event_id=u"x")
 
-    def test_delete_when_unknown_error_raises_error(
-        self, mocker, mock_connection
-    ):
+    def test_delete_when_unknown_error_raises_error(self, mocker, mock_connection):
         case_file_event_service = CasesFileEventsService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, UNKNOWN_ERROR

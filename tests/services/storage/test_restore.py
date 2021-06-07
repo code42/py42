@@ -1,6 +1,5 @@
 import pytest
-from requests import HTTPError
-from requests import Response
+from tests.conftest import create_mock_error
 from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DEVICE_GUID
@@ -23,15 +22,9 @@ def _create_expected_restore_groups(file):
 
 @pytest.fixture
 def mock_restore_connection_with_bad_request(mocker, mock_connection):
-    def side_effect(*args, **kwargs):
-        err = mocker.MagicMock(spec=HTTPError)
-        resp = mocker.MagicMock(spec=Response)
-        resp.text = "CREATE_FAILED"
-        err.response = resp
-        py42_error = Py42BadRequestError(err)
-        raise py42_error
-
-    mock_connection.post.side_effect = side_effect
+    mock_connection.post.side_effect = create_mock_error(
+        Py42BadRequestError, mocker, "CREATE_FAILED"
+    )
     return mock_connection
 
 

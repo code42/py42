@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
-from requests import HTTPError
-from requests import Response
+from tests.conftest import create_mock_error
+from tests.conftest import create_mock_response
 
 import py42.settings
 from py42.exceptions import Py42ActiveLegalHoldError
@@ -10,9 +10,7 @@ from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42OrgNotFoundError
 from py42.exceptions import Py42UserAlreadyExistsError
 from py42.exceptions import Py42UsernameMustBeEmailError
-from py42.response import Py42Response
 from py42.services.users import UserService
-
 
 USER_URI = "/api/User"
 DEFAULT_GET_ALL_PARAMS = {
@@ -26,7 +24,7 @@ DEFAULT_GET_ALL_PARAMS = {
 }
 MOCK_GET_USER_RESPONSE = '{"totalCount": 3000, "users": ["foo"]}'
 MOCK_EMPTY_GET_USER_RESPONSE = '{"totalCount": 3000, "users": []}'
-MOCK_text = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
+MOCK_TEXT = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
 MOCK_USER_DUPLICATE_ERROR_TEXT = '{"body": "USER_DUPLICATE"}'
 MOCK_USERNAME_MUST_BE_EMAIL_TEXT = '{"data": [{"name": "USERNAME_NOT_AN_EMAIL"}]}'
 
@@ -34,51 +32,35 @@ MOCK_USERNAME_MUST_BE_EMAIL_TEXT = '{"data": [{"name": "USERNAME_NOT_AN_EMAIL"}]
 class TestUserService(object):
     @pytest.fixture
     def mock_get_users_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.encoding = "utf-8"
-        response.text = MOCK_GET_USER_RESPONSE
-        return Py42Response(response)
+        return create_mock_response(mocker, MOCK_GET_USER_RESPONSE)
 
     @pytest.fixture
     def mock_get_users_empty_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.encoding = "utf-8"
-        response.text = MOCK_EMPTY_GET_USER_RESPONSE
-        return Py42Response(response)
+        return create_mock_response(mocker, MOCK_EMPTY_GET_USER_RESPONSE)
 
     @pytest.fixture
     def post_api_mock_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.encoding = "utf-8"
-        response.text = MOCK_text
-        return Py42Response(response)
+        return create_mock_response(mocker, MOCK_TEXT)
 
     @pytest.fixture
     def put_api_mock_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.encoding = "utf-8"
-        response.text = MOCK_text
-        return Py42Response(response)
+        return create_mock_response(mocker, MOCK_TEXT)
 
     @pytest.fixture
     def internal_server_error(self, mocker):
-        base_error = mocker.MagicMock(spec=HTTPError)
-        base_error.response = mocker.MagicMock(spec=Response)
-        return Py42InternalServerError(base_error)
+        return create_mock_error(Py42InternalServerError, mocker, "")
 
     @pytest.fixture
-    def post_user_duplicate_error_response(self, internal_server_error):
-        internal_server_error.response.text = MOCK_USER_DUPLICATE_ERROR_TEXT
-        return internal_server_error
+    def post_user_duplicate_error_response(self, mocker):
+        return create_mock_error(
+            Py42InternalServerError, mocker, MOCK_USER_DUPLICATE_ERROR_TEXT
+        )
 
     @pytest.fixture
-    def post_username_must_be_email_error_response(self, internal_server_error):
-        internal_server_error.response.text = MOCK_USERNAME_MUST_BE_EMAIL_TEXT
-        return internal_server_error
+    def post_username_must_be_email_error_response(self, mocker):
+        return create_mock_error(
+            Py42InternalServerError, mocker, MOCK_USERNAME_MUST_BE_EMAIL_TEXT
+        )
 
     def test_create_user_calls_post_with_expected_url_and_params(
         self, mock_connection, post_api_mock_response
@@ -228,15 +210,10 @@ class TestUserService(object):
     def test_get_page_when_org_not_found_raises_expected_error(
         self, mocker, mock_connection
     ):
-        def side_effect(*args, **kwargs):
-            base_err = mocker.MagicMock(spec=HTTPError)
-            base_err.response = mocker.MagicMock(spec=Response)
-            base_err.response.text = (
-                '[{"name":"SYSTEM","description":"Organization was not found"}]'
-            )
-            raise Py42BadRequestError(base_err)
-
-        mock_connection.get.side_effect = side_effect
+        text = '[{"name":"SYSTEM","description":"Organization was not found"}]'
+        mock_connection.get.side_effect = create_mock_error(
+            Py42BadRequestError, mocker, text
+        )
         service = UserService(mock_connection)
 
         with pytest.raises(Py42OrgNotFoundError) as err:
@@ -245,13 +222,9 @@ class TestUserService(object):
         assert str(err.value) == "The organization with UID 'TestOrgUid' was not found."
 
     def test_get_page_when_bad_request_raises(self, mocker, mock_connection):
-        def side_effect(*args, **kwargs):
-            base_err = mocker.MagicMock(spec=HTTPError)
-            base_err.response = mocker.MagicMock(spec=Response)
-            base_err.response.text = "BAD REQUEST"
-            raise Py42BadRequestError(base_err)
-
-        mock_connection.get.side_effect = side_effect
+        mock_connection.get.side_effect = create_mock_error(
+            Py42BadRequestError, mocker, "BAD REQUEST"
+        )
         service = UserService(mock_connection)
 
         with pytest.raises(Py42BadRequestError):
@@ -260,19 +233,17 @@ class TestUserService(object):
     def test_deactivate_when_user_in_legal_hold_raises_active_legal_hold_error(
         self, mocker, mock_connection
     ):
-        def side_effect(url, json):
-            if "UserDeactivation" in url:
-                base_err = mocker.MagicMock(spec=HTTPError)
-                base_err.response = mocker.MagicMock(spec=Response)
-                base_err.response.text = "ACTIVE_LEGAL_HOLD"
-                raise Py42BadRequestError(base_err)
-
-        mock_connection.put.side_effect = side_effect
+        mock_connection.put.side_effect = create_mock_error(
+            Py42BadRequestError, mocker, "ACTIVE_LEGAL_HOLD"
+        )
         client = UserService(mock_connection)
         with pytest.raises(Py42ActiveLegalHoldError) as err:
             client.deactivate(1234)
 
-        expected = "Cannot deactivate the user with ID 1234 as the user is involved in a legal hold matter."
+        expected = (
+            "Cannot deactivate the user with ID 1234 as the user is involved in "
+            "a legal hold matter."
+        )
         assert str(err.value) == expected
 
     def test_update_user_calls_put_with_expected_url_and_params(

@@ -15,6 +15,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Issue where `sdk.detectionlists.create_user()` would always fail because of API changes.
     The method has been deprecated and now returns the response from `sdk.detectionlists.get()`.
 
+### Added
+
+- New custom exception `Py42UnableToCreateProfileError` that is raised when unable to call the
+    method `sdk.detectionlists.create_user()` method due to the user not existing in Code42 or
+    is already in the process of being created on the back-end.
+
 ## 1.14.2 - 2021-05-07
 
 ### Fixed

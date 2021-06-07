@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
-from requests import HTTPError
-from requests import Response
+from tests.conftest import create_mock_error
 
 from py42._compat import str
 from py42.exceptions import Py42BadRequestError
@@ -20,14 +19,9 @@ def _create_test_query(test_filename=u"*"):
 
 @pytest.fixture()
 def mock_invalid_page_token_connection(mocker, connection):
-    def side_effect(*args, **kwargs):
-        http_error = mocker.MagicMock(spec=HTTPError)
-        response = mocker.MagicMock(spec=Response)
-        response.text = "INVALID_PAGE_TOKEN"
-        http_error.response = response
-        raise Py42BadRequestError(http_error)
-
-    connection.post.side_effect = side_effect
+    connection.post.side_effect = create_mock_error(
+        Py42BadRequestError, mocker, "INVALID_PAGE_TOKEN"
+    )
     return connection
 
 
@@ -68,14 +62,9 @@ class TestFileEventService(object):
     def test_search_when_bad_request_raised_with_token_but_has_not_invalid_token_text_raises_bad_request(
         self, mocker, connection
     ):
-        def side_effect(*args, **kwargs):
-            http_error = mocker.MagicMock(spec=HTTPError)
-            response = mocker.MagicMock(spec=Response)
-            response.text = "DIFFERENT_ERROR"
-            http_error.response = response
-            raise Py42BadRequestError(http_error)
-
-        connection.post.side_effect = side_effect
+        connection.post.side_effect = create_mock_error(
+            Py42BadRequestError, mocker, "DIFFERENT_ERROR"
+        )
         query = _create_test_query()
         query.page_token = "test_page_token"
         service = FileEventService(connection)

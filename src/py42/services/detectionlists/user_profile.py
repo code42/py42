@@ -19,25 +19,6 @@ class DetectionListUserService(BaseService):
     def _make_uri(self, action):
         return u"{}{}".format(self._resource, action)
 
-    def create(self, username):
-        """Create a detection list profile for a user.
-
-        Args:
-            username (str): Username of the user.
-
-        Returns:
-            :class:`py42.response.Py42Response`
-        """
-        data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userName": username,
-            u"notes": "",
-            u"riskFactors": [],
-            u"cloudUsernames": [],
-        }
-        uri = self._make_uri(u"/create")
-        return self._connection.post(uri, json=data)
-
     def get_by_id(self, user_id):
         """Get user details by user UID.
 

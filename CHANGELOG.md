@@ -8,6 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Fixed
+
+- Issue where `sdk.detectionlists.create_user()` would always fail because of API changes.
+    The method has been deprecated and now returns the response from `sdk.detectionlists.get()`.
+
+### Added
+
+- New custom exception `Py42UnableToCreateProfileError` that is raised when calling the
+    method `sdk.detectionlists.create_user()` due to the user not existing in Code42 or
+    is already in the process of being created on the back-end.
+
 ## 1.14.2 - 2021-05-07
 
 ### Fixed

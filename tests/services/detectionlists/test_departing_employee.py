@@ -2,8 +2,7 @@
 from datetime import datetime
 
 import pytest
-from requests import HTTPError
-from requests import Response
+from tests.conftest import create_mock_error
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.exceptions import Py42BadRequestError
@@ -128,10 +127,9 @@ class TestDepartingEmployeeClient(object):
     ):
         def side_effect(url, json):
             if "add" in url:
-                base_err = mocker.MagicMock(spec=HTTPError)
-                base_err.response = mocker.MagicMock(spec=Response)
-                base_err.response.text = "User already on list"
-                raise Py42BadRequestError(base_err)
+                raise create_mock_error(
+                    Py42BadRequestError, mocker, "User already on list"
+                )
 
         mock_connection.post.side_effect = side_effect
         client = DepartingEmployeeService(

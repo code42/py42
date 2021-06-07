@@ -213,6 +213,12 @@ def create_mock_response(mocker, text):
     return Py42Response(response)
 
 
+def create_mock_error(err_class, mocker, text):
+    mock_http_error = mocker.MagicMock(spec=HTTPError)
+    mock_http_error.response = create_mock_response(mocker, text)
+    return err_class(mock_http_error)
+
+
 @pytest.fixture
 def mock_post_not_found_session(mocker, mock_connection):
     response = mocker.MagicMock(spec=Response)

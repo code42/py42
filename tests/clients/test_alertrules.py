@@ -1,8 +1,8 @@
 import json
 
 import pytest
-from requests import HTTPError
 from requests import Response
+from tests.conftest import create_mock_error
 
 from py42.clients.alertrules import AlertRulesClient
 from py42.exceptions import Py42InternalServerError
@@ -48,9 +48,7 @@ def mock_alerts_service(mocker):
 
 @pytest.fixture
 def internal_server_error(mocker):
-    base_err = mocker.MagicMock(spec=HTTPError)
-    base_err.response = mocker.MagicMock(spec=Response)
-    return Py42InternalServerError(base_err)
+    return create_mock_error(Py42InternalServerError, mocker, "")
 
 
 class TestAlertRulesClient(object):

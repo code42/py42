@@ -113,10 +113,10 @@ class TestDetectionListClient(object):
             client.create_user("testusername")
 
         assert (
-            str(err.value) == "Detection-list profiles are now created automatically "
-            "on the server.Unable to find a detection-list profile "
-            "for 'testusername'. It is possibly still being "
-            "created."
+            str(err.value)
+            == "Detection-list profiles are now created automatically on the server. Unable "
+            "to find a detection-list profile for 'testusername'. It is possibly still "
+            "being created if you just recently created the Code42 user."
         )
 
     def test_create_user_when_service_returns_bad_request_raises(

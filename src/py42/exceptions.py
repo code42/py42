@@ -277,7 +277,7 @@ class Py42UnableToCreateProfileError(Py42BadRequestError):
     """An error raised when trying to call the method for creating a detection-list
     user when the user does not exist or is currently awaiting the profile to get
     created on the back-end. Note: you are no longer able to create detection-list
-    profiles using the API and the py42 only returns already existing profiles."""
+    profiles using the API and py42 only returns already existing profiles."""
 
     def __init__(self, exception, username):
         message = (

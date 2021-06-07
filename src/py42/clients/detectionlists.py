@@ -1,3 +1,5 @@
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UnableToCreateProfileError
 from py42.util import get_attribute_keys_from_class
 
 
@@ -50,7 +52,12 @@ class DetectionListsClient(object):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        return self._user_profile_service.get(username)
+        try:
+            return self._user_profile_service.get(username)
+        except Py42BadRequestError as err:
+            if "Could not find user" in str(err):
+                raise Py42UnableToCreateProfileError(err, username)
+            raise
 
     def get_user(self, username):
         """Get user details by username.

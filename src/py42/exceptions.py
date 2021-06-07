@@ -273,6 +273,21 @@ class Py42UserNotOnListError(Py42NotFoundError):
         super(Py42NotFoundError, self).__init__(exception, message)
 
 
+class Py42UnableToCreateProfileError(Py42BadRequestError):
+    """An error raised when trying to call the method for creating a detection-list
+    user when the user does not exist or is currently awaiting the profile to get
+    created on the back-end. Note: you are no longer able to create detection-list
+    profiles using the API and the py42 only returns already existing profiles."""
+
+    def __init__(self, exception, username):
+        message = (
+            u"Detection-list profiles are now created automatically on the server."
+            u"Unable to find a detection-list profile for '{}'. "
+            u"It is possibly still being created.".format(username)
+        )
+        super(Py42UnableToCreateProfileError, self).__init__(exception, message)
+
+
 class Py42InvalidRuleError(Py42NotFoundError):
     """An exception raised when the observer rule ID does not exist."""
 

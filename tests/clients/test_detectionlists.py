@@ -1,7 +1,10 @@
 import pytest
+from tests.conftest import create_mock_error
 
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.detectionlists import RiskTags
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42UnableToCreateProfileError
 from py42.services.detectionlists.departing_employee import DepartingEmployeeService
 from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
 from py42.services.detectionlists.user_profile import DetectionListUserService
@@ -80,6 +83,59 @@ class TestDetectionListClient(object):
         )
         client.create_user("testusername")
         mock_detection_list_user_service.get.assert_called_once_with("testusername")
+
+    def test_create_user_when_service_returns_cannot_find_user_bad_request_raises_unable_to_create_error(
+        self,
+        mocker,
+        mock_detection_list_user_service,
+        mock_departing_employee_service,
+        mock_high_risk_employee_service,
+    ):
+        mock_err_response_content = """
+            {
+                "pop-bulletin": {
+                    "type$": "com.code42.casemanagement.CaseMessages.InvalidUser",
+                    "text$": "Could not find user: testusername",
+                    "details": [],
+                    "user": "testusername"
+                }
+            }"""
+        mock_detection_list_user_service.get.side_effect = create_mock_error(
+            Py42BadRequestError, mocker, mock_err_response_content
+        )
+
+        client = DetectionListsClient(
+            mock_detection_list_user_service,
+            mock_departing_employee_service,
+            mock_high_risk_employee_service,
+        )
+        with pytest.raises(Py42UnableToCreateProfileError) as err:
+            client.create_user("testusername")
+
+        assert (
+            str(err.value) == "Detection-list profiles are now created automatically "
+            "on the server.Unable to find a detection-list profile "
+            "for 'testusername'. It is possibly still being "
+            "created."
+        )
+
+    def test_create_user_when_service_returns_bad_request_raises(
+        self,
+        mocker,
+        mock_detection_list_user_service,
+        mock_departing_employee_service,
+        mock_high_risk_employee_service,
+    ):
+        mock_detection_list_user_service.get.side_effect = create_mock_error(
+            Py42BadRequestError, mocker, ""
+        )
+        client = DetectionListsClient(
+            mock_detection_list_user_service,
+            mock_departing_employee_service,
+            mock_high_risk_employee_service,
+        )
+        with pytest.raises(Py42BadRequestError):
+            client.create_user("testusername")
 
     def test_get_user_calls_user_client_with_expected_values(
         self,

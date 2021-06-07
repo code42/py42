@@ -19,6 +19,7 @@ from py42.sdk.queries.fileevents.filters.exposure_filter import (
 from py42.sdk.queries.fileevents.filters.exposure_filter import RemovableMediaVendor
 from py42.sdk.queries.fileevents.filters.exposure_filter import RemovableMediaVolumeName
 from py42.sdk.queries.fileevents.filters.exposure_filter import SyncDestination
+from py42.sdk.queries.fileevents.filters.exposure_filter import SyncDestinationUsername
 from py42.sdk.queries.fileevents.filters.exposure_filter import TabURL
 from py42.sdk.queries.fileevents.filters.exposure_filter import WindowTitle
 
@@ -408,6 +409,44 @@ def test_sync_destination_name_not_in_str_gives_correct_json_representation():
     items = [SyncDestination.GOOGLE_DRIVE, SyncDestination.BOX, SyncDestination.ICLOUD]
     _filter = SyncDestination.not_in(items)
     expected = NOT_IN.format("syncDestination", *sorted(items))
+    assert str(_filter) == expected
+
+
+def test_sync_destination_username_exists_str_gives_correct_json_representation():
+    _filter = SyncDestinationUsername.exists()
+    expected = EXISTS.format("syncDestinationUsername")
+    assert str(_filter) == expected
+
+
+def test_sync_destination_username_not_exists_str_gives_correct_json_representation():
+    _filter = SyncDestinationUsername.not_exists()
+    expected = NOT_EXISTS.format("syncDestinationUsername")
+    assert str(_filter) == expected
+
+
+def test_sync_destination_username_eq_str_gives_correct_json_representation():
+    _filter = SyncDestinationUsername.eq("test_user@gmail.com")
+    expected = IS.format("syncDestinationUsername", "test_user@gmail.com")
+    assert str(_filter) == expected
+
+
+def test_sync_destination_username_not_eq_str_gives_correct_json_representation():
+    _filter = SyncDestinationUsername.not_eq("test_user@gmail.com")
+    expected = IS_NOT.format("syncDestinationUsername", "test_user@gmail.com")
+    assert str(_filter) == expected
+
+
+def test_sync_destination_username_is_in_str_gives_correct_json_representation():
+    items = ["*@hotmail.com", "user1@gmail.com", "user2@gmail.com"]
+    _filter = SyncDestinationUsername.is_in(items)
+    expected = IS_IN.format("syncDestinationUsername", *items)
+    assert str(_filter) == expected
+
+
+def test_sync_destination_username_not_in_str_gives_correct_json_representation():
+    items = ["*@hotmail.com", "user1@gmail.com", "user2@gmail.com"]
+    _filter = SyncDestinationUsername.not_in(items)
+    expected = NOT_IN.format("syncDestinationUsername", *items)
     assert str(_filter) == expected
 
 

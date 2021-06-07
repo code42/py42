@@ -124,6 +124,10 @@ class SyncDestination(FileEventFilterStringField):
         return get_attribute_keys_from_class(SyncDestination)
 
 
+class SyncDestinationUsername(FileEventFilterStringField):
+    _term = u"syncDestinationUsername"
+
+
 class TabURL(FileEventFilterStringField):
     """Class that filters events based on all the URLs of the browser tabs at the time the file
     contents were read by the browser (applies to ``read by browser or other app`` events only).

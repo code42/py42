@@ -281,9 +281,10 @@ class Py42UnableToCreateProfileError(Py42BadRequestError):
 
     def __init__(self, exception, username):
         message = (
-            u"Detection-list profiles are now created automatically on the server."
+            u"Detection-list profiles are now created automatically on the server. "
             u"Unable to find a detection-list profile for '{}'. "
-            u"It is possibly still being created.".format(username)
+            u"It is possibly still being created if you just recently created the "
+            u"Code42 user.".format(username)
         )
         super(Py42UnableToCreateProfileError, self).__init__(exception, message)
 

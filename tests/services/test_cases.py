@@ -1,4 +1,6 @@
 import pytest
+from tests.conftest import create_mock_error
+from tests.conftest import create_mock_response
 
 import py42.settings
 from py42.exceptions import Py42BadRequestError
@@ -7,8 +9,6 @@ from py42.exceptions import Py42DescriptionLimitExceededError
 from py42.exceptions import Py42InvalidCaseUserError
 from py42.exceptions import Py42UpdateClosedCaseError
 from py42.services.cases import CasesService
-
-from tests.conftest import create_mock_response, create_mock_error
 
 GET_ALL_TEST_RESPONSE = '{"cases":["test"], "totalCount":1}'
 EMPTY_GET_ALL_TEST_RESPONSE = '{"cases": [], "totalCount":0}'

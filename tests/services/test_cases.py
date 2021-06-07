@@ -100,11 +100,12 @@ class TestCasesService:
         mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, DESCRIPTION_TOO_LONG_ERROR_MSG
         )
-        with pytest.raises(Py42DescriptionLimitExceededError) as e:
+        with pytest.raises(Py42DescriptionLimitExceededError) as err:
             cases_service.create("test", description=u"supposedly too long")
 
         assert (
-            e.value.args[0] == "Description limit exceeded, max 250 characters allowed."
+            err.value.args[0]
+            == "Description limit exceeded, max 250 characters allowed."
         )
 
     def test_create_when_fails_with_invalid_subject_raises_custom_exception(
@@ -114,10 +115,10 @@ class TestCasesService:
         mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, _get_invalid_user_text("subject")
         )
-        with pytest.raises(Py42InvalidCaseUserError) as e:
+        with pytest.raises(Py42InvalidCaseUserError) as err:
             cases_service.create("test", subject="Not a person")
 
-        assert e.value.args[0] == "The provided subject is not a valid user."
+        assert err.value.args[0] == "The provided subject is not a valid user."
 
     def test_create_when_fails_with_invalid_assignee_raises_custom_exception(
         self, mocker, mock_connection
@@ -126,10 +127,10 @@ class TestCasesService:
         mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, _get_invalid_user_text("assignee")
         )
-        with pytest.raises(Py42InvalidCaseUserError) as e:
+        with pytest.raises(Py42InvalidCaseUserError) as err:
             cases_service.create("test", assignee="Not a person")
 
-        assert e.value.args[0] == "The provided assignee is not a valid user."
+        assert err.value.args[0] == "The provided assignee is not a valid user."
 
     def test_create_when_fails_with_unknown_error_raises_exception(
         self, mocker, mock_connection
@@ -138,9 +139,8 @@ class TestCasesService:
         mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, UNKNOWN_ERROR_MSG
         )
-        with pytest.raises(Py42BadRequestError) as e:
+        with pytest.raises(Py42BadRequestError):
             cases_service.create("Case")
-        assert e.value.response.status_code == 400
 
     def test_get_all_called_expected_number_of_times(
         self, mock_connection, mock_case_response, mock_case_empty_response
@@ -278,11 +278,11 @@ class TestCasesService:
         mock_connection.put.side_effect = create_mock_error(
             Py42BadRequestError, mocker, NAME_EXISTS_ERROR_MSG
         )
-        with pytest.raises(Py42CaseNameExistsError) as e:
+        with pytest.raises(Py42CaseNameExistsError) as err:
             cases_service.update(_TEST_CASE_NUMBER, "Duplicate")
 
         assert (
-            e.value.args[0]
+            err.value.args[0]
             == u"Case name 'Duplicate' already exists, please set another name"
         )
 
@@ -294,10 +294,10 @@ class TestCasesService:
         mock_connection.put.side_effect = create_mock_error(
             Py42BadRequestError, mocker, UPDATE_ERROR_RESPONSE
         )
-        with pytest.raises(Py42UpdateClosedCaseError) as e:
+        with pytest.raises(Py42UpdateClosedCaseError) as err:
             cases_service.update(_TEST_CASE_NUMBER, findings=u"x")
 
-        assert e.value.args[0] == u"Cannot update a closed case."
+        assert err.value.args[0] == u"Cannot update a closed case."
 
     def test_update_when_fails_with_description_too_long_error_raises_custom_exception(
         self, mocker, mock_connection, mock_get_response
@@ -307,11 +307,11 @@ class TestCasesService:
         mock_connection.put.side_effect = create_mock_error(
             Py42BadRequestError, mocker, DESCRIPTION_TOO_LONG_ERROR_MSG
         )
-        with pytest.raises(Py42DescriptionLimitExceededError) as e:
+        with pytest.raises(Py42DescriptionLimitExceededError) as err:
             cases_service.update(_TEST_CASE_NUMBER, description=u"supposedly too long")
 
         assert (
-            e.value.args[0]
+            err.value.args[0]
             == u"Description limit exceeded, max 250 characters allowed."
         )
 
@@ -322,10 +322,10 @@ class TestCasesService:
         mock_connection.put.side_effect = create_mock_error(
             Py42BadRequestError, mocker, _get_invalid_user_text("subject")
         )
-        with pytest.raises(Py42InvalidCaseUserError) as e:
+        with pytest.raises(Py42InvalidCaseUserError) as err:
             cases_service.update(_TEST_CASE_NUMBER, subject="Not a person")
 
-        assert e.value.args[0] == "The provided subject is not a valid user."
+        assert err.value.args[0] == "The provided subject is not a valid user."
 
     def test_update_when_fails_with_invalid_assignee_raises_custom_exception(
         self, mocker, mock_connection
@@ -334,7 +334,7 @@ class TestCasesService:
         mock_connection.put.side_effect = create_mock_error(
             Py42BadRequestError, mocker, _get_invalid_user_text("assignee")
         )
-        with pytest.raises(Py42InvalidCaseUserError) as e:
+        with pytest.raises(Py42InvalidCaseUserError) as err:
             cases_service.update(_TEST_CASE_NUMBER, assignee="Not a person")
 
-        assert e.value.args[0] == "The provided assignee is not a valid user."
+        assert err.value.args[0] == "The provided assignee is not a valid user."

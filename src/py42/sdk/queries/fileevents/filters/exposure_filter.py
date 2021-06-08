@@ -125,6 +125,10 @@ class SyncDestination(FileEventFilterStringField):
 
 
 class SyncDestinationUsername(FileEventFilterStringField):
+    """Class that filters events based on the name of the username associated with the cloud service
+    the file is synced with (applies to ``synced to cloud service`` events only).
+    """
+
     _term = u"syncDestinationUsername"
 
 

@@ -21,6 +21,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     method `sdk.detectionlists.create_user()` due to the user not existing in Code42 or
     is already in the process of being created on the back-end.
 
+- `SyncDestinationUsername` filter class to `py42.sdk.queries.fileevents.filters.exposure_filter` module.
+
 ## 1.14.2 - 2021-05-07
 
 ### Fixed

@@ -425,26 +425,26 @@ def test_sync_destination_username_not_exists_str_gives_correct_json_representat
 
 
 def test_sync_destination_username_eq_str_gives_correct_json_representation():
-    _filter = SyncDestinationUsername.eq("test_user@gmail.com")
-    expected = IS.format("syncDestinationUsername", "test_user@gmail.com")
+    _filter = SyncDestinationUsername.eq("test_user@example.com")
+    expected = IS.format("syncDestinationUsername", "test_user@example.com")
     assert str(_filter) == expected
 
 
 def test_sync_destination_username_not_eq_str_gives_correct_json_representation():
-    _filter = SyncDestinationUsername.not_eq("test_user@gmail.com")
-    expected = IS_NOT.format("syncDestinationUsername", "test_user@gmail.com")
+    _filter = SyncDestinationUsername.not_eq("test_user@example.com")
+    expected = IS_NOT.format("syncDestinationUsername", "test_user@example.com")
     assert str(_filter) == expected
 
 
 def test_sync_destination_username_is_in_str_gives_correct_json_representation():
-    items = ["*@hotmail.com", "user1@gmail.com", "user2@gmail.com"]
+    items = ["*@example2.com", "user1@example.com", "user2@example.com"]
     _filter = SyncDestinationUsername.is_in(items)
     expected = IS_IN.format("syncDestinationUsername", *items)
     assert str(_filter) == expected
 
 
 def test_sync_destination_username_not_in_str_gives_correct_json_representation():
-    items = ["*@hotmail.com", "user1@gmail.com", "user2@gmail.com"]
+    items = ["*@example2.com", "user1@example.com", "user2@example.com"]
     _filter = SyncDestinationUsername.not_in(items)
     expected = NOT_IN.format("syncDestinationUsername", *items)
     assert str(_filter) == expected

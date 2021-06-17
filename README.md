@@ -2,7 +2,7 @@
 # py42, the official Code42 Python SDK
 
 ![Build status](https://github.com/code42/py42/workflows/build/badge.svg)
-[![codecov.io](https://codecov.io/github/code42/py42/coverage.svg?branch=master)](https://codecov.io/github/code42/py42?branch=master)
+[![codecov.io](https://codecov.io/github/code42/py42/coverage.svg?branch=main)](https://codecov.io/github/code42/py42?branch=main)
 [![versions](https://img.shields.io/pypi/pyversions/py42.svg)](https://pypi.org/project/py42/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Documentation Status](https://readthedocs.org/projects/py42/badge/?version=latest)](https://py42docs.code42.com/en/latest/?badge=latest)

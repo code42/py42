@@ -7,7 +7,7 @@
 
 ## Licensing
 
-This project uses the [MIT License](https://github.com/code42/py42/blob/master/LICENSE.md).
+This project uses the [MIT License](https://github.com/code42/py42/blob/main/LICENSE.md).
 
 ## Installation
 

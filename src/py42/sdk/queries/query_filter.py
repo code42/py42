@@ -330,15 +330,10 @@ class QueryFilterTimestampField(object):
             value = convert_datetime_to_epoch(value)
         date_from_value = datetime.utcfromtimestamp(value)
         start_time = datetime(
-            date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0,
+            date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0
         )
         end_time = datetime(
-            date_from_value.year,
-            date_from_value.month,
-            date_from_value.day,
-            23,
-            59,
-            59,
+            date_from_value.year, date_from_value.month, date_from_value.day, 23, 59, 59
         )
         formatted_start_time = cls._convert_datetime_to_timestamp(start_time)
         formatted_end_time = cls._convert_datetime_to_timestamp(end_time)

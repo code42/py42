@@ -10,9 +10,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Unreleased
 
-### Added
+### Changed
 
-You can now use microsecond precision
+- The `DateObserved` alert query filter now parses timestamps using microsecond precision.
 
 ## 1.15.0 - 2021-06-16
 

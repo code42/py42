@@ -42,7 +42,7 @@ def test_parse_timestamp_to_milliseconds_precision_returns_expected_timestamp_wi
 
 def test_parse_timestamp_to_milliseconds_precision_returns_expected_timestamp_with_str_format_time():
     assert (
-        util.parse_timestamp_to_milliseconds_precision(u"2020-09-09 12:12:21")
+        util.parse_timestamp_to_milliseconds_precision("2020-09-09 12:12:21")
         == "2020-09-09T12:12:21.000Z"
     )
 
@@ -63,7 +63,7 @@ def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_wi
 
 def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_with_str_format_time():
     assert (
-        util.parse_timestamp_to_microseconds_precision(u"2020-09-09 12:12:21")
+        util.parse_timestamp_to_microseconds_precision("2020-09-09 12:12:21")
         == "2020-09-09T12:12:21.000000Z"
     )
 

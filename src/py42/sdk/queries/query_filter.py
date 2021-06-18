@@ -253,6 +253,10 @@ class QueryFilterTimestampField(object):
 
     _term = u"override_timestamp_field_name"
 
+    @staticmethod
+    def _parse_timestamp(value):
+        return parse_timestamp_to_milliseconds_precision(value)
+
     @classmethod
     def on_or_after(cls, value):
         """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
@@ -265,7 +269,7 @@ class QueryFilterTimestampField(object):
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        formatted_timestamp = parse_timestamp_to_milliseconds_precision(value)
+        formatted_timestamp = cls._parse_timestamp(value)
         return create_on_or_after_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
@@ -280,7 +284,7 @@ class QueryFilterTimestampField(object):
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        formatted_timestamp = parse_timestamp_to_milliseconds_precision(value)
+        formatted_timestamp = cls._parse_timestamp(value)
         return create_on_or_before_filter_group(cls._term, formatted_timestamp)
 
     @classmethod
@@ -290,14 +294,16 @@ class QueryFilterTimestampField(object):
         the provided ``start_value`` and ``end_value``.
 
         Args:
-            start_value (str or int or float or datetime): The start value used to filter results.
-            end_value (str or int or float or datetime): The end value used to filter results.
+            start_value (str or int or float or datetime): The start value used to
+                filter results.
+            end_value (str or int or float or datetime): The end value used to
+                filter results.
 
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        formatted_start_time = parse_timestamp_to_milliseconds_precision(start_value)
-        formatted_end_time = parse_timestamp_to_milliseconds_precision(end_value)
+        formatted_start_time = cls._parse_timestamp(start_value)
+        formatted_end_time = cls._parse_timestamp(end_value)
         return create_in_range_filter_group(
             cls._term, formatted_start_time, formatted_end_time
         )

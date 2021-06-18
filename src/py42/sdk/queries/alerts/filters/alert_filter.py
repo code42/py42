@@ -3,6 +3,7 @@ from py42.sdk.queries.query_filter import create_query_filter
 from py42.sdk.queries.query_filter import QueryFilterStringField
 from py42.sdk.queries.query_filter import QueryFilterTimestampField
 from py42.util import get_attribute_keys_from_class
+from py42.util import parse_timestamp_to_microseconds_precision
 
 
 def create_contains_filter_group(term, value):
@@ -74,7 +75,15 @@ class AlertQueryFilterStringField(QueryFilterStringField):
         return create_not_contains_filter_group(cls._term, value)
 
 
-class DateObserved(QueryFilterTimestampField):
+class AlertQueryFilterTimestampField(QueryFilterTimestampField):
+    """Helper class for creating alert filters where the search value is a timestamp."""
+
+    @staticmethod
+    def _parse_timestamp(value):
+        return parse_timestamp_to_microseconds_precision(value)
+
+
+class DateObserved(AlertQueryFilterTimestampField):
     """Class that filters alerts based on the timestamp the alert was triggered."""
 
     _term = u"createdAt"

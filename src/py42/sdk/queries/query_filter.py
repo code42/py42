@@ -257,6 +257,10 @@ class QueryFilterTimestampField(object):
     def _parse_timestamp(value):
         return parse_timestamp_to_milliseconds_precision(value)
 
+    @staticmethod
+    def _convert_datetime_to_timestamp(value):
+        return convert_datetime_to_timestamp_str(value)
+
     @classmethod
     def on_or_after(cls, value):
         """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful
@@ -326,13 +330,18 @@ class QueryFilterTimestampField(object):
             value = convert_datetime_to_epoch(value)
         date_from_value = datetime.utcfromtimestamp(value)
         start_time = datetime(
-            date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0
+            date_from_value.year, date_from_value.month, date_from_value.day, 0, 0, 0,
         )
         end_time = datetime(
-            date_from_value.year, date_from_value.month, date_from_value.day, 23, 59, 59
+            date_from_value.year,
+            date_from_value.month,
+            date_from_value.day,
+            23,
+            59,
+            59,
         )
-        formatted_start_time = convert_datetime_to_timestamp_str(start_time)
-        formatted_end_time = convert_datetime_to_timestamp_str(end_time)
+        formatted_start_time = cls._convert_datetime_to_timestamp(start_time)
+        formatted_end_time = cls._convert_datetime_to_timestamp(end_time)
         return create_in_range_filter_group(
             cls._term, formatted_start_time, formatted_end_time
         )

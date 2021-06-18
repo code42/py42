@@ -3,6 +3,7 @@ from py42.sdk.queries.query_filter import create_query_filter
 from py42.sdk.queries.query_filter import QueryFilterStringField
 from py42.sdk.queries.query_filter import QueryFilterTimestampField
 from py42.util import get_attribute_keys_from_class
+from py42.util import MICROSECOND_FORMAT
 from py42.util import parse_timestamp_to_microseconds_precision
 
 
@@ -81,6 +82,10 @@ class AlertQueryFilterTimestampField(QueryFilterTimestampField):
     @staticmethod
     def _parse_timestamp(value):
         return parse_timestamp_to_microseconds_precision(value)
+
+    @staticmethod
+    def _convert_datetime_to_timestamp(value):
+        return value.strftime(MICROSECOND_FORMAT)
 
 
 class DateObserved(AlertQueryFilterTimestampField):

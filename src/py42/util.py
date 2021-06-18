@@ -65,7 +65,7 @@ def convert_datetime_to_timestamp_str(date):
         (str): A str representing the given date. Example output looks like
         '2020-03-25T15:29:04.465Z'.
     """
-    prefix = date.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
+    prefix = date.strftime(MILLISECOND_FORMAT)[:-3]
     return u"{}Z".format(prefix)
 
 

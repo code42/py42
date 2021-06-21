@@ -3,9 +3,9 @@ from __future__ import print_function
 import json
 from datetime import datetime
 
-from py42._compat import str
+from py42._compat import string_type
 
-_MICROSECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%fZ"
+MICROSECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%fZ"
 DATE_STR_FORMAT = u"%Y-%m-%d %H:%M:%S"
 
 
@@ -64,7 +64,7 @@ def convert_datetime_to_timestamp_str(date):
         (str): A str representing the given date. Example output looks like
         '2020-03-25T15:29:04.465Z'.
     """
-    prefix = date.strftime(u"%Y-%m-%dT%H:%M:%S.%f")[:-3]
+    prefix = date.strftime(MICROSECOND_FORMAT)[:-4]
     return u"{}Z".format(prefix)
 
 
@@ -108,7 +108,7 @@ def parse_timestamp_to_milliseconds_precision(timestamp):
         return convert_timestamp_to_str(timestamp)
     elif isinstance(timestamp, datetime):
         return convert_datetime_to_timestamp_str(timestamp)
-    elif isinstance(timestamp, str):
+    elif isinstance(timestamp, string_type):
         return convert_datetime_to_timestamp_str(
             datetime.strptime(timestamp, DATE_STR_FORMAT)
         )
@@ -116,10 +116,10 @@ def parse_timestamp_to_milliseconds_precision(timestamp):
 
 def parse_timestamp_to_microseconds_precision(timestamp):
     if isinstance(timestamp, (int, float)):
-        return datetime.utcfromtimestamp(timestamp).strftime(_MICROSECOND_FORMAT)
+        return datetime.utcfromtimestamp(timestamp).strftime(MICROSECOND_FORMAT)
     elif isinstance(timestamp, datetime):
-        return timestamp.strftime(_MICROSECOND_FORMAT)
-    elif isinstance(timestamp, str):
+        return timestamp.strftime(MICROSECOND_FORMAT)
+    elif isinstance(timestamp, string_type):
         return datetime.strptime(timestamp, DATE_STR_FORMAT).strftime(
-            _MICROSECOND_FORMAT
+            MICROSECOND_FORMAT
         )

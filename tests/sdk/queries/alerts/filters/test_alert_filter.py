@@ -2,8 +2,6 @@ from datetime import datetime
 from time import time
 
 from tests.sdk.queries.conftest import CONTAINS
-from tests.sdk.queries.conftest import format_datetime
-from tests.sdk.queries.conftest import format_timestamp
 from tests.sdk.queries.conftest import IN_RANGE
 from tests.sdk.queries.conftest import IS
 from tests.sdk.queries.conftest import IS_IN
@@ -27,6 +25,18 @@ from py42.sdk.queries.alerts.filters.alert_filter import create_contains_filter_
 from py42.sdk.queries.alerts.filters.alert_filter import (
     create_not_contains_filter_group,
 )
+from py42.util import MICROSECOND_FORMAT
+
+
+def format_timestamp_with_microseconds(test_time):
+    test_date = datetime.utcfromtimestamp(test_time)
+    return format_datetime_with_microseconds(test_date)
+
+
+def format_datetime_with_microseconds(test_date):
+    prefix = test_date.strftime(MICROSECOND_FORMAT)
+    timestamp_str = "{}".format(prefix)
+    return timestamp_str
 
 
 def test_create_contains_filter_group_returns_filter_group_with_correct_json_representation():
@@ -52,7 +62,7 @@ def test_create_not_contains_filter_group_returns_filter_group_with_correct_json
 
 def test_date_observed_on_or_after_str_gives_correct_json_representation():
     test_time = time()
-    formatted = format_timestamp(test_time)
+    formatted = format_timestamp_with_microseconds(test_time)
     _filter = DateObserved.on_or_after(test_time)
     expected = ON_OR_AFTER.format("createdAt", formatted)
     assert str(_filter) == expected
@@ -60,7 +70,7 @@ def test_date_observed_on_or_after_str_gives_correct_json_representation():
 
 def test_date_observed_on_or_before_str_gives_correct_json_representation():
     test_time = time()
-    formatted = format_timestamp(test_time)
+    formatted = format_timestamp_with_microseconds(test_time)
     _filter = DateObserved.on_or_before(test_time)
     expected = ON_OR_BEFORE.format("createdAt", formatted)
     assert str(_filter) == expected
@@ -73,8 +83,8 @@ def test_date_observed_does_not_have_within_the_last_option():
 def test_date_observed_in_range_str_gives_correct_json_representation():
     test_before_time = time()
     test_after_time = time() + 30  # make sure timestamps are actually different
-    formatted_before = format_timestamp(test_before_time)
-    formatted_after = format_timestamp(test_after_time)
+    formatted_before = format_timestamp_with_microseconds(test_before_time)
+    formatted_after = format_timestamp_with_microseconds(test_after_time)
     _filter = DateObserved.in_range(test_before_time, test_after_time)
     expected = IN_RANGE.format("createdAt", formatted_before, formatted_after)
     assert str(_filter) == expected
@@ -85,8 +95,8 @@ def test_date_observed_on_same_day_str_gives_correct_json_representation():
     test_date = datetime.utcfromtimestamp(test_time)
     start_time = datetime(test_date.year, test_date.month, test_date.day, 0, 0, 0)
     end_time = datetime(test_date.year, test_date.month, test_date.day, 23, 59, 59)
-    formatted_before = format_datetime(start_time)
-    formatted_after = format_datetime(end_time)
+    formatted_before = format_datetime_with_microseconds(start_time)
+    formatted_after = format_datetime_with_microseconds(end_time)
     _filter = DateObserved.on_same_day(test_time)
     expected = IN_RANGE.format("createdAt", formatted_before, formatted_after)
     assert str(_filter) == expected

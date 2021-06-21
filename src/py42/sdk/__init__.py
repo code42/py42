@@ -12,7 +12,7 @@ from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
 from py42.services import Services
 from py42.services._auth import CustomJWTAuth
-from py42.services._auth import V3Auth
+from py42.services._auth import BearerAuth
 from py42.services._connection import Connection
 from py42.services._keyvaluestore import KeyValueStoreService
 from py42.services.administration import AdministrationService
@@ -108,10 +108,10 @@ class SDKClient(object):
         if username and password:
             basic_auth = HTTPBasicAuth(username, password)
         auth_connection = Connection.from_host_address(host_address, auth=basic_auth)
-        v3_auth = V3Auth(auth_connection, totp)
-        main_connection = Connection.from_host_address(host_address, auth=v3_auth)
+        bearer_auth = BearerAuth(auth_connection, totp)
+        main_connection = Connection.from_host_address(host_address, auth=bearer_auth)
 
-        return cls(main_connection, v3_auth)
+        return cls(main_connection, bearer_auth)
 
     @classmethod
     def from_jwt_provider(cls, host_address, jwt_provider):

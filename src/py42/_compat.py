@@ -35,7 +35,7 @@ else:
     from urllib.parse import urlencode
 
     str = str
-    str_options = str
+    str_options = (str,)
 
     import reprlib
 

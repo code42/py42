@@ -111,9 +111,9 @@ def test_filter_group_from_dict_gives_correct_json_representation(query_filter):
         "filterClause": "AND",
         "filters": [{"operator": "IS", "term": "testterm", "value": "testval"}],
     }
-    filter_group_json_str = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"testterm", "value":"testval"}]}'
+    expected = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"testterm", "value":"testval"}]}'
     filter_group = FilterGroup.from_dict(filter_group_dict)
-    assert str(filter_group) == filter_group_json_str
+    assert str(filter_group) == expected
 
 
 def test_filter_group_dict_gives_expected_dict_representation(query_filter):
@@ -157,10 +157,10 @@ def test_filter_group_with_multiple_filters_and_specified_str_gives_correct_json
 def test_filter_group_with_duplicate_filters_and_specified_str_gives_correct_json_representation(
     query_filter,
 ):
-    json_single_filter_group = JSON_FILTER_GROUP_BASE.format("AND", JSON_QUERY_FILTER)
+    expected = JSON_FILTER_GROUP_BASE.format("AND", JSON_QUERY_FILTER)
     assert (
         str(create_filter_group([query_filter, query_filter, query_filter], "AND"))
-        == json_single_filter_group
+        == expected
     )
 
 
@@ -177,10 +177,10 @@ def test_filter_group_with_multiple_filters_or_specified_str_gives_correct_json_
 def test_filter_group_with_duplicate_filters_or_specified_str_gives_correct_json_representation(
     query_filter,
 ):
-    json_single_filter_group = JSON_FILTER_GROUP_BASE.format("OR", JSON_QUERY_FILTER)
+    expected = JSON_FILTER_GROUP_BASE.format("OR", JSON_QUERY_FILTER)
     assert (
         str(create_filter_group([query_filter, query_filter, query_filter], "OR"))
-        == json_single_filter_group
+        == expected
     )
 
 
@@ -432,7 +432,7 @@ class TestQueryFilterTimestampField:
         ],
     )
     def test_on_or_after(self, timestamp):
-        filter_query = {
+        expected = {
             "filterClause": "AND",
             "filters": [
                 {
@@ -444,7 +444,7 @@ class TestQueryFilterTimestampField:
         }
 
         qf = QueryFilterTimestampField.on_or_after(timestamp)
-        assert dict(qf) == filter_query
+        assert dict(qf) == expected
 
     @pytest.mark.parametrize(
         "timestamp",
@@ -456,7 +456,7 @@ class TestQueryFilterTimestampField:
         ],
     )
     def test_on_or_before(self, timestamp):
-        filter_query = {
+        expected = {
             "filterClause": "AND",
             "filters": [
                 {
@@ -466,7 +466,7 @@ class TestQueryFilterTimestampField:
                 }
             ],
         }
-        assert dict(QueryFilterTimestampField.on_or_before(timestamp)) == filter_query
+        assert dict(QueryFilterTimestampField.on_or_before(timestamp)) == expected
 
     @pytest.mark.parametrize(
         "start_timestamp, end_timestamp",
@@ -481,7 +481,7 @@ class TestQueryFilterTimestampField:
         ],
     )
     def test_in_range(self, start_timestamp, end_timestamp):
-        filter_query = {
+        expected = {
             "filterClause": "AND",
             "filters": [
                 {
@@ -499,7 +499,7 @@ class TestQueryFilterTimestampField:
 
         assert (
             dict(QueryFilterTimestampField.in_range(start_timestamp, end_timestamp))
-            == filter_query
+            == expected
         )
 
     @pytest.mark.parametrize(
@@ -512,7 +512,7 @@ class TestQueryFilterTimestampField:
         ],
     )
     def test_on_same_day(self, timestamp):
-        filter_query = {
+        expected = {
             "filterClause": "AND",
             "filters": [
                 {
@@ -527,10 +527,10 @@ class TestQueryFilterTimestampField:
                 },
             ],
         }
-        assert dict(QueryFilterTimestampField.on_same_day(timestamp)) == filter_query
+        assert dict(QueryFilterTimestampField.on_same_day(timestamp)) == expected
 
     def test_on_or_after_with_decimals(self):
-        filter_query = {
+        expected = {
             "filterClause": "AND",
             "filters": [
                 {
@@ -542,10 +542,10 @@ class TestQueryFilterTimestampField:
         }
 
         qf = QueryFilterTimestampField.on_or_after(1599736333.123456)
-        assert dict(qf) == filter_query
+        assert dict(qf) == expected
 
     def test_on_or_before_with_decimals(self):
-        filter_query = {
+        expected = {
             "filterClause": "AND",
             "filters": [
                 {
@@ -556,12 +556,11 @@ class TestQueryFilterTimestampField:
             ],
         }
         assert (
-            dict(QueryFilterTimestampField.on_or_before(1599736333.123456))
-            == filter_query
+            dict(QueryFilterTimestampField.on_or_before(1599736333.123456)) == expected
         )
 
     def test_in_range_with_decimals(self):
-        filter_query = {
+        expected = {
             "filterClause": "AND",
             "filters": [
                 {
@@ -579,5 +578,5 @@ class TestQueryFilterTimestampField:
 
         assert (
             dict(QueryFilterTimestampField.in_range(1599736333.123456, 1599739994.6789))
-            == filter_query
+            == expected
         )

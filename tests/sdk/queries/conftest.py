@@ -5,7 +5,7 @@ import pytest
 
 from py42.sdk.queries.query_filter import FilterGroup
 from py42.sdk.queries.query_filter import QueryFilter
-from py42.util import MILLISECOND_FORMAT
+from py42.util import MICROSECOND_FORMAT
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
@@ -62,6 +62,6 @@ def format_timestamp(test_time):
 
 
 def format_datetime(test_date):
-    prefix = test_date.strftime(MILLISECOND_FORMAT)[:-3]
+    prefix = test_date.strftime(MICROSECOND_FORMAT)[:-4]
     timestamp_str = "{}Z".format(prefix)
     return timestamp_str

@@ -16,7 +16,9 @@ if is_py2:
     from urlparse import urljoin
     from urlparse import urlparse
 
+    original_str = str
     str = unicode
+    str_options = (original_str, str)
 
     import repr as reprlib
 
@@ -33,6 +35,7 @@ else:
     from urllib.parse import urlencode
 
     str = str
+    str_options = str
 
     import reprlib
 

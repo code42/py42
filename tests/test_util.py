@@ -43,6 +43,11 @@ def test_parse_timestamp_to_milliseconds_precision_returns_expected_timestamp_wi
     assert actual == "2020-09-09T12:12:21.000Z"
 
 
+def test_parse_timestamp_to_milliseconds_precision_when_given_unicode_returns_expected_timestamp_with_str_format_time():
+    actual = util.parse_timestamp_to_milliseconds_precision(u"2020-09-09 12:12:21")
+    assert actual == "2020-09-09T12:12:21.000Z"
+
+
 def test_parse_timestamp_to_milliseconds_precision_returns_expected_timestamp_with_datetime_time():
     dt = datetime.strptime("2020-09-09 12:12:21", "%Y-%m-%d %H:%M:%S")
     actual = util.parse_timestamp_to_milliseconds_precision(dt)
@@ -56,6 +61,11 @@ def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_wi
 
 def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_with_str_format_time():
     actual = util.parse_timestamp_to_microseconds_precision("2020-09-09 12:12:21")
+    assert actual == "2020-09-09T12:12:21.000000Z"
+
+
+def test_parse_timestamp_to_microseconds_precision_when_given_unicode_returns_expected_timestamp_with_str_format_time():
+    actual = util.parse_timestamp_to_microseconds_precision(u"2020-09-09 12:12:21")
     assert actual == "2020-09-09T12:12:21.000000Z"
 
 

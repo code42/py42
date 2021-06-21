@@ -3,7 +3,7 @@ from __future__ import print_function
 import json
 from datetime import datetime
 
-from py42._compat import str
+from py42._compat import str_options
 
 MILLISECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%f"
 MICROSECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%fZ"
@@ -109,7 +109,7 @@ def parse_timestamp_to_milliseconds_precision(timestamp):
         return convert_timestamp_to_str(timestamp)
     elif isinstance(timestamp, datetime):
         return convert_datetime_to_timestamp_str(timestamp)
-    elif isinstance(timestamp, str):
+    elif isinstance(timestamp, str_options):
         return convert_datetime_to_timestamp_str(
             datetime.strptime(timestamp, DATE_STR_FORMAT)
         )
@@ -120,7 +120,7 @@ def parse_timestamp_to_microseconds_precision(timestamp):
         return datetime.utcfromtimestamp(timestamp).strftime(MICROSECOND_FORMAT)
     elif isinstance(timestamp, datetime):
         return timestamp.strftime(MICROSECOND_FORMAT)
-    elif isinstance(timestamp, str):
+    elif isinstance(timestamp, str_options):
         return datetime.strptime(timestamp, DATE_STR_FORMAT).strftime(
             MICROSECOND_FORMAT
         )

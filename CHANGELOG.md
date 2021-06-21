@@ -14,6 +14,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - The `DateObserved` alert query filter now parses timestamps using microsecond precision.
 
+### Fixed
+
+- Python2.7 bug where non-unicode `str` timestamps would fail when used in a query filter.
+
 ## 1.15.0 - 2021-06-16
 
 ### Fixed

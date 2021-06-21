@@ -13,6 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Changed
 
 - The `DateObserved` alert query filter now parses timestamps using microsecond precision.
+- Change JWT auth token label from `v3_user_token` to `Bearer` when authenticating against the `/c42api/v3/auth/jwt` endpoint.
 
 ### Fixed
 

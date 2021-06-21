@@ -1,8 +1,8 @@
 import pytest
 from requests import Request
 
-from py42.services._auth import CustomJWTAuth
 from py42.services._auth import BearerAuth
+from py42.services._auth import CustomJWTAuth
 
 
 @pytest.fixture

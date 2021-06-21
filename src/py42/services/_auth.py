@@ -28,9 +28,9 @@ class C42RenewableAuth(AuthBase):
         raise NotImplementedError()
 
 
-class V3Auth(C42RenewableAuth):
+class BearerAuth(C42RenewableAuth):
     def __init__(self, auth_connection, totp=None):
-        super(V3Auth, self).__init__()
+        super(BearerAuth, self).__init__()
         self._auth_connection = auth_connection
         self._totp = totp if callable(totp) else lambda: totp
 
@@ -40,7 +40,7 @@ class V3Auth(C42RenewableAuth):
         current_token = self._totp()
         headers = {"totp-auth": str(current_token)} if current_token else None
         response = self._auth_connection.get(uri, params=params, headers=headers)
-        return u"v3_user_token {}".format(response["v3_user_token"])
+        return u"Bearer {}".format(response["v3_user_token"])
 
 
 class CustomJWTAuth(C42RenewableAuth):
@@ -49,4 +49,4 @@ class CustomJWTAuth(C42RenewableAuth):
         self._jwt_provider = jwt_provider
 
     def _get_credentials(self):
-        return u"v3_user_token {}".format(self._jwt_provider())
+        return u"Bearer {}".format(self._jwt_provider())

@@ -3,7 +3,6 @@ from datetime import datetime
 
 from py42._compat import str
 from py42._compat import string_type
-from py42._compat import string_type
 from py42.util import convert_datetime_to_epoch
 from py42.util import convert_datetime_to_timestamp_str
 from py42.util import DATE_STR_FORMAT

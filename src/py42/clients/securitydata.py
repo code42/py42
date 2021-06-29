@@ -1,3 +1,4 @@
+import re
 from threading import Lock
 
 from py42.exceptions import Py42ChecksumNotFoundError
@@ -202,7 +203,7 @@ class SecurityDataClient(object):
             :class:`py42.response.Py42Response`: A response containing page of events.
         """
 
-        query.page_token = page_token
+        query.page_token = _escape_quote_chars_in_token(page_token)
         response = self._file_event_service.search(query)
         return response
 
@@ -468,3 +469,18 @@ class PlanStorageInfo(object):
     def node_guid(self):
         """The GUID of the storage node containing the archive."""
         return self._node_guid
+
+
+def _escape_quote_chars_in_token(string):
+    """
+    The `nextPgToken` returned in Forensic Search requests with > 10k results is the eventId
+    of the last event returned in the response. Some eventIds have double-quote chars in
+    them, which need to be escaped when passing the token in the next search request.
+    """
+    unescaped_quote_pattern = r'[^\\]"'
+
+    return re.sub(
+        pattern=unescaped_quote_pattern,
+        repl=lambda match: match.group().replace('"', '\\"'),
+        string=string
+    )

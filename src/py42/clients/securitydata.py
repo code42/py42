@@ -481,6 +481,6 @@ def _escape_quote_chars_in_token(token):
 
     return re.sub(
         pattern=unescaped_quote_pattern,
-        repl=lambda match: match.group().replace(u'"', r'\"'),
-        string=token
+        repl=lambda match: match.group().replace(u'"', r"\""),
+        string=token,
     )

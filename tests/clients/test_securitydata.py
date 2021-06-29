@@ -1387,10 +1387,7 @@ class TestSecurityClient(object):
 
     @pytest.mark.parametrize(
         "token",
-        [
-            ('1234_"abcde"', r'1234_\"abcde\"'),
-            (r'1234_\"abcde\"', r'1234_\"abcde\"'),
-        ],
+        [('1234_"abcde"', r"1234_\"abcde\""), (r"1234_\"abcde\"", r"1234_\"abcde\"")],
     )
     def test_search_all_file_events_handles_unescaped_quote_chars_in_token(
         self,
@@ -1412,5 +1409,7 @@ class TestSecurityClient(object):
         security_client.search_all_file_events(FileEventQuery.all(), token[0])
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data='{{"groupClause":"AND", "groups":[], "pgToken":"{0}", "pgSize":10000}}'.format(token[1]),
+            data='{{"groupClause":"AND", "groups":[], "pgToken":"{0}", "pgSize":10000}}'.format(
+                token[1]
+            ),
         )

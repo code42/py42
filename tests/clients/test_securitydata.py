@@ -1412,5 +1412,5 @@ class TestSecurityClient(object):
         security_client.search_all_file_events(FileEventQuery.all(), token[0])
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data=f'{{"groupClause":"AND", "groups":[], "pgToken":"{token[1]}", "pgSize":10000}}',
+            data='{{"groupClause":"AND", "groups":[], "pgToken":"{0}", "pgSize":10000}}'.format(token[1]),
         )

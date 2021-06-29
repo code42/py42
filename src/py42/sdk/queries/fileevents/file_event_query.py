@@ -35,7 +35,7 @@ class FileEventQuery(BaseQuery):
             str(group_item) for group_item in self._filter_group_list
         )
         if self.page_token is not None:
-            paging_prop = u'"pgToken":"{}"'.format(self.page_token)
+            paging_prop = u'"srtDir": "{}", "srtKey": "{}", "pgToken":"{}"'.format(self.sort_direction, self.sort_key, self.page_token)
 
         else:
             paging_prop = u'"srtDir":"{}", "srtKey":"{}", "pgNum":{}'.format(

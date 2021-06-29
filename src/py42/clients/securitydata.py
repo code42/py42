@@ -471,7 +471,7 @@ class PlanStorageInfo(object):
         return self._node_guid
 
 
-def _escape_quote_chars_in_token(string):
+def _escape_quote_chars_in_token(token):
     """
     The `nextPgToken` returned in Forensic Search requests with > 10k results is the eventId
     of the last event returned in the response. Some eventIds have double-quote chars in
@@ -482,5 +482,5 @@ def _escape_quote_chars_in_token(string):
     return re.sub(
         pattern=unescaped_quote_pattern,
         repl=lambda match: match.group().replace('"', r'\"'),
-        string=string
+        string=token
     )

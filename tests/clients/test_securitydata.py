@@ -1388,8 +1388,8 @@ class TestSecurityClient(object):
     @pytest.mark.parametrize(
         "token",
         [
-            ('1234_"abcde"', '1234_\\"abcde\\"'),
-            ('1234_\\"abcde\\"', '1234_\\"abcde\\"'),
+            ('1234_"abcde"', r'1234_\"abcde\"'),
+            (r'1234_\"abcde\"', r'1234_\"abcde\"'),
         ],
     )
     def test_search_all_file_events_handles_unescaped_quote_chars_in_token(

@@ -21,7 +21,7 @@ FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 RAW_QUERY = "RAW JSON QUERY"
 USER_UID = "user-uid"
 PDS_EXCEPTION_MESSAGE = (
-    u"No file with hash {0} available for download on any storage node."
+    "No file with hash {0} available for download on any storage node."
 )
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION = """{
         "securityPlanLocationsByDestination": [
@@ -967,7 +967,7 @@ class TestSecurityClient(object):
         with pytest.raises(Py42ChecksumNotFoundError) as e:
             security_client.stream_file_by_sha256("shahash")
 
-        assert u"No files found with SHA256 checksum" in e.value.args[0]
+        assert "No files found with SHA256 checksum" in e.value.args[0]
 
     def test_stream_file_by_sha256_when_file_versions_returns_empty_response_gets_version_from_other_location(
         self,
@@ -1206,7 +1206,7 @@ class TestSecurityClient(object):
         with pytest.raises(Py42ChecksumNotFoundError) as e:
             security_client.stream_file_by_md5("mdhash")
 
-        assert u"No files found with MD5 checksum" in e.value.args[0]
+        assert "No files found with MD5 checksum" in e.value.args[0]
 
     def test_stream_file_by_md5_when_file_versions_returns_empty_response_gets_version_from_other_location(
         self,
@@ -1384,3 +1384,54 @@ class TestSecurityClient(object):
             data='{"groupClause":"AND", "groups":[], "pgToken":"abc", "pgSize":10000}',
         )
         assert response is successful_response
+
+    def test_search_all_file_events_handles_unescaped_quote_chars_in_token(
+        self,
+        connection,
+        security_service,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+    ):
+        file_event_service = FileEventService(connection)
+        security_client = SecurityDataClient(
+            security_service,
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        unescaped_token = '1234_"abcde"'
+        escaped_token = r"1234_\"abcde\""
+        security_client.search_all_file_events(FileEventQuery.all(), unescaped_token)
+        connection.post.assert_called_once_with(
+            FILE_EVENT_URI,
+            data='{{"groupClause":"AND", "groups":[], "pgToken":"{0}", "pgSize":10000}}'.format(
+                escaped_token
+            ),
+        )
+
+    def test_search_all_file_events_handles_escaped_quote_chars_in_token(
+        self,
+        connection,
+        security_service,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+    ):
+        file_event_service = FileEventService(connection)
+        security_client = SecurityDataClient(
+            security_service,
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        escaped_token = r"1234_\"abcde\""
+        security_client.search_all_file_events(FileEventQuery.all(), escaped_token)
+        connection.post.assert_called_once_with(
+            FILE_EVENT_URI,
+            data='{{"groupClause":"AND", "groups":[], "pgToken":"{0}", "pgSize":10000}}'.format(
+                escaped_token
+            ),
+        )

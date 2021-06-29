@@ -12,7 +12,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Fixed
 
-- `sdk.securitydata.search_all_file_events()` now automatically escapes double-quote characters in the `page_token` param when passed.
+- `sdk.securitydata.search_all_file_events()` now automatically escapes double-quote characters in the `page_token` param
+  when passed.
+
+- An issue where `FileEventQuery.sort_direction` and `FileEventQuery.sort_key` properties were not applied to searches
+  when a `page_token` was passed in calls to `sdk.securitydata.search_all_file_events()`.
 
 ## 1.15.1 - 2021-06-22
 

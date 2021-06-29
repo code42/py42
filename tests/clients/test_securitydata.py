@@ -1385,13 +1385,8 @@ class TestSecurityClient(object):
         )
         assert response is successful_response
 
-    @pytest.mark.parametrize(
-        "token",
-        [('1234_"abcde"', r"1234_\"abcde\""), (r"1234_\"abcde\"", r"1234_\"abcde\"")],
-    )
     def test_search_all_file_events_handles_unescaped_quote_chars_in_token(
         self,
-        token,
         connection,
         security_service,
         preservation_data_service,
@@ -1406,10 +1401,37 @@ class TestSecurityClient(object):
             saved_search_service,
             storage_service_factory,
         )
-        security_client.search_all_file_events(FileEventQuery.all(), token[0])
+        unescaped_token = '1234_"abcde"'
+        escaped_token = r"1234_\"abcde\""
+        security_client.search_all_file_events(FileEventQuery.all(), unescaped_token)
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
             data='{{"groupClause":"AND", "groups":[], "pgToken":"{0}", "pgSize":10000}}'.format(
-                token[1]
+                escaped_token
+            ),
+        )
+
+    def test_search_all_file_events_handles_escaped_quote_chars_in_token(
+        self,
+        connection,
+        security_service,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+    ):
+        file_event_service = FileEventService(connection)
+        security_client = SecurityDataClient(
+            security_service,
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        escaped_token = r"1234_\"abcde\""
+        security_client.search_all_file_events(FileEventQuery.all(), escaped_token)
+        connection.post.assert_called_once_with(
+            FILE_EVENT_URI,
+            data='{{"groupClause":"AND", "groups":[], "pgToken":"{0}", "pgSize":10000}}'.format(
+                escaped_token
             ),
         )

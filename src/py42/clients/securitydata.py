@@ -196,8 +196,7 @@ class SecurityDataClient(object):
             page_token (str, optional): A token used to indicate the starting point for
                 additional page results. For the first page, do not pass ``page_token``. For
                 all consecutive pages, pass the token from the previous response from
-                field ``nextPgToken``. When using ``page_token``, any sorting parameters from
-                the `FileEventQuery` will be ignored. Defaults to empty string.
+                field ``nextPgToken``. Defaults to empty string.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing page of events.

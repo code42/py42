@@ -1349,7 +1349,7 @@ class TestSecurityClient(object):
         response = security_client.search_all_file_events(query)
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data='{"groupClause":"AND", "groups":[], "srtDir": "asc", "srtKey": "eventId", "pgToken":"", "pgSize":10000}',
+            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"", "pgSize":10000}',
         )
         assert response is successful_response
 
@@ -1381,7 +1381,7 @@ class TestSecurityClient(object):
         response = security_client.search_all_file_events(query, "abc")
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data='{"groupClause":"AND", "groups":[], "srtDir": "asc", "srtKey": "eventId", "pgToken":"abc", "pgSize":10000}',
+            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}',
         )
         assert response is successful_response
 
@@ -1406,7 +1406,7 @@ class TestSecurityClient(object):
         security_client.search_all_file_events(FileEventQuery.all(), unescaped_token)
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data='{{"groupClause":"AND", "groups":[], "srtDir": "asc", "srtKey": "eventId", "pgToken":"{0}", "pgSize":10000}}'.format(
+            data='{{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"{0}", "pgSize":10000}}'.format(
                 escaped_token
             ),
         )
@@ -1431,7 +1431,7 @@ class TestSecurityClient(object):
         security_client.search_all_file_events(FileEventQuery.all(), escaped_token)
         connection.post.assert_called_once_with(
             FILE_EVENT_URI,
-            data='{{"groupClause":"AND", "groups":[], "srtDir": "asc", "srtKey": "eventId", "pgToken":"{0}", "pgSize":10000}}'.format(
+            data='{{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"{0}", "pgSize":10000}}'.format(
                 escaped_token
             ),
         )

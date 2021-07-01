@@ -18,6 +18,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - An issue where `FileEventQuery.sort_direction` and `FileEventQuery.sort_key` properties were not applied to searches
   when a `page_token` was passed in calls to `sdk.securitydata.search_all_file_events()`.
 
+- Methods `sdk.auditlogs.get_all()` and `sdk.auditlogs.get_page()` now honor microseconds when parameters
+  `begin_time` or `end_time` are epoch times.
+
 ## 1.15.1 - 2021-06-22
 
 ### Changed

@@ -333,7 +333,7 @@ class TestAuditLogService(object):
             "/rpc/search/search-audit-log", json=expected_data, headers=None
         )
 
-    def test_get_all_passes_valid_date_range_param_when_begin_and_end_time_are_epoch(
+    def test_get_all_when_begin_and_end_time_are_epoch_passes_valid_date_range_param(
         self, mock_connection
     ):
         service = AuditLogsService(mock_connection)
@@ -348,6 +348,60 @@ class TestAuditLogService(object):
             "dateRange": {
                 "startTime": "2020-06-06T00:00:00.000Z",
                 "endTime": "2020-09-09T12:12:21.000Z",
+            },
+            "eventTypes": [],
+            "actorIds": [],
+            "actorNames": [],
+            "actorIpAddresses": [],
+            "affectedUserIds": [],
+            "affectedUserNames": [],
+        }
+        mock_connection.post.assert_called_once_with(
+            "/rpc/search/search-audit-log", json=expected_data, headers=None
+        )
+
+    def test_get_all_when_begin_and_end_time_are_epoch_with_milliseconds_passes_valid_date_range_param(
+        self, mock_connection
+    ):
+        service = AuditLogsService(mock_connection)
+
+        start_time = 1591401600.123  # 2020-06-06 00:00:00.123456"
+        end_time = 1599653541.443  # 2020-09-09 12:12:21.443234"
+        for _ in service.get_all(begin_time=start_time, end_time=end_time):
+            pass
+        expected_data = {
+            "page": 0,
+            "pageSize": 500,
+            "dateRange": {
+                "startTime": "2020-06-06T00:00:00.123000Z",
+                "endTime": "2020-09-09T12:12:21.443000Z",
+            },
+            "eventTypes": [],
+            "actorIds": [],
+            "actorNames": [],
+            "actorIpAddresses": [],
+            "affectedUserIds": [],
+            "affectedUserNames": [],
+        }
+        mock_connection.post.assert_called_once_with(
+            "/rpc/search/search-audit-log", json=expected_data, headers=None
+        )
+
+    def test_get_all_when_begin_and_end_time_are_epoch_with_microseconds_passes_valid_date_range_param(
+        self, mock_connection
+    ):
+        service = AuditLogsService(mock_connection)
+
+        start_time = 1591401600.123456  # 2020-06-06 00:00:00.123456"
+        end_time = 1599653541.443234  # 2020-09-09 12:12:21.443234"
+        for _ in service.get_all(begin_time=start_time, end_time=end_time):
+            pass
+        expected_data = {
+            "page": 0,
+            "pageSize": 500,
+            "dateRange": {
+                "startTime": "2020-06-06T00:00:00.123456Z",
+                "endTime": "2020-09-09T12:12:21.443234Z",
             },
             "eventTypes": [],
             "actorIds": [],

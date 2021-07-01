@@ -23,7 +23,7 @@ class TestAuditLogService(object):
             "/rpc/search/search-audit-log", json=expected_data, headers=None
         )
 
-    def test_get_all_passes_valid_date_range_param_when_begin_and_end_times_are_given(
+    def test_get_all_when_begin_and_end_times_are_given_passes_valid_date_range_param(
         self, mock_connection
     ):
         service = AuditLogsService(mock_connection)
@@ -36,8 +36,8 @@ class TestAuditLogService(object):
             "page": 0,
             "pageSize": 500,
             "dateRange": {
-                "startTime": "2020-06-06T00:00:00.000Z",
-                "endTime": "2020-09-09T12:12:21.000Z",
+                "startTime": "2020-06-06T00:00:00.000000Z",
+                "endTime": "2020-09-09T12:12:21.000000Z",
             },
             "eventTypes": [],
             "actorIds": [],
@@ -206,7 +206,7 @@ class TestAuditLogService(object):
             "/rpc/search/search-audit-log", json=expected_data, headers=None
         )
 
-    def test_get_page_passes_csv_headers_and_params_when_format_is_specified(
+    def test_get_page_when_format_is_specified_passes_csv_headers_and_params(
         self, mock_connection
     ):
         service = AuditLogsService(mock_connection)
@@ -240,7 +240,7 @@ class TestAuditLogService(object):
             headers={"Accept": "text/csv"},
         )
 
-    def test_get_page_passes_cef_headers_and_params_when_format_is_specified(
+    def test_get_page_when_format_is_specified_passes_cef_headers_and_params(
         self, mock_connection
     ):
         service = AuditLogsService(mock_connection)
@@ -274,7 +274,7 @@ class TestAuditLogService(object):
             headers={"Accept": "text/x-cef"},
         )
 
-    def test_get_page_passes_no_headers_and_params_when_invalid_format_is_specified(
+    def test_get_page_when_invalid_format_is_specified_passes_no_headers_and_params(
         self, mock_connection
     ):
         service = AuditLogsService(mock_connection)
@@ -306,7 +306,7 @@ class TestAuditLogService(object):
             "/rpc/search/search-audit-log", json=expected_data, headers=None
         )
 
-    def test_get_all_passes_valid_date_range_param_when_begin_and_end_time_are_string_type(
+    def test_get_all_when_begin_and_end_time_are_string_type_passes_valid_date_range_param(
         self, mock_connection
     ):
         service = AuditLogsService(mock_connection)
@@ -319,8 +319,8 @@ class TestAuditLogService(object):
             "page": 0,
             "pageSize": 500,
             "dateRange": {
-                "startTime": "2020-06-06T00:00:00.000Z",
-                "endTime": "2020-09-09T12:12:21.000Z",
+                "startTime": "2020-06-06T00:00:00.000000Z",
+                "endTime": "2020-09-09T12:12:21.000000Z",
             },
             "eventTypes": [],
             "actorIds": [],
@@ -346,8 +346,8 @@ class TestAuditLogService(object):
             "page": 0,
             "pageSize": 500,
             "dateRange": {
-                "startTime": "2020-06-06T00:00:00.000Z",
-                "endTime": "2020-09-09T12:12:21.000Z",
+                "startTime": "2020-06-06T00:00:00.000000Z",
+                "endTime": "2020-09-09T12:12:21.000000Z",
             },
             "eventTypes": [],
             "actorIds": [],

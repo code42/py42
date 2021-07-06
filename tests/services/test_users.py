@@ -330,8 +330,10 @@ class TestUserService(object):
     ):
         user_service = UserService(mock_connection)
         mock_connection.put.side_effect = username_must_be_email_error_response
-        with pytest.raises(Py42UsernameMustBeEmailError):
+        with pytest.raises(Py42UsernameMustBeEmailError) as err:
             user_service.update_user("123", username="foo")
+
+        assert str(err.value) == "Username must be an email address."
 
     def test_update_user_when_get_internal_server_error_containing_email_invalid_raises_expected_error(
         self, mock_connection, invalid_email_error_response

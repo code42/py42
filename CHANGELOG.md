@@ -21,6 +21,14 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Methods `sdk.auditlogs.get_all()` and `sdk.auditlogs.get_page()` now honor microseconds when parameters
   `begin_time` or `end_time` are epoch times.
 
+### Added
+
+- Custom exception `Py42InvalidEmailError` when providing an invalid email to `sdk.users.update_user()`.
+
+- Custom exception `Py42InvalidPasswordError` when providing an invalid password to `sdk.users.update_user()`.
+
+- Custom exception `Py42InvalidUsernameError` when providing an invalid username to `sdk.users.update_user()`.
+
 ## 1.15.1 - 2021-06-22
 
 ### Changed

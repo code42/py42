@@ -2,6 +2,9 @@ from py42 import settings
 from py42._compat import quote
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidEmailError
+from py42.exceptions import Py42InvalidPasswordError
+from py42.exceptions import Py42InvalidUsernameError
 from py42.exceptions import Py42OrgNotFoundError
 from py42.exceptions import Py42UserAlreadyExistsError
 from py42.exceptions import Py42UsernameMustBeEmailError
@@ -13,7 +16,6 @@ from py42.services.util import get_all_pages
 class UserService(BaseService):
     """A service for interacting with Code42 user APIs. Use the UserService to create and retrieve
     users. You can also use it to block and deactivate users.
-
     """
 
     def create_user(
@@ -379,6 +381,13 @@ class UserService(BaseService):
         try:
             return self._connection.put(uri, json=data)
         except Py42InternalServerError as err:
-            if u"USERNAME_NOT_AN_EMAIL" in str(err.response.text):
+            response_text = str(err.response.text)
+            if u"USERNAME_NOT_AN_EMAIL" in response_text:
                 raise Py42UsernameMustBeEmailError(err)
+            elif u"EMAIL_INVALID" in response_text:
+                raise Py42InvalidEmailError(email, err)
+            elif u"NEW_PASSWORD_INVALID" in response_text:
+                raise Py42InvalidPasswordError(err)
+            elif u"INVALID_USERNAME" in response_text:
+                raise Py42InvalidUsernameError(err)
             raise

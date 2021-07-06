@@ -246,7 +246,7 @@ class Py42InvalidEmailError(Py42InternalServerError):
 
 
 class Py42InvalidPasswordError(Py42InternalServerError):
-    """An exception raised when a password is not valid."""
+    """An exception raised when trying to set an invalid password as a user's password."""
 
     def __init__(self, exception):
         message = u"Invalid password."
@@ -254,7 +254,7 @@ class Py42InvalidPasswordError(Py42InternalServerError):
 
 
 class Py42InvalidUsernameError(Py42InternalServerError):
-    """An exception raised when a username is not valid."""
+    """An exception raised when trying to set an invalid username as a user's username."""
 
     def __init__(self, exception):
         message = u"Invalid username."

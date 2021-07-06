@@ -7,6 +7,9 @@ import py42.settings
 from py42.exceptions import Py42ActiveLegalHoldError
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InternalServerError
+from py42.exceptions import Py42InvalidEmailError
+from py42.exceptions import Py42InvalidPasswordError
+from py42.exceptions import Py42InvalidUsernameError
 from py42.exceptions import Py42OrgNotFoundError
 from py42.exceptions import Py42UserAlreadyExistsError
 from py42.exceptions import Py42UsernameMustBeEmailError
@@ -27,6 +30,9 @@ MOCK_EMPTY_GET_USER_RESPONSE = '{"totalCount": 3000, "users": []}'
 MOCK_TEXT = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
 MOCK_USER_DUPLICATE_ERROR_TEXT = '{"body": "USER_DUPLICATE"}'
 MOCK_USERNAME_MUST_BE_EMAIL_TEXT = '{"data": [{"name": "USERNAME_NOT_AN_EMAIL"}]}'
+MOCK_INVALID_EMAIL_TEXT = '{"data": [{"name": "EMAIL_INVALID"}]}'
+MOCK_INVALID_PASSWORD_TEXT = '{"data": [{"name": "NEW_PASSWORD_INVALID"}]}'
+MOCK_INVALID_USERNAME_TEXT = '{"data": [{"name": "INVALID_USERNAME"}]}'
 
 
 class TestUserService(object):
@@ -51,15 +57,33 @@ class TestUserService(object):
         return create_mock_error(Py42InternalServerError, mocker, "")
 
     @pytest.fixture
-    def post_user_duplicate_error_response(self, mocker):
+    def user_duplicate_error_response(self, mocker):
         return create_mock_error(
             Py42InternalServerError, mocker, MOCK_USER_DUPLICATE_ERROR_TEXT
         )
 
     @pytest.fixture
-    def post_username_must_be_email_error_response(self, mocker):
+    def username_must_be_email_error_response(self, mocker):
         return create_mock_error(
             Py42InternalServerError, mocker, MOCK_USERNAME_MUST_BE_EMAIL_TEXT
+        )
+
+    @pytest.fixture
+    def invalid_email_error_response(self, mocker):
+        return create_mock_error(
+            Py42InternalServerError, mocker, MOCK_INVALID_EMAIL_TEXT
+        )
+
+    @pytest.fixture
+    def invalid_password_error_response(self, mocker):
+        return create_mock_error(
+            Py42InternalServerError, mocker, MOCK_INVALID_PASSWORD_TEXT
+        )
+
+    @pytest.fixture
+    def invalid_username_error_response(self, mocker):
+        return create_mock_error(
+            Py42InternalServerError, mocker, MOCK_INVALID_USERNAME_TEXT
         )
 
     def test_create_user_calls_post_with_expected_url_and_params(
@@ -88,10 +112,10 @@ class TestUserService(object):
         mock_connection.post.assert_called_once_with(USER_URI, json=expected_params)
 
     def test_create_user_calls_post_and_returns_user_duplicate_error(
-        self, mock_connection, post_user_duplicate_error_response
+        self, mock_connection, user_duplicate_error_response
     ):
         user_service = UserService(mock_connection)
-        mock_connection.post.side_effect = post_user_duplicate_error_response
+        mock_connection.post.side_effect = user_duplicate_error_response
         org_uid = "TEST_ORG_ID"
         username = "TEST_ORG@TEST.COM"
         password = "password"
@@ -301,13 +325,43 @@ class TestUserService(object):
         }
         mock_connection.put.assert_called_once_with(expected_uri, json=expected_params)
 
-    def test_update_user_when_get_internal_server_error_containing_must_be_email_text_raises_expected_error(
-        self, mock_connection, post_username_must_be_email_error_response
+    def test_update_user_when_get_internal_server_error_containing_username_must_be_email_text_raises_expected_error(
+        self, mock_connection, username_must_be_email_error_response
     ):
         user_service = UserService(mock_connection)
-        mock_connection.put.side_effect = post_username_must_be_email_error_response
+        mock_connection.put.side_effect = username_must_be_email_error_response
         with pytest.raises(Py42UsernameMustBeEmailError):
             user_service.update_user("123", username="foo")
+
+    def test_update_user_when_get_internal_server_error_containing_email_invalid_raises_expected_error(
+        self, mock_connection, invalid_email_error_response
+    ):
+        user_service = UserService(mock_connection)
+        mock_connection.put.side_effect = invalid_email_error_response
+        with pytest.raises(Py42InvalidEmailError) as err:
+            user_service.update_user("123", username="foo", email="test")
+
+        assert str(err.value) == "'test' is not a valid email."
+
+    def test_update_user_when_get_internal_server_error_containing_password_invalid_raises_expected_error(
+        self, mock_connection, invalid_password_error_response
+    ):
+        user_service = UserService(mock_connection)
+        mock_connection.put.side_effect = invalid_password_error_response
+        with pytest.raises(Py42InvalidPasswordError) as err:
+            user_service.update_user("123", username="foo", password="test")
+
+        assert str(err.value) == "Invalid password."
+
+    def test_update_user_when_get_internal_server_error_containing_username_invalid_raises_expected_error(
+        self, mock_connection, invalid_username_error_response
+    ):
+        user_service = UserService(mock_connection)
+        mock_connection.put.side_effect = invalid_username_error_response
+        with pytest.raises(Py42InvalidUsernameError) as err:
+            user_service.update_user("123", username="foo")
+
+        assert str(err.value) == "Invalid username."
 
     def test_update_user_when_get_unhandled_internal_server_error_raises_base_error(
         self, mock_connection, internal_server_error

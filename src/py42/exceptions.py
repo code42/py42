@@ -237,6 +237,30 @@ class Py42UsernameMustBeEmailError(Py42InternalServerError):
         super(Py42UsernameMustBeEmailError, self).__init__(exception, message)
 
 
+class Py42InvalidEmailError(Py42InternalServerError):
+    """An exception raised when trying to set an invalid email as a user's email."""
+
+    def __init__(self, email, exception):
+        message = u"'{}' is not a valid email.".format(email)
+        super(Py42InvalidEmailError, self).__init__(exception, message)
+
+
+class Py42InvalidPasswordError(Py42InternalServerError):
+    """An exception raised when a password is not valid."""
+
+    def __init__(self, exception):
+        message = u"Invalid password."
+        super(Py42InvalidPasswordError, self).__init__(exception, message)
+
+
+class Py42InvalidUsernameError(Py42InternalServerError):
+    """An exception raised when a username is not valid."""
+
+    def __init__(self, exception):
+        message = u"Invalid username."
+        super(Py42InvalidUsernameError, self).__init__(exception, message)
+
+
 class Py42CloudAliasLimitExceededError(Py42BadRequestError):
     """An Exception raised when trying to add a cloud alias to a user when that user
     already has the max amount of supported cloud aliases."""

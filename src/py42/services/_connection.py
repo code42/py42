@@ -233,9 +233,6 @@ class Connection(object):
         if json is not None:
             data = json_lib.dumps(json)
 
-        if isinstance(data, string_type):
-            data = data.encode("utf-8")
-
         headers = headers or {}
         headers.update(self._headers)
         if data and u"Content-Type" not in headers:
@@ -243,6 +240,12 @@ class Connection(object):
         if u"Accept" not in headers:
             headers.update({u"Accept": u"application/json"})
         headers = _create_user_headers(headers)
+
+        _print_request(method, url, params=params, data=data)
+
+        if isinstance(data, string_type):
+            data = data.encode("utf-8")
+
         request = Request(
             method=method,
             url=url,
@@ -255,7 +258,6 @@ class Connection(object):
             hooks=hooks,
         )
 
-        _print_request(method, url, params=params, data=data)
         return self._session.prepare_request(request)
 
     def _get_host_address(self):

@@ -233,9 +233,8 @@ class Connection(object):
         if json is not None:
             data = json_lib.dumps(json)
 
-        if data is not None:
-            if isinstance(data, str):
-                data = data.encode("utf-8")
+        if isinstance(data, str):
+            data = data.encode("utf-8")
 
         headers = headers or {}
         headers.update(self._headers)

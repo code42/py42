@@ -246,7 +246,7 @@ class Connection(object):
             url=url,
             headers=headers,
             files=files,
-            data=data,
+            data=data.encode("utf-8") if data else data,
             params=params,
             auth=auth or self._auth,
             cookies=cookies,

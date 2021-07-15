@@ -235,8 +235,6 @@ class Connection(object):
 
         if data is not None:
             if isinstance(data, str):
-                if json is None:
-                    json = json_lib.loads(data)
                 data = data.encode("utf-8")
 
         headers = headers or {}
@@ -258,7 +256,7 @@ class Connection(object):
             hooks=hooks,
         )
 
-        _print_request(method, url, params=params, data=json)
+        _print_request(method, url, params=params, data=data)
         return self._session.prepare_request(request)
 
     def _get_host_address(self):
@@ -300,4 +298,5 @@ def _print_request(method, url, params=None, data=None):
     if params:
         debug.logger.debug(format_dict(params, u"  params"))
     if data:
-        debug.logger.debug(format_dict(data, u"  data"))
+        data_dict = json_lib.loads(data)
+        debug.logger.debug(format_dict(data_dict, u"  data"))

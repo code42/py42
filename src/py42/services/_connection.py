@@ -231,6 +231,8 @@ class Connection(object):
 
         if json is not None:
             data = json_lib.dumps(json)
+        elif data is not None:
+            json = json_lib.loads(data)
 
         headers = headers or {}
         headers.update(self._headers)
@@ -251,7 +253,7 @@ class Connection(object):
             hooks=hooks,
         )
 
-        _print_request(method, url, params=params, data=data)
+        _print_request(method, url, params=params, data=json)
         return self._session.prepare_request(request)
 
     def _get_host_address(self):

@@ -11,6 +11,7 @@ from requests.sessions import Session
 import py42.settings as settings
 from py42._compat import urljoin
 from py42._compat import urlparse
+from py42._compat import string_type
 from py42.exceptions import Py42DeviceNotConnectedError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42FeatureUnavailableError
@@ -231,8 +232,12 @@ class Connection(object):
 
         if json is not None:
             data = json_lib.dumps(json)
-        elif data is not None:
-            json = json_lib.loads(data)
+
+        if data is not None:
+            if isinstance(data, str):
+                if json is None:
+                    json = json_lib.loads(data)
+                data = data.encode("utf-8")
 
         headers = headers or {}
         headers.update(self._headers)
@@ -246,7 +251,7 @@ class Connection(object):
             url=url,
             headers=headers,
             files=files,
-            data=data.encode("utf-8") if data else data,
+            data=data,
             params=params,
             auth=auth or self._auth,
             cookies=cookies,

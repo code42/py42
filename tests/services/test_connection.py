@@ -29,7 +29,7 @@ default_kwargs = {
 }
 HOST_ADDRESS = "http://example.com"
 URL = "/api/resource"
-DATA_VALUE = "value"
+DATA_VALUE = '{"test": "data"}'
 JSON_VALUE = {"key": "value"}
 KWARGS_INDEX = 1
 DATA_KEY = "data"
@@ -188,24 +188,24 @@ class TestConnection(object):
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        connection.put(URL, data="testdata")
-        expected = MockPreparedRequest("PUT", HOST_ADDRESS + URL, "testdata")
+        connection.put(URL, data=DATA_VALUE)
+        expected = MockPreparedRequest("PUT", HOST_ADDRESS + URL, DATA_VALUE)
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_post_calls_requests_with_post(
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        connection.post(URL, data="testdata")
-        expected = MockPreparedRequest("POST", HOST_ADDRESS + URL, "testdata")
+        connection.post(URL, data=DATA_VALUE)
+        expected = MockPreparedRequest("POST", HOST_ADDRESS + URL, DATA_VALUE)
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_patch_calls_requests_with_patch(
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        connection.patch(URL, data="testdata")
-        expected = MockPreparedRequest("PATCH", HOST_ADDRESS + URL, "testdata")
+        connection.patch(URL, data=DATA_VALUE)
+        expected = MockPreparedRequest("PATCH", HOST_ADDRESS + URL, DATA_VALUE)
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_delete_calls_requests_with_delete(

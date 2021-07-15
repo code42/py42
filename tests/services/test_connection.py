@@ -189,7 +189,9 @@ class TestConnection(object):
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.put(URL, data=DATA_VALUE)
-        expected = MockPreparedRequest("PUT", HOST_ADDRESS + URL, DATA_VALUE)
+        expected = MockPreparedRequest(
+            "PUT", HOST_ADDRESS + URL, DATA_VALUE.encode("utf-8")
+        )
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_post_calls_requests_with_post(
@@ -197,7 +199,9 @@ class TestConnection(object):
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.post(URL, data=DATA_VALUE)
-        expected = MockPreparedRequest("POST", HOST_ADDRESS + URL, DATA_VALUE)
+        expected = MockPreparedRequest(
+            "POST", HOST_ADDRESS + URL, DATA_VALUE.encode("utf-8")
+        )
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_patch_calls_requests_with_patch(
@@ -205,7 +209,9 @@ class TestConnection(object):
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.patch(URL, data=DATA_VALUE)
-        expected = MockPreparedRequest("PATCH", HOST_ADDRESS + URL, DATA_VALUE)
+        expected = MockPreparedRequest(
+            "PATCH", HOST_ADDRESS + URL, DATA_VALUE.encode("utf-8")
+        )
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_delete_calls_requests_with_delete(
@@ -238,7 +244,7 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.post(URL, json=JSON_VALUE)
         expected = MockPreparedRequest(
-            "POST", HOST_ADDRESS + URL, json.dumps(JSON_VALUE)
+            "POST", HOST_ADDRESS + URL, json.dumps(JSON_VALUE).encode("utf-8")
         )
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
@@ -248,7 +254,7 @@ class TestConnection(object):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.post(URL, data=DATA_VALUE, json=JSON_VALUE)
         expected = MockPreparedRequest(
-            "POST", HOST_ADDRESS + URL, json.dumps(JSON_VALUE)
+            "POST", HOST_ADDRESS + URL, json.dumps(JSON_VALUE).encode("utf-8")
         )
         success_requests_session.prepare_request.assert_called_once_with(expected)
 

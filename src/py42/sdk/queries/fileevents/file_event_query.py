@@ -53,12 +53,16 @@ class FileEventQuery(BaseQuery):
         output_dict = {
             u"groupClause": self._group_clause,
             u"groups": filter_group_list,
-            u"pgNum": self.page_number,
             u"pgSize": self.page_size,
             u"srtDir": self.sort_direction,
             u"srtKey": self.sort_key,
-            u"pgToken": self.page_token,
         }
+
+        if self.page_token is not None:
+            output_dict["pgToken"] = self.page_token
+        else:
+            output_dict["pgSize"] = self.page_size
+
         for key in output_dict:
             yield key, output_dict[key]
 

@@ -1419,7 +1419,7 @@ class TestSecurityClient(object):
             "srtDir": "asc",
             "srtKey": "eventId",
             "pgToken": escaped_token,
-            "pgSize": 1000,
+            "pgSize": 10000,
         }
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
 

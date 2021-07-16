@@ -14,7 +14,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Issue where debug logs double-stringified JSON data while logging requests.
 
-- Issue where `sdk.securitydata.search_file_evens()` and `sdk.alerts.search()` would raise `UnicodeError`
+- Issue where `sdk.securitydata.search_file_events()` and `sdk.alerts.search()` would raise `UnicodeError`
   when queries included certain unicode characters.
 
 ## 1.16.0 - 2021-07-08

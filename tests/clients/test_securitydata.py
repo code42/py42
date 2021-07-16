@@ -1347,10 +1347,15 @@ class TestSecurityClient(object):
         )
         query = FileEventQuery.all()
         response = security_client.search_all_file_events(query)
-        connection.post.assert_called_once_with(
-            FILE_EVENT_URI,
-            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"", "pgSize":10000}',
-        )
+        expected = {
+            "groupClause": "AND",
+            "groups": [],
+            "srtDir": "asc",
+            "srtKey": "eventId",
+            "pgToken": "",
+            "pgSize": 10000,
+        }
+        connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
         assert response is successful_response
 
     def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_passed(
@@ -1361,7 +1366,6 @@ class TestSecurityClient(object):
         saved_search_service,
         storage_service_factory,
     ):
-
         file_event_service = FileEventService(connection)
         successful_response = {
             "totalCount": None,
@@ -1379,10 +1383,15 @@ class TestSecurityClient(object):
         )
         query = FileEventQuery.all()
         response = security_client.search_all_file_events(query, "abc")
-        connection.post.assert_called_once_with(
-            FILE_EVENT_URI,
-            data='{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}',
-        )
+        expected = {
+            "groupClause": "AND",
+            "groups": [],
+            "srtDir": "asc",
+            "srtKey": "eventId",
+            "pgToken": "abc",
+            "pgSize": 10000,
+        }
+        connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
         assert response is successful_response
 
     def test_search_all_file_events_handles_unescaped_quote_chars_in_token(
@@ -1404,12 +1413,15 @@ class TestSecurityClient(object):
         unescaped_token = '1234_"abcde"'
         escaped_token = r"1234_\"abcde\""
         security_client.search_all_file_events(FileEventQuery.all(), unescaped_token)
-        connection.post.assert_called_once_with(
-            FILE_EVENT_URI,
-            data='{{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"{0}", "pgSize":10000}}'.format(
-                escaped_token
-            ),
-        )
+        expected = {
+            "groupClause": "AND",
+            "groups": [],
+            "srtDir": "asc",
+            "srtKey": "eventId",
+            "pgToken": escaped_token,
+            "pgSize": 10000,
+        }
+        connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
 
     def test_search_all_file_events_handles_escaped_quote_chars_in_token(
         self,
@@ -1429,9 +1441,12 @@ class TestSecurityClient(object):
         )
         escaped_token = r"1234_\"abcde\""
         security_client.search_all_file_events(FileEventQuery.all(), escaped_token)
-        connection.post.assert_called_once_with(
-            FILE_EVENT_URI,
-            data='{{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"{0}", "pgSize":10000}}'.format(
-                escaped_token
-            ),
-        )
+        expected = {
+            "groupClause": "AND",
+            "groups": [],
+            "srtDir": "asc",
+            "srtKey": "eventId",
+            "pgToken": escaped_token,
+            "pgSize": 10000,
+        }
+        connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)

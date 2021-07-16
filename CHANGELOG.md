@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Fixed
+
+- Issue where debug logs double-stringified JSON data while logging requests.
+
+- Issue where `sdk.securitydata.search_file_events()` and `sdk.alerts.search()` would raise `UnicodeError`
+  when queries included certain unicode characters.
+
 ## 1.16.0 - 2021-07-08
 
 ### Fixed

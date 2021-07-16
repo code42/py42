@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from requests import Response
 from tests.conftest import TEST_DEVICE_GUID
@@ -29,7 +27,7 @@ default_kwargs = {
 }
 HOST_ADDRESS = "http://example.com"
 URL = "/api/resource"
-DATA_VALUE = "value"
+DATA_VALUE = '{"test": "data"}'
 JSON_VALUE = {"key": "value"}
 KWARGS_INDEX = 1
 DATA_KEY = "data"
@@ -97,10 +95,11 @@ def proxy_set():
 
 
 class MockPreparedRequest(object):
-    def __init__(self, method, url, data=None):
+    def __init__(self, method, url, data=None, json=None):
         self._method = method
         self._url = url
         self._data = data or []
+        self._json = json or {}
 
     def __eq__(self, other):
         return (
@@ -181,31 +180,37 @@ class TestConnection(object):
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.get(URL)
-        expected = MockPreparedRequest("GET", HOST_ADDRESS + URL, None)
+        expected = MockPreparedRequest("GET", HOST_ADDRESS + URL)
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_put_calls_requests_with_put(
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        connection.put(URL, data="testdata")
-        expected = MockPreparedRequest("PUT", HOST_ADDRESS + URL, "testdata")
+        connection.put(URL, data=DATA_VALUE)
+        expected = MockPreparedRequest(
+            "PUT", HOST_ADDRESS + URL, data=DATA_VALUE.encode("utf-8")
+        )
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_post_calls_requests_with_post(
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        connection.post(URL, data="testdata")
-        expected = MockPreparedRequest("POST", HOST_ADDRESS + URL, "testdata")
+        connection.post(URL, data=DATA_VALUE)
+        expected = MockPreparedRequest(
+            "POST", HOST_ADDRESS + URL, data=DATA_VALUE.encode("utf-8")
+        )
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_patch_calls_requests_with_patch(
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        connection.patch(URL, data="testdata")
-        expected = MockPreparedRequest("PATCH", HOST_ADDRESS + URL, "testdata")
+        connection.patch(URL, data=DATA_VALUE)
+        expected = MockPreparedRequest(
+            "PATCH", HOST_ADDRESS + URL, data=DATA_VALUE.encode("utf-8")
+        )
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
     def test_connection_delete_calls_requests_with_delete(
@@ -232,23 +237,13 @@ class TestConnection(object):
         expected = MockPreparedRequest("HEAD", HOST_ADDRESS + URL)
         success_requests_session.prepare_request.assert_called_once_with(expected)
 
-    def test_connection_post_with_json_prepares_request_with_string_encoded_json_body(
+    def test_connection_post_with_json_prepares_request_with_json(
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
         connection.post(URL, json=JSON_VALUE)
         expected = MockPreparedRequest(
-            "POST", HOST_ADDRESS + URL, json.dumps(JSON_VALUE)
-        )
-        success_requests_session.prepare_request.assert_called_once_with(expected)
-
-    def test_connection_post_with_data_and_json_params_overwrites_data_with_json(
-        self, mock_host_resolver, mock_auth, success_requests_session
-    ):
-        connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        connection.post(URL, data=DATA_VALUE, json=JSON_VALUE)
-        expected = MockPreparedRequest(
-            "POST", HOST_ADDRESS + URL, json.dumps(JSON_VALUE)
+            "POST", HOST_ADDRESS + URL, data=None, json=JSON_VALUE
         )
         success_requests_session.prepare_request.assert_called_once_with(expected)
 

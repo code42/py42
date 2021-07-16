@@ -24,14 +24,14 @@ class AlertService(BaseService):
             query.page_size = page_size
         query = self._add_tenant_id_if_missing(query)
         uri = self._uri_prefix.format(u"query-alerts")
-        return self._connection.post(uri, data=query)
+        return self._connection.post(uri, json=query)
 
     def get_search_page(self, query, page_num, page_size):
         query.page_number = page_num - 1
         query.page_size = page_size
         uri = self._uri_prefix.format(u"query-alerts")
         query = self._add_tenant_id_if_missing(query)
-        return self._connection.post(uri, data=query)
+        return self._connection.post(uri, json=query)
 
     def search_all_pages(self, query):
         return get_all_pages(
@@ -64,13 +64,13 @@ class AlertService(BaseService):
         return self._connection.post(uri, json=data)
 
     def _add_tenant_id_if_missing(self, query):
-        query_dict = json.loads(str(query))
+        query_dict = dict(query)
         tenant_id = query_dict.get(u"tenantId", None)
         if tenant_id is None:
             query_dict[u"tenantId"] = self._user_context.get_current_tenant_id()
-            return json.dumps(query_dict)
+            return query_dict
         else:
-            return str(query)
+            return query_dict
 
     def get_rules_page(
         self, page_num, groups=None, sort_key=None, sort_direction=None, page_size=None

@@ -61,7 +61,7 @@ class FileEventQuery(BaseQuery):
         if self.page_token is not None:
             output_dict["pgToken"] = self.page_token
         else:
-            output_dict["pgSize"] = self.page_size
+            output_dict["pgNum"] = self.page_number
 
         for key in output_dict:
             yield key, output_dict[key]

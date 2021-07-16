@@ -1,4 +1,7 @@
+import json
+
 from py42._compat import str
+from py42._compat import string_type
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.services import BaseService
@@ -16,16 +19,22 @@ class FileEventService(BaseService):
         `REST Documentation <https://forensicsearch-east.us.code42.com/forensic-search/queryservice/swagger-ui.html#/file-event-controller/searchEventsUsingPOST>`__
 
         Args:
-            query (:class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str):
+            query (:class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str or unicode):
                 A composed :class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery`
                 object or the raw query as a JSON formatted string.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the query results.
         """
+
+        if isinstance(query, string_type):
+            query = json.loads(query)
+        else:
+            query = dict(query)
+
         try:
             uri = u"/forensic-search/queryservice/api/v1/fileevent"
-            return self._connection.post(uri, json=dict(query))
+            return self._connection.post(uri, json=query)
         except Py42BadRequestError as err:
             if u"INVALID_PAGE_TOKEN" in str(err.response.text):
                 page_token = query.page_token

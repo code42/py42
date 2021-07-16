@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+
 import pytest
 from tests.conftest import create_mock_error
 
@@ -38,6 +40,16 @@ class TestFileEventService(object):
         query = _create_test_query()
         service.search(query)
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=dict(query))
+
+    def test_search_when_given_str_type_query_calls_post_with_uri_and_query(
+        self, connection, successful_response
+    ):
+        service = FileEventService(connection)
+        connection.post.return_value = successful_response
+        query = str(_create_test_query())
+        service.search(query)
+        expected = json.loads(query)
+        connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
 
     def test_search_when_given_page_token_and_bad_request_with_invalid_page_token_occurs_raises_invalid_page_token_error(
         self, mock_invalid_page_token_connection

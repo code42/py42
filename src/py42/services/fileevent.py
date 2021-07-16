@@ -37,7 +37,7 @@ class FileEventService(BaseService):
             return self._connection.post(uri, json=query)
         except Py42BadRequestError as err:
             if u"INVALID_PAGE_TOKEN" in str(err.response.text):
-                page_token = query.page_token
+                page_token = query.get("pgToken")
                 if page_token:
                     raise Py42InvalidPageTokenError(err, page_token)
             raise

@@ -37,7 +37,7 @@ class TestFileEventService(object):
         connection.post.return_value = successful_response
         query = _create_test_query()
         service.search(query)
-        connection.post.assert_called_once_with(FILE_EVENT_URI, data=str(query))
+        connection.post.assert_called_once_with(FILE_EVENT_URI, json=dict(query))
 
     def test_search_when_given_page_token_and_bad_request_with_invalid_page_token_occurs_raises_invalid_page_token_error(
         self, mock_invalid_page_token_connection
@@ -77,9 +77,9 @@ class TestFileEventService(object):
         service = FileEventService(connection)
         connection.post.return_value = successful_response
         query = _create_test_query(u"我能吞")
-        expected = str(query)
+        expected = dict(query)
         service.search(query)
-        connection.post.assert_called_once_with(FILE_EVENT_URI, data=expected)
+        connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
 
     def test_get_file_location_detail_by_sha256_calls_get_with_hash(
         self, connection, successful_response

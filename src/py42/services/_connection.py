@@ -140,14 +140,14 @@ class Connection(object):
     def head(self, url, **kwargs):
         return self.request(u"HEAD", url, **kwargs)
 
-    def post(self, url, data=None, **kwargs):
-        return self.request(u"POST", url, data=data, **kwargs)
+    def post(self, url, data=None, json=None, **kwargs):
+        return self.request(u"POST", url, data=data, json=json, **kwargs)
 
-    def put(self, url, data=None, **kwargs):
-        return self.request(u"PUT", url, data=data, **kwargs)
+    def put(self, url, data=None, json=None, **kwargs):
+        return self.request(u"PUT", url, data=data, json=json, **kwargs)
 
-    def patch(self, url, data=None, **kwargs):
-        return self.request(u"PATCH", url, data=data, **kwargs)
+    def patch(self, url, data=None, json=None, **kwargs):
+        return self.request(u"PATCH", url, data=data, json=json, **kwargs)
 
     def delete(self, url, **kwargs):
         return self.request(u"DELETE", url, **kwargs)
@@ -230,9 +230,6 @@ class Connection(object):
         self._session.proxies = settings.proxies
         self._session.verify = settings.verify_ssl_certs
 
-        if json is not None:
-            data = json_lib.dumps(json)
-
         headers = headers or {}
         headers.update(self._headers)
         if data and u"Content-Type" not in headers:
@@ -241,7 +238,7 @@ class Connection(object):
             headers.update({u"Accept": u"application/json"})
         headers = _create_user_headers(headers)
 
-        _print_request(method, url, params=params, data=data)
+        _print_request(method, url, params=params, data=data, json=json)
 
         if isinstance(data, string_type):
             data = data.encode("utf-8")
@@ -252,6 +249,7 @@ class Connection(object):
             headers=headers,
             files=files,
             data=data,
+            json=json,
             params=params,
             auth=auth or self._auth,
             cookies=cookies,
@@ -294,10 +292,11 @@ def _handle_error(method, url, response):
         raise_py42_error(ex)
 
 
-def _print_request(method, url, params=None, data=None):
+def _print_request(method, url, params=None, data=None, json=None):
     debug.logger.info(u"{}{}".format(method.ljust(8), url))
     if params:
         debug.logger.debug(format_dict(params, u"  params"))
+    if json:
+        debug.logger.debug(format_dict(json, u"  json"))
     if data:
-        data_dict = json_lib.loads(data)
-        debug.logger.debug(format_dict(data_dict, u"  data"))
+        debug.logger.debug(data, u"  data")

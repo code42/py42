@@ -24,9 +24,8 @@ class FileEventService(BaseService):
             :class:`py42.response.Py42Response`: A response containing the query results.
         """
         try:
-            query_str = str(query)
             uri = u"/forensic-search/queryservice/api/v1/fileevent"
-            return self._connection.post(uri, data=query_str)
+            return self._connection.post(uri, json=dict(query))
         except Py42BadRequestError as err:
             if u"INVALID_PAGE_TOKEN" in str(err.response.text):
                 page_token = query.page_token

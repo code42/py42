@@ -1,5 +1,3 @@
-import json
-
 from py42 import settings
 from py42.services.fileevent import FileEventService
 from py42.services.savedsearch import SavedSearchService
@@ -53,7 +51,7 @@ class TestSavedSearchService(object):
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
         saved_search_service.execute(u"test-id")
         assert mock_connection.post.call_count == 1
-        posted_data = json.loads(mock_connection.post.call_args[1]["data"])
+        posted_data = mock_connection.post.call_args[1]["json"]
         assert (
             posted_data["pgSize"] == 10000
             and posted_data[u"pgNum"] == 1
@@ -74,7 +72,7 @@ class TestSavedSearchService(object):
             u"test-id", page_number=test_custom_page_num,
         )
         assert mock_connection.post.call_count == 1
-        posted_data = json.loads(mock_connection.post.call_args[1]["data"])
+        posted_data = mock_connection.post.call_args[1]["json"]
         settings.security_events_per_page = 10000
         assert (
             posted_data[u"pgSize"] == 5000
@@ -99,7 +97,7 @@ class TestSavedSearchService(object):
             page_size=test_custom_page_size,
         )
         assert mock_connection.post.call_count == 1
-        posted_data = json.loads(mock_connection.post.call_args[1]["data"])
+        posted_data = mock_connection.post.call_args[1]["json"]
         settings.security_events_per_page = 10000
         assert (
             posted_data[u"pgSize"] == 5000

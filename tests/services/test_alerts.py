@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from requests import Response
 from tests.conftest import TENANT_ID_FROM_RESPONSE
@@ -77,7 +75,7 @@ class TestAlertService(object):
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)
         alert_service.search(query)
-        post_data = json.loads(mock_connection.post.call_args[1]["data"])
+        post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["groupClause"] == "AND"
@@ -378,7 +376,7 @@ class TestAlertService(object):
 
         assert mock_connection.post.call_count == 1
         assert mock_connection.post.call_args[0][0] == "/svc/api/v1/query-alerts"
-        post_data = json.loads(mock_connection.post.call_args[1]["data"])
+        post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["groupClause"] == "AND"
@@ -403,7 +401,7 @@ class TestAlertService(object):
 
         assert mock_connection.post.call_count == 1
         assert mock_connection.post.call_args[0][0] == "/svc/api/v1/query-alerts"
-        post_data = json.loads(mock_connection.post.call_args[1]["data"])
+        post_data = mock_connection.post.call_args[1]["json"]
         assert (
             post_data["tenantId"] == TENANT_ID_FROM_RESPONSE
             and post_data["groupClause"] == "AND"

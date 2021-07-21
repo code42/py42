@@ -148,3 +148,13 @@ class RiskSeverity(FileEventFilterStringField):
     """Class that filters events by risk severity."""
 
     _term = u"riskSeverity"
+
+    CRITICAL = "CRITICAL"
+    HIGH = "HIGH"
+    MODERATE = "MODERATE"
+    LOW = "LOW"
+    NO_RISK_INDICATED = "NO_RISK_INDICATED"
+
+    @staticmethod
+    def choices():
+        return get_attribute_keys_from_class(RiskSeverity)

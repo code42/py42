@@ -1,4 +1,8 @@
+import json
+
 from py42.sdk.queries.alerts.filters import AlertState
+from py42.sdk.queries.alerts.alert_query import AlertQuery
+from py42._compat import string_type
 
 
 class AlertsClient(object):
@@ -136,3 +140,32 @@ class AlertsClient(object):
             :class:`py42.response.Py42Response`
         """
         return self._alert_service.get_aggregate_data(alert_id)
+
+    def iter_all_alert_details(self, query, ascending=True):
+        """
+        Helper method that combines `.get_all_pages()` and `.get_details()`.
+        Returns an iterator of all alert details in chronological order.
+
+        Args:
+            query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
+            ascending (bool): Determines if sort ordering should be ascending/descending
+                based on alert creation time. Defaults to True.
+
+        Returns:
+            generator: An object that iterates over alert detail result items.
+        """
+        if isinstance(query, string_type):
+            query = AlertQuery.from_dict(json.loads(query))
+        query.page_size = 100
+        if ascending:
+            query.sort_direction = "asc"
+        pages = self._alert_service.search_all_pages(query)
+        for page in pages:
+            alert_ids = [alert["id"] for alert in page["alerts"]]
+            alert_details = self._alert_service.get_details(alert_ids)
+            for alert in sorted(
+                alert_details["alerts"],
+                key=lambda x: x["createdAt"],
+                reverse=not ascending,
+            ):
+                yield alert

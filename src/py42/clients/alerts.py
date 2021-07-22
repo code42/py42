@@ -152,7 +152,7 @@ class AlertsClient(object):
                 based on alert creation time. Defaults to True.
 
         Returns:
-            generator: An object that iterates over alert detail result items.
+            generator: An object that iterates over alert detail items.
         """
         if isinstance(query, string_type):
             query = AlertQuery.from_dict(json.loads(query))

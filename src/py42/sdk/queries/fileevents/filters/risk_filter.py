@@ -59,7 +59,7 @@ class RiskIndicator(FileEventFilterStringField):
         - :attr:`RiskIndicator.MessagingServiceUploads.SLACK`
         - :attr:`RiskIndicator.MessagingServiceUploads.WHATSAPP`
         - :attr:`RiskIndicator.Other.OTHER`
-        - :attr:`RiskIndicator.MessagingServiceUploads.UNKNOWN`
+        - :attr:`RiskIndicator.Other.UNKNOWN`
         - :attr:`RiskIndicator.SocialMediaUploads.FACEBOOK`
         - :attr:`RiskIndicator.SocialMediaUploads.LINKEDIN`
         - :attr:`RiskIndicator.SocialMediaUploads.REDDIT`

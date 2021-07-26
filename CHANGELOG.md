@@ -12,7 +12,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- `RiskIndicator` and `RiskSeverity` filters class to new `py42.sdk.queries.fileevents.filters.risk_filter` module.
+- `RiskIndicator` and `RiskSeverity` filter classes to new `py42.sdk.queries.fileevents.filters.risk_filter` module.
 
 ## 1.16.1 - 2021-07-20
 

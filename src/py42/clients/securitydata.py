@@ -285,7 +285,7 @@ class SecurityDataClient(object):
                 (
                     x
                     for x in versions
-                    if x[u"fileMD5"] == md5_hash and x[u"fileSHA256"] == sha256_hash
+                    if x[u"fileMD5"] == md5_hash
                 ),
                 None,
             )

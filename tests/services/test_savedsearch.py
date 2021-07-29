@@ -32,7 +32,7 @@ class TestSavedSearchService:
         )
 
     def test_execute_calls_post_with_expected_uri(self, mock_connection, py42_response):
-        py42_response.text = '{u"searches": [{u"groups": []}]}'
+        py42_response.text = '{"searches": [{"groups": []}]}'
         mock_connection.post.return_value = py42_response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
@@ -108,7 +108,7 @@ class TestSavedSearchService:
     def test_get_query_calls_get_with_expected_uri(
         self, mock_connection, py42_response
     ):
-        py42_response.text = '{u"searches": [{u"groups": []}]}'
+        py42_response.text = '{"searches": [{"groups": []}]}'
         mock_connection.post.return_value = py42_response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)

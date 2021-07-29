@@ -103,8 +103,7 @@ class DetectionListsClient:
         Args:
             user_id (str or int): The userUid of the user whose risk factor tag(s) you want to update.
             tags (str or list of str ): A single tag or multiple tags in a list to be added. For
-                example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X, pass ``u"str"``
-                instead of ``"str"``.
+                example: ``"tag1"`` or ``["tag1", "tag2"]``.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -118,8 +117,7 @@ class DetectionListsClient:
         Args:
             user_id (str or int): The userUid of the user whose risk factor tag(s) needs you want to remove.
             tags (str or list of str ): A single tag or multiple tags in a list to be removed. For
-                example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X, pass ``u"str"``
-                instead of ``"str"``.
+                example: ``"tag1"`` or ``["tag1", "tag2"]``.
 
         Returns:
             :class:`py42.response.Py42Response`

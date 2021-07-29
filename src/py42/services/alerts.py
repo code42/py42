@@ -1,7 +1,6 @@
 import json
 
 from py42 import settings
-from py42._compat import str
 from py42.sdk.queries.query_filter import create_eq_filter_group
 from py42.services import BaseService
 from py42.services.util import get_all_pages

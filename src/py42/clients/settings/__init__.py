@@ -1,6 +1,3 @@
-from py42._compat import string_type
-
-
 def set_val(d, keys, value):
     """Helper for setting nested values from a dict based on a list of keys."""
     d = get_val(d, keys[:-1])
@@ -15,9 +12,9 @@ def get_val(d, keys):
 
 
 def show_change(val1, val2):
-    if isinstance(val1, string_type):
+    if isinstance(val1, str):
         val1 = u'"{}"'.format(val1)
-    if isinstance(val2, string_type):
+    if isinstance(val2, str):
         val2 = u'"{}"'.format(val2)
     return u"{} -> {}".format(val1, val2)
 

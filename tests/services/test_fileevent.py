@@ -4,7 +4,6 @@ import json
 import pytest
 from tests.conftest import create_mock_error
 
-from py42._compat import str
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery

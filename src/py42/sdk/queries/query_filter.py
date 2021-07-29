@@ -1,8 +1,6 @@
 from collections import OrderedDict
 from datetime import datetime
 
-from py42._compat import str
-from py42._compat import string_type
 from py42.util import convert_datetime_to_epoch
 from py42.util import convert_datetime_to_timestamp_str
 from py42.util import DATE_STR_FORMAT
@@ -324,7 +322,7 @@ class QueryFilterTimestampField(object):
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        if isinstance(value, string_type):
+        if isinstance(value, str):
             value = convert_datetime_to_epoch(datetime.strptime(value, DATE_STR_FORMAT))
         elif isinstance(value, datetime):
             value = convert_datetime_to_epoch(value)
@@ -439,7 +437,7 @@ class QueryFilter(object):
     def __eq__(self, other):
         if isinstance(other, (QueryFilter, tuple, list)):
             return tuple(self) == tuple(other)
-        elif isinstance(other, string_type):
+        elif isinstance(other, str):
             return str(self) == other
         else:
             return False
@@ -525,7 +523,7 @@ class FilterGroup(object):
             )
         elif isinstance(other, (tuple, list)):
             return tuple(self) == tuple(other)
-        elif isinstance(other, string_type):
+        elif isinstance(other, str):
             return str(self) == other
         else:
             return False

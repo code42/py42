@@ -1,4 +1,5 @@
-from py42._compat import quote
+from urllib.parse import quote
+
 from py42.services import BaseService
 
 

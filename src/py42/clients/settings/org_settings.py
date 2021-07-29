@@ -1,5 +1,5 @@
-from py42._compat import str
-from py42._compat import UserDict
+from collections import UserDict
+
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import TSettingProperty
 from py42.clients.settings._converters import bool_to_str

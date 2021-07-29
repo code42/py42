@@ -1,5 +1,6 @@
+from urllib.parse import quote
+
 from py42 import settings
-from py42._compat import quote
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidEmailError

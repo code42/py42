@@ -1,6 +1,3 @@
-from py42._compat import str
-
-
 def bool_to_str(value):
     if isinstance(value, bool) or value in (u"true", u"false"):
         return str(value).lower()

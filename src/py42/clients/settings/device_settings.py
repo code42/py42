@@ -1,6 +1,6 @@
-from py42._compat import str
-from py42._compat import UserDict
-from py42._compat import UserList
+from collections import UserDict
+from collections import UserList
+
 from py42.clients.settings import check_lock
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import show_change

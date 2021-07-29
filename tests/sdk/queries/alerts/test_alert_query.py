@@ -1,4 +1,3 @@
-from py42._compat import str
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 
 

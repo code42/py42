@@ -2,6 +2,8 @@ from __future__ import print_function
 
 import json as json_lib
 from threading import Lock
+from urllib.parse import urljoin
+from urllib.parse import urlparse
 
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
@@ -9,9 +11,6 @@ from requests.models import Request
 from requests.sessions import Session
 
 import py42.settings as settings
-from py42._compat import string_type
-from py42._compat import urljoin
-from py42._compat import urlparse
 from py42.exceptions import Py42DeviceNotConnectedError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42FeatureUnavailableError
@@ -240,7 +239,7 @@ class Connection(object):
 
         _print_request(method, url, params=params, data=data, json=json)
 
-        if isinstance(data, string_type):
+        if isinstance(data, str):
             data = data.encode("utf-8")
 
         request = Request(

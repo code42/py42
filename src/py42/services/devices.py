@@ -2,7 +2,6 @@ from collections import namedtuple
 from time import time
 
 from py42 import settings
-from py42._compat import str
 from py42.clients.settings.device_settings import DeviceSettings
 from py42.exceptions import Py42BadRequestError
 from py42.services import BaseService

@@ -1,10 +1,8 @@
-from __future__ import print_function
-
 import json
 from datetime import datetime
 
-MICROSECOND_FORMAT = u"%Y-%m-%dT%H:%M:%S.%fZ"
-DATE_STR_FORMAT = u"%Y-%m-%d %H:%M:%S"
+MICROSECOND_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
+DATE_STR_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
 def format_json(json_string):
@@ -29,7 +27,7 @@ def print_response(response, label=None):
         label (str, optional): A label at the beginning of the printed text. Defaults to None.
     """
     if label:
-        print(label, end=u" ")
+        print(label, end=" ")
     try:
         print(format_json(response.text))
     except ValueError:
@@ -63,7 +61,7 @@ def convert_datetime_to_timestamp_str(date):
         '2020-03-25T15:29:04.465Z'.
     """
     prefix = date.strftime(MICROSECOND_FORMAT)[:-4]
-    return u"{}Z".format(prefix)
+    return f"{prefix}Z"
 
 
 def convert_datetime_to_epoch(date):
@@ -73,7 +71,7 @@ def convert_datetime_to_epoch(date):
 def format_dict(dict_, label=None):
     indented_dict = json.dumps(dict_, indent=4)
     if label:
-        return u"{} {}".format(label, indented_dict)
+        return f"{label} {indented_dict}"
     return indented_dict
 
 
@@ -89,7 +87,7 @@ def get_attribute_keys_from_class(cls):
     return [
         cls().__getattribute__(attr)
         for attr in dir(cls)
-        if not callable(cls().__getattribute__(attr)) and not attr.startswith(u"_")
+        if not callable(cls().__getattribute__(attr)) and not attr.startswith("_")
     ]
 
 

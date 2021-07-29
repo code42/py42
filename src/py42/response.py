@@ -4,7 +4,7 @@ import reprlib
 from py42.exceptions import Py42Error
 
 
-class Py42Response(object):
+class Py42Response:
     def __init__(self, requests_response):
         self._response = requests_response
         self._data = None
@@ -15,8 +15,8 @@ class Py42Response(object):
         except TypeError:
             data_root_type = type(self._data_root)
             message = (
-                u"The Py42Response root is of type {}, but __getitem__ "
-                u"got a key of {}, which is incompatible.".format(data_root_type, key)
+                "The Py42Response root is of type {}, but __getitem__ "
+                "got a key of {}, which is incompatible.".format(data_root_type, key)
             )
             raise Py42Error(message)
 
@@ -26,8 +26,8 @@ class Py42Response(object):
         except TypeError:
             data_root_type = type(self._data_root)
             message = (
-                u"The Py42Response root is of type {}, but __setitem__ got a key "
-                u"of {} and value of {}, which is incompatible.".format(
+                "The Py42Response root is of type {}, but __setitem__ got a key "
+                "of {} and value of {}, which is incompatible.".format(
                     data_root_type, key, value
                 )
             )
@@ -97,7 +97,7 @@ class Py42Response(object):
             data = "<streamed>"
         else:
             data = self._data_root
-        return u"<{} [status={}, data={}]>".format(
+        return "<{} [status={}, data={}]>".format(
             self.__class__.__name__, self._response.status_code, reprlib.repr(data)
         )
 
@@ -115,10 +115,10 @@ class Py42Response(object):
             if not self._data:
                 response_dict = json.loads(self._response.text)
                 if type(response_dict) == dict:
-                    self._data = response_dict.get(u"data") or response_dict
+                    self._data = response_dict.get("data") or response_dict
                 else:
                     self._data = response_dict
         except ValueError:
-            self._data = self._response.text or u""
+            self._data = self._response.text or ""
 
         return self._data

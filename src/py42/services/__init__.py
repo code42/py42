@@ -4,11 +4,11 @@ from py42.exceptions import Py42ActiveLegalHoldError
 
 
 def handle_active_legal_hold_error(bad_request_err, resource, resource_id):
-    if u"ACTIVE_LEGAL_HOLD" in bad_request_err.response.text:
+    if "ACTIVE_LEGAL_HOLD" in bad_request_err.response.text:
         raise Py42ActiveLegalHoldError(bad_request_err, resource, resource_id)
 
 
-class BaseService(object):
+class BaseService:
 
     __slots__ = ["_connection"]
 
@@ -17,25 +17,25 @@ class BaseService(object):
 
 
 Services = namedtuple(
-    u"Services",
+    "Services",
     [
-        u"administration",
-        u"archive",
-        u"devices",
-        u"legalhold",
-        u"orgs",
-        u"securitydata",
-        u"users",
-        u"alertrules",
-        u"alerts",
-        u"fileevents",
-        u"savedsearch",
-        u"preservationdata",
-        u"departingemployee",
-        u"highriskemployee",
-        u"userprofile",
-        u"auditlogs",
-        u"cases",
-        u"casesfileevents",
+        "administration",
+        "archive",
+        "devices",
+        "legalhold",
+        "orgs",
+        "securitydata",
+        "users",
+        "alertrules",
+        "alerts",
+        "fileevents",
+        "savedsearch",
+        "preservationdata",
+        "departingemployee",
+        "highriskemployee",
+        "userprofile",
+        "auditlogs",
+        "cases",
+        "casesfileevents",
     ],
 )

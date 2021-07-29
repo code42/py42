@@ -38,7 +38,7 @@ MOCK_GET_ALL_EVENTS_RESPONSE = """{"legalHoldEvents":["foo"]}"""
 MOCK_EMPTY_GET_ALL_EVENTS_RESPONSE = """{"legalHoldEvents": []}"""
 
 
-class TestLegalHoldService(object):
+class TestLegalHoldService:
     @pytest.fixture
     def mock_get_all_matters_response(self, mocker):
         return create_mock_response(mocker, MOCK_GET_ALL_MATTERS_RESPONSE)

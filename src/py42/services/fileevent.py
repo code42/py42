@@ -31,10 +31,10 @@ class FileEventService(BaseService):
             query = dict(query)
 
         try:
-            uri = u"/forensic-search/queryservice/api/v1/fileevent"
+            uri = "/forensic-search/queryservice/api/v1/fileevent"
             return self._connection.post(uri, json=query)
         except Py42BadRequestError as err:
-            if u"INVALID_PAGE_TOKEN" in str(err.response.text):
+            if "INVALID_PAGE_TOKEN" in str(err.response.text):
                 page_token = query.get("pgToken")
                 if page_token:
                     raise Py42InvalidPageTokenError(err, page_token)
@@ -49,5 +49,5 @@ class FileEventService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing file details.
         """
-        uri = u"/forensic-search/queryservice/api/v1/filelocations"
-        return self._connection.get(uri, params={u"sha256": checksum})
+        uri = "/forensic-search/queryservice/api/v1/filelocations"
+        return self._connection.get(uri, params={"sha256": checksum})

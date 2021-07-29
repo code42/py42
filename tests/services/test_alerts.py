@@ -63,7 +63,7 @@ def mock_get_all_session(mocker, py42_response):
     return connection
 
 
-class TestAlertService(object):
+class TestAlertService:
     @pytest.fixture
     def successful_post(self, mock_connection, successful_response):
         mock_connection.post.return_value = successful_response
@@ -96,7 +96,7 @@ class TestAlertService(object):
         _filter = AlertState.eq("OPEN")
         query = AlertQuery(_filter)
         alert_service.search(query)
-        assert mock_connection.post.call_args[0][0] == u"/svc/api/v1/query-alerts"
+        assert mock_connection.post.call_args[0][0] == "/svc/api/v1/query-alerts"
 
     def test_get_details_when_not_given_tenant_id_posts_expected_data(
         self, mock_connection, user_context, py42_response

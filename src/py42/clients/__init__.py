@@ -1,14 +1,14 @@
 from collections import namedtuple
 
 Clients = namedtuple(
-    u"Clients",
+    "Clients",
     [
-        u"alerts",
-        u"archive",
-        u"authority",
-        u"detectionlists",
-        u"securitydata",
-        u"auditlogs",
-        u"cases",
+        "alerts",
+        "archive",
+        "authority",
+        "detectionlists",
+        "securitydata",
+        "auditlogs",
+        "cases",
     ],
 )

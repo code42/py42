@@ -20,19 +20,19 @@ class AlertQuery(BaseQuery):
     """
 
     def __init__(self, *args, **kwargs):
-        super(AlertQuery, self).__init__(*args, **kwargs)
-        self.sort_key = u"CreatedAt"
+        super().__init__(*args, **kwargs)
+        self.sort_key = "CreatedAt"
         self.page_number = 0
         self.page_size = 500
-        self.sort_direction = u"desc"
+        self.sort_direction = "desc"
 
     def __str__(self):
-        groups_string = u",".join(
+        groups_string = ",".join(
             str(group_item) for group_item in self._filter_group_list
         )
         json = (
-            u'{{"tenantId": null, "groupClause":"{0}", "groups":[{1}], "pgNum":{2}, '
-            u'"pgSize":{3}, "srtDirection":"{4}", "srtKey":"{5}"}}'.format(
+            '{{"tenantId": null, "groupClause":"{0}", "groups":[{1}], "pgNum":{2}, '
+            '"pgSize":{3}, "srtDirection":"{4}", "srtKey":"{5}"}}'.format(
                 self._group_clause,
                 groups_string,
                 self.page_number,
@@ -46,13 +46,13 @@ class AlertQuery(BaseQuery):
     def __iter__(self):
         filter_group_list = [dict(item) for item in self._filter_group_list]
         output_dict = {
-            u"tenantId": None,
-            u"groupClause": self._group_clause,
-            u"groups": filter_group_list,
-            u"pgNum": self.page_number,
-            u"pgSize": self.page_size,
-            u"srtDirection": self.sort_direction,
-            u"srtKey": self.sort_key,
+            "tenantId": None,
+            "groupClause": self._group_clause,
+            "groups": filter_group_list,
+            "pgNum": self.page_number,
+            "pgSize": self.page_size,
+            "srtDirection": self.sort_direction,
+            "srtKey": self.sort_key,
         }
         for key in output_dict:
             yield key, output_dict[key]

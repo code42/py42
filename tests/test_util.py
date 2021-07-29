@@ -12,7 +12,7 @@ def test_convert_datetime_to_timestamp_str_returns_expected_str():
     assert util.convert_datetime_to_timestamp_str(d) == "2020-04-19T13:03:02.000Z"
 
 
-class TestClass(object):
+class TestClass:
     _private = "test"
     CONSTANT1 = "value1"
     CONSTANT2 = "value2"
@@ -44,7 +44,7 @@ def test_parse_timestamp_to_milliseconds_precision_returns_expected_timestamp_wi
 
 
 def test_parse_timestamp_to_milliseconds_precision_when_given_unicode_returns_expected_timestamp_with_str_format_time():
-    actual = util.parse_timestamp_to_milliseconds_precision(u"2020-09-09 12:12:21")
+    actual = util.parse_timestamp_to_milliseconds_precision("2020-09-09 12:12:21")
     assert actual == "2020-09-09T12:12:21.000Z"
 
 
@@ -65,7 +65,7 @@ def test_parse_timestamp_to_microseconds_precision_returns_expected_timestamp_wi
 
 
 def test_parse_timestamp_to_microseconds_precision_when_given_unicode_returns_expected_timestamp_with_str_format_time():
-    actual = util.parse_timestamp_to_microseconds_precision(u"2020-09-09 12:12:21")
+    actual = util.parse_timestamp_to_microseconds_precision("2020-09-09 12:12:21")
     assert actual == "2020-09-09T12:12:21.000000Z"
 
 

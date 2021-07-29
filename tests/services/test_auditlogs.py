@@ -3,7 +3,7 @@ from datetime import datetime as dt
 from py42.services.auditlogs import AuditLogsService
 
 
-class TestAuditLogService(object):
+class TestAuditLogService:
     def test_get_all_calls_expected_uri_and_params(self, mock_connection):
         service = AuditLogsService(mock_connection)
         for _ in service.get_all():
@@ -311,8 +311,8 @@ class TestAuditLogService(object):
     ):
         service = AuditLogsService(mock_connection)
 
-        start_time = u"2020-06-06 00:00:00"
-        end_time = u"2020-09-09 12:12:21"
+        start_time = "2020-06-06 00:00:00"
+        end_time = "2020-09-09 12:12:21"
         for _ in service.get_all(begin_time=start_time, end_time=end_time):
             pass
         expected_data = {

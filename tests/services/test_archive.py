@@ -30,7 +30,7 @@ MOCK_GET_ORG_COLD_STORAGE_RESPONSE = (
 MOCK_EMPTY_GET_ORG_COLD_STORAGE_RESPONSE = """{"coldStorageRows": []}"""
 
 
-class TestArchiveService(object):
+class TestArchiveService:
     @pytest.fixture
     def mock_get_archives_response(self, mocker):
         response = mocker.MagicMock(spec=Response)

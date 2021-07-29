@@ -5,12 +5,12 @@ import pytest
 from py42.services._connection import Connection
 from py42.services.storage.securitydata import StorageSecurityDataService
 
-uri = u"/api/SecurityDetectionEvent"
+uri = "/api/SecurityDetectionEvent"
 mock_min_ts = 1000000
 mock_max_ts = 2000000
 
-min_ts_string_format = u"1970-01-12 13:46:40"
-max_ts_string_format = u"1970-01-24 03:33:20"
+min_ts_string_format = "1970-01-12 13:46:40"
+max_ts_string_format = "1970-01-24 03:33:20"
 
 
 @pytest.fixture
@@ -34,50 +34,50 @@ def max_time_str():
 
 
 def get_time_str_from_timestamp(timestamp):
-    return datetime.utcfromtimestamp(timestamp).strftime(u"%Y-%m-%dT%H:%M:%S.%fZ")
+    return datetime.utcfromtimestamp(timestamp).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
 
 @pytest.fixture
 def security_detection_events_params(min_time_str, max_time_str):
     return {
-        u"userUid": None,
-        u"planUid": None,
-        u"cursor": "Cursor",
-        u"incFiles": None,
-        u"eventType": None,
-        u"minTs": min_time_str,
-        u"maxTs": max_time_str,
-        u"summarize": None,
+        "userUid": None,
+        "planUid": None,
+        "cursor": "Cursor",
+        "incFiles": None,
+        "eventType": None,
+        "minTs": min_time_str,
+        "maxTs": max_time_str,
+        "summarize": None,
     }
 
 
 @pytest.fixture
 def plan_security_detection_events_params(security_detection_events_params):
     params = security_detection_events_params
-    params[u"planUid"] = "PlanUid"
-    params[u"incFiles"] = True
-    params[u"eventType"] = "EventType"
+    params["planUid"] = "PlanUid"
+    params["incFiles"] = True
+    params["eventType"] = "EventType"
     return params
 
 
 @pytest.fixture
 def user_security_detection_events_params(security_detection_events_params):
     params = security_detection_events_params
-    params[u"userUid"] = "UserUid"
-    params[u"incFiles"] = True
-    params[u"eventType"] = "EventType"
+    params["userUid"] = "UserUid"
+    params["incFiles"] = True
+    params["eventType"] = "EventType"
     return params
 
 
 @pytest.fixture
 def security_detection_event_summary_params(security_detection_events_params):
     params = security_detection_events_params
-    params[u"userUid"] = "UserUid"
-    params[u"summarize"] = True
+    params["userUid"] = "UserUid"
+    params["summarize"] = True
     return params
 
 
-class TestStorageSecurityService(object):
+class TestStorageSecurityService:
     def test_get_plan_security_events_calls_get_with_correct_params(
         self,
         storage_security_service,
@@ -86,10 +86,10 @@ class TestStorageSecurityService(object):
     ):
         params = plan_security_detection_events_params
         storage_security_service.get_plan_security_events(
-            plan_uid=params[u"planUid"],
-            cursor=params[u"cursor"],
-            include_files=params[u"incFiles"],
-            event_types=params[u"eventType"],
+            plan_uid=params["planUid"],
+            cursor=params["cursor"],
+            include_files=params["incFiles"],
+            event_types=params["eventType"],
             min_timestamp=datetime.utcfromtimestamp(mock_min_ts),
             max_timestamp=datetime.utcfromtimestamp(mock_max_ts),
         )
@@ -103,10 +103,10 @@ class TestStorageSecurityService(object):
     ):
         params = user_security_detection_events_params
         storage_security_service.get_user_security_events(
-            user_uid=params[u"userUid"],
-            cursor=params[u"cursor"],
-            include_files=params[u"incFiles"],
-            event_types=params[u"eventType"],
+            user_uid=params["userUid"],
+            cursor=params["cursor"],
+            include_files=params["incFiles"],
+            event_types=params["eventType"],
             min_timestamp=datetime.utcfromtimestamp(mock_min_ts),
             max_timestamp=datetime.utcfromtimestamp(mock_max_ts),
         )
@@ -120,8 +120,8 @@ class TestStorageSecurityService(object):
     ):
         params = security_detection_event_summary_params
         storage_security_service.get_security_detection_event_summary(
-            user_uid=params[u"userUid"],
-            cursor=params[u"cursor"],
+            user_uid=params["userUid"],
+            cursor=params["cursor"],
             min_timestamp=datetime.utcfromtimestamp(mock_min_ts),
             max_timestamp=datetime.utcfromtimestamp(mock_max_ts),
         )
@@ -135,8 +135,8 @@ class TestStorageSecurityService(object):
     ):
         params = security_detection_event_summary_params
         storage_security_service.get_security_detection_event_summary(
-            user_uid=params[u"userUid"],
-            cursor=params[u"cursor"],
+            user_uid=params["userUid"],
+            cursor=params["cursor"],
             min_timestamp=min_ts_string_format,
             max_timestamp=max_ts_string_format,
         )
@@ -150,8 +150,8 @@ class TestStorageSecurityService(object):
     ):
         params = security_detection_event_summary_params
         storage_security_service.get_security_detection_event_summary(
-            user_uid=params[u"userUid"],
-            cursor=params[u"cursor"],
+            user_uid=params["userUid"],
+            cursor=params["cursor"],
             min_timestamp=datetime.strptime(min_ts_string_format, "%Y-%m-%d %H:%M:%S"),
             max_timestamp=datetime.strptime(max_ts_string_format, "%Y-%m-%d %H:%M:%S"),
         )

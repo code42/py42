@@ -25,7 +25,7 @@ def storage_service_factory(mocker, storage_archive_service):
     return factory
 
 
-class TestArchiveAccessFactory(object):
+class TestArchiveAccessFactory:
     def test_archive_accessor_manager_constructor_constructs_successfully(
         self, archive_service, storage_service_factory
     ):

@@ -1,7 +1,7 @@
 from py42.sdk.queries.alerts.filters import AlertState
 
 
-class AlertsClient(object):
+class AlertsClient:
     """A client to expose alert API.
 
     `Rest Documentation <https://developer.code42.com/api/#tag/Alerts>`__

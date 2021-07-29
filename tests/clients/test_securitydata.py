@@ -232,7 +232,7 @@ AVAILABLE_VERSION_RESPONSE = """{
 }"""
 
 
-class TestSecurityClient(object):
+class TestSecurityClient:
     @pytest.fixture
     def connection(self, mocker):
         return mocker.MagicMock(spec=Connection)

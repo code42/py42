@@ -3,10 +3,10 @@ from py42.clients._archiveaccess import ArchiveExplorer
 
 
 _FILE_SIZE_CALC_TIMEOUT = 10
-_DEFAULT_BACKUP_SET_ID = u"1"
+_DEFAULT_BACKUP_SET_ID = "1"
 
 
-class ArchiveClient(object):
+class ArchiveClient:
     """A module for getting information about backup archives on storage nodes along with
     functionality for streaming a file from backup.
     """
@@ -40,7 +40,7 @@ class ArchiveClient(object):
             objects that each contain a page of archives.
         """
         return self._archive_service.get_all_archives_from_value(
-            device_guid, u"backupSourceGuid"
+            device_guid, "backupSourceGuid"
         )
 
     def stream_from_backup(
@@ -187,15 +187,15 @@ class ArchiveClient(object):
         )
 
     def _select_backup_set_id(self, device_guid, destination_guid):
-        backup_sets = self.get_backup_sets(device_guid, destination_guid)[u"backupSets"]
+        backup_sets = self.get_backup_sets(device_guid, destination_guid)["backupSets"]
         if not backup_sets:
             return None
         for backup_set in backup_sets:
-            backup_set_id = backup_set[u"backupSetId"]
+            backup_set_id = backup_set["backupSetId"]
             if str(backup_set_id) == _DEFAULT_BACKUP_SET_ID:
                 return backup_set_id
 
-        return backup_sets[0][u"backupSetId"]
+        return backup_sets[0]["backupSetId"]
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific
@@ -224,7 +224,7 @@ class ArchiveClient(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of restore history.
         """
-        return self._archive_service.get_all_restore_history(days, u"orgId", org_id)
+        return self._archive_service.get_all_restore_history(days, "orgId", org_id)
 
     def get_all_user_restore_history(self, days, user_id):
         """Gets all restore jobs from the past given days for the user with the given ID.
@@ -238,7 +238,7 @@ class ArchiveClient(object):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of restore history.
         """
-        return self._archive_service.get_all_restore_history(days, u"userId", user_id)
+        return self._archive_service.get_all_restore_history(days, "userId", user_id)
 
     def get_all_device_restore_history(self, days, device_id):
         """Gets all restore jobs from the past given days for the device with the given ID.
@@ -253,7 +253,7 @@ class ArchiveClient(object):
             that each contain a page of restore history.
         """
         return self._archive_service.get_all_restore_history(
-            days, u"computerId", device_id
+            days, "computerId", device_id
         )
 
     def update_cold_storage_purge_date(self, archive_guid, purge_date):
@@ -275,8 +275,8 @@ class ArchiveClient(object):
         self,
         org_id,
         include_child_orgs=True,
-        sort_key=u"archiveHoldExpireDate",
-        sort_dir=u"asc",
+        sort_key="archiveHoldExpireDate",
+        sort_dir="asc",
     ):
         """Returns a detailed list of cold storage archive information for a given org ID.
 

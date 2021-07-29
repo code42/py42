@@ -5,11 +5,11 @@ from py42.services import BaseService
 class SavedSearchService(BaseService):
     """A service to interact with saved search APIs."""
 
-    _version = u"v1"
-    _resource = u"/forensic-search/queryservice/api/{}/saved".format(_version)
+    _version = "v1"
+    _resource = f"/forensic-search/queryservice/api/{_version}/saved"
 
     def __init__(self, connection, file_event_client):
-        super(SavedSearchService, self).__init__(connection)
+        super().__init__(connection)
         self._file_event_client = file_event_client
 
     def get(self):
@@ -18,7 +18,7 @@ class SavedSearchService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"{}".format(self._resource)
+        uri = f"{self._resource}"
         return self._connection.get(uri)
 
     def get_by_id(self, search_id):
@@ -29,7 +29,7 @@ class SavedSearchService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"{}/{}".format(self._resource, search_id)
+        uri = f"{self._resource}/{search_id}"
         return self._connection.get(uri)
 
     def get_query(self, search_id, page_number=None, page_size=None):
@@ -43,7 +43,7 @@ class SavedSearchService(BaseService):
             :class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`
         """
         response = self.get_by_id(search_id)
-        search = response[u"searches"][0]
+        search = response["searches"][0]
         return FileEventQuery.from_dict(
             search, page_number=page_number, page_size=page_size
         )

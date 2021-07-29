@@ -55,8 +55,8 @@ def create_eq_filter_group(term, value):
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
 
-    filter_list = [create_query_filter(term, u"IS", value)]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "IS", value)]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_not_eq_filter_group(term, value):
@@ -73,8 +73,8 @@ def create_not_eq_filter_group(term, value):
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
 
-    filter_list = [create_query_filter(term, u"IS_NOT", value)]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "IS_NOT", value)]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_is_in_filter_group(term, value_list):
@@ -90,8 +90,8 @@ def create_is_in_filter_group(term, value_list):
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
 
-    filter_list = [create_query_filter(term, u"IS", value) for value in value_list]
-    return create_filter_group(filter_list, u"OR" if len(filter_list) > 1 else u"AND")
+    filter_list = [create_query_filter(term, "IS", value) for value in value_list]
+    return create_filter_group(filter_list, "OR" if len(filter_list) > 1 else "AND")
 
 
 def create_not_in_filter_group(term, value_list):
@@ -108,8 +108,8 @@ def create_not_in_filter_group(term, value_list):
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
 
-    filter_list = [create_query_filter(term, u"IS_NOT", value) for value in value_list]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "IS_NOT", value) for value in value_list]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_on_or_after_filter_group(term, value):
@@ -126,8 +126,8 @@ def create_on_or_after_filter_group(term, value):
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
 
-    filter_list = [create_query_filter(term, u"ON_OR_AFTER", value)]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "ON_OR_AFTER", value)]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_on_or_before_filter_group(term, value):
@@ -144,8 +144,8 @@ def create_on_or_before_filter_group(term, value):
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
 
-    filter_list = [create_query_filter(term, u"ON_OR_BEFORE", value)]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "ON_OR_BEFORE", value)]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_in_range_filter_group(term, start_value, end_value):
@@ -164,10 +164,10 @@ def create_in_range_filter_group(term, start_value, end_value):
     """
 
     filter_list = [
-        create_query_filter(term, u"ON_OR_AFTER", start_value),
-        create_query_filter(term, u"ON_OR_BEFORE", end_value),
+        create_query_filter(term, "ON_OR_AFTER", start_value),
+        create_query_filter(term, "ON_OR_BEFORE", end_value),
     ]
-    return create_filter_group(filter_list, u"AND")
+    return create_filter_group(filter_list, "AND")
 
 
 def create_within_the_last_filter_group(term, value):
@@ -181,14 +181,14 @@ def create_within_the_last_filter_group(term, value):
     Returns:
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
-    filter_list = [create_query_filter(term, u"WITHIN_THE_LAST", value)]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "WITHIN_THE_LAST", value)]
+    return create_filter_group(filter_list, "AND")
 
 
-class QueryFilterStringField(object):
+class QueryFilterStringField:
     """Helper class for creating filters where the search value is a string."""
 
-    _term = u"override_string_field_name"
+    _term = "override_string_field_name"
 
     @classmethod
     def eq(cls, value):
@@ -246,10 +246,10 @@ class QueryFilterStringField(object):
         return create_not_in_filter_group(cls._term, value_list)
 
 
-class QueryFilterTimestampField(object):
+class QueryFilterTimestampField:
     """Helper class for creating filters where the search value is a timestamp."""
 
-    _term = u"override_timestamp_field_name"
+    _term = "override_timestamp_field_name"
 
     @staticmethod
     def _parse_timestamp(value):
@@ -340,10 +340,10 @@ class QueryFilterTimestampField(object):
         )
 
 
-class QueryFilterBooleanField(object):
+class QueryFilterBooleanField:
     """Helper class for creating filters where the search value is a boolean."""
 
-    _term = u"override_boolean_field_name"
+    _term = "override_boolean_field_name"
 
     @classmethod
     def is_true(cls):
@@ -353,7 +353,7 @@ class QueryFilterBooleanField(object):
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        return create_eq_filter_group(cls._term, u"TRUE")
+        return create_eq_filter_group(cls._term, "TRUE")
 
     @classmethod
     def is_false(cls):
@@ -363,10 +363,10 @@ class QueryFilterBooleanField(object):
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        return create_eq_filter_group(cls._term, u"FALSE")
+        return create_eq_filter_group(cls._term, "FALSE")
 
 
-class QueryFilter(object):
+class QueryFilter:
     """Class for constructing a single filter object for use in a search query.
 
     When :func:`str()` is called on a :class:`~py42.sdk.queries.query_filter.QueryFilter`
@@ -400,7 +400,7 @@ class QueryFilter(object):
             :class:`~py42.sdk.queries.query_filter.QueryFilter`
         """
 
-        return cls(_dict[u"term"], _dict[u"operator"], value=_dict.get(u"value"))
+        return cls(_dict["term"], _dict["operator"], value=_dict.get("value"))
 
     @property
     def term(self):
@@ -421,16 +421,16 @@ class QueryFilter(object):
         return self._value
 
     def __str__(self):
-        value = u"null" if self._value is None else u'"{}"'.format(self._value)
-        return u'{{"operator":"{0}", "term":"{1}", "value":{2}}}'.format(
+        value = "null" if self._value is None else f'"{self._value}"'
+        return '{{"operator":"{0}", "term":"{1}", "value":{2}}}'.format(
             self._operator, self._term, value
         )
 
     def __iter__(self):
         output_dict = OrderedDict()
-        output_dict[u"operator"] = self._operator
-        output_dict[u"term"] = self._term
-        output_dict[u"value"] = self._value
+        output_dict["operator"] = self._operator
+        output_dict["term"] = self._term
+        output_dict["value"] = self._value
         for key in output_dict:
             yield key, output_dict[key]
 
@@ -446,7 +446,7 @@ class QueryFilter(object):
         return hash(str(self))
 
 
-class FilterGroup(object):
+class FilterGroup:
     """Class for constructing a logical sub-group of related filters from a list of
     :class:`~py42.sdk.queries.query_filter.QueryFilter` objects. Takes a list of
     :class:`~py42.sdk.queries.query_filter.QueryFilter` objects and combines them
@@ -461,7 +461,7 @@ class FilterGroup(object):
     :class:`~py42.sdk.queries.query_filter.FilterGroup` after it's been created.
     """
 
-    def __init__(self, filter_list, filter_clause=u"AND"):
+    def __init__(self, filter_list, filter_clause="AND"):
         self._filter_list = filter_list
         self._filter_clause = filter_clause
 
@@ -477,8 +477,8 @@ class FilterGroup(object):
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        filter_list = [QueryFilter.from_dict(item) for item in _dict[u"filters"]]
-        return cls(filter_list, filter_clause=_dict[u"filterClause"])
+        filter_list = [QueryFilter.from_dict(item) for item in _dict["filters"]]
+        return cls(filter_list, filter_clause=_dict["filterClause"])
 
     @property
     def filter_list(self):
@@ -504,14 +504,14 @@ class FilterGroup(object):
         return sorted(list(set(self.filter_list)), key=str)
 
     def __str__(self):
-        filters_string = u",".join(str(filter_item) for filter_item in self._filter_set)
-        return u'{{"filterClause":"{0}", "filters":[{1}]}}'.format(
+        filters_string = ",".join(str(filter_item) for filter_item in self._filter_set)
+        return '{{"filterClause":"{0}", "filters":[{1}]}}'.format(
             self._filter_clause, filters_string
         )
 
     def __iter__(self):
         filter_list = [dict(item) for item in self._filter_set]
-        output_dict = {u"filterClause": self._filter_clause, u"filters": filter_list}
+        output_dict = {"filterClause": self._filter_clause, "filters": filter_list}
         for key in output_dict:
             yield key, output_dict[key]
 

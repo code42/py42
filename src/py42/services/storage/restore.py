@@ -7,13 +7,13 @@ from py42.services import BaseService
 
 
 class PushRestoreLocation:
-    ORIGINAL_LOCATION = u"ORIGINAL_LOCATION"
-    TARGET_DIRECTORY = u"TARGET_DIRECTORY"
+    ORIGINAL_LOCATION = "ORIGINAL_LOCATION"
+    TARGET_DIRECTORY = "TARGET_DIRECTORY"
 
 
 class PushRestoreExistingFiles:
-    OVERWRITE_ORIGINAL = u"OVERWRITE_ORIGINAL"
-    RENAME_ORIGINAL = u"RENAME_ORIGINAL"
+    OVERWRITE_ORIGINAL = "OVERWRITE_ORIGINAL"
+    RENAME_ORIGINAL = "RENAME_ORIGINAL"
 
 
 class RestoreService(BaseService):
@@ -27,24 +27,24 @@ class RestoreService(BaseService):
         """Creates a web restore connection.
         See https://console.us.code42.com/apidocviewer/#WebRestoreSession
         """
-        uri = u"/api/WebRestoreSession"
+        uri = "/api/WebRestoreSession"
         json_dict = {
-            u"computerGuid": device_guid,
-            u"dataKeyToken": data_key_token,
-            u"privatePassword": private_password,
-            u"encryptionKey": encryption_key,
+            "computerGuid": device_guid,
+            "dataKeyToken": data_key_token,
+            "privatePassword": private_password,
+            "encryptionKey": encryption_key,
         }
         try:
             return self._connection.post(uri, json=json_dict)
         except Py42InternalServerError as err:
-            if u"PRIVATE_PASSWORD_INVALID" in err.response.text:
+            if "PRIVATE_PASSWORD_INVALID" in err.response.text:
                 raise Py42InvalidArchivePassword(err)
-            elif u"CUSTOM_KEY_INVALID" in err.response.text:
+            elif "CUSTOM_KEY_INVALID" in err.response.text:
                 raise Py42InvalidArchiveEncryptionKey(err)
             raise
 
     def get_restore_status(self, job_id):
-        uri = u"/api/WebRestoreJob/{}".format(job_id)
+        uri = f"/api/WebRestoreJob/{job_id}"
         return self._connection.get(uri)
 
 
@@ -69,26 +69,26 @@ class PushRestoreService(RestoreService):
         existing_files=None,
     ):
         """Submits a push restore job."""
-        uri = u"/api/v9/restore/push"
+        uri = "/api/v9/restore/push"
         json_dict = {
-            u"sourceComputerGuid": device_guid,
-            u"acceptingComputerGuid": accepting_device_guid,
-            u"webRestoreSessionId": web_restore_session_id,
-            u"targetNodeGuid": node_guid,
-            u"restorePath": restore_path,
-            u"restoreGroups": restore_groups,
-            u"numFiles": num_files,
-            u"numBytes": num_bytes,
-            u"showDeleted": show_deleted,
-            u"permitRestoreToDifferentOsVersion": permit_restore_to_different_os_version,
-            u"filePermissions": file_permissions,
-            u"restoreFullPath": restore_full_path,
-            u"fileLocation": file_location,
-            u"existingFiles": existing_files,
+            "sourceComputerGuid": device_guid,
+            "acceptingComputerGuid": accepting_device_guid,
+            "webRestoreSessionId": web_restore_session_id,
+            "targetNodeGuid": node_guid,
+            "restorePath": restore_path,
+            "restoreGroups": restore_groups,
+            "numFiles": num_files,
+            "numBytes": num_bytes,
+            "showDeleted": show_deleted,
+            "permitRestoreToDifferentOsVersion": permit_restore_to_different_os_version,
+            "filePermissions": file_permissions,
+            "restoreFullPath": restore_full_path,
+            "fileLocation": file_location,
+            "existingFiles": existing_files,
         }
         try:
             return self._connection.post(uri, json=json_dict)
         except Py42BadRequestError as err:
-            if u"CREATE_FAILED" in err.response.text:
+            if "CREATE_FAILED" in err.response.text:
                 raise Py42BadRestoreRequestError(err)
             raise

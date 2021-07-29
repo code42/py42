@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 from requests import Response
 from tests.conftest import get_file_selection
@@ -41,7 +40,7 @@ def mock_walking_tree_for_windows_path(mocker, storage_archive_service):
     mock_get_file_path_metadata_responses(mocker, storage_archive_service, responses)
 
 
-class GetFilePathMetadataResponses(object):
+class GetFilePathMetadataResponses:
     @staticmethod
     def get_file_id_from_request(response):
         return response[1]
@@ -289,7 +288,7 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
         file_id = kwargs["file_id"]
 
         if file_id not in file_id_responses:
-            raise Exception("Unexpected request with file_id: {}".format(file_id))
+            raise Exception(f"Unexpected request with file_id: {file_id}")
 
         mock_response = mocker.MagicMock(spec=Response)
         mock_response.status_code = 200
@@ -312,7 +311,7 @@ def single_dir_selection():
     return [get_file_selection(FileType.DIRECTORY, PATH_TO_DOWNLOADS_FOLDER)]
 
 
-class TestArchiveContentStreamer(object):
+class TestArchiveContentStreamer:
     def test_archive_accessor_constructor_constructs_successfully(
         self, storage_archive_service, restore_job_manager, file_size_poller
     ):
@@ -487,7 +486,7 @@ class TestArchiveContentStreamer(object):
             archive_accessor.stream_from_backup(
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
-        expected_message = u"File not found in archive for device device-guid at path {}".format(
+        expected_message = "File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
         assert e.value.args[0] == expected_message
@@ -505,13 +504,13 @@ class TestArchiveContentStreamer(object):
             restore_job_manager,
             file_size_poller,
         )
-        invalid_path_in_downloads_folder = u"/Users/qa/Downloads/吞"
+        invalid_path_in_downloads_folder = "/Users/qa/Downloads/吞"
 
         with pytest.raises(Py42ArchiveFileNotFoundError) as e:
             archive_accessor.stream_from_backup(
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
-        expected_message = u"File not found in archive for device device-guid at path {}".format(
+        expected_message = "File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
         assert e.value.args[0] == expected_message
@@ -537,7 +536,7 @@ class TestArchiveContentStreamer(object):
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
 
-        expected_message = u"File not found in archive for device device-guid at path {}".format(
+        expected_message = "File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
         assert e.value.args[0] == expected_message
@@ -563,7 +562,7 @@ class TestArchiveContentStreamer(object):
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
 
-        expected_message = u"File not found in archive for device device-guid at path {}".format(
+        expected_message = "File not found in archive for device device-guid at path {}".format(
             invalid_path_in_downloads_folder
         )
         assert e.value.args[0] == expected_message
@@ -591,7 +590,7 @@ class TestArchiveContentStreamer(object):
         )
 
 
-class TestArchiveContentPusher(object):
+class TestArchiveContentPusher:
     def test_stream_to_device_calls_restore_manager_with_expected_args(
         self, push_service, restore_job_manager, file_size_poller
     ):

@@ -24,7 +24,7 @@ TEST_ADDED_EXCLUDED_PATH = "C:/Users/TestUser/Downloads/"
 @pytest.fixture
 def archive_service(mocker):
     service = mocker.MagicMock(spec=ArchiveService)
-    data_key_text = '{{"dataKeyToken": "{0}"}}'.format(TEST_DATA_KEY_TOKEN)
+    data_key_text = f'{{"dataKeyToken": "{TEST_DATA_KEY_TOKEN}"}}'
     data_key_response = create_mock_response(mocker, data_key_text)
     service.get_data_key_token.return_value = data_key_response
     backup_set_text = '{{"backupSets": [{{"backupSetId": "{0}"}}]}}'.format(
@@ -32,7 +32,7 @@ def archive_service(mocker):
     )
     backup_set_response = create_mock_response(mocker, backup_set_text)
     service.get_backup_sets.return_value = backup_set_response
-    restore_info_text = '{{"nodeGuid": "{0}"}}'.format(TEST_NODE_GUID)
+    restore_info_text = f'{{"nodeGuid": "{TEST_NODE_GUID}"}}'
     restore_info_resp = create_mock_response(mocker, restore_info_text)
 
     def get_web_restore_info_side_effect(src_guid, dest_guid):

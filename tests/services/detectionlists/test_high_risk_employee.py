@@ -18,14 +18,14 @@ CREATE_USER_SAMPLE_RESPONSE = """
 """
 
 
-class TestHighRiskEmployeeFilters(object):
+class TestHighRiskEmployeeFilters:
     def test_choices_are_correct(self):
         actual = HighRiskEmployeeFilters.choices()
         expected = ["OPEN", "EXFILTRATION_24_HOURS", "EXFILTRATION_30_DAYS"]
         assert set(actual) == set(expected)
 
 
-class TestHighRiskEmployeeClient(object):
+class TestHighRiskEmployeeClient:
     @pytest.fixture
     def mock_connection_post_success(self, mock_connection, py42_response):
         py42_response.status_code = 201

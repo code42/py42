@@ -1,7 +1,7 @@
 from py42.constants import SortDirection
 
 
-class TestSortDirection(object):
+class TestSortDirection:
     def test_choices_are_correct(self):
         actual = SortDirection.choices()
         expected = ["DESC", "ASC"]

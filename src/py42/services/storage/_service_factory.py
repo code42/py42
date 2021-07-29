@@ -10,7 +10,7 @@ from py42.services.storage.restore import PushRestoreService
 from py42.services.storage.securitydata import StorageSecurityDataService
 
 
-class StorageServiceFactory(object):
+class StorageServiceFactory:
     def __init__(self, connection, device_service, connection_manager):
         self._connection = connection
         self._device_service = device_service
@@ -21,7 +21,7 @@ class StorageServiceFactory(object):
         return PushRestoreService(conn)
 
     def create_archive_service(self, device_guid, destination_guid):
-        auth = FileArchiveAuth(self._connection, u"my", device_guid, destination_guid)
+        auth = FileArchiveAuth(self._connection, "my", device_guid, destination_guid)
         conn = self._connection_manager.get_storage_connection(auth)
         return StorageArchiveService(conn)
 
@@ -42,13 +42,11 @@ class StorageServiceFactory(object):
         # take the first destination guid we find
         destination_list = response["backupUsage"]
         if not destination_list:
-            raise Exception(
-                u"No destinations found for device guid: {}".format(device_guid)
-            )
-        return destination_list[0][u"targetComputerGuid"]
+            raise Exception(f"No destinations found for device guid: {device_guid}")
+        return destination_list[0]["targetComputerGuid"]
 
 
-class ConnectionManager(object):
+class ConnectionManager:
     def __init__(self, session_cache=None):
         self._session_cache = session_cache or {}
         self._list_update_lock = Lock()
@@ -69,7 +67,7 @@ class ConnectionManager(object):
                         )
                         self._session_cache[url.lower()] = connection
         except Exception as ex:
-            message = u"Failed to create or retrieve connection, caused by: {}".format(
+            message = "Failed to create or retrieve connection, caused by: {}".format(
                 str(ex)
             )
             raise Py42StorageSessionInitializationError(ex, message)

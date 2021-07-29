@@ -1,17 +1,17 @@
 def bool_to_str(value):
-    if isinstance(value, bool) or value in (u"true", u"false"):
+    if isinstance(value, bool) or value in ("true", "false"):
         return str(value).lower()
     else:
-        raise ValueError(u"Value must be True or False")
+        raise ValueError("Value must be True or False")
 
 
 def str_to_bool(value):
-    if value.lower() == u"true":
+    if value.lower() == "true":
         return True
-    if value.lower() == u"false":
+    if value.lower() == "false":
         return False
     else:
-        raise ValueError(u"str_to_bool expects either 'true' or 'false'.")
+        raise ValueError("str_to_bool expects either 'true' or 'false'.")
 
 
 def to_list(value):
@@ -23,7 +23,7 @@ def to_list(value):
 
 def to_comma_separated(value):
     if isinstance(value, (list, tuple)):
-        return u",".join(value)
+        return ",".join(value)
     else:
         return value
 
@@ -60,4 +60,4 @@ def gb_to_bytes(gb):
     try:
         return gb * 1000 ** 3
     except ValueError:
-        raise AttributeError(u"value must be numeric.")
+        raise AttributeError("value must be numeric.")

@@ -26,23 +26,23 @@ class FileEventQuery(BaseQuery):
     """
 
     def __init__(self, *args, **kwargs):
-        super(FileEventQuery, self).__init__(*args, **kwargs)
-        self.sort_key = u"eventId"
+        super().__init__(*args, **kwargs)
+        self.sort_key = "eventId"
 
     def __str__(self):
-        groups_string = u",".join(
+        groups_string = ",".join(
             str(group_item) for group_item in self._filter_group_list
         )
         if self.page_token is not None:
-            paging_prop = u'"srtDir":"{}", "srtKey":"{}", "pgToken":"{}"'.format(
+            paging_prop = '"srtDir":"{}", "srtKey":"{}", "pgToken":"{}"'.format(
                 self.sort_direction, self.sort_key, self.page_token
             )
 
         else:
-            paging_prop = u'"srtDir":"{}", "srtKey":"{}", "pgNum":{}'.format(
+            paging_prop = '"srtDir":"{}", "srtKey":"{}", "pgNum":{}'.format(
                 self.sort_direction, self.sort_key, self.page_number,
             )
-        json = u'{{"groupClause":"{0}", "groups":[{1}], {2}, "pgSize":{3}}}'.format(
+        json = '{{"groupClause":"{0}", "groups":[{1}], {2}, "pgSize":{3}}}'.format(
             self._group_clause, groups_string, paging_prop, self.page_size
         )
         return json
@@ -50,11 +50,11 @@ class FileEventQuery(BaseQuery):
     def __iter__(self):
         filter_group_list = [dict(item) for item in self._filter_group_list]
         output_dict = {
-            u"groupClause": self._group_clause,
-            u"groups": filter_group_list,
-            u"pgSize": self.page_size,
-            u"srtDir": self.sort_direction,
-            u"srtKey": self.sort_key,
+            "groupClause": self._group_clause,
+            "groups": filter_group_list,
+            "pgSize": self.page_size,
+            "srtDir": self.sort_direction,
+            "srtKey": self.sort_key,
         }
 
         if self.page_token is not None:
@@ -77,8 +77,8 @@ def create_exists_filter_group(term):
     Returns:
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
-    filter_list = [create_query_filter(term, u"EXISTS")]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "EXISTS")]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_not_exists_filter_group(term):
@@ -92,8 +92,8 @@ def create_not_exists_filter_group(term):
     Returns:
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
-    filter_list = [create_query_filter(term, u"DOES_NOT_EXIST")]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "DOES_NOT_EXIST")]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_greater_than_filter_group(term, value):
@@ -109,8 +109,8 @@ def create_greater_than_filter_group(term, value):
     Returns:
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
-    filter_list = [create_query_filter(term, u"GREATER_THAN", value)]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "GREATER_THAN", value)]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_less_than_filter_group(term, value):
@@ -126,8 +126,8 @@ def create_less_than_filter_group(term, value):
     Returns:
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
-    filter_list = [create_query_filter(term, u"LESS_THAN", value)]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "LESS_THAN", value)]
+    return create_filter_group(filter_list, "AND")
 
 
 class FileEventFilterStringField(QueryFilterStringField):
@@ -154,10 +154,10 @@ class FileEventFilterStringField(QueryFilterStringField):
         return create_not_exists_filter_group(cls._term)
 
 
-class FileEventFilterComparableField(object):
+class FileEventFilterComparableField:
     """Helper class for creating filters with the ``GREATER_THAN``/``LESS_THAN`` filter clauses."""
 
-    _term = u"override_boolean_field_name"
+    _term = "override_boolean_field_name"
 
     @classmethod
     def greater_than(cls, value):

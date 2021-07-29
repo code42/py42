@@ -8,7 +8,7 @@ class Actor(FileEventFilterStringField):
     (applies to cloud data source events only).
     """
 
-    _term = u"actor"
+    _term = "actor"
 
 
 class DirectoryID(FileEventFilterStringField):
@@ -16,7 +16,7 @@ class DirectoryID(FileEventFilterStringField):
      occurred (applies to cloud data source events only).
     """
 
-    _term = u"directoryId"
+    _term = "directoryId"
 
 
 class Shared(QueryFilterBooleanField):
@@ -24,7 +24,7 @@ class Shared(QueryFilterBooleanField):
     (applies to cloud data source events only).
     """
 
-    _term = u"shared"
+    _term = "shared"
 
 
 class SharedWith(FileEventFilterStringField):
@@ -32,7 +32,7 @@ class SharedWith(FileEventFilterStringField):
     time of the event (applies to cloud data source events only).
     """
 
-    _term = u"sharedWith"
+    _term = "sharedWith"
 
 
 class SharingTypeAdded(FileEventFilterStringField):
@@ -45,11 +45,11 @@ class SharingTypeAdded(FileEventFilterStringField):
         - :attr:`SharingTypeAdded.OUTSIDE_TRUSTED_DOMAIN`
     """
 
-    _term = u"sharingTypeAdded"
+    _term = "sharingTypeAdded"
 
-    SHARED_VIA_LINK = u"SharedViaLink"
-    IS_PUBLIC = u"IsPublic"
-    OUTSIDE_TRUSTED_DOMAIN = u"OutsideTrustedDomains"
+    SHARED_VIA_LINK = "SharedViaLink"
+    IS_PUBLIC = "IsPublic"
+    OUTSIDE_TRUSTED_DOMAIN = "OutsideTrustedDomains"
 
     @staticmethod
     def choices():

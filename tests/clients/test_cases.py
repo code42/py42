@@ -87,10 +87,10 @@ class TestCasesClient:
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
         cases_client.get_all(
-            min_create_time=u"2021-01-01 00:00:00",
-            max_create_time=u"2021-02-01 00:00:00",
-            min_update_time=u"2021-01-31 00:00:00",
-            max_update_time=u"2021-02-20 00:00:00",
+            min_create_time="2021-01-01 00:00:00",
+            max_create_time="2021-02-01 00:00:00",
+            min_update_time="2021-01-31 00:00:00",
+            max_update_time="2021-02-20 00:00:00",
         )
         created_at_range = "2021-01-01T00:00:00.000Z/2021-02-01T00:00:00.000Z"
         updated_at_range = "2021-01-31T00:00:00.000Z/2021-02-20T00:00:00.000Z"
@@ -113,10 +113,10 @@ class TestCasesClient:
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
         cases_client.get_all(
             min_create_time=1609439400,
-            min_update_time=u"2021-02-01 00:00:00",
+            min_update_time="2021-02-01 00:00:00",
             max_create_time=1612117800.0,
             max_update_time=datetime.strptime(
-                u"2021-02-20 00:00:00", u"%Y-%m-%d %H:%M:%S"
+                "2021-02-20 00:00:00", "%Y-%m-%d %H:%M:%S"
             ),
             subject="subject",
             assignee="a",
@@ -144,7 +144,7 @@ class TestCasesClient:
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
         cases_client.get_all(
             max_update_time=datetime.strptime(
-                u"2021-02-20 00:00:00", u"%Y-%m-%d %H:%M:%S"
+                "2021-02-20 00:00:00", "%Y-%m-%d %H:%M:%S"
             )
         )
         expected_range = "1970-01-01T00:00:00.000Z/2021-02-20T00:00:00.000Z"

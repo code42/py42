@@ -251,18 +251,10 @@ class SecurityDataClient(object):
             device_guid, md5_hash, sha256_hash, path
         )
         if version:
-            pds = self._storage_service_factory.create_preservation_data_service(
-                version[u"storageNodeURL"]
-            )
-            token = pds.get_download_token(
-                version[u"archiveGuid"],
-                version[u"fileId"],
-                version[u"versionTimestamp"],
-            )
-            return pds.get_file(str(token))
+            return self._get_file_stream(version)
 
         raise Py42Error(
-            u"No file with hash {} available for download on any storage node.".format(
+            u"No file with hash {} available for download.".format(
                 checksum
             )
         )
@@ -279,7 +271,10 @@ class SecurityDataClient(object):
         response = self._preservation_data_service.get_file_version_list(
             device_guid, md5_hash, sha256_hash, path
         )
-        versions = response[u"versions"]
+        versions = response.data.get(u"securityEventVersionsMatchingChecksum") \
+            or response.data.get(u"securityEventVersionsAtPath") \
+            or response.data.get(u"preservationVersions")
+
         if versions:
             exact_match = next(
                 (
@@ -307,8 +302,37 @@ class SecurityDataClient(object):
             version = self._preservation_data_service.find_file_version(
                 md5_hash, sha256_hash, paths
             )
-            if version.status_code != 204:
+            if version.status_code == 200:
                 return version
+
+    def _get_file_stream(self, version):
+        if version.get(u"edsUrl"):
+            return self._get_exfiltrated_file(version)
+
+        return self._get_stored_file(version)
+
+    def _get_stored_file(self, version):
+        pds = self._storage_service_factory.create_preservation_data_service(
+            version[u"storageNodeURL"]
+        )
+        token = pds.get_download_token(
+            version[u"archiveGuid"],
+            version[u"fileId"],
+            version[u"versionTimestamp"],
+        )
+        return pds.get_file(str(token))
+
+    def _get_exfiltrated_file(self, version):
+        eds = self._storage_service_factory.create_exfiltrated_data_service(
+            version[u"edsUrl"]
+        )
+        token = eds.get_download_token(
+            version[u"deviceUid"],
+            version[u"eventId"],
+            version[u"filePath"],
+            version[u"versionTimestamp"]
+        )
+        return eds.get_file(str(token))
 
     def _get_plan_storage_infos(self, plan_destination_map):
         plan_infos = []

@@ -149,16 +149,14 @@ class AlertsClient(object):
         Args:
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
             ascending (bool): Determines if sort ordering should be ascending/descending
-                based on alert creation time. Defaults to True.
+                based on alert creation time (overrides the sort order on the query object).
+                Defaults to True.
 
         Returns:
             generator: An object that iterates over alert detail items.
         """
-        if isinstance(query, string_type):
-            query = AlertQuery.from_dict(json.loads(query))
         query.page_size = 100
-        if ascending:
-            query.sort_direction = "asc"
+        query.sort_direction = "asc" if ascending else "desc"
         pages = self._alert_service.search_all_pages(query)
         for page in pages:
             alert_ids = [alert["id"] for alert in page["alerts"]]

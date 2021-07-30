@@ -86,7 +86,7 @@ point to your virtual environment, and you should be ready to go!
 
 ## Run a full build
 
-We use [tox](https://tox.readthedocs.io/en/latest/#) to run our build against Python 2.7, 3.5, 3.6, 3.7, and 3.8. When run locally, `tox` will run only against the version of python that your virtual envrionment is running, but all versions will be validated against when you [open a PR](#opening-a-pr).
+We use [tox](https://tox.readthedocs.io/en/latest/#) to run our build against Python 3.6, 3.7, and 3.8. When run locally, `tox` will run only against the version of python that your virtual envrionment is running, but all versions will be validated against when you [open a PR](#opening-a-pr).
 
 To run all the unit tests, do a test build of the documentation, and check that the code meets all style requirements, simply run:
 

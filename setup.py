@@ -33,11 +33,11 @@ setup(
     install_requires=["requests>=2.3"],
     extras_require={
         "dev": [
-            "flake8==3.8.3",
-            "pytest==4.6.11",
-            "pytest-cov==2.10.0",
-            "pytest-mock==2.0.0",
-            "tox==3.17.1",
+            "flake8==3.9.2",
+            "pytest==6.2.4",
+            "pytest-cov==2.12.1",
+            "pytest-mock==3.6.1",
+            "tox==3.24.0",
         ]
     },
     classifiers=[
@@ -45,10 +45,7 @@ setup(
         "Natural Language :: English",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",

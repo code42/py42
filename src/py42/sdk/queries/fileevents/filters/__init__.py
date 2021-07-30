@@ -6,3 +6,4 @@ from py42.sdk.queries.fileevents.filters.event_filter import *
 from py42.sdk.queries.fileevents.filters.exposure_filter import *
 from py42.sdk.queries.fileevents.filters.file_filter import *
 from py42.sdk.queries.fileevents.filters.print_filter import *
+from py42.sdk.queries.fileevents.filters.risk_filter import *

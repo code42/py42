@@ -141,7 +141,7 @@ class AlertsClient(object):
         """
         return self._alert_service.get_aggregate_data(alert_id)
 
-    def iter_all_alert_details(self, query, ascending=True):
+    def get_all_alert_details(self, query, ascending=True):
         """
         Helper method that combines `.get_all_pages()` and `.get_details()`.
         Returns an iterator of all alert details in chronological order.

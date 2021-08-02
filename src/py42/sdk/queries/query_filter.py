@@ -1,4 +1,3 @@
-from collections import OrderedDict
 from datetime import datetime
 
 from py42.util import convert_datetime_to_epoch
@@ -427,10 +426,11 @@ class QueryFilter:
         )
 
     def __iter__(self):
-        output_dict = OrderedDict()
-        output_dict["operator"] = self._operator
-        output_dict["term"] = self._term
-        output_dict["value"] = self._value
+        output_dict = {
+            "operator": self._operator,
+            "term": self._term,
+            "value": self._value,
+        }
         for key in output_dict:
             yield key, output_dict[key]
 

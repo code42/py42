@@ -38,6 +38,12 @@ from py42.services.users import UserService
 from py42.usercontext import UserContext
 
 
+def get_login_configuration(host_address, username):
+    conn = Connection.from_host_address(host_address)
+    uri = "/c42api/v3/LoginConfiguration"
+    return conn.get(uri, params={"username": username})
+
+
 def from_local_account(host_address, username, password, totp=None):
     """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using the
     supplied credentials. This method supports only accounts created within the Code42 console or using the
@@ -85,6 +91,7 @@ class SDKClient(object):
     def __init__(self, main_connection, auth):
         services, user_ctx = _init_services(main_connection, auth)
         self._clients = _init_clients(services, main_connection)
+        self._connection = main_connection
         self._user_ctx = user_ctx
 
     @classmethod
@@ -132,6 +139,10 @@ class SDKClient(object):
         main_connection = Connection.from_host_address(host_address, auth=custom_auth)
 
         return cls(main_connection, custom_auth)
+
+    def get_login_configuration(self, username):
+        uri = "/c42api/v3/LoginConfiguration"
+        return self._connection.get(uri, params={"username": username})
 
     @property
     def serveradmin(self):

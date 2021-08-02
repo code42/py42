@@ -137,7 +137,7 @@ class AlertsClient(object):
         """
         return self._alert_service.get_aggregate_data(alert_id)
 
-    def get_all_alert_details(self, query, ascending=True):
+    def get_all_alert_details(self, query):
         """
         Helper method that combines :func:`.get_all_pages()` and :func:`.get_details()`.
         Returns an iterator of alert detail objects in chronological order by alert
@@ -153,15 +153,13 @@ class AlertsClient(object):
             generator: An object that iterates over alert detail items.
         """
         query.page_size = 100
-        query.sort_direction = "asc" if ascending else "desc"
-        query.sort_key = "CreatedAt"
+        sort_key = query.sort_key[0].lower() + query.sort_key[1:]
+        reverse = query.sort_direction == "desc"
         pages = self._alert_service.search_all_pages(query)
         for page in pages:
             alert_ids = [alert["id"] for alert in page["alerts"]]
             alert_details = self._alert_service.get_details(alert_ids)
             for alert in sorted(
-                alert_details["alerts"],
-                key=lambda x: x["createdAt"],
-                reverse=not ascending,
+                alert_details["alerts"], key=lambda x: x[sort_key], reverse=reverse,
             ):
                 yield alert

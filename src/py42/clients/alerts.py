@@ -154,6 +154,8 @@ class AlertsClient(object):
         """
         query.page_size = 100
         sort_key = query.sort_key[0].lower() + query.sort_key[1:]
+        if sort_key == "alertId":
+            sort_key = "id"
         reverse = query.sort_direction == "desc"
         pages = self._alert_service.search_all_pages(query)
         for page in pages:

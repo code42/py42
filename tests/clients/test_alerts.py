@@ -8,12 +8,132 @@ from py42.sdk.queries.alerts.alert_query import AlertQuery
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
 
-ALERT_A = {"id": "A", "createdAt": "2021-01-01T09:40:05.2837100Z"}
-ALERT_B = {"id": "B", "createdAt": "2021-02-02T18:24:15.5284760Z"}
-ALERT_C = {"id": "C", "createdAt": "2021-03-03T09:40:26.6477830Z"}
-ALERT_D = {"id": "D", "createdAt": "2021-04-04T09:40:50.7749710Z"}
-ALERT_E = {"id": "E", "createdAt": "2021-05-05T21:29:34.5510380Z"}
-ALERT_F = {"id": "F", "createdAt": "2021-06-06T21:24:50.7541390Z"}
+ALERT_A = {
+    "id": "A",
+    "createdAt": "2021-01-01T09:40:05.2837100Z",
+    "actor": "A",
+    "type": "A",
+    "name": "A",
+    "description": "A",
+    "actorId": "A",
+    "target": "A",
+    "severity": "A",
+    "ruleSource": "A",
+    "observations": "A",
+    "notes": "A",
+    "state": "A",
+    "stateLastModifiedAt": "2021-01-01T09:40:05.2837100Z",
+    "stateLastModifiedBy": "A",
+    "lastModifiedTime": "2021-01-01T09:40:05.2837100Z",
+    "lastModifiedBy": "A",
+    "ruleId": "A",
+    "tenantId": "A",
+}
+ALERT_B = {
+    "id": "B",
+    "createdAt": "2021-02-02T18:24:15.5284760Z",
+    "actor": "B",
+    "type": "B",
+    "name": "B",
+    "description": "B",
+    "actorId": "B",
+    "target": "B",
+    "severity": "B",
+    "ruleSource": "B",
+    "observations": "B",
+    "notes": "B",
+    "state": "B",
+    "stateLastModifiedAt": "2021-02-02T18:24:15.5284760Z",
+    "stateLastModifiedBy": "B",
+    "lastModifiedTime": "2021-02-02T18:24:15.5284760Z",
+    "lastModifiedBy": "B",
+    "ruleId": "B",
+    "tenantId": "B",
+}
+ALERT_C = {
+    "id": "C",
+    "createdAt": "2021-03-03T09:40:26.6477830Z",
+    "actor": "C",
+    "type": "C",
+    "name": "C",
+    "description": "C",
+    "actorId": "C",
+    "target": "C",
+    "severity": "C",
+    "ruleSource": "C",
+    "observations": "C",
+    "notes": "C",
+    "state": "C",
+    "stateLastModifiedAt": "2021-03-03T09:40:26.6477830Z",
+    "stateLastModifiedBy": "C",
+    "lastModifiedTime": "2021-03-03T09:40:26.6477830Z",
+    "lastModifiedBy": "C",
+    "ruleId": "C",
+    "tenantId": "C",
+}
+ALERT_D = {
+    "id": "D",
+    "createdAt": "2021-04-04T09:40:50.7749710Z",
+    "actor": "D",
+    "type": "D",
+    "name": "D",
+    "description": "D",
+    "actorId": "D",
+    "target": "D",
+    "severity": "D",
+    "ruleSource": "D",
+    "observations": "D",
+    "notes": "D",
+    "state": "D",
+    "stateLastModifiedAt": "2021-04-04T09:40:50.7749710Z",
+    "stateLastModifiedBy": "D",
+    "lastModifiedTime": "2021-04-04T09:40:50.7749710Z",
+    "lastModifiedBy": "D",
+    "ruleId": "D",
+    "tenantId": "D",
+}
+ALERT_E = {
+    "id": "E",
+    "createdAt": "2021-05-05T21:29:34.5510380Z",
+    "actor": "E",
+    "type": "E",
+    "name": "E",
+    "description": "E",
+    "actorId": "E",
+    "target": "E",
+    "severity": "E",
+    "ruleSource": "E",
+    "observations": "E",
+    "notes": "E",
+    "state": "E",
+    "stateLastModifiedAt": "2021-05-05T21:29:34.5510380Z",
+    "stateLastModifiedBy": "E",
+    "lastModifiedTime": "2021-05-05T21:29:34.5510380Z",
+    "lastModifiedBy": "E",
+    "ruleId": "E",
+    "tenantId": "E",
+}
+ALERT_F = {
+    "id": "F",
+    "createdAt": "2021-06-06T21:24:50.7541390Z",
+    "actor": "F",
+    "type": "F",
+    "name": "F",
+    "description": "F",
+    "actorId": "F",
+    "target": "F",
+    "severity": "F",
+    "ruleSource": "F",
+    "observations": "F",
+    "notes": "F",
+    "state": "F",
+    "stateLastModifiedAt": "2021-06-06T21:24:50.7541390Z",
+    "stateLastModifiedBy": "F",
+    "lastModifiedTime": "2021-06-06T21:24:50.7541390Z",
+    "lastModifiedBy": "F",
+    "ruleId": "F",
+    "tenantId": "F",
+}
 TEST_ALERTS = [ALERT_A, ALERT_B, ALERT_C, ALERT_D, ALERT_E, ALERT_F]
 
 
@@ -157,39 +277,82 @@ class TestAlertsClient(object):
             "F",
         ]
 
-    def test_alerts_client_get_all_alert_details_sorts_results_ascending_by_default(
-        self, mock_alerts_service_with_pages, mock_alert_rules_service, mock_details
+    @pytest.mark.parametrize(
+        "sort_key",
+        [
+            "AlertId",
+            "TenantId",
+            "Type",
+            "Name",
+            "Description",
+            "Actor",
+            "ActorId",
+            "Target",
+            "Severity",
+            "RuleSource",
+            "CreatedAt",
+            "Observations",
+            "Notes",
+            "State",
+            "StateLastModifiedAt",
+            "StateLastModifiedBy",
+            "LastModifiedTime",
+            "LastModifiedBy",
+            "RuleId",
+        ],
+    )
+    def test_alerts_client_get_all_alert_details_sorts_results_according_to_query_sort_key(
+        self,
+        mock_alerts_service_with_pages,
+        mock_alert_rules_service,
+        mock_details,
+        sort_key,
     ):
         mock_alerts_service = mock_alerts_service_with_pages(ascending=True)
         mock_alerts_service.get_details = mock_details
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         query = AlertQuery()
+        query.sort_direction = "asc"
+        query.sort_key = sort_key
         results = list(alert_client.get_all_alert_details(query))
         assert results == [ALERT_A, ALERT_B, ALERT_C, ALERT_D, ALERT_E, ALERT_F]
 
+    @pytest.mark.parametrize(
+        "sort_key",
+        [
+            "AlertId",
+            "TenantId",
+            "Type",
+            "Name",
+            "Description",
+            "Actor",
+            "ActorId",
+            "Target",
+            "Severity",
+            "RuleSource",
+            "CreatedAt",
+            "Observations",
+            "Notes",
+            "State",
+            "StateLastModifiedAt",
+            "StateLastModifiedBy",
+            "LastModifiedTime",
+            "LastModifiedBy",
+            "RuleId",
+        ],
+    )
     def test_alerts_client_get_all_alert_details_sorts_results_descending_when_specified(
-        self, mock_alerts_service_with_pages, mock_alert_rules_service, mock_details
+        self,
+        mock_alerts_service_with_pages,
+        mock_alert_rules_service,
+        mock_details,
+        sort_key,
     ):
         mock_alerts_service = mock_alerts_service_with_pages(ascending=False)
         mock_alerts_service.get_details = mock_details
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         query = AlertQuery()
-        results = list(alert_client.get_all_alert_details(query, ascending=False))
+        query.sort_direction = "desc"
+        query.sort_key = sort_key
+        results = list(alert_client.get_all_alert_details(query))
         assert results == [ALERT_F, ALERT_E, ALERT_D, ALERT_C, ALERT_B, ALERT_A]
-
-    def test_alerts_client_get_all_alert_details_overrides_query_page_size_and_sorting_properties(
-        self, mock_alerts_service_with_pages, mock_alert_rules_service, mock_details
-    ):
-        mock_alerts_service = mock_alerts_service_with_pages(ascending=True)
-        mock_alerts_service.get_details = mock_details
-        alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
-        query = AlertQuery()
-        query.page_size = 1000
-
-        list(alert_client.get_all_alert_details(query, ascending=False))
-        assert query.page_size == 100
-        assert query.sort_direction == "desc"
-        assert query.sort_key == "CreatedAt"
-
-        list(alert_client.get_all_alert_details(query, ascending=True))
-        assert query.sort_direction == "asc"

@@ -303,7 +303,7 @@ class SecurityDataClient(object):
                 md5_hash, sha256_hash, paths
             )
             if version.status_code == 200:
-                return version
+                return version.data
 
     def _get_file_stream(self, version):
         if version.get(u"edsUrl"):

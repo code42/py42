@@ -121,6 +121,7 @@ def py42_response(mocker, text):
     response.encoding = "utf-8"
     response.__getitem__ = lambda _, key: json.loads(text)[key]
     response.data = json.loads(text)
+    response.text = text
     return response
 
 

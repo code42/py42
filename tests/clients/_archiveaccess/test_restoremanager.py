@@ -1,8 +1,7 @@
 import json
 import time
 
-from requests import Response
-from tests.conftest import TEST_ACCEPTING_GUID
+from tests.conftest import TEST_ACCEPTING_GUID, py42_response
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DEVICE_GUID
 from tests.conftest import TEST_DOWNLOADS_DIR_ID
@@ -74,10 +73,7 @@ def mock_start_restore_response(mocker, storage_archive_service, response):
         num_bytes,
         **kwargs
     ):
-        start_restore_response = mocker.MagicMock(spec=Response)
-        start_restore_response.text = response
-        start_restore_response.status_code = 200
-        return Py42Response(start_restore_response)
+        return py42_response(mocker, response)
 
     storage_archive_service.start_restore.side_effect = mock_start_restore
 
@@ -85,10 +81,7 @@ def mock_start_restore_response(mocker, storage_archive_service, response):
 def mock_get_restore_status_responses(mocker, storage_archive_service, json_responses):
     responses = []
     for json_response in json_responses:
-        get_restore_status_response = mocker.MagicMock(spec=Response)
-        get_restore_status_response.text = json_response
-        get_restore_status_response.status_code = 200
-        responses.append(Py42Response(get_restore_status_response))
+        responses.append(py42_response(mocker, json_response))
 
     storage_archive_service.get_restore_status.side_effect = responses
 
@@ -119,13 +112,12 @@ class TestFileSizePoller(object):
 
     def get_create_job_side_effect(self, mocker):
         def create_job(guid, file_id, *args, **kwargs):
-            resp = mocker.MagicMock(spec=Response)
             if file_id == TEST_DOWNLOADS_FILE_ID:
-                resp.text = json.dumps({"jobId": self.DOWNLOADS_JOB})
+                text = json.dumps({"jobId": self.DOWNLOADS_JOB})
             elif file_id == TEST_DOWNLOADS_DIR_ID:
-                resp.text = json.dumps({"jobId": self.EXT_JOB})
+                text = json.dumps({"jobId": self.EXT_JOB})
 
-            return Py42Response(resp)
+            return py42_response(mocker, text)
 
         return create_job
 
@@ -133,14 +125,13 @@ class TestFileSizePoller(object):
         self, mocker,
     ):
         def get_status(job_id, device_guid):
-            resp = mocker.MagicMock(spec=Response)
             if job_id == self.DOWNLOADS_JOB:
                 self.EXTERNAL_DIR_SIZES["status"] = "DONE"
-                resp.text = json.dumps(self.EXTERNAL_DIR_SIZES)
+                text = json.dumps(self.EXTERNAL_DIR_SIZES)
             elif job_id == self.EXT_JOB:
                 self.DOWNLOADS_DIR_SIZES["status"] = "DONE"
-                resp.text = json.dumps(self.DOWNLOADS_DIR_SIZES)
-            return Py42Response(resp)
+                text = json.dumps(self.DOWNLOADS_DIR_SIZES)
+            return py42_response(mocker, text)
 
         return get_status
 
@@ -184,16 +175,14 @@ class TestFileSizePoller(object):
         desktop_statuses = ["DONE", "WORKING", "WORKING"]
 
         def get_file_sizes(job_id, device_id):
-            resp = mocker.MagicMock(spec=Response)
             if job_id == self.DOWNLOADS_JOB:
                 status = desktop_statuses.pop()
                 self.EXTERNAL_DIR_SIZES["status"] = status
-                resp.text = json.dumps(self.EXTERNAL_DIR_SIZES)
 
             elif job_id == self.EXT_JOB:
                 self.EXTERNAL_DIR_SIZES["status"] = "DONE"
-                resp.text = json.dumps(self.EXTERNAL_DIR_SIZES)
-            return Py42Response(resp)
+
+            return py42_response(mocker, json.dumps(self.EXTERNAL_DIR_SIZES))
 
         storage_archive_service.get_file_size_job.side_effect = get_file_sizes
         poller = FileSizePoller(storage_archive_service, TEST_DEVICE_GUID)

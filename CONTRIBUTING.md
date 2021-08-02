@@ -47,8 +47,8 @@ eval "$(pyenv virtualenv-init -)"
 Then, create your virtual environment.
 
 ```bash
-pyenv install 3.6.10
-pyenv virtualenv 3.6.10 py42
+pyenv install 3.6.13
+pyenv virtualenv 3.6.13 py42
 pyenv activate py42
 ```
 

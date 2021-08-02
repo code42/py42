@@ -140,7 +140,8 @@ class AlertsClient(object):
     def get_all_alert_details(self, query, ascending=True):
         """
         Helper method that combines `.get_all_pages()` and `.get_details()`.
-        Returns an iterator of all alert details in chronological order.
+        Returns an iterator of alert detail objects in chronological order by alert
+        creation date.
 
         Args:
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
@@ -153,6 +154,7 @@ class AlertsClient(object):
         """
         query.page_size = 100
         query.sort_direction = "asc" if ascending else "desc"
+        query.sort_key = "CreatedAt"
         pages = self._alert_service.search_all_pages(query)
         for page in pages:
             alert_ids = [alert["id"] for alert in page["alerts"]]

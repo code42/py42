@@ -177,7 +177,7 @@ class TestAlertsClient(object):
         results = list(alert_client.get_all_alert_details(query, ascending=False))
         assert results == [ALERT_F, ALERT_E, ALERT_D, ALERT_C, ALERT_B, ALERT_A]
 
-    def test_alerts_client_get_all_alert_details_overrides_query_page_size_to_100_and_sets_sort_direction_properly(
+    def test_alerts_client_get_all_alert_details_overrides_query_page_size_and_sorting_properties(
         self, mock_alerts_service_with_pages, mock_alert_rules_service, mock_details
     ):
         mock_alerts_service = mock_alerts_service_with_pages(ascending=True)
@@ -189,6 +189,7 @@ class TestAlertsClient(object):
         list(alert_client.get_all_alert_details(query, ascending=False))
         assert query.page_size == 100
         assert query.sort_direction == "desc"
+        assert query.sort_key == "CreatedAt"
 
         list(alert_client.get_all_alert_details(query, ascending=True))
         assert query.sort_direction == "asc"

@@ -139,7 +139,7 @@ class AlertsClient(object):
 
     def get_all_alert_details(self, query, ascending=True):
         """
-        Helper method that combines `.get_all_pages()` and `.get_details()`.
+        Helper method that combines :func:`.get_all_pages()` and :func:`.get_details()`.
         Returns an iterator of alert detail objects in chronological order by alert
         creation date.
 

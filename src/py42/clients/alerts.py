@@ -1,8 +1,4 @@
-import json
-
 from py42.sdk.queries.alerts.filters import AlertState
-from py42.sdk.queries.alerts.alert_query import AlertQuery
-from py42._compat import string_type
 
 
 class AlertsClient(object):

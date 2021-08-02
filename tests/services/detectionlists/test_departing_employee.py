@@ -2,7 +2,7 @@
 from datetime import datetime
 
 import pytest
-from tests.conftest import create_mock_error
+from tests.conftest import create_mock_error, py42_response
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.exceptions import Py42BadRequestError
@@ -65,29 +65,27 @@ class TestDepartingEmployeeFilters(object):
 
 class TestDepartingEmployeeClient(object):
     @pytest.fixture
-    def mock_get_all_response(self, py42_response):
-        py42_response.text = _GET_ALL_RESPONSE
-        return py42_response
+    def mock_get_all_response(self, mocker):
+        return py42_response(mocker, _GET_ALL_RESPONSE)
 
     @pytest.fixture
-    def mock_get_all_response_empty(self, py42_response):
-        py42_response.text = _GET_ALL_EMPTY_RESPONSE
-        return py42_response
+    def mock_get_all_response_empty(self, mocker):
+        return py42_response(mocker, _GET_ALL_EMPTY_RESPONSE)
 
     @pytest.fixture
-    def mock_user_client(self, mock_connection, user_context, py42_response):
+    def mock_user_client(self, mock_connection, user_context, mocker):
         user_client = UserService(mock_connection)
-        mock_connection.post.return_value = py42_response
+        mock_connection.post.return_value = py42_response(mocker, "{}")
         return user_client
 
     @pytest.fixture
     def mock_detection_list_user_client(
-        self, mock_connection, user_context, py42_response, mock_user_client
+        self, mock_connection, user_context, mocker, mock_user_client
     ):
         user_client = DetectionListUserService(
             mock_connection, user_context, mock_user_client
         )
-        mock_connection.post.return_value = py42_response
+        mock_connection.post.return_value = py42_response(mocker, "{}")
         return user_client
 
     @pytest.mark.parametrize(

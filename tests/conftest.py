@@ -115,12 +115,12 @@ def unauthorized_response(mocker, http_error):
     return response
 
 
-@pytest.fixture
-def py42_response(mocker):
+def py42_response(mocker, text):
     response = mocker.MagicMock(spec=Py42Response)
     response.status_code = 200
-    response.encoding = None
-    response.__getitem__ = lambda _, key: json.loads(response.text)[key]
+    response.encoding = "utf-8"
+    response.__getitem__ = lambda _, key: json.loads(text)[key]
+    response.data = json.loads(text)
     return response
 
 

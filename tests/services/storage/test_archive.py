@@ -1,7 +1,7 @@
 import pytest
 from requests import HTTPError
 from requests import Response
-from tests.conftest import TEST_BACKUP_SET_ID
+from tests.conftest import TEST_BACKUP_SET_ID, py42_response
 from tests.conftest import TEST_DATA_KEY_TOKEN
 from tests.conftest import TEST_DESTINATION_GUID_1
 from tests.conftest import TEST_DEVICE_GUID
@@ -43,12 +43,11 @@ TEST_JOB_ID = "46289723"
 
 
 @pytest.fixture
-def connection(mocker, py42_response):
+def connection(mocker):
     py_connection = mocker.MagicMock(spec=Connection)
-    py42_response.text = '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}'
     py_connection._auth = mocker.MagicMock()
     py_connection._auth.destination_guid = TEST_DESTINATION_GUID_1
-    py_connection.post.return_value = py42_response
+    py_connection.post.return_value = py42_response(mocker, '{"dataKeyToken": "FAKE_DATA_KEY_TOKEN"}')
     return py_connection
 
 

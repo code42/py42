@@ -148,6 +148,6 @@ def _convert_observation_json_strings_to_objects(results):
             for observation in alert[u"observations"]:
                 try:
                     observation[u"data"] = json.loads(observation[u"data"])
-                except Exception:
+                except Exception as e:
                     continue
     return results

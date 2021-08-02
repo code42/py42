@@ -1,26 +1,21 @@
-import json
-
 import pytest
 
+from tests.conftest import py42_response
+
 import py42.settings as settings
-from py42.response import Py42Response
 from py42.services.util import get_all_pages
 
 
 @pytest.fixture
 def empty_response(mocker):
-    response = mocker.MagicMock(spec=Py42Response)
-    response.status_code = 200
-    response.text = '{"items": []}'
-    response.__getitem__ = lambda _, key: json.loads(response.text)[key]
-    return response
+    return py42_response(mocker, '{"items": []}')
 
 
 @pytest.fixture
-def get_three_three_item_pages(mocker, py42_response, empty_response):
-    py42_response.text = '{"items": [1, 2, 3]}'
+def get_three_three_item_pages(mocker, empty_response):
+    response = py42_response(mocker, '{"items": [1, 2, 3]}')
     mock = mocker.MagicMock()
-    mock.side_effect = [py42_response, py42_response, py42_response, empty_response]
+    mock.side_effect = [response, response, response, empty_response]
     return mock
 
 

@@ -2,6 +2,8 @@ import json
 
 import pytest
 
+from tests.conftest import py42_response
+
 from py42.clients.securitydata import PlanStorageInfo
 from py42.clients.securitydata import SecurityDataClient
 from py42.exceptions import Py42ChecksumNotFoundError
@@ -194,7 +196,7 @@ FILE_LOCATION_RESPONSE = """{
     ]
 }"""
 PDS_FILE_VERSIONS = """{
-    "versions": [
+    "preservationVersions": [
         {
             "storageNodeURL": "https://host-1.com",
             "archiveGuid": "archiveid-1",
@@ -242,53 +244,45 @@ class TestSecurityClient(object):
         return mocker.MagicMock(spec=SecurityDataService)
 
     @pytest.fixture
-    def security_service_one_location(self, security_service, py42_response):
-        py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
-        security_service.get_security_event_locations.return_value = py42_response
+    def security_service_one_location(self, mocker, security_service):
+        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION)
+        security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
-    def security_service_two_plans_one_node(self, security_service, py42_response):
-        py42_response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
-        )
-        security_service.get_security_event_locations.return_value = py42_response
+    def security_service_two_plans_one_node(self, security_service, mocker):
+        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE)
+        security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
-    def security_service_two_plans_two_nodes(self, security_service, py42_response):
-        py42_response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
-        )
-        security_service.get_security_event_locations.return_value = py42_response
+    def security_service_two_plans_two_nodes(self, security_service, mocker):
+        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES)
+        security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
     def security_service_one_plan_two_destinations(
-        self, security_service, py42_response
+        self, security_service, mocker
     ):
-        py42_response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
-        )
-        security_service.get_security_event_locations.return_value = py42_response
+        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS)
+        security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
     def security_service_two_plans_two_destinations(
-        self, security_service, py42_response
+        self, security_service, mocker
     ):
-        py42_response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
-        )
-        security_service.get_security_event_locations.return_value = py42_response
+        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS)
+        security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
     def security_service_two_plans_two_destinations_three_nodes(
-        self, security_service, py42_response
+        self, security_service, mocker
     ):
-        py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
-        security_service.get_security_event_locations.return_value = py42_response
+        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES)
+        security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
@@ -823,6 +817,7 @@ class TestSecurityClient(object):
         response.__getitem__ = lambda _, key: json.loads(response.text).get(key)
         pds_file_version_response = response
         pds_file_version_response.text = PDS_FILE_VERSIONS
+        pds_file_version_response.data = json.loads(PDS_FILE_VERSIONS)
         return pds_file_version_response
 
     @pytest.fixture
@@ -983,7 +978,8 @@ class TestSecurityClient(object):
         file_download,
         available_version,
     ):
-        file_version_list.text = '{"versions": []}'
+        file_version_list.text = '{"preservationVersions": []}'
+        file_version_list.data = json.loads(file_version_list.text)
         preservation_data_service.get_file_version_list.return_value = file_version_list
         preservation_data_service.find_file_version.return_value = available_version
         file_event_service.search.return_value = file_event_search
@@ -1029,7 +1025,7 @@ class TestSecurityClient(object):
         file_version_list,
         file_location,
     ):
-        file_version_list.text = '{"versions": []}'
+        file_version_list.text = '{"preservationVersions": []}'
         file_location.text = '{"locations": []}'
         preservation_data_service.get_file_version_list.return_value = file_version_list
         file_event_service.search.return_value = file_event_search
@@ -1062,7 +1058,7 @@ class TestSecurityClient(object):
         file_version_list,
         available_version,
     ):
-        file_version_list.text = '{"versions": []}'
+        file_version_list.text = '{"preservationVersions": []}'
         preservation_data_service.get_file_version_list.return_value = file_version_list
         file_event_service.search.return_value = file_event_search
         file_event_service.get_file_location_detail_by_sha256.return_value = (
@@ -1222,7 +1218,7 @@ class TestSecurityClient(object):
         file_download,
         available_version,
     ):
-        file_version_list.text = '{"versions": []}'
+        file_version_list.text = '{"preservationVersions": []}'
         preservation_data_service.get_file_version_list.return_value = file_version_list
         preservation_data_service.find_file_version.return_value = available_version
         file_event_service.search.return_value = file_event_search
@@ -1267,7 +1263,7 @@ class TestSecurityClient(object):
         file_version_list,
         file_location,
     ):
-        file_version_list.text = '{"versions": []}'
+        file_version_list.text = '{"preservationVersions": []}'
         file_location.text = '{"locations": []}'
         preservation_data_service.get_file_version_list.return_value = file_version_list
         file_event_service.search.return_value = file_event_search
@@ -1299,7 +1295,7 @@ class TestSecurityClient(object):
         file_version_list,
         available_version,
     ):
-        file_version_list.text = '{"versions": []}'
+        file_version_list.text = '{"preservationVersions": []}'
         preservation_data_service.get_file_version_list.return_value = file_version_list
         file_event_service.search.return_value = file_event_search
         file_event_service.get_file_location_detail_by_sha256.return_value = (

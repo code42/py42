@@ -1,5 +1,5 @@
 import pytest
-from tests.conftest import create_mock_error
+from tests.conftest import create_mock_error, py42_response
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError
@@ -27,26 +27,26 @@ class TestHighRiskEmployeeFilters(object):
 
 class TestHighRiskEmployeeClient(object):
     @pytest.fixture
-    def mock_connection_post_success(self, mock_connection, py42_response):
-        py42_response.status_code = 201
-        py42_response.text = CREATE_USER_SAMPLE_RESPONSE
-        mock_connection.post.return_value = py42_response
+    def mock_connection_post_success(self, mock_connection, mocker):
+        response = py42_response(mocker, CREATE_USER_SAMPLE_RESPONSE)
+        response.status_code = 201
+        mock_connection.post.return_value = response
         return mock_connection
 
     @pytest.fixture
-    def mock_user_client(self, mock_connection, user_context, py42_response):
+    def mock_user_client(self, mock_connection, user_context, mocker):
         user_client = UserService(mock_connection)
-        mock_connection.post.return_value = py42_response
+        mock_connection.post.return_value = py42_response(mocker, "{}")
         return user_client
 
     @pytest.fixture
     def mock_detection_list_user_client(
-        self, mock_connection, user_context, py42_response, mock_user_client
+        self, mock_connection, user_context, mocker, mock_user_client
     ):
         user_client = DetectionListUserService(
             mock_connection, user_context, mock_user_client
         )
-        mock_connection.post.return_value = py42_response
+        mock_connection.post.return_value = py42_response(mocker, "{}")
         return user_client
 
     def test_add_posts_expected_data(

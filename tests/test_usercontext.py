@@ -1,5 +1,7 @@
 import pytest
 
+from tests.conftest import py42_response
+
 from py42.services.administration import AdministrationService
 from py42.usercontext import UserContext
 
@@ -23,10 +25,10 @@ _GET_CURRENT_USER = """
 
 class TestUserContext(object):
     @pytest.fixture
-    def successful_administration_client(self, mocker, py42_response):
+    def successful_administration_client(self, mocker):
         mock_administration_client = mocker.MagicMock(spec=AdministrationService)
-        py42_response.text = _GET_CURRENT_USER
-        mock_administration_client.get_current_tenant.return_value = py42_response
+        response = py42_response(mocker, _GET_CURRENT_USER)
+        mock_administration_client.get_current_tenant.return_value = response
         return mock_administration_client
 
     def test_get_current_tenant_id_returns_tenant_id_from_administration_client_get_current_tenant(

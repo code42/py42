@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 import pytest
+
+from tests.conftest import py42_response
+
 from requests import HTTPError
 from requests import Response
 
 import py42
 from py42.exceptions import Py42ActiveLegalHoldError
 from py42.exceptions import Py42BadRequestError
-from py42.response import Py42Response
 from py42.services.devices import DeviceService
 
 COMPUTER_URI = "/api/Computer"
@@ -32,19 +34,11 @@ MOCK_EMPTY_GET_DEVICE_RESPONSE = """{"totalCount": 3000, "computers":[]}"""
 class TestDeviceService(object):
     @pytest.fixture
     def mock_get_all_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.encoding = "utf-8"
-        response.text = MOCK_GET_DEVICE_RESPONSE
-        return Py42Response(response)
+        return py42_response(mocker, MOCK_GET_DEVICE_RESPONSE)
 
     @pytest.fixture
-    def mock_get_all_empty_response(self, mocker, py42_response):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.encoding = "utf-8"
-        response.text = MOCK_EMPTY_GET_DEVICE_RESPONSE
-        return Py42Response(response)
+    def mock_get_all_empty_response(self, mocker):
+        return py42_response(mocker, MOCK_EMPTY_GET_DEVICE_RESPONSE)
 
     def test_get_all_calls_get_with_uri_and_params(
         self, mock_connection, mock_get_all_response

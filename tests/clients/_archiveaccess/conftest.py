@@ -1,11 +1,9 @@
-import json
 
 import pytest
-from tests.conftest import TEST_SESSION_ID
+from tests.conftest import TEST_SESSION_ID, py42_response
 
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
-from py42.response import Py42Response
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.restore import PushRestoreService
 
@@ -18,13 +16,8 @@ def push_service(mocker):
 @pytest.fixture
 def storage_archive_service(mocker):
     client = mocker.MagicMock(spec=StorageArchiveService)
-    py42_response = mocker.MagicMock(spec=Py42Response)
-    py42_response.text = '{{"webRestoreSessionId": "{0}"}}'.format(TEST_SESSION_ID)
-    py42_response.status_code = 200
-    py42_response.encoding = None
-    py42_response.__getitem__ = lambda _, key: json.loads(py42_response.text).get(key)
-
-    client.create_restore_session.return_value = py42_response
+    response = py42_response(mocker, '{{"webRestoreSessionId": "{0}"}}'.format(TEST_SESSION_ID))
+    client.create_restore_session.return_value = response
     return client
 
 

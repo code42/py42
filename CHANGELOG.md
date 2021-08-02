@@ -14,6 +14,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `RiskIndicator` and `RiskSeverity` filter classes to new `py42.sdk.queries.fileevents.filters.risk_filter` module.
 
+### Removed
+
+- Python 2 and 3.5 usage in the library. Only 3.6+ compatible libraries are being used.
+
 ## 1.16.1 - 2021-07-20
 
 ### Fixed

@@ -140,14 +140,10 @@ class AlertsClient(object):
     def get_all_alert_details(self, query):
         """
         Helper method that combines :func:`.search_all_pages()` and :func:`.get_details()`.
-        Returns an iterator of alert detail objects in chronological order by alert
-        creation date.
+        Returns an iterator of alert detail objects.
 
         Args:
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
-            ascending (bool): Determines if sort ordering should be ascending/descending
-                based on alert creation time (overrides the sort order on the query object).
-                Defaults to True.
 
         Returns:
             generator: An object that iterates over alert detail items.

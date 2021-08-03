@@ -65,7 +65,7 @@ def convert_datetime_to_timestamp_str(date):
 
 
 def convert_datetime_to_epoch(date):
-    return (date - datetime.utcfromtimestamp(0)).total_seconds()
+    return date.timestamp()
 
 
 def format_dict(dict_, label=None):

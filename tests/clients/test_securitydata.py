@@ -1,7 +1,6 @@
 import json
 
 import pytest
-
 from tests.conftest import py42_response
 
 from py42.clients.securitydata import PlanStorageInfo
@@ -16,16 +15,14 @@ from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.securitydata import SecurityDataService
 from py42.services.storage._service_factory import StorageServiceFactory
-from py42.services.storage.preservationdata import StoragePreservationDataService
 from py42.services.storage.exfiltrateddata import ExfiltratedDataService
+from py42.services.storage.preservationdata import StoragePreservationDataService
 from py42.services.storage.securitydata import StorageSecurityDataService
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 RAW_QUERY = "RAW JSON QUERY"
 USER_UID = "user-uid"
-PDS_EXCEPTION_MESSAGE = (
-    "No file with hash {0} available for download."
-)
+PDS_EXCEPTION_MESSAGE = "No file with hash {0} available for download."
 GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION = """{
         "securityPlanLocationsByDestination": [
             {
@@ -317,35 +314,42 @@ class TestSecurityClient(object):
 
     @pytest.fixture
     def security_service_one_location(self, mocker, security_service):
-        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION)
+        response = py42_response(
+            mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
+        )
         security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
     def security_service_two_plans_one_node(self, security_service, mocker):
-        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE)
+        response = py42_response(
+            mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
+        )
         security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
     def security_service_two_plans_two_nodes(self, security_service, mocker):
-        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES)
+        response = py42_response(
+            mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
+        )
         security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
-    def security_service_one_plan_two_destinations(
-        self, security_service, mocker
-    ):
-        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS)
+    def security_service_one_plan_two_destinations(self, security_service, mocker):
+        response = py42_response(
+            mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
+        )
         security_service.get_security_event_locations.return_value = response
         return security_service
 
     @pytest.fixture
-    def security_service_two_plans_two_destinations(
-        self, security_service, mocker
-    ):
-        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS)
+    def security_service_two_plans_two_destinations(self, security_service, mocker):
+        response = py42_response(
+            mocker,
+            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS,
+        )
         security_service.get_security_event_locations.return_value = response
         return security_service
 
@@ -353,7 +357,10 @@ class TestSecurityClient(object):
     def security_service_two_plans_two_destinations_three_nodes(
         self, security_service, mocker
     ):
-        response = py42_response(mocker, GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES)
+        response = py42_response(
+            mocker,
+            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES,
+        )
         security_service.get_security_event_locations.return_value = response
         return security_service
 
@@ -575,7 +582,7 @@ class TestSecurityClient(object):
             spec=StorageSecurityDataService
         )
         response1 = py42_response(mocker, '{"cursor": "1:1"}')
-        response2 = py42_response(mocker, '{}')
+        response2 = py42_response(mocker, "{}")
         mock_storage_security_service.get_plan_security_events.side_effect = [
             response1,
             response2,
@@ -606,7 +613,7 @@ class TestSecurityClient(object):
         mock_storage_security_service = mocker.MagicMock(
             spec=StorageSecurityDataService
         )
-        response = py42_response(mocker, '{}')
+        response = py42_response(mocker, "{}")
         mock_storage_security_service.get_plan_security_events.return_value = response
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
@@ -635,7 +642,7 @@ class TestSecurityClient(object):
             spec=StorageSecurityDataService
         )
         response1 = py42_response(mocker, '{"cursor": "1:1"}')
-        response2 = py42_response(mocker, '{}')
+        response2 = py42_response(mocker, "{}")
         mock_storage_security_service.get_plan_security_events.side_effect = [
             response1,
             response2,
@@ -677,7 +684,7 @@ class TestSecurityClient(object):
         mock_storage_security_service = mocker.MagicMock(
             spec=StorageSecurityDataService
         )
-        response = py42_response(mocker, '{}')
+        response = py42_response(mocker, "{}")
         mock_storage_security_service.get_plan_security_events.return_value = response
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
@@ -713,7 +720,7 @@ class TestSecurityClient(object):
             spec=StorageSecurityDataService
         )
         response1 = py42_response(mocker, '{"cursor": "1:1"}')
-        response2 = py42_response(mocker, '{}')
+        response2 = py42_response(mocker, "{}")
         mock_storage_security_service.get_plan_security_events.side_effect = [
             response1,
             response2,
@@ -746,7 +753,7 @@ class TestSecurityClient(object):
         mock_storage_security_service = mocker.MagicMock(
             spec=StorageSecurityDataService
         )
-        response = py42_response(mocker, '{}')
+        response = py42_response(mocker, "{}")
         mock_storage_security_service.get_plan_security_events.return_value = response
         storage_service_factory.create_security_data_service.return_value = (
             mock_storage_security_service
@@ -779,7 +786,7 @@ class TestSecurityClient(object):
             spec=StorageSecurityDataService
         )
         response1 = py42_response(mocker, '{"cursor": "1:1"}')
-        response2 = py42_response(mocker, '{}')
+        response2 = py42_response(mocker, "{}")
         mock_storage_security_service.get_plan_security_events.side_effect = [
             response1,
             response2,
@@ -919,7 +926,9 @@ class TestSecurityClient(object):
         file_version_list,
         file_download,
     ):
-        file_event_service.search.return_value = py42_response(mocker, file_event_search.text.replace("-2", "-6"))
+        file_event_service.search.return_value = py42_response(
+            mocker, file_event_search.text.replace("-2", "-6")
+        )
         preservation_data_service.get_file_version_list.return_value = file_version_list
         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
         storage_node_client.get_download_token.return_value = file_download
@@ -964,7 +973,7 @@ class TestSecurityClient(object):
         preservation_data_service,
         saved_search_service,
         storage_service_factory,
-        mocker
+        mocker,
     ):
         file_event_search = py42_response(mocker, '{"fileEvents": []}')
         file_event_service.search.return_value = file_event_search
@@ -1036,7 +1045,7 @@ class TestSecurityClient(object):
         preservation_data_service,
         saved_search_service,
         storage_service_factory,
-        file_event_search
+        file_event_search,
     ):
         file_version_list = py42_response(mocker, '{"preservationVersions": []}')
         file_location = py42_response(mocker, '{"locations": []}')
@@ -1153,7 +1162,9 @@ class TestSecurityClient(object):
         file_version_list,
         file_download,
     ):
-        file_event_service.search.return_value = py42_response(mocker, file_event_search.text.replace("-2", "-6"))
+        file_event_service.search.return_value = py42_response(
+            mocker, file_event_search.text.replace("-2", "-6")
+        )
         preservation_data_service.get_file_version_list.return_value = file_version_list
         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
         storage_node_client.get_download_token.return_value = file_download
@@ -1198,9 +1209,11 @@ class TestSecurityClient(object):
         preservation_data_service,
         saved_search_service,
         storage_service_factory,
-        mocker
+        mocker,
     ):
-        file_event_service.search.return_value = py42_response(mocker, '{"fileEvents": []}')
+        file_event_service.search.return_value = py42_response(
+            mocker, '{"fileEvents": []}'
+        )
         security_client = SecurityDataClient(
             security_service,
             file_event_service,
@@ -1269,7 +1282,7 @@ class TestSecurityClient(object):
         saved_search_service,
         storage_service_factory,
         file_event_search,
-        mocker
+        mocker,
     ):
         file_version_list = py42_response(mocker, '{"preservationVersions": []}')
         file_location = py42_response(mocker, '{"locations": []}')
@@ -1301,7 +1314,7 @@ class TestSecurityClient(object):
         file_event_search,
         file_location,
         available_version,
-        mocker
+        mocker,
     ):
         file_version_list = py42_response(mocker, '{"preservationVersions": []}')
         preservation_data_service.get_file_version_list.return_value = file_version_list
@@ -1334,7 +1347,7 @@ class TestSecurityClient(object):
         storage_service_factory,
         file_event_search,
         file_download,
-        mocker
+        mocker,
     ):
         file_version_list = py42_response(mocker, XFC_EXACT_FILE_VERSIONS)
         preservation_data_service.get_file_version_list.return_value = file_version_list
@@ -1355,7 +1368,12 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_md5("testmd5-2")
         assert response == b"stream"
-        download_token_params = ["deviceuid-2", "eventid-2", "/test/file/path-2/", 12344]
+        download_token_params = [
+            "deviceuid-2",
+            "eventid-2",
+            "/test/file/path-2/",
+            12344,
+        ]
         exfiltration_client.get_download_token.assert_called_once_with(
             *download_token_params
         )
@@ -1369,7 +1387,7 @@ class TestSecurityClient(object):
         storage_service_factory,
         file_event_search,
         file_download,
-        mocker
+        mocker,
     ):
         file_version_list = py42_response(mocker, XFC_EXACT_FILE_VERSIONS)
         preservation_data_service.get_file_version_list.return_value = file_version_list
@@ -1390,7 +1408,12 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_sha256("testsha256-2")
         assert response == b"stream"
-        download_token_params = ["deviceuid-2", "eventid-2", "/test/file/path-2/", 12344]
+        download_token_params = [
+            "deviceuid-2",
+            "eventid-2",
+            "/test/file/path-2/",
+            12344,
+        ]
         exfiltration_client.get_download_token.assert_called_once_with(
             *download_token_params
         )
@@ -1404,7 +1427,7 @@ class TestSecurityClient(object):
         storage_service_factory,
         file_event_search,
         file_download,
-        mocker
+        mocker,
     ):
         file_version_list = py42_response(mocker, XFC_MATCHED_FILE_VERSIONS)
         preservation_data_service.get_file_version_list.return_value = file_version_list
@@ -1425,7 +1448,12 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_md5("testmd5-2")
         assert response == b"stream"
-        download_token_params = ["deviceuid-3", "eventid-3", "/test/file/path-3/", 12346]
+        download_token_params = [
+            "deviceuid-3",
+            "eventid-3",
+            "/test/file/path-3/",
+            12346,
+        ]
         exfiltration_client.get_download_token.assert_called_once_with(
             *download_token_params
         )
@@ -1439,7 +1467,7 @@ class TestSecurityClient(object):
         storage_service_factory,
         file_event_search,
         file_download,
-        mocker
+        mocker,
     ):
         file_version_list = py42_response(mocker, XFC_MATCHED_FILE_VERSIONS)
         preservation_data_service.get_file_version_list.return_value = file_version_list
@@ -1460,7 +1488,12 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_sha256("testsha256-2")
         assert response == b"stream"
-        download_token_params = ["deviceuid-3", "eventid-3", "/test/file/path-3/", 12346]
+        download_token_params = [
+            "deviceuid-3",
+            "eventid-3",
+            "/test/file/path-3/",
+            12346,
+        ]
         exfiltration_client.get_download_token.assert_called_once_with(
             *download_token_params
         )

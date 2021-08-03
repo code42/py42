@@ -1,5 +1,6 @@
 import pytest
-from tests.conftest import create_mock_error, py42_response
+from tests.conftest import create_mock_error
+from tests.conftest import py42_response
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42CloudAliasLimitExceededError
@@ -20,7 +21,9 @@ class TestDetectionListUserClient(object):
     @pytest.fixture
     def mock_user_client(self, mock_connection, user_context, mocker):
         user_client = UserService(mock_connection)
-        mock_connection.get.return_value = py42_response(mocker, '{"username":"username"}')
+        mock_connection.get.return_value = py42_response(
+            mocker, '{"username":"username"}'
+        )
         return user_client
 
     @pytest.fixture

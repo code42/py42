@@ -1,7 +1,8 @@
 import json
 import time
 
-from tests.conftest import TEST_ACCEPTING_GUID, py42_response
+from tests.conftest import py42_response
+from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DEVICE_GUID
 from tests.conftest import TEST_DOWNLOADS_DIR_ID

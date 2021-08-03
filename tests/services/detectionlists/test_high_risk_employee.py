@@ -1,5 +1,6 @@
 import pytest
-from tests.conftest import create_mock_error, py42_response
+from tests.conftest import create_mock_error
+from tests.conftest import py42_response
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError

@@ -21,9 +21,7 @@ class TestSavedSearchService(object):
             == "/forensic-search/queryservice/api/v1/saved"
         )
 
-    def test_get_by_id_calls_get_with_expected_uri(
-        self, mock_connection, mocker
-    ):
+    def test_get_by_id_calls_get_with_expected_uri(self, mock_connection, mocker):
         mock_connection.get.return_value = py42_response(mocker, "{}")
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
@@ -44,9 +42,7 @@ class TestSavedSearchService(object):
             == "/forensic-search/queryservice/api/v1/fileevent"
         )
 
-    def test_execute_calls_post_with_expected_query(
-        self, mock_connection, mocker
-    ):
+    def test_execute_calls_post_with_expected_query(self, mock_connection, mocker):
         response = py42_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.get.return_value = response
         file_event_service = FileEventService(mock_connection)
@@ -107,9 +103,7 @@ class TestSavedSearchService(object):
             and posted_data[u"groups"] == []
         )
 
-    def test_get_query_calls_get_with_expected_uri(
-        self, mock_connection, mocker
-    ):
+    def test_get_query_calls_get_with_expected_uri(self, mock_connection, mocker):
         response = py42_response(mocker, '{"searches": [{"groups": []}]}')
         mock_connection.post.return_value = response
         file_event_service = FileEventService(mock_connection)

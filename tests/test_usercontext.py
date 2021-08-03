@@ -1,5 +1,4 @@
 import pytest
-
 from tests.conftest import py42_response
 
 from py42.services.administration import AdministrationService

@@ -1,6 +1,6 @@
-
 import pytest
-from tests.conftest import TEST_SESSION_ID, py42_response
+from tests.conftest import py42_response
+from tests.conftest import TEST_SESSION_ID
 
 from py42.clients._archiveaccess.restoremanager import FileSizePoller
 from py42.clients._archiveaccess.restoremanager import RestoreJobManager
@@ -16,7 +16,9 @@ def push_service(mocker):
 @pytest.fixture
 def storage_archive_service(mocker):
     client = mocker.MagicMock(spec=StorageArchiveService)
-    response = py42_response(mocker, '{{"webRestoreSessionId": "{0}"}}'.format(TEST_SESSION_ID))
+    response = py42_response(
+        mocker, '{{"webRestoreSessionId": "{0}"}}'.format(TEST_SESSION_ID)
+    )
     client.create_restore_session.return_value = response
     return client
 

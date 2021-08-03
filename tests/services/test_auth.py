@@ -1,8 +1,6 @@
 import pytest
-
-from tests.conftest import py42_response
-
 from requests import Request
+from tests.conftest import py42_response
 
 from py42.services._auth import BearerAuth
 from py42.services._auth import CustomJWTAuth

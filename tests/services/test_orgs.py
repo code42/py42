@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import pytest
-
 from tests.conftest import py42_response
 
 import py42.settings

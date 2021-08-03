@@ -25,7 +25,7 @@ class TestExfiltratedDataService(object):
                 u"eventId": "testeventid",
                 u"deviceUid": "testdeviceid",
                 u"filePath": "testfilepath",
-                u"versionTimestamp": 1223
+                u"versionTimestamp": 1223,
             },
         )
 

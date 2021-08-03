@@ -1,6 +1,7 @@
 import pytest
 from requests import Response
-from tests.conftest import TENANT_ID_FROM_RESPONSE, py42_response
+from tests.conftest import py42_response
+from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.response import Py42Response
 from py42.sdk.queries.alerts.alert_query import AlertQuery

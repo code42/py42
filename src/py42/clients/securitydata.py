@@ -254,9 +254,7 @@ class SecurityDataClient(object):
             return self._get_file_stream(version)
 
         raise Py42Error(
-            u"No file with hash {} available for download.".format(
-                checksum
-            )
+            u"No file with hash {} available for download.".format(checksum)
         )
 
     def _get_file_version_for_stream(self, device_guid, md5_hash, sha256_hash, path):
@@ -271,9 +269,11 @@ class SecurityDataClient(object):
         response = self._preservation_data_service.get_file_version_list(
             device_guid, md5_hash, sha256_hash, path
         )
-        versions = response.data.get(u"securityEventVersionsMatchingChecksum") \
-            or response.data.get(u"securityEventVersionsAtPath") \
+        versions = (
+            response.data.get(u"securityEventVersionsMatchingChecksum")
+            or response.data.get(u"securityEventVersionsAtPath")
             or response.data.get(u"preservationVersions")
+        )
 
         if versions:
             if not response.data.get(u"securityEventVersionsAtPath"):
@@ -310,9 +310,7 @@ class SecurityDataClient(object):
             version[u"storageNodeURL"]
         )
         token = pds.get_download_token(
-            version[u"archiveGuid"],
-            version[u"fileId"],
-            version[u"versionTimestamp"],
+            version[u"archiveGuid"], version[u"fileId"], version[u"versionTimestamp"],
         )
         return pds.get_file(str(token))
 
@@ -324,7 +322,7 @@ class SecurityDataClient(object):
             version[u"deviceUid"],
             version[u"eventId"],
             version[u"filePath"],
-            version[u"versionTimestamp"]
+            version[u"versionTimestamp"],
         )
         return eds.get_file(str(token))
 
@@ -489,14 +487,7 @@ class PlanStorageInfo(object):
 
 
 def _get_first_matching_version(versions, md5_hash):
-    exact_match = next(
-        (
-            x
-            for x in versions
-            if x[u"fileMD5"] == md5_hash
-        ),
-        None,
-    )
+    exact_match = next((x for x in versions if x[u"fileMD5"] == md5_hash), None,)
     if exact_match:
         return exact_match
 

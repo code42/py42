@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import pytest
-
-from tests.conftest import py42_response
-
 from requests import HTTPError
 from requests import Response
+from tests.conftest import py42_response
 
 import py42
 from py42.exceptions import Py42ActiveLegalHoldError

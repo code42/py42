@@ -1,6 +1,7 @@
 import pytest
 from requests import Response
-from tests.conftest import TEST_DEVICE_GUID, py42_response
+from tests.conftest import py42_response
+from tests.conftest import TEST_DEVICE_GUID
 
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42StorageSessionInitializationError
@@ -10,9 +11,9 @@ from py42.services.storage._auth import StorageAuth
 from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.archive import StorageArchiveService
+from py42.services.storage.exfiltrateddata import ExfiltratedDataService
 from py42.services.storage.preservationdata import StoragePreservationDataService
 from py42.services.storage.securitydata import StorageSecurityDataService
-from py42.services.storage.exfiltrateddata import ExfiltratedDataService
 
 
 @pytest.fixture

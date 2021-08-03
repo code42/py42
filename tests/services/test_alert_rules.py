@@ -1,10 +1,8 @@
 import json
 
 import pytest
-
-from tests.conftest import py42_response
-
 from requests import Response
+from tests.conftest import py42_response
 
 from py42.exceptions import Py42InvalidRuleError
 from py42.exceptions import Py42NotFoundError
@@ -28,9 +26,7 @@ def mock_detection_list_user_service(mocker):
 
 
 @pytest.fixture
-def mock_detection_list_post_failure_when_invalid_rule_id(
-    mocker, mock_connection
-):
+def mock_detection_list_post_failure_when_invalid_rule_id(mocker, mock_connection):
     response = mocker.MagicMock(spec=Response)
     response.status_code = 400
     exception = mocker.MagicMock(spec=Py42NotFoundError)

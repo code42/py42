@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from requests import Response
 from tests.conftest import py42_response

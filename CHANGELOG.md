@@ -16,7 +16,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Removed
 
-- Python 2 and 3.5 usage in the library. Only 3.6+ compatible libraries are being used.
+- py42 no longer supports python 2.7 or python 3.5.
 
 ## 1.16.1 - 2021-07-20
 

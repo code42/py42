@@ -139,8 +139,13 @@ class AlertsClient(object):
 
     def get_all_alert_details(self, query):
         """
-        Helper method that combines :func:`.search_all_pages()` and :func:`.get_details()`.
+        Helper method that combines :func:`.search_all_pages()` and :func:`.get_details()`
+        methods to get alert objects with alert "observations" details populated.
         Returns an iterator of alert detail objects.
+
+        Note: automatically overrides the `page_size` property on the query object to limit
+        search to 100 results per page, as that is the max that :func:`.get_details()` can
+        request at a time.
 
         Args:
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
@@ -158,6 +163,6 @@ class AlertsClient(object):
             alert_ids = [alert["id"] for alert in page["alerts"]]
             alert_details = self._alert_service.get_details(alert_ids)
             for alert in sorted(
-                alert_details["alerts"], key=lambda x: x[sort_key], reverse=reverse,
+                alert_details["alerts"], key=lambda x: x.get(sort_key), reverse=reverse,
             ):
                 yield alert

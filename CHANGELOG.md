@@ -13,7 +13,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Added
 
 - `RiskIndicator` and `RiskSeverity` filter classes to new `py42.sdk.queries.fileevents.filters.risk_filter` module.
-- support for Incydr SKUs that do not include backup and restore functionality to `sdk.securitydata.stream_file_by_sha256()` and  `sdk.securitydata.stream_file_by_md5()`
+
+- support for Incydr SKUs that do not include backup and restore functionality to `sdk.securitydata.stream_file_by_sha256()` and  `sdk.securitydata.stream_file_by_md5()`.
 
 ## 1.16.1 - 2021-07-20
 

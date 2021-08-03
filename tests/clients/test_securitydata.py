@@ -17,6 +17,7 @@ from py42.services.savedsearch import SavedSearchService
 from py42.services.securitydata import SecurityDataService
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.preservationdata import StoragePreservationDataService
+from py42.services.storage.exfiltrateddata import ExfiltratedDataService
 from py42.services.storage.securitydata import StorageSecurityDataService
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
@@ -195,6 +196,7 @@ FILE_LOCATION_RESPONSE = """{
         }
     ]
 }"""
+
 PDS_FILE_VERSIONS = """{
     "preservationVersions": [
         {
@@ -219,6 +221,76 @@ PDS_FILE_VERSIONS = """{
             "fileId": "fileid-3",
             "fileMD5": "testmd5-3",
             "fileSHA256": "testsha256-3",
+            "versionTimestamp": 12346
+        }
+    ],
+    "securityEventVersionsMatchingChecksum": [],
+    "securityEventVersionsAtPath": []
+}"""
+
+XFC_EXACT_FILE_VERSIONS = """{
+    "preservationVersions": [],
+    "securityEventVersionsMatchingChecksum": [
+        {
+            "edsUrl": "https://host-1.com",
+            "deviceUid": "deviceuid-1",
+            "eventId": "eventid-1",
+            "fileMD5": "testmd5-1",
+            "fileSHA256": "testsha256-1",
+            "filePath": "/test/file/path-1/",
+            "versionTimestamp": 12345
+        },
+        {
+            "edsUrl": "https://host-2.com",
+            "deviceUid": "deviceuid-2",
+            "eventId": "eventid-2",
+            "fileMD5": "testmd5-2",
+            "fileSHA256": "testsha256-2",
+            "filePath": "/test/file/path-2/",
+            "versionTimestamp": 12344
+        },
+        {
+            "edsUrl": "https://host-3.com",
+            "deviceUid": "deviceuid-3",
+            "eventId": "eventid-3",
+            "fileMD5": "testmd5-3",
+            "fileSHA256": "testsha256-3",
+            "filePath": "/test/file/path-3/",
+            "versionTimestamp": 12346
+        }
+    ],
+    "securityEventVersionsAtPath": []
+}"""
+
+XFC_MATCHED_FILE_VERSIONS = """{
+    "preservationVersions": [],
+    "securityEventVersionsMatchingChecksum": [],
+    "securityEventVersionsAtPath": [
+        {
+            "edsUrl": "https://host-1.com",
+            "deviceUid": "deviceuid-1",
+            "eventId": "eventid-1",
+            "fileMD5": "testmd5-1",
+            "fileSHA256": "testsha256-1",
+            "filePath": "/test/file/path-1/",
+            "versionTimestamp": 12345
+        },
+        {
+            "edsUrl": "https://host-2.com",
+            "deviceUid": "deviceuid-2",
+            "eventId": "eventid-2",
+            "fileMD5": "testmd5-2",
+            "fileSHA256": "testsha256-2",
+            "filePath": "/test/file/path-2/",
+            "versionTimestamp": 12344
+        },
+        {
+            "edsUrl": "https://host-3.com",
+            "deviceUid": "deviceuid-3",
+            "eventId": "eventid-3",
+            "fileMD5": "testmd5-3",
+            "fileSHA256": "testsha256-3",
+            "filePath": "/test/file/path-3/",
             "versionTimestamp": 12346
         }
     ]
@@ -1252,6 +1324,146 @@ class TestSecurityClient(object):
             security_client.stream_file_by_md5("mdhash")
 
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("mdhash")
+
+    def test_stream_file_by_md5_when_has_exact_match_calls_get_token_with_expected_params_and_streams_successfully(
+        self,
+        security_service,
+        file_event_service,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+        file_event_search,
+        file_download,
+        mocker
+    ):
+        file_version_list = py42_response(mocker, XFC_EXACT_FILE_VERSIONS)
+        preservation_data_service.get_file_version_list.return_value = file_version_list
+        file_event_service.search.return_value = file_event_search
+        exfiltration_client = mocker.MagicMock(spec=ExfiltratedDataService)
+        exfiltration_client.get_download_token.return_value = file_download
+        exfiltration_client.get_file.return_value = b"stream"
+        storage_service_factory.create_exfiltrated_data_service.return_value = (
+            exfiltration_client
+        )
+
+        security_client = SecurityDataClient(
+            security_service,
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        response = security_client.stream_file_by_md5("testmd5-2")
+        assert response == b"stream"
+        download_token_params = ["deviceuid-2", "eventid-2", "/test/file/path-2/", 12344]
+        exfiltration_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
+
+    def test_stream_file_by_sha256_when_has_exact_match_calls_get_token_with_expected_params_and_streams_successfully(
+        self,
+        security_service,
+        file_event_service,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+        file_event_search,
+        file_download,
+        mocker
+    ):
+        file_version_list = py42_response(mocker, XFC_EXACT_FILE_VERSIONS)
+        preservation_data_service.get_file_version_list.return_value = file_version_list
+        file_event_service.search.return_value = file_event_search
+        exfiltration_client = mocker.MagicMock(spec=ExfiltratedDataService)
+        exfiltration_client.get_download_token.return_value = file_download
+        exfiltration_client.get_file.return_value = b"stream"
+        storage_service_factory.create_exfiltrated_data_service.return_value = (
+            exfiltration_client
+        )
+
+        security_client = SecurityDataClient(
+            security_service,
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        response = security_client.stream_file_by_sha256("testsha256-2")
+        assert response == b"stream"
+        download_token_params = ["deviceuid-2", "eventid-2", "/test/file/path-2/", 12344]
+        exfiltration_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
+
+    def test_stream_file_by_md5_when_has_path_match_calls_get_token_with_expected_params_and_streams_successfully(
+        self,
+        security_service,
+        file_event_service,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+        file_event_search,
+        file_download,
+        mocker
+    ):
+        file_version_list = py42_response(mocker, XFC_MATCHED_FILE_VERSIONS)
+        preservation_data_service.get_file_version_list.return_value = file_version_list
+        file_event_service.search.return_value = file_event_search
+        exfiltration_client = mocker.MagicMock(spec=ExfiltratedDataService)
+        exfiltration_client.get_download_token.return_value = file_download
+        exfiltration_client.get_file.return_value = b"stream"
+        storage_service_factory.create_exfiltrated_data_service.return_value = (
+            exfiltration_client
+        )
+
+        security_client = SecurityDataClient(
+            security_service,
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        response = security_client.stream_file_by_md5("testmd5-2")
+        assert response == b"stream"
+        download_token_params = ["deviceuid-3", "eventid-3", "/test/file/path-3/", 12346]
+        exfiltration_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
+
+    def test_stream_file_by_sha256_when_has_path_match_calls_get_token_with_expected_params_and_streams_successfully(
+        self,
+        security_service,
+        file_event_service,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+        file_event_search,
+        file_download,
+        mocker
+    ):
+        file_version_list = py42_response(mocker, XFC_MATCHED_FILE_VERSIONS)
+        preservation_data_service.get_file_version_list.return_value = file_version_list
+        file_event_service.search.return_value = file_event_search
+        exfiltration_client = mocker.MagicMock(spec=ExfiltratedDataService)
+        exfiltration_client.get_download_token.return_value = file_download
+        exfiltration_client.get_file.return_value = b"stream"
+        storage_service_factory.create_exfiltrated_data_service.return_value = (
+            exfiltration_client
+        )
+
+        security_client = SecurityDataClient(
+            security_service,
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        response = security_client.stream_file_by_sha256("testsha256-2")
+        assert response == b"stream"
+        download_token_params = ["deviceuid-3", "eventid-3", "/test/file/path-3/", 12346]
+        exfiltration_client.get_download_token.assert_called_once_with(
+            *download_token_params
+        )
 
     def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_not_passed(
         self,

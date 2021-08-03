@@ -276,16 +276,17 @@ class SecurityDataClient(object):
             or response.data.get(u"preservationVersions")
 
         if versions:
-            exact_match = next(
-                (
-                    x
-                    for x in versions
-                    if x[u"fileMD5"] == md5_hash
-                ),
-                None,
-            )
-            if exact_match:
-                return exact_match
+            if not response.data.get(u"securityEventVersionsAtPath"):
+                exact_match = next(
+                    (
+                        x
+                        for x in versions
+                        if x[u"fileMD5"] == md5_hash
+                    ),
+                    None,
+                )
+                if exact_match:
+                    return exact_match
 
             most_recent = sorted(
                 versions, key=lambda i: i[u"versionTimestamp"], reverse=True

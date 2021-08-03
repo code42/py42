@@ -1,5 +1,7 @@
 from py42.services import BaseService
 
+from py42._compat import quote
+
 
 class ExfiltratedDataService(BaseService):
 
@@ -21,15 +23,11 @@ class ExfiltratedDataService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing download token for the file.
         """
-        params = {
-            u"deviceUid": device_id,
-            u"eventId": event_id,
-            u"filePath": file_path,
-            u"versionTimestamp": timestamp,
-        }
+        params = u"deviceUid={}&eventId={}&filePath={}&versionTimestamp={}"
+        params = params.format(device_id, event_id, quote(file_path), timestamp)
         resource = u"file-download-token"
-        uri = u"{}{}".format(self._base_uri, resource)
-        return self._connection.get(uri, params=params)
+        uri = u"{}{}?{}".format(self._base_uri, resource, params)
+        return self._connection.get(uri)
 
     def get_file(self, token):
         """Streams a file.

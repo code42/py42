@@ -1367,8 +1367,8 @@ class TestSecurityClient(object):
         response = security_client.stream_file_by_md5("testmd5-2")
         assert response == b"stream"
         download_token_params = [
-            "deviceuid-2",
             "eventid-2",
+            "deviceuid-2",
             "/test/file/path-2/",
             12344,
         ]
@@ -1407,8 +1407,8 @@ class TestSecurityClient(object):
         response = security_client.stream_file_by_sha256("testsha256-2")
         assert response == b"stream"
         download_token_params = [
-            "deviceuid-2",
             "eventid-2",
+            "deviceuid-2",
             "/test/file/path-2/",
             12344,
         ]
@@ -1447,8 +1447,8 @@ class TestSecurityClient(object):
         response = security_client.stream_file_by_md5("testmd5-2")
         assert response == b"stream"
         download_token_params = [
-            "deviceuid-3",
             "eventid-3",
+            "deviceuid-3",
             "/test/file/path-3/",
             12346,
         ]
@@ -1487,8 +1487,8 @@ class TestSecurityClient(object):
         response = security_client.stream_file_by_sha256("testsha256-2")
         assert response == b"stream"
         download_token_params = [
-            "deviceuid-3",
             "eventid-3",
+            "deviceuid-3",
             "/test/file/path-3/",
             12346,
         ]

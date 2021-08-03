@@ -18,16 +18,11 @@ class TestExfiltratedDataService(object):
             mock_successful_connection, mock_successful_connection
         )
         service.get_download_token("testeventid", "testdeviceid", "testfilepath", 1223)
-
-        mock_successful_connection.get.assert_called_once_with(
-            u"api/v1/file-download-token",
-            params={
-                u"eventId": "testeventid",
-                u"deviceUid": "testdeviceid",
-                u"filePath": "testfilepath",
-                u"versionTimestamp": 1223,
-            },
+        qry = (
+            "deviceUid=testdeviceid&eventId=testeventid&filePath=testfilepath&versionTimestamp=1223"
         )
+        expected = "api/v1/file-download-token?{}".format(qry)
+        mock_successful_connection.get.assert_called_once_with(expected)
 
     def test_get_file_calls_get_with_valid_params(
         self, mock_successful_connection, mock_request

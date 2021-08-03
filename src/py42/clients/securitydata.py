@@ -319,8 +319,8 @@ class SecurityDataClient(object):
             version[u"edsUrl"]
         )
         token = eds.get_download_token(
-            version[u"deviceUid"],
             version[u"eventId"],
+            version[u"deviceUid"],
             version[u"filePath"],
             version[u"versionTimestamp"],
         )

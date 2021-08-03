@@ -277,14 +277,7 @@ class SecurityDataClient(object):
 
         if versions:
             if not response.data.get(u"securityEventVersionsAtPath"):
-                exact_match = next(
-                    (
-                        x
-                        for x in versions
-                        if x[u"fileMD5"] == md5_hash
-                    ),
-                    None,
-                )
+                exact_match = _get_first_matching_version(versions, md5_hash)
                 if exact_match:
                     return exact_match
 
@@ -493,6 +486,19 @@ class PlanStorageInfo(object):
     def node_guid(self):
         """The GUID of the storage node containing the archive."""
         return self._node_guid
+
+
+def _get_first_matching_version(versions, md5_hash):
+    exact_match = next(
+        (
+            x
+            for x in versions
+            if x[u"fileMD5"] == md5_hash
+        ),
+        None,
+    )
+    if exact_match:
+        return exact_match
 
 
 def _escape_quote_chars_in_token(token):

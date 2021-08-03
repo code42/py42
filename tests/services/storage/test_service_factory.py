@@ -12,6 +12,7 @@ from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.preservationdata import StoragePreservationDataService
 from py42.services.storage.securitydata import StorageSecurityDataService
+from py42.services.storage.exfiltrateddata import ExfiltratedDataService
 
 
 @pytest.fixture
@@ -89,6 +90,15 @@ class TestStorageServiceFactory(object):
         )
         service = factory.create_preservation_data_service("testhost.com")
         assert type(service) == StoragePreservationDataService
+
+    def test_exfiltrated_data_service(
+        self, mock_successful_connection, mock_device_service, mock_connection_manager
+    ):
+        factory = StorageServiceFactory(
+            mock_successful_connection, mock_device_service, mock_connection_manager
+        )
+        service = factory.create_exfiltrated_data_service("testhost.com")
+        assert type(service) == ExfiltratedDataService
 
 
 class TestStorageSessionManager(object):

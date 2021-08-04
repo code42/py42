@@ -59,14 +59,14 @@ def from_local_account(host_address, username, password, totp=None):
     """
     client = SDKClient.from_local_account(host_address, username, password, totp)
 
-    login_type = client.get_login_configuration_for_user(username)
-    if login_type == "CLOUD_SSO":
-        raise Py42Error("SSO users are not supported in `from_local_account()`.")
 
     # test credentials
     try:
         client.users.get_current()
     except Py42UnauthorizedError as err:
+        login_config = client.get_login_configuration_for_user(username)
+        if login_config["loginType"] == "CLOUD_SSO":
+            raise Py42Error("SSO users are not supported in `from_local_account()`.")
         msg = "SDK initialization failed, double-check username/password, and provide two-factor TOTP token if Multi-Factor Auth configured for your user."
         err.args = (msg,)
         raise

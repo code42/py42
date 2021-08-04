@@ -84,7 +84,7 @@ Next, with your virtual environment activated, install py42 and its development 
 ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs).
 
 ```bash
-pip install -e .[dev]
+pip install -e '.[dev]'
 ```
 
 Open the project in your IDE of choice and change the python environment to

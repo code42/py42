@@ -85,7 +85,7 @@ class TestArchiveService:
         mock_connection.get.return_value = successful_response
         service = ArchiveService(mock_connection)
         service.get_single_archive("ARCHIVE_GUID")
-        uri = "{}/{}".format(ARCHIVE_URI, "ARCHIVE_GUID")
+        uri = f"{ARCHIVE_URI}/{'ARCHIVE_GUID'}"
         mock_connection.get.assert_called_once_with(uri)
 
     def test_get_all_archives_from_value_calls_get_expected_number_of_times(

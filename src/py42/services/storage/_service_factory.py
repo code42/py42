@@ -67,8 +67,6 @@ class ConnectionManager:
                         )
                         self._session_cache[url.lower()] = connection
         except Exception as ex:
-            message = "Failed to create or retrieve connection, caused by: {}".format(
-                str(ex)
-            )
+            message = f"Failed to create or retrieve connection, caused by: {ex}"
             raise Py42StorageSessionInitializationError(ex, message)
         return connection

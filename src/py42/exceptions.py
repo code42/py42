@@ -24,8 +24,8 @@ class Py42ArchiveFileNotFoundError(Py42ResponseError):
     """An exception raised when a resource file is not found or the path is invalid."""
 
     def __init__(self, response, device_guid, file_path):
-        message = "File not found in archive for device {} at path {}".format(
-            device_guid, file_path
+        message = (
+            f"File not found in archive for device {device_guid} at path {file_path}"
         )
         super().__init__(response, message)
 
@@ -34,9 +34,7 @@ class Py42ChecksumNotFoundError(Py42ResponseError):
     """An exception raised when a user-supplied hash could not successfully locate its corresponding resource."""
 
     def __init__(self, response, checksum_name, checksum_value):
-        message = "No files found with {} checksum {}".format(
-            checksum_name, checksum_value
-        )
+        message = f"No files found with {checksum_name} checksum {checksum_value}"
         super().__init__(response, message)
 
 
@@ -56,9 +54,7 @@ class Py42HTTPError(Py42ResponseError):
     def __init__(self, exception, message=None):
         if not message:
             response_content = f"Response content: {exception.response.text}"
-            message = "Failure in HTTP call {}. {}".format(
-                str(exception), response_content
-            )
+            message = f"Failure in HTTP call {exception}. {response_content}"
             debug.logger.debug(message)
 
         super().__init__(exception.response, message)
@@ -77,8 +73,8 @@ class Py42DeviceNotConnectedError(Py42ResponseError):
 
     def __init__(self, response, device_guid):
         message = (
-            "Device with GUID '{}' is not currently connected to the Authority "
-            "server.".format(device_guid)
+            f"Device with GUID '{device_guid}' is not currently connected to the Authority "
+            "server."
         )
         super().__init__(response, message)
 
@@ -116,7 +112,7 @@ class Py42SessionInitializationError(Py42Error):
     def __init__(self, exception):
         error_message = (
             "An error occurred while requesting "
-            "server environment information, caused by {}".format(str(exception))
+            f"server environment information, caused by {exception}"
         )
         super().__init__(exception, error_message)
 
@@ -159,9 +155,7 @@ class Py42ActiveLegalHoldError(Py42BadRequestError):
     active legal hold."""
 
     def __init__(self, exception, resource, resource_id):
-        msg = "Cannot deactivate the {0} with ID {1} as the {0} is involved in a legal hold matter.".format(
-            resource, resource_id,
-        )
+        msg = f"Cannot deactivate the {resource} with ID {resource_id} as the {resource} is involved in a legal hold matter."
         super().__init__(exception, msg)
 
 
@@ -181,9 +175,7 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
     def __init__(self, exception, matter_id):
         super().__init__(
             exception,
-            "Matter with ID={} can not be found. Your account may not have permission to view the matter.".format(
-                matter_id
-            ),
+            f"Matter with ID={matter_id} can not be found. Your account may not have permission to view the matter.",
         )
 
 
@@ -203,8 +195,8 @@ class Py42InvalidRuleOperationError(Py42HTTPError):
 
     def __init__(self, exception, rule_id, source):
         msg = "Only alert rules with a source of 'Alerting' can be targeted by this command. "
-        msg += "Rule {0} has a source of '{1}'."
-        super().__init__(exception, msg.format(rule_id, source))
+        msg += f"Rule {rule_id} has a source of '{source}'."
+        super().__init__(exception, msg)
 
 
 class Py42MFARequiredError(Py42UnauthorizedError):
@@ -286,9 +278,7 @@ class Py42UserNotOnListError(Py42NotFoundError):
     """An exception raised when the user is not on a detection list."""
 
     def __init__(self, exception, user_id, list_name):
-        message = "User with ID '{}' is not currently on the {} list.".format(
-            user_id, list_name
-        )
+        message = f"User with ID '{user_id}' is not currently on the {list_name} list."
         super(Py42NotFoundError, self).__init__(exception, message)
 
 
@@ -301,9 +291,9 @@ class Py42UnableToCreateProfileError(Py42BadRequestError):
     def __init__(self, exception, username):
         message = (
             "Detection-list profiles are now created automatically on the server. "
-            "Unable to find a detection-list profile for '{}'. "
+            f"Unable to find a detection-list profile for '{username}'. "
             "It is possibly still being created if you just recently created the "
-            "Code42 user.".format(username)
+            "Code42 user."
         )
         super().__init__(exception, message)
 

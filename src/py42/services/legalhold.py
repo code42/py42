@@ -366,8 +366,8 @@ class LegalHoldService(BaseService):
         except Py42BadRequestError as err:
             if "USER_ALREADY_IN_HOLD" in err.response.text:
                 matter = self.get_matter_by_uid(legal_hold_uid)
-                matter_id_and_name_text = "legal hold matter id={}, name={}".format(
-                    legal_hold_uid, matter["name"]
+                matter_id_and_name_text = (
+                    f"legal hold matter id={legal_hold_uid}, name={matter['name']}"
                 )
                 raise Py42UserAlreadyAddedError(err, user_uid, matter_id_and_name_text)
             raise

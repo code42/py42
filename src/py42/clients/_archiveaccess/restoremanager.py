@@ -116,8 +116,8 @@ class RestoreJobManager(_RestorePoller):
         show_deleted,
         overwrite_existing_files,
     ):
-        num_files = sum([fs.num_files for fs in file_selections])
-        num_bytes = sum([fs.num_bytes for fs in file_selections])
+        num_files = sum(fs.num_files for fs in file_selections)
+        num_bytes = sum(fs.num_bytes for fs in file_selections)
         file_location = None
         permit_restore_to_different_os_version = False
         existing_files = PushRestoreExistingFiles.RENAME_ORIGINAL
@@ -169,9 +169,9 @@ class RestoreJobManager(_RestorePoller):
         return is_done
 
     def _start_web_restore(self, backup_set_id, file_selections, show_deleted):
-        num_files = sum([fs.num_files for fs in file_selections])
-        num_dirs = sum([fs.num_dirs for fs in file_selections])
-        num_bytes = sum([fs.num_bytes for fs in file_selections])
+        num_files = sum(fs.num_files for fs in file_selections)
+        num_dirs = sum(fs.num_dirs for fs in file_selections)
+        num_bytes = sum(fs.num_bytes for fs in file_selections)
 
         # For py42 backwards compat.
         if show_deleted is None:

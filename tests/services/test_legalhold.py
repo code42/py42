@@ -71,7 +71,7 @@ class TestLegalHoldService:
         mock_connection.get.return_value = successful_response
         service = LegalHoldService(mock_connection)
         service.get_matter_by_uid("LEGAL_HOLD_UID")
-        uri = "{}/{}".format(LEGAL_HOLD_URI, "LEGAL_HOLD_UID")
+        uri = f"{LEGAL_HOLD_URI}/{'LEGAL_HOLD_UID'}"
         mock_connection.get.assert_called_once_with(uri)
 
     def test_get_matter_by_uid_when_forbidden_raises_legal_hold_permission_denied_error(

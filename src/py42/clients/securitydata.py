@@ -63,7 +63,7 @@ class SecurityDataClient:
                 raise Py42SecurityPlanConnectionError(
                     response,
                     "Could not establish a connection to retrieve "
-                    "security events for user {}".format(user_uid),
+                    f"security events for user {user_uid}",
                 )
 
             return selected_plan_infos
@@ -260,9 +260,7 @@ class SecurityDataClient:
             return pds.get_file(str(token))
 
         raise Py42Error(
-            "No file with hash {} available for download on any storage node.".format(
-                checksum
-            )
+            f"No file with hash {checksum} available for download on any storage node."
         )
 
     def _get_file_version_for_stream(self, device_guid, md5_hash, sha256_hash, path):
@@ -422,7 +420,7 @@ def _parse_file_location_response(locations):
     devices = {}
     for location in locations:
         file_name = location["fileName"]
-        file_path = "{}{}".format(location["filePath"], file_name)
+        file_path = f'{location["filePath"]}{file_name}'
         device_id = location["deviceUid"]
         device_entry = devices.get(device_id)
         if device_entry:

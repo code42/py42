@@ -12,9 +12,7 @@ items_per_page = 500
 security_events_per_page = 10000
 
 _custom_user_suffix = ""
-_python_version = "{}.{}.{}".format(
-    sys.version_info[0], sys.version_info[1], sys.version_info[2]
-)
+_python_version = f"{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}"
 
 
 def get_user_agent_string():

@@ -174,9 +174,7 @@ class DeviceSettings(DeviceSettingsDefaults):
     """Notes field for this device."""
 
     def __repr__(self):
-        return "<DeviceSettings: guid: {}, name: {}>".format(
-            self.data["guid"], self.data["name"]
-        )
+        return f"<DeviceSettings: guid: {self.data['guid']}, name: {self.data['name']}>"
 
 
 class BackupSet(UserDict):
@@ -448,7 +446,7 @@ class BackupSet(UserDict):
             name = self.data["name"]["#text"]
         else:
             name = self.data["name"]
-        return "<BackupSet: id: {}, name: '{}'>".format(self.data["@id"], name)
+        return f"<BackupSet: id: {self.data['@id']}, name: '{name}'>"
 
     def __str__(self):
         return str(dict(self))

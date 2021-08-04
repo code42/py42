@@ -156,9 +156,7 @@ class TestArchiveClient:
         archive_explorer,
         archive_content_pusher,
     ):
-        backup_set_text = '{{"backupSets": [{{"backupSetId": "{0}"}}, {{"backupSetId": "1"}}]}}'.format(
-            TEST_BACKUP_SET_ID
-        )
+        backup_set_text = f'{{"backupSets": [{{"backupSetId": "{TEST_BACKUP_SET_ID}"}}, {{"backupSetId": "1"}}]}}'
         backup_set_response = create_mock_response(mocker, backup_set_text)
         archive_service.get_backup_sets.return_value = backup_set_response
         archive_accessor_factory.create_archive_accessor.return_value = archive_explorer

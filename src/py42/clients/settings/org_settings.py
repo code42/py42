@@ -354,9 +354,7 @@ class OrgSettings(UserDict):
     """Determines if web restores are enabled for devices in this org."""
 
     def __repr__(self):
-        return "<OrgSettings: org_id: {}, name: '{}'>".format(
-            self.data["orgId"], self.data["orgName"]
-        )
+        return f"<OrgSettings: org_id: {self.data['orgId']}, name: '{self.data['orgName']}'>"
 
     def __str__(self):
         return str(self.data)

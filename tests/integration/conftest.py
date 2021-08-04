@@ -47,8 +47,7 @@ def _get_sdk(host, user, pw):
         return _sdk.from_local_account(host, user, pw)
     except Exception as err:
         pytest.exit(
-            "Failed to init SDK for integration tests: {}".format(str(err)),
-            returncode=1,
+            f"Failed to init SDK for integration tests: {err}", returncode=1,
         )
 
 

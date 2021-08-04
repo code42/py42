@@ -31,15 +31,8 @@ class AlertQuery(BaseQuery):
             str(group_item) for group_item in self._filter_group_list
         )
         json = (
-            '{{"tenantId": null, "groupClause":"{0}", "groups":[{1}], "pgNum":{2}, '
-            '"pgSize":{3}, "srtDirection":"{4}", "srtKey":"{5}"}}'.format(
-                self._group_clause,
-                groups_string,
-                self.page_number,
-                self.page_size,
-                self.sort_direction,
-                self.sort_key,
-            )
+            f'{{"tenantId": null, "groupClause":"{self._group_clause}", "groups":[{groups_string}], "pgNum":{self.page_number}, '
+            f'"pgSize":{self.page_size}, "srtDirection":"{self.sort_direction}", "srtKey":"{self.sort_key}"}}'
         )
         return json
 

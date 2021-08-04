@@ -486,9 +486,7 @@ class TestArchiveContentStreamer:
             archive_accessor.stream_from_backup(
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
-        expected_message = "File not found in archive for device device-guid at path {}".format(
-            invalid_path_in_downloads_folder
-        )
+        expected_message = f"File not found in archive for device device-guid at path {invalid_path_in_downloads_folder}"
         assert e.value.args[0] == expected_message
         restore_job_manager.get_stream.assert_not_called()
 
@@ -510,9 +508,7 @@ class TestArchiveContentStreamer:
             archive_accessor.stream_from_backup(
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
-        expected_message = "File not found in archive for device device-guid at path {}".format(
-            invalid_path_in_downloads_folder
-        )
+        expected_message = f"File not found in archive for device device-guid at path {invalid_path_in_downloads_folder}"
         assert e.value.args[0] == expected_message
         restore_job_manager.get_stream.assert_not_called()
 
@@ -536,9 +532,7 @@ class TestArchiveContentStreamer:
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
 
-        expected_message = "File not found in archive for device device-guid at path {}".format(
-            invalid_path_in_downloads_folder
-        )
+        expected_message = f"File not found in archive for device device-guid at path {invalid_path_in_downloads_folder}"
         assert e.value.args[0] == expected_message
         restore_job_manager.get_stream.assert_not_called()
 
@@ -562,9 +556,7 @@ class TestArchiveContentStreamer:
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
 
-        expected_message = "File not found in archive for device device-guid at path {}".format(
-            invalid_path_in_downloads_folder
-        )
+        expected_message = f"File not found in archive for device device-guid at path {invalid_path_in_downloads_folder}"
         assert e.value.args[0] == expected_message
         restore_job_manager.get_stream.assert_not_called()
 

@@ -421,8 +421,8 @@ class QueryFilter:
 
     def __str__(self):
         value = "null" if self._value is None else f'"{self._value}"'
-        return '{{"operator":"{0}", "term":"{1}", "value":{2}}}'.format(
-            self._operator, self._term, value
+        return (
+            f'{{"operator":"{self._operator}", "term":"{self._term}", "value":{value}}}'
         )
 
     def __iter__(self):
@@ -505,8 +505,8 @@ class FilterGroup:
 
     def __str__(self):
         filters_string = ",".join(str(filter_item) for filter_item in self._filter_set)
-        return '{{"filterClause":"{0}", "filters":[{1}]}}'.format(
-            self._filter_clause, filters_string
+        return (
+            f'{{"filterClause":"{self._filter_clause}", "filters":[{filters_string}]}}'
         )
 
     def __iter__(self):

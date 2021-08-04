@@ -15,8 +15,8 @@ class Py42Response:
         except TypeError:
             data_root_type = type(self._data_root)
             message = (
-                "The Py42Response root is of type {}, but __getitem__ "
-                "got a key of {}, which is incompatible.".format(data_root_type, key)
+                f"The Py42Response root is of type {data_root_type}, but __getitem__ "
+                f"got a key of {key}, which is incompatible."
             )
             raise Py42Error(message)
 
@@ -26,10 +26,8 @@ class Py42Response:
         except TypeError:
             data_root_type = type(self._data_root)
             message = (
-                "The Py42Response root is of type {}, but __setitem__ got a key "
-                "of {} and value of {}, which is incompatible.".format(
-                    data_root_type, key, value
-                )
+                f"The Py42Response root is of type {data_root_type}, but __setitem__ got a key "
+                f"of {key} and value of {value}, which is incompatible."
             )
             raise Py42Error(message)
 
@@ -97,9 +95,7 @@ class Py42Response:
             data = "<streamed>"
         else:
             data = self._data_root
-        return "<{} [status={}, data={}]>".format(
-            self.__class__.__name__, self._response.status_code, reprlib.repr(data)
-        )
+        return f"<{self.__class__.__name__} [status={self._response.status_code}, data={reprlib.repr(data)}]>"
 
     @property
     def content(self):

@@ -22,9 +22,7 @@ VALUE_STRING = "value_example"
 VALUE_UNICODE = "您已经发现了秘密信息"
 TEST_TIMESTAMP = "2020-09-10 11:12:13"
 
-JSON_QUERY_FILTER = '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
-    OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
-)
+JSON_QUERY_FILTER = f'{{"operator":"{OPERATOR_STRING}", "term":"{EVENT_FILTER_FIELD_NAME}", "value":"{VALUE_STRING}"}}'
 
 JSON_FILTER_GROUP_BASE = '{{"filterClause":"{0}", "filters":[{1}]}}'
 JSON_FILTER_GROUP_AND = JSON_FILTER_GROUP_BASE.format("AND", JSON_QUERY_FILTER)
@@ -32,11 +30,7 @@ JSON_FILTER_GROUP_OR = JSON_FILTER_GROUP_BASE.format("OR", JSON_QUERY_FILTER)
 
 
 def json_query_filter_with_suffix(suffix):
-    return '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
-        OPERATOR_STRING + str(suffix),
-        EVENT_FILTER_FIELD_NAME + str(suffix),
-        VALUE_STRING + str(suffix),
-    )
+    return f'{{"operator":"{OPERATOR_STRING}{suffix}", "term":"{EVENT_FILTER_FIELD_NAME}{suffix}", "value":"{VALUE_STRING}{suffix}"}}'
 
 
 def test_query_filter_constructs_successfully():
@@ -48,9 +42,7 @@ def test_query_filter_str_outputs_correct_json_representation(query_filter):
 
 
 def test_query_filter_unicode_outputs_correct_json_representation(unicode_query_filter):
-    expected = '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
-        OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_UNICODE
-    )
+    expected = f'{{"operator":"{OPERATOR_STRING}", "term":"{EVENT_FILTER_FIELD_NAME}", "value":"{VALUE_UNICODE}"}}'
     assert str(unicode_query_filter) == expected
 
 
@@ -247,10 +239,9 @@ def test_create_query_filter_returns_obj_with_correct_json_representation():
     query_filter = create_query_filter(
         EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING
     )
-    assert str(
-        query_filter
-    ) == '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
-        OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
+    assert (
+        str(query_filter)
+        == f'{{"operator":"{OPERATOR_STRING}", "term":"{EVENT_FILTER_FIELD_NAME}", "value":"{VALUE_STRING}"}}'
     )
 
 
@@ -281,9 +272,7 @@ def test_compare_query_filters_with_different_terms_returns_false():
 @pytest.mark.parametrize(
     "equivalent",
     [
-        '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
-            OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, VALUE_STRING
-        ),
+        f'{{"operator":"{OPERATOR_STRING}", "term":"{EVENT_FILTER_FIELD_NAME}", "value":"{VALUE_STRING}"}}',
         (
             ("operator", OPERATOR_STRING),
             ("term", EVENT_FILTER_FIELD_NAME),
@@ -304,15 +293,9 @@ def test_compare_query_filter_with_expected_equivalent_returns_true(equivalent):
 @pytest.mark.parametrize(
     "different",
     [
-        '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
-            "DIFFERENT_OPERATOR", EVENT_FILTER_FIELD_NAME, VALUE_STRING
-        ),
-        '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
-            OPERATOR_STRING, "DIFFERENT_FIELD_NAME", VALUE_STRING
-        ),
-        '{{"operator":"{0}", "term":"{1}", "value":"{2}"}}'.format(
-            OPERATOR_STRING, EVENT_FILTER_FIELD_NAME, "DIFFERENT_VALUE"
-        ),
+        f'{{"operator":"DIFFERENT_OPERATOR", "term":"{EVENT_FILTER_FIELD_NAME}", "value":"{VALUE_STRING}"}}',
+        f'{{"operator":"{OPERATOR_STRING}", "term":"DIFFERENT_FIELD_NAME", "value":"{VALUE_STRING}"}}',
+        f'{{"operator":"{OPERATOR_STRING}", "term":"{EVENT_FILTER_FIELD_NAME}", "value":"DIFFERENT_VALUE"}}',
         (
             ("operator", "DIFFERENT_OPERATOR"),
             ("term", EVENT_FILTER_FIELD_NAME),

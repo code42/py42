@@ -40,7 +40,7 @@ class BearerAuth(C42RenewableAuth):
         current_token = self._totp()
         headers = {"totp-auth": str(current_token)} if current_token else None
         response = self._auth_connection.get(uri, params=params, headers=headers)
-        return "Bearer {}".format(response["v3_user_token"])
+        return f"Bearer {response['v3_user_token']}"
 
 
 class CustomJWTAuth(C42RenewableAuth):

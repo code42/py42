@@ -94,7 +94,7 @@ class CasesService(BaseService):
         return self._connection.get(f"{self._uri_prefix}/{case_number}")
 
     def export_summary(self, case_number):
-        uri_prefix = "{}/{}/{}".format(self._uri_prefix, case_number, "export")
+        uri_prefix = f"{self._uri_prefix}/{case_number}/{'export'}"
         return self._connection.get(uri_prefix)
 
     def update(

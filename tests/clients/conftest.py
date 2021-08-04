@@ -27,9 +27,7 @@ def archive_service(mocker):
     data_key_text = f'{{"dataKeyToken": "{TEST_DATA_KEY_TOKEN}"}}'
     data_key_response = create_mock_response(mocker, data_key_text)
     service.get_data_key_token.return_value = data_key_response
-    backup_set_text = '{{"backupSets": [{{"backupSetId": "{0}"}}]}}'.format(
-        TEST_BACKUP_SET_ID
-    )
+    backup_set_text = f'{{"backupSets": [{{"backupSetId": "{TEST_BACKUP_SET_ID}"}}]}}'
     backup_set_response = create_mock_response(mocker, backup_set_text)
     service.get_backup_sets.return_value = backup_set_response
     restore_info_text = f'{{"nodeGuid": "{TEST_NODE_GUID}"}}'

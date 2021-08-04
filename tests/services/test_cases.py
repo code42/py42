@@ -45,9 +45,7 @@ _BASE_URI = "/api/v1/case"
 
 
 def _get_invalid_user_text(user_type):
-    return '{{"problem":"INVALID_USER","description":"{} validation failed"}}'.format(
-        user_type
-    )
+    return f'{{"problem":"INVALID_USER","description":"{user_type} validation failed"}}'
 
 
 class TestCasesService:
@@ -240,15 +238,16 @@ class TestCasesService:
     def test_export_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         cases_service.export_summary(_TEST_CASE_NUMBER)
-        assert mock_connection.get.call_args[0][0] == "/api/v1/case/{}/export".format(
-            _TEST_CASE_NUMBER
+        assert (
+            mock_connection.get.call_args[0][0]
+            == f"/api/v1/case/{_TEST_CASE_NUMBER}/export"
         )
 
     def test_get_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         cases_service.get(_TEST_CASE_NUMBER)
-        assert mock_connection.get.call_args[0][0] == "/api/v1/case/{}".format(
-            _TEST_CASE_NUMBER
+        assert (
+            mock_connection.get.call_args[0][0] == f"/api/v1/case/{_TEST_CASE_NUMBER}"
         )
 
     def test_update_called_with_expected_url_and_params(

@@ -50,7 +50,7 @@ class AlertRulesService(BaseService):
                 {"userIdFromAuthority": user_id, "userAliasList": user_aliases}
             ],
         }
-        uri = "{}{}".format(self._api_prefix, "add-users")
+        uri = f"{self._api_prefix}{'add-users'}"
         try:
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
@@ -60,13 +60,13 @@ class AlertRulesService(BaseService):
         user_ids = [user_id]
         tenant_id = self._user_context.get_current_tenant_id()
         data = {"tenantId": tenant_id, "ruleId": rule_id, "userIdList": user_ids}
-        uri = "{}{}".format(self._api_prefix, "remove-users")
+        uri = f"{self._api_prefix}{'remove-users'}"
         return self._connection.post(uri, json=data)
 
     def remove_all_users(self, rule_id):
         tenant_id = self._user_context.get_current_tenant_id()
         data = {"tenantId": tenant_id, "ruleId": rule_id}
-        uri = "{}{}".format(self._api_prefix, "remove-all-users")
+        uri = f"{self._api_prefix}{'remove-all-users'}"
         return self._connection.post(uri, json=data)
 
 

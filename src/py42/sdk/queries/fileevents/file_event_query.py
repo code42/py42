@@ -34,17 +34,10 @@ class FileEventQuery(BaseQuery):
             str(group_item) for group_item in self._filter_group_list
         )
         if self.page_token is not None:
-            paging_prop = '"srtDir":"{}", "srtKey":"{}", "pgToken":"{}"'.format(
-                self.sort_direction, self.sort_key, self.page_token
-            )
-
+            paging_prop = f'"srtDir":"{self.sort_direction}", "srtKey":"{self.sort_key}", "pgToken":"{self.page_token}"'
         else:
-            paging_prop = '"srtDir":"{}", "srtKey":"{}", "pgNum":{}'.format(
-                self.sort_direction, self.sort_key, self.page_number,
-            )
-        json = '{{"groupClause":"{0}", "groups":[{1}], {2}, "pgSize":{3}}}'.format(
-            self._group_clause, groups_string, paging_prop, self.page_size
-        )
+            paging_prop = f'"srtDir":"{self.sort_direction}", "srtKey":"{self.sort_key}", "pgNum":{self.page_number}'
+        json = f'{{"groupClause":"{self._group_clause}", "groups":[{groups_string}], {paging_prop}, "pgSize":{self.page_size}}}'
         return json
 
     def __iter__(self):

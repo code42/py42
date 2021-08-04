@@ -290,7 +290,7 @@ def _handle_error(method, url, response):
 
 
 def _print_request(method, url, params=None, data=None, json=None):
-    debug.logger.info("{}{}".format(method.ljust(8), url))
+    debug.logger.info(f"{method.ljust(8)}{url}")
     if params:
         debug.logger.debug(format_dict(params, "  params"))
     if json:

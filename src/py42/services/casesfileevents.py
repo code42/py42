@@ -23,7 +23,7 @@ class CasesFileEventsService(BaseService):
         """
         try:
             return self._connection.post(
-                "{}/{}".format(self._uri_prefix.format(case_number), event_id)
+                f"{self._uri_prefix.format(case_number)}/{event_id}"
             )
         except Py42BadRequestError as err:
             if "CASE_IS_CLOSED" in err.response.text:
@@ -44,7 +44,7 @@ class CasesFileEventsService(BaseService):
             :class:`py42.response.Py42Response`
         """
         return self._connection.get(
-            "{}/{}".format(self._uri_prefix.format(case_number), event_id)
+            f"{self._uri_prefix.format(case_number)}/{event_id}"
         )
 
     def get_all(self, case_number):
@@ -70,7 +70,7 @@ class CasesFileEventsService(BaseService):
         """
         try:
             return self._connection.delete(
-                "{}/{}".format(self._uri_prefix.format(case_number), event_id)
+                f"{self._uri_prefix.format(case_number)}/{event_id}"
             )
         except Py42BadRequestError as err:
             if "CASE_IS_CLOSED" in err.response.text:

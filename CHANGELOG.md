@@ -14,6 +14,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - `RiskIndicator` and `RiskSeverity` filter classes to new `py42.sdk.queries.fileevents.filters.risk_filter` module.
 
+- New method `sdk.alerts.get_all_alert_details()` as a helper to make getting alerts with details easier (combines `sdk.alerts.search_all_pages()` and `sdk.alerts.get_details()`).
+
 ## 1.16.1 - 2021-07-20
 
 ### Fixed

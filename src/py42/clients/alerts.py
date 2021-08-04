@@ -136,3 +136,32 @@ class AlertsClient:
             :class:`py42.response.Py42Response`
         """
         return self._alert_service.get_aggregate_data(alert_id)
+
+    def get_all_alert_details(self, query):
+        """
+        Helper method that combines :func:`.search_all_pages()` and :func:`.get_details()`
+        methods to get alert objects with alert "observations" details populated.
+        Returns an iterator of alert detail objects.
+
+        Note: automatically overrides the `page_size` property on the query object to limit
+        search to 100 results per page, as that is the max that :func:`.get_details()` can
+        request at a time.
+
+        Args:
+            query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
+
+        Returns:
+            generator: An object that iterates over alert detail items.
+        """
+        query.page_size = 100
+        sort_key = query.sort_key[0].lower() + query.sort_key[1:]
+        if sort_key == "alertId":
+            sort_key = "id"
+        reverse = query.sort_direction == "desc"
+        pages = self._alert_service.search_all_pages(query)
+        for page in pages:
+            alert_ids = [alert["id"] for alert in page["alerts"]]
+            alert_details = self._alert_service.get_details(alert_ids)
+            yield from sorted(
+                alert_details["alerts"], key=lambda x: x.get(sort_key), reverse=reverse,
+            )

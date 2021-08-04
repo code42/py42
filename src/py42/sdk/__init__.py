@@ -10,6 +10,8 @@ from py42.clients.authority import AuthorityClient
 from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
+from py42.exceptions import Py42Error
+from py42.exceptions import Py42UnauthorizedError
 from py42.services import Services
 from py42.services._auth import BearerAuth
 from py42.services._auth import CustomJWTAuth
@@ -38,12 +40,6 @@ from py42.services.users import UserService
 from py42.usercontext import UserContext
 
 
-def get_login_configuration(host_address, username):
-    conn = Connection.from_host_address(host_address)
-    uri = "/c42api/v3/LoginConfiguration"
-    return conn.get(uri, params={"username": username})
-
-
 def from_local_account(host_address, username, password, totp=None):
     """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using the
     supplied credentials. This method supports only accounts created within the Code42 console or using the
@@ -63,8 +59,17 @@ def from_local_account(host_address, username, password, totp=None):
     """
     client = SDKClient.from_local_account(host_address, username, password, totp)
 
+    login_type = client.get_login_configuration_for_user(username)
+    if login_type == "CLOUD_SSO":
+        raise Py42Error("SSO users are not supported in `from_local_account()`.")
+
     # test credentials
-    client.users.get_current()
+    try:
+        client.users.get_current()
+    except Py42UnauthorizedError as err:
+        msg = "SDK initialization failed, double-check username/password, and provide two-factor TOTP token if Multi-Factor Auth configured for your user."
+        err.args = (msg,)
+        raise
     return client
 
 
@@ -140,9 +145,18 @@ class SDKClient(object):
 
         return cls(main_connection, custom_auth)
 
-    def get_login_configuration(self, username):
-        uri = "/c42api/v3/LoginConfiguration"
-        return self._connection.get(uri, params={"username": username})
+    def get_login_configuration_for_user(self, username):
+        """Retrieves login configuration for a given username. Possible return values are
+        `LOCAL`, `LOCAL_2FA`, and `CLOUD_SSO`. If username does not exist the default
+        return value is `LOCAL_2FA`.
+
+        Args:
+            username (str): Username to retrieve login configuration for.
+
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        return self._connection.get_login_config_for_user(username)
 
     @property
     def serveradmin(self):

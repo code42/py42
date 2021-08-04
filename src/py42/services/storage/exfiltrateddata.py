@@ -1,6 +1,5 @@
-from py42.services import BaseService
-
 from py42._compat import quote
+from py42.services import BaseService
 
 
 class ExfiltratedDataService(BaseService):

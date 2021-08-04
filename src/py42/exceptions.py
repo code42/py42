@@ -1,5 +1,3 @@
-import re
-
 from py42._compat import str
 from py42.settings import debug
 

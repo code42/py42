@@ -275,7 +275,8 @@ class Connection(object):
 
     def get_login_config_for_user(self, username):
         uri = f"{self.host_address}/c42api/v3/LoginConfiguration"
-        return self._session.get(uri, params={"username": username})
+        response = self._session.get(uri, params={"username": username})
+        return Py42Response(response)
 
 
 def _create_user_headers(headers):

@@ -902,9 +902,9 @@ class TestSecurityClient(object):
         )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
-        download_token_params = ["archiveid-2", "fileid-2", 12344]
+        expected_download_token_params = ["archiveid-2", "fileid-2", 12344]
         storage_node_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_download_token_params
         )
         assert response == b"stream"
 
@@ -954,9 +954,9 @@ class TestSecurityClient(object):
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
         # should get version with most recent versionTimestamp
-        download_token_params = ["archiveid-3", "fileid-3", 12346]
+        expected_download_token_params = ["archiveid-3", "fileid-3", 12346]
         storage_node_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_download_token_params
         )
         assert response == b"stream"
 
@@ -1026,9 +1026,9 @@ class TestSecurityClient(object):
         expected = ["testmd5-2", "testsha256-2", mocker.ANY]
         preservation_data_service.find_file_version.assert_called_once_with(*expected)
         # should return version returned by find_file_version
-        download_token_params = ["archiveid-3", "fileid-3", 12346]
+        expected_expected_download_token_params = ["archiveid-3", "fileid-3", 12346]
         storage_node_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_expected_download_token_params
         )
 
     def test_stream_file_by_sha256_when_get_locations_returns_empty_list_raises_py42_error(
@@ -1139,9 +1139,9 @@ class TestSecurityClient(object):
         )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
-        download_token_params = ["archiveid-2", "fileid-2", 12344]
+        expected_download_token_params = ["archiveid-2", "fileid-2", 12344]
         storage_node_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_download_token_params
         )
         assert response == b"stream"
 
@@ -1191,9 +1191,9 @@ class TestSecurityClient(object):
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
         # should get version returned with most recent versionTimestamp
-        download_token_params = ["archiveid-3", "fileid-3", 12346]
+        expected_download_token_params = ["archiveid-3", "fileid-3", 12346]
         storage_node_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_download_token_params
         )
         assert response == b"stream"
 
@@ -1264,9 +1264,9 @@ class TestSecurityClient(object):
         expected = ["testmd5-2", "testsha256-2", mocker.ANY]
         preservation_data_service.find_file_version.assert_called_once_with(*expected)
         # should return version returned by find_file_version
-        download_token_params = ["archiveid-3", "fileid-3", 12346]
+        expected_download_token_params = ["archiveid-3", "fileid-3", 12346]
         storage_node_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_download_token_params
         )
 
     def test_stream_file_by_md5_when_get_locations_returns_empty_list_raises_py42_error(
@@ -1364,14 +1364,14 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_md5("testmd5-2")
         assert response == b"stream"
-        download_token_params = [
+        expected_download_token_params = [
             "eventid-2",
             "deviceuid-2",
             "/test/file/path-2/",
             12344,
         ]
         exfiltration_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_download_token_params
         )
 
     def test_stream_file_by_sha256_when_has_exact_match_calls_get_token_with_expected_params_and_streams_successfully(
@@ -1404,14 +1404,14 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_sha256("testsha256-2")
         assert response == b"stream"
-        download_token_params = [
+        expected_download_token_params = [
             "eventid-2",
             "deviceuid-2",
             "/test/file/path-2/",
             12344,
         ]
         exfiltration_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_download_token_params
         )
 
     def test_stream_file_by_md5_when_has_path_match_calls_get_token_with_expected_params_and_streams_successfully(
@@ -1444,14 +1444,14 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_md5("testmd5-2")
         assert response == b"stream"
-        download_token_params = [
+        expected_download_token_params = [
             "eventid-3",
             "deviceuid-3",
             "/test/file/path-3/",
             12346,
         ]
         exfiltration_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_download_token_params
         )
 
     def test_stream_file_by_sha256_when_has_path_match_calls_get_token_with_expected_params_and_streams_successfully(
@@ -1484,14 +1484,14 @@ class TestSecurityClient(object):
         )
         response = security_client.stream_file_by_sha256("testsha256-2")
         assert response == b"stream"
-        download_token_params = [
+        expected_download_token_params = [
             "eventid-3",
             "deviceuid-3",
             "/test/file/path-3/",
             12346,
         ]
         exfiltration_client.get_download_token.assert_called_once_with(
-            *download_token_params
+            *expected_download_token_params
         )
 
     def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_not_passed(

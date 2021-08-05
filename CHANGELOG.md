@@ -16,6 +16,14 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - New method `sdk.alerts.get_all_alert_details()` as a helper to make getting alerts with details easier (combines `sdk.alerts.search_all_pages()` and `sdk.alerts.get_details()`).
 
+### Removed
+
+- FED (File Extraction Detection) - related functionality
+    - `get_security_plan_storage_info_list()`
+    - `get_all_plan_security_events()`
+    - `get_all_user_security_events()`
+    - `PlanStorageInfo` class
+
 ## 1.16.1 - 2021-07-20
 
 ### Fixed

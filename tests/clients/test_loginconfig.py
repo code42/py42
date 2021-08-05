@@ -8,14 +8,15 @@ HOST_ADDRESS = "example.com"
 
 
 class TestLoginConfiguration:
-
     @pytest.fixture
     def mock_session(self, mocker):
         mock_session = mocker.MagicMock(spec=Session)
         mock_session.headers = {}
         return mock_session
 
-    def test_get_for_user_calls_session_get_with_expected_uri_and_params(self, mock_session):
+    def test_get_for_user_calls_session_get_with_expected_uri_and_params(
+        self, mock_session
+    ):
         connection = Connection.from_host_address(HOST_ADDRESS, session=mock_session)
         loginconfig = LoginConfigurationClient(connection)
         loginconfig.get_for_user("test@example.com")

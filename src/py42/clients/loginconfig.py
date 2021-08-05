@@ -1,5 +1,6 @@
 from py42.response import Py42Response
 
+
 class LoginConfigurationClient:
     def __init__(self, connection):
         self._connection = connection

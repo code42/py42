@@ -121,18 +121,6 @@ class TestSecurityClient(object):
         security_client.search_file_events(RAW_QUERY)
         file_event_service.search.assert_called_once_with(RAW_QUERY)
 
-    # the order the items are iterated through is not deterministic in some versions of python,
-    # so we simply test that the value returned is one of the _possible_ values.
-    def _storage_info_contains(
-        self, storage_info_list, plan_uid, destination_guid, node_guid
-    ):
-        return any(
-            item.plan_uid == plan_uid
-            and item.destination_guid == destination_guid
-            and item.node_guid == node_guid
-            for item in storage_info_list
-        )
-
     def test_saved_searches_returns_saved_search_client(
         self,
         file_event_service,

@@ -155,12 +155,6 @@ class FileEventFilterStringField(QueryFilterStringField):
         return create_not_exists_filter_group(cls._term)
 
 
-# class FileEventFilterStringOptionField(FileEventFilterStringField):
-# @staticmethod
-#    def choices():
-#        return get_attribute_keys_from_class(SharingTypeAdded)
-
-
 class FileEventFilterComparableField(object):
     """Helper class for creating filters with the ``GREATER_THAN``/``LESS_THAN`` filter clauses."""
 

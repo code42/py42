@@ -148,7 +148,7 @@ class SDKClient(object):
         web-restores or finding a file on an archive.
 
         Returns:
-            :class:`py42.services.archive.ArchiveClient`
+            :class:`py42.clients.archive.ArchiveClient`
         """
         return self._clients.archive
 

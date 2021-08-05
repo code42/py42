@@ -171,32 +171,6 @@ class SecurityDataClient(object):
                 return version
 
 
-def _get_plan_destination_map(locations_list):
-    plan_destination_map = {}
-    for plans in _get_destinations_in_locations_list(locations_list):
-        for plan_uid in plans:
-            plan_destination_map[plan_uid] = plans[plan_uid]
-    return plan_destination_map
-
-
-def _get_destinations_in_locations_list(locations_list):
-    for destination in locations_list:
-        for node in destination[u"securityPlanLocationsByNode"]:
-            yield _get_plans_in_node(destination, node)
-
-
-def _get_plans_in_node(destination, node):
-    return {
-        plan_uid: [
-            {
-                u"destinationGuid": destination[u"destinationGuid"],
-                u"nodeGuid": node[u"nodeGuid"],
-            }
-        ]
-        for plan_uid in node[u"securityPlanUids"]
-    }
-
-
 def _parse_file_location_response(locations):
     devices = {}
     for location in locations:

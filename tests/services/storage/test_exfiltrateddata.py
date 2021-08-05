@@ -4,7 +4,7 @@ import requests
 from py42.services.storage.exfiltrateddata import ExfiltratedDataService
 
 
-class TestExfiltratedDataService(object):
+class TestExfiltratedDataService:
     @pytest.fixture
     def mock_request(self, mocker):
         request = mocker.patch.object(requests, "get")
@@ -19,7 +19,7 @@ class TestExfiltratedDataService(object):
         )
         service.get_download_token("testeventid", "testdeviceid", "testfilepath", 1223)
         qry = "deviceUid=testdeviceid&eventId=testeventid&filePath=testfilepath&versionTimestamp=1223"
-        expected = "api/v1/file-download-token?{}".format(qry)
+        expected = f"api/v1/file-download-token?{qry}"
         mock_successful_connection.get.assert_called_once_with(expected)
 
     def test_get_file_calls_get_with_valid_params(

@@ -39,7 +39,7 @@ def mock_connection_manager(mocker):
     return mock
 
 
-class TestStorageServiceFactory(object):
+class TestStorageServiceFactory:
     def test_create_archive_service(
         self, mock_successful_connection, mock_device_service, mock_connection_manager
     ):
@@ -104,7 +104,7 @@ class TestStorageServiceFactory(object):
         assert type(service) == ExfiltratedDataService
 
 
-class TestStorageSessionManager(object):
+class TestStorageSessionManager:
     def test_get_storage_session_calls_session_factory_with_token_provider(
         self, mock_tmp_auth
     ):

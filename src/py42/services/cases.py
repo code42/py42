@@ -10,20 +10,20 @@ from py42.services.util import get_all_pages
 
 class CasesService(BaseService):
 
-    _uri_prefix = u"/api/v1/case"
+    _uri_prefix = "/api/v1/case"
 
     def __init__(self, connection):
-        super(CasesService, self).__init__(connection)
+        super().__init__(connection)
 
     def create(
         self, name, subject=None, assignee=None, description=None, findings=None
     ):
         data = {
-            u"assignee": assignee,
-            u"description": description,
-            u"findings": findings,
-            u"name": name,
-            u"subject": subject,
+            "assignee": assignee,
+            "description": description,
+            "findings": findings,
+            "name": name,
+            "subject": subject,
         }
         try:
             return self._connection.post(self._uri_prefix, json=data)
@@ -40,23 +40,23 @@ class CasesService(BaseService):
         subject=None,
         assignee=None,
         page_size=None,
-        sort_direction=u"asc",
-        sort_key=u"number",
-        **kwargs
+        sort_direction="asc",
+        sort_key="number",
+        **kwargs,
     ):
 
         page_size = page_size or settings.items_per_page
         params = {
-            u"name": name,
-            u"subject": subject,
-            u"assignee": assignee,
-            u"createdAt": created_at,
-            u"updatedAt": updated_at,
-            u"status": status,
-            u"pgNum": page_num,
-            u"pgSize": page_size,
-            u"srtDir": sort_direction,
-            u"srtKey": sort_key,
+            "name": name,
+            "subject": subject,
+            "assignee": assignee,
+            "createdAt": created_at,
+            "updatedAt": updated_at,
+            "status": status,
+            "pgNum": page_num,
+            "pgSize": page_size,
+            "srtDir": sort_direction,
+            "srtKey": sort_key,
         }
         params.update(**kwargs)
 
@@ -71,13 +71,13 @@ class CasesService(BaseService):
         subject=None,
         assignee=None,
         page_size=None,
-        sort_direction=u"asc",
-        sort_key=u"number",
-        **kwargs
+        sort_direction="asc",
+        sort_key="number",
+        **kwargs,
     ):
         return get_all_pages(
             self.get_page,
-            u"cases",
+            "cases",
             name=name,
             status=status,
             created_at=created_at,
@@ -87,14 +87,14 @@ class CasesService(BaseService):
             page_size=page_size,
             sort_direction=sort_direction,
             sort_key=sort_key,
-            **kwargs
+            **kwargs,
         )
 
     def get(self, case_number):
-        return self._connection.get("{}/{}".format(self._uri_prefix, case_number))
+        return self._connection.get(f"{self._uri_prefix}/{case_number}")
 
     def export_summary(self, case_number):
-        uri_prefix = u"{}/{}/{}".format(self._uri_prefix, case_number, u"export")
+        uri_prefix = f"{self._uri_prefix}/{case_number}/export"
         return self._connection.get(uri_prefix)
 
     def update(
@@ -110,33 +110,31 @@ class CasesService(BaseService):
         current_case_data = self.get(case_number).data
 
         data = {
-            u"assignee": assignee or current_case_data.get(u"assignee"),
-            u"description": description or current_case_data.get(u"description"),
-            u"findings": findings or current_case_data.get(u"findings"),
-            u"name": name or current_case_data.get(u"name"),
-            u"subject": subject or current_case_data.get(u"subject"),
-            u"status": status or current_case_data.get("status"),
+            "assignee": assignee or current_case_data.get("assignee"),
+            "description": description or current_case_data.get("description"),
+            "findings": findings or current_case_data.get("findings"),
+            "name": name or current_case_data.get("name"),
+            "subject": subject or current_case_data.get("subject"),
+            "status": status or current_case_data.get("status"),
         }
         try:
-            return self._connection.put(
-                u"{}/{}".format(self._uri_prefix, case_number), json=data
-            )
+            return self._connection.put(f"{self._uri_prefix}/{case_number}", json=data)
         except Py42BadRequestError as err:
-            if u"NO_EDITS_ONCE_CLOSED" in err.response.text:
+            if "NO_EDITS_ONCE_CLOSED" in err.response.text:
                 raise Py42UpdateClosedCaseError(err)
             _handle_common_invalid_case_parameters_errors(err, name)
 
 
 def _handle_common_invalid_case_parameters_errors(base_err, name):
-    if u"NAME_EXISTS" in base_err.response.text:
+    if "NAME_EXISTS" in base_err.response.text:
         raise Py42CaseNameExistsError(base_err, name)
-    elif u"NO_EDITS_ONCE_CLOSED" in base_err.response.text:
+    elif "NO_EDITS_ONCE_CLOSED" in base_err.response.text:
         raise Py42UpdateClosedCaseError(base_err)
-    elif u"DESCRIPTION_TOO_LONG" in base_err.response.text:
+    elif "DESCRIPTION_TOO_LONG" in base_err.response.text:
         raise Py42DescriptionLimitExceededError(base_err)
-    elif u"INVALID_USER" in base_err.response.text:
-        if u"subject" in base_err.response.text:
-            raise Py42InvalidCaseUserError(base_err, u"subject")
-        elif u"assignee" in base_err.response.text:
-            raise Py42InvalidCaseUserError(base_err, u"assignee")
+    elif "INVALID_USER" in base_err.response.text:
+        if "subject" in base_err.response.text:
+            raise Py42InvalidCaseUserError(base_err, "subject")
+        elif "assignee" in base_err.response.text:
+            raise Py42InvalidCaseUserError(base_err, "assignee")
     raise

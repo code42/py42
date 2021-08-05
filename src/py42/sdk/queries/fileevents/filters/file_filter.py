@@ -22,20 +22,20 @@ class FileCategory(FileEventFilterStringField):
 
     """
 
-    _term = u"fileCategory"
+    _term = "fileCategory"
 
-    AUDIO = u"Audio"
-    DOCUMENT = u"Document"
-    EXECUTABLE = u"Executable"
-    IMAGE = u"Image"
-    PDF = u"Pdf"
-    PRESENTATION = u"Presentation"
-    SCRIPT = u"Script"
-    SOURCE_CODE = u"SourceCode"
-    SPREADSHEET = u"Spreadsheet"
-    VIDEO = u"Video"
-    VIRTUAL_DISK_IMAGE = u"VirtualDiskImage"
-    ZIP = u"Archive"
+    AUDIO = "Audio"
+    DOCUMENT = "Document"
+    EXECUTABLE = "Executable"
+    IMAGE = "Image"
+    PDF = "Pdf"
+    PRESENTATION = "Presentation"
+    SCRIPT = "Script"
+    SOURCE_CODE = "SourceCode"
+    SPREADSHEET = "Spreadsheet"
+    VIDEO = "Video"
+    VIRTUAL_DISK_IMAGE = "VirtualDiskImage"
+    ZIP = "Archive"
 
     @staticmethod
     def choices():
@@ -45,19 +45,19 @@ class FileCategory(FileEventFilterStringField):
 class FileName(FileEventFilterStringField):
     """Class that filters events by the name of the file observed."""
 
-    _term = u"fileName"
+    _term = "fileName"
 
 
 class FileOwner(FileEventFilterStringField):
     """Class that filters events by the owner of the file observed."""
 
-    _term = u"fileOwner"
+    _term = "fileOwner"
 
 
 class FilePath(FileEventFilterStringField):
     """Class that filters events by path of the file observed."""
 
-    _term = u"filePath"
+    _term = "filePath"
 
 
 class FileSize(FileEventFilterComparableField):
@@ -66,16 +66,16 @@ class FileSize(FileEventFilterComparableField):
     Size ``value`` must be bytes.
     """
 
-    _term = u"fileSize"
+    _term = "fileSize"
 
 
 class MD5(FileEventFilterStringField):
     """Class that filters events by the MD5 hash of the file observed."""
 
-    _term = u"md5Checksum"
+    _term = "md5Checksum"
 
 
 class SHA256(FileEventFilterStringField):
     """Class that filters events by SHA256 hash of the file observed."""
 
-    _term = u"sha256Checksum"
+    _term = "sha256Checksum"

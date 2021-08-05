@@ -5,17 +5,17 @@ from py42.util import parse_timestamp_to_microseconds_precision
 from py42.util import to_list
 
 _FILTER_PARAMS = (
-    u"event_types",
-    u"user_ids",
-    u"usernames",
-    u"user_ip_addresses",
-    u"affected_user_ids",
-    u"affected_usernames",
-    u"begin_time",
-    u"end_time",
+    "event_types",
+    "user_ids",
+    "usernames",
+    "user_ip_addresses",
+    "affected_user_ids",
+    "affected_usernames",
+    "begin_time",
+    "end_time",
 )
 
-HEADER_MAP = {u"CSV": {u"Accept": u"text/csv"}, u"CEF": {u"Accept": u"text/x-cef"}}
+HEADER_MAP = {"CSV": {"Accept": "text/csv"}, "CEF": {"Accept": "text/x-cef"}}
 
 
 class AuditLogsService(BaseService):
@@ -38,13 +38,13 @@ class AuditLogsService(BaseService):
     ):
         date_range = {}
         if begin_time:
-            date_range[u"startTime"] = parse_timestamp_to_microseconds_precision(
+            date_range["startTime"] = parse_timestamp_to_microseconds_precision(
                 begin_time
             )
         if end_time:
-            date_range[u"endTime"] = parse_timestamp_to_microseconds_precision(end_time)
+            date_range["endTime"] = parse_timestamp_to_microseconds_precision(end_time)
 
-        uri = u"/rpc/search/search-audit-log"
+        uri = "/rpc/search/search-audit-log"
         page_size = page_size or settings.items_per_page
         params = dict(
             page=page_num - 1,
@@ -76,7 +76,7 @@ class AuditLogsService(BaseService):
     ):
         return get_all_pages(
             self.get_page,
-            u"events",
+            "events",
             begin_time=begin_time,
             end_time=end_time,
             event_types=event_types,

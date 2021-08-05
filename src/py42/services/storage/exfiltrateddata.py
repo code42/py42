@@ -1,13 +1,14 @@
-from py42._compat import quote
+from urllib.parse import quote
+
 from py42.services import BaseService
 
 
 class ExfiltratedDataService(BaseService):
 
-    _base_uri = u"api/v1/"
+    _base_uri = "api/v1/"
 
     def __init__(self, main_session, streaming_session):
-        super(ExfiltratedDataService, self).__init__(main_session)
+        super().__init__(main_session)
         self._streaming_session = streaming_session
 
     def get_download_token(self, event_id, device_id, file_path, timestamp):
@@ -22,10 +23,10 @@ class ExfiltratedDataService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing download token for the file.
         """
-        params = u"deviceUid={}&eventId={}&filePath={}&versionTimestamp={}"
+        params = "deviceUid={}&eventId={}&filePath={}&versionTimestamp={}"
         params = params.format(device_id, event_id, quote(file_path), timestamp)
-        resource = u"file-download-token"
-        uri = u"{}{}?{}".format(self._base_uri, resource, params)
+        resource = "file-download-token"
+        uri = f"{self._base_uri}{resource}?{params}"
         return self._connection.get(uri)
 
     def get_file(self, token):
@@ -37,10 +38,10 @@ class ExfiltratedDataService(BaseService):
         Returns:
             Returns a stream of the file indicated by the input token.
         """
-        resource = u"get-file"
-        uri = u"{}/{}{}".format(self._connection.host_address, self._base_uri, resource)
-        params = {u"token": token}
-        headers = {u"Accept": u"*/*"}
+        resource = "get-file"
+        uri = f"{self._connection.host_address}/{self._base_uri}{resource}"
+        params = {"token": token}
+        headers = {"Accept": "*/*"}
         return self._streaming_session.get(
             uri, params=params, headers=headers, stream=True
         )

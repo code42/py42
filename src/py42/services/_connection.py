@@ -1,7 +1,7 @@
-from __future__ import print_function
-
 import json as json_lib
 from threading import Lock
+from urllib.parse import urljoin
+from urllib.parse import urlparse
 
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
@@ -9,9 +9,6 @@ from requests.models import Request
 from requests.sessions import Session
 
 import py42.settings as settings
-from py42._compat import string_type
-from py42._compat import urljoin
-from py42._compat import urlparse
 from py42.exceptions import Py42DeviceNotConnectedError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42FeatureUnavailableError
@@ -24,15 +21,15 @@ from py42.util import format_dict
 SESSION_ADAPTER = HTTPAdapter(pool_connections=200, pool_maxsize=4, pool_block=True)
 
 ROOT_SESSION = Session()
-ROOT_SESSION.mount(u"https://", SESSION_ADAPTER)
-ROOT_SESSION.mount(u"http://", SESSION_ADAPTER)
+ROOT_SESSION.mount("https://", SESSION_ADAPTER)
+ROOT_SESSION.mount("http://", SESSION_ADAPTER)
 ROOT_SESSION.headers = {
-    u"Accept-Encoding": u"gzip, deflate",
-    u"Connection": u"keep-alive",
+    "Accept-Encoding": "gzip, deflate",
+    "Connection": "keep-alive",
 }
 
 
-class HostResolver(object):
+class HostResolver:
     def get_host_address(self):
         raise NotImplementedError()
 
@@ -52,14 +49,14 @@ class MicroservicePrefixHostResolver(HostResolver):
 
     def get_host_address(self):
         sts_url = self._get_sts_base_url()
-        return sts_url.replace(u"sts", self._prefix, 1)
+        return sts_url.replace("sts", self._prefix, 1)
 
     def _get_sts_base_url(self):
-        uri = u"/api/ServerEnv"
+        uri = "/api/ServerEnv"
         response = self._connection.get(uri)
 
         response_json = json_lib.loads(response.text)
-        sts_base_url = response_json.get(u"stsBaseUrl")
+        sts_base_url = response_json.get("stsBaseUrl")
 
         if not sts_base_url:
             raise Py42FeatureUnavailableError(response)
@@ -83,18 +80,18 @@ class ConnectedServerHostResolver(HostResolver):
     def __init__(self, connection, device_guid):
         self._connection = connection
         self._device_guid = device_guid
-        super(ConnectedServerHostResolver, self).__init__()
+        super().__init__()
 
     def get_host_address(self):
         response = self._connection.get(
-            u"api/connectedServerUrl", params={u"guid": self._device_guid}
+            "api/connectedServerUrl", params={"guid": self._device_guid}
         )
-        if response[u"serverUrl"] is None:
+        if response["serverUrl"] is None:
             raise Py42DeviceNotConnectedError(response, self._device_guid)
-        return response[u"serverUrl"]
+        return response["serverUrl"]
 
 
-class Connection(object):
+class Connection:
     def __init__(self, host_resolver, auth=None, session=None):
         self._host_resolver = host_resolver
         self._session = session or ROOT_SESSION
@@ -132,25 +129,25 @@ class Connection(object):
         return Connection(host_resolver, auth=self._auth)
 
     def get(self, url, **kwargs):
-        return self.request(u"GET", url, **kwargs)
+        return self.request("GET", url, **kwargs)
 
     def options(self, url, **kwargs):
-        return self.request(u"OPTIONS", url, **kwargs)
+        return self.request("OPTIONS", url, **kwargs)
 
     def head(self, url, **kwargs):
-        return self.request(u"HEAD", url, **kwargs)
+        return self.request("HEAD", url, **kwargs)
 
     def post(self, url, data=None, json=None, **kwargs):
-        return self.request(u"POST", url, data=data, json=json, **kwargs)
+        return self.request("POST", url, data=data, json=json, **kwargs)
 
     def put(self, url, data=None, json=None, **kwargs):
-        return self.request(u"PUT", url, data=data, json=json, **kwargs)
+        return self.request("PUT", url, data=data, json=json, **kwargs)
 
     def patch(self, url, data=None, json=None, **kwargs):
-        return self.request(u"PATCH", url, data=data, json=json, **kwargs)
+        return self.request("PATCH", url, data=data, json=json, **kwargs)
 
     def delete(self, url, **kwargs):
-        return self.request(u"DELETE", url, **kwargs)
+        return self.request("DELETE", url, **kwargs)
 
     def request(
         self,
@@ -193,13 +190,13 @@ class Connection(object):
             )
 
             if response is not None:
-                debug.logger.info(u"Response status: {}".format(response.status_code))
+                debug.logger.info(f"Response status: {response.status_code}")
                 if not stream:
                     # setting this manually speeds up read times
-                    response.encoding = u"utf-8"
-                    debug.logger.debug(u"Response data: {}".format(response.text))
+                    response.encoding = "utf-8"
+                    debug.logger.debug(f"Response data: {response.text}")
                 else:
-                    debug.logger.debug(u"Response data: <streamed>")
+                    debug.logger.debug("Response data: <streamed>")
 
                 if 200 <= response.status_code <= 399:
                     return Py42Response(response)
@@ -208,7 +205,7 @@ class Connection(object):
                     if isinstance(self._auth, C42RenewableAuth):
                         self._auth.clear_credentials()
             else:
-                debug.logger.debug(u"Error! Could not retrieve response.")
+                debug.logger.debug("Error! Could not retrieve response.")
 
         # if nothing has been returned after two attempts, something went wrong
         _handle_error(method, url, response)
@@ -232,15 +229,15 @@ class Connection(object):
 
         headers = headers or {}
         headers.update(self._headers)
-        if data and u"Content-Type" not in headers:
-            headers.update({u"Content-Type": u"application/json"})
-        if u"Accept" not in headers:
-            headers.update({u"Accept": u"application/json"})
+        if data and "Content-Type" not in headers:
+            headers.update({"Content-Type": "application/json"})
+        if "Accept" not in headers:
+            headers.update({"Accept": "application/json"})
         headers = _create_user_headers(headers)
 
         _print_request(method, url, params=params, data=data, json=json)
 
-        if isinstance(data, string_type):
+        if isinstance(data, str):
             data = data.encode("utf-8")
 
         request = Request(
@@ -267,15 +264,15 @@ class Connection(object):
         return self._host_address
 
     def _init_host_info(self, host):
-        if not host.startswith(u"http://") and not host.startswith(u"https://"):
-            host = u"https://{}".format(host)
+        if not host.startswith("http://") and not host.startswith("https://"):
+            host = f"https://{host}"
         parsed_host = urlparse(host)
-        self._headers[u"Host"] = parsed_host.netloc
+        self._headers["Host"] = parsed_host.netloc
         self._host_address = host
 
 
 def _create_user_headers(headers):
-    user_headers = {u"User-Agent": settings.get_user_agent_string()}
+    user_headers = {"User-Agent": settings.get_user_agent_string()}
     if headers:
         user_headers.update(headers)
     return user_headers
@@ -283,7 +280,7 @@ def _create_user_headers(headers):
 
 def _handle_error(method, url, response):
     if response is None:
-        msg = u"No response was returned for {} request to {}.".format(method, url)
+        msg = f"No response was returned for {method} request to {url}."
         raise Py42Error(msg)
 
     try:
@@ -293,10 +290,10 @@ def _handle_error(method, url, response):
 
 
 def _print_request(method, url, params=None, data=None, json=None):
-    debug.logger.info(u"{}{}".format(method.ljust(8), url))
+    debug.logger.info(f"{method.ljust(8)}{url}")
     if params:
-        debug.logger.debug(format_dict(params, u"  params"))
+        debug.logger.debug(format_dict(params, "  params"))
     if json:
-        debug.logger.debug(format_dict(json, u"  json"))
+        debug.logger.debug(format_dict(json, "  json"))
     if data:
-        debug.logger.debug(data, u"  data")
+        debug.logger.debug(data, "  data")

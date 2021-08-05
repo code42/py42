@@ -3,10 +3,10 @@ from py42.services import BaseService
 
 class StoragePreservationDataService(BaseService):
 
-    _base_uri = u"c42api/v3/"
+    _base_uri = "c42api/v3/"
 
     def __init__(self, main_session, streaming_session):
-        super(StoragePreservationDataService, self).__init__(main_session)
+        super().__init__(main_session)
         self._streaming_session = streaming_session
 
     def get_download_token(self, archive_guid, file_id, timestamp):
@@ -21,12 +21,12 @@ class StoragePreservationDataService(BaseService):
             :class:`py42.response.Py42Response`: A response containing download token for the file.
         """
         params = {
-            u"archiveGuid": archive_guid,
-            u"fileId": file_id,
-            u"versionTimestamp": timestamp,
+            "archiveGuid": archive_guid,
+            "fileId": file_id,
+            "versionTimestamp": timestamp,
         }
-        resource = u"FileDownloadToken"
-        uri = u"{}{}".format(self._base_uri, resource)
+        resource = "FileDownloadToken"
+        uri = f"{self._base_uri}{resource}"
         return self._connection.get(uri, params=params)
 
     def get_file(self, token):
@@ -38,14 +38,14 @@ class StoragePreservationDataService(BaseService):
         Returns:
             Returns a stream of the requested token.
         """
-        resource = u"GetFile"
-        uri = u"{}/{}{}".format(self._connection.host_address, self._base_uri, resource)
-        if u"PDSDownloadToken=" in token:
-            replaced_token = token.replace(u"PDSDownloadToken=", "")
+        resource = "GetFile"
+        uri = f"{self._connection.host_address}/{self._base_uri}{resource}"
+        if "PDSDownloadToken=" in token:
+            replaced_token = token.replace("PDSDownloadToken=", "")
         else:
             replaced_token = token
-        params = {u"PDSDownloadToken": replaced_token}
-        headers = {u"Accept": u"*/*"}
+        params = {"PDSDownloadToken": replaced_token}
+        headers = {"Accept": "*/*"}
         return self._streaming_session.get(
             uri, params=params, headers=headers, stream=True
         )

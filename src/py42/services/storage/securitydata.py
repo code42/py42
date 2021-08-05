@@ -14,7 +14,7 @@ class StorageSecurityDataService(BaseService):
         max_timestamp=None,
         summarize=None,
     ):
-        uri = u"/api/SecurityDetectionEvent"
+        uri = "/api/SecurityDetectionEvent"
 
         min_time_str = None
         max_time_str = None
@@ -26,14 +26,14 @@ class StorageSecurityDataService(BaseService):
             max_time_str = parse_timestamp_to_microseconds_precision(max_timestamp)
 
         params = {
-            u"userUid": user_uid,
-            u"planUid": plan_uid,
-            u"cursor": cursor,
-            u"incFiles": include_files,
-            u"eventType": event_types,
-            u"minTs": min_time_str,
-            u"maxTs": max_time_str,
-            u"summarize": summarize,
+            "userUid": user_uid,
+            "planUid": plan_uid,
+            "cursor": cursor,
+            "incFiles": include_files,
+            "eventType": event_types,
+            "minTs": min_time_str,
+            "maxTs": max_time_str,
+            "summarize": summarize,
         }
 
         return self._connection.get(uri, params=params)

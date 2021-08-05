@@ -4,16 +4,16 @@ from py42.util import get_attribute_keys_from_class
 from py42.util import parse_timestamp_to_milliseconds_precision
 
 
-class CaseStatus(object):
-    OPEN = u"OPEN"
-    CLOSED = u"CLOSED"
+class CaseStatus:
+    OPEN = "OPEN"
+    CLOSED = "CLOSED"
 
     @staticmethod
     def choices():
         return get_attribute_keys_from_class(CaseStatus)
 
 
-class CasesClient(object):
+class CasesClient:
     """A client to expose cases API.
 
     `Rest documentation <https://developer.code42.com/api/#tag/Cases>`__
@@ -68,9 +68,9 @@ class CasesClient(object):
         subject=None,
         assignee=None,
         page_size=100,
-        sort_direction=u"asc",
-        sort_key=u"number",
-        **kwargs
+        sort_direction="asc",
+        sort_key="number",
+        **kwargs,
     ):
         """Gets individual page of cases.
         `Rest documentation <https://developer.code42.com/api/#operation/getCasesUsingGET>`__
@@ -113,7 +113,7 @@ class CasesClient(object):
             page_size=page_size,
             sort_direction=sort_direction,
             sort_key=sort_key,
-            **kwargs
+            **kwargs,
         )
 
     def get_all(
@@ -127,9 +127,9 @@ class CasesClient(object):
         subject=None,
         assignee=None,
         page_size=100,
-        sort_direction=u"asc",
-        sort_key=u"number",
-        **kwargs
+        sort_direction="asc",
+        sort_key="number",
+        **kwargs,
     ):
         """Gets all cases.
         `Rest documentation <https://developer.code42.com/api/#operation/getCasesUsingGET>`__
@@ -171,7 +171,7 @@ class CasesClient(object):
             page_size=page_size,
             sort_direction=sort_direction,
             sort_key=sort_key,
-            **kwargs
+            **kwargs,
         )
 
     def get(self, case_number):
@@ -246,4 +246,4 @@ def _make_range(begin_time, end_time):
         end_time = datetime.utcnow()
     end = parse_timestamp_to_milliseconds_precision(end_time)
     start = parse_timestamp_to_milliseconds_precision(begin_time)
-    return "{}/{}".format(start, end)
+    return f"{start}/{end}"

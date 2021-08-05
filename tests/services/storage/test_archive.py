@@ -59,7 +59,7 @@ def storage_archive_service(mocker):
     return mocker.MagicMock(spec=StorageArchiveService)
 
 
-class TestStorageArchiveService(object):
+class TestStorageArchiveService:
     def test_search_paths_calls_get_with_expected_params(self, connection):
         storage_archive_service = StorageArchiveService(connection)
         storage_archive_service.search_paths(
@@ -83,7 +83,7 @@ class TestStorageArchiveService(object):
             "device_guid", "file_id", "timestamp", True, "backupset_id"
         )
         connection.get.assert_called_once_with(
-            u"/api/WebRestoreFileSize",
+            "/api/WebRestoreFileSize",
             params={
                 "guid": "device_guid",
                 "fileId": "file_id",
@@ -128,7 +128,7 @@ class TestStorageArchiveService(object):
             include_os_metadata=True,
         )
         connection.get.assert_called_once_with(
-            u"/api/WebRestoreTreeNode",
+            "/api/WebRestoreTreeNode",
             params={
                 "webRestoreSessionId": TEST_SESSION_ID,
                 "guid": TEST_DEVICE_GUID,

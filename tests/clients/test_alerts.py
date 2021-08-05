@@ -187,8 +187,8 @@ def mock_details(mocker):
     return mock_get_details
 
 
-class TestAlertsClient(object):
-    _alert_ids = [u"test-id1", u"test-id2"]
+class TestAlertsClient:
+    _alert_ids = ["test-id1", "test-id2"]
 
     def test_rules_returns_rules_client(
         self, mock_alerts_service, mock_alert_rules_service

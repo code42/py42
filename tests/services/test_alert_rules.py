@@ -37,24 +37,24 @@ def mock_detection_list_post_failure_when_invalid_rule_id(mocker, mock_connectio
     return detection_list_user_service
 
 
-class TestAlertRulesService(object):
+class TestAlertRulesService:
     def test_add_user_posts_expected_data(
         self, mock_connection, user_context, mock_detection_list_user_service
     ):
         alert_rule_service = AlertRulesService(
             mock_connection, user_context, mock_detection_list_user_service
         )
-        alert_rule_service.add_user(u"rule-id", u"user-id")
+        alert_rule_service.add_user("rule-id", "user-id")
 
         assert mock_connection.post.call_count == 1
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_args[0][0] == "/svc/api/v1/Rules/add-users"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
-            and posted_data["ruleId"] == u"rule-id"
-            and posted_data["userList"][0]["userIdFromAuthority"] == u"user-id"
+            and posted_data["ruleId"] == "rule-id"
+            and posted_data["userList"][0]["userIdFromAuthority"] == "user-id"
             and posted_data["userList"][0]["userAliasList"]
-            == [u"user.aliases@code42.com"]
+            == ["user.aliases@code42.com"]
         )
 
     def test_remove_user_posts_expected_data(
@@ -63,15 +63,15 @@ class TestAlertRulesService(object):
         alert_rule_service = AlertRulesService(
             mock_connection, user_context, mock_detection_list_user_service
         )
-        alert_rule_service.remove_user(u"rule-id", u"user-id")
+        alert_rule_service.remove_user("rule-id", "user-id")
 
         assert mock_connection.post.call_count == 1
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_args[0][0] == "/svc/api/v1/Rules/remove-users"
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
-            and posted_data["ruleId"] == u"rule-id"
-            and posted_data["userIdList"] == [u"user-id"]
+            and posted_data["ruleId"] == "rule-id"
+            and posted_data["userIdList"] == ["user-id"]
         )
 
     def test_remove_all_users_posts_expected_data(
@@ -80,7 +80,7 @@ class TestAlertRulesService(object):
         alert_rule_service = AlertRulesService(
             mock_connection, user_context, mock_detection_list_user_service
         )
-        alert_rule_service.remove_all_users(u"rule-id")
+        alert_rule_service.remove_all_users("rule-id")
 
         assert mock_connection.post.call_count == 1
         posted_data = mock_connection.post.call_args[1]["json"]
@@ -89,7 +89,7 @@ class TestAlertRulesService(object):
         )
         assert (
             posted_data["tenantId"] == user_context.get_current_tenant_id()
-            and posted_data["ruleId"] == u"rule-id"
+            and posted_data["ruleId"] == "rule-id"
         )
 
     def test_add_user_raises_valid_exception_when_rule_id_is_invalid(

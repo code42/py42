@@ -301,7 +301,7 @@ AVAILABLE_VERSION_RESPONSE = """{
 }"""
 
 
-class TestSecurityClient(object):
+class TestSecurityClient:
     @pytest.fixture
     def connection(self, mocker):
         return mocker.MagicMock(spec=Connection)
@@ -851,12 +851,26 @@ class TestSecurityClient(object):
         return create_mock_response(mocker, PDS_FILE_VERSIONS)
 
     @pytest.fixture
-    def pds_config(self, mocker, security_service, storage_service_factory, file_event_service, preservation_data_service, saved_search_service):
+    def pds_config(
+        self,
+        mocker,
+        security_service,
+        storage_service_factory,
+        file_event_service,
+        preservation_data_service,
+        saved_search_service,
+    ):
         mock = mocker.MagicMock()
         file_download = create_mock_response(mocker, "PDSDownloadToken=token")
-        file_event_service.search.return_value = create_mock_response(mocker, FILE_EVENTS_RESPONSE)
-        preservation_data_service.get_file_version_list.return_value = create_mock_response(mocker, PDS_FILE_VERSIONS)
-        file_event_service.get_file_location_detail_by_sha256.return_value = create_mock_response(mocker, FILE_LOCATION_RESPONSE)
+        file_event_service.search.return_value = create_mock_response(
+            mocker, FILE_EVENTS_RESPONSE
+        )
+        preservation_data_service.get_file_version_list.return_value = create_mock_response(
+            mocker, PDS_FILE_VERSIONS
+        )
+        file_event_service.get_file_location_detail_by_sha256.return_value = create_mock_response(
+            mocker, FILE_LOCATION_RESPONSE
+        )
         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
         storage_node_client.get_download_token.return_value = file_download
         storage_node_client.get_file.return_value = b"stream"
@@ -880,8 +894,7 @@ class TestSecurityClient(object):
         return mock
 
     def test_stream_file_by_sha256_with_exact_match_response_calls_get_version_list_with_expected_params(
-        self,
-        pds_config,
+        self, pds_config,
     ):
 
         security_client = SecurityDataClient(
@@ -905,7 +918,10 @@ class TestSecurityClient(object):
         pds_config.storage_service_factory.create_preservation_data_service.assert_called_once_with(
             "https://host-2.example.com"
         )
-        assert pds_config.file_event_service.get_file_location_detail_by_sha256.call_count == 0
+        assert (
+            pds_config.file_event_service.get_file_location_detail_by_sha256.call_count
+            == 0
+        )
         assert pds_config.preservation_data_service.find_file_version.call_count == 0
         expected_download_token_params = ["archiveid-2", "fileid-2", 12344]
         pds_config.storage_node_client.get_download_token.assert_called_once_with(
@@ -914,9 +930,7 @@ class TestSecurityClient(object):
         assert response == b"stream"
 
     def test_stream_file_by_sha256_without_exact_match_response_calls_get_version_list_with_expected_params(
-        self,
-        mocker,
-        pds_config,
+        self, mocker, pds_config,
     ):
         pds_config.file_event_service.search.return_value = create_mock_response(
             mocker, FILE_EVENTS_RESPONSE.replace("-2", "-6")
@@ -942,7 +956,10 @@ class TestSecurityClient(object):
         pds_config.storage_service_factory.create_preservation_data_service.assert_called_once_with(
             "https://host-3.example.com"
         )
-        assert pds_config.file_event_service.get_file_location_detail_by_sha256.call_count == 0
+        assert (
+            pds_config.file_event_service.get_file_location_detail_by_sha256.call_count
+            == 0
+        )
         assert pds_config.preservation_data_service.find_file_version.call_count == 0
         # should get version with most recent versionTimestamp
         expected_download_token_params = ["archiveid-3", "fileid-3", 12346]
@@ -952,11 +969,11 @@ class TestSecurityClient(object):
         assert response == b"stream"
 
     def test_stream_file_by_sha256_when_search_returns_empty_response_raises_py42_checksum_not_found_error_(
-        self,
-        mocker,
-        pds_config
+        self, mocker, pds_config
     ):
-        pds_config.file_event_service.search.return_value = create_mock_response(mocker, '{"fileEvents": []}')
+        pds_config.file_event_service.search.return_value = create_mock_response(
+            mocker, '{"fileEvents": []}'
+        )
         security_client = SecurityDataClient(
             pds_config.security_service,
             pds_config.file_event_service,
@@ -971,14 +988,16 @@ class TestSecurityClient(object):
         assert "No files found with SHA256 checksum" in e.value.args[0]
 
     def test_stream_file_by_sha256_when_file_versions_returns_empty_response_gets_version_from_other_location(
-        self,
-        mocker,
-        pds_config,
+        self, mocker, pds_config,
     ):
         available_version = create_mock_response(mocker, AVAILABLE_VERSION_RESPONSE)
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
-        pds_config.preservation_data_service.find_file_version.return_value = available_version
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
+        pds_config.preservation_data_service.find_file_version.return_value = (
+            available_version
+        )
 
         security_client = SecurityDataClient(
             pds_config.security_service,
@@ -993,7 +1012,9 @@ class TestSecurityClient(object):
             "testsha256-2"
         )
         expected = ["testmd5-2", "testsha256-2", mocker.ANY]
-        pds_config.preservation_data_service.find_file_version.assert_called_once_with(*expected)
+        pds_config.preservation_data_service.find_file_version.assert_called_once_with(
+            *expected
+        )
         # should return version returned by find_file_version
         expected_expected_download_token_params = ["archiveid-3", "fileid-3", 12346]
         pds_config.storage_node_client.get_download_token.assert_called_once_with(
@@ -1001,13 +1022,13 @@ class TestSecurityClient(object):
         )
 
     def test_stream_file_by_sha256_when_get_locations_returns_empty_list_raises_py42_error(
-        self,
-        mocker,
-        pds_config,
+        self, mocker, pds_config,
     ):
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
         file_location = create_mock_response(mocker, '{"locations": []}')
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
         pds_config.file_event_service.get_file_location_detail_by_sha256.return_value = (
             file_location
         )
@@ -1025,16 +1046,18 @@ class TestSecurityClient(object):
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
     def test_stream_file_by_sha256_when_find_file_version_returns_204_status_code_raises_py42_error(
-        self,
-        mocker,
-        pds_config,
+        self, mocker, pds_config,
     ):
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
         available_version = create_mock_response(
             mocker, AVAILABLE_VERSION_RESPONSE, 204
         )
-        pds_config.preservation_data_service.find_file_version.return_value = available_version
+        pds_config.preservation_data_service.find_file_version.return_value = (
+            available_version
+        )
 
         security_client = SecurityDataClient(
             pds_config.security_service,
@@ -1050,8 +1073,7 @@ class TestSecurityClient(object):
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
     def test_stream_file_by_md5_with_exact_match_response_calls_get_version_list_with_expected_params(
-        self,
-        pds_config,
+        self, pds_config,
     ):
         security_client = SecurityDataClient(
             pds_config.security_service,
@@ -1074,7 +1096,10 @@ class TestSecurityClient(object):
         pds_config.storage_service_factory.create_preservation_data_service.assert_called_once_with(
             "https://host-2.example.com"
         )
-        assert pds_config.file_event_service.get_file_location_detail_by_sha256.call_count == 0
+        assert (
+            pds_config.file_event_service.get_file_location_detail_by_sha256.call_count
+            == 0
+        )
         assert pds_config.preservation_data_service.find_file_version.call_count == 0
         expected_download_token_params = ["archiveid-2", "fileid-2", 12344]
         pds_config.storage_node_client.get_download_token.assert_called_once_with(
@@ -1083,9 +1108,7 @@ class TestSecurityClient(object):
         assert response == b"stream"
 
     def test_stream_file_by_md5_without_exact_match_response_calls_get_version_list_with_expected_params(
-        self,
-        mocker,
-        pds_config,
+        self, mocker, pds_config,
     ):
         pds_config.file_event_service.search.return_value = create_mock_response(
             mocker, FILE_EVENTS_RESPONSE.replace("-2", "-6")
@@ -1112,7 +1135,10 @@ class TestSecurityClient(object):
         pds_config.storage_service_factory.create_preservation_data_service.assert_called_once_with(
             "https://host-3.example.com"
         )
-        assert pds_config.file_event_service.get_file_location_detail_by_sha256.call_count == 0
+        assert (
+            pds_config.file_event_service.get_file_location_detail_by_sha256.call_count
+            == 0
+        )
         assert pds_config.preservation_data_service.find_file_version.call_count == 0
         # should get version returned with most recent versionTimestamp
         expected_download_token_params = ["archiveid-3", "fileid-3", 12346]
@@ -1122,9 +1148,7 @@ class TestSecurityClient(object):
         assert response == b"stream"
 
     def test_stream_file_by_md5_when_search_returns_empty_response_raises_py42_checksum_not_found_error_(
-        self,
-        mocker,
-        pds_config
+        self, mocker, pds_config
     ):
         pds_config.file_event_service.search.return_value = create_mock_response(
             mocker, '{"fileEvents": []}'
@@ -1143,14 +1167,16 @@ class TestSecurityClient(object):
         assert "No files found with MD5 checksum" in e.value.args[0]
 
     def test_stream_file_by_md5_when_file_versions_returns_empty_response_gets_version_from_other_location(
-        self,
-        mocker,
-        pds_config,
+        self, mocker, pds_config,
     ):
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
         available_version = create_mock_response(mocker, AVAILABLE_VERSION_RESPONSE)
-        pds_config.preservation_data_service.find_file_version.return_value = available_version
+        pds_config.preservation_data_service.find_file_version.return_value = (
+            available_version
+        )
 
         security_client = SecurityDataClient(
             pds_config.security_service,
@@ -1165,7 +1191,9 @@ class TestSecurityClient(object):
             "testsha256-2"
         )
         expected = ["testmd5-2", "testsha256-2", mocker.ANY]
-        pds_config.preservation_data_service.find_file_version.assert_called_once_with(*expected)
+        pds_config.preservation_data_service.find_file_version.assert_called_once_with(
+            *expected
+        )
         # should return version returned by find_file_version
         expected_download_token_params = ["archiveid-3", "fileid-3", 12346]
         pds_config.storage_node_client.get_download_token.assert_called_once_with(
@@ -1173,13 +1201,13 @@ class TestSecurityClient(object):
         )
 
     def test_stream_file_by_md5_when_get_locations_returns_empty_list_raises_py42_error(
-        self,
-        mocker,
-        pds_config
+        self, mocker, pds_config
     ):
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
         file_location = create_mock_response(mocker, '{"locations": []}')
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
         pds_config.file_event_service.get_file_location_detail_by_sha256.return_value = (
             file_location
         )
@@ -1197,16 +1225,18 @@ class TestSecurityClient(object):
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("mdhash")
 
     def test_stream_file_by_md5_when_find_file_version_returns_204_status_code_raises_py42_error(
-        self,
-        mocker,
-        pds_config
+        self, mocker, pds_config
     ):
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
         available_version = create_mock_response(
             mocker, AVAILABLE_VERSION_RESPONSE, 204
         )
-        pds_config.preservation_data_service.find_file_version.return_value = available_version
+        pds_config.preservation_data_service.find_file_version.return_value = (
+            available_version
+        )
 
         security_client = SecurityDataClient(
             pds_config.security_service,
@@ -1222,12 +1252,12 @@ class TestSecurityClient(object):
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("mdhash")
 
     def test_stream_file_by_md5_when_has_exact_match_calls_get_token_with_expected_params_and_streams_successfully(
-        self,
-        mocker,
-        pds_config
+        self, mocker, pds_config
     ):
         file_version_list = create_mock_response(mocker, XFC_EXACT_FILE_VERSIONS)
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
 
         security_client = SecurityDataClient(
             pds_config.security_service,
@@ -1249,12 +1279,12 @@ class TestSecurityClient(object):
         )
 
     def test_stream_file_by_sha256_when_has_exact_match_calls_get_token_with_expected_params_and_streams_successfully(
-        self,
-        mocker,
-        pds_config
+        self, mocker, pds_config
     ):
         file_version_list = create_mock_response(mocker, XFC_EXACT_FILE_VERSIONS)
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
 
         security_client = SecurityDataClient(
             pds_config.security_service,
@@ -1276,12 +1306,12 @@ class TestSecurityClient(object):
         )
 
     def test_stream_file_by_md5_when_has_path_match_calls_get_token_with_expected_params_and_streams_successfully(
-        self,
-        mocker,
-        pds_config
+        self, mocker, pds_config
     ):
         file_version_list = create_mock_response(mocker, XFC_MATCHED_FILE_VERSIONS)
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
 
         security_client = SecurityDataClient(
             pds_config.security_service,
@@ -1303,12 +1333,12 @@ class TestSecurityClient(object):
         )
 
     def test_stream_file_by_sha256_when_has_path_match_calls_get_token_with_expected_params_and_streams_successfully(
-        self,
-        mocker,
-        pds_config
+        self, mocker, pds_config
     ):
         file_version_list = create_mock_response(mocker, XFC_MATCHED_FILE_VERSIONS)
-        pds_config.preservation_data_service.get_file_version_list.return_value = file_version_list
+        pds_config.preservation_data_service.get_file_version_list.return_value = (
+            file_version_list
+        )
 
         security_client = SecurityDataClient(
             pds_config.security_service,

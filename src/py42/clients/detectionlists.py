@@ -3,24 +3,24 @@ from py42.exceptions import Py42UnableToCreateProfileError
 from py42.util import get_attribute_keys_from_class
 
 
-class RiskTags(object):
+class RiskTags:
     """The available RiskTags for :meth:`~py42.clients.detectionlists.DetectionListsClient.add_user_risk_tags()`
     and :meth:`~py42.clients.detectionlists.DetectionListsClient.remove_user_risk_tags()`"""
 
-    FLIGHT_RISK = u"FLIGHT_RISK"
-    HIGH_IMPACT_EMPLOYEE = u"HIGH_IMPACT_EMPLOYEE"
-    ELEVATED_ACCESS_PRIVILEGES = u"ELEVATED_ACCESS_PRIVILEGES"
-    PERFORMANCE_CONCERNS = u"PERFORMANCE_CONCERNS"
-    SUSPICIOUS_SYSTEM_ACTIVITY = u"SUSPICIOUS_SYSTEM_ACTIVITY"
-    POOR_SECURITY_PRACTICES = u"POOR_SECURITY_PRACTICES"
-    CONTRACT_EMPLOYEE = u"CONTRACT_EMPLOYEE"
+    FLIGHT_RISK = "FLIGHT_RISK"
+    HIGH_IMPACT_EMPLOYEE = "HIGH_IMPACT_EMPLOYEE"
+    ELEVATED_ACCESS_PRIVILEGES = "ELEVATED_ACCESS_PRIVILEGES"
+    PERFORMANCE_CONCERNS = "PERFORMANCE_CONCERNS"
+    SUSPICIOUS_SYSTEM_ACTIVITY = "SUSPICIOUS_SYSTEM_ACTIVITY"
+    POOR_SECURITY_PRACTICES = "POOR_SECURITY_PRACTICES"
+    CONTRACT_EMPLOYEE = "CONTRACT_EMPLOYEE"
 
     @staticmethod
     def choices():
         return get_attribute_keys_from_class(RiskTags)
 
 
-class DetectionListsClient(object):
+class DetectionListsClient:
     """`Rest documentation <https://developer.code42.com/api/#tag/Detection-Lists>`__"""
 
     def __init__(
@@ -103,8 +103,7 @@ class DetectionListsClient(object):
         Args:
             user_id (str or int): The userUid of the user whose risk factor tag(s) you want to update.
             tags (str or list of str ): A single tag or multiple tags in a list to be added. For
-                example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X, pass ``u"str"``
-                instead of ``"str"``.
+                example: ``"tag1"`` or ``["tag1", "tag2"]``.
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -118,8 +117,7 @@ class DetectionListsClient(object):
         Args:
             user_id (str or int): The userUid of the user whose risk factor tag(s) needs you want to remove.
             tags (str or list of str ): A single tag or multiple tags in a list to be removed. For
-                example: ``"tag1"`` or ``["tag1", "tag2"]``. For python version 2.X, pass ``u"str"``
-                instead of ``"str"``.
+                example: ``"tag1"`` or ``["tag1", "tag2"]``.
 
         Returns:
             :class:`py42.response.Py42Response`

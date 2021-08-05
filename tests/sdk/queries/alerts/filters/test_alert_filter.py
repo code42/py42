@@ -11,7 +11,6 @@ from tests.sdk.queries.conftest import NOT_IN
 from tests.sdk.queries.conftest import ON_OR_AFTER
 from tests.sdk.queries.conftest import ON_OR_BEFORE
 
-from py42._compat import str
 from py42.sdk.queries.alerts.filters import Actor
 from py42.sdk.queries.alerts.filters import AlertState
 from py42.sdk.queries.alerts.filters import DateObserved
@@ -35,7 +34,7 @@ def format_timestamp_with_microseconds(test_time):
 
 def format_datetime_with_microseconds(test_date):
     prefix = test_date.strftime(MICROSECOND_FORMAT)
-    timestamp_str = "{}".format(prefix)
+    timestamp_str = prefix
     return timestamp_str
 
 

@@ -3,7 +3,7 @@ import pytest
 from py42.services.preservationdata import PreservationDataService
 
 
-class TestPreservationDataService(object):
+class TestPreservationDataService:
     @pytest.fixture
     def mock_connection(self, mock_connection, successful_response):
         mock_connection.post.return_value = successful_response
@@ -17,10 +17,10 @@ class TestPreservationDataService(object):
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_args[0][0] == "/api/v1/FindAvailableVersion"
         assert (
-            posted_data[u"fileSHA256"] == "adfadf"
-            and posted_data[u"fileMD5"] == "abc"
-            and posted_data[u"devicePaths"][0] == "/path/path"
-            and posted_data[u"devicePaths"][1] == "/path/path2"
+            posted_data["fileSHA256"] == "adfadf"
+            and posted_data["fileMD5"] == "abc"
+            and posted_data["devicePaths"][0] == "/path/path"
+            and posted_data["devicePaths"][1] == "/path/path2"
         )
 
     def test_get_file_version_list_uses_expected_url(self, mock_connection):
@@ -29,5 +29,5 @@ class TestPreservationDataService(object):
         qry = (
             "fileSHA256=testsha256&fileMD5=testmd5&deviceUid=testguid&filePath=/t/1%20X"
         )
-        expected = "/api/v2/file-version-listing?{}".format(qry)
+        expected = f"/api/v2/file-version-listing?{qry}"
         mock_connection.get.assert_called_once_with(expected)

@@ -17,7 +17,7 @@ CLOUD_ALIAS_LIMIT_EXCEEDED_ERROR_MESSAGE = """{
 }"""
 
 
-class TestDetectionListUserClient(object):
+class TestDetectionListUserClient:
     @pytest.fixture
     def mock_user_client(self, mock_connection, user_context, mocker):
         user_client = UserService(mock_connection)
@@ -127,7 +127,7 @@ class TestDetectionListUserClient(object):
         detection_list_user_client = DetectionListUserService(
             mock_connection, user_context, mock_user_client
         )
-        detection_list_user_client.remove_risk_tags("942897397520289999", u"Test")
+        detection_list_user_client.remove_risk_tags("942897397520289999", "Test")
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
@@ -144,7 +144,7 @@ class TestDetectionListUserClient(object):
         detection_list_user_client = DetectionListUserService(
             mock_connection, user_context, mock_user_client
         )
-        detection_list_user_client.add_cloud_alias("942897397520289999", u"Test")
+        detection_list_user_client.add_cloud_alias("942897397520289999", "Test")
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1
@@ -161,7 +161,7 @@ class TestDetectionListUserClient(object):
         detection_list_user_client = DetectionListUserService(
             mock_connection, user_context, mock_user_client
         )
-        detection_list_user_client.remove_cloud_alias("942897397520289999", u"Test")
+        detection_list_user_client.remove_cloud_alias("942897397520289999", "Test")
 
         posted_data = mock_connection.post.call_args[1]["json"]
         assert mock_connection.post.call_count == 1

@@ -42,7 +42,7 @@ def mock_storage_auth_token_conn(mocker):
     return mock_connection
 
 
-class TestFileArchiveTmpAuth(object):
+class TestFileArchiveTmpAuth:
     def test_call_returns_request_with_expected_header(
         self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
@@ -73,9 +73,9 @@ class TestFileArchiveTmpAuth(object):
         )
         auth(mock_request)
         data = {
-            u"userId": TEST_USER_ID,
-            u"sourceGuid": TEST_DEVICE_GUID,
-            u"destinationGuid": TEST_DESTINATION_GUID,
+            "userId": TEST_USER_ID,
+            "sourceGuid": TEST_DEVICE_GUID,
+            "destinationGuid": TEST_DESTINATION_GUID,
         }
         mock_tmp_auth_conn.post.assert_called_once_with("/api/LoginToken", json=data)
         mock_storage_auth_token_conn.post.assert_called_once_with(
@@ -119,7 +119,7 @@ class TestFileArchiveTmpAuth(object):
         assert mock_storage_auth_token_conn.post.call_count == 1
 
 
-class TestSecurityArchiveTmpAuth(object):
+class TestSecurityArchiveTmpAuth:
     def test_call_returns_request_with_expected_header(
         self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
     ):
@@ -149,12 +149,12 @@ class TestSecurityArchiveTmpAuth(object):
             mock_tmp_auth_conn, TEST_PLAN_UID, TEST_DESTINATION_GUID
         )
         auth(mock_request)
-        data = {u"planUid": TEST_PLAN_UID, u"destinationGuid": TEST_DESTINATION_GUID}
+        data = {"planUid": TEST_PLAN_UID, "destinationGuid": TEST_DESTINATION_GUID}
         mock_tmp_auth_conn.post.assert_called_once_with(
             "/api/StorageAuthToken", json=data
         )
         mock_storage_auth_token_conn.post.assert_called_once_with(
-            u"api/AuthToken",
+            "api/AuthToken",
             headers={"Authorization": "login_token TEST_TMP_TOKEN_VALUE"},
         )
 

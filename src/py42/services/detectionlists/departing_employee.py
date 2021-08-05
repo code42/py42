@@ -16,7 +16,7 @@ _DATE_FORMAT = "%Y-%m-%d"
 class DepartingEmployeeFilters(_DetectionListFilters):
     """Constants available for filtering Departing Employee search results."""
 
-    LEAVING_TODAY = u"LEAVING_TODAY"
+    LEAVING_TODAY = "LEAVING_TODAY"
 
     @staticmethod
     def choices():
@@ -26,12 +26,12 @@ class DepartingEmployeeFilters(_DetectionListFilters):
 class DepartingEmployeeService(BaseService):
     """A service for interacting with Code42 Departing Employee APIs."""
 
-    _uri_prefix = u"v2/departingemployee/{0}"
+    _uri_prefix = "v2/departingemployee/{0}"
 
-    _CREATED_AT = u"CREATED_AT"
+    _CREATED_AT = "CREATED_AT"
 
     def __init__(self, session, user_context, user_profile_service):
-        super(DepartingEmployeeService, self).__init__(session)
+        super().__init__(session)
         self._user_context = user_context
         self._user_profile_service = user_profile_service
 
@@ -55,15 +55,15 @@ class DepartingEmployeeService(BaseService):
             departure_date = departure_date.strftime(_DATE_FORMAT)
         tenant_id = self._user_context.get_current_tenant_id()
         data = {
-            u"tenantId": tenant_id,
-            u"userId": user_id,
-            u"departureDate": departure_date,
+            "tenantId": tenant_id,
+            "userId": user_id,
+            "departureDate": departure_date,
         }
-        uri = self._uri_prefix.format(u"add")
+        uri = self._uri_prefix.format("add")
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
-            handle_user_already_added_error(err, user_id, u"departing-employee list")
+            handle_user_already_added_error(err, user_id, "departing-employee list")
             raise
 
     def remove(self, user_id):
@@ -78,12 +78,12 @@ class DepartingEmployeeService(BaseService):
         """
 
         tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format(u"remove")
-        data = {u"userId": user_id, u"tenantId": tenant_id}
+        uri = self._uri_prefix.format("remove")
+        data = {"userId": user_id, "tenantId": tenant_id}
         try:
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
-            raise Py42UserNotOnListError(err, user_id, u"departing-employee")
+            raise Py42UserNotOnListError(err, user_id, "departing-employee")
 
     def get(self, user_id):
         """Gets departing employee data of a user.
@@ -96,15 +96,15 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format(u"get")
-        data = {u"userId": user_id, u"tenantId": tenant_id}
+        uri = self._uri_prefix.format("get")
+        data = {"userId": user_id, "tenantId": tenant_id}
         return self._connection.post(uri, json=data)
 
     def get_all(
         self,
         filter_type=DepartingEmployeeFilters.OPEN,
         sort_key=_CREATED_AT,
-        sort_direction=u"DESC",
+        sort_direction="DESC",
         page_size=_PAGE_SIZE,
     ):
         """Gets all Departing Employees.
@@ -125,7 +125,7 @@ class DepartingEmployeeService(BaseService):
         """
         return get_all_pages(
             self.get_page,
-            u"items",
+            "items",
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
@@ -137,7 +137,7 @@ class DepartingEmployeeService(BaseService):
         page_num,
         filter_type=DepartingEmployeeFilters.OPEN,
         sort_key=_CREATED_AT,
-        sort_direction=u"DESC",
+        sort_direction="DESC",
         page_size=_PAGE_SIZE,
     ):
         """Gets a single page of Departing Employees.
@@ -157,14 +157,14 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        uri = self._uri_prefix.format(u"search")
+        uri = self._uri_prefix.format("search")
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"pgSize": page_size,
-            u"pgNum": page_num,
-            u"filterType": filter_type,
-            u"srtKey": sort_key,
-            u"srtDirection": sort_direction,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "pgSize": page_size,
+            "pgNum": page_num,
+            "filterType": filter_type,
+            "srtKey": sort_key,
+            "srtDirection": sort_direction,
         }
         return self._connection.post(uri, json=data)
 
@@ -179,8 +179,8 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format(u"setalertstate")
-        data = {u"tenantId": tenant_id, u"alertsEnabled": alerts_enabled}
+        uri = self._uri_prefix.format("setalertstate")
+        data = {"tenantId": tenant_id, "alertsEnabled": alerts_enabled}
         return self._connection.post(uri, json=data)
 
     def update_departure_date(self, user_id, departure_date):
@@ -199,10 +199,10 @@ class DepartingEmployeeService(BaseService):
         tenant_id = self._user_context.get_current_tenant_id()
         if isinstance(departure_date, datetime):
             departure_date = departure_date.strftime(_DATE_FORMAT)
-        uri = self._uri_prefix.format(u"update")
+        uri = self._uri_prefix.format("update")
         data = {
-            u"tenantId": tenant_id,
-            u"userId": user_id,
-            u"departureDate": departure_date,
+            "tenantId": tenant_id,
+            "userId": user_id,
+            "departureDate": departure_date,
         }
         return self._connection.post(uri, json=data)

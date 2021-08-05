@@ -17,7 +17,7 @@ def push_service(mocker):
 def storage_archive_service(mocker):
     client = mocker.MagicMock(spec=StorageArchiveService)
     response = create_mock_response(
-        mocker, '{{"webRestoreSessionId": "{0}"}}'.format(TEST_SESSION_ID)
+        mocker, f'{{"webRestoreSessionId": "{TEST_SESSION_ID}"}}'
     )
     client.create_restore_session.return_value = response
     return client
@@ -31,7 +31,7 @@ def restore_job_manager(mocker):
 @pytest.fixture
 def file_size_poller(mocker):
     poller = mocker.MagicMock(spec=FileSizePoller)
-    poller.get_file_sizes.return_value = [{u"numFiles": 1, u"numDirs": 1, u"size": 1}]
+    poller.get_file_sizes.return_value = [{"numFiles": 1, "numDirs": 1, "size": 1}]
     return poller
 
 

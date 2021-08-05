@@ -125,14 +125,14 @@ TEST_T_SETTINGS_DICT = {
 
 @pytest.fixture
 def org_settings_dict():
-    with open("tests/clients/settings/org_settings_not_inherited.json", "r") as f:
+    with open("tests/clients/settings/org_settings_not_inherited.json") as f:
         data = json.load(f)
     return data["data"]
 
 
 @pytest.fixture
 def org_settings_inherited_dict():
-    with open("tests/clients/settings/org_settings_inherited.json", "r") as f:
+    with open("tests/clients/settings/org_settings_inherited.json") as f:
         data = json.load(f)
     return data["data"]
 
@@ -150,7 +150,7 @@ def org_device_defaults_with_empty_values(org_settings_dict):
     org_settings_dict["deviceDefaults"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
     ]["backupSet"][0]["backupPaths"]["excludeUser"] = [
-        {u"windows": [], u"linux": [], u"macintosh": []}
+        {"windows": [], "linux": [], "macintosh": []}
     ]
     return org_settings_dict
 
@@ -206,7 +206,7 @@ def org_device_defaults_with_multiple_values(org_settings_dict):
     return org_settings_dict
 
 
-class TestOrgSettings(object):
+class TestOrgSettings:
     @pytest.mark.parametrize(
         "param",
         [
@@ -565,7 +565,7 @@ class TestOrgSettings(object):
         assert param.name in org_settings.changes
 
 
-class TestOrgDeviceSettingsDefaultsBackupSets(object):
+class TestOrgDeviceSettingsDefaultsBackupSets:
     def test_backup_set_destinations_property_returns_expected_value(
         self, org_settings_dict
     ):

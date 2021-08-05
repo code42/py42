@@ -28,7 +28,7 @@ def mock_custom_auth_function():
     return custom_function
 
 
-class TestV3Auth(object):
+class TestV3Auth:
     def test_call_returns_request_with_expected_header(
         self, mock_v3_conn, mock_request
     ):
@@ -78,7 +78,7 @@ class TestV3Auth(object):
         assert mock_v3_conn.get.call_count == 2
 
 
-class TestCustomJWTAuth(object):
+class TestCustomJWTAuth:
     def test_get_credentials_returns_jwt_string(self, mock_custom_auth_function):
         auth = CustomJWTAuth(mock_custom_auth_function)
         jwt_string = auth.get_credentials()

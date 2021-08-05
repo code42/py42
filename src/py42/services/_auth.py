@@ -9,7 +9,7 @@ class C42RenewableAuth(AuthBase):
         self._credentials = None
 
     def __call__(self, r):
-        r.headers[u"Authorization"] = self.get_credentials()
+        r.headers["Authorization"] = self.get_credentials()
         return r
 
     def clear_credentials(self):
@@ -30,23 +30,23 @@ class C42RenewableAuth(AuthBase):
 
 class BearerAuth(C42RenewableAuth):
     def __init__(self, auth_connection, totp=None):
-        super(BearerAuth, self).__init__()
+        super().__init__()
         self._auth_connection = auth_connection
         self._totp = totp if callable(totp) else lambda: totp
 
     def _get_credentials(self):
-        uri = u"/c42api/v3/auth/jwt"
-        params = {u"useBody": True}
+        uri = "/c42api/v3/auth/jwt"
+        params = {"useBody": True}
         current_token = self._totp()
         headers = {"totp-auth": str(current_token)} if current_token else None
         response = self._auth_connection.get(uri, params=params, headers=headers)
-        return u"Bearer {}".format(response["v3_user_token"])
+        return f"Bearer {response['v3_user_token']}"
 
 
 class CustomJWTAuth(C42RenewableAuth):
     def __init__(self, jwt_provider):
-        super(CustomJWTAuth, self).__init__()
+        super().__init__()
         self._jwt_provider = jwt_provider
 
     def _get_credentials(self):
-        return u"Bearer {}".format(self._jwt_provider())
+        return f"Bearer {self._jwt_provider()}"

@@ -11,7 +11,7 @@ from py42.sdk.queries.fileevents.filters.file_filter import MD5
 from py42.sdk.queries.fileevents.filters.file_filter import SHA256
 
 
-class SecurityDataClient(object):
+class SecurityDataClient:
     def __init__(
         self,
         security_service,
@@ -52,7 +52,7 @@ class SecurityDataClient(object):
         locations = None
         try:
             response = self._security_service.get_security_event_locations(user_uid)
-            locations = response[u"securityPlanLocationsByDestination"]
+            locations = response["securityPlanLocationsByDestination"]
         except Py42NotFoundError:
             pass
 
@@ -62,8 +62,8 @@ class SecurityDataClient(object):
             if not selected_plan_infos:
                 raise Py42SecurityPlanConnectionError(
                     response,
-                    u"Could not establish a connection to retrieve "
-                    u"security events for user {}".format(user_uid),
+                    "Could not establish a connection to retrieve "
+                    f"security events for user {user_uid}",
                 )
 
             return selected_plan_infos
@@ -216,10 +216,10 @@ class SecurityDataClient(object):
             Returns a stream of the requested file.
         """
         response = self._search_by_hash(checksum, SHA256)
-        events = response[u"fileEvents"]
+        events = response["fileEvents"]
         info = _get_version_lookup_info(events)
         if not len(events) or not info:
-            raise Py42ChecksumNotFoundError(response, u"SHA256", checksum)
+            raise Py42ChecksumNotFoundError(response, "SHA256", checksum)
         return self._stream_file(checksum, info)
 
     def stream_file_by_md5(self, checksum):
@@ -232,16 +232,16 @@ class SecurityDataClient(object):
             Returns a stream of the requested file.
         """
         response = self._search_by_hash(checksum, MD5)
-        events = response[u"fileEvents"]
+        events = response["fileEvents"]
         info = _get_version_lookup_info(events)
         if not len(events) or not info:
-            raise Py42ChecksumNotFoundError(response, u"MD5", checksum)
+            raise Py42ChecksumNotFoundError(response, "MD5", checksum)
         return self._stream_file(checksum, info)
 
     def _search_by_hash(self, checksum, checksum_type):
         query = FileEventQuery.all(checksum_type.eq(checksum))
-        query.sort_key = u"eventTimestamp"
-        query.sort_direction = u"desc"
+        query.sort_key = "eventTimestamp"
+        query.sort_direction = "desc"
         response = self.search_file_events(query)
         return response
 
@@ -253,9 +253,7 @@ class SecurityDataClient(object):
         if version:
             return self._get_file_stream(version)
 
-        raise Py42Error(
-            u"No file with hash {} available for download.".format(checksum)
-        )
+        raise Py42Error(f"No file with hash {checksum} available for download.")
 
     def _get_file_version_for_stream(self, device_guid, md5_hash, sha256_hash, path):
         version = self._get_device_file_version(
@@ -270,19 +268,19 @@ class SecurityDataClient(object):
             device_guid, md5_hash, sha256_hash, path
         )
         versions = (
-            response.data.get(u"securityEventVersionsMatchingChecksum")
-            or response.data.get(u"securityEventVersionsAtPath")
-            or response.data.get(u"preservationVersions")
+            response.data.get("securityEventVersionsMatchingChecksum")
+            or response.data.get("securityEventVersionsAtPath")
+            or response.data.get("preservationVersions")
         )
 
         if versions:
-            if not response.data.get(u"securityEventVersionsAtPath"):
+            if not response.data.get("securityEventVersionsAtPath"):
                 exact_match = _get_first_matching_version(versions, md5_hash)
                 if exact_match:
                     return exact_match
 
             most_recent = sorted(
-                versions, key=lambda i: i[u"versionTimestamp"], reverse=True
+                versions, key=lambda i: i["versionTimestamp"], reverse=True
             )
             return most_recent[0]
 
@@ -290,7 +288,7 @@ class SecurityDataClient(object):
         response = self._file_event_service.get_file_location_detail_by_sha256(
             sha256_hash
         )
-        locations = response[u"locations"]
+        locations = response["locations"]
         if locations:
             paths = _parse_file_location_response(locations)
             version = self._preservation_data_service.find_file_version(
@@ -300,29 +298,29 @@ class SecurityDataClient(object):
                 return version.data
 
     def _get_file_stream(self, version):
-        if version.get(u"edsUrl"):
+        if version.get("edsUrl"):
             return self._get_exfiltrated_file(version)
 
         return self._get_stored_file(version)
 
     def _get_exfiltrated_file(self, version):
         eds = self._storage_service_factory.create_exfiltrated_data_service(
-            version[u"edsUrl"]
+            version["edsUrl"]
         )
         token = eds.get_download_token(
-            version[u"eventId"],
-            version[u"deviceUid"],
-            version[u"filePath"],
-            version[u"versionTimestamp"],
+            version["eventId"],
+            version["deviceUid"],
+            version["filePath"],
+            version["versionTimestamp"],
         )
         return eds.get_file(str(token))
 
     def _get_stored_file(self, version):
         pds = self._storage_service_factory.create_preservation_data_service(
-            version[u"storageNodeURL"]
+            version["storageNodeURL"]
         )
         token = pds.get_download_token(
-            version[u"archiveGuid"], version[u"fileId"], version[u"versionTimestamp"],
+            version["archiveGuid"], version["fileId"], version["versionTimestamp"],
         )
         return pds.get_file(str(token))
 
@@ -347,8 +345,8 @@ class SecurityDataClient(object):
 
     def _get_storage_info_for_plan_destination(self, plan_uid, destination):
         try:
-            destination_guid = destination[u"destinationGuid"]
-            node_guid = destination[u"nodeGuid"]
+            destination_guid = destination["destinationGuid"]
+            node_guid = destination["nodeGuid"]
             plan_storage_info = PlanStorageInfo(plan_uid, destination_guid, node_guid)
             self._try_get_security_detection_event_client(plan_storage_info)
             return plan_storage_info
@@ -404,7 +402,7 @@ class SecurityDataClient(object):
                 )
 
                 if response.text:
-                    cursor = response.data.get(u"cursor")
+                    cursor = response.data.get("cursor")
                     # if there are no results, we don't get a cursor and have reached the end
                     if cursor:
                         yield response, cursor
@@ -420,7 +418,7 @@ def _get_plan_destination_map(locations_list):
 
 def _get_destinations_in_locations_list(locations_list):
     for destination in locations_list:
-        for node in destination[u"securityPlanLocationsByNode"]:
+        for node in destination["securityPlanLocationsByNode"]:
             yield _get_plans_in_node(destination, node)
 
 
@@ -428,20 +426,20 @@ def _get_plans_in_node(destination, node):
     return {
         plan_uid: [
             {
-                u"destinationGuid": destination[u"destinationGuid"],
-                u"nodeGuid": node[u"nodeGuid"],
+                "destinationGuid": destination["destinationGuid"],
+                "nodeGuid": node["nodeGuid"],
             }
         ]
-        for plan_uid in node[u"securityPlanUids"]
+        for plan_uid in node["securityPlanUids"]
     }
 
 
 def _parse_file_location_response(locations):
     devices = {}
     for location in locations:
-        file_name = location[u"fileName"]
-        file_path = u"{}{}".format(location[u"filePath"], file_name)
-        device_id = location[u"deviceUid"]
+        file_name = location["fileName"]
+        file_path = f'{location["filePath"]}{file_name}'
+        device_id = location["deviceUid"]
         device_entry = devices.get(device_id)
         if device_entry:
             devices[device_id]["paths"].append(file_path)
@@ -453,18 +451,18 @@ def _parse_file_location_response(locations):
 
 def _get_version_lookup_info(events):
     for event in events:
-        device_guid = event[u"deviceUid"]
-        md5 = event[u"md5Checksum"]
-        sha256 = event[u"sha256Checksum"]
-        fileName = event[u"fileName"]
-        filePath = event[u"filePath"]
+        device_guid = event["deviceUid"]
+        md5 = event["md5Checksum"]
+        sha256 = event["sha256Checksum"]
+        fileName = event["fileName"]
+        filePath = event["filePath"]
 
         if device_guid and md5 and sha256 and fileName and filePath:
-            path = "{}{}".format(filePath, fileName)
+            path = f"{filePath}{fileName}"
             return device_guid, md5, sha256, path
 
 
-class PlanStorageInfo(object):
+class PlanStorageInfo:
     def __init__(self, plan_uid, destination_guid, node_guid):
         self._plan_uid = plan_uid
         self._destination_uid = destination_guid
@@ -487,7 +485,7 @@ class PlanStorageInfo(object):
 
 
 def _get_first_matching_version(versions, md5_hash):
-    exact_match = next((x for x in versions if x[u"fileMD5"] == md5_hash), None)
+    exact_match = next((x for x in versions if x["fileMD5"] == md5_hash), None)
     if exact_match:
         return exact_match
 
@@ -502,6 +500,6 @@ def _escape_quote_chars_in_token(token):
 
     return re.sub(
         pattern=unescaped_quote_pattern,
-        repl=lambda match: match.group().replace(u'"', r"\""),
+        repl=lambda match: match.group().replace('"', r"\""),
         string=token,
     )

@@ -48,7 +48,7 @@ def internal_server_error(mocker):
     return create_mock_error(Py42InternalServerError, mocker, "")
 
 
-class TestAlertRulesClient(object):
+class TestAlertRulesClient:
     def test_add_user_calls_alert_rules_service_add_user_with_expected_value(
         self, mock_alerts_service, mock_alert_rules_service
     ):
@@ -161,7 +161,7 @@ class TestAlertRulesClient(object):
     def test_alert_rules_service_calls_get_all_by_name_with_expected_value(
         self, mock_alerts_service, mock_alert_rules_service
     ):
-        rule_name = u"test rule"
+        rule_name = "test rule"
         alert_rules_client = AlertRulesClient(
             mock_alerts_service, mock_alert_rules_service
         )
@@ -171,7 +171,7 @@ class TestAlertRulesClient(object):
     def test_alert_rules_service_calls_get_rules_by_observer_id_with_expected_value(
         self, mock_alerts_service, mock_alert_rules_service
     ):
-        rule_id = u"test-rule-id"
+        rule_id = "test-rule-id"
         alert_rules_client = AlertRulesClient(
             mock_alerts_service, mock_alert_rules_service
         )

@@ -41,13 +41,13 @@ DEVICE_DICT_W_SETTINGS = {
             "destinationId": 1,
             "destinationName": TEST_DESTINATION_NAME_1,
             "guid": TEST_DESTINATION_GUID_1,
-            "type": u"CLUSTER",
+            "type": "CLUSTER",
         },
         {
             "destinationId": 2,
             "destinationName": TEST_DESTINATION_NAME_2,
             "guid": TEST_DESTINATION_GUID_2,
-            "type": u"CLUSTER",
+            "type": "CLUSTER",
         },
         {
             "destinationId": 3,
@@ -211,7 +211,7 @@ DEVICE_DICT_W_SETTINGS = {
             "backupStatusEmailEnabled": {"#text": "false", "@locked": "true"},
             "backupStatusEmailFreqInMinutes": {"#text": "10080", "@locked": "true"},
             "hiddenFiles": [{"linux": [], "macintosh": [], "windows": []}],
-            "highBandwidthRate": u"37.5",
+            "highBandwidthRate": "37.5",
             "inboundRunWindow": [
                 {
                     "@always": "true",
@@ -347,9 +347,7 @@ def device_settings_with_empty_values():
     # set empty filename exclusions
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
-    ][0]["backupPaths"]["excludeUser"] = [
-        {u"windows": [], u"linux": [], u"macintosh": []}
-    ]
+    ][0]["backupPaths"]["excludeUser"] = [{"windows": [], "linux": [], "macintosh": []}]
     # set empty destinations
     device_settings_dict["settings"]["serviceBackupConfig"]["backupConfig"][
         "backupSets"
@@ -481,7 +479,7 @@ def device_settings_legal_hold():
     return device_settings_dict
 
 
-class TestDeviceSettings(object):
+class TestDeviceSettings:
     device_settings = DeviceSettings(DEVICE_DICT_W_SETTINGS)
 
     @pytest.mark.parametrize(
@@ -632,7 +630,7 @@ class TestDeviceSettings(object):
         assert self.device_settings.java_memory_heap_max == {"@nil": "true"}
 
 
-class TestDeviceSettingsBackupSets(object):
+class TestDeviceSettingsBackupSets:
     device_settings = DeviceSettings(deepcopy(DEVICE_DICT_W_SETTINGS))
 
     def test_backup_set_destinations_property_returns_expected_value(self,):

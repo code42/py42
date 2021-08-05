@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
 
 import pytest
@@ -51,7 +50,7 @@ _GET_ALL_EMPTY_RESPONSE = """
 """
 
 
-class TestDepartingEmployeeFilters(object):
+class TestDepartingEmployeeFilters:
     def test_choices_are_correct(self):
         actual = DepartingEmployeeFilters.choices()
         expected = [
@@ -63,7 +62,7 @@ class TestDepartingEmployeeFilters(object):
         assert set(actual) == set(expected)
 
 
-class TestDepartingEmployeeClient(object):
+class TestDepartingEmployeeClient:
     @pytest.fixture
     def mock_get_all_response(self, py42_response):
         py42_response.text = _GET_ALL_RESPONSE
@@ -368,8 +367,7 @@ class TestDepartingEmployeeClient(object):
         user_id = "942897397520289999"
         with pytest.raises(Py42UserNotOnListError) as err:
             departing_employee_client.remove(user_id)
-        assert "User with ID '{}' is not currently on the departing-employee list.".format(
-            user_id
-        ) in str(
-            err.value
+        assert (
+            f"User with ID '{user_id}' is not currently on the departing-employee list."
+            in str(err.value)
         )

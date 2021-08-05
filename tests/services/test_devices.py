@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 from requests import HTTPError
 from requests import Response
@@ -29,7 +28,7 @@ MOCK_GET_DEVICE_RESPONSE = """{"totalCount": 3000, "computers":["foo"]}"""
 MOCK_EMPTY_GET_DEVICE_RESPONSE = """{"totalCount": 3000, "computers":[]}"""
 
 
-class TestDeviceService(object):
+class TestDeviceService:
     @pytest.fixture
     def mock_get_all_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
@@ -62,7 +61,7 @@ class TestDeviceService(object):
     def test_unicode_hostname_get_devices_calls_get_with_unicode_q_param(
         self, mock_connection, mock_get_all_response
     ):
-        unicode_hostname = u"您已经发现了秘密信息"
+        unicode_hostname = "您已经发现了秘密信息"
         service = DeviceService(mock_connection)
         mock_connection.get.return_value = mock_get_all_response
         for _ in service.get_all(q=unicode_hostname):
@@ -80,7 +79,7 @@ class TestDeviceService(object):
         service = DeviceService(mock_connection)
         service.get_by_id("DEVICE_ID", include_backup_usage=True)
         expected_params = {"incBackupUsage": True}
-        uri = "{}/{}".format(COMPUTER_URI, "DEVICE_ID")
+        uri = f"{COMPUTER_URI}/DEVICE_ID"
         mock_connection.get.assert_called_once_with(uri, params=expected_params)
 
     def test_get_all_calls_get_expected_number_of_times(
@@ -124,7 +123,7 @@ class TestDeviceService(object):
         service = DeviceService(mock_connection)
         service.get_agent_state("DEVICE_ID", property_name="KEY")
         expected_params = {"deviceGuid": "DEVICE_ID", "propertyName": "KEY"}
-        uri = u"/api/v14/agent-state/view-by-device-guid"
+        uri = "/api/v14/agent-state/view-by-device-guid"
         mock_connection.get.assert_called_once_with(uri, params=expected_params)
 
     def test_get_agent_full_disk_access_state_calls_get_agent_state_with_arguments(
@@ -140,10 +139,10 @@ class TestDeviceService(object):
         self, mocker, mock_connection
     ):
         def side_effect(url, json):
-            if u"computer-deactivation" in url:
+            if "computer-deactivation" in url:
                 base_err = mocker.MagicMock(spec=HTTPError)
                 base_err.response = mocker.MagicMock(spec=Response)
-                base_err.response.text = u"ACTIVE_LEGAL_HOLD"
+                base_err.response.text = "ACTIVE_LEGAL_HOLD"
                 raise Py42BadRequestError(base_err)
 
         mock_connection.post.side_effect = side_effect
@@ -151,5 +150,5 @@ class TestDeviceService(object):
         with pytest.raises(Py42ActiveLegalHoldError) as err:
             client.deactivate(1234)
 
-        expected = u"Cannot deactivate the device with ID 1234 as the device is involved in a legal hold matter."
+        expected = "Cannot deactivate the device with ID 1234 as the device is involved in a legal hold matter."
         assert str(err.value) == expected

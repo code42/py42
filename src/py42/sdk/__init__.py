@@ -94,7 +94,7 @@ def from_jwt_provider(host_address, jwt_provider):
     return client
 
 
-class SDKClient(object):
+class SDKClient:
     def __init__(self, main_connection, auth):
         services, user_ctx = _init_services(main_connection, auth)
         self._clients = _init_clients(services, main_connection)

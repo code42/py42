@@ -236,15 +236,15 @@ def test_event_timestamp_gives_correct_json_representation():
 @pytest.mark.parametrize(
     "key, value",
     [
-        (EventTimestamp.FIFTEEN_MINUTES, u"PT15M"),
-        (EventTimestamp.ONE_HOUR, u"PT1H"),
-        (EventTimestamp.THREE_HOURS, u"PT3H"),
-        (EventTimestamp.TWELVE_HOURS, u"PT12H"),
-        (EventTimestamp.ONE_DAY, u"P1D"),
-        (EventTimestamp.THREE_DAYS, u"P3D"),
-        (EventTimestamp.SEVEN_DAYS, u"P7D"),
-        (EventTimestamp.FOURTEEN_DAYS, u"P14D"),
-        (EventTimestamp.THIRTY_DAYS, u"P30D"),
+        (EventTimestamp.FIFTEEN_MINUTES, "PT15M"),
+        (EventTimestamp.ONE_HOUR, "PT1H"),
+        (EventTimestamp.THREE_HOURS, "PT3H"),
+        (EventTimestamp.TWELVE_HOURS, "PT12H"),
+        (EventTimestamp.ONE_DAY, "P1D"),
+        (EventTimestamp.THREE_DAYS, "P3D"),
+        (EventTimestamp.SEVEN_DAYS, "P7D"),
+        (EventTimestamp.FOURTEEN_DAYS, "P14D"),
+        (EventTimestamp.THIRTY_DAYS, "P30D"),
     ],
 )
 def test_all_event_timestamp_gives_correct_json_representation(key, value):

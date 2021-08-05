@@ -1,8 +1,7 @@
-from py42._compat import str
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 
 
-JSON_QUERY_BASE = u'{{"groupClause":"{0}", "groups":[{1}], "srtDir":"{4}", "srtKey":"{5}", "pgNum":{2}, "pgSize":{3}}}'
+JSON_QUERY_BASE = '{{"groupClause":"{0}", "groups":[{1}], "srtDir":"{4}", "srtKey":"{5}", "pgNum":{2}, "pgSize":{3}}}'
 
 
 def build_query_json(group_clause, group_list):
@@ -154,10 +153,10 @@ def test_file_event_str_gives_correct_json_representation_when_pg_token_is_set(
     assert query.page_token is None
     assert (
         str(query)
-        == u'{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgNum":1, "pgSize":10000}'
+        == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgNum":1, "pgSize":10000}'
     )
     query.page_token = "abc"
     assert (
         str(query)
-        == u'{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}'
+        == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}'
     )

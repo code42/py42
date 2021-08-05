@@ -69,7 +69,7 @@ class RiskIndicator(FileEventFilterStringField):
         - :attr:`RiskIndicator.UserBehavior.REMOTE`
     """
 
-    _term = u"riskIndicatorNames"
+    _term = "riskIndicatorNames"
 
     @staticmethod
     def choices():
@@ -86,7 +86,7 @@ class RiskIndicator(FileEventFilterStringField):
             + RiskIndicator.UserBehavior.choices()
         )
 
-    class CloudDataExposures(object):
+    class CloudDataExposures:
         PUBLIC_CORPORATE_BOX = "Public link from corporate Box"
         PUBLIC_CORPORATE_GOOGLE_DRIVE = "Public link from corporate Google Drive"
         PUBLIC_CORPORATE_ONEDRIVE = "Public link from corporate OneDrive"
@@ -99,109 +99,109 @@ class RiskIndicator(FileEventFilterStringField):
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.CloudDataExposures)
 
-    class CloudStorageUploads(object):
-        AMAZON_DRIVE = u"Amazon Drive upload"
-        BOX = u"Box upload"
-        DROPBOX = u"Dropbox upload"
-        GOOGLE_DRIVE = u"Google Drive upload"
-        ICLOUD = u"iCloud upload"
-        MEGA = u"Mega upload"
-        ONEDRIVE = u"OneDrive upload"
-        ZOHO = u"Zoho WorkDrive upload"
+    class CloudStorageUploads:
+        AMAZON_DRIVE = "Amazon Drive upload"
+        BOX = "Box upload"
+        DROPBOX = "Dropbox upload"
+        GOOGLE_DRIVE = "Google Drive upload"
+        ICLOUD = "iCloud upload"
+        MEGA = "Mega upload"
+        ONEDRIVE = "OneDrive upload"
+        ZOHO = "Zoho WorkDrive upload"
 
         @staticmethod
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.CloudStorageUploads)
 
-    class CodeRepositoryUploads(object):
-        BITBUCKET = u"Bitbucket upload"
-        GITHUB = u"GitHub upload"
-        GITLAB = u"GitLab upload"
-        SOURCEFORGE = u"SourceForge upload"
-        STASH = u"Stash upload"
+    class CodeRepositoryUploads:
+        BITBUCKET = "Bitbucket upload"
+        GITHUB = "GitHub upload"
+        GITLAB = "GitLab upload"
+        SOURCEFORGE = "SourceForge upload"
+        STASH = "Stash upload"
 
         @staticmethod
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.CodeRepositoryUploads)
 
-    class EmaiServiceUploads(object):
-        ONESIXTHREE_DOT_COM = u"163.com upload"
-        ONETWOSIX_DOT_COM = u"126.com upload"
-        AOL = u"AOL upload"
-        COMCAST = u"Comcast upload"
-        GMAIL = u"Gmail upload"
-        ICLOUD = u"iCloud Mail upload"
-        MAIL_DOT_COM = u"Mail.com upload"
-        OUTLOOK = u"Outlook upload"
-        PROTONMAIL = u"ProtonMail upload"
-        QQMAIL = u"QQMail upload"
-        SINA_MAIL = u"Sina Mail upload"
-        SOHU_MAIl = u"Sohu Mail upload"
-        YAHOO = u"Yahoo upload"
-        ZOHO_MAIL = u"Zoho Mail upload"
+    class EmaiServiceUploads:
+        ONESIXTHREE_DOT_COM = "163.com upload"
+        ONETWOSIX_DOT_COM = "126.com upload"
+        AOL = "AOL upload"
+        COMCAST = "Comcast upload"
+        GMAIL = "Gmail upload"
+        ICLOUD = "iCloud Mail upload"
+        MAIL_DOT_COM = "Mail.com upload"
+        OUTLOOK = "Outlook upload"
+        PROTONMAIL = "ProtonMail upload"
+        QQMAIL = "QQMail upload"
+        SINA_MAIL = "Sina Mail upload"
+        SOHU_MAIl = "Sohu Mail upload"
+        YAHOO = "Yahoo upload"
+        ZOHO_MAIL = "Zoho Mail upload"
 
         @staticmethod
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.EmaiServiceUploads)
 
-    class ExternalDevices(object):
-        AIRDROP = u"AirDrop"
-        REMOVABLE_MEDIA = u"Removable media"
+    class ExternalDevices:
+        AIRDROP = "AirDrop"
+        REMOVABLE_MEDIA = "Removable media"
 
         @staticmethod
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.ExternalDevices)
 
-    class FileCategories(object):
-        AUDIO = u"Audio"
-        DOCUMENT = u"Document"
-        EXECUTABLE = u"Executable"
-        IMAGE = u"Image"
-        PDF = u"PDF"
-        PRESENTATION = u"Presentation"
-        SCRIPT = u"Script"
-        SOURCE_CODE = u"Source code"
-        SPREADSHEET = u"Spreadsheet"
-        VIDEO = u"Video"
-        VIRTUAL_DISK_IMAGE = u"Virtual Disk Image"
-        ZIP = u"Zip"
+    class FileCategories:
+        AUDIO = "Audio"
+        DOCUMENT = "Document"
+        EXECUTABLE = "Executable"
+        IMAGE = "Image"
+        PDF = "PDF"
+        PRESENTATION = "Presentation"
+        SCRIPT = "Script"
+        SOURCE_CODE = "Source code"
+        SPREADSHEET = "Spreadsheet"
+        VIDEO = "Video"
+        VIRTUAL_DISK_IMAGE = "Virtual Disk Image"
+        ZIP = "Zip"
 
         @staticmethod
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.FileCategories)
 
-    class MessagingServiceUploads(object):
-        FACEBOOK_MESSENGER = u"Facebook Messenger upload"
-        MICROSOFT_TEAMS = u"Microsoft Teams upload"
-        SLACK = u"Slack upload"
-        WHATSAPP = u"WhatsApp upload"
+    class MessagingServiceUploads:
+        FACEBOOK_MESSENGER = "Facebook Messenger upload"
+        MICROSOFT_TEAMS = "Microsoft Teams upload"
+        SLACK = "Slack upload"
+        WHATSAPP = "WhatsApp upload"
 
         @staticmethod
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.MessagingServiceUploads)
 
-    class Other(object):
-        OTHER = u"Other destination"
-        UNKNOWN = u"Unknown destination"
+    class Other:
+        OTHER = "Other destination"
+        UNKNOWN = "Unknown destination"
 
         @staticmethod
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.Other)
 
-    class SocialMediaUploads(object):
-        FACEBOOK = u"Facebook upload"
-        LINKEDIN = u"LinkedIn upload"
-        REDDIT = u"Reddit upload"
-        TWITTER = u"Twitter upload"
+    class SocialMediaUploads:
+        FACEBOOK = "Facebook upload"
+        LINKEDIN = "LinkedIn upload"
+        REDDIT = "Reddit upload"
+        TWITTER = "Twitter upload"
 
         @staticmethod
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.SocialMediaUploads)
 
-    class UserBehavior(object):
-        FILE_MISMATCH = u"File mismatch"
-        OFF_HOURS = u"Off hours"
-        REMOTE = u"Remote"
+    class UserBehavior:
+        FILE_MISMATCH = "File mismatch"
+        OFF_HOURS = "Off hours"
+        REMOTE = "Remote"
 
         @staticmethod
         def choices():
@@ -219,13 +219,13 @@ class RiskSeverity(FileEventFilterStringField):
         - :attr:`RiskSeverity.NO_RISK_INDICATED`
     """
 
-    _term = u"riskSeverity"
+    _term = "riskSeverity"
 
-    CRITICAL = u"CRITICAL"
-    HIGH = u"HIGH"
-    MODERATE = u"MODERATE"
-    LOW = u"LOW"
-    NO_RISK_INDICATED = u"NO_RISK_INDICATED"
+    CRITICAL = "CRITICAL"
+    HIGH = "HIGH"
+    MODERATE = "MODERATE"
+    LOW = "LOW"
+    NO_RISK_INDICATED = "NO_RISK_INDICATED"
 
     @staticmethod
     def choices():

@@ -31,7 +31,7 @@ response = sdk.devices.get_all(active=True)
 for page in response:
     devices = page["computers"]
     for device in devices:
-        print("{0} - {1}".format(device["guid"], device["osName"]))
+        print(f"{device['guid']} - {device['osName']}")
 ```
 
 As another example, you might have the Cross Org Administrator role and want to get all the active devices for
@@ -48,7 +48,7 @@ response = sdk.devices.get_all(active=True, org_uid=engineering_org_uid)
 for page in response:
     devices = page["computers"]
     for device in devices:
-        print("{0} - {1}".format(device["guid"], device["osName"]))
+        print(f"{device['guid']} - {device['osName']}")
 ```
 
 We got the org UID from the engineering organization and then passed it as a parameter to the method to get all the

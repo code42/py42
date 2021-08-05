@@ -1,7 +1,7 @@
-from __future__ import print_function
-
 import json as json_lib
 from threading import Lock
+from urllib.parse import urljoin
+from urllib.parse import urlparse
 
 from requests.adapters import HTTPAdapter
 from requests.exceptions import HTTPError
@@ -9,9 +9,6 @@ from requests.models import Request
 from requests.sessions import Session
 
 import py42.settings as settings
-from py42._compat import string_type
-from py42._compat import urljoin
-from py42._compat import urlparse
 from py42.exceptions import Py42DeviceNotConnectedError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42FeatureUnavailableError
@@ -32,7 +29,7 @@ ROOT_SESSION.headers = {
 }
 
 
-class HostResolver(object):
+class HostResolver:
     def get_host_address(self):
         raise NotImplementedError()
 
@@ -83,7 +80,7 @@ class ConnectedServerHostResolver(HostResolver):
     def __init__(self, connection, device_guid):
         self._connection = connection
         self._device_guid = device_guid
-        super(ConnectedServerHostResolver, self).__init__()
+        super().__init__()
 
     def get_host_address(self):
         response = self._connection.get(
@@ -94,7 +91,7 @@ class ConnectedServerHostResolver(HostResolver):
         return response["serverUrl"]
 
 
-class Connection(object):
+class Connection:
     def __init__(self, host_resolver, auth=None, session=None):
         self._host_resolver = host_resolver
         self._session = session or ROOT_SESSION
@@ -193,11 +190,11 @@ class Connection(object):
             )
 
             if response is not None:
-                debug.logger.info("Response status: {}".format(response.status_code))
+                debug.logger.info(f"Response status: {response.status_code}")
                 if not stream:
                     # setting this manually speeds up read times
                     response.encoding = "utf-8"
-                    debug.logger.debug("Response data: {}".format(response.text))
+                    debug.logger.debug(f"Response data: {response.text}")
                 else:
                     debug.logger.debug("Response data: <streamed>")
 
@@ -240,7 +237,7 @@ class Connection(object):
 
         _print_request(method, url, params=params, data=data, json=json)
 
-        if isinstance(data, string_type):
+        if isinstance(data, str):
             data = data.encode("utf-8")
 
         request = Request(
@@ -268,7 +265,7 @@ class Connection(object):
 
     def _init_host_info(self, host):
         if not host.startswith("http://") and not host.startswith("https://"):
-            host = "https://{}".format(host)
+            host = f"https://{host}"
         parsed_host = urlparse(host)
         self._headers["Host"] = parsed_host.netloc
         self._host_address = host
@@ -283,7 +280,7 @@ def _create_user_headers(headers):
 
 def _handle_error(method, url, response):
     if response is None:
-        msg = "No response was returned for {} request to {}.".format(method, url)
+        msg = f"No response was returned for {method} request to {url}."
         raise Py42Error(msg)
 
     try:
@@ -293,7 +290,7 @@ def _handle_error(method, url, response):
 
 
 def _print_request(method, url, params=None, data=None, json=None):
-    debug.logger.info("{}{}".format(method.ljust(8), url))
+    debug.logger.info(f"{method.ljust(8)}{url}")
     if params:
         debug.logger.debug(format_dict(params, "  params"))
     if json:

@@ -26,7 +26,7 @@ TEST_USERNAME = "test-username"
 TEST_PASSWORD = "test-password"
 
 
-class TestSDK(object):
+class TestSDK:
     @pytest.fixture
     def py42_connection(self, mocker, successful_response):
         mock_connection = mocker.MagicMock(spec=Connection)

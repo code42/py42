@@ -20,19 +20,19 @@ class HighRiskEmployeeFilters(_DetectionListFilters):
 class HighRiskEmployeeService(BaseService):
     """A service for interacting with High Risk Employee APIs."""
 
-    _resource = u"v2/highriskemployee"
+    _resource = "v2/highriskemployee"
 
     def __init__(self, connection, user_context, user_profile_service):
-        super(HighRiskEmployeeService, self).__init__(connection)
+        super().__init__(connection)
         self._user_context = user_context
         self._user_profile_service = user_profile_service
 
     def _make_uri(self, action):
-        return u"{}{}".format(self._resource, action)
+        return f"{self._resource}{action}"
 
     def _add_high_risk_employee(self, tenant_id, user_id):
-        data = {u"tenantId": tenant_id, u"userId": user_id}
-        uri = self._make_uri(u"/add")
+        data = {"tenantId": tenant_id, "userId": user_id}
+        uri = self._make_uri("/add")
         return self._connection.post(uri, json=data)
 
     def add(self, user_id):
@@ -53,7 +53,7 @@ class HighRiskEmployeeService(BaseService):
         try:
             return self._add_high_risk_employee(tenant_id, user_id)
         except Py42BadRequestError as err:
-            handle_user_already_added_error(err, user_id, u"high-risk-employee list")
+            handle_user_already_added_error(err, user_id, "high-risk-employee list")
             raise
 
     def set_alerts_enabled(self, enabled=True):
@@ -67,10 +67,10 @@ class HighRiskEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"alertsEnabled": enabled,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "alertsEnabled": enabled,
         }
-        uri = self._make_uri(u"/setalertstate")
+        uri = self._make_uri("/setalertstate")
         return self._connection.post(uri, json=data)
 
     def remove(self, user_id):
@@ -85,14 +85,14 @@ class HighRiskEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userId": user_id,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
         }
-        uri = self._make_uri(u"/remove")
+        uri = self._make_uri("/remove")
         try:
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
-            raise Py42UserNotOnListError(err, user_id, u"high-risk-employee")
+            raise Py42UserNotOnListError(err, user_id, "high-risk-employee")
 
     def get(self, user_id):
         """Gets user information.
@@ -106,10 +106,10 @@ class HighRiskEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userId": user_id,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
         }
-        uri = self._make_uri(u"/get")
+        uri = self._make_uri("/get")
         return self._connection.post(uri, json=data)
 
     def get_all(
@@ -140,7 +140,7 @@ class HighRiskEmployeeService(BaseService):
 
         return get_all_pages(
             self.get_page,
-            u"items",
+            "items",
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
@@ -174,12 +174,12 @@ class HighRiskEmployeeService(BaseService):
         """
 
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"filterType": filter_type,
-            u"pgNum": page_num,
-            u"pgSize": page_size,
-            u"srtKey": sort_key,
-            u"srtDirection": sort_direction,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "filterType": filter_type,
+            "pgNum": page_num,
+            "pgSize": page_size,
+            "srtKey": sort_key,
+            "srtDirection": sort_direction,
         }
-        uri = self._make_uri(u"/search")
+        uri = self._make_uri("/search")
         return self._connection.post(uri, json=data)

@@ -73,7 +73,7 @@ def mock_server_env_conn_missing_sts_base_url(mocker):
 def mock_connected_server_conn(mocker):
     mock_conn = mocker.MagicMock(spec=Connection)
     mock_response = mocker.MagicMock(spec=Response)
-    mock_response.text = '{{"serverUrl": "{0}"}}'.format(HOST_ADDRESS)
+    mock_response.text = f'{{"serverUrl": "{HOST_ADDRESS}"}}'
     mock_conn.get.return_value = Py42Response(mock_response)
     return mock_conn
 
@@ -94,7 +94,7 @@ def proxy_set():
     settings.proxies = None
 
 
-class MockPreparedRequest(object):
+class MockPreparedRequest:
     def __init__(self, method, url, data=None, json=None):
         self._method = method
         self._url = url
@@ -109,13 +109,13 @@ class MockPreparedRequest(object):
         )
 
 
-class TestKnownUrlHostResolver(object):
+class TestKnownUrlHostResolver:
     def test_get_host_address_returns_expected_value(self):
         resolver = KnownUrlHostResolver(HOST_ADDRESS)
         assert resolver.get_host_address() == HOST_ADDRESS
 
 
-class TestMicroserviceKeyHostResolver(object):
+class TestMicroserviceKeyHostResolver:
     def test_get_host_address_returns_expected_value(self, mock_key_value_service):
         mock_key_value_service.get_stored_value.return_value.text = HOST_ADDRESS
         resolver = MicroserviceKeyHostResolver(mock_key_value_service, "TEST_KEY")
@@ -127,7 +127,7 @@ class TestMicroserviceKeyHostResolver(object):
         mock_key_value_service.get_stored_value.assert_called_once_with("TEST_KEY")
 
 
-class TestMicroservicePrefixHostResolver(object):
+class TestMicroservicePrefixHostResolver:
     def test_get_host_address_returns_expected_value(self, mock_server_env_conn):
         resolver = MicroservicePrefixHostResolver(mock_server_env_conn, "TESTPREFIX")
         assert resolver.get_host_address() == "TESTPREFIX-testsuffix"
@@ -147,7 +147,7 @@ class TestMicroservicePrefixHostResolver(object):
         mock_server_env_conn.get.assert_called_once_with("/api/ServerEnv")
 
 
-class TestConnectedServerHostResolver(object):
+class TestConnectedServerHostResolver:
     def test_get_host_address_returns_expected_value(self, mock_connected_server_conn):
         resolver = ConnectedServerHostResolver(
             mock_connected_server_conn, TEST_DEVICE_GUID
@@ -174,7 +174,7 @@ class TestConnectedServerHostResolver(object):
         assert str(err.value) == expected_message
 
 
-class TestConnection(object):
+class TestConnection:
     def test_connection_get_calls_requests_with_get(
         self, mock_host_resolver, mock_auth, success_requests_session
     ):

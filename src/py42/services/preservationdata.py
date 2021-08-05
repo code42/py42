@@ -1,4 +1,5 @@
-from py42._compat import quote
+from urllib.parse import quote
+
 from py42.services import BaseService
 
 
@@ -15,12 +16,11 @@ class PreservationDataService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        data = {u"fileSHA256": file_sha256, u"fileMD5": file_md5, u"devicePaths": paths}
-        uri = u"/api/v1/FindAvailableVersion"
+        data = {"fileSHA256": file_sha256, "fileMD5": file_md5, "devicePaths": paths}
+        uri = "/api/v1/FindAvailableVersion"
         return self._connection.post(uri, json=data)
 
     def get_file_version_list(self, deviceGuid, file_md5, file_sha256, path):
-        params = u"fileSHA256={}&fileMD5={}&deviceGuid={}&path={}"
-        params = params.format(file_sha256, file_md5, deviceGuid, quote(path))
-        uri = u"/api/v1/FileVersionListing?{}".format(params)
+        params = f"fileSHA256={file_sha256}&fileMD5={file_md5}&deviceGuid={deviceGuid}&path={quote(path)}"
+        uri = f"/api/v1/FileVersionListing?{params}"
         return self._connection.get(uri)

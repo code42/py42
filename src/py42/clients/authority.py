@@ -1,14 +1,14 @@
 from collections import namedtuple
 
 AuthorityClient = namedtuple(
-    u"AuthorityClient",
+    "AuthorityClient",
     [
-        u"administration",
-        u"archive",
-        u"devices",
-        u"legalhold",
-        u"orgs",
-        u"securitydata",
-        u"users",
+        "administration",
+        "archive",
+        "devices",
+        "legalhold",
+        "orgs",
+        "securitydata",
+        "users",
     ],
 )

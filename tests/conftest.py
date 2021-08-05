@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import json
 
 import pytest
@@ -44,7 +43,7 @@ TRACEBACK = "Traceback..."
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
-VALUE_UNICODE = u"您已经发现了秘密信息"
+VALUE_UNICODE = "您已经发现了秘密信息"
 
 TEST_ACCEPTING_GUID = "accepting-device-guid"
 TEST_ADDED_PATH = "E:/"

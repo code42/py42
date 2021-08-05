@@ -20,8 +20,8 @@ def create_contains_filter_group(term, value):
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
 
-    filter_list = [create_query_filter(term, u"CONTAINS", value)]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "CONTAINS", value)]
+    return create_filter_group(filter_list, "AND")
 
 
 def create_not_contains_filter_group(term, value):
@@ -38,8 +38,8 @@ def create_not_contains_filter_group(term, value):
         :class:`~py42.sdk.queries.query_filter.FilterGroup`
     """
 
-    filter_list = [create_query_filter(term, u"DOES_NOT_CONTAIN", value)]
-    return create_filter_group(filter_list, u"AND")
+    filter_list = [create_query_filter(term, "DOES_NOT_CONTAIN", value)]
+    return create_filter_group(filter_list, "AND")
 
 
 class AlertQueryFilterStringField(QueryFilterStringField):
@@ -91,26 +91,26 @@ class AlertQueryFilterTimestampField(QueryFilterTimestampField):
 class DateObserved(AlertQueryFilterTimestampField):
     """Class that filters alerts based on the timestamp the alert was triggered."""
 
-    _term = u"createdAt"
+    _term = "createdAt"
 
 
 class Actor(AlertQueryFilterStringField):
     """Class that filters alerts based on the username that originated the event(s) that
     triggered the alert."""
 
-    _term = u"actor"
+    _term = "actor"
 
 
 class RuleName(AlertQueryFilterStringField):
     """Class that filters alerts based on rule name."""
 
-    _term = u"name"
+    _term = "name"
 
 
 class RuleId(QueryFilterStringField):
     """Class that filters alerts based on rule identifier."""
 
-    _term = u"ruleId"
+    _term = "ruleId"
 
 
 class RuleSource(QueryFilterStringField):
@@ -122,11 +122,11 @@ class RuleSource(QueryFilterStringField):
         - :attr:`RuleSource.HIGH_RISK_EMPLOYEE`
     """
 
-    _term = u"ruleSource"
+    _term = "ruleSource"
 
-    ALERTING = u"Alerting"
-    DEPARTING_EMPLOYEE = u"Departing Employee"
-    HIGH_RISK_EMPLOYEE = u"High Risk Employee"
+    ALERTING = "Alerting"
+    DEPARTING_EMPLOYEE = "Departing Employee"
+    HIGH_RISK_EMPLOYEE = "High Risk Employee"
 
     @staticmethod
     def choices():
@@ -142,11 +142,11 @@ class RuleType(QueryFilterStringField):
         - :attr:`RuleType.FILE_TYPE_MISMATCH`
     """
 
-    _term = u"type"
+    _term = "type"
 
-    ENDPOINT_EXFILTRATION = u"FedEndpointExfiltration"
-    CLOUD_SHARE_PERMISSIONS = u"FedCloudSharePermissions"
-    FILE_TYPE_MISMATCH = u"FedFileTypeMismatch"
+    ENDPOINT_EXFILTRATION = "FedEndpointExfiltration"
+    CLOUD_SHARE_PERMISSIONS = "FedCloudSharePermissions"
+    FILE_TYPE_MISMATCH = "FedFileTypeMismatch"
 
     @staticmethod
     def choices():
@@ -156,7 +156,7 @@ class RuleType(QueryFilterStringField):
 class Description(AlertQueryFilterStringField):
     """Class that filters alerts based on rule description text."""
 
-    _term = u"description"
+    _term = "description"
 
 
 class Severity(QueryFilterStringField):
@@ -168,11 +168,11 @@ class Severity(QueryFilterStringField):
         - :attr:`Severity.LOW`
     """
 
-    _term = u"severity"
+    _term = "severity"
 
-    HIGH = u"HIGH"
-    MEDIUM = u"MEDIUM"
-    LOW = u"LOW"
+    HIGH = "HIGH"
+    MEDIUM = "MEDIUM"
+    LOW = "LOW"
 
     @staticmethod
     def choices():
@@ -189,12 +189,12 @@ class AlertState(QueryFilterStringField):
         - :attr:`AlertState.IN_PROGRESS`
     """
 
-    _term = u"state"
+    _term = "state"
 
-    OPEN = u"OPEN"
-    DISMISSED = u"RESOLVED"
-    PENDING = u"PENDING"
-    IN_PROGRESS = u"IN_PROGRESS"
+    OPEN = "OPEN"
+    DISMISSED = "RESOLVED"
+    PENDING = "PENDING"
+    IN_PROGRESS = "IN_PROGRESS"
 
     @staticmethod
     def choices():

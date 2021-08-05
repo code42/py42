@@ -9,15 +9,15 @@ class DetectionListUserService(BaseService):
     `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
     """
 
-    _resource = u"v2/user"
+    _resource = "v2/user"
 
     def __init__(self, connection, user_context, user_service):
-        super(DetectionListUserService, self).__init__(connection)
+        super().__init__(connection)
         self._user_context = user_context
         self._user_service = user_service
 
     def _make_uri(self, action):
-        return u"{}{}".format(self._resource, action)
+        return f"{self._resource}{action}"
 
     def get_by_id(self, user_id):
         """Get user details by user UID.
@@ -29,10 +29,10 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userId": user_id,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
         }
-        uri = self._make_uri(u"/getbyid")
+        uri = self._make_uri("/getbyid")
         return self._connection.post(uri, json=data)
 
     def get(self, username):
@@ -45,10 +45,10 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"username": username,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "username": username,
         }
-        uri = self._make_uri(u"/getbyusername")
+        uri = self._make_uri("/getbyusername")
         return self._connection.post(uri, json=data)
 
     def update_notes(self, user_id, notes):
@@ -62,11 +62,11 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userId": user_id,
-            u"notes": notes,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "notes": notes,
         }
-        uri = self._make_uri(u"/updatenotes")
+        uri = self._make_uri("/updatenotes")
         return self._connection.post(uri, json=data)
 
     def add_risk_tags(self, user_id, tags):
@@ -85,11 +85,11 @@ class DetectionListUserService(BaseService):
             tags = [tags]
 
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userId": user_id,
-            u"riskFactors": tags,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "riskFactors": tags,
         }
-        uri = self._make_uri(u"/addriskfactors")
+        uri = self._make_uri("/addriskfactors")
         return self._connection.post(uri, json=data)
 
     def remove_risk_tags(self, user_id, tags):
@@ -107,11 +107,11 @@ class DetectionListUserService(BaseService):
             tags = [tags]
 
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userId": user_id,
-            u"riskFactors": tags,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "riskFactors": tags,
         }
-        uri = self._make_uri(u"/removeriskfactors")
+        uri = self._make_uri("/removeriskfactors")
         return self._connection.post(uri, json=data)
 
     def add_cloud_alias(self, user_id, alias):
@@ -125,11 +125,11 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userId": user_id,
-            u"cloudUsernames": [alias],
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "cloudUsernames": [alias],
         }
-        uri = self._make_uri(u"/addcloudusernames")
+        uri = self._make_uri("/addcloudusernames")
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
@@ -148,11 +148,11 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userId": user_id,
-            u"cloudUsernames": [alias],
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
+            "cloudUsernames": [alias],
         }
-        uri = self._make_uri(u"/removecloudusernames")
+        uri = self._make_uri("/removecloudusernames")
         return self._connection.post(uri, json=data)
 
     def refresh(self, user_id):
@@ -165,8 +165,8 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            u"tenantId": self._user_context.get_current_tenant_id(),
-            u"userId": user_id,
+            "tenantId": self._user_context.get_current_tenant_id(),
+            "userId": user_id,
         }
-        uri = self._make_uri(u"/refresh")
+        uri = self._make_uri("/refresh")
         return self._connection.post(uri, json=data)

@@ -1,7 +1,7 @@
 from py42.sdk.queries.alerts.filters import AlertState
 
 
-class AlertsClient(object):
+class AlertsClient:
     """A client to expose alert API.
 
     `Rest Documentation <https://developer.code42.com/api/#tag/Alerts>`__
@@ -162,7 +162,6 @@ class AlertsClient(object):
         for page in pages:
             alert_ids = [alert["id"] for alert in page["alerts"]]
             alert_details = self._alert_service.get_details(alert_ids)
-            for alert in sorted(
+            yield from sorted(
                 alert_details["alerts"], key=lambda x: x.get(sort_key), reverse=reverse,
-            ):
-                yield alert
+            )

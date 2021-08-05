@@ -12,7 +12,7 @@ from py42.exceptions import Py42UnauthorizedError
 from py42.exceptions import raise_py42_error
 
 
-class TestPy42Errors(object):
+class TestPy42Errors:
     def test_raise_py42_error_raises_bad_request_error(self, error_response):
         error_response.response.status_code = 400
         with pytest.raises(Py42BadRequestError):

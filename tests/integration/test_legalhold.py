@@ -4,7 +4,7 @@ from tests.integration.conftest import assert_successful_response
 
 @pytest.fixture(scope="module")
 def policy(connection, timestamp):
-    policy_name = "integration test policy {}".format(timestamp)
+    policy_name = f"integration test policy {timestamp}"
     response = connection.legalhold.create_policy(policy_name)
     assert_successful_response(response)
     return response["legalHoldPolicyUid"]
@@ -12,7 +12,7 @@ def policy(connection, timestamp):
 
 @pytest.fixture(scope="module")
 def matter(connection, policy, timestamp):
-    matter_name = "integration test matter {}".format(timestamp)
+    matter_name = f"integration test matter {timestamp}"
     response = connection.legalhold.create_matter(matter_name, policy)
     assert_successful_response(response)
     return response["legalHoldUid"]

@@ -148,6 +148,12 @@ class SDKClient(object):
 
     @property
     def loginconfig(self):
+        """A collection of methods related to getting information about the login configuration
+        of user accounts.
+
+        Returns:
+            :class:`py42.clients.loginconfig.LoginConfigurationClient.`
+        """
         return self._clients.loginconfig
 
     @property

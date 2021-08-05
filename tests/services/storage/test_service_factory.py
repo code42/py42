@@ -1,16 +1,17 @@
 import pytest
 from requests import Response
+from tests.conftest import create_mock_response
 from tests.conftest import TEST_DEVICE_GUID
 
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42StorageSessionInitializationError
-from py42.response import Py42Response
 from py42.services._connection import Connection
 from py42.services.devices import DeviceService
 from py42.services.storage._auth import StorageAuth
 from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.archive import StorageArchiveService
+from py42.services.storage.exfiltrateddata import ExfiltratedDataService
 from py42.services.storage.preservationdata import StoragePreservationDataService
 from py42.services.storage.securitydata import StorageSecurityDataService
 
@@ -25,9 +26,9 @@ def mock_tmp_auth(mocker):
 @pytest.fixture
 def mock_device_service(mocker):
     service = mocker.MagicMock(spec=DeviceService)
-    return_value = mocker.MagicMock(spec=Response)
-    return_value.text = """{"backupUsage": [{"targetComputerGuid": "123"}]}"""
-    response = Py42Response(return_value)
+    response = create_mock_response(
+        mocker, '{"backupUsage": [{"targetComputerGuid": "123"}]}'
+    )
     service.get_by_guid.return_value = response
     return service
 
@@ -63,13 +64,13 @@ class TestStorageServiceFactory:
         mock_successful_connection,
         mock_device_service,
         mock_connection_manager,
-        py42_response,
+        mocker,
     ):
         factory = StorageServiceFactory(
             mock_successful_connection, mock_device_service, mock_connection_manager
         )
-        py42_response.text = '{"backupUsage": []}'
-        mock_device_service.get_by_guid.return_value = py42_response
+        response = create_mock_response(mocker, '{"backupUsage": []}')
+        mock_device_service.get_by_guid.return_value = response
         with pytest.raises(Exception):
             factory.auto_select_destination_guid(TEST_DEVICE_GUID)
 
@@ -92,6 +93,15 @@ class TestStorageServiceFactory:
         )
         service = factory.create_preservation_data_service("testhost.com")
         assert type(service) == StoragePreservationDataService
+
+    def test_exfiltrated_data_service(
+        self, mock_successful_connection, mock_device_service, mock_connection_manager
+    ):
+        factory = StorageServiceFactory(
+            mock_successful_connection, mock_device_service, mock_connection_manager
+        )
+        service = factory.create_exfiltrated_data_service("testhost.com")
+        assert type(service) == ExfiltratedDataService
 
 
 class TestStorageSessionManager:

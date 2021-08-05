@@ -1,7 +1,6 @@
-import json
-
 import pytest
 from requests import Response
+from tests.conftest import create_mock_response
 
 from py42.exceptions import Py42InvalidRuleError
 from py42.exceptions import Py42NotFoundError
@@ -17,31 +16,24 @@ MOCK_DETECTION_LIST_GET_RESPONSE = """
 
 
 @pytest.fixture
-def mock_response(mock_connection, py42_response):
-    mock_connection.post.return_value = py42_response
-    return mock_connection
-
-
-@pytest.fixture
-def mock_detection_list_user_service(mocker, py42_response):
-    py42_response.text = MOCK_DETECTION_LIST_GET_RESPONSE
-    py42_response.data = json.loads(MOCK_DETECTION_LIST_GET_RESPONSE)
+def mock_detection_list_user_service(mocker):
+    response = create_mock_response(mocker, MOCK_DETECTION_LIST_GET_RESPONSE)
     detection_list_user_service = mocker.MagicMock(spec=DetectionListUserService)
-    detection_list_user_service.get_by_id.return_value = py42_response
+    detection_list_user_service.get_by_id.return_value = response
     return detection_list_user_service
 
 
 @pytest.fixture
-def mock_detection_list_post_failure_when_invalid_rule_id(
-    mocker, mock_connection, py42_response
-):
+def mock_detection_list_post_failure_when_invalid_rule_id(mocker, mock_connection):
     response = mocker.MagicMock(spec=Response)
     response.status_code = 400
     exception = mocker.MagicMock(spec=Py42NotFoundError)
     exception.response = response
     mock_connection.post.side_effect = Py42NotFoundError(exception, "")
     detection_list_user_service = mocker.MagicMock(spec=DetectionListUserService)
-    detection_list_user_service.get_by_id.return_value = py42_response
+    detection_list_user_service.get_by_id.return_value = create_mock_response(
+        mocker, "{}"
+    )
     return detection_list_user_service
 
 

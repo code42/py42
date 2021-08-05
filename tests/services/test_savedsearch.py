@@ -1,3 +1,5 @@
+from tests.conftest import create_mock_response
+
 from py42 import settings
 from py42.services.fileevent import FileEventService
 from py42.services.savedsearch import SavedSearchService
@@ -8,8 +10,8 @@ SAVED_SEARCH_GET_RESPONSE = """
 
 
 class TestSavedSearchService:
-    def test_get_calls_get_with_expected_uri(self, mock_connection, py42_response):
-        mock_connection.get.return_value = py42_response
+    def test_get_calls_get_with_expected_uri(self, mock_connection, mocker):
+        mock_connection.get.return_value = create_mock_response(mocker, "{}")
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
         saved_search_service.get()
@@ -19,10 +21,8 @@ class TestSavedSearchService:
             == "/forensic-search/queryservice/api/v1/saved"
         )
 
-    def test_get_by_id_calls_get_with_expected_uri(
-        self, mock_connection, py42_response
-    ):
-        mock_connection.get.return_value = py42_response
+    def test_get_by_id_calls_get_with_expected_uri(self, mock_connection, mocker):
+        mock_connection.get.return_value = create_mock_response(mocker, "{}")
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
         saved_search_service.get_by_id("TEst-id")
@@ -31,9 +31,9 @@ class TestSavedSearchService:
             == "/forensic-search/queryservice/api/v1/saved/TEst-id"
         )
 
-    def test_execute_calls_post_with_expected_uri(self, mock_connection, py42_response):
-        py42_response.text = '{"searches": [{"groups": []}]}'
-        mock_connection.post.return_value = py42_response
+    def test_execute_calls_post_with_expected_uri(self, mock_connection, mocker):
+        response = create_mock_response(mocker, '{"searches": [{"groups": []}]}')
+        mock_connection.post.return_value = response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
         saved_search_service.execute("test-id")
@@ -42,11 +42,9 @@ class TestSavedSearchService:
             == "/forensic-search/queryservice/api/v1/fileevent"
         )
 
-    def test_execute_calls_post_with_expected_query(
-        self, mock_connection, py42_response
-    ):
-        py42_response.text = SAVED_SEARCH_GET_RESPONSE
-        mock_connection.get.return_value = py42_response
+    def test_execute_calls_post_with_expected_query(self, mock_connection, mocker):
+        response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
+        mock_connection.get.return_value = response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
         saved_search_service.execute("test-id")
@@ -59,13 +57,13 @@ class TestSavedSearchService:
         )
 
     def test_execute_calls_post_with_expected_setting_page_param(
-        self, mock_connection, py42_response
+        self, mock_connection, mocker
     ):
         test_custom_page_num = 2
         settings.security_events_per_page = 5000
 
-        py42_response.text = SAVED_SEARCH_GET_RESPONSE
-        mock_connection.get.return_value = py42_response
+        response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
+        mock_connection.get.return_value = response
         file_event_client = FileEventService(mock_connection)
         saved_search_client = SavedSearchService(mock_connection, file_event_client)
         saved_search_client.execute(
@@ -81,14 +79,14 @@ class TestSavedSearchService:
         )
 
     def test_execute_calls_post_with_expected_page_params(
-        self, mock_connection, py42_response
+        self, mock_connection, mocker
     ):
         test_custom_page_num = 2
         settings.security_events_per_page = 6000
         test_custom_page_size = 5000
 
-        py42_response.text = SAVED_SEARCH_GET_RESPONSE
-        mock_connection.get.return_value = py42_response
+        response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
+        mock_connection.get.return_value = response
         file_event_client = FileEventService(mock_connection)
         saved_search_client = SavedSearchService(mock_connection, file_event_client)
         saved_search_client.execute(
@@ -105,11 +103,9 @@ class TestSavedSearchService:
             and posted_data["groups"] == []
         )
 
-    def test_get_query_calls_get_with_expected_uri(
-        self, mock_connection, py42_response
-    ):
-        py42_response.text = '{"searches": [{"groups": []}]}'
-        mock_connection.post.return_value = py42_response
+    def test_get_query_calls_get_with_expected_uri(self, mock_connection, mocker):
+        response = create_mock_response(mocker, '{"searches": [{"groups": []}]}')
+        mock_connection.post.return_value = response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
         saved_search_service.get_query("test-id")

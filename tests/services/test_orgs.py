@@ -1,8 +1,7 @@
 import pytest
-from requests import Response
+from tests.conftest import create_mock_response
 
 import py42.settings
-from py42.response import Py42Response
 from py42.services.orgs import OrgService
 
 COMPUTER_URI = "/api/Org"
@@ -17,19 +16,11 @@ MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "orgs": []}"""
 class TestOrgService:
     @pytest.fixture
     def mock_get_all_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.encoding = "utf-8"
-        response.text = MOCK_GET_ORG_RESPONSE
-        return Py42Response(response)
+        yield create_mock_response(mocker, MOCK_GET_ORG_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_empty_response(self, mocker):
-        response = mocker.MagicMock(spec=Response)
-        response.status_code = 200
-        response.encoding = "utf-8"
-        response.text = MOCK_EMPTY_GET_ORGS_RESPONSE
-        return Py42Response(response)
+        yield create_mock_response(mocker, MOCK_EMPTY_GET_ORGS_RESPONSE)
 
     def test_get_org_by_id_calls_get_with_uri_and_params(
         self, mock_connection, successful_response

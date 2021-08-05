@@ -120,4 +120,4 @@ class TestSDK(object):
         with pytest.raises(Py42UnauthorizedError) as err:
             from_local_account(HOST_ADDRESS, TEST_USERNAME, TEST_PASSWORD)
 
-        assert f"User LoginConfig: {login_type}" in str(err)
+        assert "User LoginConfig: {}".format(login_type) in str(err)

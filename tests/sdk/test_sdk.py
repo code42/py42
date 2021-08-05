@@ -111,7 +111,7 @@ class TestSDK(object):
         login_type = "LOCAL_2FA"
         mock_session.send.return_value = unauthorized_response
         mock_session.get.return_value = create_mock_response(
-            mocker, f'{{"loginType": "{login_type}"}}'
+            mocker, '{{"loginType": "{}"}}'.format(login_type)
         )
         connection = Connection.from_host_address(HOST_ADDRESS, session=mock_session)
         client = SDKClient(connection, mock_auth)

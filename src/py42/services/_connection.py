@@ -128,7 +128,7 @@ class Connection(object):
         return self._get_host_address()
 
     def get_login_configuration_for_user(self, username):
-        uri = f"{self.host_address}/c42api/v3/LoginConfiguration"
+        uri = "{}/c42api/v3/LoginConfiguration".format(self.host_address)
         response = self._session.get(uri, params={"username": username})
         return Py42Response(response)
 

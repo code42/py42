@@ -146,19 +146,6 @@ class SDKClient(object):
 
         return cls(main_connection, custom_auth)
 
-    # def get_login_configuration_for_user(self, username):
-    #     """Retrieves login configuration for a given username. Possible `loginType` values are
-    #     `LOCAL`, `LOCAL_2FA`, and `CLOUD_SSO`. If username does not exist the default
-    #     return value is `LOCAL_2FA`.
-    #
-    #     Args:
-    #         username (str): Username to retrieve login configuration for.
-    #
-    #     Returns:
-    #         :class:`py42.response.Py42Response`
-    #     """
-    #     return self._connection.get_login_configuration_for_user(username)
-
     @property
     def loginconfig(self):
         return self._clients.loginconfig

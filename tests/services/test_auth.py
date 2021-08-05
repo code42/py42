@@ -1,5 +1,6 @@
 import pytest
 from requests import Request
+from tests.conftest import create_mock_response
 
 from py42.services._auth import BearerAuth
 from py42.services._auth import CustomJWTAuth
@@ -13,9 +14,9 @@ def mock_request(mocker):
 
 
 @pytest.fixture
-def mock_v3_conn(mock_connection, py42_response):
-    py42_response.text = '{"v3_user_token": "TEST_TOKEN_VALUE"}'
-    mock_connection.get.return_value = py42_response
+def mock_v3_conn(mock_connection, mocker):
+    response = create_mock_response(mocker, '{"v3_user_token": "TEST_TOKEN_VALUE"}')
+    mock_connection.get.return_value = response
     return mock_connection
 
 

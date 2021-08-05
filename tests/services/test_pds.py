@@ -23,9 +23,11 @@ class TestPreservationDataService:
             and posted_data["devicePaths"][1] == "/path/path2"
         )
 
-    def test_get_file_version_list_uses_expected_ur(self, mock_connection):
+    def test_get_file_version_list_uses_expected_url(self, mock_connection):
         pds = PreservationDataService(mock_connection)
         pds.get_file_version_list("testguid", "testmd5", "testsha256", "/t/1 X")
-        qry = "fileSHA256=testsha256&fileMD5=testmd5&deviceGuid=testguid&path=/t/1%20X"
-        expected = f"/api/v1/FileVersionListing?{qry}"
+        qry = (
+            "fileSHA256=testsha256&fileMD5=testmd5&deviceUid=testguid&filePath=/t/1%20X"
+        )
+        expected = f"/api/v2/file-version-listing?{qry}"
         mock_connection.get.assert_called_once_with(expected)

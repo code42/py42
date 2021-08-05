@@ -1,13 +1,12 @@
 import json
 
 import pytest
-from requests import Response
 from tests.conftest import create_mock_error
+from tests.conftest import create_mock_response
 
 from py42.clients.alertrules import AlertRulesClient
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidRuleOperationError
-from py42.response import Py42Response
 from py42.services.alertrules import AlertRulesService
 from py42.services.alerts import AlertService
 
@@ -29,10 +28,8 @@ TEST_SYSTEM_RULE_RESPONSE = {
 
 @pytest.fixture
 def mock_alerts_service_system_rule(mocker, mock_alerts_service):
-    response = mocker.MagicMock(spec=Response)
-    response.text = json.dumps(TEST_SYSTEM_RULE_RESPONSE)
-    py42_response = Py42Response(response)
-    mock_alerts_service.get_rule_by_observer_id.return_value = py42_response
+    response = create_mock_response(mocker, json.dumps(TEST_SYSTEM_RULE_RESPONSE))
+    mock_alerts_service.get_rule_by_observer_id.return_value = response
     return mock_alerts_service
 
 

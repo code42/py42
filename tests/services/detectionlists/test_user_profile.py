@@ -1,5 +1,6 @@
 import pytest
 from tests.conftest import create_mock_error
+from tests.conftest import create_mock_response
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42CloudAliasLimitExceededError
@@ -18,10 +19,11 @@ CLOUD_ALIAS_LIMIT_EXCEEDED_ERROR_MESSAGE = """{
 
 class TestDetectionListUserClient:
     @pytest.fixture
-    def mock_user_client(self, mock_connection, user_context, py42_response):
+    def mock_user_client(self, mock_connection, user_context, mocker):
         user_client = UserService(mock_connection)
-        py42_response.text = '{"username":"username"}'
-        mock_connection.get.return_value = py42_response
+        mock_connection.get.return_value = create_mock_response(
+            mocker, '{"username":"username"}'
+        )
         return user_client
 
     @pytest.fixture
@@ -33,7 +35,7 @@ class TestDetectionListUserClient:
 
     @pytest.fixture
     def mock_user_client_raises_exception(
-        self, mocker, mock_connection, user_context, py42_response
+        self, mocker, mock_connection, user_context,
     ):
         user_client = UserService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
@@ -43,7 +45,7 @@ class TestDetectionListUserClient:
 
     @pytest.fixture
     def mock_user_client_error_on_adding_cloud_aliases(
-        self, mocker, mock_connection, user_context, py42_response
+        self, mocker, mock_connection, user_context,
     ):
         user_client = UserService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(

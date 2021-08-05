@@ -111,17 +111,9 @@ class SecurityDataClient:
             device_guid, md5_hash, sha256_hash, path
         )
         if version:
-            pds = self._storage_service_factory.create_preservation_data_service(
-                version["storageNodeURL"]
-            )
-            token = pds.get_download_token(
-                version["archiveGuid"], version["fileId"], version["versionTimestamp"],
-            )
-            return pds.get_file(str(token))
+            return self._get_file_stream(version)
 
-        raise Py42Error(
-            f"No file with hash {checksum} available for download on any storage node."
-        )
+        raise Py42Error(f"No file with hash {checksum} available for download.")
 
     def _get_file_version_for_stream(self, device_guid, md5_hash, sha256_hash, path):
         version = self._get_device_file_version(
@@ -135,18 +127,17 @@ class SecurityDataClient:
         response = self._preservation_data_service.get_file_version_list(
             device_guid, md5_hash, sha256_hash, path
         )
-        versions = response["versions"]
+        versions = (
+            response.data.get("securityEventVersionsMatchingChecksum")
+            or response.data.get("securityEventVersionsAtPath")
+            or response.data.get("preservationVersions")
+        )
+
         if versions:
-            exact_match = next(
-                (
-                    x
-                    for x in versions
-                    if x["fileMD5"] == md5_hash and x["fileSHA256"] == sha256_hash
-                ),
-                None,
-            )
-            if exact_match:
-                return exact_match
+            if not response.data.get("securityEventVersionsAtPath"):
+                exact_match = _get_first_matching_version(versions, md5_hash)
+                if exact_match:
+                    return exact_match
 
             most_recent = sorted(
                 versions, key=lambda i: i["versionTimestamp"], reverse=True
@@ -163,8 +154,35 @@ class SecurityDataClient:
             version = self._preservation_data_service.find_file_version(
                 md5_hash, sha256_hash, paths
             )
-            if version.status_code != 204:
-                return version
+            if version.status_code == 200:
+                return version.data
+
+    def _get_file_stream(self, version):
+        if version.get("edsUrl"):
+            return self._get_exfiltrated_file(version)
+
+        return self._get_stored_file(version)
+
+    def _get_exfiltrated_file(self, version):
+        eds = self._storage_service_factory.create_exfiltrated_data_service(
+            version["edsUrl"]
+        )
+        token = eds.get_download_token(
+            version["eventId"],
+            version["deviceUid"],
+            version["filePath"],
+            version["versionTimestamp"],
+        )
+        return eds.get_file(str(token))
+
+    def _get_stored_file(self, version):
+        pds = self._storage_service_factory.create_preservation_data_service(
+            version["storageNodeURL"]
+        )
+        token = pds.get_download_token(
+            version["archiveGuid"], version["fileId"], version["versionTimestamp"],
+        )
+        return pds.get_file(str(token))
 
 
 def _parse_file_location_response(locations):
@@ -193,6 +211,12 @@ def _get_version_lookup_info(events):
         if device_guid and md5 and sha256 and fileName and filePath:
             path = f"{filePath}{fileName}"
             return device_guid, md5, sha256, path
+
+
+def _get_first_matching_version(versions, md5_hash):
+    exact_match = next((x for x in versions if x["fileMD5"] == md5_hash), None)
+    if exact_match:
+        return exact_match
 
 
 def _escape_quote_chars_in_token(token):

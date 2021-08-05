@@ -1078,7 +1078,9 @@ class TestSecurityClient(object):
         file_event_service.get_file_location_detail_by_sha256.return_value = (
             file_location
         )
-        available_version = create_mock_response(mocker, AVAILABLE_VERSION_RESPONSE, 204)
+        available_version = create_mock_response(
+            mocker, AVAILABLE_VERSION_RESPONSE, 204
+        )
         preservation_data_service.find_file_version.return_value = available_version
 
         security_client = SecurityDataClient(
@@ -1314,7 +1316,9 @@ class TestSecurityClient(object):
         file_event_service.get_file_location_detail_by_sha256.return_value = (
             file_location
         )
-        available_version = create_mock_response(mocker, AVAILABLE_VERSION_RESPONSE, 204)
+        available_version = create_mock_response(
+            mocker, AVAILABLE_VERSION_RESPONSE, 204
+        )
         preservation_data_service.find_file_version.return_value = available_version
 
         security_client = SecurityDataClient(

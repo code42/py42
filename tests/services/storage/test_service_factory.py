@@ -26,7 +26,9 @@ def mock_tmp_auth(mocker):
 @pytest.fixture
 def mock_device_service(mocker):
     service = mocker.MagicMock(spec=DeviceService)
-    response = create_mock_response(mocker, '{"backupUsage": [{"targetComputerGuid": "123"}]}')
+    response = create_mock_response(
+        mocker, '{"backupUsage": [{"targetComputerGuid": "123"}]}'
+    )
     service.get_by_guid.return_value = response
     return service
 

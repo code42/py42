@@ -31,7 +31,9 @@ def mock_detection_list_post_failure_when_invalid_rule_id(mocker, mock_connectio
     exception.response = response
     mock_connection.post.side_effect = Py42NotFoundError(exception, "")
     detection_list_user_service = mocker.MagicMock(spec=DetectionListUserService)
-    detection_list_user_service.get_by_id.return_value = create_mock_response(mocker, "{}")
+    detection_list_user_service.get_by_id.return_value = create_mock_response(
+        mocker, "{}"
+    )
     return detection_list_user_service
 
 

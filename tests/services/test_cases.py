@@ -86,7 +86,7 @@ class TestCasesService:
 
         assert (
             err.value.args[0]
-            == "Case name 'Duplicate' already exists, please set another name"
+            == "Case name 'Duplicate' already exists, please set another name."
         )
 
     def test_create_when_fails_with_description_too_long_error_raises_custom_exception(
@@ -280,7 +280,7 @@ class TestCasesService:
 
         assert (
             err.value.args[0]
-            == "Case name 'Duplicate' already exists, please set another name"
+            == "Case name 'Duplicate' already exists, please set another name."
         )
 
     def test_update_when_case_is_closed_raises_custom_exception(

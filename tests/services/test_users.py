@@ -160,7 +160,7 @@ class TestUserService:
         mock_connection.get.return_value = successful_response
         service = UserService(mock_connection)
         service.get_by_id(123456)
-        uri = f"{USER_URI}/{123456}"
+        uri = f"{USER_URI}/123456"
         mock_connection.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(

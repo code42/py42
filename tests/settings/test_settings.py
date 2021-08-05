@@ -26,8 +26,6 @@ def test_get_user_agent_returns_correct_default_value(default_user_agent):
 
 def test_get_user_agent_returns_correct_value_after_setting_suffix(default_user_agent):
     settings.set_user_agent_suffix("example-suffix")
-    assert (
-        settings.get_user_agent_string() == f"{default_user_agent} {'example-suffix'}"
-    )
+    assert settings.get_user_agent_string() == f"{default_user_agent} example-suffix"
     # reset settings to default
     settings.set_user_agent_suffix("")

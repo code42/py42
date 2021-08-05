@@ -79,7 +79,7 @@ class TestDeviceService:
         service = DeviceService(mock_connection)
         service.get_by_id("DEVICE_ID", include_backup_usage=True)
         expected_params = {"incBackupUsage": True}
-        uri = f"{COMPUTER_URI}/{'DEVICE_ID'}"
+        uri = f"{COMPUTER_URI}/DEVICE_ID"
         mock_connection.get.assert_called_once_with(uri, params=expected_params)
 
     def test_get_all_calls_get_expected_number_of_times(

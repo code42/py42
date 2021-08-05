@@ -58,7 +58,7 @@ class TestFileEventService:
         with pytest.raises(Py42InvalidPageTokenError) as err:
             service.search(query)
 
-        assert str(err.value) == f"Invalid page token: {query.page_token}"
+        assert str(err.value) == f'Invalid page token: "{query.page_token}".'
 
     def test_search_when_bad_request_raised_and_token_not_in_query_raises_bad_request(
         self, mock_invalid_page_token_connection

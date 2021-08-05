@@ -51,7 +51,7 @@ class ArchiveService(BaseService):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of archives.
         """
-        params = {f"{id_type}": f"{id_value}"}
+        params = {id_type: id_value}
         return get_all_pages(self.get_page, "archives", **params)
 
     def get_backup_sets(self, device_guid, destination_guid):

@@ -55,7 +55,7 @@ pyenv activate py42
 If running into issues on Big Sur(Version 11) while installing python 3.6 the below may work
 
 ```bash
-pyenv install --patch 3.6.13 < <(curl -sSL https://github.com/python/cpython/commit/8ea6353.patch)
+pyenv install --patch 3.6.14 < <(curl -sSL https://github.com/python/cpython/commit/8ea6353.patch)
 ```
 
 Use `source deactivate` to exit the virtual environment and `pyenv activate py42` to reactivate it.

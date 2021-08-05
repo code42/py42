@@ -34,7 +34,7 @@ def format_timestamp_with_microseconds(test_time):
 
 def format_datetime_with_microseconds(test_date):
     prefix = test_date.strftime(MICROSECOND_FORMAT)
-    timestamp_str = f"{prefix}"
+    timestamp_str = prefix
     return timestamp_str
 
 

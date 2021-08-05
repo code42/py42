@@ -34,7 +34,7 @@ class Py42ChecksumNotFoundError(Py42ResponseError):
     """An exception raised when a user-supplied hash could not successfully locate its corresponding resource."""
 
     def __init__(self, response, checksum_name, checksum_value):
-        message = f"No files found with {checksum_name} checksum {checksum_value}"
+        message = f"No files found with {checksum_name} checksum {checksum_value}."
         super().__init__(response, message)
 
 
@@ -270,7 +270,7 @@ class Py42InvalidPageTokenError(Py42BadRequestError):
     """An error raised when the page token given is invalid."""
 
     def __init__(self, exception, page_token):
-        message = f"Invalid page token: {page_token}"
+        message = f'Invalid page token: "{page_token}".'
         super().__init__(exception, message)
 
 
@@ -318,7 +318,7 @@ class Py42CaseNameExistsError(Py42BadRequestError):
     """An error raised when trying to create a case with a name that already exists."""
 
     def __init__(self, exception, case_name):
-        msg = f"Case name '{case_name}' already exists, please set another name"
+        msg = f"Case name '{case_name}' already exists, please set another name."
         super().__init__(exception, msg)
 
 

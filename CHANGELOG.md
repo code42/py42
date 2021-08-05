@@ -18,7 +18,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Removed
 
-- FED (File Extraction Detection) - related functionality
+- FED (File Extraction Detection) - related functionality from the `SecurityDataClient` class
     - `get_security_plan_storage_info_list()`
     - `get_all_plan_security_events()`
     - `get_all_user_security_events()`

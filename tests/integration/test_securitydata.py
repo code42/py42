@@ -27,11 +27,10 @@ def user_uid(request):
 @pytest.fixture
 def file_data(request):
     return request.config.getini("file_data")
-    
+
 
 @pytest.mark.integration
 class TestSecurityData:
-
     def test_search_file_events(self, connection):
         start_date = datetime.utcnow() - timedelta(1)
         end_date = datetime.utcnow()

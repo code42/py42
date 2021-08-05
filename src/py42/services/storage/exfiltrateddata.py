@@ -11,7 +11,7 @@ class ExfiltratedDataService(BaseService):
         self._streaming_session = streaming_session
 
     def get_download_token(self, event_id, device_id, file_path, timestamp):
-        """Get PDS download token for a file.
+        """Get EDS download token for a file.
 
         Args:
             event_id (str): Id of the file event that references the file desired for download.
@@ -32,7 +32,7 @@ class ExfiltratedDataService(BaseService):
         """Streams a file.
 
         Args:
-            token (str): PDS Download token.
+            token (str):EDS Download token.
 
         Returns:
             Returns a stream of the file indicated by the input token.

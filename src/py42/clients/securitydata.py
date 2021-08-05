@@ -305,15 +305,6 @@ class SecurityDataClient(object):
 
         return self._get_stored_file(version)
 
-    def _get_stored_file(self, version):
-        pds = self._storage_service_factory.create_preservation_data_service(
-            version[u"storageNodeURL"]
-        )
-        token = pds.get_download_token(
-            version[u"archiveGuid"], version[u"fileId"], version[u"versionTimestamp"],
-        )
-        return pds.get_file(str(token))
-
     def _get_exfiltrated_file(self, version):
         eds = self._storage_service_factory.create_exfiltrated_data_service(
             version[u"edsUrl"]
@@ -325,6 +316,15 @@ class SecurityDataClient(object):
             version[u"versionTimestamp"],
         )
         return eds.get_file(str(token))
+
+    def _get_stored_file(self, version):
+        pds = self._storage_service_factory.create_preservation_data_service(
+            version[u"storageNodeURL"]
+        )
+        token = pds.get_download_token(
+            version[u"archiveGuid"], version[u"fileId"], version[u"versionTimestamp"],
+        )
+        return pds.get_file(str(token))
 
     def _get_plan_storage_infos(self, plan_destination_map):
         plan_infos = []
@@ -487,7 +487,7 @@ class PlanStorageInfo(object):
 
 
 def _get_first_matching_version(versions, md5_hash):
-    exact_match = next((x for x in versions if x[u"fileMD5"] == md5_hash), None,)
+    exact_match = next((x for x in versions if x[u"fileMD5"] == md5_hash), None)
     if exact_match:
         return exact_match
 

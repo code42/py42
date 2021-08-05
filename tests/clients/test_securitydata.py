@@ -195,7 +195,7 @@ FILE_LOCATION_RESPONSE = """{
 PDS_FILE_VERSIONS = """{
     "preservationVersions": [
         {
-            "storageNodeURL": "https://host-1.com",
+            "storageNodeURL": "https://host-1.example.com",
             "archiveGuid": "archiveid-1",
             "fileId": "fileid-1",
             "fileMD5": "testmd5-1",
@@ -203,7 +203,7 @@ PDS_FILE_VERSIONS = """{
             "versionTimestamp": 12345
         },
         {
-            "storageNodeURL": "https://host-2.com",
+            "storageNodeURL": "https://host-2.example.com",
             "archiveGuid": "archiveid-2",
             "fileId": "fileid-2",
             "fileMD5": "testmd5-2",
@@ -211,7 +211,7 @@ PDS_FILE_VERSIONS = """{
             "versionTimestamp": 12344
         },
         {
-            "storageNodeURL": "https://host-3.com",
+            "storageNodeURL": "https://host-3.example.com",
             "archiveGuid": "archiveid-3",
             "fileId": "fileid-3",
             "fileMD5": "testmd5-3",
@@ -227,7 +227,7 @@ XFC_EXACT_FILE_VERSIONS = """{
     "preservationVersions": [],
     "securityEventVersionsMatchingChecksum": [
         {
-            "edsUrl": "https://host-1.com",
+            "edsUrl": "https://host-1.example.com",
             "deviceUid": "deviceuid-1",
             "eventId": "eventid-1",
             "fileMD5": "testmd5-1",
@@ -236,7 +236,7 @@ XFC_EXACT_FILE_VERSIONS = """{
             "versionTimestamp": 12345
         },
         {
-            "edsUrl": "https://host-2.com",
+            "edsUrl": "https://host-2.example.com",
             "deviceUid": "deviceuid-2",
             "eventId": "eventid-2",
             "fileMD5": "testmd5-2",
@@ -245,7 +245,7 @@ XFC_EXACT_FILE_VERSIONS = """{
             "versionTimestamp": 12344
         },
         {
-            "edsUrl": "https://host-3.com",
+            "edsUrl": "https://host-3.example.com",
             "deviceUid": "deviceuid-3",
             "eventId": "eventid-3",
             "fileMD5": "testmd5-3",
@@ -262,7 +262,7 @@ XFC_MATCHED_FILE_VERSIONS = """{
     "securityEventVersionsMatchingChecksum": [],
     "securityEventVersionsAtPath": [
         {
-            "edsUrl": "https://host-1.com",
+            "edsUrl": "https://host-1.example.com",
             "deviceUid": "deviceuid-1",
             "eventId": "eventid-1",
             "fileMD5": "testmd5-1",
@@ -271,7 +271,7 @@ XFC_MATCHED_FILE_VERSIONS = """{
             "versionTimestamp": 12345
         },
         {
-            "edsUrl": "https://host-2.com",
+            "edsUrl": "https://host-2.example.com",
             "deviceUid": "deviceuid-2",
             "eventId": "eventid-2",
             "fileMD5": "testmd5-2",
@@ -280,7 +280,7 @@ XFC_MATCHED_FILE_VERSIONS = """{
             "versionTimestamp": 12344
         },
         {
-            "edsUrl": "https://host-3.com",
+            "edsUrl": "https://host-3.example.com",
             "deviceUid": "deviceuid-3",
             "eventId": "eventid-3",
             "fileMD5": "testmd5-3",
@@ -902,7 +902,7 @@ class TestSecurityClient(object):
             *version_list_params
         )
         storage_service_factory.create_preservation_data_service.assert_called_once_with(
-            "https://host-2.com"
+            "https://host-2.example.com"
         )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
@@ -953,7 +953,7 @@ class TestSecurityClient(object):
             *expected
         )
         storage_service_factory.create_preservation_data_service.assert_called_once_with(
-            "https://host-3.com"
+            "https://host-3.example.com"
         )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
@@ -1138,7 +1138,7 @@ class TestSecurityClient(object):
             *version_list_params
         )
         storage_service_factory.create_preservation_data_service.assert_called_once_with(
-            "https://host-2.com"
+            "https://host-2.example.com"
         )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0
@@ -1189,7 +1189,7 @@ class TestSecurityClient(object):
             *expected
         )
         storage_service_factory.create_preservation_data_service.assert_called_once_with(
-            "https://host-3.com"
+            "https://host-3.example.com"
         )
         assert file_event_service.get_file_location_detail_by_sha256.call_count == 0
         assert preservation_data_service.find_file_version.call_count == 0

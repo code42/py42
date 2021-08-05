@@ -5,7 +5,6 @@ from py42.clients.securitydata import PlanStorageInfo
 from py42.clients.securitydata import SecurityDataClient
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
-from py42.response import Py42Response
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.services._connection import Connection
 from py42.services.fileevent import FileEventService

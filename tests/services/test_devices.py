@@ -32,11 +32,11 @@ MOCK_EMPTY_GET_DEVICE_RESPONSE = """{"totalCount": 3000, "computers":[]}"""
 class TestDeviceService(object):
     @pytest.fixture
     def mock_get_all_response(self, mocker):
-        return create_mock_response(mocker, MOCK_GET_DEVICE_RESPONSE)
+        yield create_mock_response(mocker, MOCK_GET_DEVICE_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_empty_response(self, mocker):
-        return create_mock_response(mocker, MOCK_EMPTY_GET_DEVICE_RESPONSE)
+        yield create_mock_response(mocker, MOCK_EMPTY_GET_DEVICE_RESPONSE)
 
     def test_get_all_calls_get_with_uri_and_params(
         self, mock_connection, mock_get_all_response

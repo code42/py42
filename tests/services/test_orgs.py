@@ -17,11 +17,11 @@ MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "orgs": []}"""
 class TestOrgService(object):
     @pytest.fixture
     def mock_get_all_response(self, mocker):
-        return create_mock_response(mocker, MOCK_GET_ORG_RESPONSE)
+        yield create_mock_response(mocker, MOCK_GET_ORG_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_empty_response(self, mocker):
-        return create_mock_response(mocker, MOCK_EMPTY_GET_ORGS_RESPONSE)
+        yield create_mock_response(mocker, MOCK_EMPTY_GET_ORGS_RESPONSE)
 
     def test_get_org_by_id_calls_get_with_uri_and_params(
         self, mock_connection, successful_response

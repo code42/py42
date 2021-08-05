@@ -67,11 +67,11 @@ class TestDepartingEmployeeFilters(object):
 class TestDepartingEmployeeClient(object):
     @pytest.fixture
     def mock_get_all_response(self, mocker):
-        return create_mock_response(mocker, _GET_ALL_RESPONSE)
+        yield create_mock_response(mocker, _GET_ALL_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_response_empty(self, mocker):
-        return create_mock_response(mocker, _GET_ALL_EMPTY_RESPONSE)
+        yield create_mock_response(mocker, _GET_ALL_EMPTY_RESPONSE)
 
     @pytest.fixture
     def mock_user_client(self, mock_connection, user_context, mocker):

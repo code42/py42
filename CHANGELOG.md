@@ -16,6 +16,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - New method `sdk.alerts.get_all_alert_details()` as a helper to make getting alerts with details easier (combines `sdk.alerts.search_all_pages()` and `sdk.alerts.get_details()`).
 
+- New method `sdk.get_login_configuration_for_user()` to identify if a user's login type is `LOCAL`, `LOCAL_2FA`, or `CLOUD_SSO`.
+
+### Removed
+
+- Usage of `Py42MFARequiredError`. Use `sdk.get_login_configuration_for_user()` instead to check if a user is configured for two-factor authentication.
+
 ## 1.16.1 - 2021-07-20
 
 ### Fixed

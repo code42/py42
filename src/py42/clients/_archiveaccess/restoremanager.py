@@ -16,7 +16,7 @@ def create_file_size_poller(storage_archive_service, device_guid):
     return FileSizePoller(storage_archive_service, device_guid)
 
 
-class _RestorePoller(object):
+class _RestorePoller:
     """Base class for observing web/push restore calculation processes, such as polling
     for file sizes or the restore itself."""
 
@@ -36,9 +36,7 @@ class FileSizePoller(_RestorePoller):
     restore."""
 
     def __init__(self, storage_archive_service, device_guid, job_polling_interval=None):
-        super(FileSizePoller, self).__init__(
-            storage_archive_service, device_guid, job_polling_interval
-        )
+        super().__init__(storage_archive_service, device_guid, job_polling_interval)
 
     def get_file_sizes(self, file_ids, timeout):
         if not timeout:
@@ -54,7 +52,7 @@ class FileSizePoller(_RestorePoller):
             response = self._storage_archive_service.create_file_size_job(
                 self._device_guid, file_id
             )
-            job_id = response[u"jobId"]
+            job_id = response["jobId"]
             job_ids.append(job_id)
         return job_ids
 
@@ -68,7 +66,7 @@ class FileSizePoller(_RestorePoller):
                 response = self._get_job_status(job_id)
                 size_dict = _create_size_dict(job_id, response)
                 _print_file_size(size_dict)
-                if response[u"status"].lower() == u"done":
+                if response["status"].lower() == "done":
                     job_ids.remove(job_id)
                     sizes.append(size_dict)
 
@@ -96,7 +94,7 @@ class RestoreJobManager(_RestorePoller):
         archive_session_id,
         job_polling_interval=None,
     ):
-        super(RestoreJobManager, self).__init__(
+        super().__init__(
             storage_archive_service=storage_archive_service,
             device_guid=device_guid,
             job_polling_interval=job_polling_interval,
@@ -118,8 +116,8 @@ class RestoreJobManager(_RestorePoller):
         show_deleted,
         overwrite_existing_files,
     ):
-        num_files = sum([fs.num_files for fs in file_selections])
-        num_bytes = sum([fs.num_bytes for fs in file_selections])
+        num_files = sum(fs.num_files for fs in file_selections)
+        num_bytes = sum(fs.num_bytes for fs in file_selections)
         file_location = None
         permit_restore_to_different_os_version = False
         existing_files = PushRestoreExistingFiles.RENAME_ORIGINAL
@@ -127,7 +125,7 @@ class RestoreJobManager(_RestorePoller):
         # Use expected request parameters for restoring to the original location.
         if restore_path == PushRestoreLocation.ORIGINAL_LOCATION:
             file_location = restore_path
-            restore_path = u""
+            restore_path = ""
             if self._device_guid != accepting_guid:
                 permit_restore_to_different_os_version = True
             if overwrite_existing_files:
@@ -141,8 +139,8 @@ class RestoreJobManager(_RestorePoller):
             restore_path,
             [
                 {
-                    u"backupSetId": backup_set_id,
-                    u"files": [f.file for f in file_selections],
+                    "backupSetId": backup_set_id,
+                    "files": [f.file for f in file_selections],
                 }
             ],
             num_files,
@@ -154,26 +152,26 @@ class RestoreJobManager(_RestorePoller):
         )
 
     def _wait_for_job(self, response):
-        job_id = response[u"jobId"]
+        job_id = response["jobId"]
         while not self._is_job_complete(job_id):
             time.sleep(self._job_polling_interval)
         return job_id
 
     def _is_job_complete(self, job_id):
         response = self._storage_archive_service.get_restore_status(job_id)
-        is_done = response[u"done"]
+        is_done = response["done"]
         percentage_dict = {
-            u"jobId": job_id,
-            u"status": response.data.get(u"status"),
-            u"percentComplete": response[u"percentComplete"] if not is_done else 100,
+            "jobId": job_id,
+            "status": response.data.get("status"),
+            "percentComplete": response["percentComplete"] if not is_done else 100,
         }
         debug.logger.debug(format_dict(percentage_dict))
         return is_done
 
     def _start_web_restore(self, backup_set_id, file_selections, show_deleted):
-        num_files = sum([fs.num_files for fs in file_selections])
-        num_dirs = sum([fs.num_dirs for fs in file_selections])
-        num_bytes = sum([fs.num_bytes for fs in file_selections])
+        num_files = sum(fs.num_files for fs in file_selections)
+        num_dirs = sum(fs.num_dirs for fs in file_selections)
+        num_bytes = sum(fs.num_bytes for fs in file_selections)
 
         # For py42 backwards compat.
         if show_deleted is None:
@@ -184,8 +182,8 @@ class RestoreJobManager(_RestorePoller):
             self._archive_session_id,
             [
                 {
-                    u"backupSetId": backup_set_id,
-                    u"files": [f.file for f in file_selections],
+                    "backupSetId": backup_set_id,
+                    "files": [f.file for f in file_selections],
                 }
             ],
             num_files,
@@ -201,7 +199,7 @@ class RestoreJobManager(_RestorePoller):
 
 def _create_size_dict(job_id, size_response):
     size_dict = size_response.data
-    size_dict[u"jobId"] = job_id
+    size_dict["jobId"] = job_id
     return size_dict
 
 

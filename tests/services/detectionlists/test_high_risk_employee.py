@@ -18,14 +18,14 @@ CREATE_USER_SAMPLE_RESPONSE = """
 """
 
 
-class TestHighRiskEmployeeFilters(object):
+class TestHighRiskEmployeeFilters:
     def test_choices_are_correct(self):
         actual = HighRiskEmployeeFilters.choices()
         expected = ["OPEN", "EXFILTRATION_24_HOURS", "EXFILTRATION_30_DAYS"]
         assert set(actual) == set(expected)
 
 
-class TestHighRiskEmployeeClient(object):
+class TestHighRiskEmployeeClient:
     @pytest.fixture
     def mock_connection_post_success(self, mock_connection, py42_response):
         py42_response.status_code = 201
@@ -241,8 +241,7 @@ class TestHighRiskEmployeeClient(object):
         user_id = "942897397520289999"
         with pytest.raises(Py42NotFoundError) as err:
             high_risk_employee_client.remove(user_id)
-        assert "User with ID '{}' is not currently on the high-risk-employee list.".format(
-            user_id
-        ) in str(
-            err.value
+        assert (
+            f"User with ID '{user_id}' is not currently on the high-risk-employee list."
+            in str(err.value)
         )

@@ -44,12 +44,18 @@ eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 ```
 
-Then, create your virtual environment. While py42 runs on python 2.7 and 3.5+, a 3.6+ version is required for development in order to run all of the unit tests and style checks.
+Then, create your virtual environment.
 
 ```bash
-pyenv install 3.6.10
-pyenv virtualenv 3.6.10 py42
+pyenv install 3.6.14
+pyenv virtualenv 3.6.14 py42
 pyenv activate py42
+```
+
+If running into issues on Big Sur(Version 11) while installing python 3.6 the below may work
+
+```bash
+pyenv install --patch 3.6.14 < <(curl -sSL https://github.com/python/cpython/commit/8ea6353.patch)
 ```
 
 Use `source deactivate` to exit the virtual environment and `pyenv activate py42` to reactivate it.
@@ -78,7 +84,7 @@ Next, with your virtual environment activated, install py42 and its development 
 ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs).
 
 ```bash
-pip install -e .[dev]
+pip install -e '.[dev]'
 ```
 
 Open the project in your IDE of choice and change the python environment to
@@ -86,7 +92,7 @@ point to your virtual environment, and you should be ready to go!
 
 ## Run a full build
 
-We use [tox](https://tox.readthedocs.io/en/latest/#) to run our build against Python 2.7, 3.5, 3.6, 3.7, and 3.8. When run locally, `tox` will run only against the version of python that your virtual envrionment is running, but all versions will be validated against when you [open a PR](#opening-a-pr).
+We use [tox](https://tox.readthedocs.io/en/latest/#) to run our build against Python 3.6, 3.7, and 3.8. When run locally, `tox` will run only against the version of python that your virtual envrionment is running, but all versions will be validated against when you [open a PR](#opening-a-pr).
 
 To run all the unit tests, do a test build of the documentation, and check that the code meets all style requirements, simply run:
 
@@ -96,11 +102,6 @@ tox
 If the full process runs without any errors, your environment is set up correctly! You can also use `tox` to run sub-parts of the build, as explained below.
 
 ## Coding Style
-
-### General
-
-* Use syntax and built-in modules that are compatible with both Python 2 and 3.
-* Use the `py42._compat` module to create abstractions around functionality that differs between 2 and 3.
 
 ### Wrapping web APIs
 

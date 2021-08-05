@@ -3,7 +3,7 @@ from py42.clients._archiveaccess.restoremanager import create_file_size_poller
 from py42.clients._archiveaccess.restoremanager import create_restore_job_manager
 
 
-class ArchiveAccessorFactory(object):
+class ArchiveAccessorFactory:
     """Creates different types of :class:`py42.clients._archiveaccess.ArchiveAccessor`
     for use in a web/push restore."""
 
@@ -102,29 +102,29 @@ class ArchiveAccessorFactory(object):
         decryption_keys = {}
         # Favors encryption-key over other security levels.
         if encryption_key:
-            decryption_keys[u"encryption_key"] = encryption_key
+            decryption_keys["encryption_key"] = encryption_key
         else:
             data_key_token = (
                 self._get_data_key_token(device_guid) if not encryption_key else None
             )
             if data_key_token:
-                decryption_keys[u"data_key_token"] = data_key_token
+                decryption_keys["data_key_token"] = data_key_token
             if private_password:
-                decryption_keys[u"private_password"] = private_password
+                decryption_keys["private_password"] = private_password
         return decryption_keys
 
     def _get_data_key_token(self, device_guid):
-        return self._archive_service.get_data_key_token(device_guid)[u"dataKeyToken"]
+        return self._archive_service.get_data_key_token(device_guid)["dataKeyToken"]
 
     def _get_node_guid(self, device_guid, destination_guid):
         response = self._archive_service.get_web_restore_info(
             device_guid, destination_guid
         )
-        return response[u"nodeGuid"]
+        return response["nodeGuid"]
 
     @staticmethod
     def _create_restore_session(session_creator, device_guid, **kwargs):
         """Session creator is :class:`StorageArchiveService` for web restore
         and :class:`PushRestoreService` for push restore."""
         response = session_creator.create_restore_session(device_guid, **kwargs)
-        return response[u"webRestoreSessionId"]
+        return response["webRestoreSessionId"]

@@ -1,4 +1,4 @@
-class UserContext(object):
+class UserContext:
     """An object representing the currently logged in user."""
 
     def __init__(self, administration_client):
@@ -13,4 +13,4 @@ class UserContext(object):
 
     def _get_tenant_id(self):
         response = self._administration_client.get_current_tenant()
-        return response[u"tenantUid"]
+        return response["tenantUid"]

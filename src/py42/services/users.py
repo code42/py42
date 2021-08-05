@@ -1,5 +1,6 @@
+from urllib.parse import quote
+
 from py42 import settings
-from py42._compat import quote
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidEmailError
@@ -46,21 +47,21 @@ class UserService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        uri = u"/api/User"
+        uri = "/api/User"
         data = {
-            u"orgUid": org_uid,
-            u"username": username,
-            u"email": email,
-            u"password": password,
-            u"firstName": first_name,
-            u"lastName": last_name,
-            u"notes": notes,
+            "orgUid": org_uid,
+            "username": username,
+            "email": email,
+            "password": password,
+            "firstName": first_name,
+            "lastName": last_name,
+            "notes": notes,
         }
 
         try:
             return self._connection.post(uri, json=data)
         except Py42InternalServerError as err:
-            if u"USER_DUPLICATE" in err.response.text:
+            if "USER_DUPLICATE" in err.response.text:
                 raise Py42UserAlreadyExistsError(err)
             raise
 
@@ -74,7 +75,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = u"/api/User/{}".format(user_id)
+        uri = f"/api/User/{user_id}"
         return self._connection.get(uri, params=kwargs)
 
     def get_by_uid(self, user_uid, **kwargs):
@@ -86,8 +87,8 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = u"/api/User/{}".format(user_uid)
-        params = dict(idType=u"uid", **kwargs)
+        uri = f"/api/User/{user_uid}"
+        params = dict(idType="uid", **kwargs)
         return self._connection.get(uri, params=params)
 
     def get_by_username(self, username, **kwargs):
@@ -99,7 +100,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = u"/api/User"
+        uri = "/api/User"
         params = dict(username=username, **kwargs)
         return self._connection.get(uri, params=params)
 
@@ -109,7 +110,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = u"/api/User/my"
+        uri = "/api/User/my"
         return self._connection.get(uri, params=kwargs)
 
     def get_page(
@@ -121,7 +122,7 @@ class UserService(BaseService):
         role_id=None,
         page_size=None,
         q=None,
-        **kwargs
+        **kwargs,
     ):
         """Gets an individual page of users.
 
@@ -142,7 +143,7 @@ class UserService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        uri = u"/api/User"
+        uri = "/api/User"
         page_size = page_size or settings.items_per_page
         params = dict(
             active=active,
@@ -152,12 +153,12 @@ class UserService(BaseService):
             pgNum=page_num,
             pgSize=page_size,
             q=q,
-            **kwargs
+            **kwargs,
         )
         try:
             return self._connection.get(uri, params=params)
         except Py42BadRequestError as err:
-            if u"Organization was not found" in str(err.response.text):
+            if "Organization was not found" in str(err.response.text):
                 raise Py42OrgNotFoundError(err, org_uid)
             raise
 
@@ -183,13 +184,13 @@ class UserService(BaseService):
         """
         return get_all_pages(
             self.get_page,
-            u"users",
+            "users",
             active=active,
             email=email,
             org_uid=org_uid,
             role_id=role_id,
             q=q,
-            **kwargs
+            **kwargs,
         )
 
     def get_scim_data_by_uid(self, user_uid):
@@ -202,7 +203,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/v7/scim-user-data/collated-view"
+        uri = "/api/v7/scim-user-data/collated-view"
         params = dict(userId=user_uid)
         return self._connection.get(uri, params=params)
 
@@ -217,7 +218,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserBlock/{}".format(user_id)
+        uri = f"/api/UserBlock/{user_id}"
         return self._connection.put(uri)
 
     def unblock(self, user_id):
@@ -231,7 +232,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserBlock/{}".format(user_id)
+        uri = f"/api/UserBlock/{user_id}"
         return self._connection.delete(uri)
 
     def deactivate(self, user_id, block_user=None):
@@ -246,12 +247,12 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserDeactivation/{}".format(user_id)
-        data = {u"blockUser": block_user}
+        uri = f"/api/UserDeactivation/{user_id}"
+        data = {"blockUser": block_user}
         try:
             return self._connection.put(uri, json=data)
         except Py42BadRequestError as ex:
-            handle_active_legal_hold_error(ex, u"user", user_id)
+            handle_active_legal_hold_error(ex, "user", user_id)
             raise
 
     def reactivate(self, user_id, unblock_user=None):
@@ -265,8 +266,8 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserDeactivation/{}".format(user_id)
-        params = {u"unblockUser": unblock_user}
+        uri = f"/api/UserDeactivation/{user_id}"
+        params = {"unblockUser": unblock_user}
         return self._connection.delete(uri, params=params)
 
     def change_org_assignment(self, user_id, org_id):
@@ -280,8 +281,8 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserMoveProcess"
-        data = {u"userId": user_id, u"parentOrgId": org_id}
+        uri = "/api/UserMoveProcess"
+        data = {"userId": user_id, "parentOrgId": org_id}
         return self._connection.post(uri, json=data)
 
     def get_available_roles(self):
@@ -292,7 +293,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/role"
+        uri = "/api/role"
         return self._connection.get(uri)
 
     def get_roles(self, user_id):
@@ -305,7 +306,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserRole/{}".format(user_id)
+        uri = f"/api/UserRole/{user_id}"
         return self._connection.get(uri)
 
     def add_role(self, user_id, role_name):
@@ -319,8 +320,8 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/UserRole"
-        data = {u"userId": user_id, u"roleName": role_name}
+        uri = "/api/UserRole"
+        data = {"userId": user_id, "roleName": role_name}
         return self._connection.post(uri, json=data)
 
     def remove_role(self, user_id, role_name):
@@ -337,7 +338,7 @@ class UserService(BaseService):
 
         # use quote instead of params here so that %20 is used instead of + for spaces.
         role_name = quote(role_name)
-        uri = u"/api/UserRole?userId={}&roleName={}".format(user_id, role_name)
+        uri = f"/api/UserRole?userId={user_id}&roleName={role_name}"
         return self._connection.delete(uri)
 
     def update_user(
@@ -368,26 +369,26 @@ class UserService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        uri = u"/api/User/{}?idType=uid".format(user_uid)
+        uri = f"/api/User/{user_uid}?idType=uid"
         data = {
-            u"username": username,
-            u"email": email,
-            u"password": password,
-            u"firstName": first_name,
-            u"lastName": last_name,
-            u"notes": notes,
-            u"quotaInBytes": archive_size_quota_bytes,
+            "username": username,
+            "email": email,
+            "password": password,
+            "firstName": first_name,
+            "lastName": last_name,
+            "notes": notes,
+            "quotaInBytes": archive_size_quota_bytes,
         }
         try:
             return self._connection.put(uri, json=data)
         except Py42InternalServerError as err:
             response_text = str(err.response.text)
-            if u"USERNAME_NOT_AN_EMAIL" in response_text:
+            if "USERNAME_NOT_AN_EMAIL" in response_text:
                 raise Py42UsernameMustBeEmailError(err)
-            elif u"EMAIL_INVALID" in response_text:
+            elif "EMAIL_INVALID" in response_text:
                 raise Py42InvalidEmailError(email, err)
-            elif u"NEW_PASSWORD_INVALID" in response_text:
+            elif "NEW_PASSWORD_INVALID" in response_text:
                 raise Py42InvalidPasswordError(err)
-            elif u"INVALID_USERNAME" in response_text:
+            elif "INVALID_USERNAME" in response_text:
                 raise Py42InvalidUsernameError(err)
             raise

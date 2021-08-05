@@ -81,7 +81,7 @@ def from_jwt_provider(host_address, jwt_provider):
     return client
 
 
-class SDKClient(object):
+class SDKClient:
     def __init__(self, main_connection, auth):
         services, user_ctx = _init_services(main_connection, auth)
         self._clients = _init_clients(services, main_connection)
@@ -254,14 +254,14 @@ class SDKClient(object):
 
 
 def _init_services(main_connection, main_auth):
-    alert_rules_key = u"FedObserver-API_URL"
-    alerts_key = u"AlertService-API_URL"
-    file_events_key = u"FORENSIC_SEARCH-API_URL"
-    preservation_data_key = u"PRESERVATION-DATA-SERVICE_API-URL"
-    employee_case_mgmt_key = u"employeecasemanagementV2-API_URL"
-    kv_prefix = u"simple-key-value-store"
-    audit_logs_key = u"AUDIT-LOG_API-URL"
-    cases_key = u"CASES_API-URL"
+    alert_rules_key = "FedObserver-API_URL"
+    alerts_key = "AlertService-API_URL"
+    file_events_key = "FORENSIC_SEARCH-API_URL"
+    preservation_data_key = "PRESERVATION-DATA-SERVICE_API-URL"
+    employee_case_mgmt_key = "employeecasemanagementV2-API_URL"
+    kv_prefix = "simple-key-value-store"
+    audit_logs_key = "AUDIT-LOG_API-URL"
+    cases_key = "CASES_API-URL"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
     kv_service = KeyValueStoreService(kv_connection)

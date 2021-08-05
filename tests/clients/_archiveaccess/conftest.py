@@ -19,7 +19,7 @@ def push_service(mocker):
 def storage_archive_service(mocker):
     client = mocker.MagicMock(spec=StorageArchiveService)
     py42_response = mocker.MagicMock(spec=Py42Response)
-    py42_response.text = '{{"webRestoreSessionId": "{0}"}}'.format(TEST_SESSION_ID)
+    py42_response.text = f'{{"webRestoreSessionId": "{TEST_SESSION_ID}"}}'
     py42_response.status_code = 200
     py42_response.encoding = None
     py42_response.__getitem__ = lambda _, key: json.loads(py42_response.text).get(key)
@@ -36,7 +36,7 @@ def restore_job_manager(mocker):
 @pytest.fixture
 def file_size_poller(mocker):
     poller = mocker.MagicMock(spec=FileSizePoller)
-    poller.get_file_sizes.return_value = [{u"numFiles": 1, u"numDirs": 1, u"size": 1}]
+    poller.get_file_sizes.return_value = [{"numFiles": 1, "numDirs": 1, "size": 1}]
     return poller
 
 

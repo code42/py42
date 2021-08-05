@@ -2,7 +2,7 @@ import logging
 import sys
 
 
-class _DebugSettings(object):
+class _DebugSettings:
     INFO = logging.INFO
     DEBUG = logging.DEBUG
     TRACE = logging.DEBUG

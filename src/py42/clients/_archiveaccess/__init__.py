@@ -4,20 +4,20 @@ from collections import namedtuple
 from py42.exceptions import Py42ArchiveFileNotFoundError
 
 # Data for initiating a web or push restore.
-FileSelection = namedtuple(u"FileSelection", u"file, num_files, num_dirs, num_bytes")
+FileSelection = namedtuple("FileSelection", "file, num_files, num_dirs, num_bytes")
 
 
-class FileType(object):
+class FileType:
     """The different file-types in an archive."""
 
-    DIRECTORY = u"DIRECTORY"
-    FILE = u"FILE"
+    DIRECTORY = "DIRECTORY"
+    FILE = "FILE"
 
 
-class ArchiveAccessor(object):
+class ArchiveAccessor:
     """Base class for certain archive operations, such file-exploring or restoring."""
 
-    DEFAULT_DIRECTORY_DOWNLOAD_NAME = u"download"
+    DEFAULT_DIRECTORY_DOWNLOAD_NAME = "download"
     JOB_POLLING_INTERVAL = 1
 
     def __init__(
@@ -43,9 +43,9 @@ class ArchiveExplorer(ArchiveAccessor):
     def create_file_selections(self, backup_set_id, file_paths, file_size_calc_timeout):
         if not isinstance(file_paths, (list, tuple)):
             file_paths = [file_paths]
-        file_paths = [fp.replace(u"\\", u"/") for fp in file_paths]
+        file_paths = [fp.replace("\\", "/") for fp in file_paths]
         metadata_list = self._get_restore_metadata(backup_set_id, file_paths)
-        file_ids = [md[u"id"] for md in metadata_list]
+        file_ids = [md["id"] for md in metadata_list]
         file_sizes = self._file_size_poller.get_file_sizes(
             file_ids, timeout=file_size_calc_timeout
         )
@@ -56,20 +56,20 @@ class ArchiveExplorer(ArchiveAccessor):
         for path in file_paths:
             metadata = self._get_file_via_walking_tree(backup_set_id, path)
             metadata_list_entry = {
-                u"id": metadata[u"id"],
-                u"path": metadata[u"path"],
-                u"type": metadata[u"type"],
+                "id": metadata["id"],
+                "path": metadata["path"],
+                "type": metadata["type"],
             }
             metadata_list.append(metadata_list_entry)
         return metadata_list
 
     def _get_file_via_walking_tree(self, backup_set_id, file_path):
-        path_parts = file_path.split(u"/")
-        path_root = path_parts[0] + u"/"
+        path_parts = file_path.split("/")
+        path_root = path_parts[0] + "/"
 
         response = self._get_children(backup_set_id, file_id=None)
         for root in response:
-            if root[u"path"].lower() == path_root.lower():
+            if root["path"].lower() == path_root.lower():
                 return self._walk_tree(backup_set_id, response, root, path_parts[1:])
 
         raise Py42ArchiveFileNotFoundError(response, self._device_guid, file_path)
@@ -80,12 +80,12 @@ class ArchiveExplorer(ArchiveAccessor):
         if not remaining_path_components or not remaining_path_components[0]:
             return current_file
 
-        children = self._get_children(backup_set_id, file_id=current_file[u"id"])
-        current_path = current_file[u"path"]
+        children = self._get_children(backup_set_id, file_id=current_file["id"])
+        current_path = current_file["path"]
         target_child_path = posixpath.join(current_path, remaining_path_components[0])
 
         for child in children:
-            if child[u"path"].lower() == target_child_path.lower():
+            if child["path"].lower() == target_child_path.lower():
                 return self._walk_tree(
                     backup_set_id, response, child, remaining_path_components[1:]
                 )
@@ -133,7 +133,7 @@ class ArchiveContentPusher(ArchiveAccessor):
         file_size_poller,
     ):
         self._node_guid = node_guid
-        super(ArchiveContentPusher, self).__init__(
+        super().__init__(
             device_guid,
             archive_session_id,
             destination_guid,
@@ -168,16 +168,16 @@ def _create_file_selections(file_paths, metadata_list, file_sizes=None):
         metadata = metadata_list[i]
         size_info = file_sizes[i] if file_sizes else _get_default_file_size()
         file = {
-            u"fileType": metadata[u"type"].upper(),
-            u"path": metadata[u"path"],
-            u"selected": True,
+            "fileType": metadata["type"].upper(),
+            "path": metadata["path"],
+            "selected": True,
         }
         selection = FileSelection(
-            file, size_info[u"numFiles"], size_info[u"numDirs"], size_info[u"size"],
+            file, size_info["numFiles"], size_info["numDirs"], size_info["size"],
         )
         file_selections.append(selection)
     return file_selections
 
 
 def _get_default_file_size():
-    return {u"numFiles": 1, u"numDirs": 1, u"size": 1}
+    return {"numFiles": 1, "numDirs": 1, "size": 1}

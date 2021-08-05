@@ -55,7 +55,7 @@ def archive_explorer(mocker):
     return mock
 
 
-class TestArchiveClient(object):
+class TestArchiveClient:
     def test_get_by_archive_guid_calls_get_single_archive_with_expected_params(
         self, archive_service, archive_accessor_factory
     ):
@@ -70,7 +70,7 @@ class TestArchiveClient(object):
         for _ in archive.get_all_by_device_guid(TEST_DEVICE_GUID):
             pass
         archive_service.get_all_archives_from_value.assert_called_once_with(
-            TEST_DEVICE_GUID, u"backupSourceGuid"
+            TEST_DEVICE_GUID, "backupSourceGuid"
         )
 
     def test_stream_from_backup_calls_get_archive_accessor_with_expected_params(
@@ -156,9 +156,7 @@ class TestArchiveClient(object):
         archive_explorer,
         archive_content_pusher,
     ):
-        backup_set_text = '{{"backupSets": [{{"backupSetId": "{0}"}}, {{"backupSetId": "1"}}]}}'.format(
-            TEST_BACKUP_SET_ID
-        )
+        backup_set_text = f'{{"backupSets": [{{"backupSetId": "{TEST_BACKUP_SET_ID}"}}, {{"backupSetId": "1"}}]}}'
         backup_set_response = create_mock_response(mocker, backup_set_text)
         archive_service.get_backup_sets.return_value = backup_set_response
         archive_accessor_factory.create_archive_accessor.return_value = archive_explorer
@@ -226,9 +224,9 @@ class TestArchiveClient(object):
         self, archive_accessor_factory, archive_service
     ):
         archive = ArchiveClient(archive_accessor_factory, archive_service)
-        archive.update_cold_storage_purge_date(u"123", u"2020-04-24")
+        archive.update_cold_storage_purge_date("123", "2020-04-24")
         archive_service.update_cold_storage_purge_date.assert_called_once_with(
-            u"123", u"2020-04-24"
+            "123", "2020-04-24"
         )
 
     def test_get_all_org_cold_storage_archives_calls_client_with_expected_data(

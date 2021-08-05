@@ -45,9 +45,7 @@ _BASE_URI = "/api/v1/case"
 
 
 def _get_invalid_user_text(user_type):
-    return '{{"problem":"INVALID_USER","description":"{} validation failed"}}'.format(
-        user_type
-    )
+    return f'{{"problem":"INVALID_USER","description":"{user_type} validation failed"}}'
 
 
 class TestCasesService:
@@ -65,16 +63,14 @@ class TestCasesService:
 
     def test_create_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
-        cases_service.create(
-            u"name", u"subject", u"user uid", u"description", u"findings"
-        )
-        assert mock_connection.post.call_args[0][0] == u"/api/v1/case"
+        cases_service.create("name", "subject", "user uid", "description", "findings")
+        assert mock_connection.post.call_args[0][0] == "/api/v1/case"
         data = {
-            "name": u"name",
-            "subject": u"subject",
-            "assignee": u"user uid",
-            "description": u"description",
-            "findings": u"findings",
+            "name": "name",
+            "subject": "subject",
+            "assignee": "user uid",
+            "description": "description",
+            "findings": "findings",
         }
         mock_connection.post.assert_called_once_with(_BASE_URI, json=data)
 
@@ -90,7 +86,7 @@ class TestCasesService:
 
         assert (
             err.value.args[0]
-            == u"Case name 'Duplicate' already exists, please set another name"
+            == "Case name 'Duplicate' already exists, please set another name."
         )
 
     def test_create_when_fails_with_description_too_long_error_raises_custom_exception(
@@ -101,7 +97,7 @@ class TestCasesService:
             Py42BadRequestError, mocker, DESCRIPTION_TOO_LONG_ERROR_MSG
         )
         with pytest.raises(Py42DescriptionLimitExceededError) as err:
-            cases_service.create("test", description=u"supposedly too long")
+            cases_service.create("test", description="supposedly too long")
 
         assert (
             err.value.args[0]
@@ -242,15 +238,16 @@ class TestCasesService:
     def test_export_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         cases_service.export_summary(_TEST_CASE_NUMBER)
-        assert mock_connection.get.call_args[0][0] == u"/api/v1/case/{}/export".format(
-            _TEST_CASE_NUMBER
+        assert (
+            mock_connection.get.call_args[0][0]
+            == f"/api/v1/case/{_TEST_CASE_NUMBER}/export"
         )
 
     def test_get_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         cases_service.get(_TEST_CASE_NUMBER)
-        assert mock_connection.get.call_args[0][0] == u"/api/v1/case/{}".format(
-            _TEST_CASE_NUMBER
+        assert (
+            mock_connection.get.call_args[0][0] == f"/api/v1/case/{_TEST_CASE_NUMBER}"
         )
 
     def test_update_called_with_expected_url_and_params(
@@ -258,17 +255,17 @@ class TestCasesService:
     ):
         cases_service = CasesService(mock_connection)
         mock_connection.get.return_value = mock_get_response
-        cases_service.update(_TEST_CASE_NUMBER, findings=u"x")
+        cases_service.update(_TEST_CASE_NUMBER, findings="x")
         data = {
             "name": "string",
             "subject": "string",
             "assignee": "string",
             "description": None,
             "status": "OPEN",
-            "findings": u"x",
+            "findings": "x",
         }
         mock_connection.put.assert_called_once_with(
-            u"/api/v1/case/{}".format(_TEST_CASE_NUMBER), json=data
+            f"/api/v1/case/{_TEST_CASE_NUMBER}", json=data
         )
 
     def test_update_when_fails_with_name_exists_error_raises_custom_exception(
@@ -283,7 +280,7 @@ class TestCasesService:
 
         assert (
             err.value.args[0]
-            == u"Case name 'Duplicate' already exists, please set another name"
+            == "Case name 'Duplicate' already exists, please set another name."
         )
 
     def test_update_when_case_is_closed_raises_custom_exception(
@@ -295,9 +292,9 @@ class TestCasesService:
             Py42BadRequestError, mocker, UPDATE_ERROR_RESPONSE
         )
         with pytest.raises(Py42UpdateClosedCaseError) as err:
-            cases_service.update(_TEST_CASE_NUMBER, findings=u"x")
+            cases_service.update(_TEST_CASE_NUMBER, findings="x")
 
-        assert err.value.args[0] == u"Cannot update a closed case."
+        assert err.value.args[0] == "Cannot update a closed case."
 
     def test_update_when_fails_with_description_too_long_error_raises_custom_exception(
         self, mocker, mock_connection, mock_get_response
@@ -308,11 +305,11 @@ class TestCasesService:
             Py42BadRequestError, mocker, DESCRIPTION_TOO_LONG_ERROR_MSG
         )
         with pytest.raises(Py42DescriptionLimitExceededError) as err:
-            cases_service.update(_TEST_CASE_NUMBER, description=u"supposedly too long")
+            cases_service.update(_TEST_CASE_NUMBER, description="supposedly too long")
 
         assert (
             err.value.args[0]
-            == u"Description limit exceeded, max 250 characters allowed."
+            == "Description limit exceeded, max 250 characters allowed."
         )
 
     def test_update_when_fails_with_invalid_subject_raises_custom_exception(

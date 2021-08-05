@@ -1,9 +1,8 @@
-from py42._compat import str
 from py42.sdk.queries.alerts.alert_query import AlertQuery
 
 
-_TENANT_ID = u"null"
-JSON_QUERY_BASE = u'{{"tenantId": {0}, "groupClause":"{1}", "groups":[{2}], "pgNum":{3}, "pgSize":{4}, "srtDirection":"{5}", "srtKey":"{6}"}}'
+_TENANT_ID = "null"
+JSON_QUERY_BASE = '{{"tenantId": {0}, "groupClause":"{1}", "groups":[{2}], "pgNum":{3}, "pgSize":{4}, "srtDirection":"{5}", "srtKey":"{6}"}}'
 
 
 def build_query_json(group_clause, group_list):

@@ -2,7 +2,6 @@ from collections import namedtuple
 from time import time
 
 from py42 import settings
-from py42._compat import str
 from py42.clients.settings.device_settings import DeviceSettings
 from py42.exceptions import Py42BadRequestError
 from py42.services import BaseService
@@ -57,19 +56,19 @@ class DeviceService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        uri = u"/api/Computer"
+        uri = "/api/Computer"
         page_size = page_size or settings.items_per_page
         params = {
-            u"active": active,
-            u"blocked": blocked,
-            u"orgUid": org_uid,
-            u"userUid": user_uid,
-            u"targetComputerGuid": destination_guid,
-            u"incBackupUsage": include_backup_usage,
-            u"incCounts": include_counts,
-            u"pgNum": page_num,
-            u"pgSize": page_size,
-            u"q": q,
+            "active": active,
+            "blocked": blocked,
+            "orgUid": org_uid,
+            "userUid": user_uid,
+            "targetComputerGuid": destination_guid,
+            "incBackupUsage": include_backup_usage,
+            "incCounts": include_counts,
+            "pgNum": page_num,
+            "pgSize": page_size,
+            "q": q,
         }
 
         return self._connection.get(uri, params=params)
@@ -84,7 +83,7 @@ class DeviceService(BaseService):
         include_backup_usage=None,
         include_counts=True,
         q=None,
-        **kwargs
+        **kwargs,
     ):
         """Gets all device information.
 
@@ -120,7 +119,7 @@ class DeviceService(BaseService):
 
         return get_all_pages(
             self.get_page,
-            u"computers",
+            "computers",
             active=active,
             blocked=blocked,
             org_uid=org_uid,
@@ -129,7 +128,7 @@ class DeviceService(BaseService):
             include_backup_usage=include_backup_usage,
             include_counts=include_counts,
             q=q,
-            **kwargs
+            **kwargs,
         )
 
     def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
@@ -144,7 +143,7 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing device information.
         """
-        uri = u"/api/Computer/{}".format(device_id)
+        uri = f"/api/Computer/{device_id}"
         params = dict(incBackupUsage=include_backup_usage, **kwargs)
         return self._connection.get(uri, params=params)
 
@@ -160,8 +159,8 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing device information.
         """
-        uri = u"/api/Computer/{}".format(guid)
-        params = dict(idType=u"guid", incBackupUsage=include_backup_usage, **kwargs)
+        uri = f"/api/Computer/{guid}"
+        params = dict(idType="guid", incBackupUsage=include_backup_usage, **kwargs)
         return self._connection.get(uri, params=params)
 
     def block(self, device_id):
@@ -175,7 +174,7 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/ComputerBlock/{}".format(device_id)
+        uri = f"/api/ComputerBlock/{device_id}"
         return self._connection.put(uri)
 
     def unblock(self, device_id):
@@ -188,7 +187,7 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/ComputerBlock/{}".format(device_id)
+        uri = f"/api/ComputerBlock/{device_id}"
         return self._connection.delete(uri)
 
     def deactivate(self, device_id):
@@ -201,12 +200,12 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/v4/computer-deactivation/update"
-        data = {u"id": device_id}
+        uri = "/api/v4/computer-deactivation/update"
+        data = {"id": device_id}
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as ex:
-            handle_active_legal_hold_error(ex, u"device", device_id)
+            handle_active_legal_hold_error(ex, "device", device_id)
             raise
 
     def reactivate(self, device_id):
@@ -219,8 +218,8 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/v4/computer-deactivation/remove"
-        data = {u"id": device_id}
+        uri = "/api/v4/computer-deactivation/remove"
+        data = {"id": device_id}
         return self._connection.post(uri, json=data)
 
     def deauthorize(self, device_id):
@@ -234,7 +233,7 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/ComputerDeauthorization/{}".format(device_id)
+        uri = f"/api/ComputerDeauthorization/{device_id}"
         return self._connection.put(uri)
 
     def get_agent_state(self, guid, property_name):
@@ -248,8 +247,8 @@ class DeviceService(BaseService):
             Returns:
                 :class:`py42.response.Py42Response`: A response containing settings information.
             """
-        uri = u"/api/v14/agent-state/view-by-device-guid"
-        params = {u"deviceGuid": guid, u"propertyName": property_name}
+        uri = "/api/v14/agent-state/view-by-device-guid"
+        params = {"deviceGuid": guid, "propertyName": property_name}
         return self._connection.get(uri, params=params)
 
     def get_agent_full_disk_access_state(self, guid):
@@ -262,7 +261,7 @@ class DeviceService(BaseService):
             Returns:
                 :class:`py42.response.Py42Response`: A response containing settings information.
             """
-        return self.get_agent_state(guid, u"fullDiskAccess")
+        return self.get_agent_state(guid, "fullDiskAccess")
 
     def get_settings(self, guid):
         """Gets setting data for a device and returns a `DeviceSettings` object for the target device.
@@ -286,8 +285,8 @@ class DeviceService(BaseService):
             :class:`py42.response.Py42Response`: A response containing the result of the setting change.
         """
         device_settings = dict(device_settings)
-        device_id = device_settings[u"computerId"]
-        uri = u"/api/Computer/{}".format(device_id)
+        device_id = device_settings["computerId"]
+        uri = f"/api/Computer/{device_id}"
         new_config_date_ms = str(int(time() * 1000))
-        device_settings[u"settings"][u"configDateMs"] = new_config_date_ms
+        device_settings["settings"]["configDateMs"] = new_config_date_ms
         return self._connection.put(uri, json=device_settings)

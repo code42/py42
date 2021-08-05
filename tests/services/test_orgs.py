@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 from requests import Response
 
@@ -15,7 +14,7 @@ MOCK_GET_ORG_RESPONSE = (
 MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "orgs": []}"""
 
 
-class TestOrgService(object):
+class TestOrgService:
     @pytest.fixture
     def mock_get_all_response(self, mocker):
         response = mocker.MagicMock(spec=Response)
@@ -38,7 +37,7 @@ class TestOrgService(object):
         mock_connection.get.return_value = successful_response
         service = OrgService(mock_connection)
         service.get_by_id(12345)
-        uri = "{}/{}".format(COMPUTER_URI, 12345)
+        uri = f"{COMPUTER_URI}/12345"
         mock_connection.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
@@ -70,7 +69,7 @@ class TestOrgService(object):
         service = OrgService(mock_connection)
         service.get_agent_state("ORG_ID", property_name="KEY")
         expected_params = {"orgId": "ORG_ID", "propertyName": "KEY"}
-        uri = u"/api/v14/agent-state/view-by-organization-id"
+        uri = "/api/v14/agent-state/view-by-organization-id"
         mock_connection.get.assert_called_once_with(uri, params=expected_params)
 
     def test_get_agent_full_disk_access_states_calls_get_agent_state_with_arguments(

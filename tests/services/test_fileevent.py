@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 import json
 
 import pytest
 from tests.conftest import create_mock_error
 
-from py42._compat import str
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
@@ -12,10 +10,10 @@ from py42.sdk.queries.fileevents.filters import FileName
 from py42.services._connection import Connection
 from py42.services.fileevent import FileEventService
 
-FILE_EVENT_URI = u"/forensic-search/queryservice/api/v1/fileevent"
+FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 
 
-def _create_test_query(test_filename=u"*"):
+def _create_test_query(test_filename="*"):
     return FileEventQuery(FileName.eq(test_filename))
 
 
@@ -27,7 +25,7 @@ def mock_invalid_page_token_connection(mocker, connection):
     return connection
 
 
-class TestFileEventService(object):
+class TestFileEventService:
     @pytest.fixture
     def connection(self, mocker):
         return mocker.MagicMock(spec=Connection)
@@ -60,7 +58,7 @@ class TestFileEventService(object):
         with pytest.raises(Py42InvalidPageTokenError) as err:
             service.search(query)
 
-        assert str(err.value) == "Invalid page token: {}".format(query.page_token)
+        assert str(err.value) == f'Invalid page token: "{query.page_token}".'
 
     def test_search_when_bad_request_raised_and_token_not_in_query_raises_bad_request(
         self, mock_invalid_page_token_connection
@@ -88,7 +86,7 @@ class TestFileEventService(object):
     ):
         service = FileEventService(connection)
         connection.post.return_value = successful_response
-        query = _create_test_query(u"我能吞")
+        query = _create_test_query("我能吞")
         expected = dict(query)
         service.search(query)
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
@@ -100,6 +98,6 @@ class TestFileEventService(object):
         connection.get.return_value = successful_response
         service.get_file_location_detail_by_sha256("abc")
         connection.get.assert_called_once_with(
-            u"/forensic-search/queryservice/api/v1/filelocations",
+            "/forensic-search/queryservice/api/v1/filelocations",
             params={"sha256": "abc"},
         )

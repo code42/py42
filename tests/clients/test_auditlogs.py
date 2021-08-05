@@ -9,7 +9,7 @@ def auditlog_service(mocker):
     return mocker.MagicMock(spec=AuditLogsService)
 
 
-class TestAuditLogsClient(object):
+class TestAuditLogsClient:
     def test_get_all_calls_expected_auditlogs_service(self, auditlog_service):
         client = AuditLogsClient(auditlog_service)
         for _ in client.get_all():

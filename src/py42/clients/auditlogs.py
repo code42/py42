@@ -1,4 +1,4 @@
-class AuditLogsClient(object):
+class AuditLogsClient:
     """`Rest documentation <https://developer.code42.com/api/#tag/Audit-Log>`__"""
 
     def __init__(self, audit_log_service):

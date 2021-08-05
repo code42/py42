@@ -24,17 +24,17 @@ class EventTimestamp(FileEventFilterTimestampField):
         filter = EventTimestamp.within_the_last(EventTimestamp.SEVEN_DAYS)
     """
 
-    _term = u"eventTimestamp"
+    _term = "eventTimestamp"
 
-    FIFTEEN_MINUTES = u"PT15M"
-    ONE_HOUR = u"PT1H"
-    THREE_HOURS = u"PT3H"
-    TWELVE_HOURS = u"PT12H"
-    ONE_DAY = u"P1D"
-    THREE_DAYS = u"P3D"
-    SEVEN_DAYS = u"P7D"
-    FOURTEEN_DAYS = u"P14D"
-    THIRTY_DAYS = u"P30D"
+    FIFTEEN_MINUTES = "PT15M"
+    ONE_HOUR = "PT1H"
+    THREE_HOURS = "PT3H"
+    TWELVE_HOURS = "PT12H"
+    ONE_DAY = "P1D"
+    THREE_DAYS = "P3D"
+    SEVEN_DAYS = "P7D"
+    FOURTEEN_DAYS = "P14D"
+    THIRTY_DAYS = "P30D"
 
     @staticmethod
     def choices():
@@ -59,14 +59,14 @@ class EventType(FileEventFilterStringField):
 
     """
 
-    _term = u"eventType"
+    _term = "eventType"
 
-    CREATED = u"CREATED"
-    MODIFIED = u"MODIFIED"
-    DELETED = u"DELETED"
-    READ_BY_APP = u"READ_BY_APP"
-    EMAILED = u"EMAILED"
-    PRINTED = u"PRINTED"
+    CREATED = "CREATED"
+    MODIFIED = "MODIFIED"
+    DELETED = "DELETED"
+    READ_BY_APP = "READ_BY_APP"
+    EMAILED = "EMAILED"
+    PRINTED = "PRINTED"
 
     @staticmethod
     def choices():
@@ -81,7 +81,7 @@ class InsertionTimestamp(FileEventFilterTimestampField):
     user guide for details on timestamp arguments in py42)
     """
 
-    _term = u"insertionTimestamp"
+    _term = "insertionTimestamp"
 
 
 class Source(FileEventFilterStringField):
@@ -101,14 +101,14 @@ class Source(FileEventFilterStringField):
 
     """
 
-    _term = u"source"
+    _term = "source"
 
-    ENDPOINT = u"Endpoint"
-    GOOGLE_DRIVE = u"GoogleDrive"
-    ONE_DRIVE = u"OneDrive"
-    BOX = u"Box"
-    GMAIL = u"Gmail"
-    OFFICE_365 = u"Office365"
+    ENDPOINT = "Endpoint"
+    GOOGLE_DRIVE = "GoogleDrive"
+    ONE_DRIVE = "OneDrive"
+    BOX = "Box"
+    GMAIL = "Gmail"
+    OFFICE_365 = "Office365"
 
     @staticmethod
     def choices():
@@ -118,10 +118,10 @@ class Source(FileEventFilterStringField):
 class MimeTypeMismatch(QueryFilterBooleanField):
     """Class that filters events by whether or not a file's mime type matches its extension type."""
 
-    _term = u"mimeTypeMismatch"
+    _term = "mimeTypeMismatch"
 
 
 class OutsideActiveHours(QueryFilterBooleanField):
     """Class that filters events by whether or not they occurred outside a user's typical working hours"""
 
-    _term = u"outsideActiveHours"
+    _term = "outsideActiveHours"

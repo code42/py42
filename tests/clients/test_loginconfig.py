@@ -20,7 +20,7 @@ class TestLoginConfiguration:
         connection = Connection.from_host_address(HOST_ADDRESS, session=mock_session)
         loginconfig = LoginConfigurationClient(connection)
         loginconfig.get_for_user("test@example.com")
-        expected_uri = "https://{}/c42api/v3/LoginConfiguration".format(HOST_ADDRESS)
+        expected_uri = f"https://{HOST_ADDRESS}/c42api/v3/LoginConfiguration"
         expected_params = {"username": "test@example.com"}
         mock_session.get.assert_called_once_with(expected_uri, params=expected_params)
 

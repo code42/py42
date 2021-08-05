@@ -67,9 +67,7 @@ def from_local_account(host_address, username, password, totp=None):
         login_type = client.loginconfig.get_for_user(username)["loginType"]
         if login_type == "CLOUD_SSO":
             raise Py42Error("SSO users are not supported in `from_local_account()`.")
-        msg = "SDK initialization failed, double-check username/password, and provide two-factor TOTP token if Multi-Factor Auth configured for your user. User LoginConfig: {}".format(
-            login_type
-        )
+        msg = f"SDK initialization failed, double-check username/password, and provide two-factor TOTP token if Multi-Factor Auth configured for your user. User LoginConfig: {login_type}"
         err.args = (msg,)
         raise
     return client

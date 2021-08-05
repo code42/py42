@@ -97,7 +97,7 @@ class TestSDK:
         login_type = "LOCAL_2FA"
         mock_session.send.return_value = unauthorized_response
         mock_session.get.return_value = create_mock_response(
-            mocker, '{{"loginType": "{}"}}'.format(login_type)
+            mocker, f'{{"loginType": "{login_type}"}}'
         )
         connection = Connection.from_host_address(HOST_ADDRESS, session=mock_session)
         client = SDKClient(connection, mock_auth)
@@ -106,4 +106,4 @@ class TestSDK:
         with pytest.raises(Py42UnauthorizedError) as err:
             from_local_account(HOST_ADDRESS, TEST_USERNAME, TEST_PASSWORD)
 
-        assert "User LoginConfig: {}".format(login_type) in str(err)
+        assert f"User LoginConfig: {login_type}" in str(err)

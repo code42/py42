@@ -16,6 +16,6 @@ class LoginConfigurationClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "{}/c42api/v3/LoginConfiguration".format(self._connection.host_address)
+        uri = f"{self._connection.host_address}/c42api/v3/LoginConfiguration"
         response = self._connection._session.get(uri, params={"username": username})
         return Py42Response(response)

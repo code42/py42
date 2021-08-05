@@ -1,4 +1,6 @@
 import pytest
+from requests import Session
+from tests.conftest import create_mock_response
 
 from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
@@ -6,6 +8,8 @@ from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.securitydata import SecurityDataClient
+from py42.exceptions import Py42UnauthorizedError
+from py42.sdk import from_local_account
 from py42.sdk import SDKClient
 from py42.services import administration
 from py42.services import devices
@@ -32,6 +36,12 @@ class TestSDK(object):
     @pytest.fixture
     def mock_auth(self, mocker):
         return mocker.MagicMock(spec=C42RenewableAuth)
+
+    @pytest.fixture
+    def mock_session(self, mocker):
+        mock_session = mocker.MagicMock(spec=Session)
+        mock_session.headers = {}
+        return mock_session
 
     def test_has_administration_service_set(self, py42_connection, mock_auth):
         client = SDKClient(py42_connection, mock_auth)
@@ -80,3 +90,34 @@ class TestSDK(object):
     def test_has_cases_service_set(self, py42_connection, mock_auth):
         client = SDKClient(py42_connection, mock_auth)
         assert type(client.cases) == CasesClient
+
+    def test_get_login_configuration_does_not_use_py42_connection_get_method(
+        self, mocker, mock_session, mock_auth
+    ):
+        """Because the loginConfiguration endpoint is unauthenticated, we want to make
+        sure we don't force the Connection's C42RenewableAuth object to make any
+        authentication requests before making the loginConfig request.
+        """
+        mock_get = mocker.patch("py42.services._connection.Connection.get")
+        connection = Connection.from_host_address(HOST_ADDRESS, session=mock_session)
+        client = SDKClient(connection, mock_auth)
+        client.get_login_configuration_for_user("test@example.com")
+        assert mock_get.call_count == 0
+        assert mock_session.get.call_count == 1
+
+    def test_from_local_account_when_unauthorized_calls_loginConfig_and_returns_config_value_on_raised_exception_text(
+        self, mocker, mock_session, mock_auth, unauthorized_response
+    ):
+        login_type = "LOCAL_2FA"
+        mock_session.send.return_value = unauthorized_response
+        mock_session.get.return_value = create_mock_response(
+            mocker, f'{{"loginType": "{login_type}"}}'
+        )
+        connection = Connection.from_host_address(HOST_ADDRESS, session=mock_session)
+        client = SDKClient(connection, mock_auth)
+        mocker.patch("py42.sdk.SDKClient.from_local_account", return_value=client)
+
+        with pytest.raises(Py42UnauthorizedError) as err:
+            from_local_account(HOST_ADDRESS, TEST_USERNAME, TEST_PASSWORD)
+
+        assert f"User LoginConfig: {login_type}" in str(err)

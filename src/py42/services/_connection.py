@@ -127,6 +127,11 @@ class Connection(object):
     def host_address(self):
         return self._get_host_address()
 
+    def get_login_config_for_user(self, username):
+        uri = f"{self.host_address}/c42api/v3/LoginConfiguration"
+        response = self._session.get(uri, params={"username": username})
+        return Py42Response(response)
+
     def clone(self, host_address):
         host_resolver = KnownUrlHostResolver(host_address)
         return Connection(host_resolver, auth=self._auth)
@@ -272,11 +277,6 @@ class Connection(object):
         parsed_host = urlparse(host)
         self._headers["Host"] = parsed_host.netloc
         self._host_address = host
-
-    def get_login_config_for_user(self, username):
-        uri = f"{self.host_address}/c42api/v3/LoginConfiguration"
-        response = self._session.get(uri, params={"username": username})
-        return Py42Response(response)
 
 
 def _create_user_headers(headers):

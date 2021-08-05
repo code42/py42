@@ -2,7 +2,7 @@
 import pytest
 from requests import HTTPError
 from requests import Response
-from tests.conftest import py42_response
+from tests.conftest import create_mock_response
 
 import py42
 from py42.exceptions import Py42ActiveLegalHoldError
@@ -32,11 +32,11 @@ MOCK_EMPTY_GET_DEVICE_RESPONSE = """{"totalCount": 3000, "computers":[]}"""
 class TestDeviceService(object):
     @pytest.fixture
     def mock_get_all_response(self, mocker):
-        return py42_response(mocker, MOCK_GET_DEVICE_RESPONSE)
+        return create_mock_response(mocker, MOCK_GET_DEVICE_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_empty_response(self, mocker):
-        return py42_response(mocker, MOCK_EMPTY_GET_DEVICE_RESPONSE)
+        return create_mock_response(mocker, MOCK_EMPTY_GET_DEVICE_RESPONSE)
 
     def test_get_all_calls_get_with_uri_and_params(
         self, mock_connection, mock_get_all_response

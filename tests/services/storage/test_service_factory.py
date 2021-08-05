@@ -1,6 +1,6 @@
 import pytest
 from requests import Response
-from tests.conftest import py42_response
+from tests.conftest import create_mock_response
 from tests.conftest import TEST_DEVICE_GUID
 
 from py42.exceptions import Py42HTTPError
@@ -26,7 +26,7 @@ def mock_tmp_auth(mocker):
 @pytest.fixture
 def mock_device_service(mocker):
     service = mocker.MagicMock(spec=DeviceService)
-    response = py42_response(mocker, '{"backupUsage": [{"targetComputerGuid": "123"}]}')
+    response = create_mock_response(mocker, '{"backupUsage": [{"targetComputerGuid": "123"}]}')
     service.get_by_guid.return_value = response
     return service
 
@@ -67,7 +67,7 @@ class TestStorageServiceFactory(object):
         factory = StorageServiceFactory(
             mock_successful_connection, mock_device_service, mock_connection_manager
         )
-        response = py42_response(mocker, '{"backupUsage": []}')
+        response = create_mock_response(mocker, '{"backupUsage": []}')
         mock_device_service.get_by_guid.return_value = response
         with pytest.raises(Exception):
             factory.auto_select_destination_guid(TEST_DEVICE_GUID)

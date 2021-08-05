@@ -2,7 +2,7 @@ import json
 
 import pytest
 from tests.conftest import create_mock_error
-from tests.conftest import py42_response
+from tests.conftest import create_mock_response
 
 from py42.clients.alertrules import AlertRulesClient
 from py42.exceptions import Py42InternalServerError
@@ -28,7 +28,7 @@ TEST_SYSTEM_RULE_RESPONSE = {
 
 @pytest.fixture
 def mock_alerts_service_system_rule(mocker, mock_alerts_service):
-    response = py42_response(mocker, json.dumps(TEST_SYSTEM_RULE_RESPONSE))
+    response = create_mock_response(mocker, json.dumps(TEST_SYSTEM_RULE_RESPONSE))
     mock_alerts_service.get_rule_by_observer_id.return_value = response
     return mock_alerts_service
 

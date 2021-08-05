@@ -1,6 +1,6 @@
 import pytest
 from requests import Response
-from tests.conftest import py42_response
+from tests.conftest import create_mock_response
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.response import Py42Response
@@ -58,7 +58,7 @@ TEST_NON_PARSEABLE_ALERT_DETAIL_RESPONSE = """
 
 @pytest.fixture
 def mock_get_all_session(mocker):
-    response = py42_response(mocker, TEST_RESPONSE)
+    response = create_mock_response(mocker, TEST_RESPONSE)
     connection = mocker.MagicMock(spec=Connection)
     connection.post.return_value = response
     return connection
@@ -102,7 +102,7 @@ class TestAlertService(object):
     def test_get_details_when_not_given_tenant_id_posts_expected_data(
         self, mock_connection, user_context, mocker
     ):
-        response = py42_response(mocker, TEST_PARSEABLE_ALERT_DETAIL_RESPONSE)
+        response = create_mock_response(mocker, TEST_PARSEABLE_ALERT_DETAIL_RESPONSE)
         mock_connection.post.return_value = response
         alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
@@ -120,7 +120,7 @@ class TestAlertService(object):
     def test_get_details_when_given_single_alert_id_posts_expected_data(
         self, mock_connection, user_context, successful_post, mocker, alert_id
     ):
-        response = py42_response(mocker, TEST_PARSEABLE_ALERT_DETAIL_RESPONSE)
+        response = create_mock_response(mocker, TEST_PARSEABLE_ALERT_DETAIL_RESPONSE)
         mock_connection.post.return_value = response
         alert_service = AlertService(mock_connection, user_context)
         alert_service.get_details(alert_id)
@@ -133,7 +133,7 @@ class TestAlertService(object):
     def test_get_details_when_given_tenant_id_posts_expected_data(
         self, mock_connection, user_context, successful_post, mocker
     ):
-        response = py42_response(mocker, TEST_PARSEABLE_ALERT_DETAIL_RESPONSE)
+        response = create_mock_response(mocker, TEST_PARSEABLE_ALERT_DETAIL_RESPONSE)
         mock_connection.post.return_value = response
         alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]
@@ -148,7 +148,7 @@ class TestAlertService(object):
     def test_get_details_posts_to_expected_url(
         self, mock_connection, user_context, successful_post, mocker
     ):
-        response = py42_response(mocker, TEST_PARSEABLE_ALERT_DETAIL_RESPONSE)
+        response = create_mock_response(mocker, TEST_PARSEABLE_ALERT_DETAIL_RESPONSE)
         mock_connection.post.return_value = response
         alert_service = AlertService(mock_connection, user_context)
         alert_ids = ["ALERT_ID_1", "ALERT_ID_2"]

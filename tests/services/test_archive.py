@@ -1,5 +1,5 @@
 import pytest
-from tests.conftest import py42_response
+from tests.conftest import create_mock_response
 
 import py42.settings
 from py42.services.archive import ArchiveService
@@ -32,27 +32,27 @@ MOCK_EMPTY_GET_ORG_COLD_STORAGE_RESPONSE = """{"coldStorageRows": []}"""
 class TestArchiveService(object):
     @pytest.fixture
     def mock_get_archives_response(self, mocker):
-        return py42_response(mocker, MOCK_GET_ARCHIVE_RESPONSE)
+        return create_mock_response(mocker, MOCK_GET_ARCHIVE_RESPONSE)
 
     @pytest.fixture
     def mock_get_archives_empty_response(self, mocker):
-        return py42_response(mocker, MOCK_EMPTY_GET_ARCHIVE_RESPONSE)
+        return create_mock_response(mocker, MOCK_EMPTY_GET_ARCHIVE_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_restore_history_response(self, mocker):
-        return py42_response(mocker, MOCK_GET_ORG_RESTORE_HISTORY_RESPONSE)
+        return create_mock_response(mocker, MOCK_GET_ORG_RESTORE_HISTORY_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_restore_history_empty_response(self, mocker):
-        return py42_response(mocker, MOCK_EMPTY_GET_ORG_RESTORE_HISTORY_RESPONSE)
+        return create_mock_response(mocker, MOCK_EMPTY_GET_ORG_RESTORE_HISTORY_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_org_cold_storage_response(self, mocker):
-        return py42_response(mocker, MOCK_GET_ORG_COLD_STORAGE_RESPONSE)
+        return create_mock_response(mocker, MOCK_GET_ORG_COLD_STORAGE_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_org_cold_storage_empty_response(self, mocker):
-        return py42_response(mocker, MOCK_EMPTY_GET_ORG_COLD_STORAGE_RESPONSE)
+        return create_mock_response(mocker, MOCK_EMPTY_GET_ORG_COLD_STORAGE_RESPONSE)
 
     def test_get_single_archive_calls_get_with_expected_uri(
         self, mock_connection, successful_response

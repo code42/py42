@@ -115,16 +115,6 @@ def unauthorized_response(mocker, http_error):
     return response
 
 
-def py42_response(mocker, text):
-    response = mocker.MagicMock(spec=Py42Response)
-    response.status_code = 200
-    response.encoding = "utf-8"
-    response.__getitem__ = lambda _, key: json.loads(text)[key]
-    response.data = json.loads(text)
-    response.text = text
-    return response
-
-
 @pytest.fixture
 def traceback(mocker):
     format_exc = mocker.patch("traceback.format_exc")
@@ -206,10 +196,10 @@ def mock_successful_connection(mock_connection, successful_response):
     return mock_connection
 
 
-def create_mock_response(mocker, text):
+def create_mock_response(mocker, text, status_code=200):
     response = mocker.MagicMock(spec=Response)
     response.text = text
-    response.status_code = 200
+    response.status_code = status_code
     response.encoding = None
     return Py42Response(response)
 

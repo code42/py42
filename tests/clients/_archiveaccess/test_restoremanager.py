@@ -1,7 +1,7 @@
 import json
 import time
 
-from tests.conftest import py42_response
+from tests.conftest import create_mock_response
 from tests.conftest import TEST_ACCEPTING_GUID
 from tests.conftest import TEST_BACKUP_SET_ID
 from tests.conftest import TEST_DEVICE_GUID
@@ -74,7 +74,7 @@ def mock_start_restore_response(mocker, storage_archive_service, response):
         num_bytes,
         **kwargs
     ):
-        return py42_response(mocker, response)
+        return create_mock_response(mocker, response)
 
     storage_archive_service.start_restore.side_effect = mock_start_restore
 
@@ -82,7 +82,7 @@ def mock_start_restore_response(mocker, storage_archive_service, response):
 def mock_get_restore_status_responses(mocker, storage_archive_service, json_responses):
     responses = []
     for json_response in json_responses:
-        responses.append(py42_response(mocker, json_response))
+        responses.append(create_mock_response(mocker, json_response))
 
     storage_archive_service.get_restore_status.side_effect = responses
 
@@ -118,7 +118,7 @@ class TestFileSizePoller(object):
             elif file_id == TEST_DOWNLOADS_DIR_ID:
                 text = json.dumps({"jobId": self.EXT_JOB})
 
-            return py42_response(mocker, text)
+            return create_mock_response(mocker, text)
 
         return create_job
 
@@ -132,7 +132,7 @@ class TestFileSizePoller(object):
             elif job_id == self.EXT_JOB:
                 self.DOWNLOADS_DIR_SIZES["status"] = "DONE"
                 text = json.dumps(self.DOWNLOADS_DIR_SIZES)
-            return py42_response(mocker, text)
+            return create_mock_response(mocker, text)
 
         return get_status
 
@@ -183,7 +183,7 @@ class TestFileSizePoller(object):
             elif job_id == self.EXT_JOB:
                 self.EXTERNAL_DIR_SIZES["status"] = "DONE"
 
-            return py42_response(mocker, json.dumps(self.EXTERNAL_DIR_SIZES))
+            return create_mock_response(mocker, json.dumps(self.EXTERNAL_DIR_SIZES))
 
         storage_archive_service.get_file_size_job.side_effect = get_file_sizes
         poller = FileSizePoller(storage_archive_service, TEST_DEVICE_GUID)

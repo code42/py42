@@ -1,6 +1,6 @@
 import pytest
 from requests import Request
-from tests.conftest import py42_response
+from tests.conftest import create_mock_response
 
 from py42.services._connection import Connection
 from py42.services.storage._auth import FileArchiveAuth
@@ -21,7 +21,7 @@ def mock_request(mocker):
 
 @pytest.fixture
 def mock_tmp_auth_conn(mock_connection, mocker):
-    response = py42_response(
+    response = create_mock_response(
         mocker, '{"serverUrl": "testhost.com", "loginToken": "TEST_TMP_TOKEN_VALUE"}'
     )
     mock_connection.post.return_value = response
@@ -32,7 +32,7 @@ def mock_tmp_auth_conn(mock_connection, mocker):
 def mock_storage_auth_token_conn(mocker):
     mock_connection = mocker.MagicMock(spec=Connection)
     mock_connection.headers = {}
-    mock_connection.post.return_value = py42_response(
+    mock_connection.post.return_value = create_mock_response(
         mocker, '["TEST_V1", "TOKEN_VALUE"]'
     )
     mocker.patch(

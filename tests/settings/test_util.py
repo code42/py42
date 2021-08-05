@@ -1,5 +1,5 @@
 import pytest
-from tests.conftest import py42_response
+from tests.conftest import create_mock_response
 
 import py42.settings as settings
 from py42.services.util import get_all_pages
@@ -7,12 +7,12 @@ from py42.services.util import get_all_pages
 
 @pytest.fixture
 def empty_response(mocker):
-    return py42_response(mocker, '{"items": []}')
+    return create_mock_response(mocker, '{"items": []}')
 
 
 @pytest.fixture
 def get_three_three_item_pages(mocker, empty_response):
-    response = py42_response(mocker, '{"items": [1, 2, 3]}')
+    response = create_mock_response(mocker, '{"items": [1, 2, 3]}')
     mock = mocker.MagicMock()
     mock.side_effect = [response, response, response, empty_response]
     return mock

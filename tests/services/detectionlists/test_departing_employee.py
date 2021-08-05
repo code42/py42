@@ -3,7 +3,7 @@ from datetime import datetime
 
 import pytest
 from tests.conftest import create_mock_error
-from tests.conftest import py42_response
+from tests.conftest import create_mock_response
 from tests.conftest import TENANT_ID_FROM_RESPONSE
 
 from py42.exceptions import Py42BadRequestError
@@ -67,16 +67,16 @@ class TestDepartingEmployeeFilters(object):
 class TestDepartingEmployeeClient(object):
     @pytest.fixture
     def mock_get_all_response(self, mocker):
-        return py42_response(mocker, _GET_ALL_RESPONSE)
+        return create_mock_response(mocker, _GET_ALL_RESPONSE)
 
     @pytest.fixture
     def mock_get_all_response_empty(self, mocker):
-        return py42_response(mocker, _GET_ALL_EMPTY_RESPONSE)
+        return create_mock_response(mocker, _GET_ALL_EMPTY_RESPONSE)
 
     @pytest.fixture
     def mock_user_client(self, mock_connection, user_context, mocker):
         user_client = UserService(mock_connection)
-        mock_connection.post.return_value = py42_response(mocker, "{}")
+        mock_connection.post.return_value = create_mock_response(mocker, "{}")
         return user_client
 
     @pytest.fixture
@@ -86,7 +86,7 @@ class TestDepartingEmployeeClient(object):
         user_client = DetectionListUserService(
             mock_connection, user_context, mock_user_client
         )
-        mock_connection.post.return_value = py42_response(mocker, "{}")
+        mock_connection.post.return_value = create_mock_response(mocker, "{}")
         return user_client
 
     @pytest.mark.parametrize(

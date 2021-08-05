@@ -31,7 +31,6 @@ from py42.services.legalhold import LegalHoldService
 from py42.services.orgs import OrgService
 from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
-from py42.services.securitydata import SecurityDataService
 from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.users import UserService
@@ -210,7 +209,7 @@ class SDKClient(object):
             * Security plan information
 
         Returns:
-            :class:`py42.services.securitydata.SecurityDataClient`
+            :class:`py42.clients.securitydata.SecurityDataClient`
         """
         return self._clients.securitydata
 
@@ -220,7 +219,7 @@ class SDKClient(object):
         lists, such as departing employees.
 
         Returns:
-            :class:`py42.services.detectionlists.DetectionListsClient`
+            :class:`py42.clients.detectionlists.DetectionListsClient`
         """
         return self._clients.detectionlists
 
@@ -229,7 +228,7 @@ class SDKClient(object):
         """A collection of methods related to retrieving and updating alerts rules.
 
         Returns:
-            :class:`py42.services.alertrules.AlertRulesClient`
+            :class:`py42.clients.alertrules.AlertRulesClient`
         """
         return self._clients.alerts
 
@@ -238,7 +237,7 @@ class SDKClient(object):
         """A collection of methods for retrieving audit logs.
 
         Returns:
-            :class:`py42.services.auditlogs.AuditLogsService`
+            :class:`py42.clients.auditlogs.AuditLogsService`
         """
         return self._clients.auditlogs
 
@@ -297,7 +296,6 @@ def _init_services(main_connection, main_auth):
         devices=DeviceService(main_connection),
         legalhold=LegalHoldService(main_connection),
         orgs=OrgService(main_connection),
-        securitydata=SecurityDataService(main_connection),
         users=UserService(main_connection),
         alertrules=AlertRulesService(alert_rules_conn, user_ctx, user_profile_svc),
         alerts=AlertService(alerts_conn, user_ctx),
@@ -324,7 +322,6 @@ def _init_clients(services, connection):
         devices=services.devices,
         legalhold=services.legalhold,
         orgs=services.orgs,
-        securitydata=services.securitydata,
         users=services.users,
     )
     detectionlists = DetectionListsClient(
@@ -335,7 +332,6 @@ def _init_clients(services, connection):
     )
     alertrules = AlertRulesClient(services.alerts, services.alertrules)
     securitydata = SecurityDataClient(
-        services.securitydata,
         services.fileevents,
         services.preservationdata,
         services.savedsearch,

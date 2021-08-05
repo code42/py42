@@ -5,7 +5,6 @@ from py42.clients.archive import ArchiveClient
 from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
-from py42.clients.securitydata import SecurityDataClient
 from py42.sdk import SDKClient
 from py42.services import administration
 from py42.services import devices
@@ -60,10 +59,6 @@ class TestSDK(object):
     def test_has_org_service_set(self, py42_connection, mock_auth):
         client = SDKClient(py42_connection, mock_auth)
         assert type(client.orgs) == orgs.OrgService
-
-    def test_has_security_service_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.securitydata) == SecurityDataClient
 
     def test_has_user_service_set(self, py42_connection, mock_auth):
         client = SDKClient(py42_connection, mock_auth)

@@ -2,7 +2,6 @@ import json
 
 import pytest
 
-from py42.clients.securitydata import PlanStorageInfo
 from py42.clients.securitydata import SecurityDataClient
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
@@ -12,10 +11,8 @@ from py42.services._connection import Connection
 from py42.services.fileevent import FileEventService
 from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
-from py42.services.securitydata import SecurityDataService
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.preservationdata import StoragePreservationDataService
-from py42.services.storage.securitydata import StorageSecurityDataService
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 RAW_QUERY = "RAW JSON QUERY"
@@ -23,151 +20,6 @@ USER_UID = "user-uid"
 PDS_EXCEPTION_MESSAGE = (
     "No file with hash {0} available for download on any storage node."
 )
-GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION = """{
-        "securityPlanLocationsByDestination": [
-            {
-                "destinationGuid": "4",
-                "securityPlanLocationsByNode": [
-                    {
-                        "nodeGuid": "41",
-                        "securityPlanUids": [
-                            "111111111111111111"
-                        ]
-                    }
-                ]
-            }
-        ],
-        "userUid": "917354657784339860"
-    }"""
-GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE = """{
-        "securityPlanLocationsByDestination": [
-            {
-                "destinationGuid": "4",
-                "securityPlanLocationsByNode": [
-                    {
-                        "nodeGuid": "41",
-                        "securityPlanUids": [
-                            "111111111111111111",
-                            "222222222222222222"
-                        ]
-                    }
-                ]
-            }
-        ],
-        "userUid": "917354657784339860"
-}"""
-GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES = """{
-        "securityPlanLocationsByDestination": [
-            {
-                "destinationGuid": "4",
-                "securityPlanLocationsByNode": [
-                    {
-                        "nodeGuid": "41",
-                        "securityPlanUids": [
-                            "111111111111111111"
-                        ]
-                    },
-                    {
-                        "nodeGuid": "42",
-                        "securityPlanUids": [
-                            "222222222222222222"
-                        ]
-                    }
-                ]
-            }
-        ],
-        "userUid": "917354657784339860"
-}"""
-GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS = """{
-        "securityPlanLocationsByDestination": [
-            {
-                "destinationGuid": "4",
-                "securityPlanLocationsByNode": [
-                    {
-                        "nodeGuid": "41",
-                        "securityPlanUids": [
-                            "111111111111111111"
-                        ]
-                    }
-                ]
-            },
-            {
-                "destinationGuid": "5",
-                "securityPlanLocationsByNode": [
-                    {
-                        "nodeGuid": "51",
-                        "securityPlanUids": [
-                            "111111111111111111"
-                        ]
-                    }
-                ]
-            }
-        ],
-        "userUid": "917354657784339860"
-}"""
-GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS = """{
-        "securityPlanLocationsByDestination": [
-            {
-                "destinationGuid": "4",
-                "securityPlanLocationsByNode": [
-                    {
-                        "nodeGuid": "41",
-                        "securityPlanUids": [
-                            "111111111111111111",
-                            "222222222222222222"
-                        ]
-                    }
-                ]
-            },
-            {
-                "destinationGuid": "5",
-                "securityPlanLocationsByNode": [
-                    {
-                        "nodeGuid": "51",
-                        "securityPlanUids": [
-                            "111111111111111111",
-                            "222222222222222222"
-                        ]
-                    }
-                ]
-            }
-        ],
-        "userUid": "917354657784339860"
-}"""
-GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES = """{
-        "securityPlanLocationsByDestination": [
-            {
-                "destinationGuid": "4",
-                "securityPlanLocationsByNode": [
-                    {
-                        "nodeGuid": "41",
-                        "securityPlanUids": [
-                            "111111111111111111",
-                            "222222222222222222"
-                        ]
-                    }
-                ]
-            },
-            {
-                "destinationGuid": "5",
-                "securityPlanLocationsByNode": [
-                    {
-                        "nodeGuid": "51",
-                        "securityPlanUids": [
-                            "111111111111111111"
-                        ]
-                    },
-                    {
-                        "nodeGuid": "52",
-                        "securityPlanUids": [
-                            "222222222222222222"
-                        ]
-                    }
-                ]
-            }
-        ],
-        "userUid": "917354657784339860"
-}"""
 FILE_EVENTS_RESPONSE = """{
     "fileEvents":[
         {
@@ -238,60 +90,6 @@ class TestSecurityClient(object):
         return mocker.MagicMock(spec=Connection)
 
     @pytest.fixture
-    def security_service(self, mocker):
-        return mocker.MagicMock(spec=SecurityDataService)
-
-    @pytest.fixture
-    def security_service_one_location(self, security_service, py42_response):
-        py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_LOCATION
-        security_service.get_security_event_locations.return_value = py42_response
-        return security_service
-
-    @pytest.fixture
-    def security_service_two_plans_one_node(self, security_service, py42_response):
-        py42_response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_ONE_NODE
-        )
-        security_service.get_security_event_locations.return_value = py42_response
-        return security_service
-
-    @pytest.fixture
-    def security_service_two_plans_two_nodes(self, security_service, py42_response):
-        py42_response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_NODES
-        )
-        security_service.get_security_event_locations.return_value = py42_response
-        return security_service
-
-    @pytest.fixture
-    def security_service_one_plan_two_destinations(
-        self, security_service, py42_response
-    ):
-        py42_response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_ONE_PLAN_TWO_DESTINATIONS
-        )
-        security_service.get_security_event_locations.return_value = py42_response
-        return security_service
-
-    @pytest.fixture
-    def security_service_two_plans_two_destinations(
-        self, security_service, py42_response
-    ):
-        py42_response.text = (
-            GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS
-        )
-        security_service.get_security_event_locations.return_value = py42_response
-        return security_service
-
-    @pytest.fixture
-    def security_service_two_plans_two_destinations_three_nodes(
-        self, security_service, py42_response
-    ):
-        py42_response.text = GET_SECURITY_EVENT_LOCATIONS_RESPONSE_BODY_TWO_PLANS_TWO_DESTINATIONS_THREE_NODES
-        security_service.get_security_event_locations.return_value = py42_response
-        return security_service
-
-    @pytest.fixture
     def storage_service_factory(self, mocker):
         return mocker.MagicMock(spec=StorageServiceFactory)
 
@@ -309,14 +107,12 @@ class TestSecurityClient(object):
 
     def test_search_with_only_query_calls_through_to_client(
         self,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
         storage_service_factory,
     ):
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -324,447 +120,6 @@ class TestSecurityClient(object):
         )
         security_client.search_file_events(RAW_QUERY)
         file_event_service.search.assert_called_once_with(RAW_QUERY)
-
-    def test_get_security_plan_storage_info_one_location_returns_location_info(
-        self,
-        security_service_one_location,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        security_client = SecurityDataClient(
-            security_service_one_location,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        storage_infos = security_client.get_security_plan_storage_info_list("foo")
-        assert len(storage_infos) == 1
-        assert self._storage_info_contains(
-            storage_infos, "111111111111111111", "4", "41"
-        )
-
-    def test_get_security_plan_storage_info_two_plans_one_node_returns_both_location_info(
-        self,
-        security_service_two_plans_one_node,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        security_client = SecurityDataClient(
-            security_service_two_plans_one_node,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        storage_infos = security_client.get_security_plan_storage_info_list("foo")
-        assert len(storage_infos) == 2
-        assert self._storage_info_contains(
-            storage_infos, "111111111111111111", "4", "41"
-        )
-        assert self._storage_info_contains(
-            storage_infos, "222222222222222222", "4", "41"
-        )
-
-    def test_get_security_plan_storage_info_two_plans_two_nodes_returns_both_location_info(
-        self,
-        security_service_two_plans_two_nodes,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        security_client = SecurityDataClient(
-            security_service_two_plans_two_nodes,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        storage_infos = security_client.get_security_plan_storage_info_list("foo")
-        assert self._storage_info_contains(
-            storage_infos, "111111111111111111", "4", "41"
-        )
-        assert self._storage_info_contains(
-            storage_infos, "222222222222222222", "4", "42"
-        )
-
-    def test_get_security_plan_storage_info_one_plan_two_destinations_returns_one_location(
-        self,
-        security_service_one_plan_two_destinations,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        security_client = SecurityDataClient(
-            security_service_one_plan_two_destinations,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        storage_infos = security_client.get_security_plan_storage_info_list("foo")
-        assert len(storage_infos) == 1
-        assert self._storage_info_contains(
-            storage_infos, "111111111111111111", "4", "41"
-        ) or self._storage_info_contains(storage_infos, "111111111111111111", "5", "51")
-
-    def test_get_security_plan_storage_info_two_plans_two_destinations_returns_one_location_per_plan(
-        self,
-        security_service_two_plans_two_destinations,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        security_client = SecurityDataClient(
-            security_service_two_plans_two_destinations,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        storage_infos = security_client.get_security_plan_storage_info_list("foo")
-        assert len(storage_infos) == 2
-        assert self._storage_info_contains(
-            storage_infos, "111111111111111111", "4", "41"
-        ) or self._storage_info_contains(storage_infos, "111111111111111111", "5", "51")
-        assert self._storage_info_contains(
-            storage_infos, "222222222222222222", "4", "41"
-        ) or self._storage_info_contains(storage_infos, "222222222222222222", "5", "51")
-
-    def test_get_security_plan_storage_info_two_plans_two_destinations_three_nodes_returns_one_location_per_plan(
-        self,
-        security_service_two_plans_two_destinations_three_nodes,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        security_client = SecurityDataClient(
-            security_service_two_plans_two_destinations_three_nodes,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        storage_infos = security_client.get_security_plan_storage_info_list("foo")
-        assert self._storage_info_contains(
-            storage_infos, "111111111111111111", "4", "41"
-        ) or self._storage_info_contains(storage_infos, "111111111111111111", "5", "51")
-        assert self._storage_info_contains(
-            storage_infos, "222222222222222222", "4", "41"
-        ) or self._storage_info_contains(storage_infos, "222222222222222222", "5", "52")
-
-    def test_get_all_user_security_events_calls_security_service_with_expected_params(
-        self,
-        mocker,
-        security_service_one_location,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        mock_storage_security_service = mocker.MagicMock(
-            spec=StorageSecurityDataService
-        )
-        response = mocker.MagicMock(spec=Py42Response)
-        response.text = "{}"
-        response.data = {}
-        mock_storage_security_service.get_plan_security_events.return_value = response
-        storage_service_factory.create_security_data_service.return_value = (
-            mock_storage_security_service
-        )
-        security_client = SecurityDataClient(
-            security_service_one_location,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        for _, _ in security_client.get_all_user_security_events("foo"):
-            pass
-        mock_storage_security_service.get_plan_security_events.assert_called_once_with(
-            "111111111111111111",
-            cursor=None,
-            event_types=None,
-            include_files=True,
-            max_timestamp=None,
-            min_timestamp=None,
-        )
-
-    def test_get_all_user_security_events_when_cursors_returned_calls_security_service_expected_number_of_times(
-        self,
-        mocker,
-        security_service_one_location,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        mock_storage_security_service = mocker.MagicMock(
-            spec=StorageSecurityDataService
-        )
-        response1 = mocker.MagicMock(spec=Py42Response)
-        cursor_json = '{"cursor": "1:1"}'
-        response1.text = cursor_json
-        response1.data = json.loads(cursor_json)
-        response2 = mocker.MagicMock(spec=Py42Response)
-        response2.text = "{}"
-        response2.data = {}
-        mock_storage_security_service.get_plan_security_events.side_effect = [
-            response1,
-            response2,
-        ]
-        storage_service_factory.create_security_data_service.return_value = (
-            mock_storage_security_service
-        )
-        security_client = SecurityDataClient(
-            security_service_one_location,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        for _, _ in security_client.get_all_user_security_events("foo"):
-            pass
-        assert mock_storage_security_service.get_plan_security_events.call_count == 2
-
-    def test_get_all_user_security_events_when_multiple_plans_returned_calls_security_service_expected_number_of_times(
-        self,
-        mocker,
-        security_service_two_plans_one_node,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        mock_storage_security_service = mocker.MagicMock(
-            spec=StorageSecurityDataService
-        )
-        response = mocker.MagicMock(spec=Py42Response)
-        response.text = "{}"
-        response.data = {}
-        mock_storage_security_service.get_plan_security_events.return_value = response
-        storage_service_factory.create_security_data_service.return_value = (
-            mock_storage_security_service
-        )
-        security_client = SecurityDataClient(
-            security_service_two_plans_one_node,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        for _, _ in security_client.get_all_user_security_events("foo"):
-            pass
-        assert mock_storage_security_service.get_plan_security_events.call_count == 2
-
-    def test_get_all_user_security_events_when_multiple_plans_with_cursors_returned_calls_security_service_expected_number_of_times(
-        self,
-        mocker,
-        security_service_two_plans_one_node,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        mock_storage_security_service = mocker.MagicMock(
-            spec=StorageSecurityDataService
-        )
-        response1 = mocker.MagicMock(spec=Py42Response)
-        cursor_json = '{"cursor": "1:1"}'
-        response1.text = cursor_json
-        response1.data = json.loads(cursor_json)
-        response2 = mocker.MagicMock(spec=Py42Response)
-        response2.text = "{}"
-        response2.data = {}
-        mock_storage_security_service.get_plan_security_events.side_effect = [
-            response1,
-            response2,
-            response1,
-            response2,
-        ]
-        storage_service_factory.create_security_data_service.return_value = (
-            mock_storage_security_service
-        )
-        security_client = SecurityDataClient(
-            security_service_two_plans_one_node,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        for _, _ in security_client.get_all_user_security_events("foo"):
-            pass
-        assert mock_storage_security_service.get_plan_security_events.call_count == 4
-
-    @pytest.mark.parametrize(
-        "plan_storage_info",
-        [
-            PlanStorageInfo("111111111111111111", "41", "4"),
-            (PlanStorageInfo("111111111111111111", "41", "4"),),
-            [PlanStorageInfo("111111111111111111", "41", "4")],
-        ],
-    )
-    def test_get_all_plan_security_events_calls_security_service_with_expected_params(
-        self,
-        mocker,
-        security_service,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-        plan_storage_info,
-    ):
-        mock_storage_security_service = mocker.MagicMock(
-            spec=StorageSecurityDataService
-        )
-        response = mocker.MagicMock(spec=Py42Response)
-        response.text = "{}"
-        response.data = {}
-        mock_storage_security_service.get_plan_security_events.return_value = response
-        storage_service_factory.create_security_data_service.return_value = (
-            mock_storage_security_service
-        )
-        security_client = SecurityDataClient(
-            security_service,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        for _, _ in security_client.get_all_plan_security_events(plan_storage_info):
-            pass
-        mock_storage_security_service.get_plan_security_events.assert_called_once_with(
-            "111111111111111111",
-            cursor=None,
-            event_types=None,
-            include_files=True,
-            max_timestamp=None,
-            min_timestamp=None,
-        )
-
-    def test_get_all_plan_security_events_when_cursors_returned_calls_security_service_expected_number_of_times(
-        self,
-        mocker,
-        security_service,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        mock_storage_security_service = mocker.MagicMock(
-            spec=StorageSecurityDataService
-        )
-        response1 = mocker.MagicMock(spec=Py42Response)
-        cursor_json = '{"cursor": "1:1"}'
-        response1.text = cursor_json
-        response1.data = json.loads(cursor_json)
-        response2 = mocker.MagicMock(spec=Py42Response)
-        response2.text = "{}"
-        response2.data = {}
-        mock_storage_security_service.get_plan_security_events.side_effect = [
-            response1,
-            response2,
-        ]
-        storage_service_factory.create_security_data_service.return_value = (
-            mock_storage_security_service
-        )
-        security_client = SecurityDataClient(
-            security_service,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        for _, _ in security_client.get_all_plan_security_events(
-            PlanStorageInfo("111111111111111111", "41", "4")
-        ):
-            pass
-        assert mock_storage_security_service.get_plan_security_events.call_count == 2
-
-    def test_get_all_plan_security_events_when_multiple_plans_returned_calls_security_service_expected_number_of_times(
-        self,
-        mocker,
-        security_service,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        mock_storage_security_service = mocker.MagicMock(
-            spec=StorageSecurityDataService
-        )
-        response = mocker.MagicMock(spec=Py42Response)
-        response.text = "{}"
-        response.data = {}
-        mock_storage_security_service.get_plan_security_events.return_value = response
-        storage_service_factory.create_security_data_service.return_value = (
-            mock_storage_security_service
-        )
-        security_client = SecurityDataClient(
-            security_service,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        plans = [
-            PlanStorageInfo("111111111111111111", "41", "4"),
-            PlanStorageInfo("222222222222222222", "41", "4"),
-        ]
-        for _, _ in security_client.get_all_plan_security_events(plans):
-            pass
-        assert mock_storage_security_service.get_plan_security_events.call_count == 2
-
-    def test_get_all_plan_security_events_when_multiple_plans_with_cursors_returned_calls_security_service_expected_number_of_times(
-        self,
-        mocker,
-        security_service,
-        file_event_service,
-        preservation_data_service,
-        saved_search_service,
-        storage_service_factory,
-    ):
-        mock_storage_security_service = mocker.MagicMock(
-            spec=StorageSecurityDataService
-        )
-        response1 = mocker.MagicMock(spec=Py42Response)
-        cursor_json = '{"cursor": "1:1"}'
-        response1.text = cursor_json
-        response1.data = json.loads(cursor_json)
-        response2 = mocker.MagicMock(spec=Py42Response)
-        response2.text = "{}"
-        response2.data = {}
-        mock_storage_security_service.get_plan_security_events.side_effect = [
-            response1,
-            response2,
-            response1,
-            response2,
-        ]
-        storage_service_factory.create_security_data_service.return_value = (
-            mock_storage_security_service
-        )
-        security_client = SecurityDataClient(
-            security_service,
-            file_event_service,
-            preservation_data_service,
-            saved_search_service,
-            storage_service_factory,
-        )
-        plans = [
-            PlanStorageInfo("111111111111111111", "41", "4"),
-            PlanStorageInfo("222222222222222222", "41", "4"),
-        ]
-        for _, _ in security_client.get_all_plan_security_events(plans):
-            pass
-        assert mock_storage_security_service.get_plan_security_events.call_count == 4
 
     # the order the items are iterated through is not deterministic in some versions of python,
     # so we simply test that the value returned is one of the _possible_ values.
@@ -780,14 +135,12 @@ class TestSecurityClient(object):
 
     def test_saved_searches_returns_saved_search_client(
         self,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
         storage_service_factory,
     ):
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -848,7 +201,6 @@ class TestSecurityClient(object):
     def test_stream_file_by_sha256_with_exact_match_response_calls_get_version_list_with_expected_params(
         self,
         mocker,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -866,7 +218,6 @@ class TestSecurityClient(object):
             storage_node_client
         )
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -897,7 +248,6 @@ class TestSecurityClient(object):
     def test_stream_file_by_sha256_without_exact_match_response_calls_get_version_list_with_expected_params(
         self,
         mocker,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -916,7 +266,6 @@ class TestSecurityClient(object):
             storage_node_client
         )
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -947,7 +296,6 @@ class TestSecurityClient(object):
 
     def test_stream_file_by_sha256_when_search_returns_empty_response_raises_py42_checksum_not_found_error_(
         self,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -957,7 +305,6 @@ class TestSecurityClient(object):
         file_event_search.text = '{"fileEvents": []}'
         file_event_service.search.return_value = file_event_search
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -972,7 +319,6 @@ class TestSecurityClient(object):
     def test_stream_file_by_sha256_when_file_versions_returns_empty_response_gets_version_from_other_location(
         self,
         mocker,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -998,7 +344,6 @@ class TestSecurityClient(object):
         )
 
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1020,7 +365,6 @@ class TestSecurityClient(object):
     def test_stream_file_by_sha256_when_get_locations_returns_empty_list_raises_py42_error(
         self,
         mocker,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -1037,7 +381,6 @@ class TestSecurityClient(object):
             file_location
         )
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1052,7 +395,6 @@ class TestSecurityClient(object):
     def test_stream_file_by_sha256_when_find_file_version_returns_204_status_code_raises_py42_error(
         self,
         mocker,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -1072,7 +414,6 @@ class TestSecurityClient(object):
         preservation_data_service.find_file_version.return_value = available_version
 
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1087,7 +428,6 @@ class TestSecurityClient(object):
     def test_stream_file_by_md5_with_exact_match_response_calls_get_version_list_with_expected_params(
         self,
         mocker,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -1105,7 +445,6 @@ class TestSecurityClient(object):
             storage_node_client
         )
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1136,7 +475,6 @@ class TestSecurityClient(object):
     def test_stream_file_by_md5_without_exact_match_response_calls_get_version_list_with_expected_params(
         self,
         mocker,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -1155,7 +493,6 @@ class TestSecurityClient(object):
             storage_node_client
         )
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1186,7 +523,6 @@ class TestSecurityClient(object):
 
     def test_stream_file_by_md5_when_search_returns_empty_response_raises_py42_checksum_not_found_error_(
         self,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -1196,7 +532,6 @@ class TestSecurityClient(object):
         file_event_search.text = '{"fileEvents": []}'
         file_event_service.search.return_value = file_event_search
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1211,7 +546,6 @@ class TestSecurityClient(object):
     def test_stream_file_by_md5_when_file_versions_returns_empty_response_gets_version_from_other_location(
         self,
         mocker,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -1237,7 +571,6 @@ class TestSecurityClient(object):
         )
 
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1258,7 +591,6 @@ class TestSecurityClient(object):
 
     def test_stream_file_by_md5_when_get_locations_returns_empty_list_raises_py42_error(
         self,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -1275,7 +607,6 @@ class TestSecurityClient(object):
             file_location
         )
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1289,7 +620,6 @@ class TestSecurityClient(object):
 
     def test_stream_file_by_md5_when_find_file_version_returns_204_status_code_raises_py42_error(
         self,
-        security_service,
         file_event_service,
         preservation_data_service,
         saved_search_service,
@@ -1309,7 +639,6 @@ class TestSecurityClient(object):
         preservation_data_service.find_file_version.return_value = available_version
 
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1323,7 +652,6 @@ class TestSecurityClient(object):
 
     def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_not_passed(
         self,
-        security_service,
         connection,
         preservation_data_service,
         saved_search_service,
@@ -1339,7 +667,6 @@ class TestSecurityClient(object):
         connection.post.return_value = successful_response
 
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1360,7 +687,6 @@ class TestSecurityClient(object):
 
     def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_passed(
         self,
-        security_service,
         connection,
         preservation_data_service,
         saved_search_service,
@@ -1375,7 +701,6 @@ class TestSecurityClient(object):
         }
         connection.post.return_value = successful_response
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1397,14 +722,12 @@ class TestSecurityClient(object):
     def test_search_all_file_events_handles_unescaped_quote_chars_in_token(
         self,
         connection,
-        security_service,
         preservation_data_service,
         saved_search_service,
         storage_service_factory,
     ):
         file_event_service = FileEventService(connection)
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,
@@ -1426,14 +749,12 @@ class TestSecurityClient(object):
     def test_search_all_file_events_handles_escaped_quote_chars_in_token(
         self,
         connection,
-        security_service,
         preservation_data_service,
         saved_search_service,
         storage_service_factory,
     ):
         file_event_service = FileEventService(connection)
         security_client = SecurityDataClient(
-            security_service,
             file_event_service,
             preservation_data_service,
             saved_search_service,

@@ -12,7 +12,6 @@ from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.preservationdata import StoragePreservationDataService
-from py42.services.storage.securitydata import StorageSecurityDataService
 
 
 @pytest.fixture
@@ -72,17 +71,6 @@ class TestStorageServiceFactory(object):
         mock_device_service.get_by_guid.return_value = py42_response
         with pytest.raises(Exception):
             factory.auto_select_destination_guid(TEST_DEVICE_GUID)
-
-    def test_create_security_data_service(
-        self, mock_successful_connection, mock_device_service, mock_connection_manager
-    ):
-        factory = StorageServiceFactory(
-            mock_successful_connection, mock_device_service, mock_connection_manager
-        )
-        service = factory.create_security_data_service(
-            "testplanuid", "testdestinationguid"
-        )
-        assert type(service) == StorageSecurityDataService
 
     def test_preservation_data_service(
         self, mock_successful_connection, mock_device_service, mock_connection_manager

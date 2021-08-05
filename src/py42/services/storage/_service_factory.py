@@ -4,11 +4,9 @@ from py42._compat import str
 from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
 from py42.services.storage._auth import FileArchiveAuth
-from py42.services.storage._auth import SecurityArchiveAuth
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.preservationdata import StoragePreservationDataService
 from py42.services.storage.restore import PushRestoreService
-from py42.services.storage.securitydata import StorageSecurityDataService
 
 
 class StorageServiceFactory(object):
@@ -25,11 +23,6 @@ class StorageServiceFactory(object):
         auth = FileArchiveAuth(self._connection, u"my", device_guid, destination_guid)
         conn = self._connection_manager.get_storage_connection(auth)
         return StorageArchiveService(conn)
-
-    def create_security_data_service(self, plan_uid, destination_guid):
-        auth = SecurityArchiveAuth(self._connection, plan_uid, destination_guid)
-        conn = self._connection_manager.get_storage_connection(auth)
-        return StorageSecurityDataService(conn)
 
     def create_preservation_data_service(self, host_address):
         main_connection = self._connection.clone(host_address)

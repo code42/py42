@@ -24,7 +24,6 @@ Services = namedtuple(
         u"devices",
         u"legalhold",
         u"orgs",
-        u"securitydata",
         u"users",
         u"alertrules",
         u"alerts",

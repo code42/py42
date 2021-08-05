@@ -77,7 +77,7 @@ for page in pages:  # page has 'Py42Response' type
     for employee in employees:
         username = employee["userName"]
         notes = employee["notes"]
-        print("{0}: {1}".format(employee, notes))
+        print(f"{employee}: {notes}")
 ```
 
 Each page is a typical py42 response. The next section covers what you can do with `Py42Response` objects.

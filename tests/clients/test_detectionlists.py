@@ -28,7 +28,7 @@ def mock_high_risk_employee_service(mocker):
 TEST_USER_ID = "12345"
 
 
-class TestRiskTags(object):
+class TestRiskTags:
     def test_choices_returns_expected_set(self):
         choices = RiskTags.choices()
         valid_set = {
@@ -43,7 +43,7 @@ class TestRiskTags(object):
         assert set(choices) == valid_set
 
 
-class TestDetectionListClient(object):
+class TestDetectionListClient:
     def test_departing_employee_call_get_departing_employee_client_with_expected_values(
         self,
         mock_detection_list_user_service,

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from datetime import datetime
 
 import pytest
@@ -10,25 +9,25 @@ from py42.util import MICROSECOND_FORMAT
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
 OPERATOR_STRING = "IS_IN"
 VALUE_STRING = "value_example"
-VALUE_UNICODE = u"您已经发现了秘密信息"
+VALUE_UNICODE = "您已经发现了秘密信息"
 
-EXISTS = u'{{"filterClause":"AND", "filters":[{{"operator":"EXISTS", "term":"{0}", "value":null}}]}}'
-NOT_EXISTS = u'{{"filterClause":"AND", "filters":[{{"operator":"DOES_NOT_EXIST", "term":"{0}", "value":null}}]}}'
-IS = u'{{"filterClause":"AND", "filters":[{{"operator":"IS", "term":"{0}", "value":"{1}"}}]}}'
-IS_NOT = u'{{"filterClause":"AND", "filters":[{{"operator":"IS_NOT", "term":"{0}", "value":"{1}"}}]}}'
-IS_IN = u'{{"filterClause":"OR", "filters":[{{"operator":"IS", "term":"{0}", "value":"{1}"}},{{"operator":"IS", "term":"{0}", "value":"{2}"}},{{"operator":"IS", "term":"{0}", "value":"{3}"}}]}}'
-NOT_IN = u'{{"filterClause":"AND", "filters":[{{"operator":"IS_NOT", "term":"{0}", "value":"{1}"}},{{"operator":"IS_NOT", "term":"{0}", "value":"{2}"}},{{"operator":"IS_NOT", "term":"{0}", "value":"{3}"}}]}}'
-IN_RANGE = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"{0}", "value":"{1}"}},{{"operator":"ON_OR_BEFORE", "term":"{0}", "value":"{2}"}}]}}'
+EXISTS = '{{"filterClause":"AND", "filters":[{{"operator":"EXISTS", "term":"{0}", "value":null}}]}}'
+NOT_EXISTS = '{{"filterClause":"AND", "filters":[{{"operator":"DOES_NOT_EXIST", "term":"{0}", "value":null}}]}}'
+IS = '{{"filterClause":"AND", "filters":[{{"operator":"IS", "term":"{0}", "value":"{1}"}}]}}'
+IS_NOT = '{{"filterClause":"AND", "filters":[{{"operator":"IS_NOT", "term":"{0}", "value":"{1}"}}]}}'
+IS_IN = '{{"filterClause":"OR", "filters":[{{"operator":"IS", "term":"{0}", "value":"{1}"}},{{"operator":"IS", "term":"{0}", "value":"{2}"}},{{"operator":"IS", "term":"{0}", "value":"{3}"}}]}}'
+NOT_IN = '{{"filterClause":"AND", "filters":[{{"operator":"IS_NOT", "term":"{0}", "value":"{1}"}},{{"operator":"IS_NOT", "term":"{0}", "value":"{2}"}},{{"operator":"IS_NOT", "term":"{0}", "value":"{3}"}}]}}'
+IN_RANGE = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"{0}", "value":"{1}"}},{{"operator":"ON_OR_BEFORE", "term":"{0}", "value":"{2}"}}]}}'
 
-ON_OR_AFTER = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"{0}", "value":"{1}"}}]}}'
-ON_OR_BEFORE = u'{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_BEFORE", "term":"{0}", "value":"{1}"}}]}}'
+ON_OR_AFTER = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_AFTER", "term":"{0}", "value":"{1}"}}]}}'
+ON_OR_BEFORE = '{{"filterClause":"AND", "filters":[{{"operator":"ON_OR_BEFORE", "term":"{0}", "value":"{1}"}}]}}'
 
-CONTAINS = u'{{"filterClause":"AND", "filters":[{{"operator":"CONTAINS", "term":"{0}", "value":"{1}"}}]}}'
-NOT_CONTAINS = u'{{"filterClause":"AND", "filters":[{{"operator":"DOES_NOT_CONTAIN", "term":"{0}", "value":"{1}"}}]}}'
+CONTAINS = '{{"filterClause":"AND", "filters":[{{"operator":"CONTAINS", "term":"{0}", "value":"{1}"}}]}}'
+NOT_CONTAINS = '{{"filterClause":"AND", "filters":[{{"operator":"DOES_NOT_CONTAIN", "term":"{0}", "value":"{1}"}}]}}'
 
-GREATER_THAN = u'{{"filterClause":"AND", "filters":[{{"operator":"GREATER_THAN", "term":"{0}", "value":"{1}"}}]}}'
-LESS_THAN = u'{{"filterClause":"AND", "filters":[{{"operator":"LESS_THAN", "term":"{0}", "value":"{1}"}}]}}'
-WITHIN_THE_LAST = u'{{"filterClause":"AND", "filters":[{{"operator":"WITHIN_THE_LAST", "term":"{0}", "value":"{1}"}}]}}'
+GREATER_THAN = '{{"filterClause":"AND", "filters":[{{"operator":"GREATER_THAN", "term":"{0}", "value":"{1}"}}]}}'
+LESS_THAN = '{{"filterClause":"AND", "filters":[{{"operator":"LESS_THAN", "term":"{0}", "value":"{1}"}}]}}'
+WITHIN_THE_LAST = '{{"filterClause":"AND", "filters":[{{"operator":"WITHIN_THE_LAST", "term":"{0}", "value":"{1}"}}]}}'
 
 
 @pytest.fixture
@@ -63,5 +62,5 @@ def format_timestamp(test_time):
 
 def format_datetime(test_date):
     prefix = test_date.strftime(MICROSECOND_FORMAT)[:-4]
-    timestamp_str = "{}Z".format(prefix)
+    timestamp_str = f"{prefix}Z"
     return timestamp_str

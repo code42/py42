@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import pytest
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
@@ -35,7 +34,7 @@ MOCK_INVALID_PASSWORD_TEXT = '{"data": [{"name": "NEW_PASSWORD_INVALID"}]}'
 MOCK_INVALID_USERNAME_TEXT = '{"data": [{"name": "INVALID_USERNAME"}]}'
 
 
-class TestUserService(object):
+class TestUserService:
     @pytest.fixture
     def mock_get_users_response(self, mocker):
         return create_mock_response(mocker, MOCK_GET_USER_RESPONSE)
@@ -148,11 +147,11 @@ class TestUserService(object):
     def test_unicode_username_get_user_by_username_calls_get_with_username(
         self, mock_connection, mock_get_users_response
     ):
-        username = u"您已经发现了秘密信息"
+        username = "您已经发现了秘密信息"
         mock_connection.get.return_value = mock_get_users_response
         service = UserService(mock_connection)
         service.get_by_username(username)
-        expected_params = {u"username": username}
+        expected_params = {"username": username}
         mock_connection.get.assert_called_once_with(USER_URI, params=expected_params)
 
     def test_get_user_by_id_calls_get_with_uri_and_params(
@@ -161,7 +160,7 @@ class TestUserService(object):
         mock_connection.get.return_value = successful_response
         service = UserService(mock_connection)
         service.get_by_id(123456)
-        uri = "{}/{}".format(USER_URI, 123456)
+        uri = f"{USER_URI}/123456"
         mock_connection.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
@@ -276,7 +275,7 @@ class TestUserService(object):
         user_service = UserService(mock_connection)
         mock_connection.post.return_value = put_api_mock_response
         user_id = "TEST_USER_ID"
-        expected_uri = "{}/{}?idType=uid".format(USER_URI, user_id)
+        expected_uri = f"{USER_URI}/{user_id}?idType=uid"
         username = "TEST_ORG@TEST.COM"
         email = "TEST_EMAIL@TEST.com"
         password = "password"
@@ -311,7 +310,7 @@ class TestUserService(object):
         user_service = UserService(mock_connection)
         mock_connection.post.return_value = put_api_mock_response
         user_id = "TEST_USER_ID"
-        expected_uri = "{}/{}?idType=uid".format(USER_URI, user_id)
+        expected_uri = f"{USER_URI}/{user_id}?idType=uid"
         username = "TEST_ORG@TEST.COM"
         user_service.update_user(user_id, username=username)
         expected_params = {

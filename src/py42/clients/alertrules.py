@@ -3,7 +3,7 @@ from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidRuleOperationError
 
 
-class AlertRulesClient(object):
+class AlertRulesClient:
     """`Rest Documentation <https://developer.code42.com/api/#tag/Rules>`__"""
 
     def __init__(self, alerts_service, alert_rules_service):
@@ -51,7 +51,7 @@ class AlertRulesClient(object):
         try:
             return self._alert_rules_service.add_user(rule_id, user_id)
         except Py42InternalServerError as err:
-            rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
+            rules = self.get_by_observer_id(rule_id)["ruleMetadata"]
             _check_if_system_rule(err, rules)
             raise
 
@@ -69,7 +69,7 @@ class AlertRulesClient(object):
         try:
             return self._alert_rules_service.remove_user(rule_id, user_id)
         except Py42InternalServerError as err:
-            rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
+            rules = self.get_by_observer_id(rule_id)["ruleMetadata"]
             _check_if_system_rule(err, rules)
             raise
 
@@ -87,12 +87,12 @@ class AlertRulesClient(object):
         try:
             return self._alert_rules_service.remove_all_users(rule_id)
         except Py42InternalServerError as err:
-            rules = self.get_by_observer_id(rule_id)[u"ruleMetadata"]
+            rules = self.get_by_observer_id(rule_id)["ruleMetadata"]
             _check_if_system_rule(err, rules)
             raise
 
     def get_page(
-        self, sort_key=u"CreatedAt", sort_direction=u"DESC", page_num=1, page_size=None
+        self, sort_key="CreatedAt", sort_direction="DESC", page_num=1, page_size=None
     ):
         """Gets a page of alert rules. Note that you can use page_size here the same
         way as other methods that have a `page_size` parameter in py42. However, under
@@ -118,7 +118,7 @@ class AlertRulesClient(object):
             page_size=page_size,
         )
 
-    def get_all(self, sort_key=u"CreatedAt", sort_direction=u"DESC"):
+    def get_all(self, sort_key="CreatedAt", sort_direction="DESC"):
         """Fetch all available rules.
 
         Args:
@@ -161,7 +161,7 @@ class AlertRulesClient(object):
 def _check_if_system_rule(base_err, rules):
     """You cannot add or remove users from system rules this way; use the specific
     feature behind the rule, such as the Departing Employee list."""
-    if rules and rules[0][u"isSystem"]:
-        observer_id = rules[0][u"observerRuleId"]
-        source = rules[0][u"ruleSource"]
+    if rules and rules[0]["isSystem"]:
+        observer_id = rules[0]["observerRuleId"]
+        source = rules[0]["ruleSource"]
         raise Py42InvalidRuleOperationError(base_err, observer_id, source)

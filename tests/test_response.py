@@ -15,7 +15,7 @@ JSON_DICT_NO_DATA_NODE = '{"item_list_key": {"foo": "foo_val", "bar": "bar_val"}
 PLAIN_TEXT = "TEST_PLAIN_TEXT"
 
 
-class TestPy42Response(object):
+class TestPy42Response:
     @pytest.fixture
     def mock_response_list_data_node(self, mocker):
         mock_response = mocker.MagicMock(spec=Response)

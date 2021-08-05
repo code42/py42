@@ -18,6 +18,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Removed
 
+- py42 no longer supports python 2.7 or python 3.5.
+
 - FED (File Extraction Detection) - related functionality from the `SecurityDataClient` class
     - `get_security_plan_storage_info_list()`
     - `get_all_plan_security_events()`

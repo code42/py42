@@ -4,7 +4,7 @@ import requests
 from py42.services.storage.preservationdata import StoragePreservationDataService
 
 
-class TestStoragePreservationDataService(object):
+class TestStoragePreservationDataService:
     @pytest.fixture
     def mock_request(self, mocker):
         request = mocker.patch.object(requests, "get")
@@ -20,12 +20,8 @@ class TestStoragePreservationDataService(object):
         service.get_download_token("abc", "fabc", 1223)
 
         mock_successful_connection.get.assert_called_once_with(
-            u"c42api/v3/FileDownloadToken",
-            params={
-                u"archiveGuid": "abc",
-                u"fileId": "fabc",
-                u"versionTimestamp": 1223,
-            },
+            "c42api/v3/FileDownloadToken",
+            params={"archiveGuid": "abc", "fileId": "fabc", "versionTimestamp": 1223},
         )
 
     def test_get_file_calls_get_with_valid_params_with_substitution(

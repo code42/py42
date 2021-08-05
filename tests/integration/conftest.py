@@ -47,8 +47,7 @@ def _get_sdk(host, user, pw):
         return _sdk.from_local_account(host, user, pw)
     except Exception as err:
         pytest.exit(
-            "Failed to init SDK for integration tests: {}".format(str(err)),
-            returncode=1,
+            f"Failed to init SDK for integration tests: {err}", returncode=1,
         )
 
 
@@ -68,7 +67,7 @@ def org(connection, timestamp):
     orgs = next(orgs_gen)
     # Assumption: Parent org always exists.
     org = orgs["orgs"][0]  # The first record is always the parent org
-    new_org = "integration test org {}".format(timestamp)
+    new_org = f"integration test org {timestamp}"
     response = connection.orgs.create_org(new_org, parent_org_uid=org["orgUid"])
     assert response.status_code == 200
     return response
@@ -76,7 +75,7 @@ def org(connection, timestamp):
 
 @pytest.fixture(scope="session")
 def new_user(connection, org, timestamp):
-    new_user = "integration_user_{}_@test.com".format(timestamp)
+    new_user = f"integration_user_{timestamp}_@test.com"
     response = connection.users.create_user(org["orgUid"], new_user, new_user)
     assert response.status_code == 200
     return response

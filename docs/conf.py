@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -19,14 +18,14 @@ import py42.__version__ as meta
 
 # -- Project information -----------------------------------------------------
 
-project = u"py42"
-copyright = u"2020, Code42 Software"
-author = u"Code42 Software"
+project = "py42"
+copyright = "2020, Code42 Software"
+author = "Code42 Software"
 
 # The short X.Y version
-version = "py42 v{}".format(meta.__version__)
+version = f"py42 v{meta.__version__}"
 # The full version, including alpha/beta/rc tags
-release = "py42 v{}".format(meta.__version__)
+release = f"py42 v{meta.__version__}"
 
 
 # -- General configuration ---------------------------------------------------
@@ -61,7 +60,7 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = [u"_build", "Thumbs.db", ".DS_Store"]
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None

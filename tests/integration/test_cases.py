@@ -6,7 +6,7 @@ from tests.integration.conftest import assert_successful_response
 class TestCases:
     @pytest.fixture(scope="module")
     def case(self, connection, timestamp):
-        return connection.cases.create("integration_test_{}".format(timestamp))
+        return connection.cases.create(f"integration_test_{timestamp}")
 
     def test_get_all_cases(
         self, connection,

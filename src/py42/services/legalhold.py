@@ -11,12 +11,12 @@ from py42.util import parse_timestamp_to_milliseconds_precision
 
 
 def _active_state_map(active):
-    _map = {True: u"ACTIVE", False: u"INACTIVE", None: u"ALL"}
+    _map = {True: "ACTIVE", False: "INACTIVE", None: "ALL"}
     try:
         return _map[active]
     except KeyError:
         raise Py42Error(
-            "Invalid argument: '{}'. active must be True, False, or None".format(active)
+            f"Invalid argument: '{active}'. active must be True, False, or None"
         )
 
 
@@ -42,8 +42,8 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/v4/legal-hold-policy/create"
-        data = {u"name": name, u"policy": policy}
+        uri = "/api/v4/legal-hold-policy/create"
+        data = {"name": name, "policy": policy}
         return self._connection.post(uri, json=data)
 
     def create_matter(
@@ -63,13 +63,13 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/LegalHold"
+        uri = "/api/LegalHold"
         data = {
-            u"name": name,
-            u"holdPolicyUid": hold_policy_uid,
-            u"description": description,
-            u"notes": notes,
-            u"holdExtRef": hold_ext_ref,
+            "name": name,
+            "holdPolicyUid": hold_policy_uid,
+            "description": description,
+            "notes": notes,
+            "holdExtRef": hold_ext_ref,
         }
         return self._connection.post(uri, json=data)
 
@@ -83,8 +83,8 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the Policy.
         """
-        uri = u"/api/v4/legal-hold-policy/view"
-        params = {u"legalHoldPolicyUid": legal_hold_policy_uid}
+        uri = "/api/v4/legal-hold-policy/view"
+        params = {"legalHoldPolicyUid": legal_hold_policy_uid}
         return self._connection.get(uri, params=params)
 
     def get_policy_list(self):
@@ -94,7 +94,7 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the list of Policies.
         """
-        uri = u"/api/v4/legal-hold-policy/list"
+        uri = "/api/v4/legal-hold-policy/list"
         return self._connection.get(uri)
 
     def get_matter_by_uid(self, legal_hold_uid):
@@ -107,7 +107,7 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the Matter.
         """
-        uri = u"/api/LegalHold/{}".format(legal_hold_uid)
+        uri = f"/api/LegalHold/{legal_hold_uid}"
         try:
             return self._connection.get(uri)
         except Py42ForbiddenError as err:
@@ -145,14 +145,14 @@ class LegalHoldService(BaseService):
 
         active_state = _active_state_map(active)
         page_size = page_size or settings.items_per_page
-        uri = u"/api/LegalHold"
+        uri = "/api/LegalHold"
         params = {
-            u"creatorUserUid": creator_user_uid,
-            u"activeState": active_state,
-            u"name": name,
-            u"holdExtRef": hold_ext_ref,
-            u"pgNum": page_num,
-            u"pgSize": page_size,
+            "creatorUserUid": creator_user_uid,
+            "activeState": active_state,
+            "name": name,
+            "holdExtRef": hold_ext_ref,
+            "pgNum": page_num,
+            "pgSize": page_size,
         }
         return self._connection.get(uri, params=params)
 
@@ -179,7 +179,7 @@ class LegalHoldService(BaseService):
         """
         return get_all_pages(
             self.get_matters_page,
-            u"legalHolds",
+            "legalHolds",
             creator_user_uid=creator_user_uid,
             active=active,
             name=name,
@@ -224,19 +224,19 @@ class LegalHoldService(BaseService):
         active_state = _active_state_map(active)
         page_size = page_size or settings.items_per_page
         params = {
-            u"legalHoldMembershipUid": legal_hold_membership_uid,
-            u"legalHoldUid": legal_hold_uid,
-            u"userUid": user_uid,
-            u"user": user,
-            u"activeState": active_state,
-            u"pgNum": page_num,
-            u"pgSize": page_size,
+            "legalHoldMembershipUid": legal_hold_membership_uid,
+            "legalHoldUid": legal_hold_uid,
+            "userUid": user_uid,
+            "user": user,
+            "activeState": active_state,
+            "pgNum": page_num,
+            "pgSize": page_size,
         }
-        uri = u"/api/LegalHoldMembership"
+        uri = "/api/LegalHoldMembership"
         try:
             return self._connection.get(uri, params=params)
         except Py42BadRequestError as ex:
-            if u"At least one criteria must be specified" in ex.response.text:
+            if "At least one criteria must be specified" in ex.response.text:
                 raise Py42LegalHoldCriteriaMissingError(ex)
             raise
 
@@ -269,7 +269,7 @@ class LegalHoldService(BaseService):
         """
         return get_all_pages(
             self.get_custodians_page,
-            u"legalHoldMemberships",
+            "legalHoldMemberships",
             legal_hold_uid=legal_hold_uid,
             user_uid=user_uid,
             user=user,
@@ -310,13 +310,13 @@ class LegalHoldService(BaseService):
         if max_event_date:
             max_event_date = parse_timestamp_to_milliseconds_precision(max_event_date)
         params = {
-            u"legalHoldUid": legal_hold_uid,
-            u"minEventDate": min_event_date,
-            u"maxEventDate": max_event_date,
-            u"pgNum": page_num,
-            u"pgSize": page_size,
+            "legalHoldUid": legal_hold_uid,
+            "minEventDate": min_event_date,
+            "maxEventDate": max_event_date,
+            "pgNum": page_num,
+            "pgSize": page_size,
         }
-        uri = u"/api/LegalHoldEventReport"
+        uri = "/api/LegalHoldEventReport"
 
         return self._connection.get(uri, params=params)
 
@@ -342,7 +342,7 @@ class LegalHoldService(BaseService):
         """
         return get_all_pages(
             self.get_events_page,
-            u"legalHoldEvents",
+            "legalHoldEvents",
             legal_hold_uid=legal_hold_uid,
             min_event_date=min_event_date,
             max_event_date=max_event_date,
@@ -359,15 +359,15 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/LegalHoldMembership"
-        data = {u"legalHoldUid": legal_hold_uid, u"userUid": user_uid}
+        uri = "/api/LegalHoldMembership"
+        data = {"legalHoldUid": legal_hold_uid, "userUid": user_uid}
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
-            if u"USER_ALREADY_IN_HOLD" in err.response.text:
+            if "USER_ALREADY_IN_HOLD" in err.response.text:
                 matter = self.get_matter_by_uid(legal_hold_uid)
-                matter_id_and_name_text = u"legal hold matter id={}, name={}".format(
-                    legal_hold_uid, matter[u"name"]
+                matter_id_and_name_text = (
+                    f"legal hold matter id={legal_hold_uid}, name={matter['name']}"
                 )
                 raise Py42UserAlreadyAddedError(err, user_uid, matter_id_and_name_text)
             raise
@@ -383,8 +383,8 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/LegalHoldMembershipDeactivation"
-        data = {u"legalHoldMembershipUid": legal_hold_membership_uid}
+        uri = "/api/LegalHoldMembershipDeactivation"
+        data = {"legalHoldMembershipUid": legal_hold_membership_uid}
         return self._connection.post(uri, json=data)
 
     def deactivate_matter(self, legal_hold_uid):
@@ -397,8 +397,8 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/v4/legal-hold-deactivation/update"
-        data = {u"legalHoldUid": legal_hold_uid}
+        uri = "/api/v4/legal-hold-deactivation/update"
+        data = {"legalHoldUid": legal_hold_uid}
         return self._connection.post(uri, json=data)
 
     def reactivate_matter(self, legal_hold_uid):
@@ -411,5 +411,5 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = u"/api/LegalHoldReactivation/{}".format(legal_hold_uid)
+        uri = f"/api/LegalHoldReactivation/{legal_hold_uid}"
         return self._connection.put(uri)

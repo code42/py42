@@ -14,15 +14,15 @@ class ExposureType(FileEventFilterStringField):
         - :attr:`ExposureType.IS_PUBLIC`
     """
 
-    _term = u"exposure"
+    _term = "exposure"
 
-    SHARED_VIA_LINK = u"SharedViaLink"
-    SHARED_TO_DOMAIN = u"SharedToDomain"
-    APPLICATION_READ = u"ApplicationRead"
-    CLOUD_STORAGE = u"CloudStorage"
-    REMOVABLE_MEDIA = u"RemovableMedia"
-    IS_PUBLIC = u"IsPublic"
-    OUTSIDE_TRUSTED_DOMAINS = u"OutsideTrustedDomains"
+    SHARED_VIA_LINK = "SharedViaLink"
+    SHARED_TO_DOMAIN = "SharedToDomain"
+    APPLICATION_READ = "ApplicationRead"
+    CLOUD_STORAGE = "CloudStorage"
+    REMOVABLE_MEDIA = "RemovableMedia"
+    IS_PUBLIC = "IsPublic"
+    OUTSIDE_TRUSTED_DOMAINS = "OutsideTrustedDomains"
 
     @staticmethod
     def choices():
@@ -34,7 +34,7 @@ class ProcessName(FileEventFilterStringField):
     ``read by browser or other app`` events only).
     """
 
-    _term = u"processName"
+    _term = "processName"
 
 
 class ProcessOwner(FileEventFilterStringField):
@@ -42,7 +42,7 @@ class ProcessOwner(FileEventFilterStringField):
     (applies to ``read by browser or other app`` events only).
     """
 
-    _term = u"processOwner"
+    _term = "processOwner"
 
 
 class RemovableMediaName(FileEventFilterStringField):
@@ -50,7 +50,7 @@ class RemovableMediaName(FileEventFilterStringField):
     (applies to ``removable media`` events only).
     """
 
-    _term = u"removableMediaName"
+    _term = "removableMediaName"
 
 
 class RemovableMediaVendor(FileEventFilterStringField):
@@ -58,7 +58,7 @@ class RemovableMediaVendor(FileEventFilterStringField):
     exposure (applies to ``removable media`` events only).
     """
 
-    _term = u"removableMediaVendor"
+    _term = "removableMediaVendor"
 
 
 class RemovableMediaMediaName(FileEventFilterStringField):
@@ -67,7 +67,7 @@ class RemovableMediaMediaName(FileEventFilterStringField):
     ``removable media`` events only).
     """
 
-    _term = u"removableMediaMediaName"
+    _term = "removableMediaMediaName"
 
 
 class RemovableMediaVolumeName(FileEventFilterStringField):
@@ -76,7 +76,7 @@ class RemovableMediaVolumeName(FileEventFilterStringField):
     ``removable media`` events only).
     """
 
-    _term = u"removableMediaVolumeName"
+    _term = "removableMediaVolumeName"
 
 
 class RemovableMediaPartitionID(FileEventFilterStringField):
@@ -84,7 +84,7 @@ class RemovableMediaPartitionID(FileEventFilterStringField):
     to the removable media involved in the exposure (applies to ``removable media`` events only).
     """
 
-    _term = u"removableMediaPartitionId"
+    _term = "removableMediaPartitionId"
 
 
 class RemovableMediaSerialNumber(FileEventFilterStringField):
@@ -92,7 +92,7 @@ class RemovableMediaSerialNumber(FileEventFilterStringField):
     by the operating system (applies to ``removable media`` events only).
     """
 
-    _term = u"removableMediaSerialNumber"
+    _term = "removableMediaSerialNumber"
 
 
 class SyncDestination(FileEventFilterStringField):
@@ -109,15 +109,15 @@ class SyncDestination(FileEventFilterStringField):
         - :attr:`SyncDestination.ONEDRIVE`
     """
 
-    _term = u"syncDestination"
+    _term = "syncDestination"
 
-    ICLOUD = u"ICloud"
-    BOX = u"Box"
-    BOX_DRIVE = u"BoxDrive"
-    GOOGLE_DRIVE = u"GoogleDrive"
-    GOOGLE_BACKUP_AND_SYNC = u"GoogleBackupAndSync"
-    DROPBOX = u"Dropbox"
-    ONEDRIVE = u"OneDrive"
+    ICLOUD = "ICloud"
+    BOX = "Box"
+    BOX_DRIVE = "BoxDrive"
+    GOOGLE_DRIVE = "GoogleDrive"
+    GOOGLE_BACKUP_AND_SYNC = "GoogleBackupAndSync"
+    DROPBOX = "Dropbox"
+    ONEDRIVE = "OneDrive"
 
     @staticmethod
     def choices():
@@ -129,7 +129,7 @@ class SyncDestinationUsername(FileEventFilterStringField):
     the file is synced with (applies to ``synced to cloud service`` events only).
     """
 
-    _term = u"syncDestinationUsername"
+    _term = "syncDestinationUsername"
 
 
 class TabURL(FileEventFilterStringField):
@@ -137,7 +137,7 @@ class TabURL(FileEventFilterStringField):
     contents were read by the browser (applies to ``read by browser or other app`` events only).
     """
 
-    _term = u"tabUrls"
+    _term = "tabUrls"
 
 
 class WindowTitle(FileEventFilterStringField):
@@ -146,4 +146,4 @@ class WindowTitle(FileEventFilterStringField):
     events only).
     """
 
-    _term = u"tabTitles"
+    _term = "tabTitles"

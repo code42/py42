@@ -1,6 +1,3 @@
-from py42._compat import string_type
-
-
 def set_val(d, keys, value):
     """Helper for setting nested values from a dict based on a list of keys."""
     d = get_val(d, keys[:-1])
@@ -15,21 +12,21 @@ def get_val(d, keys):
 
 
 def show_change(val1, val2):
-    if isinstance(val1, string_type):
-        val1 = u'"{}"'.format(val1)
-    if isinstance(val2, string_type):
-        val2 = u'"{}"'.format(val2)
-    return u"{} -> {}".format(val1, val2)
+    if isinstance(val1, str):
+        val1 = f'"{val1}"'
+    if isinstance(val2, str):
+        val2 = f'"{val2}"'
+    return f"{val1} -> {val2}"
 
 
-class BaseSettingProperty(object):
+class BaseSettingProperty:
     def __init__(self, name, location):
         self.name = name
         self.location = location
         self.init_val = None
 
     def _register_change(self, instance, orig_val, new_val):
-        name = self.name.lstrip(u"_")
+        name = self.name.lstrip("_")
         if self.init_val is None:
             self.init_val = orig_val
         if self.init_val == new_val:
@@ -58,15 +55,15 @@ class SettingProperty(BaseSettingProperty):
         set_converter=None,
         inheritance_attr=None,
     ):
-        super(SettingProperty, self).__init__(name, location)
+        super().__init__(name, location)
         self.get_converter = get_converter
         self.set_converter = set_converter
         self.inheritance_attr = inheritance_attr
 
     def __get__(self, instance, owner):
         val = get_val(instance.data, self.location)
-        if isinstance(val, dict) and u"#text" in val.keys():
-            val = val[u"#text"]
+        if isinstance(val, dict) and "#text" in val.keys():
+            val = val["#text"]
         return self.get_converter(val) if self.get_converter is not None else val
 
     def __set__(self, instance, new_val):
@@ -76,9 +73,9 @@ class SettingProperty(BaseSettingProperty):
         orig_val = get_val(instance.data, self.location)
 
         # if locked, value is a dict with '#text' as the _real_ value key. Some properties will have dicts with @nil: true, these should stay dicts, as the whole dict is the property value.
-        if isinstance(orig_val, dict) and u"#text" in orig_val.keys():
-            location = self.location + [u"#text"]
-            orig_val = orig_val[u"#text"]
+        if isinstance(orig_val, dict) and "#text" in orig_val.keys():
+            location = self.location + ["#text"]
+            orig_val = orig_val["#text"]
         else:
             location = self.location
 
@@ -90,7 +87,7 @@ class SettingProperty(BaseSettingProperty):
         set_val(instance.data, location, converted_new_val)
 
 
-class TSettingProperty(object):
+class TSettingProperty:
     """Descriptor class to help manage transforming t_setting packet values. Assumes t_setting
     dict is stored in `._t_settings` attribute on managed instances.
 
@@ -114,14 +111,14 @@ class TSettingProperty(object):
         if packet is None:
             return None
         return (
-            self.get_converter(packet[u"value"])
+            self.get_converter(packet["value"])
             if self.get_converter is not None
-            else packet[u"value"]
+            else packet["value"]
         )
 
     def __set__(self, instance, val):
         val = self.set_converter(val) if self.set_converter is not None else val
-        packet = {u"key": self.key, u"value": val, u"locked": False}
+        packet = {"key": self.key, "value": val, "locked": False}
         instance._packets[self.key] = packet
         self._register_change(instance, val)
 
@@ -131,7 +128,7 @@ class TSettingProperty(object):
             if packet is None:
                 self.init_val = None
             else:
-                self.init_val = packet[u"value"]
+                self.init_val = packet["value"]
         if self.init_val == val:
             if self.name in instance.changes:
                 instance.changes.pop(self.name)

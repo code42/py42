@@ -14,7 +14,7 @@ of session / authentication management.
 
 ## Requirements
 
-- Python 2.7.x or 3.5.0+
+- Python 3.6.0+
 - Code42 Server 6.8.x+ or cloud environment (e.g. console.us.code42.com or crashplan.com)
 
 ## Installation

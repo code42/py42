@@ -18,7 +18,7 @@ from py42.services.storage.restore import PushRestoreExistingFiles
 from py42.services.storage.restore import PushRestoreLocation
 
 
-class GetWebRestoreJobResponses(object):
+class GetWebRestoreJobResponses:
     MISSING_STATUS = """{
                 "zipResult": false,
                 "name": "WebRestore_13",
@@ -111,7 +111,7 @@ def get_response_job_id(response_str):
     return json.loads(response_str)["jobId"]
 
 
-class TestFileSizePoller(object):
+class TestFileSizePoller:
     DOWNLOADS_JOB = "DWLDS_JOB"
     EXT_JOB = "EXT_JOB"
     DOWNLOADS_DIR_SIZES = {"numDirs": 1, "numFiles": 2, "size": 3}
@@ -223,7 +223,7 @@ class TestFileSizePoller(object):
         assert actual is None
 
 
-class TestRestoreJobManager(object):
+class TestRestoreJobManager:
     def test_restore_job_manager_constructs_successfully(self, storage_archive_service):
         assert RestoreJobManager(
             storage_archive_service, TEST_DEVICE_GUID, TEST_SESSION_ID
@@ -244,8 +244,8 @@ class TestRestoreJobManager(object):
         restore_job_manager.get_stream(TEST_BACKUP_SET_ID, single_file_selection, True)
         expected_restore_groups = [
             {
-                u"backupSetId": TEST_BACKUP_SET_ID,
-                u"files": [single_file_selection[0].file],
+                "backupSetId": TEST_BACKUP_SET_ID,
+                "files": [single_file_selection[0].file],
             }
         ]
         storage_archive_service.start_restore.assert_called_once_with(
@@ -274,8 +274,8 @@ class TestRestoreJobManager(object):
         restore_job_manager.get_stream(TEST_BACKUP_SET_ID, double_file_selection, False)
         expected_restore_groups = [
             {
-                u"backupSetId": TEST_BACKUP_SET_ID,
-                u"files": [
+                "backupSetId": TEST_BACKUP_SET_ID,
+                "files": [
                     double_file_selection[0].file,
                     double_file_selection[1].file,
                 ],
@@ -432,8 +432,8 @@ class TestRestoreJobManager(object):
             "",
             [
                 {
-                    u"backupSetId": TEST_BACKUP_SET_ID,
-                    u"files": [single_file_selection[0].file],
+                    "backupSetId": TEST_BACKUP_SET_ID,
+                    "files": [single_file_selection[0].file],
                 }
             ],
             1,
@@ -467,8 +467,8 @@ class TestRestoreJobManager(object):
             "",
             [
                 {
-                    u"backupSetId": TEST_BACKUP_SET_ID,
-                    u"files": [single_file_selection[0].file],
+                    "backupSetId": TEST_BACKUP_SET_ID,
+                    "files": [single_file_selection[0].file],
                 }
             ],
             1,
@@ -502,8 +502,8 @@ class TestRestoreJobManager(object):
             "",
             [
                 {
-                    u"backupSetId": TEST_BACKUP_SET_ID,
-                    u"files": [single_file_selection[0].file],
+                    "backupSetId": TEST_BACKUP_SET_ID,
+                    "files": [single_file_selection[0].file],
                 }
             ],
             1,

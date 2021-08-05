@@ -1,6 +1,6 @@
-from py42._compat import str
-from py42._compat import UserDict
-from py42._compat import UserList
+from collections import UserDict
+from collections import UserList
+
 from py42.clients.settings import check_lock
 from py42.clients.settings import SettingProperty
 from py42.clients.settings import show_change
@@ -11,14 +11,14 @@ from py42.clients.settings._converters import str_to_bool
 from py42.exceptions import Py42Error
 
 invalid_destination_error = Py42Error(
-    u"Invalid destination guid or destination not offered to device's Org."
+    "Invalid destination guid or destination not offered to device's Org."
 )
 destination_not_added_error = Py42Error(
-    u"Destination is not added to device, unable to lock."
+    "Destination is not added to device, unable to lock."
 )
 
 
-class DeviceSettingsDefaults(UserDict, object):
+class DeviceSettingsDefaults(UserDict):
     """Class used for managing an Organization's Device Default settings. Also acts as a
     base class for `DeviceSettings` to manage individual device settings."""
 
@@ -26,11 +26,11 @@ class DeviceSettingsDefaults(UserDict, object):
         self.data = device_dict
         self._org_settings = org_settings
         self.changes = org_settings.changes
-        self._destinations = org_settings.data[u"settings"][u"destinations"]
-        self.data[u"settings"] = {
-            u"serviceBackupConfig": self.data[u"serviceBackupConfig"]
+        self._destinations = org_settings.data["settings"]["destinations"]
+        self.data["settings"] = {
+            "serviceBackupConfig": self.data["serviceBackupConfig"]
         }
-        bs = self.data[u"serviceBackupConfig"][u"backupConfig"][u"backupSets"]
+        bs = self.data["serviceBackupConfig"]["backupConfig"]["backupSets"]
         self.backup_sets = self._extract_backup_sets(bs)
 
     def _extract_backup_sets(self, backup_sets):
@@ -45,7 +45,7 @@ class DeviceSettingsDefaults(UserDict, object):
                     if not _backup_set_is_legal_hold(bs)
                 ]
             else:
-                raise Py42Error("Unable to extract backup sets: {}".format(backup_sets))
+                raise Py42Error(f"Unable to extract backup sets: {backup_sets}")
         else:
             return [
                 BackupSet(self, bs)
@@ -58,27 +58,27 @@ class DeviceSettingsDefaults(UserDict, object):
         """Returns a dict of destinations available to be used by devices. Dict keys are
         destination guids and values are destination names.
         """
-        return {d[u"guid"]: d[u"destinationName"] for d in self._destinations}
+        return {d["guid"]: d["destinationName"] for d in self._destinations}
 
     warning_email_enabled = SettingProperty(
-        name=u"warning_email_enabled",
-        location=[u"settings", u"serviceBackupConfig", u"warningEmailEnabled"],
+        name="warning_email_enabled",
+        location=["settings", "serviceBackupConfig", "warningEmailEnabled"],
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     """Determines if backup "warning" threshold email alerts are configured for this device."""
 
     critical_email_enabled = SettingProperty(
-        name=u"critical_email_enabled",
-        location=[u"settings", u"serviceBackupConfig", u"severeEmailEnabled"],
+        name="critical_email_enabled",
+        location=["settings", "serviceBackupConfig", "severeEmailEnabled"],
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     """Determines if backup "critical" threshold email alerts are configured for this device."""
 
     warning_alert_days = SettingProperty(
-        name=u"warning_alert_days",
-        location=[u"settings", u"serviceBackupConfig", u"minutesUntilWarning"],
+        name="warning_alert_days",
+        location=["settings", "serviceBackupConfig", "minutesUntilWarning"],
         get_converter=minutes_to_days,
         set_converter=days_to_minutes,
     )
@@ -87,8 +87,8 @@ class DeviceSettingsDefaults(UserDict, object):
     """
 
     critical_alert_days = SettingProperty(
-        name=u"critical_alert_days",
-        location=[u"settings", u"serviceBackupConfig", u"minutesUntilSevere"],
+        name="critical_alert_days",
+        location=["settings", "serviceBackupConfig", "minutesUntilSevere"],
         get_converter=minutes_to_days,
         set_converter=days_to_minutes,
     )
@@ -97,27 +97,23 @@ class DeviceSettingsDefaults(UserDict, object):
     """
 
     backup_status_email_enabled = SettingProperty(
-        name=u"backup_status_email_enabled",
-        location=[u"settings", u"serviceBackupConfig", u"backupStatusEmailEnabled"],
+        name="backup_status_email_enabled",
+        location=["settings", "serviceBackupConfig", "backupStatusEmailEnabled"],
         get_converter=str_to_bool,
         set_converter=bool_to_str,
     )
     """Determines if the regularly scheduled backup status email is enabled."""
 
     backup_status_email_frequency_days = SettingProperty(
-        name=u"backup_status_email_frequency_days",
-        location=[
-            u"settings",
-            u"serviceBackupConfig",
-            u"backupStatusEmailFreqInMinutes",
-        ],
+        name="backup_status_email_frequency_days",
+        location=["settings", "serviceBackupConfig", "backupStatusEmailFreqInMinutes"],
         get_converter=minutes_to_days,
         set_converter=days_to_minutes,
     )
     """Determines the frequency of the regularly scheduled backup status email."""
 
     def __repr__(self):
-        return u"<DeviceSettingsDefaults: org_id: {}>".format(self._org_settings.org_id)
+        return f"<DeviceSettingsDefaults: org_id: {self._org_settings.org_id}>"
 
 
 class DeviceSettings(DeviceSettingsDefaults):
@@ -126,17 +122,15 @@ class DeviceSettings(DeviceSettingsDefaults):
     def __init__(self, device_dict):
         self.changes = {}
         self.data = device_dict
-        self._destinations = device_dict[u"availableDestinations"]
-        bs = self.data[u"settings"][u"serviceBackupConfig"][u"backupConfig"][
-            u"backupSets"
-        ]
+        self._destinations = device_dict["availableDestinations"]
+        bs = self.data["settings"]["serviceBackupConfig"]["backupConfig"]["backupSets"]
         self.backup_sets = self._extract_backup_sets(bs)
         """List of :class:`BackupSet` objects used to manage this device's backup set configurations."""
 
     @property
     def computer_id(self):
         """Identifier of this device. Read-only."""
-        return self.data[u"computerId"]
+        return self.data["computerId"]
 
     @property
     def device_id(self):
@@ -146,46 +140,44 @@ class DeviceSettings(DeviceSettingsDefaults):
     @property
     def guid(self):
         """Globally unique identifier of this device. Read-only."""
-        return self.data[u"guid"]
+        return self.data["guid"]
 
     @property
     def org_id(self):
         """Identifier of the organization this device belongs to. Read-only."""
-        return self.data[u"orgId"]
+        return self.data["orgId"]
 
     @property
     def user_id(self):
         """Identifier of the user this device belongs to. Read-only."""
-        return self.data[u"userId"]
+        return self.data["userId"]
 
     @property
     def version(self):
         """Latest reported Code42 client version number for this device. Read-only."""
-        return self.data[u"version"]
+        return self.data["version"]
 
     @property
     def java_memory_heap_max(self):
         """The maximum memory the client will use on its system"""
-        return self.data[u"settings"][u"javaMemoryHeapMax"]
+        return self.data["settings"]["javaMemoryHeapMax"]
 
-    name = SettingProperty(name=u"name", location=[u"name"])
+    name = SettingProperty(name="name", location=["name"])
     """Name for this device."""
 
     external_reference = SettingProperty(
-        name=u"external_reference", location=[u"computerExtRef"]
+        name="external_reference", location=["computerExtRef"]
     )
     """External reference field for this device."""
 
-    notes = SettingProperty(name=u"notes", location=[u"notes"])
+    notes = SettingProperty(name="notes", location=["notes"])
     """Notes field for this device."""
 
     def __repr__(self):
-        return u"<DeviceSettings: guid: {}, name: {}>".format(
-            self.data[u"guid"], self.data[u"name"]
-        )
+        return f"<DeviceSettings: guid: {self.data['guid']}, name: {self.data['name']}>"
 
 
-class BackupSet(UserDict, object):
+class BackupSet(UserDict):
     """Helper class for managing device backup sets and Org device default backup sets."""
 
     def __init__(self, settings_manager, backup_set_dict):
@@ -195,13 +187,13 @@ class BackupSet(UserDict, object):
         includes, excludes = self._extract_file_selection_lists()
         regex_excludes = self._extract_regex_exclusions()
         self._included_files = TrackedFileSelectionList(
-            self, u"included_files", includes, self._changes
+            self, "included_files", includes, self._changes
         )
         self._excluded_files = TrackedFileSelectionList(
-            self, u"excluded_files", excludes, self._changes
+            self, "excluded_files", excludes, self._changes
         )
         self._filename_exclusions = TrackedFileSelectionList(
-            self, u"filename_exclusions", regex_excludes, self._changes
+            self, "filename_exclusions", regex_excludes, self._changes
         )
         self._orig_destinations = self.destinations
 
@@ -218,11 +210,11 @@ class BackupSet(UserDict, object):
             One+ paths:         `[{"path": [{"@include": "C:/Users/"},{"@exclude": "C:/Users/Admin/"},],"@os": "Linux"}]`
             One+ paths locked:  `{'@locked': 'true', 'paths': {'@os': 'Linux', 'path': [{'@include': 'C:/Users/'}, {'@exclude': 'C:/Users/Admin/'}]}}`
         """
-        pathset = self.data[u"backupPaths"][u"pathset"]
+        pathset = self.data["backupPaths"]["pathset"]
         if isinstance(pathset, dict):  # pathset is locked
-            path_list = pathset[u"paths"].get(u"path")
+            path_list = pathset["paths"].get("path")
         else:
-            path_list = pathset[0].get(u"path")
+            path_list = pathset[0].get("path")
 
         # no paths selected
         if path_list is None:
@@ -232,8 +224,8 @@ class BackupSet(UserDict, object):
         if isinstance(path_list, dict):
             path_list = [path_list]
 
-        includes = [p[u"@include"] for p in path_list if u"@include" in p]
-        excludes = [p[u"@exclude"] for p in path_list if u"@exclude" in p]
+        includes = [p["@include"] for p in path_list if "@include" in p]
+        excludes = [p["@exclude"] for p in path_list if "@exclude" in p]
         return includes, excludes
 
     def _extract_regex_exclusions(self):
@@ -249,35 +241,35 @@ class BackupSet(UserDict, object):
             One+ exclusions:        `[{"windows": [], "pattern": [{"@regex": ".*1"}, {"@regex": ".*2"}],"linux": [],"macintosh": []}]
             One+ exclusion locked:  `{'@locked': 'true', 'patternList': {'pattern': [{'@regex': '.*1'}, {'@regex': '.*2'}], 'windows': [], 'macintosh': [], 'linux': []}}`
         """
-        exclude_user = self.data[u"backupPaths"][u"excludeUser"]
+        exclude_user = self.data["backupPaths"]["excludeUser"]
         if isinstance(exclude_user, dict):  # exclusions are locked
-            pattern_list = exclude_user[u"patternList"].get(u"pattern")
+            pattern_list = exclude_user["patternList"].get("pattern")
         else:
-            pattern_list = exclude_user[0].get(u"pattern")
+            pattern_list = exclude_user[0].get("pattern")
         if not pattern_list:
             return []
         if isinstance(pattern_list, dict):
             pattern_list = [pattern_list]
-        return [p[u"@regex"] for p in pattern_list]
+        return [p["@regex"] for p in pattern_list]
 
     def _build_file_selection(self):
         """Converts the user-friendly lists of included and excluded file paths back
         into a "pathset" object the api expects. Called whenever one of the file selection
         property lists (`.included_files`, `.excluded_files`) is modified.
         """
-        paths = {u"@os": u"Linux", u"path": []}
+        paths = {"@os": "Linux", "path": []}
         if not self._included_files:  # ignore excluded values if nothing is included
-            paths[u"@cleared"] = u"true"
+            paths["@cleared"] = "true"
         else:
             path_list = []
             for path in self._included_files:
-                path_list.append({u"@include": path, u"@und": u"false"})
+                path_list.append({"@include": path, "@und": "false"})
             for path in self._excluded_files:
-                path_list.append({u"@exclude": path, u"@und": u"false"})
-            paths[u"path"] = path_list
-            paths[u"@cleared"] = u"false"
+                path_list.append({"@exclude": path, "@und": "false"})
+            paths["path"] = path_list
+            paths["@cleared"] = "false"
 
-        self.data[u"backupPaths"][u"pathset"] = {u"paths": paths}
+        self.data["backupPaths"]["pathset"] = {"paths": paths}
 
     def _build_regex_exclusions(self):
         """Converts the user-friendly list of filename exclusions back into the
@@ -286,23 +278,23 @@ class BackupSet(UserDict, object):
         """
         patterns = []
         for regex in self._filename_exclusions:
-            patterns.append({u"@regex": regex})
+            patterns.append({"@regex": regex})
         user_exclude_dict = {
-            u"patternList": {
-                u"pattern": patterns,
-                u"windows": {u"pattern": []},
-                u"macintosh": {u"pattern": []},
-                u"linux": {u"pattern": []},
+            "patternList": {
+                "pattern": patterns,
+                "windows": {"pattern": []},
+                "macintosh": {"pattern": []},
+                "linux": {"pattern": []},
             }
         }
-        self.data[u"backupPaths"][u"excludeUser"] = user_exclude_dict
+        self.data["backupPaths"]["excludeUser"] = user_exclude_dict
 
     @property
     def locked(self):
         """Indicates whether the backup set as a whole is locked. If True, individual
         settings for this backup set (except for Destination settings), cannot be modified.
         """
-        return u"@locked" in self.data and str_to_bool(self.data[u"@locked"])
+        return "@locked" in self.data and str_to_bool(self.data["@locked"])
 
     @property
     def included_files(self):
@@ -318,7 +310,7 @@ class BackupSet(UserDict, object):
             self._included_files.clear()
             self._included_files.extend(value)
         else:
-            raise AttributeError(u"included files must be a list/tuple.")
+            raise AttributeError("included files must be a list/tuple.")
 
     @property
     def excluded_files(self):
@@ -334,7 +326,7 @@ class BackupSet(UserDict, object):
             self._excluded_files.clear()
             self._excluded_files.extend(value)
         else:
-            raise AttributeError(u"excluded files must be a list/tuple.")
+            raise AttributeError("excluded files must be a list/tuple.")
 
     @property
     def filename_exclusions(self):
@@ -351,7 +343,7 @@ class BackupSet(UserDict, object):
             self._filename_exclusions.clear()
             self._filename_exclusions.extend(value)
         else:
-            raise AttributeError(u"filename exclusions must be a list/tuple.")
+            raise AttributeError("filename exclusions must be a list/tuple.")
 
     @property
     def destinations(self):
@@ -359,13 +351,13 @@ class BackupSet(UserDict, object):
         keys are the destination guids, values are the destination names.
         """
         destination_dict = {}
-        if u"@cleared" in self.data[u"destinations"]:
+        if "@cleared" in self.data["destinations"]:
             return destination_dict
-        for d in self.data[u"destinations"]:
-            guid = d[u"@id"]
+        for d in self.data["destinations"]:
+            guid = d["@id"]
             dest_name = self._manager.available_destinations[guid]
-            if u"@locked" in d:
-                dest_name = dest_name + u" <LOCKED>"
+            if "@locked" in d:
+                dest_name = dest_name + " <LOCKED>"
             destination_dict[guid] = dest_name
         return destination_dict
 
@@ -381,10 +373,10 @@ class BackupSet(UserDict, object):
         if destination_guid in self._manager.available_destinations:
             if destination_guid not in self.destinations:
                 if not self.destinations:  # no destinations
-                    self.data[u"destinations"] = [{u"@id": destination_guid}]
+                    self.data["destinations"] = [{"@id": destination_guid}]
                 else:
-                    self.data[u"destinations"].append({u"@id": destination_guid})
-                self._changes[u"destinations"] = show_change(
+                    self.data["destinations"].append({"@id": destination_guid})
+                self._changes["destinations"] = show_change(
                     self._orig_destinations, self.destinations
                 )
         else:
@@ -400,12 +392,12 @@ class BackupSet(UserDict, object):
         destination_guid = str(destination_guid)
         self._raise_if_invalid_destination(destination_guid)
         if destination_guid in self.destinations:
-            for d in self.data[u"destinations"]:
-                if d[u"@id"] == destination_guid:
-                    self.data[u"destinations"].remove(d)
-            if not self.data[u"destinations"]:  # all destinations removed
-                self.data[u"destinations"] = {u"@cleared": u"true"}
-            self._changes[u"destinations"] = show_change(
+            for d in self.data["destinations"]:
+                if d["@id"] == destination_guid:
+                    self.data["destinations"].remove(d)
+            if not self.data["destinations"]:  # all destinations removed
+                self.data["destinations"] = {"@cleared": "true"}
+            self._changes["destinations"] = show_change(
                 self._orig_destinations, self.destinations
             )
 
@@ -419,10 +411,10 @@ class BackupSet(UserDict, object):
             if destination_guid not in self.destinations:
                 raise destination_not_added_error
             else:
-                for d in self.data[u"destinations"]:
-                    if d[u"@id"] == destination_guid:
-                        d[u"@locked"] = u"true"
-                self._changes[u"destinations"] = show_change(
+                for d in self.data["destinations"]:
+                    if d["@id"] == destination_guid:
+                        d["@locked"] = "true"
+                self._changes["destinations"] = show_change(
                     self._orig_destinations, self.destinations
                 )
         else:
@@ -438,10 +430,10 @@ class BackupSet(UserDict, object):
         if destination_guid not in self.destinations:
             raise destination_not_added_error
         else:
-            for d in self.data[u"destinations"]:
-                if d[u"@id"] == destination_guid:
-                    del d[u"@locked"]
-            self._changes[u"destinations"] = show_change(
+            for d in self.data["destinations"]:
+                if d["@id"] == destination_guid:
+                    del d["@locked"]
+            self._changes["destinations"] = show_change(
                 self._orig_destinations, self.destinations
             )
 
@@ -450,17 +442,17 @@ class BackupSet(UserDict, object):
             raise invalid_destination_error
 
     def __repr__(self):
-        if isinstance(self.data[u"name"], dict):  # name setting locked
-            name = self.data[u"name"][u"#text"]
+        if isinstance(self.data["name"], dict):  # name setting locked
+            name = self.data["name"]["#text"]
         else:
-            name = self.data[u"name"]
-        return u"<BackupSet: id: {}, name: '{}'>".format(self.data[u"@id"], name)
+            name = self.data["name"]
+        return f"<BackupSet: id: {self.data['@id']}, name: '{name}'>"
 
     def __str__(self):
         return str(dict(self))
 
 
-class TrackedFileSelectionList(UserList, object):
+class TrackedFileSelectionList(UserList):
     """Helper class to track modifications to file selection lists."""
 
     def __init__(self, backup_set, name, _list, changes_dict):

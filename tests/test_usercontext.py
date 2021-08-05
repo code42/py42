@@ -21,7 +21,7 @@ _GET_CURRENT_USER = """
 """
 
 
-class TestUserContext(object):
+class TestUserContext:
     @pytest.fixture
     def successful_administration_client(self, mocker, py42_response):
         mock_administration_client = mocker.MagicMock(spec=AdministrationService)

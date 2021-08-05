@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-import json
-
 import pytest
 from requests import HTTPError
 from requests import Response

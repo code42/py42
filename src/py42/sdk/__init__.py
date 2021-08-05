@@ -9,6 +9,7 @@ from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.authority import AuthorityClient
 from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
+from py42.clients.loginconfig import LoginConfigurationClient
 from py42.clients.securitydata import SecurityDataClient
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42UnauthorizedError
@@ -63,7 +64,7 @@ def from_local_account(host_address, username, password, totp=None):
     try:
         client.users.get_current()
     except Py42UnauthorizedError as err:
-        login_type = client.get_login_configuration_for_user(username)["loginType"]
+        login_type = client.loginconfig.get_for_user(username)["loginType"]
         if login_type == "CLOUD_SSO":
             raise Py42Error("SSO users are not supported in `from_local_account()`.")
         msg = "SDK initialization failed, double-check username/password, and provide two-factor TOTP token if Multi-Factor Auth configured for your user. User LoginConfig: {}".format(
@@ -97,7 +98,6 @@ class SDKClient(object):
     def __init__(self, main_connection, auth):
         services, user_ctx = _init_services(main_connection, auth)
         self._clients = _init_clients(services, main_connection)
-        self._connection = main_connection
         self._user_ctx = user_ctx
 
     @classmethod
@@ -146,18 +146,22 @@ class SDKClient(object):
 
         return cls(main_connection, custom_auth)
 
-    def get_login_configuration_for_user(self, username):
-        """Retrieves login configuration for a given username. Possible `loginType` values are
-        `LOCAL`, `LOCAL_2FA`, and `CLOUD_SSO`. If username does not exist the default
-        return value is `LOCAL_2FA`.
+    # def get_login_configuration_for_user(self, username):
+    #     """Retrieves login configuration for a given username. Possible `loginType` values are
+    #     `LOCAL`, `LOCAL_2FA`, and `CLOUD_SSO`. If username does not exist the default
+    #     return value is `LOCAL_2FA`.
+    #
+    #     Args:
+    #         username (str): Username to retrieve login configuration for.
+    #
+    #     Returns:
+    #         :class:`py42.response.Py42Response`
+    #     """
+    #     return self._connection.get_login_configuration_for_user(username)
 
-        Args:
-            username (str): Username to retrieve login configuration for.
-
-        Returns:
-            :class:`py42.response.Py42Response`
-        """
-        return self._connection.get_login_configuration_for_user(username)
+    @property
+    def loginconfig(self):
+        return self._clients.loginconfig
 
     @property
     def serveradmin(self):
@@ -373,6 +377,7 @@ def _init_clients(services, connection):
     )
     archive = ArchiveClient(archive_accessor_factory, services.archive)
     auditlogs = AuditLogsClient(services.auditlogs)
+    loginconfig = LoginConfigurationClient(connection)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
@@ -381,5 +386,6 @@ def _init_clients(services, connection):
         archive=archive,
         auditlogs=auditlogs,
         cases=CasesClient(services.cases, services.casesfileevents),
+        loginconfig=loginconfig,
     )
     return clients

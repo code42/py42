@@ -91,20 +91,6 @@ class TestSDK(object):
         client = SDKClient(py42_connection, mock_auth)
         assert type(client.cases) == CasesClient
 
-    def test_get_login_configuration_does_not_use_py42_connection_get_method(
-        self, mocker, mock_session, mock_auth
-    ):
-        """Because the loginConfiguration endpoint is unauthenticated, we want to make
-        sure we don't force the Connection's C42RenewableAuth object to make any
-        authentication requests before making the loginConfig request.
-        """
-        mock_get = mocker.patch("py42.services._connection.Connection.get")
-        connection = Connection.from_host_address(HOST_ADDRESS, session=mock_session)
-        client = SDKClient(connection, mock_auth)
-        client.get_login_configuration_for_user("test@example.com")
-        assert mock_get.call_count == 0
-        assert mock_session.get.call_count == 1
-
     def test_from_local_account_when_unauthorized_calls_loginConfig_and_returns_config_value_on_raised_exception_text(
         self, mocker, mock_session, mock_auth, unauthorized_response
     ):

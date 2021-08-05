@@ -127,11 +127,6 @@ class Connection(object):
     def host_address(self):
         return self._get_host_address()
 
-    def get_login_configuration_for_user(self, username):
-        uri = "{}/c42api/v3/LoginConfiguration".format(self.host_address)
-        response = self._session.get(uri, params={"username": username})
-        return Py42Response(response)
-
     def clone(self, host_address):
         host_resolver = KnownUrlHostResolver(host_address)
         return Connection(host_resolver, auth=self._auth)

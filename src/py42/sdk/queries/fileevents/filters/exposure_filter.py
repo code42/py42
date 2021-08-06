@@ -1,8 +1,10 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.util import get_attribute_keys_from_class
+from py42.sdk.queries.fileevents.file_event_query import (
+    FileEventFilterStringOptionField,
+)
 
 
-class ExposureType(FileEventFilterStringField):
+class ExposureType(FileEventFilterStringOptionField):
     """Class that filters events based on exposure type.
 
     Available options are provided as class attributes:
@@ -23,10 +25,6 @@ class ExposureType(FileEventFilterStringField):
     REMOVABLE_MEDIA = "RemovableMedia"
     IS_PUBLIC = "IsPublic"
     OUTSIDE_TRUSTED_DOMAINS = "OutsideTrustedDomains"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(ExposureType)
 
 
 class ProcessName(FileEventFilterStringField):
@@ -95,7 +93,7 @@ class RemovableMediaSerialNumber(FileEventFilterStringField):
     _term = "removableMediaSerialNumber"
 
 
-class SyncDestination(FileEventFilterStringField):
+class SyncDestination(FileEventFilterStringOptionField):
     """Class that filters events based on the name of the cloud service the file is synced with
     (applies to ``synced to cloud service`` events only).
 
@@ -118,10 +116,6 @@ class SyncDestination(FileEventFilterStringField):
     GOOGLE_BACKUP_AND_SYNC = "GoogleBackupAndSync"
     DROPBOX = "Dropbox"
     ONEDRIVE = "OneDrive"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(SyncDestination)
 
 
 class SyncDestinationUsername(FileEventFilterStringField):

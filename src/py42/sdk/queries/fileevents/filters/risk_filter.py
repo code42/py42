@@ -1,4 +1,7 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
+from py42.sdk.queries.fileevents.file_event_query import (
+    FileEventFilterStringOptionField,
+)
 from py42.util import get_attribute_keys_from_class
 
 
@@ -208,7 +211,7 @@ class RiskIndicator(FileEventFilterStringField):
             return get_attribute_keys_from_class(RiskIndicator.UserBehavior)
 
 
-class RiskSeverity(FileEventFilterStringField):
+class RiskSeverity(FileEventFilterStringOptionField):
     """Class that filters events by risk severity.
 
     Available options are provided as class attributes:
@@ -226,7 +229,3 @@ class RiskSeverity(FileEventFilterStringField):
     MODERATE = "MODERATE"
     LOW = "LOW"
     NO_RISK_INDICATED = "NO_RISK_INDICATED"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(RiskSeverity)

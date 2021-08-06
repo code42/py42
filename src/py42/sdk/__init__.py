@@ -9,7 +9,10 @@ from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.authority import AuthorityClient
 from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
+from py42.clients.loginconfig import LoginConfigurationClient
 from py42.clients.securitydata import SecurityDataClient
+from py42.exceptions import Py42Error
+from py42.exceptions import Py42UnauthorizedError
 from py42.services import Services
 from py42.services._auth import BearerAuth
 from py42.services._auth import CustomJWTAuth
@@ -57,7 +60,15 @@ def from_local_account(host_address, username, password, totp=None):
     client = SDKClient.from_local_account(host_address, username, password, totp)
 
     # test credentials
-    client.users.get_current()
+    try:
+        client.users.get_current()
+    except Py42UnauthorizedError as err:
+        login_type = client.loginconfig.get_for_user(username)["loginType"]
+        if login_type == "CLOUD_SSO":
+            raise Py42Error("SSO users are not supported in `from_local_account()`.")
+        msg = f"SDK initialization failed, double-check username/password, and provide two-factor TOTP token if Multi-Factor Auth configured for your user. User LoginConfig: {login_type}"
+        err.args = (msg,)
+        raise
     return client
 
 
@@ -131,6 +142,16 @@ class SDKClient:
         main_connection = Connection.from_host_address(host_address, auth=custom_auth)
 
         return cls(main_connection, custom_auth)
+
+    @property
+    def loginconfig(self):
+        """A collection of methods related to getting information about the login configuration
+        of user accounts.
+
+        Returns:
+            :class:`py42.clients.loginconfig.LoginConfigurationClient.`
+        """
+        return self._clients.loginconfig
 
     @property
     def serveradmin(self):
@@ -343,6 +364,7 @@ def _init_clients(services, connection):
     )
     archive = ArchiveClient(archive_accessor_factory, services.archive)
     auditlogs = AuditLogsClient(services.auditlogs)
+    loginconfig = LoginConfigurationClient(connection)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
@@ -351,5 +373,6 @@ def _init_clients(services, connection):
         archive=archive,
         auditlogs=auditlogs,
         cases=CasesClient(services.cases, services.casesfileevents),
+        loginconfig=loginconfig,
     )
     return clients

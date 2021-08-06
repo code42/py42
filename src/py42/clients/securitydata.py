@@ -1,5 +1,4 @@
 import re
-from threading import Lock
 
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
@@ -20,15 +19,13 @@ class SecurityDataClient:
         self._preservation_data_service = preservation_data_service
         self._saved_search_service = saved_search_service
         self._storage_service_factory = storage_service_factory
-        self._client_cache = {}
-        self._client_cache_lock = Lock()
 
     @property
     def savedsearches(self):
         """A collection of methods related to retrieving forensic search data.
 
         Returns:
-            :class: `py42._internal.services.SavedSearchService`
+            :class: `py42._internal.services.savedsearch.SavedSearchService`
         """
         return self._saved_search_service
 

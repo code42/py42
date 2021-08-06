@@ -148,7 +148,7 @@ class FileEventFilterStringField(QueryFilterStringField):
         return create_not_exists_filter_group(cls._term)
 
 
-class FileEventFilterStringOptionField(FileEventFilterStringField):
+class Choices:
     """Helper class for creating filters with the ``EXISTS``/``NOT_EXISTS`` filter clauses with additional choices() method."""
 
     @classmethod

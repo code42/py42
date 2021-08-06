@@ -1,10 +1,8 @@
+from py42.sdk.queries.fileevents.file_event_query import Choices
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.fileevents.file_event_query import (
-    FileEventFilterStringOptionField,
-)
 
 
-class ExposureType(FileEventFilterStringOptionField):
+class ExposureType(FileEventFilterStringField, Choices):
     """Class that filters events based on exposure type.
 
     Available options are provided as class attributes:
@@ -93,7 +91,7 @@ class RemovableMediaSerialNumber(FileEventFilterStringField):
     _term = "removableMediaSerialNumber"
 
 
-class SyncDestination(FileEventFilterStringOptionField):
+class SyncDestination(FileEventFilterStringField, Choices):
     """Class that filters events based on the name of the cloud service the file is synced with
     (applies to ``synced to cloud service`` events only).
 

@@ -22,7 +22,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - py42 no longer supports python 2.7 or python 3.5.
 
-- Usage of `Py42MFARequiredError`. Use `sdk.get_login_configuration_for_user()` instead to check if a user is configured for two-factor authentication.
+- Usage of `Py42MFARequiredError`. Use `sdk.loginconfig.get_for_user()` instead to check if a user is configured for two-factor authentication.
 
 ## 1.16.1 - 2021-07-20
 

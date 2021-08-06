@@ -25,7 +25,7 @@ class SecurityDataClient:
         """A collection of methods related to retrieving forensic search data.
 
         Returns:
-            :class: `py42._internal.services.savedsearch.SavedSearchService`
+            :class: `py42.services.savedsearch.SavedSearchService`
         """
         return self._saved_search_service
 

@@ -80,7 +80,7 @@ class RiskIndicator(FileEventFilterStringField):
             RiskIndicator.CloudDataExposures.choices()
             + RiskIndicator.CloudStorageUploads.choices()
             + RiskIndicator.CodeRepositoryUploads.choices()
-            + RiskIndicator.EmaiServiceUploads.choices()
+            + RiskIndicator.EmailServiceUploads.choices()
             + RiskIndicator.ExternalDevices.choices()
             + RiskIndicator.FileCategories.choices()
             + RiskIndicator.MessagingServiceUploads.choices()
@@ -127,7 +127,7 @@ class RiskIndicator(FileEventFilterStringField):
         def choices():
             return get_attribute_keys_from_class(RiskIndicator.CodeRepositoryUploads)
 
-    class EmaiServiceUploads:
+    class EmailServiceUploads:
         ONESIXTHREE_DOT_COM = "163.com upload"
         ONETWOSIX_DOT_COM = "126.com upload"
         AOL = "AOL upload"
@@ -145,7 +145,7 @@ class RiskIndicator(FileEventFilterStringField):
 
         @staticmethod
         def choices():
-            return get_attribute_keys_from_class(RiskIndicator.EmaiServiceUploads)
+            return get_attribute_keys_from_class(RiskIndicator.EmailServiceUploads)
 
     class ExternalDevices:
         AIRDROP = "AirDrop"

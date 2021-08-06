@@ -149,8 +149,16 @@ class FileEventFilterStringField(QueryFilterStringField):
 
 
 class FileEventFilterStringOptionField(FileEventFilterStringField):
+    """Helper class for creating filters with the ``EXISTS``/``NOT_EXISTS`` filter clauses with additional choices() method."""
+
     @classmethod
     def choices(cls):
+        """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` to find events
+        where filter data does not exist.
+
+        Returns:
+            :class:`~py42.sdk.queries.query_filter.FilterGroup`
+        """
         return get_attribute_keys_from_class(cls)
 
 

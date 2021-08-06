@@ -1,16 +1,12 @@
 from datetime import datetime
 
-from py42.util import get_attribute_keys_from_class
+from py42.sdk.queries.fileevents.file_event_query import Choices
 from py42.util import parse_timestamp_to_milliseconds_precision
 
 
-class CaseStatus:
+class CaseStatus(Choices):
     OPEN = "OPEN"
     CLOSED = "CLOSED"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(CaseStatus)
 
 
 class CasesClient:

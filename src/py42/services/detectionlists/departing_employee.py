@@ -3,24 +3,20 @@ from datetime import datetime
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserNotOnListError
+from py42.sdk.queries.fileevents.file_event_query import Choices
 from py42.services import BaseService
 from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
-from py42.util import get_attribute_keys_from_class
 
 _DATE_FORMAT = "%Y-%m-%d"
 
 
-class DepartingEmployeeFilters(_DetectionListFilters):
+class DepartingEmployeeFilters(_DetectionListFilters, Choices):
     """Constants available for filtering Departing Employee search results."""
 
     LEAVING_TODAY = "LEAVING_TODAY"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(DepartingEmployeeFilters)
 
 
 class DepartingEmployeeService(BaseService):

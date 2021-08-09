@@ -9,7 +9,10 @@ from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.authority import AuthorityClient
 from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
+from py42.clients.loginconfig import LoginConfigurationClient
 from py42.clients.securitydata import SecurityDataClient
+from py42.exceptions import Py42Error
+from py42.exceptions import Py42UnauthorizedError
 from py42.services import Services
 from py42.services._auth import BearerAuth
 from py42.services._auth import CustomJWTAuth
@@ -31,7 +34,6 @@ from py42.services.legalhold import LegalHoldService
 from py42.services.orgs import OrgService
 from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
-from py42.services.securitydata import SecurityDataService
 from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.users import UserService
@@ -58,7 +60,15 @@ def from_local_account(host_address, username, password, totp=None):
     client = SDKClient.from_local_account(host_address, username, password, totp)
 
     # test credentials
-    client.users.get_current()
+    try:
+        client.users.get_current()
+    except Py42UnauthorizedError as err:
+        login_type = client.loginconfig.get_for_user(username)["loginType"]
+        if login_type == "CLOUD_SSO":
+            raise Py42Error("SSO users are not supported in `from_local_account()`.")
+        msg = f"SDK initialization failed, double-check username/password, and provide two-factor TOTP token if Multi-Factor Auth configured for your user. User LoginConfig: {login_type}"
+        err.args = (msg,)
+        raise
     return client
 
 
@@ -134,6 +144,16 @@ class SDKClient:
         return cls(main_connection, custom_auth)
 
     @property
+    def loginconfig(self):
+        """A collection of methods related to getting information about the login configuration
+        of user accounts.
+
+        Returns:
+            :class:`py42.clients.loginconfig.LoginConfigurationClient.`
+        """
+        return self._clients.loginconfig
+
+    @property
     def serveradmin(self):
         """A collection of methods for getting server information for on-premise environments
         and tenant information for cloud environments.
@@ -149,7 +169,7 @@ class SDKClient:
         web-restores or finding a file on an archive.
 
         Returns:
-            :class:`py42.services.archive.ArchiveClient`
+            :class:`py42.clients.archive.ArchiveClient`
         """
         return self._clients.archive
 
@@ -210,7 +230,7 @@ class SDKClient:
             * Security plan information
 
         Returns:
-            :class:`py42.services.securitydata.SecurityDataClient`
+            :class:`py42.clients.securitydata.SecurityDataClient`
         """
         return self._clients.securitydata
 
@@ -220,7 +240,7 @@ class SDKClient:
         lists, such as departing employees.
 
         Returns:
-            :class:`py42.services.detectionlists.DetectionListsClient`
+            :class:`py42.clients.detectionlists.DetectionListsClient`
         """
         return self._clients.detectionlists
 
@@ -229,7 +249,7 @@ class SDKClient:
         """A collection of methods related to retrieving and updating alerts rules.
 
         Returns:
-            :class:`py42.services.alertrules.AlertRulesClient`
+            :class:`py42.clients.alertrules.AlertRulesClient`
         """
         return self._clients.alerts
 
@@ -238,7 +258,7 @@ class SDKClient:
         """A collection of methods for retrieving audit logs.
 
         Returns:
-            :class:`py42.services.auditlogs.AuditLogsService`
+            :class:`py42.clients.auditlogs.AuditLogsService`
         """
         return self._clients.auditlogs
 
@@ -297,7 +317,6 @@ def _init_services(main_connection, main_auth):
         devices=DeviceService(main_connection),
         legalhold=LegalHoldService(main_connection),
         orgs=OrgService(main_connection),
-        securitydata=SecurityDataService(main_connection),
         users=UserService(main_connection),
         alertrules=AlertRulesService(alert_rules_conn, user_ctx, user_profile_svc),
         alerts=AlertService(alerts_conn, user_ctx),
@@ -324,7 +343,6 @@ def _init_clients(services, connection):
         devices=services.devices,
         legalhold=services.legalhold,
         orgs=services.orgs,
-        securitydata=services.securitydata,
         users=services.users,
     )
     detectionlists = DetectionListsClient(
@@ -335,7 +353,6 @@ def _init_clients(services, connection):
     )
     alertrules = AlertRulesClient(services.alerts, services.alertrules)
     securitydata = SecurityDataClient(
-        services.securitydata,
         services.fileevents,
         services.preservationdata,
         services.savedsearch,
@@ -347,6 +364,7 @@ def _init_clients(services, connection):
     )
     archive = ArchiveClient(archive_accessor_factory, services.archive)
     auditlogs = AuditLogsClient(services.auditlogs)
+    loginconfig = LoginConfigurationClient(connection)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
@@ -355,5 +373,6 @@ def _init_clients(services, connection):
         archive=archive,
         auditlogs=auditlogs,
         cases=CasesClient(services.cases, services.casesfileevents),
+        loginconfig=loginconfig,
     )
     return clients

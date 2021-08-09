@@ -53,21 +53,5 @@ class FileArchiveAuth(StorageAuth):
         return storage_url, login_token
 
 
-class SecurityArchiveAuth(StorageAuth):
-    def __init__(self, connection, plan_uid, destination_guid):
-        super().__init__()
-        self._connection = connection
-        self._plan_uid = plan_uid
-        self._destination_guid = destination_guid
-
-    def get_tmp_auth(self):
-        uri = "/api/StorageAuthToken"
-        data = {"planUid": self._plan_uid, "destinationGuid": self._destination_guid}
-        response = self._connection.post(uri, json=data)
-        storage_url = response["serverUrl"]
-        login_token = response["loginToken"]
-        return storage_url, login_token
-
-
 def _get_new_storage_connection(storage_url):
     return Connection.from_host_address(storage_url)

@@ -1,5 +1,3 @@
-import re
-
 from py42.settings import debug
 
 
@@ -58,13 +56,6 @@ class Py42HTTPError(Py42ResponseError):
             debug.logger.debug(message)
 
         super().__init__(exception.response, message)
-
-
-class Py42SecurityPlanConnectionError(Py42HTTPError):
-    """An exception raised when the user is not authorized to access the requested resource."""
-
-    def __init__(self, exception, error_message):
-        super().__init__(exception, error_message)
 
 
 class Py42DeviceNotConnectedError(Py42ResponseError):
@@ -200,7 +191,7 @@ class Py42InvalidRuleOperationError(Py42HTTPError):
 
 
 class Py42MFARequiredError(Py42UnauthorizedError):
-    """An exception raised when a request requires multi-factor authentication"""
+    """Deprecated: An exception raised when a request requires multi-factor authentication"""
 
     def __init__(self, exception, message=None):
         message = message or "User requires multi-factor authentication."
@@ -353,11 +344,6 @@ def raise_py42_error(raised_error):
     if raised_error.response.status_code == 400:
         raise Py42BadRequestError(raised_error)
     elif raised_error.response.status_code == 401:
-        if raised_error.response.text and re.search(
-            "(TOTP_AUTH_CONFIGURATION_REQUIRED_FOR_USER|TIME_BASED_ONE_TIME_PASSWORD_REQUIRED)",
-            raised_error.response.text,
-        ):
-            raise Py42MFARequiredError(raised_error)
         raise Py42UnauthorizedError(raised_error)
     elif raised_error.response.status_code == 403:
         raise Py42ForbiddenError(raised_error)

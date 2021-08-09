@@ -58,13 +58,6 @@ class Py42HTTPError(Py42ResponseError):
         super().__init__(exception.response, message)
 
 
-class Py42SecurityPlanConnectionError(Py42HTTPError):
-    """An exception raised when the user is not authorized to access the requested resource."""
-
-    def __init__(self, exception, error_message):
-        super().__init__(exception, error_message)
-
-
 class Py42DeviceNotConnectedError(Py42ResponseError):
     """An exception raised when trying to push a restore to a device that is not
     connected to an Authority server."""

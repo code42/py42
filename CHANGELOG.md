@@ -26,6 +26,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Usage of `Py42MFARequiredError`. Use `sdk.loginconfig.get_for_user()` instead to check if a user is configured for two-factor authentication.
 
+- FED (File Extraction Detection) - related functionality from the `SecurityDataClient` class
+    - `get_security_plan_storage_info_list()`
+    - `get_all_plan_security_events()`
+    - `get_all_user_security_events()`
+    - `PlanStorageInfo` class
+
 ## 1.16.1 - 2021-07-20
 
 ### Fixed

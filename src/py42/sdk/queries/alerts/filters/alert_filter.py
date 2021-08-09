@@ -1,4 +1,4 @@
-from py42.sdk.queries.fileevents.file_event_query import Choices
+from py42.sdk.queries import Choices
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
 from py42.sdk.queries.query_filter import QueryFilterStringField

@@ -4,7 +4,6 @@ from py42.sdk.queries.query_filter import create_query_filter
 from py42.sdk.queries.query_filter import create_within_the_last_filter_group
 from py42.sdk.queries.query_filter import QueryFilterStringField
 from py42.sdk.queries.query_filter import QueryFilterTimestampField
-from py42.util import get_attribute_keys_from_class
 
 
 class FileEventQuery(BaseQuery):
@@ -146,20 +145,6 @@ class FileEventFilterStringField(QueryFilterStringField):
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
         return create_not_exists_filter_group(cls._term)
-
-
-class Choices:
-    """Helper class for creating filters with the ``EXISTS``/``NOT_EXISTS`` filter clauses with additional choices() method."""
-
-    @classmethod
-    def choices(cls):
-        """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` to find events
-        where filter data does not exist.
-
-        Returns:
-            :class:`~py42.sdk.queries.query_filter.FilterGroup`
-        """
-        return get_attribute_keys_from_class(cls)
 
 
 class FileEventFilterComparableField:

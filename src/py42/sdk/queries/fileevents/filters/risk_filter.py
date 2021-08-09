@@ -1,4 +1,4 @@
-from py42.sdk.queries.fileevents.file_event_query import Choices
+from py42.sdk.queries import Choices
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
 
 

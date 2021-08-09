@@ -25,10 +25,10 @@ class TestSavedSearchService:
         mock_connection.get.return_value = create_mock_response(mocker, "{}")
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
-        saved_search_service.get_by_id("TEst-id")
+        saved_search_service.get_by_id("test-id")
         assert (
             mock_connection.get.call_args[0][0]
-            == "/forensic-search/queryservice/api/v1/saved/TEst-id"
+            == "/forensic-search/queryservice/api/v1/saved/test-id"
         )
 
     def test_execute_calls_post_with_expected_uri(self, mock_connection, mocker):
@@ -64,8 +64,8 @@ class TestSavedSearchService:
 
         response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.get.return_value = response
-        file_event_client = FileEventService(mock_connection)
-        saved_search_client = SavedSearchService(mock_connection, file_event_client)
+        file_event_service = FileEventService(mock_connection)
+        saved_search_client = SavedSearchService(mock_connection, file_event_service)
         saved_search_client.execute(
             "test-id", page_number=test_custom_page_num,
         )
@@ -87,8 +87,8 @@ class TestSavedSearchService:
 
         response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.get.return_value = response
-        file_event_client = FileEventService(mock_connection)
-        saved_search_client = SavedSearchService(mock_connection, file_event_client)
+        file_event_service = FileEventService(mock_connection)
+        saved_search_client = SavedSearchService(mock_connection, file_event_service)
         saved_search_client.execute(
             "test-id",
             page_number=test_custom_page_num,
@@ -113,3 +113,57 @@ class TestSavedSearchService:
             mock_connection.get.call_args[0][0]
             == "/forensic-search/queryservice/api/v1/saved/test-id"
         )
+
+    def test_execute_get_all_calls_post_with_expected_uri(self, mock_connection, mocker):
+        response = create_mock_response(mocker, '{"searches": [{"groups": []}]}')
+        mock_connection.post.return_value = response
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.execute_get_all("test-id")
+        assert (
+            mock_connection.post.call_args[0][0]
+            == "/forensic-search/queryservice/api/v1/fileevent"
+        )
+
+    def test_execute_get_all_calls_post_with_expected_query_when_pg_token_is_not_passed(
+        self, mock_connection, mocker
+    ):
+        response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
+        mock_connection.get.return_value = response
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.execute_get_all("test-id")
+        assert mock_connection.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert (
+            posted_data["pgSize"] == 10000
+            and posted_data["pgNum"] == 1
+            and posted_data["groups"] == []
+            and posted_data["pgToken"] == ""
+        )
+
+    def test_execute_get_all_calls_post_with_expected_query_when_pg_token_is_passed(
+        self, mock_connection, mocker
+    ):
+        response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
+        mock_connection.get.return_value = response
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.execute_get_all("test-id")
+        assert mock_connection.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert (
+            posted_data["pgSize"] == 10000
+            and posted_data["pgNum"] == 1
+            and posted_data["groups"] == []
+            and posted_data["pgToken"] == ""
+        )
+
+    # def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_not_passed(
+
+    # def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_passed(
+
+    # def test_search_all_file_events_handles_unescaped_quote_chars_in_token(
+
+    # def test_search_all_file_events_handles_escaped_quote_chars_in_token(
+

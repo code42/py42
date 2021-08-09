@@ -1,3 +1,4 @@
+from py42.services.util import escape_quote_chars
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.services import BaseService
 
@@ -50,7 +51,7 @@ class SavedSearchService(BaseService):
 
     def execute(self, search_id, page_number=None, page_size=None):
         """
-        Execute a saved search for given search Id and return its results.
+        Executes a saved search for given search Id, returns up to the first 10,000 events.
 
         Args:
             search_id (str): Unique search Id of the saved search.
@@ -60,4 +61,21 @@ class SavedSearchService(BaseService):
             :class:`py42.response.Py42Response`
         """
         query = self.get_query(search_id, page_number=page_number, page_size=page_size)
+        return self._file_event_client.search(query)
+
+    def execute_get_all(self, search_id, page_token=''):
+        """
+        Executes a saved search for given search Id, returns a page of events with a token in the response to retrieve next page.
+
+        Args:
+            search_id (str): Unique search Id of the saved search.
+            page_token (str, optional): A token used to indicate the starting point for
+                additional page results. For the first page, do not pass ``page_token``. For
+                all consecutive pages, pass the token from the previous response from
+                field ``nextPgToken``. Defaults to empty string.
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing a page of events.
+        """
+        query = self.get_query(search_id)
+        query.page_token = escape_quote_chars(page_token)
         return self._file_event_client.search(query)

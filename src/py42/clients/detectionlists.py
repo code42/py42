@@ -1,6 +1,6 @@
+from py42.choices import Choices
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UnableToCreateProfileError
-from py42.sdk.queries import Choices
 
 
 class RiskTags(Choices):

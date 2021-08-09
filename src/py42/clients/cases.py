@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from py42.sdk.queries import Choices
+from py42.choices import Choices
 from py42.util import parse_timestamp_to_milliseconds_precision
 
 

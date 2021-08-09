@@ -1,6 +1,5 @@
 from py42 import settings
 from py42.sdk.queries.query_filter import FilterGroup
-from py42.util import get_attribute_keys_from_class
 
 
 class BaseQuery:
@@ -27,16 +26,3 @@ class BaseQuery:
     @classmethod
     def all(cls, *args):
         return cls(*args)
-
-
-class Choices:
-    """Helper class to provide the choices() method to a class."""
-
-    @classmethod
-    def choices(cls):
-        """Returns attribute names for the given class.
-
-        Returns:
-            (list): A list containing the attribute names of the given class.
-        """
-        return get_attribute_keys_from_class(cls)

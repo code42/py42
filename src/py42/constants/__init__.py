@@ -1,4 +1,4 @@
-from py42.sdk.queries import Choices
+from py42.choices import Choices
 
 
 class SortDirection(Choices):

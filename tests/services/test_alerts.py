@@ -423,6 +423,18 @@ class TestAlertService:
         alert_service.get_aggregate_data("alert-id")
         assert (
             mock_connection.post.call_args[0][0]
+            == "/svc/api/v1/query-details-aggregate"
+        )
+        post_data = mock_connection.post.call_args[1]["json"]
+        assert post_data["alertId"] == "alert-id"
+
+    def test_get_v2_aggregate_data_calls_post_with_expected_url_and_data(
+        self, mock_connection, user_context
+    ):
+        alert_service = AlertService(mock_connection, user_context)
+        alert_service.get_v2_aggregate_data("alert-id")
+        assert (
+            mock_connection.post.call_args[0][0]
             == "/svc/api/v2/query-details-aggregate"
         )
         post_data = mock_connection.post.call_args[1]["json"]

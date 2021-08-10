@@ -259,6 +259,13 @@ class TestAlertsClient:
         alert_client.get_aggregate_data("alert-id")
         mock_alerts_service.get_aggregate_data.assert_called_once_with("alert-id")
 
+    def test_alerts_client_calls_get_v2_aggregate_data_with_expected_value_and_param(
+        self, mock_alerts_service, mock_alert_rules_service,
+    ):
+        alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
+        alert_client.get_v2_aggregate_data("alert-id")
+        mock_alerts_service.get_v2_aggregate_data.assert_called_once_with("alert-id")
+
     def test_alerts_client_get_all_alert_details_calls_get_details_for_each_page(
         self, mock_alerts_service_with_pages, mock_alert_rules_service
     ):

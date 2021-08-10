@@ -7,7 +7,7 @@ from py42.services.util import get_all_pages
 
 
 class AlertService(BaseService):
-    _uri_prefix = "/svc/api/v1/{0}"
+    _uri_prefix = "/svc/api"
 
     _CREATED_AT = "CreatedAt"
     _RULE_METADATA = "ruleMetadata"
@@ -22,13 +22,13 @@ class AlertService(BaseService):
         if page_size:
             query.page_size = page_size
         query = self._add_tenant_id_if_missing(query)
-        uri = self._uri_prefix.format("query-alerts")
+        uri = f"{self._uri_prefix}/v1/query-alerts"
         return self._connection.post(uri, json=query)
 
     def get_search_page(self, query, page_num, page_size):
         query.page_number = page_num - 1
         query.page_size = page_size
-        uri = self._uri_prefix.format("query-alerts")
+        uri = f"{self._uri_prefix}/v1/query-alerts"
         query = self._add_tenant_id_if_missing(query)
         return self._connection.post(uri, json=query)
 
@@ -44,7 +44,7 @@ class AlertService(BaseService):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
         tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format("query-details")
+        uri = f"{self._uri_prefix}/v1/query-details"
         data = {"tenantId": tenant_id, "alertIds": alert_ids}
         results = self._connection.post(uri, json=data)
         return _convert_observation_json_strings_to_objects(results)
@@ -53,7 +53,7 @@ class AlertService(BaseService):
         if not isinstance(alert_ids, (list, tuple)):
             alert_ids = [alert_ids]
         tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format("update-state")
+        uri = f"{self._uri_prefix}/v1/update-state"
         data = {
             "tenantId": tenant_id,
             "alertIds": alert_ids,
@@ -86,7 +86,7 @@ class AlertService(BaseService):
             "srtKey": sort_key,
             "srtDirection": sort_direction,
         }
-        uri = self._uri_prefix.format("rules/query-rule-metadata")
+        uri = f"{self._uri_prefix}/v1/rules/query-rule-metadata"
         return self._connection.post(uri, json=data)
 
     def get_all_rules(self, sort_key=_CREATED_AT, sort_direction="DESC"):
@@ -125,7 +125,7 @@ class AlertService(BaseService):
 
     def update_note(self, alert_id, note):
         tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format("add-note")
+        uri = f"{self._uri_prefix}/v1/add-note"
         data = {
             "tenantId": tenant_id,
             "alertId": alert_id,
@@ -134,7 +134,7 @@ class AlertService(BaseService):
         return self._connection.post(uri, json=data)
 
     def get_aggregate_data(self, alert_id):
-        uri = self._uri_prefix.format("query-details-aggregate")
+        uri = f"{self._uri_prefix}/v2/query-details-aggregate"
         data = {
             "alertId": alert_id,
         }

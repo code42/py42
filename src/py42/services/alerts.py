@@ -135,7 +135,7 @@ class AlertService(BaseService):
 
     def get_aggregate_data(self, alert_id):
         uri = f"{self._uri_prefix}/v1/query-details-aggregate"
-        data = { "alertId": alert_id}
+        data = {"alertId": alert_id}
         return self._connection.post(uri, json=data)
 
     def get_v2_aggregate_data(self, alert_id):

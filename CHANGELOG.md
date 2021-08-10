@@ -12,9 +12,6 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- New method `sdk.alerts.get_v2_aggregate_data()` that does the same as `sdk.alerts.get_aggregate_data()` except
-  calls the V2 version of the API.
-
 - `RiskIndicator` and `RiskSeverity` filter classes to new `py42.sdk.queries.fileevents.filters.risk_filter` module.
 
 - Support for Incydr SKUs that do not include backup and restore functionality to `sdk.securitydata.stream_file_by_sha256()` and  `sdk.securitydata.stream_file_by_md5()`.

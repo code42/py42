@@ -9,12 +9,12 @@ from py42.sdk.queries.alerts.filters import AlertState
 from py42.services._connection import Connection
 from py42.services.alerts import AlertService
 
+
 TEST_RESPONSE = """
 {"type$": "RULE_METADATA_SEARCH_RESPONSE",
  "ruleMetadata": [{ "name": "TESTNAME"}, { "name": "TSTNAME"}, { "name": "TesTNAME"}]
 , "totalCount": 1, "problems": []}
 """
-
 TEST_PARSEABLE_ALERT_DETAIL_RESPONSE = """
 {
     "type$": "ALERT_DETAILS_RESPONSE",
@@ -34,7 +34,6 @@ TEST_PARSEABLE_ALERT_DETAIL_RESPONSE = """
     ]
 }
 """
-
 TEST_NON_PARSEABLE_ALERT_DETAIL_RESPONSE = """
 {
     "type$": "ALERT_DETAILS_RESPONSE",
@@ -52,6 +51,77 @@ TEST_NON_PARSEABLE_ALERT_DETAIL_RESPONSE = """
             ]
         }
     ]
+}
+"""
+TEST_ALERT_AGGREGATE_RESPONSE = """{
+  "type$": "ALERT_DETAILS_IN_AGGREGATE_V2_RESPONSE",
+  "alert": {
+    "type$": "ALERT_DETAILS_AGGREGATE_V2",
+    "tenantId": "093845-3333-bbbb-a6d9-11213cfbb33",
+    "type": "FED_COMPOSITE",
+    "name": "Zip file exfiltration",
+    "description": "Alerts you about the movement of archive files that may conceal file contents.",
+    "actor": "test.testerson@example.com",
+    "actorId": "111154444252344565",
+    "target": "N/A",
+    "severity": "HIGH",
+    "ruleId": "4455661d-1111-2222-3333-33d83f500000",
+    "ruleSource": "Alerting",
+    "id": "d8e67016-1969-4cc9-9590-d52ab20d349a",
+    "createdAt": "2021-08-09T15:21:56.9761420Z",
+    "state": "OPEN",
+    "observations": [
+      {
+        "type$": "OBSERVATION_AGGREGATE",
+        "observedAt": "2021-08-09T15:00:00.0000000Z",
+        "type": "FedEndpointExfiltration",
+        "data": "{}"
+      }
+    ],
+    "firstObservationAt": "2021-08-09T15:00:00.0000000Z",
+    "lastObservationAt": "2021-08-09T15:05:00.0000000Z",
+    "fileCount": 1,
+    "totalFileSize": 112303,
+    "fileCategories": [
+      {
+        "type$": "FILE_CATEGORY",
+        "category": "Archive",
+        "fileCount": 1,
+        "totalFileSize": 112303
+      }
+    ],
+    "riskSeveritySummary": [
+      {
+        "type$": "RISK_SEVERITY_SUMMARY",
+        "severity": "CRITICAL",
+        "numEvents": 1,
+        "summarizedRiskIndicators": [
+          {
+            "type$": "SUMMARIZED_RISK_INDICATOR",
+            "name": "Zip",
+            "numEvents": 1
+          },
+          {
+            "type$": "SUMMARIZED_RISK_INDICATOR",
+            "name": "Remote",
+            "numEvents": 1
+          },
+          {
+            "type$": "SUMMARIZED_RISK_INDICATOR",
+            "name": "Yahoo upload",
+            "numEvents": 1
+          },
+          {
+            "type$": "SUMMARIZED_RISK_INDICATOR",
+            "name": "Departing",
+            "numEvents": 1
+          }
+        ]
+      }
+    ],
+    "ffsUrlEndpoint": "https://ffs-url-test.example.com",
+    "alertUrl": "https://alerts.example.com/alert-id"
+  }
 }
 """
 
@@ -423,19 +493,22 @@ class TestAlertService:
         alert_service.get_aggregate_data("alert-id")
         assert (
             mock_connection.post.call_args[0][0]
-            == "/svc/api/v1/query-details-aggregate"
-        )
-        post_data = mock_connection.post.call_args[1]["json"]
-        assert post_data["alertId"] == "alert-id"
-
-    def test_get_v2_aggregate_data_calls_post_with_expected_url_and_data(
-        self, mock_connection, user_context
-    ):
-        alert_service = AlertService(mock_connection, user_context)
-        alert_service.get_v2_aggregate_data("alert-id")
-        assert (
-            mock_connection.post.call_args[0][0]
             == "/svc/api/v2/query-details-aggregate"
         )
         post_data = mock_connection.post.call_args[1]["json"]
         assert post_data["alertId"] == "alert-id"
+
+    def test_get_aggregate_data_creates_alias_for_ffs_url(
+        self, mocker, mock_connection, user_context
+    ):
+        # This is to support the method when it once called the v1 api.
+        mock_connection.post.return_value = create_mock_response(
+            mocker, TEST_ALERT_AGGREGATE_RESPONSE
+        )
+        alert_service = AlertService(mock_connection, user_context)
+        response = alert_service.get_aggregate_data("alert-id")
+        assert (
+            response["alert"]["ffsUrl"]
+            == "https://ffs-url-test.example.com"
+            == response["alert"]["ffsUrlEndpoint"]
+        )

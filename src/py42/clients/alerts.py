@@ -137,17 +137,6 @@ class AlertsClient:
         """
         return self._alert_service.get_aggregate_data(alert_id)
 
-    def get_v2_aggregate_data(self, alert_id):
-        """Gets alert summary with details about observations and risk indicators.
-
-        Args:
-            alert_id (str): Gets the details for the alert with the given ID.
-
-        Returns:
-            :class:`py42.response.Py42Response`
-        """
-        return self._alert_service.get_v2_aggregate_data(alert_id)
-
     def get_all_alert_details(self, query):
         """
         Helper method that combines :func:`.search_all_pages()` and :func:`.get_details()`

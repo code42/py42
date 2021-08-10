@@ -134,14 +134,11 @@ class AlertService(BaseService):
         return self._connection.post(uri, json=data)
 
     def get_aggregate_data(self, alert_id):
-        uri = f"{self._uri_prefix}/v1/query-details-aggregate"
-        data = {"alertId": alert_id}
-        return self._connection.post(uri, json=data)
-
-    def get_v2_aggregate_data(self, alert_id):
         uri = f"{self._uri_prefix}/v2/query-details-aggregate"
         data = {"alertId": alert_id}
-        return self._connection.post(uri, json=data)
+        response = self._connection.post(uri, json=data)
+        response.data["alert"]["ffsUrl"] = response.data["alert"].get("ffsUrlEndpoint")
+        return response
 
 
 def _convert_observation_json_strings_to_objects(results):

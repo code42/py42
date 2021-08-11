@@ -6,9 +6,9 @@ class Choices:
 
     @classmethod
     def choices(cls):
-        """Returns attribute names for the given class.
+        """Returns attribute values for the given class.
 
         Returns:
-            (list): A list containing the attribute names of the given class.
+            (list): A list containing the attribute values of the given class.
         """
         return get_attribute_keys_from_class(cls)

@@ -1,5 +1,5 @@
+from py42.choices import Choices
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.util import get_attribute_keys_from_class
 
 
 class RiskIndicator(FileEventFilterStringField):
@@ -86,7 +86,7 @@ class RiskIndicator(FileEventFilterStringField):
             + RiskIndicator.UserBehavior.choices()
         )
 
-    class CloudDataExposures:
+    class CloudDataExposures(Choices):
         PUBLIC_CORPORATE_BOX = "Public link from corporate Box"
         PUBLIC_CORPORATE_GOOGLE_DRIVE = "Public link from corporate Google Drive"
         PUBLIC_CORPORATE_ONEDRIVE = "Public link from corporate OneDrive"
@@ -95,11 +95,7 @@ class RiskIndicator(FileEventFilterStringField):
         SHARED_CORPORATE_GOOGLE_DRIVE = "Shared from corporate Google Drive"
         SHARED_CORPORATE_ONEDRIVE = "Shared from corporate OneDrive"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.CloudDataExposures)
-
-    class CloudStorageUploads:
+    class CloudStorageUploads(Choices):
         AMAZON_DRIVE = "Amazon Drive upload"
         BOX = "Box upload"
         DROPBOX = "Dropbox upload"
@@ -109,22 +105,14 @@ class RiskIndicator(FileEventFilterStringField):
         ONEDRIVE = "OneDrive upload"
         ZOHO = "Zoho WorkDrive upload"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.CloudStorageUploads)
-
-    class CodeRepositoryUploads:
+    class CodeRepositoryUploads(Choices):
         BITBUCKET = "Bitbucket upload"
         GITHUB = "GitHub upload"
         GITLAB = "GitLab upload"
         SOURCEFORGE = "SourceForge upload"
         STASH = "Stash upload"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.CodeRepositoryUploads)
-
-    class EmailServiceUploads:
+    class EmailServiceUploads(Choices):
         ONESIXTHREE_DOT_COM = "163.com upload"
         ONETWOSIX_DOT_COM = "126.com upload"
         AOL = "AOL upload"
@@ -140,19 +128,11 @@ class RiskIndicator(FileEventFilterStringField):
         YAHOO = "Yahoo upload"
         ZOHO_MAIL = "Zoho Mail upload"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.EmailServiceUploads)
-
-    class ExternalDevices:
+    class ExternalDevices(Choices):
         AIRDROP = "AirDrop"
         REMOVABLE_MEDIA = "Removable media"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.ExternalDevices)
-
-    class FileCategories:
+    class FileCategories(Choices):
         AUDIO = "Audio"
         DOCUMENT = "Document"
         EXECUTABLE = "Executable"
@@ -166,49 +146,29 @@ class RiskIndicator(FileEventFilterStringField):
         VIRTUAL_DISK_IMAGE = "Virtual Disk Image"
         ZIP = "Zip"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.FileCategories)
-
-    class MessagingServiceUploads:
+    class MessagingServiceUploads(Choices):
         FACEBOOK_MESSENGER = "Facebook Messenger upload"
         MICROSOFT_TEAMS = "Microsoft Teams upload"
         SLACK = "Slack upload"
         WHATSAPP = "WhatsApp upload"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.MessagingServiceUploads)
-
-    class Other:
+    class Other(Choices):
         OTHER = "Other destination"
         UNKNOWN = "Unknown destination"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.Other)
-
-    class SocialMediaUploads:
+    class SocialMediaUploads(Choices):
         FACEBOOK = "Facebook upload"
         LINKEDIN = "LinkedIn upload"
         REDDIT = "Reddit upload"
         TWITTER = "Twitter upload"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.SocialMediaUploads)
-
-    class UserBehavior:
+    class UserBehavior(Choices):
         FILE_MISMATCH = "File mismatch"
         OFF_HOURS = "Off hours"
         REMOTE = "Remote"
 
-        @staticmethod
-        def choices():
-            return get_attribute_keys_from_class(RiskIndicator.UserBehavior)
 
-
-class RiskSeverity(FileEventFilterStringField):
+class RiskSeverity(FileEventFilterStringField, Choices):
     """Class that filters events by risk severity.
 
     Available options are provided as class attributes:
@@ -226,7 +186,3 @@ class RiskSeverity(FileEventFilterStringField):
     MODERATE = "MODERATE"
     LOW = "LOW"
     NO_RISK_INDICATED = "NO_RISK_INDICATED"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(RiskSeverity)

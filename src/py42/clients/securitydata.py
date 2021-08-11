@@ -213,5 +213,3 @@ def _get_first_matching_version(versions, md5_hash):
     exact_match = next((x for x in versions if x["fileMD5"] == md5_hash), None)
     if exact_match:
         return exact_match
-
-

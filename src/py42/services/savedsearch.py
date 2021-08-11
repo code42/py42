@@ -1,6 +1,6 @@
-from py42.services.util import escape_quote_chars
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.services import BaseService
+from py42.services.util import escape_quote_chars
 
 
 class SavedSearchService(BaseService):
@@ -63,7 +63,7 @@ class SavedSearchService(BaseService):
         query = self.get_query(search_id, page_number=page_number, page_size=page_size)
         return self._file_event_client.search(query)
 
-    def execute_get_all(self, search_id, page_token=''):
+    def execute_get_all(self, search_id, page_token=""):
         """
         Executes a saved search for given search Id, returns a page of events with a token in the response to retrieve next page.
 

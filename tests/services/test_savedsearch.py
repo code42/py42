@@ -114,7 +114,9 @@ class TestSavedSearchService:
             == "/forensic-search/queryservice/api/v1/saved/test-id"
         )
 
-    def test_execute_get_all_calls_post_with_expected_uri(self, mock_connection, mocker):
+    def test_execute_get_all_calls_post_with_expected_uri(
+        self, mock_connection, mocker
+    ):
         response = create_mock_response(mocker, '{"searches": [{"groups": []}]}')
         mock_connection.post.return_value = response
         file_event_service = FileEventService(mock_connection)
@@ -125,7 +127,7 @@ class TestSavedSearchService:
             == "/forensic-search/queryservice/api/v1/fileevent"
         )
 
-    def test_execute_get_all_calls_post_with_expected_query_when_pg_token_is_not_passed(
+    def test_execute_get_all_calls_post_with_expected_query_without_token(
         self, mock_connection, mocker
     ):
         response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
@@ -137,33 +139,41 @@ class TestSavedSearchService:
         posted_data = mock_connection.post.call_args[1]["json"]
         assert (
             posted_data["pgSize"] == 10000
-            and posted_data["pgNum"] == 1
             and posted_data["groups"] == []
             and posted_data["pgToken"] == ""
         )
 
-    def test_execute_get_all_calls_post_with_expected_query_when_pg_token_is_passed(
+    def test_execute_get_all_handles_unescaped_quote_chars_in_token(
         self, mock_connection, mocker
     ):
         response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.get.return_value = response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
-        saved_search_service.execute_get_all("test-id")
+        unescaped_token = '1234_"abcde"'
+        escaped_token = r"1234_\"abcde\""
+        saved_search_service.execute_get_all("test-id", unescaped_token)
         assert mock_connection.post.call_count == 1
         posted_data = mock_connection.post.call_args[1]["json"]
         assert (
             posted_data["pgSize"] == 10000
-            and posted_data["pgNum"] == 1
             and posted_data["groups"] == []
-            and posted_data["pgToken"] == ""
+            and posted_data["pgToken"] == escaped_token
         )
 
-    # def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_not_passed(
-
-    # def test_search_all_file_events_calls_search_with_expected_params_when_pg_token_is_passed(
-
-    # def test_search_all_file_events_handles_unescaped_quote_chars_in_token(
-
-    # def test_search_all_file_events_handles_escaped_quote_chars_in_token(
-
+    def test_execute_get_all_handles_escaped_quote_chars_in_token(
+        self, mock_connection, mocker
+    ):
+        response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
+        mock_connection.get.return_value = response
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        escaped_token = r"1234_\"abcde\""
+        saved_search_service.execute_get_all("test-id", escaped_token)
+        assert mock_connection.post.call_count == 1
+        posted_data = mock_connection.post.call_args[1]["json"]
+        assert (
+            posted_data["pgSize"] == 10000
+            and posted_data["groups"] == []
+            and posted_data["pgToken"] == escaped_token
+        )

@@ -1,4 +1,4 @@
-from py42.util import get_attribute_keys_from_class
+from py42.util import get_attribute_values_from_class
 
 
 class Choices:
@@ -11,4 +11,4 @@ class Choices:
         Returns:
             (list): A list containing the attribute values of the given class.
         """
-        return get_attribute_keys_from_class(cls)
+        return get_attribute_values_from_class(cls)

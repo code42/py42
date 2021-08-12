@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- New method `sdk.securitydata.savedsearches.execute_get_all()` which makes use of page tokens when a search query returns over 10,000 results.
+
+### Removed
+
 ## 1.17.0 - 2021-08-10
 
 ### Added

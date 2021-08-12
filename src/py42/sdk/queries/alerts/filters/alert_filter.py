@@ -1,8 +1,8 @@
+from py42.choices import Choices
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
 from py42.sdk.queries.query_filter import QueryFilterStringField
 from py42.sdk.queries.query_filter import QueryFilterTimestampField
-from py42.util import get_attribute_keys_from_class
 from py42.util import MICROSECOND_FORMAT
 from py42.util import parse_timestamp_to_microseconds_precision
 
@@ -113,7 +113,7 @@ class RuleId(QueryFilterStringField):
     _term = "ruleId"
 
 
-class RuleSource(QueryFilterStringField):
+class RuleSource(QueryFilterStringField, Choices):
     """Class that filters alerts based on rule source.
 
     Available options are:
@@ -128,12 +128,8 @@ class RuleSource(QueryFilterStringField):
     DEPARTING_EMPLOYEE = "Departing Employee"
     HIGH_RISK_EMPLOYEE = "High Risk Employee"
 
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(RuleSource)
 
-
-class RuleType(QueryFilterStringField):
+class RuleType(QueryFilterStringField, Choices):
     """Class that filters alerts based on rule type.
 
     Available options are:
@@ -148,10 +144,6 @@ class RuleType(QueryFilterStringField):
     CLOUD_SHARE_PERMISSIONS = "FedCloudSharePermissions"
     FILE_TYPE_MISMATCH = "FedFileTypeMismatch"
 
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(RuleType)
-
 
 class Description(AlertQueryFilterStringField):
     """Class that filters alerts based on rule description text."""
@@ -159,7 +151,7 @@ class Description(AlertQueryFilterStringField):
     _term = "description"
 
 
-class Severity(QueryFilterStringField):
+class Severity(QueryFilterStringField, Choices):
     """Class that filters alerts based on severity.
 
     Available options are:
@@ -174,12 +166,8 @@ class Severity(QueryFilterStringField):
     MEDIUM = "MEDIUM"
     LOW = "LOW"
 
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(Severity)
 
-
-class AlertState(QueryFilterStringField):
+class AlertState(QueryFilterStringField, Choices):
     """Class that filters alerts based on alert state.
 
     Available options are:
@@ -195,7 +183,3 @@ class AlertState(QueryFilterStringField):
     DISMISSED = "RESOLVED"
     PENDING = "PENDING"
     IN_PROGRESS = "IN_PROGRESS"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(AlertState)

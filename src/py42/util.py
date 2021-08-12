@@ -75,14 +75,14 @@ def format_dict(dict_, label=None):
     return indented_dict
 
 
-def get_attribute_keys_from_class(cls):
-    """Returns attribute names for the given class.
+def get_attribute_values_from_class(cls):
+    """Returns attribute values for the given class.
 
     Args:
         cls (class): The class to obtain attributes from.
 
     Returns:
-        (list): A list containing the attribute names of the given class.
+        (list): A list containing the attribute values of the given class.
     """
     return [
         cls().__getattribute__(attr)

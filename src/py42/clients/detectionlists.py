@@ -1,9 +1,9 @@
+from py42.choices import Choices
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UnableToCreateProfileError
-from py42.util import get_attribute_keys_from_class
 
 
-class RiskTags:
+class RiskTags(Choices):
     """The available RiskTags for :meth:`~py42.clients.detectionlists.DetectionListsClient.add_user_risk_tags()`
     and :meth:`~py42.clients.detectionlists.DetectionListsClient.remove_user_risk_tags()`"""
 
@@ -14,10 +14,6 @@ class RiskTags:
     SUSPICIOUS_SYSTEM_ACTIVITY = "SUSPICIOUS_SYSTEM_ACTIVITY"
     POOR_SECURITY_PRACTICES = "POOR_SECURITY_PRACTICES"
     CONTRACT_EMPLOYEE = "CONTRACT_EMPLOYEE"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(RiskTags)
 
 
 class DetectionListsClient:

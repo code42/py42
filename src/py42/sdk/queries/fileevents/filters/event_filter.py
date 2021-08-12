@@ -1,10 +1,10 @@
+from py42.choices import Choices
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterTimestampField
 from py42.sdk.queries.query_filter import QueryFilterBooleanField
-from py42.util import get_attribute_keys_from_class
 
 
-class EventTimestamp(FileEventFilterTimestampField):
+class EventTimestamp(FileEventFilterTimestampField, Choices):
     """Class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These
@@ -36,12 +36,8 @@ class EventTimestamp(FileEventFilterTimestampField):
     FOURTEEN_DAYS = "P14D"
     THIRTY_DAYS = "P30D"
 
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(EventTimestamp)
 
-
-class EventType(FileEventFilterStringField):
+class EventType(FileEventFilterStringField, Choices):
     """Class that filters file events based on event type.
 
     Available event types are provided as class attributes:
@@ -68,10 +64,6 @@ class EventType(FileEventFilterStringField):
     EMAILED = "EMAILED"
     PRINTED = "PRINTED"
 
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(EventType)
-
 
 class InsertionTimestamp(FileEventFilterTimestampField):
     """Class that filters events based on the timestamp of when the event was actually added to the
@@ -84,7 +76,7 @@ class InsertionTimestamp(FileEventFilterTimestampField):
     _term = "insertionTimestamp"
 
 
-class Source(FileEventFilterStringField):
+class Source(FileEventFilterStringField, Choices):
     """Class that filters events by event source.
 
     Available source types are provided as class attributes:
@@ -109,10 +101,6 @@ class Source(FileEventFilterStringField):
     BOX = "Box"
     GMAIL = "Gmail"
     OFFICE_365 = "Office365"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(Source)
 
 
 class MimeTypeMismatch(QueryFilterBooleanField):

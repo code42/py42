@@ -22,7 +22,7 @@ class TestClass:
 
 
 def test_get_attribute_keys_from_class_returns_public_class_attribute_keys():
-    public_attributes = util.get_attribute_keys_from_class(TestClass)
+    public_attributes = util.get_attribute_values_from_class(TestClass)
     assert set(public_attributes) == {"value1", "value2"}
 
 

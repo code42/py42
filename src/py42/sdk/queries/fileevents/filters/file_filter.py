@@ -1,9 +1,9 @@
+from py42.choices import Choices
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterComparableField
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.util import get_attribute_keys_from_class
 
 
-class FileCategory(FileEventFilterStringField):
+class FileCategory(FileEventFilterStringField, Choices):
     """Class that filters events by category of the file observed.
 
     Available file categories are provided as class attributes:
@@ -36,10 +36,6 @@ class FileCategory(FileEventFilterStringField):
     VIDEO = "Video"
     VIRTUAL_DISK_IMAGE = "VirtualDiskImage"
     ZIP = "Archive"
-
-    @staticmethod
-    def choices():
-        return get_attribute_keys_from_class(FileCategory)
 
 
 class FileName(FileEventFilterStringField):

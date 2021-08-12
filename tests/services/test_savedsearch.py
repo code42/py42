@@ -1,8 +1,6 @@
-import pytest
 from tests.conftest import create_mock_response
 
 from py42 import settings
-from py42.services._connection import Connection
 from py42.services.fileevent import FileEventService
 from py42.services.savedsearch import SavedSearchService
 
@@ -13,10 +11,6 @@ FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 
 
 class TestSavedSearchService:
-    @pytest.fixture
-    def connection(self, mocker):
-        return mocker.MagicMock(spec=Connection)
-
     def test_get_calls_get_with_expected_uri(self, mock_connection, mocker):
         mock_connection.get.return_value = create_mock_response(mocker, "{}")
         file_event_service = FileEventService(mock_connection)
@@ -128,14 +122,14 @@ class TestSavedSearchService:
         mock_connection.post.return_value = response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
-        saved_search_service.execute_get_all("test-id")
+        saved_search_service.search_all_file_events("test-id")
         assert mock_connection.post.call_args[0][0] == FILE_EVENT_URI
 
     def test_execute_get_all_calls_post_with_expected_query_without_token(
-        self, connection
+        self, mock_connection
     ):
-        file_event_service = FileEventService(connection)
-        saved_search_service = SavedSearchService(connection, file_event_service)
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
 
         successful_response = {
             "totalCount": None,
@@ -143,9 +137,9 @@ class TestSavedSearchService:
             "nextPgToken": None,
             "problems": None,
         }
-        connection.post.return_value = successful_response
+        mock_connection.post.return_value = successful_response
 
-        actual_response = saved_search_service.execute_get_all("test-id")
+        actual_response = saved_search_service.search_all_file_events("test-id")
         expected = {
             "groupClause": "AND",
             "groups": [],
@@ -155,14 +149,14 @@ class TestSavedSearchService:
             "pgSize": 10000,
         }
 
-        connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
+        mock_connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
         assert actual_response is successful_response
 
     def test_execute_get_all_calls_post_with_expected_query_with_token(
-        self, connection
+        self, mock_connection
     ):
-        file_event_service = FileEventService(connection)
-        saved_search_service = SavedSearchService(connection, file_event_service)
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
 
         successful_response = {
             "totalCount": None,
@@ -170,9 +164,9 @@ class TestSavedSearchService:
             "nextPgToken": "pqr",
             "problems": None,
         }
-        connection.post.return_value = successful_response
+        mock_connection.post.return_value = successful_response
 
-        actual_response = saved_search_service.execute_get_all("test-id", "abc")
+        actual_response = saved_search_service.search_all_file_events("test-id", "abc")
         expected = {
             "groupClause": "AND",
             "groups": [],
@@ -182,7 +176,7 @@ class TestSavedSearchService:
             "pgSize": 10000,
         }
 
-        connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
+        mock_connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
         assert actual_response is successful_response
 
     def test_execute_get_all_handles_unescaped_quote_chars_in_token(
@@ -194,7 +188,7 @@ class TestSavedSearchService:
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
         unescaped_token = '1234_"abcde"'
         escaped_token = r"1234_\"abcde\""
-        saved_search_service.execute_get_all("test-id", unescaped_token)
+        saved_search_service.search_all_file_events("test-id", unescaped_token)
         expected = {
             "groupClause": "AND",
             "groups": [],
@@ -213,7 +207,7 @@ class TestSavedSearchService:
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
         escaped_token = r"1234_\"abcde\""
-        saved_search_service.execute_get_all("test-id", escaped_token)
+        saved_search_service.search_all_file_events("test-id", escaped_token)
         expected = {
             "groupClause": "AND",
             "groups": [],

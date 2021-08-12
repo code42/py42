@@ -63,7 +63,20 @@ class SavedSearchService(BaseService):
         query = self.get_query(search_id, page_number=page_number, page_size=page_size)
         return self._file_event_client.search(query)
 
-    def execute_get_all(self, search_id, page_token=""):
+    def search_file_events(self, search_id, page_number=None, page_size=None):
+        """
+        Alias method for `execute()`. Executes a saved search for given search Id, returns up to the first 10,000 events.
+
+        Args:
+            search_id (str): Unique search Id of the saved search.
+            page_number (int, optional): The consecutive group of results of size page_size in the result set to return. Defaults to None.
+            page_size (int, optional): The maximum number of results to be returned. Defaults to None.
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        return self.execute(search_id, page_number=page_number, page_size=page_size)
+
+    def search_all_file_events(self, search_id, page_token=""):
         """
         Executes a saved search for given search Id, returns a page of events with a token in the response to retrieve next page.
 

@@ -30,7 +30,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     python_requires=">=3.6, <4",
-    install_requires=["requests>=2.3"],
+    install_requires=["requests>=2.5"],
     extras_require={
         "dev": [
             "flake8==3.9.2",

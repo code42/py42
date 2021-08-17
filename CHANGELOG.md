@@ -13,6 +13,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Added
 
 - New method `sdk.securitydata.savedsearches.execute_get_all()` which makes use of page tokens when a search query returns over 10,000 results.
+### Changed
+
+- Updated minimum version of `requests` library to 2.4.2
 
 ## 1.17.0 - 2021-08-10
 

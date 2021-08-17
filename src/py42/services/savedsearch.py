@@ -64,11 +64,11 @@ class SavedSearchService(BaseService):
 
     def search_file_events(self, search_id, page_number=None, page_size=None):
         """
-        Alias method for `execute()`. Executes a saved search for given search Id, returns up to the first 10,000 events.
+        Alias method for :meth:`~execute()`. Executes a saved search for given search Id, returns up to the first 10,000 events.
 
         To view more than the first 10,000 events:
-            * pass the `search_id` to `get_query()`
-            * pass the resulting query object to `~securitydata.search_all_file_events()`, use that method as normal.
+            * pass the :data:`search_id` to :meth:`~get_query()`
+            * pass the resulting query (:class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery`) to :meth:`~py42.clients.securitydata.SecurityDataClient.search_all_file_events()`, use that method as normal.
 
         Args:
             search_id (str): Unique search Id of the saved search.

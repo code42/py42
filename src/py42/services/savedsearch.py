@@ -66,7 +66,7 @@ class SavedSearchService(BaseService):
         """
         Alias method for `execute()`. Executes a saved search for given search Id, returns up to the first 10,000 events.
 
-        To view more than the first 10,000 events
+        To view more than the first 10,000 events:
             * pass the `search_id` to `get_query()`
             * pass the resulting query object to `~securitydata.search_all_file_events()`, use that method as normal.
 

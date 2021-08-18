@@ -37,11 +37,11 @@ class RiskIndicator(FileEventFilterStringField):
         - :attr:`RiskIndicator.EmailServiceUploads.PROTONMAIL`
         - :attr:`RiskIndicator.EmailServiceUploads.QQMAIL`
         - :attr:`RiskIndicator.EmailServiceUploads.SINA_MAIL`
-        - :attr:`RiskIndicator.EmailServiceUploads.SOHU_MAIl`
+        - :attr:`RiskIndicator.EmailServiceUploads.SOHU_MAIL`
         - :attr:`RiskIndicator.EmailServiceUploads.YAHOO`
         - :attr:`RiskIndicator.EmailServiceUploads.ZOHO_MAIL`
-        - :attr:`RiskIndicator.RemovableMedia.AIRDROP`
-        - :attr:`RiskIndicator.RemovableMedia.REMOVABLE_MEDIA`
+        - :attr:`RiskIndicator.ExternalDevices.AIRDROP`
+        - :attr:`RiskIndicator.ExternalDevices.REMOVABLE_MEDIA`
         - :attr:`RiskIndicator.FileCategories.AUDIO`
         - :attr:`RiskIndicator.FileCategories.DOCUMENT`
         - :attr:`RiskIndicator.FileCategories.EXECUTABLE`
@@ -124,7 +124,7 @@ class RiskIndicator(FileEventFilterStringField):
         PROTONMAIL = "ProtonMail upload"
         QQMAIL = "QQMail upload"
         SINA_MAIL = "Sina Mail upload"
-        SOHU_MAIl = "Sohu Mail upload"
+        SOHU_MAIL = "Sohu Mail upload"
         YAHOO = "Yahoo upload"
         ZOHO_MAIL = "Zoho Mail upload"
 

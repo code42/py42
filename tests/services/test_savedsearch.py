@@ -7,6 +7,7 @@ from py42.services.savedsearch import SavedSearchService
 SAVED_SEARCH_GET_RESPONSE = """
     {"searches": [{"groups": [] }]}
 """
+FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 
 
 class TestSavedSearchService:
@@ -25,14 +26,14 @@ class TestSavedSearchService:
         mock_connection.get.return_value = create_mock_response(mocker, "{}")
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
-        saved_search_service.get_by_id("TEst-id")
+        saved_search_service.get_by_id("test-id")
         assert (
             mock_connection.get.call_args[0][0]
-            == "/forensic-search/queryservice/api/v1/saved/TEst-id"
+            == "/forensic-search/queryservice/api/v1/saved/test-id"
         )
 
     def test_execute_calls_post_with_expected_uri(self, mock_connection, mocker):
-        response = create_mock_response(mocker, '{"searches": [{"groups": []}]}')
+        response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.post.return_value = response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
@@ -64,8 +65,8 @@ class TestSavedSearchService:
 
         response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.get.return_value = response
-        file_event_client = FileEventService(mock_connection)
-        saved_search_client = SavedSearchService(mock_connection, file_event_client)
+        file_event_service = FileEventService(mock_connection)
+        saved_search_client = SavedSearchService(mock_connection, file_event_service)
         saved_search_client.execute(
             "test-id", page_number=test_custom_page_num,
         )
@@ -87,8 +88,8 @@ class TestSavedSearchService:
 
         response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.get.return_value = response
-        file_event_client = FileEventService(mock_connection)
-        saved_search_client = SavedSearchService(mock_connection, file_event_client)
+        file_event_service = FileEventService(mock_connection)
+        saved_search_client = SavedSearchService(mock_connection, file_event_service)
         saved_search_client.execute(
             "test-id",
             page_number=test_custom_page_num,
@@ -104,7 +105,7 @@ class TestSavedSearchService:
         )
 
     def test_get_query_calls_get_with_expected_uri(self, mock_connection, mocker):
-        response = create_mock_response(mocker, '{"searches": [{"groups": []}]}')
+        response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.post.return_value = response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)

@@ -1,10 +1,9 @@
-import re
-
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters.file_filter import MD5
 from py42.sdk.queries.fileevents.filters.file_filter import SHA256
+from py42.services.util import escape_quote_chars
 
 
 class SecurityDataClient:
@@ -56,10 +55,10 @@ class SecurityDataClient:
                 field ``nextPgToken``. Defaults to empty string.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing page of events.
+            :class:`py42.response.Py42Response`: A response containing a page of events.
         """
 
-        query.page_token = _escape_quote_chars_in_token(page_token)
+        query.page_token = escape_quote_chars(page_token)
         response = self._file_event_service.search(query)
         return response
 
@@ -214,18 +213,3 @@ def _get_first_matching_version(versions, md5_hash):
     exact_match = next((x for x in versions if x["fileMD5"] == md5_hash), None)
     if exact_match:
         return exact_match
-
-
-def _escape_quote_chars_in_token(token):
-    """
-    The `nextPgToken` returned in Forensic Search requests with > 10k results is the eventId
-    of the last event returned in the response. Some eventIds have double-quote chars in
-    them, which need to be escaped when passing the token in the next search request.
-    """
-    unescaped_quote_pattern = r'[^\\]"'
-
-    return re.sub(
-        pattern=unescaped_quote_pattern,
-        repl=lambda match: match.group().replace('"', r"\""),
-        string=token,
-    )

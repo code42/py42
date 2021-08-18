@@ -50,7 +50,7 @@ class SavedSearchService(BaseService):
 
     def execute(self, search_id, page_number=None, page_size=None):
         """
-        Execute a saved search for given search Id and return its results.
+        Executes a saved search for given search Id, returns up to the first 10,000 events.
 
         Args:
             search_id (str): Unique search Id of the saved search.
@@ -61,3 +61,20 @@ class SavedSearchService(BaseService):
         """
         query = self.get_query(search_id, page_number=page_number, page_size=page_size)
         return self._file_event_client.search(query)
+
+    def search_file_events(self, search_id, page_number=None, page_size=None):
+        """
+        Alias method for :meth:`~execute()`. Executes a saved search for given search Id, returns up to the first 10,000 events.
+
+        To view more than the first 10,000 events:
+            * pass the :data:`search_id` to :meth:`~get_query()`
+            * pass the resulting query (:class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery`) to :meth:`~py42.clients.securitydata.SecurityDataClient.search_all_file_events()`, use that method as normal.
+
+        Args:
+            search_id (str): Unique search Id of the saved search.
+            page_number (int, optional): The consecutive group of results of size page_size in the result set to return. Defaults to None.
+            page_size (int, optional): The maximum number of results to be returned. Defaults to None.
+        Returns:
+            :class:`py42.response.Py42Response`
+        """
+        return self.execute(search_id, page_number=page_number, page_size=page_size)

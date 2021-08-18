@@ -10,6 +10,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
+
+- New alias method `sdk.securitydata.savedsearches.search_file_events()` for existing method `sdk.securitydata.savedsearches.execute()`.
+
 ### Changed
 
 - Updated minimum version of `requests` library to 2.4.2

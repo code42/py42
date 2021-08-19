@@ -67,6 +67,8 @@ class RiskIndicator(FileEventFilterStringField):
         - :attr:`RiskIndicator.UserBehavior.FILE_MISMATCH`
         - :attr:`RiskIndicator.UserBehavior.OFF_HOURS`
         - :attr:`RiskIndicator.UserBehavior.REMOTE`
+        - :attr:`RiskIndicator.UserBehavior.FIRST_DESTINATION_USE`
+        - :attr:`RiskIndicator.UserBehavior.RARE_DESTINATION_USE`
     """
 
     _term = "riskIndicatorNames"
@@ -166,6 +168,8 @@ class RiskIndicator(FileEventFilterStringField):
         FILE_MISMATCH = "File mismatch"
         OFF_HOURS = "Off hours"
         REMOTE = "Remote"
+        FIRST_DESTINATION_USE = "First use of destination"
+        RARE_DESTINATION_USE = "Rare use of destination"
 
 
 class RiskSeverity(FileEventFilterStringField, Choices):

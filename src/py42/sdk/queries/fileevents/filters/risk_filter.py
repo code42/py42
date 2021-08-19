@@ -37,11 +37,11 @@ class RiskIndicator(FileEventFilterStringField):
         - :attr:`RiskIndicator.EmailServiceUploads.PROTONMAIL`
         - :attr:`RiskIndicator.EmailServiceUploads.QQMAIL`
         - :attr:`RiskIndicator.EmailServiceUploads.SINA_MAIL`
-        - :attr:`RiskIndicator.EmailServiceUploads.SOHU_MAIl`
+        - :attr:`RiskIndicator.EmailServiceUploads.SOHU_MAIL`
         - :attr:`RiskIndicator.EmailServiceUploads.YAHOO`
         - :attr:`RiskIndicator.EmailServiceUploads.ZOHO_MAIL`
-        - :attr:`RiskIndicator.RemovableMedia.AIRDROP`
-        - :attr:`RiskIndicator.RemovableMedia.REMOVABLE_MEDIA`
+        - :attr:`RiskIndicator.ExternalDevices.AIRDROP`
+        - :attr:`RiskIndicator.ExternalDevices.REMOVABLE_MEDIA`
         - :attr:`RiskIndicator.FileCategories.AUDIO`
         - :attr:`RiskIndicator.FileCategories.DOCUMENT`
         - :attr:`RiskIndicator.FileCategories.EXECUTABLE`
@@ -67,6 +67,8 @@ class RiskIndicator(FileEventFilterStringField):
         - :attr:`RiskIndicator.UserBehavior.FILE_MISMATCH`
         - :attr:`RiskIndicator.UserBehavior.OFF_HOURS`
         - :attr:`RiskIndicator.UserBehavior.REMOTE`
+        - :attr:`RiskIndicator.UserBehavior.FIRST_DESTINATION_USE`
+        - :attr:`RiskIndicator.UserBehavior.RARE_DESTINATION_USE`
     """
 
     _term = "riskIndicatorNames"
@@ -124,7 +126,7 @@ class RiskIndicator(FileEventFilterStringField):
         PROTONMAIL = "ProtonMail upload"
         QQMAIL = "QQMail upload"
         SINA_MAIL = "Sina Mail upload"
-        SOHU_MAIl = "Sohu Mail upload"
+        SOHU_MAIL = "Sohu Mail upload"
         YAHOO = "Yahoo upload"
         ZOHO_MAIL = "Zoho Mail upload"
 
@@ -166,6 +168,8 @@ class RiskIndicator(FileEventFilterStringField):
         FILE_MISMATCH = "File mismatch"
         OFF_HOURS = "Off hours"
         REMOTE = "Remote"
+        FIRST_DESTINATION_USE = "First use of destination"
+        RARE_DESTINATION_USE = "Rare use of destination"
 
 
 class RiskSeverity(FileEventFilterStringField, Choices):

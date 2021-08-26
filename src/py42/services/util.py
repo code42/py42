@@ -23,6 +23,9 @@ def escape_quote_chars(token):
     of the last event returned in the response. Some eventIds have double-quote chars in
     them, which need to be escaped when passing the token in the next search request.
     """
+    if not isinstance(token, (str, bytes)):
+        return token
+
     unescaped_quote_pattern = r'[^\\]"'
 
     return re.sub(

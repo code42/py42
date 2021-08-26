@@ -230,11 +230,11 @@ class TestSecurityClient:
         file_event_service.search.return_value = create_mock_response(
             mocker, FILE_EVENTS_RESPONSE
         )
-        preservation_data_service.get_file_version_list.return_value = create_mock_response(
-            mocker, PDS_FILE_VERSIONS
+        preservation_data_service.get_file_version_list.return_value = (
+            create_mock_response(mocker, PDS_FILE_VERSIONS)
         )
-        file_event_service.get_file_location_detail_by_sha256.return_value = create_mock_response(
-            mocker, FILE_LOCATION_RESPONSE
+        file_event_service.get_file_location_detail_by_sha256.return_value = (
+            create_mock_response(mocker, FILE_LOCATION_RESPONSE)
         )
         storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
         storage_node_client.get_download_token.return_value = file_download
@@ -258,7 +258,8 @@ class TestSecurityClient:
         return mock
 
     def test_stream_file_by_sha256_with_exact_match_response_calls_get_version_list_with_expected_params(
-        self, pds_config,
+        self,
+        pds_config,
     ):
 
         security_client = SecurityDataClient(
@@ -293,7 +294,9 @@ class TestSecurityClient:
         assert response == b"stream"
 
     def test_stream_file_by_sha256_without_exact_match_response_calls_get_version_list_with_expected_params(
-        self, mocker, pds_config,
+        self,
+        mocker,
+        pds_config,
     ):
         pds_config.file_event_service.search.return_value = create_mock_response(
             mocker, FILE_EVENTS_RESPONSE.replace("-2", "-6")
@@ -349,7 +352,9 @@ class TestSecurityClient:
         assert "No files found with SHA256 checksum" in e.value.args[0]
 
     def test_stream_file_by_sha256_when_file_versions_returns_empty_response_gets_version_from_other_location(
-        self, mocker, pds_config,
+        self,
+        mocker,
+        pds_config,
     ):
         available_version = create_mock_response(mocker, AVAILABLE_VERSION_RESPONSE)
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
@@ -382,7 +387,9 @@ class TestSecurityClient:
         )
 
     def test_stream_file_by_sha256_when_get_locations_returns_empty_list_raises_py42_error(
-        self, mocker, pds_config,
+        self,
+        mocker,
+        pds_config,
     ):
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
         file_location = create_mock_response(mocker, '{"locations": []}')
@@ -405,7 +412,9 @@ class TestSecurityClient:
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
     def test_stream_file_by_sha256_when_find_file_version_returns_204_status_code_raises_py42_error(
-        self, mocker, pds_config,
+        self,
+        mocker,
+        pds_config,
     ):
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
         pds_config.preservation_data_service.get_file_version_list.return_value = (
@@ -431,7 +440,8 @@ class TestSecurityClient:
         assert e.value.args[0] == PDS_EXCEPTION_MESSAGE.format("shahash")
 
     def test_stream_file_by_md5_with_exact_match_response_calls_get_version_list_with_expected_params(
-        self, pds_config,
+        self,
+        pds_config,
     ):
         security_client = SecurityDataClient(
             pds_config.file_event_service,
@@ -465,7 +475,9 @@ class TestSecurityClient:
         assert response == b"stream"
 
     def test_stream_file_by_md5_without_exact_match_response_calls_get_version_list_with_expected_params(
-        self, mocker, pds_config,
+        self,
+        mocker,
+        pds_config,
     ):
         pds_config.file_event_service.search.return_value = create_mock_response(
             mocker, FILE_EVENTS_RESPONSE.replace("-2", "-6")
@@ -522,7 +534,9 @@ class TestSecurityClient:
         assert "No files found with MD5 checksum" in e.value.args[0]
 
     def test_stream_file_by_md5_when_file_versions_returns_empty_response_gets_version_from_other_location(
-        self, mocker, pds_config,
+        self,
+        mocker,
+        pds_config,
     ):
         file_version_list = create_mock_response(mocker, '{"preservationVersions": []}')
         pds_config.preservation_data_service.get_file_version_list.return_value = (
@@ -828,3 +842,19 @@ class TestSecurityClient:
             "pgSize": 10000,
         }
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
+
+    def test_search_all_file_events_handles_token_when_none(
+        self,
+        connection,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+    ):
+        file_event_service = FileEventService(connection)
+        security_client = SecurityDataClient(
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        security_client.search_all_file_events(FileEventQuery.all(), page_token=None)

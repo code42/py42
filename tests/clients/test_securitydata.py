@@ -829,7 +829,7 @@ class TestSecurityClient:
         }
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
 
-    def test_search_all_file_events_handles_token_when_none(
+    def test_search_all_file_events_when_token_is_none_succeeds(
         self,
         connection,
         preservation_data_service,

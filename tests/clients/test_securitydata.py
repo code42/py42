@@ -828,3 +828,19 @@ class TestSecurityClient:
             "pgSize": 10000,
         }
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
+
+    def test_search_all_file_events_when_token_is_none_succeeds(
+        self,
+        connection,
+        preservation_data_service,
+        saved_search_service,
+        storage_service_factory,
+    ):
+        file_event_service = FileEventService(connection)
+        security_client = SecurityDataClient(
+            file_event_service,
+            preservation_data_service,
+            saved_search_service,
+            storage_service_factory,
+        )
+        security_client.search_all_file_events(FileEventQuery.all(), page_token=None)

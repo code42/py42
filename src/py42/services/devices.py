@@ -30,7 +30,6 @@ class DeviceService(BaseService):
         q=None,
     ):
         """Gets a page of devices.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
         Args:
             page_num (int): The page number to request.
@@ -90,7 +89,6 @@ class DeviceService(BaseService):
         When no arguments are passed, all records are returned. To filter results, specify
         respective arguments. For example, to retrieve all active and blocked devices, pass
         active=true and blocked=true.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
         Args:
             active (bool, optional): Filters results by device state. When set to True, gets all
@@ -133,7 +131,6 @@ class DeviceService(BaseService):
 
     def get_by_id(self, device_id, include_backup_usage=None, **kwargs):
         """Gets device information by ID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
         Args:
             device_id (int): The identification number of the device.
@@ -149,7 +146,6 @@ class DeviceService(BaseService):
 
     def get_by_guid(self, guid, include_backup_usage=None, **kwargs):
         """Gets device information by GUID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Computer-get>`__
 
         Args:
             guid (str): The globally unique identifier of the device.
@@ -166,7 +162,6 @@ class DeviceService(BaseService):
     def block(self, device_id):
         """Blocks a device causing the user not to be able to log in to or restore from Code42 on
         that device.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
         Args:
             device_id (int): The identification number of the device.
@@ -179,7 +174,6 @@ class DeviceService(BaseService):
 
     def unblock(self, device_id):
         """Unblocks a device, permitting a user to be able to login and restore again.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerBlock>`__
 
         Args:
             device_id (int): The identification number of the device.
@@ -192,7 +186,6 @@ class DeviceService(BaseService):
 
     def deactivate(self, device_id):
         """Deactivates a device, causing backups to stop and archives to go to cold storage.
-        `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v4#/computer-deactivation/ComputerDeactivation_Update>`__
 
         Args:
             device_id (int): The identification number of the device.
@@ -210,7 +203,6 @@ class DeviceService(BaseService):
 
     def reactivate(self, device_id):
         """Activates a previously deactivated device.
-        `REST Documentation <https://console.us.code42.com/swagger/?urls.primaryName=v4#/computer-deactivation/ComputerDeactivation_Remove>`__
 
         Args:
             device_id (int): The identification number of the device.
@@ -225,7 +217,6 @@ class DeviceService(BaseService):
     def deauthorize(self, device_id):
         """Deauthorizes the device with the given ID. If used on a cloud connector device, it will
         remove the authorization token for that account.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#ComputerDeauthorization>`__
 
         Args:
             device_id (int): The identification number of the device.
@@ -238,7 +229,6 @@ class DeviceService(BaseService):
 
     def get_agent_state(self, guid, property_name):
         """Gets the agent state of the device.
-            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
 
             Args:
                 guid (str): The globally unique identifier of the device.
@@ -253,7 +243,6 @@ class DeviceService(BaseService):
 
     def get_agent_full_disk_access_state(self, guid):
         """Gets the full disk access status of a device.
-            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
 
             Args:
                 guid (str): The globally unique identifier of the device.

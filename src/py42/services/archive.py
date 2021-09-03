@@ -11,7 +11,6 @@ class ArchiveService(BaseService):
 
     def get_single_archive(self, archive_guid):
         """Gets single archive information by GUID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
             archive_guid (str): The GUID for the archive.
@@ -24,7 +23,6 @@ class ArchiveService(BaseService):
 
     def get_page(self, page_num, page_size=None, **kwargs):
         """Gets an individual page of archives.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
             page_num (int): The page number to request.
@@ -40,7 +38,6 @@ class ArchiveService(BaseService):
 
     def get_all_archives_from_value(self, id_value, id_type):
         """Gets archive information from an ID, such as a User UID, Device GUID, or Destination GUID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
             id_value (str): Query value for archive.

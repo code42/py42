@@ -10,8 +10,6 @@ class LoginConfigurationClient:
         `LOCAL`, `LOCAL_2FA`, and `CLOUD_SSO`. If username does not exist the default
         return value is `LOCAL_2FA`.
 
-        `REST Documentation: <https://console.us.code42.com/swagger/index.html?urls.primaryName=v3#/Feature/get>`__
-
         Args:
             username (str): Username to retrieve login configuration for.
 

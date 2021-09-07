@@ -54,7 +54,7 @@ class ArchiveClient:
         """Streams a file from a backup archive to memory. This method uses the same endpoint
         as restoring from Console and therefore has all the same considerations.
 
-        `Support Documentation <https://support.code42.com/Administrator/6/Monitoring_and_managing/Restore_files_from_the_Code42_console#Troubleshooting>`__
+        `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Restore_files_from_the_Code42_console#Troubleshooting>`__
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in

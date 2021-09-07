@@ -24,9 +24,7 @@ class RestoreService(BaseService):
         private_password=None,
         encryption_key=None,
     ):
-        """Creates a web restore connection.
-        See https://console.us.code42.com/apidocviewer/#WebRestoreSession
-        """
+        """Creates a web restore connection."""
         uri = "/api/WebRestoreSession"
         json_dict = {
             "computerGuid": device_guid,

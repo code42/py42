@@ -32,7 +32,6 @@ class LegalHoldService(BaseService):
 
     def create_policy(self, name, policy=None):
         """Creates a new Legal Hold Preservation Policy.
-        `REST Documentation <https://console.us.code42.com/swagger/?urls.primaryName=v4#/legal-hold-policy/LegalHoldPolicy_Create>`__
 
         Args:
             name (str): The name of the new Policy.
@@ -50,7 +49,6 @@ class LegalHoldService(BaseService):
         self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None
     ):
         """Creates a new, active Legal Hold Matter.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-post>`__
 
         Args:
             name (str): The name of the new Legal Hold Matter.
@@ -75,7 +73,6 @@ class LegalHoldService(BaseService):
 
     def get_policy_by_uid(self, legal_hold_policy_uid):
         """Gets a single Preservation Policy.
-        `V4 REST Documentation <https://console.us.code42.com/swagger/#/legal-hold-policy/LegalHoldPolicy_View>`__
 
         Args:
             legal_hold_policy_uid (str): The identifier of the Preservation Policy.
@@ -89,7 +86,6 @@ class LegalHoldService(BaseService):
 
     def get_policy_list(self):
         """Gets a list of existing Preservation Policies.
-        `V4 REST Documentation <https://console.us.code42.com/swagger/#/legal-hold-policy/LegalHoldPolicy_List>`__
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the list of Policies.
@@ -99,7 +95,6 @@ class LegalHoldService(BaseService):
 
     def get_matter_by_uid(self, legal_hold_uid):
         """Gets a single Legal Hold Matter.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-get>`__
 
         Args:
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
@@ -123,7 +118,6 @@ class LegalHoldService(BaseService):
         page_size=None,
     ):
         """Gets a page of existing Legal Hold Matters.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-get>`__
 
         Args:
             page_num (int): The page number to request.
@@ -160,7 +154,6 @@ class LegalHoldService(BaseService):
         self, creator_user_uid=None, active=True, name=None, hold_ext_ref=None
     ):
         """Gets all existing Legal Hold Matters.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHold-get>`__
 
         Args:
             creator_user_uid (str, optional): Find Matters by the identifier of the user who created
@@ -201,7 +194,6 @@ class LegalHoldService(BaseService):
 
         `legal_hold_membership_uid`, `legal_hold_uid`, `user_uid`, `user`
 
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-get>`__
 
         Args:
             page_num (int): The page number to request.
@@ -250,7 +242,6 @@ class LegalHoldService(BaseService):
         "INACTIVE", they have been removed from the Matter and are no longer subject to the Legal
         Hold retention rules. Users can be Custodians of multiple Legal Holds at once (and thus
         would be part of multiple LegalHoldMembership objects).
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-get>`__
 
         Args:
             legal_hold_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter
@@ -286,7 +277,6 @@ class LegalHoldService(BaseService):
     ):
         """Gets an individual page of Legal Hold events.
 
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldEventReport-get>`__
 
         Args:
             legal_hold_uid (str, optional): Find LegalHoldEvents for the Legal Hold
@@ -324,7 +314,6 @@ class LegalHoldService(BaseService):
         self, legal_hold_uid=None, min_event_date=None, max_event_date=None
     ):
         """Gets an individual page of Legal Hold events.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldEventReport-get>`__
 
         Args:
             legal_hold_uid (str, optional): Find LegalHoldEvents for the Legal Hold Matter
@@ -350,7 +339,6 @@ class LegalHoldService(BaseService):
 
     def add_to_matter(self, user_uid, legal_hold_uid):
         """Add a user (Custodian) to a Legal Hold Matter.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembership-post>`__
 
         Args:
             user_uid (str): The identifier of the user.
@@ -374,7 +362,6 @@ class LegalHoldService(BaseService):
 
     def remove_from_matter(self, legal_hold_membership_uid):
         """Remove a user (Custodian) from a Legal Hold Matter.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldMembershipDeactivation-post>`__
 
         Args:
             legal_hold_membership_uid (str): The identifier of the LegalHoldMembership
@@ -389,7 +376,6 @@ class LegalHoldService(BaseService):
 
     def deactivate_matter(self, legal_hold_uid):
         """Deactivates and closes a Legal Hold Matter.
-        `V4 REST Documentation <https://console.us.code42.com/swagger/#/legal-hold-deactivation/LegalHoldDeactivation_Update>`__
 
         Args:
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
@@ -403,7 +389,6 @@ class LegalHoldService(BaseService):
 
     def reactivate_matter(self, legal_hold_uid):
         """Reactivates and re-opens a closed Matter.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#LegalHoldReactivation-put>`__
 
         Args:
             legal_hold_uid (str): The identifier of the Legal Hold Matter.

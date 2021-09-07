@@ -32,7 +32,6 @@ class UserService(BaseService):
         """Creates a new user.
         WARNING: If the provided username already exists for a user, it will be updated in the
         database instead.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-post>`__
 
         Args:
             org_uid (str): The org UID for the organization the new user belongs to.
@@ -195,7 +194,6 @@ class UserService(BaseService):
 
     def get_scim_data_by_uid(self, user_uid):
         """Returns SCIM data such as division, department, and title for a given user.
-        `REST Documentation <https://console.us.code42.com/swagger/?urls.primaryName=v7#/scim-user-data>`__
 
         Args:
             user_uid (str): A Code42 user uid.
@@ -210,7 +208,6 @@ class UserService(BaseService):
     def block(self, user_id):
         """Blocks the user with the given ID. A blocked user is not allowed to log in or restore
         files. Backups will continue if the user is still active.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserBlock-put>`__
 
         Args:
             user_id (int): An ID for a user.
@@ -224,7 +221,6 @@ class UserService(BaseService):
     def unblock(self, user_id):
         """Removes a block, if one exists, on the user with the given user ID. Unblocked users are
         allowed to log in and restore.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserBlock-delete>`__
 
         Args:
             user_id (int): An ID for a user.
@@ -238,7 +234,6 @@ class UserService(BaseService):
     def deactivate(self, user_id, block_user=None):
         """Deactivates the user with the given user ID.
         Backups discontinue for a deactivated user, and their archives go to cold storage.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserDeactivation-put>`__
 
         Args:
             user_id (int): An ID for a user.
@@ -257,7 +252,6 @@ class UserService(BaseService):
 
     def reactivate(self, user_id, unblock_user=None):
         """Reactivates the user with the given ID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserDeactivation-delete>`__
 
         Args:
             user_id (int): An ID for a user.
@@ -272,7 +266,6 @@ class UserService(BaseService):
 
     def change_org_assignment(self, user_id, org_id):
         """Assigns a user to a different organization.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserMoveProcess-post>`__
 
         Args:
             user_id (int): An ID for a user.
@@ -288,7 +281,6 @@ class UserService(BaseService):
     def get_available_roles(self):
         """Report the list of roles that are available for the authenticated user to
         assign to other users.
-        `REST Documentation <https://console.us.code42.com/swagger/?urls.primaryName=v4#/role/Role_View>`__
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -298,7 +290,6 @@ class UserService(BaseService):
 
     def get_roles(self, user_id):
         """Return the list of roles that are currently assigned to the given user.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserRole-get>`__
 
         Args:
             user_id (int): An ID for a user.
@@ -311,7 +302,6 @@ class UserService(BaseService):
 
     def add_role(self, user_id, role_name):
         """Adds a role to a user.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserRole-post>`__
 
         Args:
             user_id (int): An ID for a user.
@@ -326,7 +316,6 @@ class UserService(BaseService):
 
     def remove_role(self, user_id, role_name):
         """Removes a role from a user.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#UserRole-delete>`__
 
         Args:
             user_id (int): An ID for a user.
@@ -353,7 +342,6 @@ class UserService(BaseService):
         archive_size_quota_bytes=None,
     ):
         """Updates an existing user.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#User-put>`__
 
         Args:
             user_uid (str or int): A Code42 user UID.

@@ -20,7 +20,6 @@ class OrgService(BaseService):
 
     def create_org(self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None):
         """Creates a new organization.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-post>`__
 
         Args:
             org_name (str): The name of the new organization.
@@ -45,7 +44,6 @@ class OrgService(BaseService):
 
     def get_by_id(self, org_id, **kwargs):
         """Gets the organization with the given ID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
             org_id (int): An ID for an organization.
@@ -58,7 +56,6 @@ class OrgService(BaseService):
 
     def get_by_uid(self, org_uid, **kwargs):
         """Gets the organization with the given UID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
             org_uid (str): A UID for an organization.
@@ -72,7 +69,6 @@ class OrgService(BaseService):
 
     def get_page(self, page_num, page_size=None, **kwargs):
         """Gets an individual page of organizations.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Args:
             page_num (int): The page number to request.
@@ -90,7 +86,6 @@ class OrgService(BaseService):
 
     def get_all(self, **kwargs):
         """Gets all organizations.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -103,7 +98,6 @@ class OrgService(BaseService):
         blocked organization will not allow any of its users or devices to log in. New
         registrations will be rejected and all currently logged in clients will be logged out.
         Backups continue for any devices that are still active.
-        `Rest Documentation <https://console.us.code42.com/apidocviewer/#OrgBlock-put>`__
 
         Args:
             org_id (int): An ID for an organization.
@@ -117,7 +111,6 @@ class OrgService(BaseService):
     def unblock(self, org_id):
         """Removes a block, if one exists, on an organization and its descendants with the given
         ID. All users in the organization remain blocked until they are unblocked individually.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgBlock-delete>`__
 
         Args:
             org_id (int): An ID for an organization.
@@ -131,7 +124,6 @@ class OrgService(BaseService):
     def deactivate(self, org_id):
         """Deactivates the organization with the given ID, including all users, plans, and
         devices. Backups stop and archives move to cold storage.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgDeactivation-put>`__
 
         Args:
             org_id (int): An ID for an organization.
@@ -145,7 +137,6 @@ class OrgService(BaseService):
     def reactivate(self, org_id):
         """Reactivates the organization with the given ID. Backups are *not* restarted
         automatically.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#OrgDeactivation-delete>`__
 
         Args:
             org_id (int): An ID for an organization.
@@ -158,7 +149,6 @@ class OrgService(BaseService):
 
     def get_current(self, **kwargs):
         """Gets the organization for the currently signed-in user.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Org-get>`__
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization for the
@@ -169,7 +159,6 @@ class OrgService(BaseService):
 
     def get_agent_state(self, org_id, property_name):
         """Gets the agent state of the devices in the org.
-            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
 
             Args:
                 org_id (str): The org's identifier.
@@ -184,7 +173,6 @@ class OrgService(BaseService):
 
     def get_agent_full_disk_access_states(self, org_id):
         """Gets the full disk access status for devices in an org.
-            `REST Documentation <https://console.us.code42.com/swagger/index.html?urls.primaryName=v14#/agent-state/AgentState_ViewByDeviceGuid>`__
 
             Args:
                 org_id (str): The org's identifier.

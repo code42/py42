@@ -17,7 +17,6 @@ class ArchiveClient:
 
     def get_by_archive_guid(self, archive_guid):
         """Gets single archive information by GUID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
             archive_guid (str): The GUID for the archive.
@@ -30,7 +29,6 @@ class ArchiveClient:
 
     def get_all_by_device_guid(self, device_guid):
         """Gets archive information for a device.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#Archive-get>`__
 
         Args:
             device_guid (str): The GUID for the device.
@@ -56,7 +54,7 @@ class ArchiveClient:
         """Streams a file from a backup archive to memory. This method uses the same endpoint
         as restoring from Console and therefore has all the same considerations.
 
-        `Support Documentation <https://support.code42.com/Administrator/6/Monitoring_and_managing/Restore_files_from_the_Code42_console#Troubleshooting>`__
+        `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Restore_files_from_the_Code42_console#Troubleshooting>`__
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in
@@ -214,7 +212,6 @@ class ArchiveClient:
 
     def get_all_org_restore_history(self, days, org_id):
         """Gets all restore jobs from the past given days for the organization with the given ID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
             days (int): Number of days of restore history to retrieve.
@@ -228,7 +225,6 @@ class ArchiveClient:
 
     def get_all_user_restore_history(self, days, user_id):
         """Gets all restore jobs from the past given days for the user with the given ID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
             days (int): Number of days of restore history to retrieve.
@@ -242,7 +238,6 @@ class ArchiveClient:
 
     def get_all_device_restore_history(self, days, device_id):
         """Gets all restore jobs from the past given days for the device with the given ID.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#RestoreHistory-get>`__
 
         Args:
             days (int): Number of days of restore history to retrieve.
@@ -258,7 +253,6 @@ class ArchiveClient:
 
     def update_cold_storage_purge_date(self, archive_guid, purge_date):
         """Updates the cold storage purge date for a specified archive.
-        `REST Documentation <https://console.us.code42.com/apidocviewer/#ColdStorage-put>`__
 
         Args:
             archive_guid (str): The identification number of the archive that should be updated

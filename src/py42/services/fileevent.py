@@ -14,7 +14,7 @@ class FileEventService(BaseService):
 
     def search(self, query):
         """Searches for file events matching the query criteria.
-        `REST Documentation <https://forensicsearch-east.us.code42.com/forensic-search/queryservice/swagger-ui.html#/file-event-controller/searchEventsUsingPOST>`__
+        `REST Documentation <https://developer.code42.com/api/#operation/searchEventsUsingPOST>`__
 
         Args:
             query (:class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str or unicode):

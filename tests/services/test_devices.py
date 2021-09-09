@@ -1,11 +1,13 @@
 import pytest
 from requests import HTTPError
 from requests import Response
+from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
 import py42
 from py42.exceptions import Py42ActiveLegalHoldError
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42OrgNotFoundError
 from py42.services.devices import DeviceService
 
 COMPUTER_URI = "/api/Computer"
@@ -144,3 +146,17 @@ class TestDeviceService:
 
         expected = "Cannot deactivate the device with ID 1234 as the device is involved in a legal hold matter."
         assert str(err.value) == expected
+
+    def test_get_page_when_org_not_found_raises_expected_error(
+        self, mocker, mock_connection
+    ):
+        text = '[{"name":"SYSTEM","description":"Unable to find org"}]'
+        mock_connection.get.side_effect = create_mock_error(
+            Py42BadRequestError, mocker, text
+        )
+        service = DeviceService(mock_connection)
+
+        with pytest.raises(Py42OrgNotFoundError) as err:
+            service.get_page(1, org_uid="TestOrgUid")
+
+        assert str(err.value) == "The organization with UID 'TestOrgUid' was not found."

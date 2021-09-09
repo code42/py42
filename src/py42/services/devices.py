@@ -4,6 +4,7 @@ from time import time
 from py42 import settings
 from py42.clients.settings.device_settings import DeviceSettings
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42OrgNotFoundError
 from py42.services import BaseService
 from py42.services import handle_active_legal_hold_error
 from py42.services.util import get_all_pages
@@ -69,8 +70,12 @@ class DeviceService(BaseService):
             "pgSize": page_size,
             "q": q,
         }
-
-        return self._connection.get(uri, params=params)
+        try:
+            return self._connection.get(uri, params=params)
+        except Py42BadRequestError as err:
+            if "Unable to find org" in str(err.response.text):
+                raise Py42OrgNotFoundError(err, org_uid)
+            raise
 
     def get_all(
         self,

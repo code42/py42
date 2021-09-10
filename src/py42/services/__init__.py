@@ -36,5 +36,6 @@ Services = namedtuple(
         "auditlogs",
         "cases",
         "casesfileevents",
+        "trustedactivities",
     ],
 )

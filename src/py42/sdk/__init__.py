@@ -11,6 +11,7 @@ from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.loginconfig import LoginConfigurationClient
 from py42.clients.securitydata import SecurityDataClient
+from py42.clients.trustedactivities import TrustedActivitiesClient
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42UnauthorizedError
 from py42.services import Services
@@ -36,6 +37,7 @@ from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
+from py42.services.trustedactivities import TrustedActivitiesService
 from py42.services.users import UserService
 from py42.usercontext import UserContext
 
@@ -258,7 +260,7 @@ class SDKClient:
         """A collection of methods for retrieving audit logs.
 
         Returns:
-            :class:`py42.clients.auditlogs.AuditLogsService`
+            :class:`py42.clients.auditlogs.AuditLogsClient`
         """
         return self._clients.auditlogs
 
@@ -271,6 +273,15 @@ class SDKClient:
             :class:`py42.clients.cases.CaseClient`
         """
         return self._clients.cases
+
+    @property
+    def trustedactivities(self):
+        """A collection of methods and properties for managing trusted domains.
+
+        Returns:
+            :class:`py42.clients.trustedactivities.TrustedActivitiesClient`
+        """
+        return self._clients.trustedactivities
 
 
 def _init_services(main_connection, main_auth):
@@ -331,6 +342,7 @@ def _init_services(main_connection, main_auth):
         auditlogs=AuditLogsService(audit_logs_conn),
         cases=CasesService(cases_conn),
         casesfileevents=CasesFileEventsService(cases_conn),
+        trustedactivities=TrustedActivitiesService(main_connection),
     )
 
     return services, user_ctx
@@ -365,6 +377,7 @@ def _init_clients(services, connection):
     archive = ArchiveClient(archive_accessor_factory, services.archive)
     auditlogs = AuditLogsClient(services.auditlogs)
     loginconfig = LoginConfigurationClient(connection)
+    trustedactivities = TrustedActivitiesClient(services.trustedactivities)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
@@ -374,5 +387,6 @@ def _init_clients(services, connection):
         auditlogs=auditlogs,
         cases=CasesClient(services.cases, services.casesfileevents),
         loginconfig=loginconfig,
+        trustedactivities=trustedactivities,
     )
     return clients

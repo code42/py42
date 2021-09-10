@@ -11,5 +11,6 @@ Clients = namedtuple(
         "auditlogs",
         "cases",
         "loginconfig",
+        "trustedactivities",
     ],
 )

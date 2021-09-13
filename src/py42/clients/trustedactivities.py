@@ -27,6 +27,20 @@ class TrustedActivitiesClient:
         """
         return self._trusted_activities_service.get_all(type)
 
+    def create(self, type, value, description):
+        """Gets all trusted activities with the given type.
+        `Rest documentation <https://developer.code42.com/api/TODO>`
+
+        Args:
+            type (str): Type of the trusted activity. `TrustedActivityType.DOMAIN` or `TrustedActivityType.SLACK`
+            value (str): The URL of the domain or name of the Slack workspace.
+            description (str): Description of the trusted activity.
+
+        Returns:
+            :class:'py42.response.Py42Response'
+        """
+        return self._trusted_activities_service.create(type, value, description)
+
     def get(self, id):
         """Retrieve trusted activity details by given resource number.
         `Rest documentation <https://developer.code42.com/api/TODO>`

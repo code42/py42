@@ -26,8 +26,9 @@ class ExfiltratedDataService(BaseService):
         params = "deviceUid={}&eventId={}&filePath={}&versionTimestamp={}"
         params = params.format(device_id, event_id, quote(file_path), timestamp)
         resource = "file-download-token"
+        headers = {"Accept": "*/*"}
         uri = f"{self._base_uri}{resource}?{params}"
-        return self._connection.get(uri)
+        return self._connection.get(uri, headers=headers)
 
     def get_file(self, token):
         """Streams a file.

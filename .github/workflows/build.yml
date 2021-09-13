@@ -48,6 +48,7 @@ jobs:
           127.0.0.1 file-events
           127.0.0.1 storage
           127.0.0.1 preservation-data-service
+          127.0.0.1 exfiltration-data-service
           127.0.0.1 connected-server
           127.0.0.1 cases
           EOF

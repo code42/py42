@@ -337,6 +337,30 @@ class Py42CaseAlreadyHasEventError(Py42BadRequestError):
         super().__init__(exception, msg)
 
 
+class Py42TrustedActivityInvalidChangeError(Py42BadRequestError):
+    """An error raised when an invalid change is being made to a trusted activity."""
+    def __init__(self, exception):
+        msg = "Invalid change to trusted activity. Trusted activity type cannot be changed."
+        super().__init__(exception, msg)
+
+
+class Py42TrustedActivityConflictError(Py42BadRequestError):
+    """An error raised when theres a conflict with a trusted activity domain URL."""
+    def __init__(self, exception, value):
+        msg = (
+            f"Duplicate URL or workspace name, '{value}' already exists on your trusted list.  "
+            "Please enter a unique value"
+        )
+        super().__init__(exception, msg)
+
+
+class Py42TrustedActivityInvalidCharacterError(Py42BadRequestError):
+    """An error raised when an invalid change is being made to a trusted activity."""
+    def __init__(self, exception):
+        msg = "Domain name cannot include @"
+        super().__init__(exception, msg)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

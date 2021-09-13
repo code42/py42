@@ -1,3 +1,7 @@
+from py42.exceptions import Py42BadRequestError, Py42TrustedActivityInvalidChangeError, \
+    Py42CaseNameExistsError, Py42DescriptionLimitExceededError, \
+    Py42TrustedActivityConflictError, Py42TrustedActivityInvalidCharacterError, \
+    Py42HTTPError
 from py42.services import BaseService
 
 
@@ -8,33 +12,58 @@ class TrustedActivitiesService(BaseService):
     def __init__(self, connection):
         super().__init__(connection)
 
-    def get_all(self, type):
+    def get_all(self, type=None):
         params = {"type": type}
         return self._connection.get(self._uri_prefix, params=params)
 
     def create(
-        self, type, value, description
-    ):  # change this name probably, these should all be strings
+        self, type, value, description=None
+    ):
         data = {
             "type": type,
             "value": value,
             "description": description,
         }
-        return self._connection.post(self._uri_prefix, json=data)
+        try:
+            return self._connection.post(self._uri_prefix, json=data)
+        except Py42BadRequestError as err:
+            _handle_common_invalid_case_parameters_errors(err, value)
+        except Py42HTTPError as err:
+            _handle_common_client_errors(err, value)
 
-    def get(self, id):  # id should be int
+    def get(self, id):
         uri = f"{self._uri_prefix}/{id}"
         return self._connection.get(uri)
 
-    def update(self, id, type, value, description):
+    def update(self, id, type=None, value=None, description=None):
         uri = f"{self._uri_prefix}/{id}"
+        current_activity_data = self.get(id).data
         data = {
-            "type": type,
-            "value": value,
-            "description": description,
+            "type": type or current_activity_data.get("type"),
+            "value": value or current_activity_data.get("value"),
+            "description": description or current_activity_data.get("description"),
         }
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.put(uri, json=data)
+        except Py42BadRequestError as err:
+            if "INVALID_CHANGE" in err.response.text:
+                raise Py42TrustedActivityInvalidChangeError(err)
+            _handle_common_invalid_case_parameters_errors(err, value)
+        except Py42HTTPError as err:
+            _handle_common_client_errors(err, value)
 
     def delete(self, id):
         uri = f"{self._uri_prefix}/{id}"
         return self._connection.delete(uri)
+
+
+def _handle_common_invalid_case_parameters_errors(base_err, value):
+    if "DESCRIPTION_TOO_LONG" in base_err.response.text:
+        raise Py42DescriptionLimitExceededError(base_err)
+    elif "INVALID_CHARACTERS_IN_VALUE" in base_err.response.text:
+        raise Py42TrustedActivityInvalidCharacterError(base_err)
+
+
+def _handle_common_client_errors(base_err, value):
+    if "CONFLICT" in base_err.response.text:
+        raise Py42TrustedActivityConflictError(base_err, value)

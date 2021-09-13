@@ -137,4 +137,3 @@ def _handle_common_invalid_case_parameters_errors(base_err, name):
             raise Py42InvalidCaseUserError(base_err, "subject")
         elif "assignee" in base_err.response.text:
             raise Py42InvalidCaseUserError(base_err, "assignee")
-    raise

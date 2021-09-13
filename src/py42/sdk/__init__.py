@@ -293,6 +293,7 @@ def _init_services(main_connection, main_auth):
     kv_prefix = "simple-key-value-store"
     audit_logs_key = "AUDIT-LOG_API-URL"
     cases_key = "CASES_API-URL"
+    trusted_activities_key = "TRUSTED-DOMAINS_API-URL"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
     kv_service = KeyValueStoreService(kv_connection)
@@ -321,6 +322,9 @@ def _init_services(main_connection, main_auth):
     user_ctx = UserContext(administration_svc)
     user_profile_svc = DetectionListUserService(ecm_conn, user_ctx, user_svc)
     cases_conn = Connection.from_microservice_key(kv_service, cases_key, auth=main_auth)
+    trusted_activities_conn = Connection.from_microservice_key(
+        kv_service, trusted_activities_key, auth=main_auth
+    )
 
     services = Services(
         administration=administration_svc,
@@ -342,7 +346,7 @@ def _init_services(main_connection, main_auth):
         auditlogs=AuditLogsService(audit_logs_conn),
         cases=CasesService(cases_conn),
         casesfileevents=CasesFileEventsService(cases_conn),
-        trustedactivities=TrustedActivitiesService(main_connection),
+        trustedactivities=TrustedActivitiesService(trusted_activities_conn),
     )
 
     return services, user_ctx

@@ -27,7 +27,7 @@ class TrustedActivitiesService(BaseService):
         try:
             return self._connection.post(self._uri_prefix, json=data)
         except Py42BadRequestError as err:
-            _handle_common_invalid_case_parameters_errors(err, value)
+            _handle_common_invalid_case_parameters_errors(err)
         except Py42HTTPError as err:
             _handle_common_client_errors(err, value)
 
@@ -48,7 +48,7 @@ class TrustedActivitiesService(BaseService):
         except Py42BadRequestError as err:
             if "INVALID_CHANGE" in err.response.text:
                 raise Py42TrustedActivityInvalidChangeError(err)
-            _handle_common_invalid_case_parameters_errors(err, value)
+            _handle_common_invalid_case_parameters_errors(err)
         except Py42HTTPError as err:
             _handle_common_client_errors(err, value)
 
@@ -57,13 +57,15 @@ class TrustedActivitiesService(BaseService):
         return self._connection.delete(uri)
 
 
-def _handle_common_invalid_case_parameters_errors(base_err, value):
+def _handle_common_invalid_case_parameters_errors(base_err):
     if "DESCRIPTION_TOO_LONG" in base_err.response.text:
         raise Py42DescriptionLimitExceededError(base_err)
     elif "INVALID_CHARACTERS_IN_VALUE" in base_err.response.text:
         raise Py42TrustedActivityInvalidCharacterError(base_err)
+    raise
 
 
 def _handle_common_client_errors(base_err, value):
     if "CONFLICT" in base_err.response.text:
         raise Py42TrustedActivityConflictError(base_err, value)
+    raise

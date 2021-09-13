@@ -344,7 +344,7 @@ class Py42TrustedActivityInvalidChangeError(Py42BadRequestError):
         super().__init__(exception, msg)
 
 
-class Py42TrustedActivityConflictError(Py42BadRequestError):
+class Py42TrustedActivityConflictError(Py42HTTPError):
     """An error raised when theres a conflict with a trusted activity domain URL."""
     def __init__(self, exception, value):
         msg = (

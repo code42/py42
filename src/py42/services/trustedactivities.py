@@ -1,7 +1,9 @@
-from py42.exceptions import Py42BadRequestError, Py42TrustedActivityInvalidChangeError, \
-    Py42CaseNameExistsError, Py42DescriptionLimitExceededError, \
-    Py42TrustedActivityConflictError, Py42TrustedActivityInvalidCharacterError, \
-    Py42HTTPError
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42DescriptionLimitExceededError
+from py42.exceptions import Py42HTTPError
+from py42.exceptions import Py42TrustedActivityConflictError
+from py42.exceptions import Py42TrustedActivityInvalidChangeError
+from py42.exceptions import Py42TrustedActivityInvalidCharacterError
 from py42.services import BaseService
 
 
@@ -16,9 +18,7 @@ class TrustedActivitiesService(BaseService):
         params = {"type": type}
         return self._connection.get(self._uri_prefix, params=params)
 
-    def create(
-        self, type, value, description=None
-    ):
+    def create(self, type, value, description=None):
         data = {
             "type": type,
             "value": value,

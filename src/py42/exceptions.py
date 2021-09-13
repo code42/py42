@@ -351,7 +351,7 @@ class Py42TrustedActivityConflictError(Py42HTTPError):
     def __init__(self, exception, value):
         msg = (
             f"Duplicate URL or workspace name, '{value}' already exists on your trusted list.  "
-            "Please enter a unique value"
+            "Please provide a unique value"
         )
         super().__init__(exception, msg)
 

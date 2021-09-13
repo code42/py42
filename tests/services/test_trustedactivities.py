@@ -98,7 +98,7 @@ class TestTrustedActivitiesService:
 
         assert err.value.args[0] == (
             "Duplicate URL or workspace name, 'duplicate-name' already exists on your trusted list.  "
-            "Please enter a unique value"
+            "Please provide a unique value"
         )
 
     def test_create_when_fails_with_description_too_long_error_raises_custom_exception(
@@ -124,7 +124,7 @@ class TestTrustedActivitiesService:
         with pytest.raises(Py42TrustedActivityInvalidCharacterError) as err:
             trusted_activities_service.create("DOMAIN", "bad@name")
 
-        assert err.value.args[0] == "Domain name cannot include @"
+        assert err.value.args[0] == "Invalid character in domain or slack workspace name"
 
     def test_get_all_called_with_expected_url_and_params(self, mock_connection):
         trusted_activities_service = TrustedActivitiesService(mock_connection)
@@ -191,7 +191,7 @@ class TestTrustedActivitiesService:
 
         assert err.value.args[0] == (
             "Duplicate URL or workspace name, 'duplicate-name' already exists on your trusted list.  "
-            "Please enter a unique value"
+            "Please provide a unique value"
         )
 
     def test_update_when_fails_with_description_too_long_error_raises_custom_exception(
@@ -221,7 +221,7 @@ class TestTrustedActivitiesService:
                 _TEST_TRUSTED_ACTIVITY_RESOURCE_ID, value="bad@name"
             )
 
-        assert err.value.args[0] == "Domain name cannot include @"
+        assert err.value.args[0] == "Invalid character in domain or slack workspace name"
 
     def test_update_when_fails_with_invalid_change_error_raises_custom_exception(
         self, mock_connection, mock_get_response, mock_invalid_change_error

@@ -360,7 +360,7 @@ class Py42TrustedActivityInvalidCharacterError(Py42BadRequestError):
     """An error raised when an invalid change is being made to a trusted activity."""
 
     def __init__(self, exception):
-        msg = "Domain name cannot include @"
+        msg = "Invalid character in domain or slack workspace name"
         super().__init__(exception, msg)
 
 

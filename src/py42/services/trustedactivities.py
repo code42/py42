@@ -2,7 +2,6 @@ from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42DescriptionLimitExceededError
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42TrustedActivityConflictError
-from py42.exceptions import Py42TrustedActivityInvalidChangeError
 from py42.exceptions import Py42TrustedActivityInvalidCharacterError
 from py42.services import BaseService
 
@@ -35,19 +34,17 @@ class TrustedActivitiesService(BaseService):
         uri = f"{self._uri_prefix}/{id}"
         return self._connection.get(uri)
 
-    def update(self, id, type=None, value=None, description=None):
+    def update(self, id, value=None, description=None):
         uri = f"{self._uri_prefix}/{id}"
         current_activity_data = self.get(id).data
         data = {
-            "type": type or current_activity_data.get("type"),
+            "type": current_activity_data.get("type"),
             "value": value or current_activity_data.get("value"),
             "description": description or current_activity_data.get("description"),
         }
         try:
             return self._connection.put(uri, json=data)
         except Py42BadRequestError as err:
-            if "INVALID_CHANGE" in err.response.text:
-                raise Py42TrustedActivityInvalidChangeError(err)
             _handle_common_invalid_case_parameters_errors(err)
         except Py42HTTPError as err:
             _handle_common_client_errors(err, value)

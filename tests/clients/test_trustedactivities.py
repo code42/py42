@@ -57,7 +57,6 @@ class TestTrustedActivitiesClient:
         )
         mock_trusted_activities_service.update.assert_called_once_with(
             id=_TEST_TRUSTED_ACTIVITY_RESOURCE_ID,
-            type=None,
             value="new-domain.com",
             description=None,
         )

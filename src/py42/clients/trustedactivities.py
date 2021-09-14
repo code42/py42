@@ -53,13 +53,12 @@ class TrustedActivitiesClient:
         """
         return self._trusted_activities_service.get(id)
 
-    def update(self, id, type=None, value=None, description=None):
+    def update(self, id, value=None, description=None):
         """Updates trusted activity details by given resource number.
         `Rest documentation <https://developer.code42.com/>`
 
         Args:
             id (int): Resource number of the trusted activity.
-            type (str, optional): Type of the trusted activity. `TrustedActivityType.DOMAIN` or `TrustedActivityType.SLACK`
             value (str, optional): The URL of the domain or name of the Slack workspace.
             description (str, optional): Description of the trusted activity.
 
@@ -67,7 +66,7 @@ class TrustedActivitiesClient:
             :class:'py42.response.Py42Response'
         """
         return self._trusted_activities_service.update(
-            id=id, type=type, value=value, description=description
+            id=id, value=value, description=description
         )
 
     def delete(self, id):

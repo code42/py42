@@ -8,7 +8,6 @@ from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42DescriptionLimitExceededError
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42TrustedActivityConflictError
-from py42.exceptions import Py42TrustedActivityInvalidChangeError
 from py42.exceptions import Py42TrustedActivityInvalidCharacterError
 from py42.services.trustedactivities import TrustedActivitiesService
 
@@ -124,7 +123,9 @@ class TestTrustedActivitiesService:
         with pytest.raises(Py42TrustedActivityInvalidCharacterError) as err:
             trusted_activities_service.create("DOMAIN", "bad@name")
 
-        assert err.value.args[0] == "Invalid character in domain or slack workspace name"
+        assert (
+            err.value.args[0] == "Invalid character in domain or slack workspace name"
+        )
 
     def test_get_all_called_with_expected_url_and_params(self, mock_connection):
         trusted_activities_service = TrustedActivitiesService(mock_connection)
@@ -154,7 +155,7 @@ class TestTrustedActivitiesService:
     ):
         trusted_activities_service = TrustedActivitiesService(mock_connection)
         mock_connection.get.return_value = mock_get_response
-        trusted_activities_service.update(_TEST_TRUSTED_ACTIVITY_RESOURCE_ID,)
+        trusted_activities_service.update(_TEST_TRUSTED_ACTIVITY_RESOURCE_ID)
         expected_url = f"{_BASE_URI}/{_TEST_TRUSTED_ACTIVITY_RESOURCE_ID}"
         assert mock_connection.put.call_args[0][0] == expected_url
         data = {
@@ -164,10 +165,11 @@ class TestTrustedActivitiesService:
         }
         mock_connection.put.assert_called_once_with(expected_url, json=data)
 
-    def test_update_called_with_expected_url_and_optional_params(self, mock_connection):
+    def test_update_called_with_expected_url_and_optional_params(self, mock_connection, mock_get_response):
         trusted_activities_service = TrustedActivitiesService(mock_connection)
+        mock_connection.get.return_value = mock_get_response
         trusted_activities_service.update(
-            _TEST_TRUSTED_ACTIVITY_RESOURCE_ID, "DOMAIN", "test.com", "description"
+            _TEST_TRUSTED_ACTIVITY_RESOURCE_ID, "test.com", "description"
         )
         expected_url = f"{_BASE_URI}/{_TEST_TRUSTED_ACTIVITY_RESOURCE_ID}"
         assert mock_connection.put.call_args[0][0] == expected_url
@@ -221,22 +223,8 @@ class TestTrustedActivitiesService:
                 _TEST_TRUSTED_ACTIVITY_RESOURCE_ID, value="bad@name"
             )
 
-        assert err.value.args[0] == "Invalid character in domain or slack workspace name"
-
-    def test_update_when_fails_with_invalid_change_error_raises_custom_exception(
-        self, mock_connection, mock_get_response, mock_invalid_change_error
-    ):
-        trusted_activities_service = TrustedActivitiesService(mock_connection)
-        mock_connection.get.return_value = mock_get_response
-        mock_connection.put.side_effect = mock_invalid_change_error
-        with pytest.raises(Py42TrustedActivityInvalidChangeError) as err:
-            trusted_activities_service.update(
-                _TEST_TRUSTED_ACTIVITY_RESOURCE_ID, type="SLACK"
-            )
-
         assert (
-            err.value.args[0]
-            == "Invalid change to trusted activity. Trusted activity type cannot be changed."
+            err.value.args[0] == "Invalid character in domain or slack workspace name"
         )
 
     def test_delete_called_with_expected_url_and_params(self, mock_connection):

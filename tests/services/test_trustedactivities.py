@@ -165,7 +165,9 @@ class TestTrustedActivitiesService:
         }
         mock_connection.put.assert_called_once_with(expected_url, json=data)
 
-    def test_update_called_with_expected_url_and_optional_params(self, mock_connection, mock_get_response):
+    def test_update_called_with_expected_url_and_optional_params(
+        self, mock_connection, mock_get_response
+    ):
         trusted_activities_service = TrustedActivitiesService(mock_connection)
         mock_connection.get.return_value = mock_get_response
         trusted_activities_service.update(

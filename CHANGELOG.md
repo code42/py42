@@ -114,6 +114,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Fixed
 
 - Issue where `sdk.users.get_roles()` was using a deprecated API.
+- Issue where `sdk.devices.get_page()` raises a vague error message when provided with invalid org UID.
 
 ## 1.14.1 - 2021-04-29
 

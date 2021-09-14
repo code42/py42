@@ -1,9 +1,11 @@
+from py42 import settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42DescriptionLimitExceededError
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42TrustedActivityConflictError
 from py42.exceptions import Py42TrustedActivityInvalidCharacterError
 from py42.services import BaseService
+from py42.services.util import get_all_pages
 
 
 class TrustedActivitiesService(BaseService):
@@ -13,8 +15,18 @@ class TrustedActivitiesService(BaseService):
     def __init__(self, connection):
         super().__init__(connection)
 
-    def get_all(self, type=None):
-        params = {"type": type}
+    def get_all(self, type=None, page_size=None, **kwargs):
+        return get_all_pages(self.get_page, "trustedactivities", type=type, page_size=page_size, **kwargs)
+
+    def get_page(self, page_num, page_size, type, **kwargs):
+        page_size = page_size or settings.items_per_page
+        params = {
+            "type": type,
+            "pgNum": page_num,
+            "pgSize": page_size,
+        }
+        params.update(**kwargs)
+
         return self._connection.get(self._uri_prefix, params=params)
 
     def create(self, type, value, description=None):

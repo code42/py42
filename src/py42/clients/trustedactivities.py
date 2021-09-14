@@ -15,7 +15,7 @@ class TrustedActivitiesClient:
     def __init__(self, trusted_activities_service):
         self._trusted_activities_service = trusted_activities_service
 
-    def get_all(self, type=None):
+    def get_all(self, type=None, page_size=None):
         """Gets all trusted activities.
         `Rest documentation <https://developer.code42.com/>`
 
@@ -25,7 +25,7 @@ class TrustedActivitiesClient:
         Returns:
             :class:'py42.response.Py42Response'
         """
-        return self._trusted_activities_service.get_all(type)
+        return self._trusted_activities_service.get_all(type, page_size)
 
     def create(self, type, value, description=None):
         """Gets all trusted activities with the given type.

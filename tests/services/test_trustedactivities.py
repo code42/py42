@@ -1,11 +1,10 @@
 import json
 
 import pytest
-
-import py42.settings
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
+import py42.settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42DescriptionLimitExceededError
 from py42.exceptions import Py42HTTPError
@@ -155,11 +154,11 @@ class TestTrustedActivitiesService:
         assert mock_connection.get.call_count == 2
         py42.settings.items_per_page = 500
 
-    def test_get_all_called_with_expected_url_and_params(self, mock_connection, mock_get_all_response):
+    def test_get_all_called_with_expected_url_and_params(
+        self, mock_connection, mock_get_all_response
+    ):
         trusted_activities_service = TrustedActivitiesService(mock_connection)
-        mock_connection.get.side_effect = [
-            mock_get_all_response
-        ]
+        mock_connection.get.side_effect = [mock_get_all_response]
 
         for _ in trusted_activities_service.get_all():
             pass

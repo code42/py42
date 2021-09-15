@@ -16,7 +16,9 @@ class TrustedActivitiesService(BaseService):
         super().__init__(connection)
 
     def get_all(self, type=None, page_size=None, **kwargs):
-        return get_all_pages(self.get_page, "trustResources", type=type, page_size=page_size, **kwargs)
+        return get_all_pages(
+            self.get_page, "trustResources", type=type, page_size=page_size, **kwargs
+        )
 
     def get_page(self, page_num, page_size, type, **kwargs):
         page_size = page_size or settings.items_per_page

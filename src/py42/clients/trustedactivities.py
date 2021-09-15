@@ -23,7 +23,8 @@ class TrustedActivitiesClient:
             type (str, optional): Type of the trusted activity. `TrustedActivityType.DOMAIN` or `TrustedActivityType.SLACK`
 
         Returns:
-            :class:'py42.response.Py42Response'
+            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            that each contain a page of cases.
         """
         return self._trusted_activities_service.get_all(type, page_size)
 
@@ -37,7 +38,7 @@ class TrustedActivitiesClient:
             description (str, optional): Description of the trusted activity.
 
         Returns:
-            :class:'py42.response.Py42Response'
+            :class:`py42.response.Py42Response`
         """
         return self._trusted_activities_service.create(type, value, description)
 
@@ -49,7 +50,7 @@ class TrustedActivitiesClient:
             id (int): Resource number of the trusted activity or domain.
 
         Returns:
-            :class:'py42.response.Py42Response'
+            :class:`py42.response.Py42Response`
         """
         return self._trusted_activities_service.get(id)
 
@@ -63,7 +64,7 @@ class TrustedActivitiesClient:
             description (str, optional): Description of the trusted activity.
 
         Returns:
-            :class:'py42.response.Py42Response'
+            :class:`py42.response.Py42Response`
         """
         return self._trusted_activities_service.update(
             id=id, value=value, description=description
@@ -77,6 +78,6 @@ class TrustedActivitiesClient:
             id (int): Resource number of the trusted activity or domain.
 
         Returns:
-            :class:'py42.response.Py42Response'
+            :class:`py42.response.Py42Response`
         """
         return self._trusted_activities_service.delete(id)

@@ -22,6 +22,17 @@ class TestTrustedActivitiesClient:
         trusted_activities_client.get_all()
         assert mock_trusted_activities_service.get_all.call_count == 1
 
+    def test_get_all_calls_service_with_expected_optional_params(
+        self, mock_trusted_activities_service
+    ):
+        trusted_activities_client = TrustedActivitiesClient(
+            mock_trusted_activities_service
+        )
+        trusted_activities_client.get_all("DOMAIN", 1)
+        mock_trusted_activities_service.get_all.assert_called_once_with(
+            "DOMAIN", 1
+        )
+
     def test_create_calls_service_with_expected_params(
         self, mock_trusted_activities_service
     ):

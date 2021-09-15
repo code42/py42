@@ -17,10 +17,11 @@ class TrustedActivitiesClient:
 
     def get_all(self, type=None, page_size=None):
         """Gets all trusted activities.
-        `Rest documentation <https://developer.code42.com/>`
+        `Rest documentation <https://developer.code42.com/api>`
 
         Args:
             type (str, optional): Type of the trusted activity. `TrustedActivityType.DOMAIN` or `TrustedActivityType.SLACK`
+            page_size (int, optional): Number of results to return per page. Defaults to 100.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
@@ -30,7 +31,7 @@ class TrustedActivitiesClient:
 
     def create(self, type, value, description=None):
         """Gets all trusted activities with the given type.
-        `Rest documentation <https://developer.code42.com/>`
+        `Rest documentation <https://developer.code42.com/api>`
 
         Args:
             type (str): Type of the trusted activity. `TrustedActivityType.DOMAIN` or `TrustedActivityType.SLACK`
@@ -44,7 +45,7 @@ class TrustedActivitiesClient:
 
     def get(self, id):
         """Retrieve trusted activity details by given resource number.
-        `Rest documentation <https://developer.code42.com/>`
+        `Rest documentation <https://developer.code42.com/api>`
 
         Args:
             id (int): Resource number of the trusted activity or domain.
@@ -56,7 +57,7 @@ class TrustedActivitiesClient:
 
     def update(self, id, value=None, description=None):
         """Updates trusted activity details by given resource number.
-        `Rest documentation <https://developer.code42.com/>`
+        `Rest documentation <https://developer.code42.com/api>`
 
         Args:
             id (int): Resource number of the trusted activity.
@@ -72,7 +73,7 @@ class TrustedActivitiesClient:
 
     def delete(self, id):
         """Deletes a trusted activity by given resource number.
-        `Rest documentation <https://developer.code42.com/>`
+        `Rest documentation <https://developer.code42.com/api>`
 
         Args:
             id (int): Resource number of the trusted activity or domain.

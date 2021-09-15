@@ -37,6 +37,7 @@ Explore the complete public documentation for `py42` below.
 * [Exceptions](methoddocs/exceptions.md)
 * [Util](methoddocs/util.md)
 * [Constants](methoddocs/constants.md)
+* [Trusted Activities](methoddocs/trustedactivities.md)
 
 ```eval_rst
 .. automodule:: py42.sdk

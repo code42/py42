@@ -10,6 +10,20 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### 1.18.1 - 2021-09-15
 
+### Added
+
+- New `trustedactivities` client with the following new methods:
+    - `sdk.trustedactivities.get_all()` to get all trusted activities.
+    - `sdk.trustedactivities.create()` to create a new trusted activity.
+    - `sdk.trustedactivities.get()` to get details about a single trusted activity.
+    - `sdk.trustedactivities.update()` to update a trusted activity.
+    - `sdk.trustedactivities.delete()` to delete a trusted activity
+
+- New custom exceptions
+    - `Py42TrustedActivityInvalidChangeError`
+    - `Py42TrustedActivityConflictError`
+    - `Py42TrustedActivityInvalidCharacterError`
+
 ### Fixed
 
 - Bug where `sdk.securitydata.search_all_file_events()` errored when `page_token` param was `None`.

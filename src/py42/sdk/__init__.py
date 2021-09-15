@@ -11,6 +11,7 @@ from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.clients.loginconfig import LoginConfigurationClient
 from py42.clients.securitydata import SecurityDataClient
+from py42.clients.trustedactivities import TrustedActivitiesClient
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42UnauthorizedError
 from py42.services import Services
@@ -36,6 +37,7 @@ from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
 from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
+from py42.services.trustedactivities import TrustedActivitiesService
 from py42.services.users import UserService
 from py42.usercontext import UserContext
 
@@ -258,7 +260,7 @@ class SDKClient:
         """A collection of methods for retrieving audit logs.
 
         Returns:
-            :class:`py42.clients.auditlogs.AuditLogsService`
+            :class:`py42.clients.auditlogs.AuditLogsClient`
         """
         return self._clients.auditlogs
 
@@ -272,6 +274,15 @@ class SDKClient:
         """
         return self._clients.cases
 
+    @property
+    def trustedactivities(self):
+        """A collection of methods and properties for managing trusted domains.
+
+        Returns:
+            :class:`py42.clients.trustedactivities.TrustedActivitiesClient`
+        """
+        return self._clients.trustedactivities
+
 
 def _init_services(main_connection, main_auth):
     alert_rules_key = "FedObserver-API_URL"
@@ -282,6 +293,7 @@ def _init_services(main_connection, main_auth):
     kv_prefix = "simple-key-value-store"
     audit_logs_key = "AUDIT-LOG_API-URL"
     cases_key = "CASES_API-URL"
+    trusted_activities_key = "TRUSTED-DOMAINS_API-URL"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
     kv_service = KeyValueStoreService(kv_connection)
@@ -310,6 +322,9 @@ def _init_services(main_connection, main_auth):
     user_ctx = UserContext(administration_svc)
     user_profile_svc = DetectionListUserService(ecm_conn, user_ctx, user_svc)
     cases_conn = Connection.from_microservice_key(kv_service, cases_key, auth=main_auth)
+    trusted_activities_conn = Connection.from_microservice_key(
+        kv_service, trusted_activities_key, auth=main_auth
+    )
 
     services = Services(
         administration=administration_svc,
@@ -331,6 +346,7 @@ def _init_services(main_connection, main_auth):
         auditlogs=AuditLogsService(audit_logs_conn),
         cases=CasesService(cases_conn),
         casesfileevents=CasesFileEventsService(cases_conn),
+        trustedactivities=TrustedActivitiesService(trusted_activities_conn),
     )
 
     return services, user_ctx
@@ -365,6 +381,7 @@ def _init_clients(services, connection):
     archive = ArchiveClient(archive_accessor_factory, services.archive)
     auditlogs = AuditLogsClient(services.auditlogs)
     loginconfig = LoginConfigurationClient(connection)
+    trustedactivities = TrustedActivitiesClient(services.trustedactivities)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
@@ -374,5 +391,6 @@ def _init_clients(services, connection):
         auditlogs=auditlogs,
         cases=CasesClient(services.cases, services.casesfileevents),
         loginconfig=loginconfig,
+        trustedactivities=trustedactivities,
     )
     return clients

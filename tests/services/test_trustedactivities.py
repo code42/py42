@@ -1,6 +1,8 @@
 import json
 
 import pytest
+
+import py42.settings
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
@@ -11,6 +13,8 @@ from py42.exceptions import Py42TrustedActivityConflictError
 from py42.exceptions import Py42TrustedActivityInvalidCharacterError
 from py42.services.trustedactivities import TrustedActivitiesService
 
+GET_ALL_TEST_RESPONSE = '{"trustResources":["test"], "totalCount":1}'
+EMPTY_GET_ALL_TEST_RESPONSE = '{"trustResources": [], "totalCount":0}'
 GET_TRUSTED_ACTIVITY_RESPONSE = {
     "description": "test description",
     "resourceId": "456",
@@ -31,6 +35,16 @@ _INVALID_CHANGE_ERROR_MSG = '{"problem":"INVALID_CHANGE","description":null}'
 _INVALID_CHARACTER_ERROR_MSG = (
     '{"problem":"INVALID_CHARACTERS_IN_VALUE","description":null}'
 )
+
+
+@pytest.fixture
+def mock_get_all_response(mocker):
+    return create_mock_response(mocker, GET_ALL_TEST_RESPONSE)
+
+
+@pytest.fixture
+def mock_get_all_empty_response(mocker):
+    return create_mock_response(mocker, EMPTY_GET_ALL_TEST_RESPONSE)
 
 
 @pytest.fixture
@@ -127,20 +141,54 @@ class TestTrustedActivitiesService:
             err.value.args[0] == "Invalid character in domain or slack workspace name"
         )
 
-    def test_get_all_called_with_expected_url_and_params(self, mock_connection):
+    def test_get_all_called_expected_number_of_times(
+        self, mock_connection, mock_get_all_response, mock_get_all_empty_response
+    ):
         trusted_activities_service = TrustedActivitiesService(mock_connection)
-        trusted_activities_service.get_all()
+        py42.settings.items_per_page = 1
+        items = [mock_get_all_response, mock_get_all_empty_response]
+
+        mock_connection.get.side_effect = items
+        for _ in trusted_activities_service.get_all():
+            pass
+
+        assert mock_connection.get.call_count == 2
+        py42.settings.items_per_page = 500
+
+    def test_get_all_called_with_expected_url_and_params(self, mock_connection, mock_get_all_response):
+        trusted_activities_service = TrustedActivitiesService(mock_connection)
+        mock_connection.get.side_effect = [
+            mock_get_all_response
+        ]
+
+        for _ in trusted_activities_service.get_all():
+            pass
+
         assert mock_connection.get.call_args[0][0] == _BASE_URI
-        data = {"type": None}
+        data = {
+            "type": None,
+            "pgNum": 1,
+            "pgSize": 500,
+        }
         mock_connection.get.assert_called_once_with(_BASE_URI, params=data)
 
     def test_get_all_called_with_expected_url_and_all_optional_params(
-        self, mock_connection
+        self, mock_connection, mock_get_all_response
     ):
         trusted_activities_service = TrustedActivitiesService(mock_connection)
-        trusted_activities_service.get_all("DOMAIN")
+        mock_connection.get.side_effect = [
+            mock_get_all_response,
+        ]
+
+        for _ in trusted_activities_service.get_all("DOMAIN"):
+            pass
+
         assert mock_connection.get.call_args[0][0] == _BASE_URI
-        data = {"type": "DOMAIN"}
+        data = {
+            "type": "DOMAIN",
+            "pgNum": 1,
+            "pgSize": 500,
+        }
         mock_connection.get.assert_called_once_with(_BASE_URI, params=data)
 
     def test_get_called_with_expected_url_and_params(self, mock_connection):

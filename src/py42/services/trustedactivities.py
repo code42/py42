@@ -58,7 +58,7 @@ class TrustedActivitiesService(BaseService):
         data = {
             "type": current_activity_data.get("type"),
             "value": value or current_activity_data.get("value"),
-            "description": description
+            "description": description,
         }
         try:
             return self._connection.put(uri, json=data)

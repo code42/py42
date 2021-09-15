@@ -20,7 +20,9 @@ class TestExfiltratedDataService:
         service.get_download_token("testeventid", "testdeviceid", "testfilepath", 1223)
         qry = "deviceUid=testdeviceid&eventId=testeventid&filePath=testfilepath&versionTimestamp=1223"
         expected = f"api/v1/file-download-token?{qry}"
-        mock_successful_connection.get.assert_called_once_with(expected)
+        mock_successful_connection.get.assert_called_once_with(
+            expected, headers={"Accept": "*/*"}
+        )
 
     def test_get_file_calls_get_with_valid_params(
         self, mock_successful_connection, mock_request

@@ -101,6 +101,16 @@ class DetectionListsClient:
             tags (str or list of str ): A single tag or multiple tags in a list to be added. For
                 example: ``"tag1"`` or ``["tag1", "tag2"]``.
 
+                Constants available at :class:`py42.constants.RiskTags`:
+
+                * ``FLIGHT_RISK``
+                * ``HIGH_IMPACT_EMPLOYEE``
+                * ``ELEVATED_ACCESS_PRIVILEGES``
+                * ``PERFORMANCE_CONCERNS``
+                * ``SUSPICIOUS_SYSTEM_ACTIVITY``
+                * ``POOR_SECURITY_PRACTICES``
+                * ``CONTRACT_EMPLOYEE``
+
         Returns:
             :class:`py42.response.Py42Response`
         """
@@ -114,6 +124,17 @@ class DetectionListsClient:
             user_id (str or int): The userUid of the user whose risk factor tag(s) needs you want to remove.
             tags (str or list of str ): A single tag or multiple tags in a list to be removed. For
                 example: ``"tag1"`` or ``["tag1", "tag2"]``.
+
+                Constants available at :class:`py42.constants.RiskTags`:
+
+                * ``FLIGHT_RISK``
+                * ``HIGH_IMPACT_EMPLOYEE``
+                * ``ELEVATED_ACCESS_PRIVILEGES``
+                * ``PERFORMANCE_CONCERNS``
+                * ``SUSPICIOUS_SYSTEM_ACTIVITY``
+                * ``POOR_SECURITY_PRACTICES``
+                * ``CONTRACT_EMPLOYEE``
+
 
         Returns:
             :class:`py42.response.Py42Response`

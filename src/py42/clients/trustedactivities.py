@@ -20,7 +20,7 @@ class TrustedActivitiesClient:
         `Rest documentation <https://developer.code42.com/api>`
 
         Args:
-            type (str, optional): Type of the trusted activity. `TrustedActivityType.DOMAIN` or `TrustedActivityType.SLACK`
+            type (str, optional): Type of the trusted activity. ``DOMAIN`` or ``SLACK``. Defaults to None. Constants available at :class:`py42.constants.TrustedActivityType`.
             page_size (int, optional): Number of results to return per page. Defaults to 100.
 
         Returns:
@@ -34,7 +34,7 @@ class TrustedActivitiesClient:
         `Rest documentation <https://developer.code42.com/api>`
 
         Args:
-            type (str): Type of the trusted activity. `TrustedActivityType.DOMAIN` or `TrustedActivityType.SLACK`
+            type (str): Type of the trusted activity. ``DOMAIN`` or ``SLACK``. Defaults to None. Constants available at :class:`py42.constants.TrustedActivityType`.
             value (str): The URL of the domain or name of the Slack workspace.
             description (str, optional): Description of the trusted activity.
 

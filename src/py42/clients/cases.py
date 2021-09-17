@@ -74,7 +74,7 @@ class CasesClient:
         Args:
             page_num (int): The page number to request.
             name (str, optional): Filter results by case name, matches partial names. Defaults to None.
-            status (str, optional): Filter results by case status. `CaseStatus.OPEN` or `CaseStatus.CLOSED` Defaults to None.
+            status (str, optional): Filter results by case status. ``OPEN`` or ``CLOSED``. Defaults to None. Constants available at :class:`py42.constants.CaseStatus`.
             min_create_time (str or int or float or datetime, optional): Filter results by case creation time, start time.
                  str format %Y-%m-%d %H:%M:%S. Defaults to None.
             max_create_time (str or int or float or datetime, optional): Filter results by case creation time, end time.
@@ -132,7 +132,7 @@ class CasesClient:
 
         Args:
             name (str, optional): Filter results by case name, matches partial names. Defaults to None.
-            status (str, optional): Filter results by case status. `CaseStatus.OPEN` or `CaseStatus.CLOSED` Defaults to None.
+            status (str, optional): Filter results by case status. ``OPEN`` or ``CLOSED``. Defaults to None. Constants available at :class:`py42.constants.CaseStatus`.
             min_create_time (str or int or float or datetime, optional): Filter results by case creation time, start time.
                  str format %Y-%m-%d %H:%M:%S. Defaults to None.
             max_create_time (str or int or float or datetime, optional): Filter results by case creation time, end time.
@@ -216,8 +216,7 @@ class CasesClient:
             assignee (str, optional): User UID of the assignee. Defaults to None.
             description (str, optional): Description of the case. Defaults to None.
             findings (str, optional): Notes on the case. Defaults to None.
-            status (str, optional): Status of the case. `CaseStatus.OPEN` or `CaseStatus.CLOSED`.
-                Defaults to None.
+            status (str, optional): Status of the case. ``OPEN`` or ``CLOSED``. Defaults to None. Constants available at :class:`py42.constants.CaseStatus`.
 
         Returns:
             :class:`py42.response.Py42Response`

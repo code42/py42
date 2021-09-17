@@ -107,8 +107,8 @@ class DepartingEmployeeService(BaseService):
 
         Args:
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                ``OPEN``, or ``LEAVING_TODAY``. Constants are available at
-                :class:`py42.services.detectionlists.departing_employee.DepartingEmployeeFilters`.
+                ``OPEN``, or ``LEAVING_TODAY``. Constants available at
+                :class:`py42.constants.DepartingEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str, optional): ``ASC`` or ``DESC``. Defaults to "DESC".
@@ -141,8 +141,8 @@ class DepartingEmployeeService(BaseService):
         Args:
             page_num (int): The page number to request.
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                ``OPEN``, or ``LEAVING_TODAY``. Constants are available at
-                :class:`py42.services.detectionlists.departing_employee.DepartingEmployeeFilters`.
+                ``OPEN``, or ``LEAVING_TODAY``. Constants available at
+                :class:`py42.constants.DepartingEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to "CREATED_AT".
             sort_direction (str. optional): ``ASC`` or ``DESC``. Defaults to "DESC".

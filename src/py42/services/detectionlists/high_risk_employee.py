@@ -120,8 +120,8 @@ class HighRiskEmployeeService(BaseService):
 
         Args:
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                or ``OPEN``. Constants are available at
-                :class:`py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
+                or ``OPEN``. Constants available at
+                :class:`py42.constants.HighRiskEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
@@ -156,8 +156,8 @@ class HighRiskEmployeeService(BaseService):
         Args:
             page_num (int): The page number to request.
             filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                or ``OPEN``. Constants are available at
-                :class:`py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
+                or ``OPEN``. Constants available at
+                :class:`py42.constants.HighRiskEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str. optional): ``ASC`` or ``DESC``. Constants available at

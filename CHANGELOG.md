@@ -23,6 +23,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42TrustedActivityInvalidChangeError`
     - `Py42TrustedActivityConflictError`
     - `Py42TrustedActivityInvalidCharacterError`
+    - `Py42TrustedActivityIdNotFound`
+
+- New custom py42 `409` error wrapper class `Py42ConflictError`
 
 ### Fixed
 

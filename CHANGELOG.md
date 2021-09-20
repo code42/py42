@@ -8,9 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-### 1.18.1 - 2021-09-15
+## Unreleased
 
 ### Added
+
+- The following enums classes can now be referenced in the `py42.constants` module
+    - `CaseStatus`
+    - `RiskTags`
+    - `TrustedActivityType`
+    - `DepartingEmployeeFilters`
+    - `HighRiskEmployeeFilters`
 
 - New `trustedactivities` client with the following new methods:
     - `sdk.trustedactivities.get_all()` to get all trusted activities.
@@ -26,6 +33,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `Py42TrustedActivityIdNotFound`
 
 - New custom `HTTP 409 error` wrapper class `Py42ConflictError`
+
+## 1.18.1 - 2021-09-15
 
 ### Fixed
 

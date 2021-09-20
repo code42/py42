@@ -2,6 +2,7 @@ import pytest
 from tests.conftest import REQUEST_EXCEPTION_MESSAGE
 
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42ConflictError
 from py42.exceptions import Py42ForbiddenError
 from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42InternalServerError
@@ -33,6 +34,11 @@ class TestPy42Errors:
         with pytest.raises(Py42NotFoundError):
             raise_py42_error(error_response)
 
+    def test_raise_py42_error_raises_conflict_error(self, error_response):
+        error_response.response.status_code = 409
+        with pytest.raises(Py42ConflictError):
+            raise_py42_error(error_response)
+
     def test_raise_py42_error_raises_internal_server_error(self, error_response):
         error_response.response.status_code = 500
         with pytest.raises(Py42InternalServerError):
@@ -48,7 +54,7 @@ class TestPy42Errors:
         with pytest.raises(Py42TooManyRequestsError):
             raise_py42_error(error_response)
 
-    @pytest.mark.parametrize("status_code", [400, 401, 403, 404, 429, 500, 600])
+    @pytest.mark.parametrize("status_code", [400, 401, 403, 404, 409, 429, 500, 600])
     def test_raise_py42_http_error_has_correct_response_type(
         self, error_response, status_code
     ):

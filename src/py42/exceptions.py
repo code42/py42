@@ -124,6 +124,10 @@ class Py42NotFoundError(Py42HTTPError):
     """A wrapper to represent an HTTP 404 error."""
 
 
+class Py42ConflictError(Py42HTTPError):
+    """A wrapper to represent an HTTP 409 error."""
+
+
 class Py42InternalServerError(Py42HTTPError):
     """A wrapper to represent an HTTP 500 error."""
 
@@ -345,7 +349,7 @@ class Py42TrustedActivityInvalidChangeError(Py42BadRequestError):
         super().__init__(exception, msg)
 
 
-class Py42TrustedActivityConflictError(Py42HTTPError):
+class Py42TrustedActivityConflictError(Py42ConflictError):
     """An error raised when theres a conflict with a trusted activity domain URL."""
 
     def __init__(self, exception, value):
@@ -364,6 +368,14 @@ class Py42TrustedActivityInvalidCharacterError(Py42BadRequestError):
         super().__init__(exception, msg)
 
 
+class Py42TrustedActivityIdNotFound(Py42NotFoundError):
+    """An exception raised when the trusted activity ID does not exist."""
+
+    def __init__(self, exception, resource_id):
+        message = f"Resource ID '{resource_id}' not found."
+        super(Py42NotFoundError, self).__init__(exception, message)
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.
@@ -376,6 +388,8 @@ def raise_py42_error(raised_error):
         raise Py42ForbiddenError(raised_error)
     elif raised_error.response.status_code == 404:
         raise Py42NotFoundError(raised_error)
+    elif raised_error.response.status_code == 409:
+        raise Py42ConflictError(raised_error)
     elif raised_error.response.status_code == 429:
         raise Py42TooManyRequestsError(raised_error)
     elif 500 <= raised_error.response.status_code < 600:

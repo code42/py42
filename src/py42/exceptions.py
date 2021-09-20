@@ -346,7 +346,7 @@ class Py42TrustedActivityInvalidChangeError(Py42BadRequestError):
 
 
 class Py42TrustedActivityConflictError(Py42HTTPError):
-    """An error raised when theres a conflict with a trusted activity domain URL."""
+    """An error raised when a user attempts to create or update a trusted activity with a value which already exists."""
 
     def __init__(self, exception, value):
         msg = (
@@ -357,7 +357,7 @@ class Py42TrustedActivityConflictError(Py42HTTPError):
 
 
 class Py42TrustedActivityInvalidCharacterError(Py42BadRequestError):
-    """An error raised when an invalid change is being made to a trusted activity."""
+    """An error raised when an invalid character is used in a trusted activity value."""
 
     def __init__(self, exception):
         msg = "Invalid character in domain or slack workspace name"

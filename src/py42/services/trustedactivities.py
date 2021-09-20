@@ -1,8 +1,10 @@
 from py42 import settings
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42ConflictError
 from py42.exceptions import Py42DescriptionLimitExceededError
-from py42.exceptions import Py42HTTPError
+from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42TrustedActivityConflictError
+from py42.exceptions import Py42TrustedActivityIdNotFound
 from py42.exceptions import Py42TrustedActivityInvalidCharacterError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
@@ -41,12 +43,15 @@ class TrustedActivitiesService(BaseService):
             return self._connection.post(self._uri_prefix, json=data)
         except Py42BadRequestError as err:
             _handle_common_invalid_case_parameters_errors(err)
-        except Py42HTTPError as err:
-            _handle_common_client_errors(err, value)
+        except Py42ConflictError as err:
+            raise Py42TrustedActivityConflictError(err, value)
 
     def get(self, id):
         uri = f"{self._uri_prefix}/{id}"
-        return self._connection.get(uri)
+        try:
+            return self._connection.get(uri)
+        except Py42NotFoundError as err:
+            raise Py42TrustedActivityIdNotFound(err, id)
 
     def update(self, id, value=None, description=None):
         uri = f"{self._uri_prefix}/{id}"
@@ -64,12 +69,17 @@ class TrustedActivitiesService(BaseService):
             return self._connection.put(uri, json=data)
         except Py42BadRequestError as err:
             _handle_common_invalid_case_parameters_errors(err)
-        except Py42HTTPError as err:
-            _handle_common_client_errors(err, value)
+        except Py42NotFoundError as err:
+            raise Py42TrustedActivityIdNotFound(err, id)
+        except Py42ConflictError as err:
+            raise Py42TrustedActivityConflictError(err, value)
 
     def delete(self, id):
         uri = f"{self._uri_prefix}/{id}"
-        return self._connection.delete(uri)
+        try:
+            return self._connection.delete(uri)
+        except Py42NotFoundError as err:
+            raise Py42TrustedActivityIdNotFound(err, id)
 
 
 def _handle_common_invalid_case_parameters_errors(base_err):
@@ -77,10 +87,4 @@ def _handle_common_invalid_case_parameters_errors(base_err):
         raise Py42DescriptionLimitExceededError(base_err)
     elif "INVALID_CHARACTERS_IN_VALUE" in base_err.response.text:
         raise Py42TrustedActivityInvalidCharacterError(base_err)
-    raise
-
-
-def _handle_common_client_errors(base_err, value):
-    if "CONFLICT" in base_err.response.text:
-        raise Py42TrustedActivityConflictError(base_err, value)
     raise

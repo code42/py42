@@ -51,6 +51,7 @@ jobs:
           127.0.0.1 exfiltration-data-service
           127.0.0.1 connected-server
           127.0.0.1 cases
+          127.0.0.1 trusted-activities-service
           EOF
       - name: Start up the mock servers
         run: cd code42-mock-servers; docker-compose up -d --build

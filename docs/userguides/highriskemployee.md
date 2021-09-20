@@ -39,9 +39,9 @@ You can add/remove risk factor tags from a user programmatically using the `add_
 you want to add/remove:
 
 ```python
-import py42.constants
+from py42.constants import RiskTags
 
-tag_list = [py42.constants.RiskTags.CONTRACT_EMPLOYEE, py42.constants.RiskTags.ELEVATED_ACCESS_PRIVILEGES]
+tag_list = [RiskTags.CONTRACT_EMPLOYEE, RiskTags.ELEVATED_ACCESS_PRIVILEGES]
 
 # Add the risk tags
 response = sdk.detectionlists.add_user_risk_tags(user_id, tag_list)

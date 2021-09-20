@@ -7,9 +7,9 @@ Use py42 to quickly and easily manage trusted activities and resources, includin
 To get started create a new trusted activity resource.
 
 ```python
-import py42.constants
+from py42.constants import TrustedActivityType
 
-response = sdk.trustedactivities.create(py42.constants.TrustedActivityType.DOMAIN, "test-domain.com")
+response = sdk.trustedactivities.create(TrustedActivityType.DOMAIN, "test-domain.com")
 ```
 Trusted activities can be of type `DOMAIN` or `SLACK`.
 
@@ -39,9 +39,9 @@ To clear the description of a trusted activity, pass an empty string `descriptio
 This section describes how to view the details of all trusted activities of the type `DOMAIN` type.
 
 ```python
-import py42.constants
+from py42.constants import TrustedActivityType
 
-response = sdk.trustedactivities.get_all(type=py42.constants.TrustedActivityType.DOMAIN)
+response = sdk.trustedactivities.get_all(type=TrustedActivityType.DOMAIN)
 
 for page in response:
     resources = page["trustResources"]

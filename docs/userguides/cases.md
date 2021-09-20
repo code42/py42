@@ -22,9 +22,9 @@ case = sdk.cases.get(case_number)
 You can also access a case by its `number` to update its details.  For instance, if you wanted to update a case's status to `CLOSED`:
 
 ```python
-import py42.constants
+from py42.constants import CaseStatus
 
-response = sdk.cases.update(case_number, status=py42.constants.CaseStatus.CLOSED)
+response = sdk.cases.update(case_number, status=CaseStatus.CLOSED)
 ```
 
 Case statuses can be set to either `OPEN` or `CLOSED`.
@@ -34,9 +34,9 @@ Case statuses can be set to either `OPEN` or `CLOSED`.
 This section describes how to view the details of all cases with an `OPEN` status.
 
 ```python
-import py42.constants
+from py42.constants import CaseStatus
 
-response = sdk.cases.get_all(status=py42.constants.CaseStatus.OPEN)
+response = sdk.cases.get_all(status=CaseStatus.OPEN)
 
 for page in response:
     cases = page["cases"]

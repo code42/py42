@@ -16,7 +16,6 @@ Trusted activities can be of type `DOMAIN` or `SLACK`.
 Once you've created a trusted activity, or if you're working with an existing one, you can use the trusted activity's `resourceId` to view details about it.
 
 ```python
-# view details about a trusted activity
 response = sdk.trustedactivities.get(resource_id)
 
 ```

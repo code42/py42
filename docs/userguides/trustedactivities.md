@@ -1,6 +1,6 @@
 # Trust Settings
 
-Use py42 to quickly and easily manage trusted activities and resources, including domains and slack workspaces.
+Use py42 to quickly and easily manage trusted activities and resources, including domains and Slack workspaces.
 
 ## Create, View or Modify Trusted Activities
 

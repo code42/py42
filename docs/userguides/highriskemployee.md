@@ -34,8 +34,8 @@ sdk.detectionlists.high_risk_employee.remove(user_id)
 
 ## Add or Remove Risk Factors From Users
 
-You can add/remove risk factor tags from a user programmatically using the `add_user_risk_tags()` and
-`remove_user_risk_tags()` methods in the `detectionlists` module. Both methods take a user_id and a list of tags that
+You can add/remove risk factor tags from a high risk user programmatically using the `add_user_risk_tags()` and
+`remove_user_risk_tags()` methods in the `detectionlists` module. Both methods take the `user_id` of a high risk employee, and a list of tags that
 you want to add/remove:
 
 ```python
@@ -50,7 +50,7 @@ response = sdk.detectionlists.add_user_risk_tags(user_id, tag_list)
 response = sdk.detectionlists.remove_user_risk_tags(user_id, tag_list)
 ```
 
-The following available risk tags are availabe in `py42.constants.RiskTags`:
+The following risk tags are available in `py42.constants.RiskTags`:
 
 - `HIGH_IMPACT_EMPLOYEE`
 - `ELEVATED_ACCESS_PRIVILEGES`
@@ -59,6 +59,7 @@ The following available risk tags are availabe in `py42.constants.RiskTags`:
 - `SUSPICIOUS_SYSTEM_ACTIVITY`
 - `POOR_SECURITY_PRACTICES`
 - `CONTRACT_EMPLOYEE`
+
 
 For complete details, see
  [High Risk Employee](../methoddocs/detectionlists.html#high-risk-employee).

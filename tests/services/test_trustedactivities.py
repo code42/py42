@@ -148,7 +148,7 @@ class TestTrustedActivitiesService:
             trusted_activities_service.create("DOMAIN", "bad@name")
 
         assert (
-            err.value.args[0] == "Invalid character in domain or slack workspace name"
+            err.value.args[0] == "Invalid character in domain or Slack workspace name"
         )
 
     def test_get_all_called_expected_number_of_times(
@@ -294,7 +294,7 @@ class TestTrustedActivitiesService:
             )
 
         assert (
-            err.value.args[0] == "Invalid character in domain or slack workspace name"
+            err.value.args[0] == "Invalid character in domain or Slack workspace name"
         )
 
     def test_update_when_fails_with_resource_id_not_found_error_raises_custom_exception(

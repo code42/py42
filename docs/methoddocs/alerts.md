@@ -27,4 +27,3 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
     :members:
     :show-inheritance:
 ```
-

@@ -161,7 +161,7 @@ class TestCasesClient:
         actual_max_time_obj = datetime.strptime(
             actual_max_time_string, "%Y-%m-%dT%H:%M:%S.%fZ"
         )
-        assert (datetime.utcnow() - actual_max_time_obj).total_seconds() < 0.02
+        assert (datetime.utcnow() - actual_max_time_obj).total_seconds() < 0.03
 
     def test_get_page_calls_service_with_expected_params(
         self, mock_cases_service, mock_cases_file_event_service

@@ -50,16 +50,7 @@ response = sdk.detectionlists.add_user_risk_tags(user_id, tag_list)
 response = sdk.detectionlists.remove_user_risk_tags(user_id, tag_list)
 ```
 
-The following risk tags are available in `py42.constants.RiskTags`:
-
-- `HIGH_IMPACT_EMPLOYEE`
-- `ELEVATED_ACCESS_PRIVILEGES`
-- `PERFORMANCE_CONCERNS`
-- `FLIGHT_RISK`
-- `SUSPICIOUS_SYSTEM_ACTIVITY`
-- `POOR_SECURITY_PRACTICES`
-- `CONTRACT_EMPLOYEE`
-
+Constants for Risk tags are available at [Risk Tags](../methoddocs/constants.html#py42.constants.RiskTags)
 
 For complete details, see
  [High Risk Employee](../methoddocs/detectionlists.html#high-risk-employee).

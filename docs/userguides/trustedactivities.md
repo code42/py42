@@ -11,7 +11,8 @@ from py42.constants import TrustedActivityType
 
 response = sdk.trustedactivities.create(TrustedActivityType.DOMAIN, "test-domain.com")
 ```
-Trusted activities can be of type `DOMAIN` or `SLACK`.
+Constants for the trusted activity types are available at [Trusted Activity Type](../methoddocs/constants.html#py42.constants.TrustedActivityType)
+
 
 Once you've created a trusted activity, or if you're working with an existing one, you can use the trusted activity's `resourceId` to view details about it.
 
@@ -36,7 +37,7 @@ To clear the description of a trusted activity, pass an empty string `descriptio
 
 ## View Details for all Trusted Domains
 
-This section describes how to view the details of all trusted activities of the type `DOMAIN` type.
+This section describes how to view the details of all trusted activities of the type `DOMAIN`.
 
 ```python
 from py42.constants import TrustedActivityType

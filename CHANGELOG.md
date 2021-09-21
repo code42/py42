@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-### 1.19.0 - 2021-09-21
+## 1.19.0 - 2021-09-21
 
 ### Added
 
@@ -27,7 +27,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - New custom `HTTP 409 error` wrapper class `Py42ConflictError`
 
-### 1.18.1 - 2021-09-15
+## 1.18.1 - 2021-09-15
 
 ### Fixed
 

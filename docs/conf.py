@@ -11,6 +11,7 @@
 #
 import os
 import sys
+import py42.sdk.queries.alerts.filters
 
 from recommonmark.transform import AutoStructify
 

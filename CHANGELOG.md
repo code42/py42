@@ -12,12 +12,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- The following enums classes can now be referenced in the `py42.constants` module
+- The following enums classes can now be referenced in `py42.constants` in addition to their original modules:
     - `CaseStatus`
     - `RiskTags`
     - `TrustedActivityType`
     - `DepartingEmployeeFilters`
     - `HighRiskEmployeeFilters`
+
+## 1.19.0 - 2021-09-21
+
+### Added
 
 - New `trustedactivities` client with the following new methods:
     - `sdk.trustedactivities.get_all()` to get all trusted activities.

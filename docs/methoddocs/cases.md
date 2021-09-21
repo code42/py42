@@ -12,7 +12,7 @@
     :show-inheritance:
 ```
 
-## Cases file events
+## Cases File Events
 
 ```eval_rst
 .. autoclass:: py42.services.casesfileevents.CasesFileEventsService

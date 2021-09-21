@@ -156,13 +156,12 @@ class TestCasesClient:
     ):
         cases_client = CasesClient(mock_cases_service, mock_cases_file_event_service)
         cases_client.get_all(min_create_time=1609439400)
-        expected_max_time = datetime.utcnow()
         actual_range = mock_cases_service.get_all.call_args[1]["created_at"]
         actual_max_time_string = actual_range.split("/")[1]
         actual_max_time_obj = datetime.strptime(
             actual_max_time_string, "%Y-%m-%dT%H:%M:%S.%fZ"
         )
-        assert (expected_max_time - actual_max_time_obj).total_seconds() < 0.02
+        assert (datetime.utcnow() - actual_max_time_obj).total_seconds() < 0.03
 
     def test_get_page_calls_service_with_expected_params(
         self, mock_cases_service, mock_cases_file_event_service

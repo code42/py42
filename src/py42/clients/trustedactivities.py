@@ -7,6 +7,7 @@ class TrustedActivityType(Choices):
         * ``DOMAIN``
         * ``SLACK``
     """
+
     DOMAIN = "DOMAIN"
     SLACK = "SLACK"
 

@@ -20,7 +20,6 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
     :show-inheritance:
 ```
 
-
 # Alerts
 
 ```eval_rst

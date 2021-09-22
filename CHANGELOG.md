@@ -12,7 +12,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- The following enums classes can now be referenced in `py42.constants` in addition to their original modules:
+- The following enums classes are now available to reference in `py42.constants` in addition to their original modules:
     - `CaseStatus`
     - `RiskTags`
     - `TrustedActivityType`

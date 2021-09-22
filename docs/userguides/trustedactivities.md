@@ -2,16 +2,16 @@
 
 Use py42 to quickly and easily manage trusted activities and resources, including domains and Slack workspaces.
 
-## Create, View or Modify Trusted Activities
+## Create, View, or Modify Trusted Activities
 
-To get started create a new trusted activity resource.
+To get started, create a new trusted activity resource.
 
 ```python
 from py42.constants import TrustedActivityType
 
 response = sdk.trustedactivities.create(TrustedActivityType.DOMAIN, "test-domain.com")
 ```
-Constants for the trusted activity types are available at [Trusted Activity Type](../methoddocs/constants.html#py42.constants.TrustedActivityType)
+Constants for the each type of trusted activity are available at [Trusted Activity Type](../methoddocs/constants.html#py42.constants.TrustedActivityType)
 
 
 Once you've created a trusted activity, or if you're working with an existing one, you can use the trusted activity's `resourceId` to view details about it.
@@ -21,7 +21,7 @@ response = sdk.trustedactivities.get(resource_id)
 
 ```
 
-You can also access a trusted activity by its `resourceId` to update its details.  For instance, if you wanted to add a description to a trusted activity:
+You can also access a trusted activity by its `resourceId` to update its details.  For example, to add a description to a trusted activity:
 
 ```python
 response = sdk.trustedactivities.update(resource_id, description="This is a trusted activity.")

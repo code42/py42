@@ -2,9 +2,9 @@
 
 Use py42 to quickly and easily manage cases.
 
-## Create, View or Modify Cases
+## Create, View, or Modify Cases
 
-To get started create a new case.
+To get started, create a new case.
 
 ```python
 case = sdk.cases.create("new-case")
@@ -19,7 +19,7 @@ case = sdk.cases.get(case_number)
 
 ```
 
-You can also access a case by its `number` to update its details.  For instance, if you wanted to update a case's status to `CLOSED`:
+You can also access a case by its `number` to update its details.  For example, to update a case's status to `CLOSED`:
 
 ```python
 from py42.constants import CaseStatus

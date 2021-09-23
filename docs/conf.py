@@ -15,6 +15,7 @@ import sys
 from recommonmark.transform import AutoStructify
 
 import py42.__version__ as meta
+import py42.sdk.queries
 
 # -- Project information -----------------------------------------------------
 

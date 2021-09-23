@@ -23,6 +23,12 @@
 ## High Risk Employee
 
 ```eval_rst
+.. autoclass:: py42.clients.detectionlists.RiskTags
+    :members:
+    :show-inheritance:
+```
+
+```eval_rst
 .. autoclass:: py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters
     :members:
     :show-inheritance:

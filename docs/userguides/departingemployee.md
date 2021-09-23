@@ -1,4 +1,6 @@
-# Add or Remove Users From the Departing Employees List
+# Departing Employees
+
+## Add or Remove Users From the Departing Employees List
 
 Use py42 to quickly and easily manage users on the Departing Employees list. This guide describes how to add users to and remove users from the Departing Employees list.
 

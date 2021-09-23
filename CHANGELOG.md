@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- The following enums classes are now available to reference in `py42.constants` in addition to their original modules:
+    - `CaseStatus`
+    - `RiskTags`
+    - `TrustedActivityType`
+    - `DepartingEmployeeFilters`
+    - `HighRiskEmployeeFilters`
+
 ## 1.19.0 - 2021-09-21
 
 ### Added

@@ -10,7 +10,12 @@ from py42.services.util import get_all_pages
 
 
 class HighRiskEmployeeFilters(_DetectionListFilters, Choices):
-    """Constants available for filtering High Risk Employee search results."""
+    """Constants available for filtering High Risk Employee search results.
+
+        * ``OPEN``
+        * ``EXFILTRATION_30_DAYS``
+        * ``EXFILTRATION_24_HOURS``
+    """
 
 
 class HighRiskEmployeeService(BaseService):
@@ -119,10 +124,9 @@ class HighRiskEmployeeService(BaseService):
         `Rest Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_Search>`__
 
         Args:
-            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                or ``OPEN``. Constants are available at
-                :class:`py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
-                Defaults to "OPEN".
+            filter_type (str, optional): Constants available at
+                :class:`py42.constants.HighRiskEmployeeFilters`.
+                Defaults to ``OPEN``.
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
                 :class:`py42.constants.SortDirection`. Defaults to None.
@@ -155,9 +159,8 @@ class HighRiskEmployeeService(BaseService):
 
         Args:
             page_num (int): The page number to request.
-            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
-                or ``OPEN``. Constants are available at
-                :class:`py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
+            filter_type (str, optional): Constants available at
+                :class:`py42.constants.HighRiskEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str. optional): ``ASC`` or ``DESC``. Constants available at

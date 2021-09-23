@@ -364,7 +364,7 @@ class Py42TrustedActivityInvalidCharacterError(Py42BadRequestError):
     """An error raised when an invalid character is in a trusted activity value."""
 
     def __init__(self, exception):
-        msg = "Invalid character in domain or slack workspace name"
+        msg = "Invalid character in domain or Slack workspace name"
         super().__init__(exception, msg)
 
 

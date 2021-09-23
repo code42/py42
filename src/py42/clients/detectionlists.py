@@ -4,8 +4,17 @@ from py42.exceptions import Py42UnableToCreateProfileError
 
 
 class RiskTags(Choices):
-    """The available RiskTags for :meth:`~py42.clients.detectionlists.DetectionListsClient.add_user_risk_tags()`
-    and :meth:`~py42.clients.detectionlists.DetectionListsClient.remove_user_risk_tags()`"""
+    """Constants available as risk tags for :meth:`~py42.clients.detectionlists.DetectionListsClient.add_user_risk_tags()`
+    and :meth:`~py42.clients.detectionlists.DetectionListsClient.remove_user_risk_tags()`.
+
+        * ``FLIGHT_RISK``
+        * ``HIGH_IMPACT_EMPLOYEE``
+        * ``ELEVATED_ACCESS_PRIVILEGES``
+        * ``PERFORMANCE_CONCERNS``
+        * ``SUSPICIOUS_SYSTEM_ACTIVITY``
+        * ``POOR_SECURITY_PRACTICES``
+        * ``CONTRACT_EMPLOYEE``
+    """
 
     FLIGHT_RISK = "FLIGHT_RISK"
     HIGH_IMPACT_EMPLOYEE = "HIGH_IMPACT_EMPLOYEE"
@@ -101,6 +110,8 @@ class DetectionListsClient:
             tags (str or list of str ): A single tag or multiple tags in a list to be added. For
                 example: ``"tag1"`` or ``["tag1", "tag2"]``.
 
+                Constants available at :class:`py42.constants.RiskTags`
+
         Returns:
             :class:`py42.response.Py42Response`
         """
@@ -114,6 +125,8 @@ class DetectionListsClient:
             user_id (str or int): The userUid of the user whose risk factor tag(s) needs you want to remove.
             tags (str or list of str ): A single tag or multiple tags in a list to be removed. For
                 example: ``"tag1"`` or ``["tag1", "tag2"]``.
+
+                Constants available at :class:`py42.constants.RiskTags`
 
         Returns:
             :class:`py42.response.Py42Response`

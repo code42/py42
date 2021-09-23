@@ -1,4 +1,4 @@
-# High Risk Employee
+# High Risk Employees
 
 ## Add or Remove Users From the High Risk Employee List
 
@@ -32,19 +32,16 @@ To remove a user from the High Risk Employee list:
 sdk.detectionlists.high_risk_employee.remove(user_id)
 ```
 
-For complete details, see
- [High Risk Employee](../methoddocs/detectionlists.html#high-risk-employee).
+## Add or Remove Risk Factors From Users
 
-
-##
- Add or Remove Risk Factors From Users
-
-You can add/remove risk factor tags from a user programmatically using the `add_user_risk_tags()` and
-`remove_user_risk_tags()` methods in the `detectionlists` module. Both methods take a user_id and a list of tags that
+You can add/remove risk factor tags from a high risk user programmatically using the `add_user_risk_tags()` and
+`remove_user_risk_tags()` methods in the `detectionlists` module. Both methods take the `user_id` of a high risk employee, and a list of tags that
 you want to add/remove:
 
 ```python
-tag_list = ["CONTRACT_EMPLOYEE", "ELEVATED_ACCESS_PRIVILEGES"]
+from py42.constants import RiskTags
+
+tag_list = [RiskTags.CONTRACT_EMPLOYEE, RiskTags.ELEVATED_ACCESS_PRIVILEGES]
 
 # Add the risk tags
 response = sdk.detectionlists.add_user_risk_tags(user_id, tag_list)
@@ -53,12 +50,7 @@ response = sdk.detectionlists.add_user_risk_tags(user_id, tag_list)
 response = sdk.detectionlists.remove_user_risk_tags(user_id, tag_list)
 ```
 
-The available risk tags are:
+Constants for Risk tags are available at [Risk Tags](../methoddocs/constants.html#py42.constants.RiskTags)
 
-- `HIGH_IMPACT_EMPLOYEE`
-- `ELEVATED_ACCESS_PRIVILEGES`
-- `PERFORMANCE_CONCERNS`
-- `FLIGHT_RISK`
-- `SUSPICIOUS_SYSTEM_ACTIVITY`
-- `POOR_SECURITY_PRACTICES`
-- `CONTRACT_EMPLOYEE`
+For complete details, see
+ [High Risk Employee](../methoddocs/detectionlists.html#high-risk-employee).

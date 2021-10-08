@@ -19,6 +19,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `DepartingEmployeeFilters`
     - `HighRiskEmployeeFilters`
 
+### Fixed
+
+- Bug where `sdk.alerts.get_all_alert_details()` was raising error when no alerts were found in query.
+
 ## 1.19.0 - 2021-09-21
 
 ### Added

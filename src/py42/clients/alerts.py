@@ -161,7 +161,12 @@ class AlertsClient:
         pages = self._alert_service.search_all_pages(query)
         for page in pages:
             alert_ids = [alert["id"] for alert in page["alerts"]]
-            alert_details = self._alert_service.get_details(alert_ids)
-            yield from sorted(
-                alert_details["alerts"], key=lambda x: x.get(sort_key), reverse=reverse,
-            )
+            if alert_ids:
+                alert_details = self._alert_service.get_details(alert_ids)
+                yield from sorted(
+                    alert_details["alerts"],
+                    key=lambda x: x.get(sort_key),
+                    reverse=reverse,
+                )
+            else:
+                yield from []

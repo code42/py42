@@ -164,7 +164,9 @@ class AlertsClient:
             if alert_ids:
                 alert_details = self._alert_service.get_details(alert_ids)
                 yield from sorted(
-                    alert_details["alerts"], key=lambda x: x.get(sort_key), reverse=reverse,
+                    alert_details["alerts"],
+                    key=lambda x: x.get(sort_key),
+                    reverse=reverse,
                 )
             else:
-                return []
+                return []  # noqa B901

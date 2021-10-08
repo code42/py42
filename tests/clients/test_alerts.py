@@ -367,23 +367,23 @@ class TestAlertsClient:
         query.sort_key = sort_key
         results = list(alert_client.get_all_alert_details(query))
         assert results == [ALERT_F, ALERT_E, ALERT_D, ALERT_C, ALERT_B, ALERT_A]
-    
+
     def test_alerts_client_get_all_alert_details_returns_empty_generator_when_no_alerts_found(
-        self,
-        mock_alerts_service_with_no_alerts,
-        mock_alert_rules_service
+        self, mock_alerts_service_with_no_alerts, mock_alert_rules_service
     ):
-        alert_client = AlertsClient(mock_alerts_service_with_no_alerts, mock_alert_rules_service)
+        alert_client = AlertsClient(
+            mock_alerts_service_with_no_alerts, mock_alert_rules_service
+        )
         query = AlertQuery()
         results = list(alert_client.get_all_alert_details(query))
         assert results == []
 
     def test_alerts_client_get_all_alert_details_does_not_call_get_details_when_no_alerts_found(
-        self,
-        mock_alerts_service_with_no_alerts,
-        mock_alert_rules_service
+        self, mock_alerts_service_with_no_alerts, mock_alert_rules_service
     ):
-        alert_client = AlertsClient(mock_alerts_service_with_no_alerts, mock_alert_rules_service)
+        alert_client = AlertsClient(
+            mock_alerts_service_with_no_alerts, mock_alert_rules_service
+        )
         query = AlertQuery()
         list(alert_client.get_all_alert_details(query))
         assert mock_alerts_service_with_no_alerts.get_details.call_count == 0

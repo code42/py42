@@ -169,4 +169,4 @@ class AlertsClient:
                     reverse=reverse,
                 )
             else:
-                return []  # noqa B901
+                yield from []

@@ -153,7 +153,7 @@ class AlertsClient:
         Returns:
             generator: An object that iterates over alert detail items.
         """
-        query.page_size = 100
+        query.page_size = 25
         sort_key = query.sort_key[0].lower() + query.sort_key[1:]
         if sort_key == "alertId":
             sort_key = "id"

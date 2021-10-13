@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Fixed
+
+- Decreased `get_all_alert_details` batch size to 25 when retrieving alert queries due to performance concerns.
+
 ## 1.19.1 - 2021-10-12
 
 ### Added

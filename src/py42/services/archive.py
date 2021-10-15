@@ -52,7 +52,7 @@ class ArchiveService(BaseService):
         return get_all_pages(self.get_page, "archives", **params)
 
     def get_backup_sets(self, device_guid, destination_guid):
-        uri = f"/c42api/v3/BackupSets/{device_guid}/{destination_guid}"
+        uri = f"/api/v3/BackupSets/{device_guid}/{destination_guid}"
         return self._connection.get(uri)
 
     def get_all_restore_history(self, days, id_type, id_value, **kwargs):

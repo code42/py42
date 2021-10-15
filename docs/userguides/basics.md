@@ -45,7 +45,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 def jwt_provider():
     res = requests.get(
-            'https://console.us.code42.com/c42api/v3/auth/jwt?useBody=true',
+            'https://console.us.code42.com/api/v3/auth/jwt?useBody=true',
             auth=HTTPBasicAuth('username', 'password')
           )
     res_json = json.loads(res.text)

@@ -46,7 +46,7 @@ class UserService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        uri = "/api/User"
+        uri = "/api/v1/User"
         data = {
             "orgUid": org_uid,
             "username": username,
@@ -74,7 +74,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = f"/api/User/{user_id}"
+        uri = f"/api/v1/User/{user_id}"
         return self._connection.get(uri, params=kwargs)
 
     def get_by_uid(self, user_uid, **kwargs):
@@ -86,7 +86,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = f"/api/User/{user_uid}"
+        uri = f"/api/v1/User/{user_uid}"
         params = dict(idType="uid", **kwargs)
         return self._connection.get(uri, params=params)
 
@@ -99,7 +99,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = "/api/User"
+        uri = "/api/v1/User"
         params = dict(username=username, **kwargs)
         return self._connection.get(uri, params=params)
 
@@ -109,7 +109,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the user.
         """
-        uri = "/api/User/my"
+        uri = "/api/v1/User/my"
         return self._connection.get(uri, params=kwargs)
 
     def get_page(
@@ -142,7 +142,7 @@ class UserService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        uri = "/api/User"
+        uri = "/api/v1/User"
         page_size = page_size or settings.items_per_page
         params = dict(
             active=active,
@@ -215,7 +215,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/UserBlock/{user_id}"
+        uri = f"/api/v1/UserBlock/{user_id}"
         return self._connection.put(uri)
 
     def unblock(self, user_id):
@@ -228,7 +228,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/UserBlock/{user_id}"
+        uri = f"/api/v1/UserBlock/{user_id}"
         return self._connection.delete(uri)
 
     def deactivate(self, user_id, block_user=None):
@@ -242,7 +242,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/UserDeactivation/{user_id}"
+        uri = f"/api/v1/UserDeactivation/{user_id}"
         data = {"blockUser": block_user}
         try:
             return self._connection.put(uri, json=data)
@@ -260,7 +260,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/UserDeactivation/{user_id}"
+        uri = f"/api/v1/UserDeactivation/{user_id}"
         params = {"unblockUser": unblock_user}
         return self._connection.delete(uri, params=params)
 
@@ -274,7 +274,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/UserMoveProcess"
+        uri = "/api/v1/UserMoveProcess"
         data = {"userId": user_id, "parentOrgId": org_id}
         return self._connection.post(uri, json=data)
 
@@ -285,7 +285,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/role"
+        uri = "/api/v1/role"
         return self._connection.get(uri)
 
     def get_roles(self, user_id):
@@ -297,7 +297,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/UserRole/{user_id}"
+        uri = f"/api/v1/UserRole/{user_id}"
         return self._connection.get(uri)
 
     def add_role(self, user_id, role_name):
@@ -310,7 +310,7 @@ class UserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/UserRole"
+        uri = "/api/v1/UserRole"
         data = {"userId": user_id, "roleName": role_name}
         return self._connection.post(uri, json=data)
 
@@ -327,7 +327,7 @@ class UserService(BaseService):
 
         # use quote instead of params here so that %20 is used instead of + for spaces.
         role_name = quote(role_name)
-        uri = f"/api/UserRole?userId={user_id}&roleName={role_name}"
+        uri = f"/api/v1/UserRole?userId={user_id}&roleName={role_name}"
         return self._connection.delete(uri)
 
     def update_user(
@@ -357,7 +357,7 @@ class UserService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        uri = f"/api/User/{user_uid}?idType=uid"
+        uri = f"/api/v1/User/{user_uid}?idType=uid"
         data = {
             "username": username,
             "email": email,

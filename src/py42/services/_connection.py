@@ -52,7 +52,7 @@ class MicroservicePrefixHostResolver(HostResolver):
         return sts_url.replace("sts", self._prefix, 1)
 
     def _get_sts_base_url(self):
-        uri = "/api/ServerEnv"
+        uri = "/api/v1/ServerEnv"
         response = self._connection.get(uri)
 
         response_json = json_lib.loads(response.text)

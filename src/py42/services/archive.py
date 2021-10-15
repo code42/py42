@@ -5,7 +5,7 @@ from py42.services.util import get_all_pages
 
 class ArchiveService(BaseService):
     def get_data_key_token(self, device_guid):
-        uri = "/api/DataKeyToken"
+        uri = "/api/v1/DataKeyToken"
         data = {"computerGuid": device_guid}
         return self._connection.post(uri, json=data)
 
@@ -18,7 +18,7 @@ class ArchiveService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing archive information.
         """
-        uri = f"/api/Archive/{archive_guid}"
+        uri = f"/api/v1/Archive/{archive_guid}"
         return self._connection.get(uri)
 
     def get_page(self, page_num, page_size=None, **kwargs):
@@ -31,7 +31,7 @@ class ArchiveService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/Archive"
+        uri = "/api/v1/Archive"
         page_size = page_size or settings.items_per_page
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
         return self._connection.get(uri, params=params)
@@ -68,13 +68,13 @@ class ArchiveService(BaseService):
     def _get_restore_history_page(
         self, days, id_type, id_value, page_num, page_size, **kwargs
     ):
-        uri = "/api/RestoreHistory"
+        uri = "/api/v1/RestoreHistory"
         params = dict(days=days, pgNum=page_num, pgSize=page_size, **kwargs)
         params[id_type] = id_value
         return self._connection.get(uri, params=params)
 
     def get_web_restore_info(self, src_guid, dest_guid):
-        uri = "/api/WebRestoreInfo"
+        uri = "/api/v1/WebRestoreInfo"
         params = {"srcGuid": src_guid, "destGuid": dest_guid}
         return self._connection.get(uri, params=params)
 
@@ -87,7 +87,7 @@ class ArchiveService(BaseService):
         page_size=None,
         page_num=None,
     ):
-        uri = "/api/ColdStorage"
+        uri = "/api/v1/ColdStorage"
         params = {
             "orgId": org_id,
             "incChildOrgs": include_child_orgs,
@@ -116,7 +116,7 @@ class ArchiveService(BaseService):
         )
 
     def update_cold_storage_purge_date(self, archive_guid, purge_date):
-        uri = f"/api/coldStorage/{archive_guid}"
+        uri = f"/api/v1/coldStorage/{archive_guid}"
         params = {"idType": "guid"}
         data = {"archiveHoldExpireDate": purge_date}
         return self._connection.put(uri, params=params, json=data)

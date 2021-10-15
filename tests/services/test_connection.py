@@ -144,7 +144,7 @@ class TestMicroservicePrefixHostResolver:
     def test_get_host_address_calls_correct_server_env_url(self, mock_server_env_conn):
         resolver = MicroservicePrefixHostResolver(mock_server_env_conn, "TESTPREFIX")
         resolver.get_host_address()
-        mock_server_env_conn.get.assert_called_once_with("/api/ServerEnv")
+        mock_server_env_conn.get.assert_called_once_with("/api/v1/ServerEnv")
 
 
 class TestConnectedServerHostResolver:

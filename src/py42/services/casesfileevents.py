@@ -6,7 +6,7 @@ from py42.services import BaseService
 
 class CasesFileEventsService(BaseService):
 
-    _uri_prefix = "/api/v1/case/{0}/fileevent"
+    _uri_prefix = "/api/v1/cases/{0}/fileevent"
 
     def __init__(self, connection):
         super().__init__(connection)

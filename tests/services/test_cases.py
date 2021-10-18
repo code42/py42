@@ -41,7 +41,7 @@ NAME_EXISTS_ERROR_MSG = '{"problem":"NAME_EXISTS","description":null}'
 DESCRIPTION_TOO_LONG_ERROR_MSG = '{"problem":"DESCRIPTION_TOO_LONG","description":null}'
 UNKNOWN_ERROR_MSG = '{"problem":"SURPRISE!"}'
 _TEST_CASE_NUMBER = 123456
-_BASE_URI = "/api/v1/case"
+_BASE_URI = "/api/v1/cases"
 
 
 def _get_invalid_user_text(user_type):
@@ -64,7 +64,7 @@ class TestCasesService:
     def test_create_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         cases_service.create("name", "subject", "user uid", "description", "findings")
-        assert mock_connection.post.call_args[0][0] == "/api/v1/case"
+        assert mock_connection.post.call_args[0][0] == "/api/v1/cases"
         data = {
             "name": "name",
             "subject": "subject",
@@ -240,14 +240,14 @@ class TestCasesService:
         cases_service.export_summary(_TEST_CASE_NUMBER)
         assert (
             mock_connection.get.call_args[0][0]
-            == f"/api/v1/case/{_TEST_CASE_NUMBER}/export"
+            == f"/api/v1/cases/{_TEST_CASE_NUMBER}/export"
         )
 
     def test_get_called_with_expected_url_and_params(self, mock_connection):
         cases_service = CasesService(mock_connection)
         cases_service.get(_TEST_CASE_NUMBER)
         assert (
-            mock_connection.get.call_args[0][0] == f"/api/v1/case/{_TEST_CASE_NUMBER}"
+            mock_connection.get.call_args[0][0] == f"/api/v1/cases/{_TEST_CASE_NUMBER}"
         )
 
     def test_update_called_with_expected_url_and_params(
@@ -265,7 +265,7 @@ class TestCasesService:
             "findings": "x",
         }
         mock_connection.put.assert_called_once_with(
-            f"/api/v1/case/{_TEST_CASE_NUMBER}", json=data
+            f"/api/v1/cases/{_TEST_CASE_NUMBER}", json=data
         )
 
     def test_update_when_fails_with_name_exists_error_raises_custom_exception(

@@ -12,6 +12,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Fixed
 
+- Fixed typo in API resource `/api/v1/cases`, which was incorrectly specified as `/api/v1/case`"
 - Decreased `get_all_alert_details` batch size to 25 when retrieving alert queries due to performance concerns.
 
 ## 1.19.1 - 2021-10-12

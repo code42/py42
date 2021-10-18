@@ -18,7 +18,7 @@ class TestCasesFileEventService:
         case_file_event_service.add(_TEST_CASE_NUMBER, "event-id")
         assert (
             mock_connection.post.call_args[0][0]
-            == f"/api/v1/case/{_TEST_CASE_NUMBER}/fileevent/event-id"
+            == f"/api/v1/cases/{_TEST_CASE_NUMBER}/fileevent/event-id"
         )
 
     def test_delete_called_with_expected_url_and_params(self, mock_connection):
@@ -26,7 +26,7 @@ class TestCasesFileEventService:
         case_file_event_service.delete(_TEST_CASE_NUMBER, "event-id")
         assert (
             mock_connection.delete.call_args[0][0]
-            == f"/api/v1/case/{_TEST_CASE_NUMBER}/fileevent/event-id"
+            == f"/api/v1/cases/{_TEST_CASE_NUMBER}/fileevent/event-id"
         )
 
     def test_get_called_with_expected_url_and_params(self, mock_connection):
@@ -34,7 +34,7 @@ class TestCasesFileEventService:
         case_file_event_service.get(_TEST_CASE_NUMBER, "event-id")
         assert (
             mock_connection.get.call_args[0][0]
-            == f"/api/v1/case/{_TEST_CASE_NUMBER}/fileevent/event-id"
+            == f"/api/v1/cases/{_TEST_CASE_NUMBER}/fileevent/event-id"
         )
 
     def test_get_all_called_with_expected_url_and_params(self, mock_connection):
@@ -42,7 +42,7 @@ class TestCasesFileEventService:
         case_file_event_service.get_all(_TEST_CASE_NUMBER)
         assert (
             mock_connection.get.call_args[0][0]
-            == f"/api/v1/case/{_TEST_CASE_NUMBER}/fileevent"
+            == f"/api/v1/cases/{_TEST_CASE_NUMBER}/fileevent"
         )
 
     def test_add_on_a_closed_case_raises_error(self, mocker, mock_connection):

@@ -10,7 +10,7 @@ from py42.services.util import get_all_pages
 
 class CasesService(BaseService):
 
-    _uri_prefix = "/api/v1/case"
+    _uri_prefix = "/api/v1/cases"
 
     def __init__(self, connection):
         super().__init__(connection)

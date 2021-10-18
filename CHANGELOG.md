@@ -14,6 +14,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Decreased `get_all_alert_details` batch size to 25 when retrieving alert queries due to performance concerns.
 
+### Changed
+
+- updated uri paths to use updated `/api/v#`
+
 ## 1.19.1 - 2021-10-12
 
 ### Added

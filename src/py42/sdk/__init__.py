@@ -137,7 +137,9 @@ class SDKClient:
         basic_auth = HTTPBasicAuth(client_id, secret)
         auth_connection = Connection.from_host_address(host_address, auth=basic_auth)
         api_client_auth = ApiClientAuth(auth_connection)
-        main_connection = Connection.from_host_address(host_address, auth=api_client_auth)
+        main_connection = Connection.from_host_address(
+            host_address, auth=api_client_auth
+        )
 
         return cls(main_connection, api_client_auth)
 

@@ -57,9 +57,7 @@ def from_api_client(host_address, client_id, secret):
         :class:`py42.sdk.SDKClient`
     """
 
-    client = SDKClient.from_api_client(host_address, client_id, secret)
-    # client.users.get_current()
-    return client
+    return SDKClient.from_api_client(host_address, client_id, secret)
 
 
 def from_local_account(host_address, username, password, totp=None):
@@ -108,9 +106,7 @@ def from_jwt_provider(host_address, jwt_provider):
         :class:`py42.sdk.SDKClient`
     """
 
-    client = SDKClient.from_jwt_provider(host_address, jwt_provider)
-    client.users.get_current()
-    return client
+    return SDKClient.from_jwt_provider(host_address, jwt_provider)
 
 
 class SDKClient:
@@ -140,7 +136,7 @@ class SDKClient:
         main_connection = Connection.from_host_address(
             host_address, auth=api_client_auth
         )
-
+        api_client_auth.get_credentials()
         return cls(main_connection, api_client_auth)
 
     @classmethod
@@ -186,7 +182,7 @@ class SDKClient:
         """
         custom_auth = CustomJWTAuth(jwt_provider)
         main_connection = Connection.from_host_address(host_address, auth=custom_auth)
-
+        custom_auth.get_credentials()
         return cls(main_connection, custom_auth)
 
     @property

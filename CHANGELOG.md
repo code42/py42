@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- Support for Code42 API Clients. You can instantiate py42 using a client ID and secret via `py42.sdk.from_api_client()`.
+
 ## 1.19.2 - 2021-10-19
 
 ### Fixed

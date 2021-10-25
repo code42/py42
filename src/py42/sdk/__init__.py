@@ -15,6 +15,7 @@ from py42.clients.trustedactivities import TrustedActivitiesClient
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42UnauthorizedError
 from py42.services import Services
+from py42.services._auth import ApiClientAuth
 from py42.services._auth import BearerAuth
 from py42.services._auth import CustomJWTAuth
 from py42.services._connection import Connection
@@ -40,6 +41,23 @@ from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.trustedactivities import TrustedActivitiesService
 from py42.services.users import UserService
 from py42.usercontext import UserContext
+
+
+def from_api_client(host_address, client_id, secret):
+    """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
+    an API client ID and secret.
+
+    Args:
+        host_address (str): The domain name of the Code42 instance being authenticated to, e.g.
+            console.us.code42.com
+        client_id (str): The client ID of the API client to authenticate with.
+        secret (str): The secret of the API client to authenticate with.
+
+    Returns:
+        :class:`py42.sdk.SDKClient`
+    """
+
+    return SDKClient.from_api_client(host_address, client_id, secret)
 
 
 def from_local_account(host_address, username, password, totp=None):
@@ -88,9 +106,7 @@ def from_jwt_provider(host_address, jwt_provider):
         :class:`py42.sdk.SDKClient`
     """
 
-    client = SDKClient.from_jwt_provider(host_address, jwt_provider)
-    client.users.get_current()
-    return client
+    return SDKClient.from_jwt_provider(host_address, jwt_provider)
 
 
 class SDKClient:
@@ -98,6 +114,30 @@ class SDKClient:
         services, user_ctx = _init_services(main_connection, auth)
         self._clients = _init_clients(services, main_connection)
         self._user_ctx = user_ctx
+
+    @classmethod
+    def from_api_client(cls, host_address, client_id, secret):
+        """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
+        an API client ID and secret.
+
+        Args:
+            host_address (str): The domain name of the Code42 instance being authenticated to, e.g.
+                console.us.code42.com
+            client_id (str): The client ID of the API client to authenticate with.
+            secret (str): The secret of the API client to authenticate with.
+
+        Returns:
+            :class:`py42.sdk.SDKClient`
+        """
+
+        basic_auth = HTTPBasicAuth(client_id, secret)
+        auth_connection = Connection.from_host_address(host_address, auth=basic_auth)
+        api_client_auth = ApiClientAuth(auth_connection)
+        main_connection = Connection.from_host_address(
+            host_address, auth=api_client_auth
+        )
+        api_client_auth.get_credentials()
+        return cls(main_connection, api_client_auth)
 
     @classmethod
     def from_local_account(cls, host_address, username, password, totp=None):
@@ -142,7 +182,7 @@ class SDKClient:
         """
         custom_auth = CustomJWTAuth(jwt_provider)
         main_connection = Connection.from_host_address(host_address, auth=custom_auth)
-
+        custom_auth.get_credentials()
         return cls(main_connection, custom_auth)
 
     @property

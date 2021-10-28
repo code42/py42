@@ -5,7 +5,7 @@ class AdministrationService(BaseService):
     def get_alert_log(
         self, status=None, alert_type=None, page_num=None, page_size=None
     ):
-        uri = "/api/v1/AlertLog"
+        uri = "/api/AlertLog"
         params = {
             "status": status,
             "type": alert_type,

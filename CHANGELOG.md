@@ -14,15 +14,15 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Removed method Get_alert_log(), method was no longer functional
 
+### Changed
+
+- updated uri paths to use updated `/api/v#`
+
 ## 1.19.2 - 2021-10-19
 
 ### Fixed
 
 - Decreased `get_all_alert_details` batch size to 25 when retrieving alert queries due to performance concerns.
-
-### Changed
-
-- updated uri paths to use updated `/api/v#`
 
 ## 1.19.1 - 2021-10-12
 

@@ -10,6 +10,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Removed
+
+- Removed method Get_alert_log(), method was no longer functional
+
+## 1.19.2 - 2021-10-19
+
 ### Fixed
 
 - Decreased `get_all_alert_details` batch size to 25 when retrieving alert queries due to performance concerns.

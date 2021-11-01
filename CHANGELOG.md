@@ -16,7 +16,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Changed
 
-- updated uri paths to use updated `/api/v#`
+- updated URI paths to use new standardized versioning scheme
 
 ## 1.19.2 - 2021-10-19
 

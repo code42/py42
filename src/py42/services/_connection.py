@@ -84,7 +84,7 @@ class ConnectedServerHostResolver(HostResolver):
 
     def get_host_address(self):
         response = self._connection.get(
-            "api/connectedServerUrl", params={"guid": self._device_guid}
+            "api/v1/connectedServerUrl", params={"guid": self._device_guid}
         )
         if response["serverUrl"] is None:
             raise Py42DeviceNotConnectedError(response, self._device_guid)

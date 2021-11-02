@@ -56,7 +56,7 @@ class DeviceService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        uri = "/api/Computer"
+        uri = "/api/v1/Computer"
         page_size = page_size or settings.items_per_page
         params = {
             "active": active,
@@ -145,7 +145,7 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing device information.
         """
-        uri = f"/api/Computer/{device_id}"
+        uri = f"/api/v1/Computer/{device_id}"
         params = dict(incBackupUsage=include_backup_usage, **kwargs)
         return self._connection.get(uri, params=params)
 
@@ -160,7 +160,7 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing device information.
         """
-        uri = f"/api/Computer/{guid}"
+        uri = f"/api/v1/Computer/{guid}"
         params = dict(idType="guid", incBackupUsage=include_backup_usage, **kwargs)
         return self._connection.get(uri, params=params)
 
@@ -174,7 +174,7 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/ComputerBlock/{device_id}"
+        uri = f"/api/v1/ComputerBlock/{device_id}"
         return self._connection.put(uri)
 
     def unblock(self, device_id):
@@ -186,7 +186,7 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/ComputerBlock/{device_id}"
+        uri = f"/api/v1/ComputerBlock/{device_id}"
         return self._connection.delete(uri)
 
     def deactivate(self, device_id):
@@ -229,7 +229,7 @@ class DeviceService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/ComputerDeauthorization/{device_id}"
+        uri = f"/api/v1/ComputerDeauthorization/{device_id}"
         return self._connection.put(uri)
 
     def get_agent_state(self, guid, property_name):
@@ -280,7 +280,7 @@ class DeviceService(BaseService):
         """
         device_settings = dict(device_settings)
         device_id = device_settings["computerId"]
-        uri = f"/api/Computer/{device_id}"
+        uri = f"/api/v1/Computer/{device_id}"
         new_config_date_ms = str(int(time() * 1000))
         device_settings["settings"]["configDateMs"] = new_config_date_ms
         return self._connection.put(uri, json=device_settings)

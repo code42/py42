@@ -49,7 +49,7 @@ class TestV3Auth:
         params = {"useBody": True}
         headers = None
         mock_v3_conn.get.assert_called_once_with(
-            "/c42api/v3/auth/jwt", params=params, headers=headers
+            "/api/v3/auth/jwt", params=params, headers=headers
         )
 
     @pytest.mark.parametrize(
@@ -64,7 +64,7 @@ class TestV3Auth:
         params = {"useBody": True}
         headers = {"totp-auth": expected}
         mock_v3_conn.get.assert_called_once_with(
-            "/c42api/v3/auth/jwt", params=params, headers=headers
+            "/api/v3/auth/jwt", params=params, headers=headers
         )
 
     def test_clear_credentials_causes_auth_api_to_be_called_on_subsequent_calls(

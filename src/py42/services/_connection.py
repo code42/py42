@@ -52,7 +52,7 @@ class MicroservicePrefixHostResolver(HostResolver):
         return sts_url.replace("sts", self._prefix, 1)
 
     def _get_sts_base_url(self):
-        uri = "/api/ServerEnv"
+        uri = "/api/v1/ServerEnv"
         response = self._connection.get(uri)
 
         response_json = json_lib.loads(response.text)
@@ -84,7 +84,7 @@ class ConnectedServerHostResolver(HostResolver):
 
     def get_host_address(self):
         response = self._connection.get(
-            "api/connectedServerUrl", params={"guid": self._device_guid}
+            "api/v1/connectedServerUrl", params={"guid": self._device_guid}
         )
         if response["serverUrl"] is None:
             raise Py42DeviceNotConnectedError(response, self._device_guid)

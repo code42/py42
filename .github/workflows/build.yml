@@ -35,8 +35,8 @@ jobs:
       - name: Checkout mock servers
         uses: actions/checkout@v2
         with:
-          ref: chore/enable-py42-integration-tests
           repository: code42/code42-mock-servers
+          #ref: chore/enable-py42-integration-tests
           path: code42-mock-servers
       - name: Add mock servers host addresses
         run: |

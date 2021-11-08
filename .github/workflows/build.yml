@@ -56,5 +56,5 @@ jobs:
           EOF
       - name: Start up the mock servers
         run: cd code42-mock-servers; docker-compose up -d --build
-      - name: Run the integration tests
+      - name: Run the integration testss
         run: cd py42; tox -e integration

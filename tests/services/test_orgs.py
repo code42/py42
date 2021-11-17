@@ -4,7 +4,7 @@ from tests.conftest import create_mock_response
 import py42.settings
 from py42.services.orgs import OrgService
 
-COMPUTER_URI = "/api/Org"
+COMPUTER_URI = "/api/v1/Org"
 
 MOCK_GET_ORG_RESPONSE = (
     """{"totalCount": 3000, "orgs": [{"orgName": "foo", "orgUid": "123"}]}"""
@@ -50,7 +50,7 @@ class TestOrgService:
         service = OrgService(mock_connection)
         service.get_page(3, 25)
         mock_connection.get.assert_called_once_with(
-            "/api/Org", params={"pgNum": 3, "pgSize": 25}
+            "/api/v1/Org", params={"pgNum": 3, "pgSize": 25}
         )
 
     def test_get_agent_state_calls_get_with_uri_and_params(

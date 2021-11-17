@@ -41,7 +41,7 @@ class FileArchiveAuth(StorageAuth):
         self._destination_guid = destination_guid
 
     def get_tmp_auth(self):
-        uri = "/api/LoginToken"
+        uri = "/api/v1/LoginToken"
         data = {
             "userId": self._user_id,
             "sourceGuid": self._device_guid,

@@ -18,6 +18,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
   - `create_policy()` - No longer requires the `policy` arg.
   - `get_custodians_page()` - No longer includes optional arg `legal_hold_membership_uid`.
 
+## 1.19.3 - 2021-11-09
+
+### Removed
+
+- Removed method Get_alert_log(), method was no longer functional
+
+### Changed
+
+- updated URI paths to use new standardized versioning scheme
+
 ## 1.19.2 - 2021-10-19
 
 ### Fixed

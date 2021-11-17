@@ -92,9 +92,7 @@ class LegalHoldApiClientService(BaseService):
         uri = f"{self._uri_prefix}/legal-hold-policy/list"
         return self._connection.get(uri)
 
-    def get_matter_by_uid(
-        self, legal_hold_uid
-    ):
+    def get_matter_by_uid(self, legal_hold_uid):
         """Gets a single Legal Hold Matter.
 
         Args:
@@ -180,7 +178,7 @@ class LegalHoldApiClientService(BaseService):
             creator_user_uid=creator_user_uid,
             active=active,
             name=name,
-            hold_ext_ref=hold_ext_ref
+            hold_ext_ref=hold_ext_ref,
         )
 
     def get_custodians_page(

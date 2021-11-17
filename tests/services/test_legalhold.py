@@ -10,7 +10,7 @@ from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
 from py42.services.legalhold import LegalHoldService
 
-LEGAL_HOLD_URI = "/api/LegalHold"
+LEGAL_HOLD_URI = "/api/v1/LegalHold"
 
 DEFAULT_GET_LEGAL_HOLDS_PARAMS = {
     "active": None,
@@ -150,7 +150,7 @@ class TestLegalHoldService:
         service = LegalHoldService(mock_connection)
         service.get_matters_page(10, "creator", True, "name", "ref", 100)
         mock_connection.get.assert_called_once_with(
-            "/api/LegalHold",
+            "/api/v1/LegalHold",
             params={
                 "creatorUserUid": "creator",
                 "activeState": "ACTIVE",
@@ -169,7 +169,7 @@ class TestLegalHoldService:
             20, "membership", "legalhold", "user ID", "username", True, 200
         )
         mock_connection.get.assert_called_once_with(
-            "/api/LegalHoldMembership",
+            "/api/v1/LegalHoldMembership",
             params={
                 "legalHoldMembershipUid": "membership",
                 "legalHoldUid": "legalhold",
@@ -223,7 +223,7 @@ class TestLegalHoldService:
         service.add_to_matter("user", "legal")
         expected_data = {"legalHoldUid": "legal", "userUid": "user"}
         mock_connection.post.assert_called_once_with(
-            "/api/LegalHoldMembership", json=expected_data
+            "/api/v1/LegalHoldMembership", json=expected_data
         )
 
     def test_add_to_matter_when_post_raises_bad_request_error_indicating_user_already_added_raises_user_already_added(

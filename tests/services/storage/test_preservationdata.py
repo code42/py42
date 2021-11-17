@@ -20,7 +20,7 @@ class TestStoragePreservationDataService:
         service.get_download_token("abc", "fabc", 1223)
 
         mock_successful_connection.get.assert_called_once_with(
-            "c42api/v3/FileDownloadToken",
+            "api/v3/FileDownloadToken",
             params={"archiveGuid": "abc", "fileId": "fabc", "versionTimestamp": 1223},
         )
 
@@ -34,7 +34,7 @@ class TestStoragePreservationDataService:
         )
         service.get_file("token")
         mock_successful_connection.get.assert_called_once_with(
-            "https://host.com/c42api/v3/GetFile",
+            "https://host.com/api/v3/GetFile",
             headers={"Accept": "*/*"},
             params={"PDSDownloadToken": "token"},
             stream=True,
@@ -49,7 +49,7 @@ class TestStoragePreservationDataService:
         )
         service.get_file("PDSDownloadToken=token")
         mock_successful_connection.get.assert_called_once_with(
-            "https://host.com/c42api/v3/GetFile",
+            "https://host.com/api/v3/GetFile",
             headers={"Accept": "*/*"},
             params={"PDSDownloadToken": "token"},
             stream=True,

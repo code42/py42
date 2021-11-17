@@ -33,6 +33,7 @@ from py42.services.detectionlists.user_profile import DetectionListUserService
 from py42.services.devices import DeviceService
 from py42.services.fileevent import FileEventService
 from py42.services.legalhold import LegalHoldService
+from py42.services.legalholdapiclient import LegalHoldApiClientService
 from py42.services.orgs import OrgService
 from py42.services.preservationdata import PreservationDataService
 from py42.services.savedsearch import SavedSearchService
@@ -109,11 +110,18 @@ def from_jwt_provider(host_address, jwt_provider):
     return SDKClient.from_jwt_provider(host_address, jwt_provider)
 
 
+class AuthFlags:
+    API_CLIENT = "API_CLIENT"
+    LOCAL_ACCOUNT = "LOCAL_ACCOUNT"
+    CUSTOM = "CUSTOM"
+
+
 class SDKClient:
-    def __init__(self, main_connection, auth):
-        services, user_ctx = _init_services(main_connection, auth)
+    def __init__(self, main_connection, auth, auth_flag):
+        services, user_ctx = _init_services(main_connection, auth, auth_flag)
         self._clients = _init_clients(services, main_connection)
         self._user_ctx = user_ctx
+        self._auth_flag = auth_flag
 
     @classmethod
     def from_api_client(cls, host_address, client_id, secret):
@@ -137,7 +145,7 @@ class SDKClient:
             host_address, auth=api_client_auth
         )
         api_client_auth.get_credentials()
-        return cls(main_connection, api_client_auth)
+        return cls(main_connection, api_client_auth, AuthFlags.API_CLIENT)
 
     @classmethod
     def from_local_account(cls, host_address, username, password, totp=None):
@@ -163,7 +171,7 @@ class SDKClient:
         bearer_auth = BearerAuth(auth_connection, totp)
         main_connection = Connection.from_host_address(host_address, auth=bearer_auth)
 
-        return cls(main_connection, bearer_auth)
+        return cls(main_connection, bearer_auth, AuthFlags.LOCAL_ACCOUNT)
 
     @classmethod
     def from_jwt_provider(cls, host_address, jwt_provider):
@@ -183,7 +191,7 @@ class SDKClient:
         custom_auth = CustomJWTAuth(jwt_provider)
         main_connection = Connection.from_host_address(host_address, auth=custom_auth)
         custom_auth.get_credentials()
-        return cls(main_connection, custom_auth)
+        return cls(main_connection, custom_auth, AuthFlags.CUSTOM)
 
     @property
     def loginconfig(self):
@@ -324,7 +332,7 @@ class SDKClient:
         return self._clients.trustedactivities
 
 
-def _init_services(main_connection, main_auth):
+def _init_services(main_connection, main_auth, auth_flag):
     alert_rules_key = "FedObserver-API_URL"
     alerts_key = "AlertService-API_URL"
     file_events_key = "FORENSIC_SEARCH-API_URL"
@@ -370,7 +378,9 @@ def _init_services(main_connection, main_auth):
         administration=administration_svc,
         archive=ArchiveService(main_connection),
         devices=DeviceService(main_connection),
-        legalhold=LegalHoldService(main_connection),
+        legalhold=LegalHoldApiClientService(main_connection)
+        if (auth_flag == AuthFlags.API_CLIENT)
+        else LegalHoldService(main_connection),
         orgs=OrgService(main_connection),
         users=UserService(main_connection),
         alertrules=AlertRulesService(alert_rules_conn, user_ctx, user_profile_svc),

@@ -35,7 +35,7 @@ class BearerAuth(C42RenewableAuth):
         self._totp = totp if callable(totp) else lambda: totp
 
     def _get_credentials(self):
-        uri = "/c42api/v3/auth/jwt"
+        uri = "/api/v3/auth/jwt"
         params = {"useBody": True}
         current_token = self._totp()
         headers = {"totp-auth": str(current_token)} if current_token else None

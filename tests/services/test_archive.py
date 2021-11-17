@@ -4,7 +4,7 @@ from tests.conftest import create_mock_response
 import py42.settings
 from py42.services.archive import ArchiveService
 
-ARCHIVE_URI = "/api/Archive"
+ARCHIVE_URI = "/api/v1/Archive"
 DEFAULT_GET_ARCHIVES_PARAMS = {
     "pgNum": 1,
     "pgSize": 100,
@@ -115,7 +115,7 @@ class TestArchiveService:
         service.get_web_restore_info("src", "dest")
         expected_params = {"srcGuid": "src", "destGuid": "dest"}
         mock_connection.get.assert_called_once_with(
-            "/api/WebRestoreInfo", params=expected_params
+            "/api/v1/WebRestoreInfo", params=expected_params
         )
 
     def test_update_cold_storage_purge_date_calls_coldstorage_with_expected_data(
@@ -124,7 +124,7 @@ class TestArchiveService:
         service = ArchiveService(mock_connection)
         service.update_cold_storage_purge_date("123", "2020-04-24")
         mock_connection.put.assert_called_once_with(
-            "/api/coldStorage/123",
+            "/api/v1/coldStorage/123",
             params={"idType": "guid"},
             json={"archiveHoldExpireDate": "2020-04-24"},
         )
@@ -163,4 +163,6 @@ class TestArchiveService:
             "srtDir": "asc",
             "srtKey": "archiveHoldExpireDate",
         }
-        mock_connection.get.assert_called_once_with("/api/ColdStorage", params=params)
+        mock_connection.get.assert_called_once_with(
+            "/api/v1/ColdStorage", params=params
+        )

@@ -61,7 +61,7 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/LegalHold"
+        uri = "/api/v1/LegalHold"
         data = {
             "name": name,
             "holdPolicyUid": hold_policy_uid,
@@ -102,7 +102,7 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the Matter.
         """
-        uri = f"/api/LegalHold/{legal_hold_uid}"
+        uri = f"/api/v1/LegalHold/{legal_hold_uid}"
         try:
             return self._connection.get(uri)
         except Py42ForbiddenError as err:
@@ -139,7 +139,7 @@ class LegalHoldService(BaseService):
 
         active_state = _active_state_map(active)
         page_size = page_size or settings.items_per_page
-        uri = "/api/LegalHold"
+        uri = "/api/v1/LegalHold"
         params = {
             "creatorUserUid": creator_user_uid,
             "activeState": active_state,
@@ -224,7 +224,7 @@ class LegalHoldService(BaseService):
             "pgNum": page_num,
             "pgSize": page_size,
         }
-        uri = "/api/LegalHoldMembership"
+        uri = "/api/v1/LegalHoldMembership"
         try:
             return self._connection.get(uri, params=params)
         except Py42BadRequestError as ex:
@@ -347,7 +347,7 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/LegalHoldMembership"
+        uri = "/api/v1/LegalHoldMembership"
         data = {"legalHoldUid": legal_hold_uid, "userUid": user_uid}
         try:
             return self._connection.post(uri, json=data)
@@ -370,7 +370,7 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/LegalHoldMembershipDeactivation"
+        uri = "/api/v1/LegalHoldMembershipDeactivation"
         data = {"legalHoldMembershipUid": legal_hold_membership_uid}
         return self._connection.post(uri, json=data)
 
@@ -396,5 +396,5 @@ class LegalHoldService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/LegalHoldReactivation/{legal_hold_uid}"
+        uri = f"/api/v1/LegalHoldReactivation/{legal_hold_uid}"
         return self._connection.put(uri)

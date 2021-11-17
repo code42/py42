@@ -1,45 +1,11 @@
 from requests.auth import HTTPBasicAuth
 
-from py42.clients import Clients
-from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
-from py42.clients.alertrules import AlertRulesClient
-from py42.clients.alerts import AlertsClient
-from py42.clients.archive import ArchiveClient
-from py42.clients.auditlogs import AuditLogsClient
-from py42.clients.authority import AuthorityClient
-from py42.clients.cases import CasesClient
-from py42.clients.detectionlists import DetectionListsClient
-from py42.clients.loginconfig import LoginConfigurationClient
-from py42.clients.securitydata import SecurityDataClient
-from py42.clients.trustedactivities import TrustedActivitiesClient
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42UnauthorizedError
-from py42.services import Services
 from py42.services._auth import ApiClientAuth
 from py42.services._auth import BearerAuth
 from py42.services._auth import CustomJWTAuth
 from py42.services._connection import Connection
-from py42.services._keyvaluestore import KeyValueStoreService
-from py42.services.administration import AdministrationService
-from py42.services.alertrules import AlertRulesService
-from py42.services.alerts import AlertService
-from py42.services.archive import ArchiveService
-from py42.services.auditlogs import AuditLogsService
-from py42.services.cases import CasesService
-from py42.services.casesfileevents import CasesFileEventsService
-from py42.services.detectionlists.departing_employee import DepartingEmployeeService
-from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
-from py42.services.detectionlists.user_profile import DetectionListUserService
-from py42.services.devices import DeviceService
-from py42.services.fileevent import FileEventService
-from py42.services.legalhold import LegalHoldService
-from py42.services.orgs import OrgService
-from py42.services.preservationdata import PreservationDataService
-from py42.services.savedsearch import SavedSearchService
-from py42.services.storage._service_factory import ConnectionManager
-from py42.services.storage._service_factory import StorageServiceFactory
-from py42.services.trustedactivities import TrustedActivitiesService
-from py42.services.users import UserService
 from py42.usercontext import UserContext
 
 
@@ -325,6 +291,29 @@ class SDKClient:
 
 
 def _init_services(main_connection, main_auth):
+    # services are imported within function to prevent circular imports when a service
+    # imports anything from py42.sdk.queries
+    from py42.services import Services
+    from py42.services._keyvaluestore import KeyValueStoreService
+    from py42.services.administration import AdministrationService
+    from py42.services.alertrules import AlertRulesService
+    from py42.services.alerts import AlertService
+    from py42.services.archive import ArchiveService
+    from py42.services.auditlogs import AuditLogsService
+    from py42.services.cases import CasesService
+    from py42.services.casesfileevents import CasesFileEventsService
+    from py42.services.detectionlists.departing_employee import DepartingEmployeeService
+    from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
+    from py42.services.detectionlists.user_profile import DetectionListUserService
+    from py42.services.devices import DeviceService
+    from py42.services.fileevent import FileEventService
+    from py42.services.legalhold import LegalHoldService
+    from py42.services.orgs import OrgService
+    from py42.services.preservationdata import PreservationDataService
+    from py42.services.savedsearch import SavedSearchService
+    from py42.services.trustedactivities import TrustedActivitiesService
+    from py42.services.users import UserService
+
     alert_rules_key = "FedObserver-API_URL"
     alerts_key = "AlertService-API_URL"
     file_events_key = "FORENSIC_SEARCH-API_URL"
@@ -393,6 +382,23 @@ def _init_services(main_connection, main_auth):
 
 
 def _init_clients(services, connection):
+    # clients are imported within function to prevent circular imports when a client
+    # imports anything from py42.sdk.queries
+    from py42.clients import Clients
+    from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
+    from py42.clients.alertrules import AlertRulesClient
+    from py42.clients.alerts import AlertsClient
+    from py42.clients.archive import ArchiveClient
+    from py42.clients.auditlogs import AuditLogsClient
+    from py42.clients.authority import AuthorityClient
+    from py42.clients.cases import CasesClient
+    from py42.clients.detectionlists import DetectionListsClient
+    from py42.clients.loginconfig import LoginConfigurationClient
+    from py42.clients.securitydata import SecurityDataClient
+    from py42.clients.trustedactivities import TrustedActivitiesClient
+    from py42.services.storage._service_factory import ConnectionManager
+    from py42.services.storage._service_factory import StorageServiceFactory
+
     authority = AuthorityClient(
         administration=services.administration,
         archive=services.archive,

@@ -10,7 +10,7 @@ from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42OrgNotFoundError
 from py42.services.devices import DeviceService
 
-COMPUTER_URI = "/api/Computer"
+COMPUTER_URI = "/api/v1/Computer"
 
 DEFAULT_GET_DEVICES_PARAMS = {
     "active": None,
@@ -95,7 +95,7 @@ class TestDeviceService:
         service = DeviceService(mock_connection)
         service.get_page(20, True, True, "org", "user", "dest", True, True, 1000)
         mock_connection.get.assert_called_once_with(
-            "/api/Computer",
+            "/api/v1/Computer",
             params={
                 "active": True,
                 "blocked": True,

@@ -3,7 +3,7 @@ from py42.services import BaseService
 
 class StoragePreservationDataService(BaseService):
 
-    _base_uri = "c42api/v3/"
+    _base_uri = "api/v3/"
 
     def __init__(self, main_session, streaming_session):
         super().__init__(main_session)

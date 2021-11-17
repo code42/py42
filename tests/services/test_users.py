@@ -14,7 +14,7 @@ from py42.exceptions import Py42UserAlreadyExistsError
 from py42.exceptions import Py42UsernameMustBeEmailError
 from py42.services.users import UserService
 
-USER_URI = "/api/User"
+USER_URI = "/api/v1/User"
 DEFAULT_GET_ALL_PARAMS = {
     "active": None,
     "email": None,
@@ -189,19 +189,19 @@ class TestUserService:
     def test_get_available_roles_calls_get_with_expected_uri(self, mock_connection):
         service = UserService(mock_connection)
         service.get_available_roles()
-        uri = "/api/role"
+        uri = "/api/v1/role"
         mock_connection.get.assert_called_once_with(uri)
 
     def test_get_roles_calls_get_with_expected_uri(self, mock_connection):
         service = UserService(mock_connection)
         service.get_roles(12345)
-        uri = "/api/UserRole/12345"
+        uri = "/api/v1/UserRole/12345"
         mock_connection.get.assert_called_once_with(uri)
 
     def test_add_role_calls_post_with_expected_uri_and_data(self, mock_connection):
         service = UserService(mock_connection)
         service.add_role(12345, "Test Role Name")
-        uri = "/api/UserRole"
+        uri = "/api/v1/UserRole"
         assert mock_connection.post.call_args[0][0] == uri
         assert mock_connection.post.call_args[1]["json"]["roleName"] == "Test Role Name"
         assert mock_connection.post.call_args[1]["json"]["userId"] == 12345
@@ -211,14 +211,14 @@ class TestUserService:
     ):
         service = UserService(mock_connection)
         service.remove_role(12345, "Test Role Name")
-        uri = "/api/UserRole?userId=12345&roleName=Test%20Role%20Name"
+        uri = "/api/v1/UserRole?userId=12345&roleName=Test%20Role%20Name"
         mock_connection.delete.assert_called_once_with(uri)
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_connection):
         service = UserService(mock_connection)
         service.get_page(10, True, "email", "org", "role", 100, "q")
         mock_connection.get.assert_called_once_with(
-            "/api/User",
+            "/api/v1/User",
             params={
                 "active": True,
                 "email": "email",

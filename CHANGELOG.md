@@ -14,6 +14,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Support for Code42 API Clients. You can instantiate py42 using a client ID and secret via `py42.sdk.from_api_client()`.
 
+## 1.19.3 - 2021-11-09
+
+### Removed
+
+- Removed method Get_alert_log(), method was no longer functional
+
+### Changed
+
+- updated URI paths to use new standardized versioning scheme
+
 ## 1.19.2 - 2021-10-19
 
 ### Fixed

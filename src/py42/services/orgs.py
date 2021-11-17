@@ -33,7 +33,7 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/Org/"
+        uri = "/api/v1/Org/"
         data = {
             "orgName": org_name,
             "orgExtRef": org_ext_ref,
@@ -51,7 +51,7 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
-        uri = f"/api/Org/{org_id}"
+        uri = f"/api/v1/Org/{org_id}"
         return self._connection.get(uri, params=kwargs)
 
     def get_by_uid(self, org_uid, **kwargs):
@@ -63,7 +63,7 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
-        uri = f"/api/Org/{org_uid}"
+        uri = f"/api/v1/Org/{org_uid}"
         params = dict(idType="orgUid", **kwargs)
         return self._connection.get(uri, params=params)
 
@@ -80,7 +80,7 @@ class OrgService(BaseService):
             :class:`py42.response.Py42Response`
         """
         page_size = page_size or settings.items_per_page
-        uri = "/api/Org"
+        uri = "/api/v1/Org"
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
         return self._connection.get(uri, params=params)
 
@@ -105,7 +105,7 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/OrgBlock/{org_id}"
+        uri = f"/api/v1/OrgBlock/{org_id}"
         return self._connection.put(uri)
 
     def unblock(self, org_id):
@@ -118,7 +118,7 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/OrgBlock/{org_id}"
+        uri = f"/api/v1/OrgBlock/{org_id}"
         return self._connection.delete(uri)
 
     def deactivate(self, org_id):
@@ -131,7 +131,7 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/OrgDeactivation/{org_id}"
+        uri = f"/api/v1/OrgDeactivation/{org_id}"
         return self._connection.put(uri)
 
     def reactivate(self, org_id):
@@ -144,7 +144,7 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/OrgDeactivation/{org_id}"
+        uri = f"/api/v1/OrgDeactivation/{org_id}"
         return self._connection.delete(uri)
 
     def get_current(self, **kwargs):
@@ -154,7 +154,7 @@ class OrgService(BaseService):
             :class:`py42.response.Py42Response`: A response containing the organization for the
             currently signed-in user.
         """
-        uri = "/api/Org/my"
+        uri = "/api/v1/Org/my"
         return self._connection.get(uri, params=kwargs)
 
     def get_agent_state(self, org_id, property_name):
@@ -221,7 +221,7 @@ class OrgService(BaseService):
                 org_settings_response = ex
 
         if org_settings.changes:
-            uri = f"/api/Org/{org_id}"
+            uri = f"/api/v1/Org/{org_id}"
             try:
                 org_response = self._connection.put(uri, json=org_settings.data)
             except Py42Error as ex:

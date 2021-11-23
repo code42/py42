@@ -2,6 +2,8 @@ from py42 import settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42ForbiddenError
+from py42.exceptions import Py42LegalHoldAlreadyActiveError
+from py42.exceptions import Py42LegalHoldAlreadyDeactivatedError
 from py42.exceptions import Py42LegalHoldCriteriaMissingError
 from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
 from py42.exceptions import Py42UserAlreadyAddedError
@@ -30,6 +32,11 @@ class LegalHoldApiClientService(BaseService):
     """
 
     _uri_prefix = "/api/v27"
+
+    # object strings to pass to specify error messages
+    _membership_string = "membership"
+    _policy_string = "policy"
+    _matter_string = "matter"
 
     def create_policy(self, name):
         """Creates a new Legal Hold Preservation Policy.
@@ -81,7 +88,12 @@ class LegalHoldApiClientService(BaseService):
         """
         uri = f"{self._uri_prefix}/legal-hold-policy/view"
         params = {"legalHoldPolicyUid": legal_hold_policy_uid}
-        return self._connection.get(uri, params=params)
+        try:
+            return self._connection.get(uri, params=params)
+        except Py42ForbiddenError as err:
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(
+                err, legal_hold_policy_uid, self._policy_string
+            )
 
     def get_policy_list(self):
         """Gets a list of existing Preservation Policies.
@@ -101,7 +113,7 @@ class LegalHoldApiClientService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the Matter.
         """
-        uri = f"{self._uri_prefix}/legal_hold_matter/view"
+        uri = f"{self._uri_prefix}/legal-hold-matter/view"
         params = {
             "legalHoldUid": legal_hold_uid,
         }
@@ -110,7 +122,7 @@ class LegalHoldApiClientService(BaseService):
         except Py42ForbiddenError as err:
             raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
 
-    def get_matters_page(  # CHANGED SIGNATURE
+    def get_matters_page(
         self,
         page_num,
         creator_user_uid=None,
@@ -287,6 +299,8 @@ class LegalHoldApiClientService(BaseService):
                 )
                 raise Py42UserAlreadyAddedError(err, user_uid, matter_id_and_name_text)
             raise
+        except Py42ForbiddenError as err:
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
 
     def remove_from_matter(self, legal_hold_membership_uid):
         """Remove a user (Custodian) from a Legal Hold Matter.
@@ -300,7 +314,12 @@ class LegalHoldApiClientService(BaseService):
         """
         uri = f"{self._uri_prefix}/legal-hold-membership/deactivate"
         data = {"legalHoldMembershipUid": legal_hold_membership_uid}
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42ForbiddenError as err:
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(
+                err, legal_hold_membership_uid, self._membership_string
+            )
 
     def deactivate_matter(self, legal_hold_uid):
         """Deactivates and closes a Legal Hold Matter.
@@ -313,7 +332,14 @@ class LegalHoldApiClientService(BaseService):
         """
         uri = f"{self._uri_prefix}/legal-hold-matter/deactivate"
         data = {"legalHoldUid": legal_hold_uid}
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42BadRequestError as err:
+            if "ALREADY_DEACTIVATED" in err.response.text:
+                raise Py42LegalHoldAlreadyDeactivatedError(err, legal_hold_uid)
+            raise
+        except Py42ForbiddenError as err:
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
 
     def reactivate_matter(self, legal_hold_uid):
         """Reactivates and re-opens a closed Matter.
@@ -326,4 +352,11 @@ class LegalHoldApiClientService(BaseService):
         """
         uri = f"{self._uri_prefix}/legal-hold-matter/activate"
         data = {"legalHoldUid": legal_hold_uid}
-        return self._connection.post(uri, json=data)
+        try:
+            return self._connection.post(uri, json=data)
+        except Py42BadRequestError as err:
+            if "ALREADY_ACTIVE" in err.response.text:
+                raise Py42LegalHoldAlreadyActiveError(err, legal_hold_uid)
+            raise
+        except Py42ForbiddenError as err:
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)

@@ -77,8 +77,6 @@ def from_jwt_provider(host_address, jwt_provider):
 
 class AuthFlags:
     API_CLIENT = "API_CLIENT"
-    LOCAL_ACCOUNT = "LOCAL_ACCOUNT"
-    CUSTOM = "CUSTOM"
 
 
 class SDKClient:
@@ -136,7 +134,7 @@ class SDKClient:
         bearer_auth = BearerAuth(auth_connection, totp)
         main_connection = Connection.from_host_address(host_address, auth=bearer_auth)
 
-        return cls(main_connection, bearer_auth, auth_flag=AuthFlags.LOCAL_ACCOUNT)
+        return cls(main_connection, bearer_auth)
 
     @classmethod
     def from_jwt_provider(cls, host_address, jwt_provider):
@@ -156,7 +154,7 @@ class SDKClient:
         custom_auth = CustomJWTAuth(jwt_provider)
         main_connection = Connection.from_host_address(host_address, auth=custom_auth)
         custom_auth.get_credentials()
-        return cls(main_connection, custom_auth, auth_flag=AuthFlags.CUSTOM)
+        return cls(main_connection, custom_auth)
 
     @property
     def loginconfig(self):
@@ -297,7 +295,7 @@ class SDKClient:
         return self._clients.trustedactivities
 
 
-def _init_services(main_connection, main_auth, auth_flag):
+def _init_services(main_connection, main_auth, auth_flag=None):
     # services are imported within function to prevent circular imports when a service
     # imports anything from py42.sdk.queries
     from py42.services import Services

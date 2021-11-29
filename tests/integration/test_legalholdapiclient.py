@@ -17,6 +17,7 @@ def matter(api_client_connection, policy, timestamp):
     assert_successful_response(response)
     return response["legalHoldUid"]
 
+
 @pytest.fixture
 def membership(api_client_connection, matter, new_user):
     response = api_client_connection.legalhold.add_to_matter(
@@ -24,6 +25,7 @@ def membership(api_client_connection, matter, new_user):
     )
     assert_successful_response(response)
     return response["legalHoldMembershipUid"]
+
 
 @pytest.mark.integration
 class TestLegalHoldApiClient:

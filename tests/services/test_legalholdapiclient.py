@@ -252,7 +252,7 @@ class TestLegalHoldApiClientService:
 
         assert (
             str(err.value) == "At least one criteria must be specified; "
-            "legal_hold_membership_uid, legal_hold_uid, user_uid, or user."
+            "legal_hold_membership_uid, legal_hold_matter_uid, user_uid, or user."
         )
 
     def test_add_to_matter_calls_post_with_expected_url_and_params(

@@ -52,13 +52,18 @@ class LegalHoldApiClientService(BaseService):
         return self._connection.post(uri, json=data)
 
     def create_matter(
-        self, name, hold_policy_uid, description=None, notes=None, hold_ext_ref=None
+        self,
+        name,
+        legal_hold_policy_uid,
+        description=None,
+        notes=None,
+        hold_ext_ref=None,
     ):
         """Creates a new, active Legal Hold Matter.
 
         Args:
             name (str): The name of the new Legal Hold Matter.
-            hold_policy_uid (str): The identifier of the Preservation Policy that will apply to this
+            legal_hold_policy_uid (str): The identifier of the Preservation Policy that will apply to this
                 Matter.
             description (str, optional): An optional description of the Matter. Defaults to None.
             notes (str, optional): Optional notes information. Defaults to None.
@@ -69,7 +74,7 @@ class LegalHoldApiClientService(BaseService):
         """
         uri = f"{self._uri_prefix}/legal-hold-matter/create"
         data = {
-            "policyId": hold_policy_uid,
+            "policyId": legal_hold_policy_uid,
             "name": name,
             "description": description,
             "notes": notes,
@@ -104,23 +109,25 @@ class LegalHoldApiClientService(BaseService):
         uri = f"{self._uri_prefix}/legal-hold-policy/list"
         return self._connection.get(uri)
 
-    def get_matter_by_uid(self, legal_hold_uid):
+    def get_matter_by_uid(self, legal_hold_matter_uid):
         """Gets a single Legal Hold Matter.
 
         Args:
-            legal_hold_uid (str): The unique identifier of the Legal Hold Matter.
+            legal_hold_matter_uid (str): The unique identifier of the Legal Hold Matter.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the Matter.
         """
         uri = f"{self._uri_prefix}/legal-hold-matter/view"
         params = {
-            "legalHoldUid": legal_hold_uid,
+            "legalHoldUid": legal_hold_matter_uid,
         }
         try:
             return self._connection.get(uri, params=params)
         except Py42ForbiddenError as err:
-            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(
+                err, legal_hold_matter_uid
+            )
 
     def get_matters_page(
         self,
@@ -196,7 +203,7 @@ class LegalHoldApiClientService(BaseService):
     def get_custodians_page(
         self,
         page_num,
-        legal_hold_uid=None,
+        legal_hold_matter_uid=None,
         user_uid=None,
         user=None,
         active=True,
@@ -210,7 +217,7 @@ class LegalHoldApiClientService(BaseService):
 
         Args:
             page_num (int): The page number to request.
-            legal_hold_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter
+            legal_hold_matter_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter
                 with this unique identifier. Defaults to None.
             user_uid (str, optional): Find LegalHoldMemberships for the user with this identifier.
                 Defaults to None.
@@ -228,7 +235,7 @@ class LegalHoldApiClientService(BaseService):
         page_size = page_size or settings.items_per_page
         params = {
             "userUid": user_uid,
-            "legalHoldUid": legal_hold_uid,
+            "legalHoldUid": legal_hold_matter_uid,
             "user": user,
             "active": active_state,
             "page": page_num,
@@ -243,7 +250,7 @@ class LegalHoldApiClientService(BaseService):
             raise
 
     def get_all_matter_custodians(
-        self, legal_hold_uid=None, user_uid=None, user=None, active=True
+        self, legal_hold_matter_uid=None, user_uid=None, user=None, active=True
     ):
         """Gets all Legal Hold memberships.
 
@@ -254,7 +261,7 @@ class LegalHoldApiClientService(BaseService):
         would be part of multiple LegalHoldMembership objects).
 
         Args:
-            legal_hold_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter
+            legal_hold_matter_uid (str, optional): Find LegalHoldMemberships for the Legal Hold Matter
                 with this unique identifier. Defaults to None.
             user_uid (str, optional): Find LegalHoldMemberships for the user with this identifier.
                 Defaults to None.
@@ -271,36 +278,36 @@ class LegalHoldApiClientService(BaseService):
         return get_all_pages(
             self.get_custodians_page,
             "legalHoldMemberships",
-            legal_hold_uid=legal_hold_uid,
+            legal_hold_uid=legal_hold_matter_uid,
             user_uid=user_uid,
             user=user,
             active=active,
         )
 
-    def add_to_matter(self, user_uid, legal_hold_uid):
+    def add_to_matter(self, user_uid, legal_hold_matter_uid):
         """Add a user (Custodian) to a Legal Hold Matter.
 
         Args:
             user_uid (str): The identifier of the user.
-            legal_hold_uid (str): The identifier of the Legal Hold Matter.
+            legal_hold_matter_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
         uri = f"{self._uri_prefix}/legal-hold-membership/create"
-        data = {"legalHoldUid": legal_hold_uid, "userUid": user_uid}
+        data = {"legalHoldUid": legal_hold_matter_uid, "userUid": user_uid}
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
             if "USER_ALREADY_IN_HOLD" in err.response.text:
-                matter = self.get_matter_by_uid(legal_hold_uid)
-                matter_id_and_name_text = (
-                    f"legal hold matter id={legal_hold_uid}, name={matter['name']}"
-                )
+                matter = self.get_matter_by_uid(legal_hold_matter_uid)
+                matter_id_and_name_text = f"legal hold matter id={legal_hold_matter_uid}, name={matter['name']}"
                 raise Py42UserAlreadyAddedError(err, user_uid, matter_id_and_name_text)
             raise
         except Py42ForbiddenError as err:
-            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(
+                err, legal_hold_matter_uid
+            )
 
     def remove_from_matter(self, legal_hold_membership_uid):
         """Remove a user (Custodian) from a Legal Hold Matter.
@@ -321,42 +328,46 @@ class LegalHoldApiClientService(BaseService):
                 err, legal_hold_membership_uid, self._membership_string
             )
 
-    def deactivate_matter(self, legal_hold_uid):
+    def deactivate_matter(self, legal_hold_matter_uid):
         """Deactivates and closes a Legal Hold Matter.
 
         Args:
-            legal_hold_uid (str): The identifier of the Legal Hold Matter.
+            legal_hold_matter_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
         uri = f"{self._uri_prefix}/legal-hold-matter/deactivate"
-        data = {"legalHoldUid": legal_hold_uid}
+        data = {"legalHoldUid": legal_hold_matter_uid}
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
             if "ALREADY_DEACTIVATED" in err.response.text:
-                raise Py42LegalHoldAlreadyDeactivatedError(err, legal_hold_uid)
+                raise Py42LegalHoldAlreadyDeactivatedError(err, legal_hold_matter_uid)
             raise
         except Py42ForbiddenError as err:
-            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(
+                err, legal_hold_matter_uid
+            )
 
-    def reactivate_matter(self, legal_hold_uid):
+    def reactivate_matter(self, legal_hold_matter_uid):
         """Reactivates and re-opens a closed Matter.
 
         Args:
-            legal_hold_uid (str): The identifier of the Legal Hold Matter.
+            legal_hold_matter_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
         uri = f"{self._uri_prefix}/legal-hold-matter/activate"
-        data = {"legalHoldUid": legal_hold_uid}
+        data = {"legalHoldUid": legal_hold_matter_uid}
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
             if "ALREADY_ACTIVE" in err.response.text:
-                raise Py42LegalHoldAlreadyActiveError(err, legal_hold_uid)
+                raise Py42LegalHoldAlreadyActiveError(err, legal_hold_matter_uid)
             raise
         except Py42ForbiddenError as err:
-            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
+            raise Py42LegalHoldNotFoundOrPermissionDeniedError(
+                err, legal_hold_matter_uid
+            )

@@ -85,7 +85,7 @@ class TestLegalHoldService:
             service.get_matter_by_uid("matter")
 
         expected = (
-            "Matter with ID=matter can not be found. Your account may not have "
+            "Matter with UID 'matter' can not be found. Your account may not have "
             "permission to view the matter."
         )
         assert str(err.value) == expected

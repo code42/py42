@@ -82,7 +82,7 @@ class AuthFlags:
 
 
 class SDKClient:
-    def __init__(self, main_connection, auth, auth_flag):
+    def __init__(self, main_connection, auth, auth_flag=None):
         services, user_ctx = _init_services(main_connection, auth, auth_flag)
         self._clients = _init_clients(services, main_connection)
         self._user_ctx = user_ctx
@@ -110,7 +110,7 @@ class SDKClient:
             host_address, auth=api_client_auth
         )
         api_client_auth.get_credentials()
-        return cls(main_connection, api_client_auth, AuthFlags.API_CLIENT)
+        return cls(main_connection, api_client_auth, auth_flag=AuthFlags.API_CLIENT)
 
     @classmethod
     def from_local_account(cls, host_address, username, password, totp=None):
@@ -136,7 +136,7 @@ class SDKClient:
         bearer_auth = BearerAuth(auth_connection, totp)
         main_connection = Connection.from_host_address(host_address, auth=bearer_auth)
 
-        return cls(main_connection, bearer_auth, AuthFlags.LOCAL_ACCOUNT)
+        return cls(main_connection, bearer_auth, auth_flag=AuthFlags.LOCAL_ACCOUNT)
 
     @classmethod
     def from_jwt_provider(cls, host_address, jwt_provider):
@@ -156,7 +156,7 @@ class SDKClient:
         custom_auth = CustomJWTAuth(jwt_provider)
         main_connection = Connection.from_host_address(host_address, auth=custom_auth)
         custom_auth.get_credentials()
-        return cls(main_connection, custom_auth, AuthFlags.CUSTOM)
+        return cls(main_connection, custom_auth, auth_flag=AuthFlags.CUSTOM)
 
     @property
     def loginconfig(self):
@@ -367,6 +367,7 @@ def _init_services(main_connection, main_auth, auth_flag):
         administration=administration_svc,
         archive=ArchiveService(main_connection),
         devices=DeviceService(main_connection),
+        # Only use updated legal hold client if initialized with API Client authorization
         legalhold=LegalHoldApiClientService(main_connection)
         if (auth_flag == AuthFlags.API_CLIENT)
         else LegalHoldService(main_connection),

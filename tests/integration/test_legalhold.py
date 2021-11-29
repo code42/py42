@@ -26,7 +26,7 @@ def membership(connection, matter, new_user):
 
 
 @pytest.mark.integration
-class TestLegalhold:
+class TestLegalHold:
     def test_get_policy_by_uid(self, connection, policy):
         response = connection.legalhold.get_policy_by_uid(policy)
         assert_successful_response(response)

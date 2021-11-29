@@ -278,7 +278,7 @@ class LegalHoldApiClientService(BaseService):
         return get_all_pages(
             self.get_custodians_page,
             "legalHoldMemberships",
-            legal_hold_uid=legal_hold_matter_uid,
+            legal_hold_matter_uid=legal_hold_matter_uid,
             user_uid=user_uid,
             user=user,
             active=active,

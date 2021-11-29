@@ -1,5 +1,7 @@
 # Legal Hold
 
+*For legal hold commands compatible with API Client authentication, see [Legal Hold - Api Clients](legalholdapiclient.md).*
+
 ```eval_rst
 .. autoclass:: py42.services.legalhold.LegalHoldService
     :members:

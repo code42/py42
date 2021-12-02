@@ -8,7 +8,6 @@ from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.cases import CasesClient
 from py42.clients.detectionlists import DetectionListsClient
 from py42.exceptions import Py42UnauthorizedError
-from py42.sdk import AuthFlags
 from py42.sdk import from_local_account
 from py42.sdk import SDKClient
 from py42.services import administration
@@ -71,7 +70,7 @@ class TestSDK:
     def test_has_api_client_legal_hold_service_set_if_initialized_with_api_client_flag(
         self, py42_connection, mock_auth
     ):
-        client = SDKClient(py42_connection, mock_auth, auth_flag=AuthFlags.API_CLIENT)
+        client = SDKClient(py42_connection, mock_auth, auth_flag=1)
         assert type(client.legalhold) == legalholdapiclient.LegalHoldApiClientService
 
     def test_has_org_service_set(self, py42_connection, mock_auth):

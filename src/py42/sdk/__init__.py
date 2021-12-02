@@ -75,10 +75,6 @@ def from_jwt_provider(host_address, jwt_provider):
     return SDKClient.from_jwt_provider(host_address, jwt_provider)
 
 
-class AuthFlags:
-    API_CLIENT = "API_CLIENT"
-
-
 class SDKClient:
     def __init__(self, main_connection, auth, auth_flag=None):
         services, user_ctx = _init_services(main_connection, auth, auth_flag)
@@ -108,7 +104,7 @@ class SDKClient:
             host_address, auth=api_client_auth
         )
         api_client_auth.get_credentials()
-        return cls(main_connection, api_client_auth, auth_flag=AuthFlags.API_CLIENT)
+        return cls(main_connection, api_client_auth, auth_flag=1)
 
     @classmethod
     def from_local_account(cls, host_address, username, password, totp=None):
@@ -367,7 +363,7 @@ def _init_services(main_connection, main_auth, auth_flag=None):
         devices=DeviceService(main_connection),
         # Only use updated legal hold client if initialized with API Client authorization
         legalhold=LegalHoldApiClientService(main_connection)
-        if (auth_flag == AuthFlags.API_CLIENT)
+        if auth_flag
         else LegalHoldService(main_connection),
         orgs=OrgService(main_connection),
         users=UserService(main_connection),

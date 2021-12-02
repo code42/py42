@@ -165,12 +165,12 @@ class Py42UserAlreadyAddedError(Py42BadRequestError):
 
 class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
     """An exception raised when a legal hold matter is inaccessible from your account or
-    the matter ID is not valid."""
+    the matter UID is not valid."""
 
-    def __init__(self, exception, matter_id):
+    def __init__(self, exception, uid, legal_hold_object="matter"):
         super().__init__(
             exception,
-            f"Matter with ID={matter_id} can not be found. Your account may not have permission to view the matter.",
+            f"{legal_hold_object.capitalize()} with UID '{uid}' can not be found. Your account may not have permission to view the {legal_hold_object.lower()}.",
         )
 
 
@@ -181,7 +181,27 @@ class Py42LegalHoldCriteriaMissingError(Py42BadRequestError):
         super().__init__(
             exception,
             "At least one criteria must be specified; legal_hold_membership_uid, "
-            "legal_hold_uid, user_uid, or user.",
+            "legal_hold_matter_uid, user_uid, or user.",
+        )
+
+
+class Py42LegalHoldAlreadyDeactivatedError(Py42BadRequestError):
+    """An exception raised when trying to deactivate a Legal Hold Matter that is already inactive."""
+
+    def __init__(self, exception, legal_hold_matter_uid):
+        super().__init__(
+            exception,
+            f"Legal Hold Matter with UID '{legal_hold_matter_uid}' has already been deactivated.",
+        )
+
+
+class Py42LegalHoldAlreadyActiveError(Py42BadRequestError):
+    """An exception raised when trying to activate a Legal Hold Matter that is already active."""
+
+    def __init__(self, exception, legal_hold_matter_uid):
+        super().__init__(
+            exception,
+            f"Legal Hold Matter with UID '{legal_hold_matter_uid}' is already active.",
         )
 
 

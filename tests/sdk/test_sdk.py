@@ -13,6 +13,7 @@ from py42.sdk import SDKClient
 from py42.services import administration
 from py42.services import devices
 from py42.services import legalhold
+from py42.services import legalholdapiclient
 from py42.services import orgs
 from py42.services import users
 from py42.services._auth import C42RenewableAuth
@@ -65,6 +66,12 @@ class TestSDK:
     def test_has_legal_hold_service_set(self, py42_connection, mock_auth):
         client = SDKClient(py42_connection, mock_auth)
         assert type(client.legalhold) == legalhold.LegalHoldService
+
+    def test_has_api_client_legal_hold_service_set_if_initialized_with_api_client_flag(
+        self, py42_connection, mock_auth
+    ):
+        client = SDKClient(py42_connection, mock_auth, auth_flag=1)
+        assert type(client.legalhold) == legalholdapiclient.LegalHoldApiClientService
 
     def test_has_org_service_set(self, py42_connection, mock_auth):
         client = SDKClient(py42_connection, mock_auth)

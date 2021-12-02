@@ -30,6 +30,7 @@ Explore the complete public documentation for `py42` below.
 * [Exceptions](methoddocs/exceptions.md)
 * [File Event Queries](methoddocs/filleeventqueries.md)
 * [Legal Hold](methoddocs/legalhold.md)
+* [Legal Hold - API Clients](methoddocs/legalholdapiclient.md)
 * [Orgs](methoddocs/orgs.md)
 * [Org Settings](methoddocs/orgsettings.md)
 * [Response](methoddocs/response.md)

@@ -14,6 +14,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Support for Code42 API Clients. You can instantiate py42 using a client ID and secret via `py42.sdk.from_api_client()`.
 
+- New Legal Hold Client which supports API Client authentication.  This updated client will only be attached to the SDK if initialized with `py42.sdk.from_api_client()`, otherwise the original client will be used.  This new client includes the following changes from the existing client:
+  - `create_policy()` - Does **not** allow optional arg `policy`.
+  - `get_custodians_page()` - Does **not** allow optional arg `legal_hold_membership_uid`.
+  - `get_events_page()`/`get_all_events()` - **Not available**.
+
 ## 1.19.3 - 2021-11-09
 
 ### Removed

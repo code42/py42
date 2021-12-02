@@ -76,10 +76,11 @@ def from_jwt_provider(host_address, jwt_provider):
 
 
 class SDKClient:
-    def __init__(self, main_connection, auth):
-        services, user_ctx = _init_services(main_connection, auth)
+    def __init__(self, main_connection, auth, auth_flag=None):
+        services, user_ctx = _init_services(main_connection, auth, auth_flag)
         self._clients = _init_clients(services, main_connection)
         self._user_ctx = user_ctx
+        self._auth_flag = auth_flag
 
     @classmethod
     def from_api_client(cls, host_address, client_id, secret):
@@ -103,7 +104,7 @@ class SDKClient:
             host_address, auth=api_client_auth
         )
         api_client_auth.get_credentials()
-        return cls(main_connection, api_client_auth)
+        return cls(main_connection, api_client_auth, auth_flag=1)
 
     @classmethod
     def from_local_account(cls, host_address, username, password, totp=None):
@@ -290,7 +291,7 @@ class SDKClient:
         return self._clients.trustedactivities
 
 
-def _init_services(main_connection, main_auth):
+def _init_services(main_connection, main_auth, auth_flag=None):
     # services are imported within function to prevent circular imports when a service
     # imports anything from py42.sdk.queries
     from py42.services import Services
@@ -308,6 +309,7 @@ def _init_services(main_connection, main_auth):
     from py42.services.devices import DeviceService
     from py42.services.fileevent import FileEventService
     from py42.services.legalhold import LegalHoldService
+    from py42.services.legalholdapiclient import LegalHoldApiClientService
     from py42.services.orgs import OrgService
     from py42.services.preservationdata import PreservationDataService
     from py42.services.savedsearch import SavedSearchService
@@ -359,7 +361,10 @@ def _init_services(main_connection, main_auth):
         administration=administration_svc,
         archive=ArchiveService(main_connection),
         devices=DeviceService(main_connection),
-        legalhold=LegalHoldService(main_connection),
+        # Only use updated legal hold client if initialized with API Client authorization
+        legalhold=LegalHoldApiClientService(main_connection)
+        if auth_flag
+        else LegalHoldService(main_connection),
         orgs=OrgService(main_connection),
         users=UserService(main_connection),
         alertrules=AlertRulesService(alert_rules_conn, user_ctx, user_profile_svc),

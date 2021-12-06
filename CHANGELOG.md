@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Changed
+
+- Updated `sdk.queries.alerts.filters.alerts_filter.Severity` enum to use updated `riskSeverity` search propert instead of deprecated `severity`.
+   - New values `CRITICAL` and `MODERATE`.
+   - Aliased previous `severity.MEDIUM` > `riskSeverity.MODERATE` for backwards compatibility.
+
 ## 1.19.3 - 2021-11-09
 
 ### Removed

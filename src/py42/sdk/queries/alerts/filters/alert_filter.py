@@ -160,10 +160,12 @@ class Severity(QueryFilterStringField, Choices):
         - :attr:`Severity.LOW`
     """
 
-    _term = "severity"
+    _term = "riskSeverity"
 
+    CRITICAL = "CRITICAL"
     HIGH = "HIGH"
-    MEDIUM = "MEDIUM"
+    MEDIUM = "MODERATE"
+    MODERATE = "MODERATE"
     LOW = "LOW"
 
 

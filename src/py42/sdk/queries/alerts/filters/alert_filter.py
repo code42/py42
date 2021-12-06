@@ -6,6 +6,7 @@ from py42.sdk.queries.query_filter import QueryFilterTimestampField
 from py42.util import MICROSECOND_FORMAT
 from py42.util import parse_timestamp_to_microseconds_precision
 
+
 def create_contains_filter_group(term, value):
     """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering results
     where the value with key ``term`` contains the given value. Useful for creating ``CONTAINS``

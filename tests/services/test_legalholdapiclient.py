@@ -31,13 +31,13 @@ DEFAULT_GET_LEGAL_HOLDS_PARAMS = {
     "q": None,
 }
 
-MOCK_GET_ALL_MATTERS_RESPONSE = """{"legalHolds":["foo"]}"""
+MOCK_GET_ALL_MATTERS_RESPONSE = """["foo"]"""
 
-MOCK_EMPTY_GET_ALL_MATTERS_RESPONSE = """{"legalHolds": []}"""
+MOCK_EMPTY_GET_ALL_MATTERS_RESPONSE = """[]"""
 
-MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{"legalHoldMemberships": ["foo"]}"""
+MOCK_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """["foo"]"""
 
-MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """{"legalHoldMemberships": []}"""
+MOCK_EMPTY_GET_ALL_MATTER_CUSTODIANS_RESPONSE = """[]"""
 
 
 class TestLegalHoldApiClientService:

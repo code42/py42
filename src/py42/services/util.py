@@ -13,7 +13,7 @@ def get_all_pages(func, key, *args, **kwargs):
         page_num += 1
         response = func(*args, page_num=page_num, **kwargs)
         yield response
-        page_items = response[key]
+        page_items = response[key] if key else response.data
         item_count = len(page_items)
 
 

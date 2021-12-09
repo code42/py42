@@ -42,7 +42,7 @@ class TrustedActivitiesService(BaseService):
         try:
             return self._connection.post(self._uri_prefix, json=data)
         except Py42BadRequestError as err:
-            _handle_common_invalid_case_parameters_errors(err)
+            _handle_common_invalid_trust_parameters_errors(err)
         except Py42ConflictError as err:
             raise Py42TrustedActivityConflictError(err, value)
 
@@ -68,7 +68,7 @@ class TrustedActivitiesService(BaseService):
         try:
             return self._connection.put(uri, json=data)
         except Py42BadRequestError as err:
-            _handle_common_invalid_case_parameters_errors(err)
+            _handle_common_invalid_trust_parameters_errors(err)
         except Py42NotFoundError as err:
             raise Py42TrustedActivityIdNotFound(err, id)
         except Py42ConflictError as err:
@@ -82,7 +82,7 @@ class TrustedActivitiesService(BaseService):
             raise Py42TrustedActivityIdNotFound(err, id)
 
 
-def _handle_common_invalid_case_parameters_errors(base_err):
+def _handle_common_invalid_trust_parameters_errors(base_err):
     if "DESCRIPTION_TOO_LONG" in base_err.response.text:
         raise Py42DescriptionLimitExceededError(base_err)
     elif "INVALID_CHARACTERS_IN_VALUE" in base_err.response.text:

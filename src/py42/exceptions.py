@@ -8,8 +8,8 @@ class Py42Error(Exception):
 class Py42ResponseError(Py42Error):
     """A base custom class to manage all errors raised because of an HTTP response."""
 
-    def __init__(self, response, message):
-        super().__init__(message)
+    def __init__(self, response, message, *args):
+        super().__init__(message, *args)
         self._response = response
 
     @property
@@ -25,7 +25,19 @@ class Py42ArchiveFileNotFoundError(Py42ResponseError):
         message = (
             f"File not found in archive for device {device_guid} at path {file_path}"
         )
-        super().__init__(response, message)
+        super().__init__(response, message, device_guid, file_path)
+        self._device_guid = device_guid
+        self._file_path = file_path
+
+    @property
+    def device_guid(self):
+        """The device GUID provided."""
+        return self._device_guid
+
+    @property
+    def file_path(self):
+        """The file path provided."""
+        return self._file_path
 
 
 class Py42ChecksumNotFoundError(Py42ResponseError):
@@ -33,7 +45,19 @@ class Py42ChecksumNotFoundError(Py42ResponseError):
 
     def __init__(self, response, checksum_name, checksum_value):
         message = f"No files found with {checksum_name} checksum {checksum_value}."
-        super().__init__(response, message)
+        super().__init__(response, message, checksum_name, checksum_value)
+        self._checksum_name = checksum_name
+        self._checksum_value = checksum_value
+
+    @property
+    def checksum_name(self):
+        """ The checksum name. """
+        return self._checksum_name
+
+    @property
+    def checksum_value(self):
+        """ The checksum value. """
+        return self.checksum_value
 
 
 class Py42FeatureUnavailableError(Py42ResponseError):
@@ -49,13 +73,13 @@ class Py42FeatureUnavailableError(Py42ResponseError):
 class Py42HTTPError(Py42ResponseError):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
-    def __init__(self, exception, message=None):
+    def __init__(self, exception, message=None, *args):
         if not message:
             response_content = f"Response content: {exception.response.text}"
             message = f"Failure in HTTP call {exception}. {response_content}"
             debug.logger.debug(message)
 
-        super().__init__(exception.response, message)
+        super().__init__(exception.response, message, *args)
 
 
 class Py42DeviceNotConnectedError(Py42ResponseError):
@@ -67,7 +91,13 @@ class Py42DeviceNotConnectedError(Py42ResponseError):
             f"Device with GUID '{device_guid}' is not currently connected to the Authority "
             "server."
         )
-        super().__init__(response, message)
+        super().__init__(response, message, device_guid)
+        self._device_guid = device_guid
+
+    @property
+    def device_guid(self):
+        """ The device GUID. """
+        return self._device_guid
 
 
 class Py42InvalidArchivePassword(Py42HTTPError):
@@ -91,8 +121,8 @@ class Py42StorageSessionInitializationError(Py42HTTPError):
     may occur when trying to restore a file or trying to get events for file activity on removable
     media, in cloud sync folders, and browser uploads."""
 
-    def __init__(self, exception, error_message):
-        super().__init__(exception, error_message)
+    def __init__(self, exception, message):
+        super().__init__(exception, message)
 
 
 class Py42SessionInitializationError(Py42Error):
@@ -101,11 +131,11 @@ class Py42SessionInitializationError(Py42Error):
     """
 
     def __init__(self, exception):
-        error_message = (
+        message = (
             "An error occurred while requesting "
             f"server environment information, caused by {exception}"
         )
-        super().__init__(exception, error_message)
+        super().__init__(exception, message)
 
 
 class Py42BadRequestError(Py42HTTPError):
@@ -142,7 +172,13 @@ class Py42OrgNotFoundError(Py42BadRequestError):
 
     def __init__(self, exception, org_uid):
         msg = f"The organization with UID '{org_uid}' was not found."
-        super().__init__(exception, msg)
+        super().__init__(exception, msg, org_uid)
+        self._org_uid = org_uid
+
+    @property
+    def org_uid(self):
+        """" The org UID. """
+        return self._org_uid
 
 
 class Py42ActiveLegalHoldError(Py42BadRequestError):
@@ -151,7 +187,19 @@ class Py42ActiveLegalHoldError(Py42BadRequestError):
 
     def __init__(self, exception, resource, resource_id):
         msg = f"Cannot deactivate the {resource} with ID {resource_id} as the {resource} is involved in a legal hold matter."
-        super().__init__(exception, msg)
+        super().__init__(exception, msg, resource, resource_id)
+        self._resource = resource
+        self._resource_id = resource_id
+
+    @property
+    def resource(self):
+        """ The user or device resource. """
+        return self._resource
+
+    @property
+    def resource_id(self):
+        """ The resource ID. """
+        return self._resource_id
 
 
 class Py42UserAlreadyAddedError(Py42BadRequestError):
@@ -160,18 +208,35 @@ class Py42UserAlreadyAddedError(Py42BadRequestError):
 
     def __init__(self, exception, user_id, list_name):
         msg = f"User with ID {user_id} is already on the {list_name}."
-        super().__init__(exception, msg)
+        super().__init__(exception, msg, user_id, list_name)
+        self._user_id = user_id
+        self._list_name = list_name
+
+    @property
+    def user_id(self):
+        """ The user ID. """
+        return self._user_id
+
+    @property
+    def list_name(self):
+        """ The list name. """
+        return self._list_name
 
 
 class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
     """An exception raised when a legal hold matter is inaccessible from your account or
     the matter ID is not valid."""
 
-    def __init__(self, exception, matter_id):
-        super().__init__(
-            exception,
-            f"Matter with ID={matter_id} can not be found. Your account may not have permission to view the matter.",
-        )
+    def __init__(self, exception, resource_uid, legal_hold_resource="matter"):
+        message = f"{legal_hold_resource.capitalize()} with UID '{resource_uid}' can not be found. Your account may not have permission to view the {legal_hold_resource.lower()}."
+        super().__init__(exception, message, resource_uid)
+        self._legal_hold_object = legal_hold_resource
+        self._resource_uid = resource_uid
+
+    @property
+    def uid(self):
+        """ The UID of the legal hold resource. """
+        return self._resource_uid
 
 
 class Py42LegalHoldCriteriaMissingError(Py42BadRequestError):
@@ -180,9 +245,39 @@ class Py42LegalHoldCriteriaMissingError(Py42BadRequestError):
     def __init__(self, exception):
         super().__init__(
             exception,
-            "At least one criteria must be specified; legal_hold_membership_uid, "
-            "legal_hold_uid, user_uid, or user.",
+            "At least one criteria must be specified: legal_hold_membership_uid, "
+            "legal_hold_matter_uid, user_uid, or user.",
         )
+
+
+class Py42LegalHoldAlreadyDeactivatedError(Py42BadRequestError):
+    """An exception raised when trying to deactivate a Legal Hold Matter that is already inactive."""
+
+    def __init__(self, exception, legal_hold_matter_uid):
+        message = f"Legal Hold Matter with UID '{legal_hold_matter_uid}' has already been deactivated."
+        super().__init__(exception, message, legal_hold_matter_uid)
+        self._legal_hold_matter_uid = legal_hold_matter_uid
+
+    @property
+    def legal_hold_matter_uid(self):
+        """ The legal hold matter UID. """
+        return self._legal_hold_matter_uid
+
+
+class Py42LegalHoldAlreadyActiveError(Py42BadRequestError):
+    """An exception raised when trying to activate a Legal Hold Matter that is already active."""
+
+    def __init__(self, exception, legal_hold_matter_uid):
+        message = (
+            f"Legal Hold Matter with UID '{legal_hold_matter_uid}' is already active."
+        )
+        super().__init__(exception, message, legal_hold_matter_uid)
+        self._legal_hold_matter_uid = legal_hold_matter_uid
+
+    @property
+    def legal_hold_matter_uid(self):
+        """ The legal hold matter UID. """
+        return self._legal_hold_matter_uid
 
 
 class Py42InvalidRuleOperationError(Py42HTTPError):
@@ -191,7 +286,19 @@ class Py42InvalidRuleOperationError(Py42HTTPError):
     def __init__(self, exception, rule_id, source):
         msg = "Only alert rules with a source of 'Alerting' can be targeted by this command. "
         msg += f"Rule {rule_id} has a source of '{source}'."
-        super().__init__(exception, msg)
+        super().__init__(exception, msg, rule_id, source)
+        self._rule_id = rule_id
+        self._source = source
+
+    @property
+    def rule_id(self):
+        """ The rule ID. """
+        return self._rule_id
+
+    @property
+    def source(self):
+        """ The rule source. """
+        return self._source
 
 
 class Py42MFARequiredError(Py42UnauthorizedError):
@@ -224,7 +331,13 @@ class Py42InvalidEmailError(Py42InternalServerError):
 
     def __init__(self, email, exception):
         message = f"'{email}' is not a valid email."
-        super().__init__(exception, message)
+        super().__init__(exception, message, email)
+        self._email = email
+
+    @property
+    def email(self):
+        """ The email being assigned to a user. """
+        return self._email
 
 
 class Py42InvalidPasswordError(Py42InternalServerError):
@@ -266,7 +379,13 @@ class Py42InvalidPageTokenError(Py42BadRequestError):
 
     def __init__(self, exception, page_token):
         message = f'Invalid page token: "{page_token}".'
-        super().__init__(exception, message)
+        super().__init__(exception, message, page_token)
+        self._page_token = page_token
+
+    @property
+    def page_token(self):
+        """ The page token. """
+        return self._page_token
 
 
 class Py42UserNotOnListError(Py42NotFoundError):
@@ -274,7 +393,19 @@ class Py42UserNotOnListError(Py42NotFoundError):
 
     def __init__(self, exception, user_id, list_name):
         message = f"User with ID '{user_id}' is not currently on the {list_name} list."
-        super(Py42NotFoundError, self).__init__(exception, message)
+        super(Py42NotFoundError, self).__init__(exception, message, user_id, list_name)
+        self._user_id = user_id
+        self._list_name = list_name
+
+    @property
+    def user_id(self):
+        """ The user ID. """
+        return self._user_id
+
+    @property
+    def list_name(self):
+        """ The list name. """
+        return self._list_name
 
 
 class Py42UnableToCreateProfileError(Py42BadRequestError):
@@ -290,7 +421,13 @@ class Py42UnableToCreateProfileError(Py42BadRequestError):
             "It is possibly still being created if you just recently created the "
             "Code42 user."
         )
-        super().__init__(exception, message)
+        super().__init__(exception, message, username)
+        self._username = username
+
+    @property
+    def username(self):
+        """ The username of the user. """
+        return self._username
 
 
 class Py42InvalidRuleError(Py42NotFoundError):
@@ -298,7 +435,13 @@ class Py42InvalidRuleError(Py42NotFoundError):
 
     def __init__(self, exception, rule_id):
         message = f"Invalid Observer Rule ID '{rule_id}'."
-        super(Py42NotFoundError, self).__init__(exception, message)
+        super(Py42NotFoundError, self).__init__(exception, message, rule_id)
+        self._rule_id = rule_id
+
+    @property
+    def rule_id(self):
+        """ The observer rule ID. """
+        return self._rule_id
 
 
 class Py42UpdateClosedCaseError(Py42BadRequestError):
@@ -314,7 +457,13 @@ class Py42CaseNameExistsError(Py42BadRequestError):
 
     def __init__(self, exception, case_name):
         msg = f"Case name '{case_name}' already exists, please set another name."
-        super().__init__(exception, msg)
+        super().__init__(exception, msg, case_name)
+        self._case_name = case_name
+
+    @property
+    def case_name(self):
+        """ The case name. """
+        return self._case_name
 
 
 class Py42DescriptionLimitExceededError(Py42BadRequestError):
@@ -328,9 +477,15 @@ class Py42DescriptionLimitExceededError(Py42BadRequestError):
 class Py42InvalidCaseUserError(Py42BadRequestError):
     """An error raised when a case subject or assignee is not a valid user."""
 
-    def __init__(self, exception, user_field):
-        msg = f"The provided {user_field} is not a valid user."
+    def __init__(self, exception, user_uid):
+        msg = f"The provided {user_uid} is not a valid user."
         super().__init__(exception, msg)
+        self._user_uid = user_uid
+
+    @property
+    def user(self):
+        """ The user UID. """
+        return self._user_uid
 
 
 class Py42CaseAlreadyHasEventError(Py42BadRequestError):
@@ -357,7 +512,13 @@ class Py42TrustedActivityConflictError(Py42ConflictError):
             f"Duplicate URL or workspace name, '{value}' already exists on your trusted list.  "
             "Please provide a unique value"
         )
-        super().__init__(exception, msg)
+        super().__init__(exception, msg, value)
+        self._value = value
+
+    @property
+    def value(self):
+        """ The domain, URL or workspace name. """
+        return self._value
 
 
 class Py42TrustedActivityInvalidCharacterError(Py42BadRequestError):
@@ -373,7 +534,13 @@ class Py42TrustedActivityIdNotFound(Py42NotFoundError):
 
     def __init__(self, exception, resource_id):
         message = f"Resource ID '{resource_id}' not found."
-        super(Py42NotFoundError, self).__init__(exception, message)
+        super().__init__(exception, message, resource_id)
+        self._resource_id = resource_id
+
+    @property
+    def resource_id(self):
+        """ The resource ID. """
+        return self._resource_id
 
 
 def raise_py42_error(raised_error):

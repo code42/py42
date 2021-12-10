@@ -422,7 +422,7 @@ class BackupSet(UserDict):
 
     def unlock_destination(self, destination_guid):
         """Unlocks an in-use destination, allowing the device owner to remove this
-        destination from their backup. Raises a :class:`Py42Error` if the supplied destination
+        destination from their backup. Raises a :class:`~py42.exceptions.Py42Error` if the supplied destination
         guid is not in use on this backup set, or not available to the parent device/org.
         """
         destination_guid = str(destination_guid)

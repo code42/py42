@@ -59,6 +59,7 @@ class TestFileEventService:
             service.search(query)
 
         assert f'Invalid page token: "{query.page_token}".' in str(err.value)
+        assert err.value.page_token == "test_page_token"
 
     def test_search_when_bad_request_raised_and_token_not_in_query_raises_bad_request(
         self, mock_invalid_page_token_connection

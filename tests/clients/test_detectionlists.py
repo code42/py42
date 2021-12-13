@@ -118,6 +118,7 @@ class TestDetectionListClient:
             "possibly still being created if you just recently created the Code42 "
             "user." in str(err.value)
         )
+        assert err.value.username == "testusername"
 
     def test_create_user_when_service_returns_bad_request_raises(
         self,

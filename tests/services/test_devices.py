@@ -146,6 +146,8 @@ class TestDeviceService:
 
         expected = "Cannot deactivate the device with ID 1234 as the device is involved in a legal hold matter."
         assert expected in str(err.value)
+        assert err.value.resource == "device"
+        assert err.value.resource_id == 1234
 
     def test_get_page_when_org_not_found_raises_expected_error(
         self, mocker, mock_connection
@@ -160,3 +162,4 @@ class TestDeviceService:
             service.get_page(1, org_uid="TestOrgUid")
 
         assert "The organization with UID 'TestOrgUid' was not found." in str(err.value)
+        assert err.value.org_uid == "TestOrgUid"

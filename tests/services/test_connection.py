@@ -172,6 +172,7 @@ class TestConnectedServerHostResolver:
             "to the Authority server."
         )
         assert expected_message in str(err.value)
+        assert err.value.device_guid == TEST_DEVICE_GUID
 
 
 class TestConnection:

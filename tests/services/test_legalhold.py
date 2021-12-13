@@ -86,6 +86,7 @@ class TestLegalHoldService:
 
         expected = "Matter with UID 'matter' can not be found. Your account may not have permission to view the matter."
         assert expected in str(err.value)
+        assert err.value.uid == "matter"
 
     def test_get_all_matters_calls_get_expected_number_of_times(
         self,
@@ -238,3 +239,4 @@ class TestLegalHoldService:
             "User with ID user is already on the legal hold matter id=legal, name=NAME."
         )
         assert expected in str(err.value)
+        assert err.value.user_id == "user"

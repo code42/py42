@@ -210,17 +210,11 @@ class Py42UserAlreadyAddedError(Py42BadRequestError):
         msg = f"User with ID {user_id} is already on the {list_name}."
         super().__init__(exception, msg, user_id, list_name)
         self._user_id = user_id
-        self._list_name = list_name
 
     @property
     def user_id(self):
         """ The user ID. """
         return self._user_id
-
-    @property
-    def list_name(self):
-        """ The list name. """
-        return self._list_name
 
 
 class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
@@ -230,7 +224,6 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
     def __init__(self, exception, resource_uid, legal_hold_resource="matter"):
         message = f"{legal_hold_resource.capitalize()} with UID '{resource_uid}' can not be found. Your account may not have permission to view the {legal_hold_resource.lower()}."
         super().__init__(exception, message, resource_uid)
-        self._legal_hold_object = legal_hold_resource
         self._resource_uid = resource_uid
 
     @property

@@ -89,6 +89,7 @@ class TestHighRiskEmployeeClient:
 
         expected = "User with ID user_id is already on the high-risk-employee list."
         assert expected in str(err.value)
+        assert err.value.user_id == "user_id"
 
     def test_set_alerts_enabled_posts_expected_data_with_default_value(
         self, user_context, mock_connection, mock_detection_list_user_client

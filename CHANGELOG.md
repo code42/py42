@@ -15,6 +15,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Updated `sdk.queries.alerts.filters.alerts_filter.Severity` enum to use updated `riskSeverity` search propert instead of deprecated `severity`.
    - New values `CRITICAL` and `MODERATE`.
    - Aliased previous `severity.MEDIUM` > `riskSeverity.MODERATE` for backwards compatibility.
+- Updated custom exception behavior such that the parameters relating to the exception are:
+  - Printed in addition to the error message.
+  - Accessible as properties of the custom exception class.
 
 ## 1.19.3 - 2021-11-09
 

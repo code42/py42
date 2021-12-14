@@ -171,7 +171,8 @@ class TestConnectedServerHostResolver:
             "Device with GUID 'device-guid' is not currently connected "
             "to the Authority server."
         )
-        assert str(err.value) == expected_message
+        assert expected_message in str(err.value)
+        assert err.value.device_guid == TEST_DEVICE_GUID
 
 
 class TestConnection:

@@ -84,11 +84,9 @@ class TestLegalHoldService:
         with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
             service.get_matter_by_uid("matter")
 
-        expected = (
-            "Matter with ID=matter can not be found. Your account may not have "
-            "permission to view the matter."
-        )
-        assert str(err.value) == expected
+        expected = "Matter with UID 'matter' can not be found. Your account may not have permission to view the matter."
+        assert expected in str(err.value)
+        assert err.value.uid == "matter"
 
     def test_get_all_matters_calls_get_expected_number_of_times(
         self,
@@ -212,8 +210,8 @@ class TestLegalHoldService:
             service.get_custodians_page(1)
 
         assert (
-            str(err.value) == "At least one criteria must be specified; "
-            "legal_hold_membership_uid, legal_hold_uid, user_uid, or user."
+            str(err.value) == "At least one criteria must be specified: "
+            "legal_hold_membership_uid, legal_hold_matter_uid, user_uid, or user."
         )
 
     def test_add_to_matter_calls_post_with_expected_url_and_params(
@@ -240,4 +238,5 @@ class TestLegalHoldService:
         expected = (
             "User with ID user is already on the legal hold matter id=legal, name=NAME."
         )
-        assert str(err.value) == expected
+        assert expected in str(err.value)
+        assert err.value.user_id == "user"

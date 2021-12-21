@@ -12,7 +12,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- New fileevent filter query `sdk.queries.fileevents.filers.risk_filter.RiskScore` to search for file events based on riskScore values.
+- New file event filter query `sdk.queries.fileevents.filers.risk_filter.RiskScore` to search for file events based on riskScore values.
 
 ### Changed
 

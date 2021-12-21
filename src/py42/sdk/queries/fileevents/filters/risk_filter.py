@@ -1,6 +1,7 @@
 from py42.choices import Choices
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-
+from py42.sdk.queries.fileevents.file_event_query import FileEventFilterComparableField
+from py42.sdk.queries.query_filter import QueryFilterStringField
 
 class RiskIndicator(FileEventFilterStringField):
     """Class that filters events by risk indicator.
@@ -190,3 +191,12 @@ class RiskSeverity(FileEventFilterStringField, Choices):
     MODERATE = "MODERATE"
     LOW = "LOW"
     NO_RISK_INDICATED = "NO_RISK_INDICATED"
+
+
+class RiskScore(QueryFilterStringField, FileEventFilterComparableField):
+    """Class that filters events by risk score."""
+
+    _term = "riskScore"
+
+    
+

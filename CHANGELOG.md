@@ -10,6 +10,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
+
+- New fileevent filter query `sdk.queries.fileevents.filers.risk_filter.RiskScore` to search for file events based on riskScore values.
+
 ### Changed
 
 - Updated `sdk.queries.alerts.filters.alerts_filter.Severity` enum to use updated `riskSeverity` search propert instead of deprecated `severity`.

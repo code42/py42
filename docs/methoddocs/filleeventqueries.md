@@ -394,3 +394,10 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
     :inherited-members:
     :show-inheritance:
 ```
+
+```eval_rst
+.. autoclass:: py42.sdk.queries.fileevents.filters.risk_filter.RiskScore
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```

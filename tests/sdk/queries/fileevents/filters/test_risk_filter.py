@@ -1,13 +1,13 @@
+from tests.sdk.queries.conftest import GREATER_THAN
 from tests.sdk.queries.conftest import IS
 from tests.sdk.queries.conftest import IS_IN
 from tests.sdk.queries.conftest import IS_NOT
-from tests.sdk.queries.conftest import NOT_IN
-from tests.sdk.queries.conftest import GREATER_THAN
 from tests.sdk.queries.conftest import LESS_THAN
+from tests.sdk.queries.conftest import NOT_IN
 
 from py42.sdk.queries.fileevents.filters.risk_filter import RiskIndicator
-from py42.sdk.queries.fileevents.filters.risk_filter import RiskSeverity
 from py42.sdk.queries.fileevents.filters.risk_filter import RiskScore
+from py42.sdk.queries.fileevents.filters.risk_filter import RiskSeverity
 
 
 def test_risk_indicator_eq_str_gives_correct_json_representation():
@@ -83,14 +83,14 @@ def test_risk_score_not_eq_str_gives_correct_json_representation():
 
 
 def test_risk_score_is_in_str_gives_correct_json_representation():
-    items = [3,4,5]
+    items = [3, 4, 5]
     _filter = RiskScore.is_in(items)
     expected = IS_IN.format("riskScore", *items)
     assert str(_filter) == expected
 
 
 def test_risk_score_not_in_str_gives_correct_json_representation():
-    items = [3,4,5]
+    items = [3, 4, 5]
     _filter = RiskScore.not_in(items)
     expected = NOT_IN.format("riskScore", *items)
     assert str(_filter) == expected
@@ -100,6 +100,7 @@ def test_risk_score_greater_than_str_gives_correct_json_representation():
     _filter = RiskScore.greater_than(5)
     expected = GREATER_THAN.format("riskScore", "5")
     assert str(_filter) == expected
+
 
 def test_risk_score_less_than_str_gives_correct_json_representation():
     _filter = RiskScore.less_than(5)

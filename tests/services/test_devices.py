@@ -11,6 +11,7 @@ from py42.exceptions import Py42OrgNotFoundError
 from py42.services.devices import DeviceService
 
 COMPUTER_URI = "/api/v1/Computer"
+UPGRADE_URI = "/api/v4/device-upgrade/upgrade-device"
 
 DEFAULT_GET_DEVICES_PARAMS = {
     "active": None,
@@ -163,3 +164,13 @@ class TestDeviceService:
 
         assert "The organization with UID 'TestOrgUid' was not found." in str(err.value)
         assert err.value.org_uid == "TestOrgUid"
+
+    def test_upgrade_calls_upgrade_with_uri_and_params(
+        self, mock_connection, successful_response
+    ):
+        mock_connection.get.return_value = successful_response
+        service = DeviceService(mock_connection)
+        service.upgrade("DEVICE_ID")
+        expected_params = {"deviceGuid": "DEVICE_ID"}
+        uri = f"{UPGRADE_URI}"
+        mock_connection.post.assert_called_once_with(uri, json=expected_params)

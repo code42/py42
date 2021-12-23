@@ -284,3 +284,15 @@ class DeviceService(BaseService):
         new_config_date_ms = str(int(time() * 1000))
         device_settings["settings"]["configDateMs"] = new_config_date_ms
         return self._connection.put(uri, json=device_settings)
+
+    def upgrade(self, guid):
+        """Instructs a device to upgrade to the latest available version.
+
+        Args:
+            guid (str): The globally unique identifier of the device.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing the result of the upgrade request.
+        """
+        uri = "/api/v4/device-upgrade/upgrade-device"
+        return self._connection.post(uri, json={"deviceGuid": guid})

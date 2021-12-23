@@ -10,6 +10,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
+
+- `sdk.devices.upgrade()` to instruct the Code42 cloud to upgrade an individual device to the latest available version.
+
 ### Changed
 
 - Updated `sdk.queries.alerts.filters.alerts_filter.Severity` enum to use updated `riskSeverity` search propert instead of deprecated `severity`.

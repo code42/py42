@@ -172,5 +172,4 @@ class TestDeviceService:
         service = DeviceService(mock_connection)
         service.upgrade("DEVICE_ID")
         expected_params = {"deviceGuid": "DEVICE_ID"}
-        uri = f"{UPGRADE_URI}"
-        mock_connection.post.assert_called_once_with(uri, json=expected_params)
+        mock_connection.post.assert_called_once_with(UPGRADE_URI, json=expected_params)

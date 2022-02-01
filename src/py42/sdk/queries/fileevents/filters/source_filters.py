@@ -2,7 +2,6 @@ from py42.choices import Choices
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
 
 
-
 class SourceCategory(FileEventFilterStringField, Choices):
     """
     Class that filters events based on source category.

@@ -5,10 +5,10 @@ from tests.sdk.queries.conftest import IS_NOT
 from tests.sdk.queries.conftest import NOT_EXISTS
 from tests.sdk.queries.conftest import NOT_IN
 
-from py42.sdk.queries.fileevents.filters.source_filters import SourceCategory
-from py42.sdk.queries.fileevents.filters.source_filters import SourceName
-from py42.sdk.queries.fileevents.filters.source_filters import SourceTabTitles
-from py42.sdk.queries.fileevents.filters.source_filters import SourceTabUrls
+from py42.sdk.queries.fileevents.filters.source_filter import SourceCategory
+from py42.sdk.queries.fileevents.filters.source_filter import SourceName
+from py42.sdk.queries.fileevents.filters.source_filter import SourceTabTitles
+from py42.sdk.queries.fileevents.filters.source_filter import SourceTabUrls
 
 
 def test_source_category_exists_str_gives_correct_json_representation():

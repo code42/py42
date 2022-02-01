@@ -12,7 +12,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- Source Filters for fields `sourceCategory`,`sourceName`, `sourceTabTitles`, `sourceTabUrls`
+- New file event filter query classes to `sdk.queries.fileevents.filters.source_filters`:
+    - `SourceCategory`
+    - `SourceName`
+    - `SourceTabTitles`
+    - `SourceTabUrls`
 
 ## 1.20.0 - 2022-01-10
 

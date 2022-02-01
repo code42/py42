@@ -5,7 +5,7 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringFi
 
 class SourceCategory(FileEventFilterStringField, Choices):
     """
-    Class that filters events by the source category.
+    Class that filters events based on source category.
 
     Available options are provided as class attributes:
         - :attr:`SourceCategory.BUSINESS_TOOLS`
@@ -35,18 +35,18 @@ class SourceCategory(FileEventFilterStringField, Choices):
 
 
 class SourceName(FileEventFilterStringField):
-    """Class that filters events by the source name."""
+    """Class that filters events based on source name."""
 
     _term = "sourceName"
 
 
 class SourceTabTitles(FileEventFilterStringField):
-    """Class that filters events by the source tab titles."""
+    """Class that filters events based on source tab titles (for 'browser or other app' events)."""
 
     _term = "sourceTabTitles"
 
 
 class SourceTabUrls(FileEventFilterStringField):
-    """Class that filters events by the source tab URLs."""
+    """Class that filters events based on source tab URLs (for 'browser or other app' events)."""
 
     _term = "sourceTabUrls"

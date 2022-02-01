@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+
+- New file event filter query classes to `sdk.queries.fileevents.filters.source_filters`:
+    - `SourceCategory`
+    - `SourceName`
+    - `SourceTabTitles`
+    - `SourceTabUrls`
+
 ## 1.20.0 - 2022-01-10
 
 ### Added

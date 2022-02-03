@@ -555,6 +555,7 @@ def test_sync_destination_choices_returns_valid_attributes():
     }
     assert set(choices) == valid_set
 
+
 def test_destination_category_exists_str_gives_correct_json_representation():
     _filter = DestinationCategory.exists()
     expected = EXISTS.format("destinationCategory")
@@ -600,6 +601,7 @@ def test_destination_category_not_in_str_gives_correct_json_representation():
     expected = NOT_IN.format("destinationCategory", *items)
     assert str(_filter) == expected
 
+
 def test_destination_category_choices_returns_valid_attributes():
     choices = DestinationCategory.choices()
     valid_set = {
@@ -611,9 +613,10 @@ def test_destination_category_choices_returns_valid_attributes():
         "Social Media",
         "Source Code Repository",
         "Uncategorized",
-        "Unknown"
+        "Unknown",
     }
     assert set(choices) == valid_set
+
 
 def test_destination_name_exists_str_gives_correct_json_representation():
     _filter = DestinationName.exists()
@@ -659,4 +662,3 @@ def test_destination_name_not_in_str_gives_correct_json_representation():
     _filter = DestinationName.not_in(items)
     expected = NOT_IN.format("destinationName", *items)
     assert str(_filter) == expected
-

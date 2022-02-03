@@ -12,11 +12,15 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
-- New file event filter query classes to `sdk.queries.fileevents.filters.source_filters`:
-    - `SourceCategory`
-    - `SourceName`
-    - `SourceTabTitles`
-    - `SourceTabUrls`
+- New file event filter query classes:
+    - in `sdk.queries.fileevents.filters.source_filters`:
+        - `SourceCategory`
+        - `SourceName`
+        - `SourceTabTitles`
+        - `SourceTabUrls`
+    - in `sdk.queries.filevents.filters.exposure_filters`:
+        - `DestinationCategory`
+        - `DestinationName`
 
 ## 1.20.0 - 2022-01-10
 

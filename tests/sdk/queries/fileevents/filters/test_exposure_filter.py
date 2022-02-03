@@ -5,6 +5,8 @@ from tests.sdk.queries.conftest import IS_NOT
 from tests.sdk.queries.conftest import NOT_EXISTS
 from tests.sdk.queries.conftest import NOT_IN
 
+from py42.sdk.queries.fileevents.filters.exposure_filter import DestinationCategory
+from py42.sdk.queries.fileevents.filters.exposure_filter import DestinationName
 from py42.sdk.queries.fileevents.filters.exposure_filter import ExposureType
 from py42.sdk.queries.fileevents.filters.exposure_filter import ProcessName
 from py42.sdk.queries.fileevents.filters.exposure_filter import ProcessOwner
@@ -552,3 +554,109 @@ def test_sync_destination_choices_returns_valid_attributes():
         "OneDrive",
     }
     assert set(choices) == valid_set
+
+def test_destination_category_exists_str_gives_correct_json_representation():
+    _filter = DestinationCategory.exists()
+    expected = EXISTS.format("destinationCategory")
+    assert str(_filter) == expected
+
+
+def test_destination_category_not_exists_str_gives_correct_json_representation():
+    _filter = DestinationCategory.not_exists()
+    expected = NOT_EXISTS.format("destinationCategory")
+    assert str(_filter) == expected
+
+
+def test_destination_category_eq_str_gives_correct_json_representation():
+    _filter = DestinationCategory.eq(DestinationCategory.CLOUD_STORAGE)
+    expected = IS.format("destinationCategory", "Cloud Storage")
+    assert str(_filter) == expected
+
+
+def test_destination_category_not_eq_str_gives_correct_json_representation():
+    _filter = DestinationCategory.not_eq(DestinationCategory.MESSAGING)
+    expected = IS_NOT.format("destinationCategory", "Messaging")
+    assert str(_filter) == expected
+
+
+def test_destination_category_is_in_str_gives_correct_json_representation():
+    items = [
+        DestinationCategory.CLOUD_STORAGE,
+        DestinationCategory.MESSAGING,
+        DestinationCategory.UNCATEGORIZED,
+    ]
+    _filter = DestinationCategory.is_in(items)
+    expected = IS_IN.format("destinationCategory", *items)
+    assert str(_filter) == expected
+
+
+def test_destination_category_not_in_str_gives_correct_json_representation():
+    items = [
+        DestinationCategory.CLOUD_STORAGE,
+        DestinationCategory.MESSAGING,
+        DestinationCategory.UNCATEGORIZED,
+    ]
+    _filter = DestinationCategory.not_in(items)
+    expected = NOT_IN.format("destinationCategory", *items)
+    assert str(_filter) == expected
+
+def test_destination_category_choices_returns_valid_attributes():
+    choices = DestinationCategory.choices()
+    valid_set = {
+        "Cloud Storage",
+        "Device",
+        "Email",
+        "Messaging",
+        "Multiple Possibilities",
+        "Social Media",
+        "Source Code Repository",
+        "Uncategorized",
+        "Unknown"
+    }
+    assert set(choices) == valid_set
+
+def test_destination_name_exists_str_gives_correct_json_representation():
+    _filter = DestinationName.exists()
+    expected = EXISTS.format("destinationName")
+    assert str(_filter) == expected
+
+
+def test_destination_name_not_exists_str_gives_correct_json_representation():
+    _filter = DestinationName.not_exists()
+    expected = NOT_EXISTS.format("destinationName")
+    assert str(_filter) == expected
+
+
+def test_destination_name_eq_str_gives_correct_json_representation():
+    _filter = DestinationName.eq("Dropbox")
+    expected = IS.format("destinationName", "Dropbox")
+    assert str(_filter) == expected
+
+
+def test_destination_name_not_eq_str_gives_correct_json_representation():
+    _filter = DestinationName.not_eq("Dropbox")
+    expected = IS_NOT.format("destinationName", "Dropbox")
+    assert str(_filter) == expected
+
+
+def test_destination_name_is_in_str_gives_correct_json_representation():
+    items = [
+        "Dropbox",
+        "Reddit",
+        "Windows 10",
+    ]
+    _filter = DestinationName.is_in(items)
+    expected = IS_IN.format("destinationName", *items)
+    assert str(_filter) == expected
+
+
+def test_destination_name_not_in_str_gives_correct_json_representation():
+    items = [
+        "Dropbox",
+        "Reddit",
+        "Windows 10",
+    ]
+    _filter = DestinationName.not_in(items)
+    expected = NOT_IN.format("destinationName", *items)
+    assert str(_filter) == expected
+

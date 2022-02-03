@@ -139,3 +139,37 @@ class WindowTitle(FileEventFilterStringField):
     """
 
     _term = "tabTitles"
+
+
+class DestinationCategory(FileEventFilterStringField, Choices):
+    """Class that filters events based on the category of the file event destination.
+
+    Available options are provided as class attributes:
+        - :attr:`DestinationCategory.CLOUD_STORAGE`
+        - :attr:`DestinationCategory.DEVICE`
+        - :attr:`DestinationCategory.EMAIL`
+        - :attr:`DestinationCategory.MESSAGING`
+        - :attr:`DestinationCategory.MULTIPLE_POSSIBILITIES`
+        - :attr:`DestinationCategory.SOCIAL_MEDIA`
+        - :attr:`DestinationCategory.SOURCE_CODE_REPOSITORY`
+        - :attr:`DestinationCategory.UNCATEGORIZED`
+        - :attr:`DestinationCategory.UNKNOWN`
+    """
+
+    _term = "destinationCategory"
+
+    CLOUD_STORAGE = "Cloud Storage"
+    DEVICE = "Device"
+    EMAIL = "Email"
+    MESSAGING = "Messaging"
+    MULTIPLE_POSSIBILITIES = "Multiple Possibilities"
+    SOCIAL_MEDIA = "Social Media"
+    SOURCE_CODE_REPOSITORY = "Source Code Repository"
+    UNCATEGORIZED = "Uncategorized"
+    UNKNOWN = "Unknown"
+
+
+class DestinationName(FileEventFilterStringField):
+    """Class that filters events based on the name of the file event destination."""
+
+    _term = "destinationName"

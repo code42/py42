@@ -38,9 +38,9 @@ class AlertRulesClient:
         return self._alert_rules_service.filetypemismatch
 
     def add_user(self, rule_id, user_id):
-        """Update alert rule criteria to add a user and all its aliases to an alert rule. A rule's
-        user list can either be inclusive (only the users on the list will be alerted) or exclusive
-        (everyone will be alerted on except users on the list). This method will include or
+        """Update alert rule criteria to add a user and all their aliases to an alert rule. A rule's
+        user list can either be inclusive (only the users on the list can generate alerts) or exclusive
+        (everyone can generate alerts except users on the list). This method will include or
         exclude based on the rule configuration.
 
         `Rest Documentation <https://developer.code42.com/api/#operation/Rules_AddUsersToRule>`__
@@ -60,9 +60,9 @@ class AlertRulesClient:
             raise
 
     def remove_user(self, rule_id, user_id):
-        """Update alert rule criteria to remove a user and all its aliases from an alert rule. A rule's
-        user list can either be inclusive (only the users on the list will be alerted) or exclusive
-        (everyone will be alerted on except users on the list). This method will include or
+        """Update alert rule criteria to remove a user and all their aliases from an alert rule. A rule's
+        user list can either be inclusive (only the users on the list can generate alerts) or exclusive
+        (everyone can generate alerts, except users on the list). This method will include or
         exclude based on the rule configuration.
 
         `Rest Documentation <https://developer.code42.com/api/#operation/Rules_RemoveUsersFromRule>`__

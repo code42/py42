@@ -29,7 +29,7 @@ response = sdk.trustedactivities.update(resource_id, description="This is a trus
 
 To clear the description of a trusted activity, pass an empty string `description=""` to the `update()` method.
 
-```eval_rst
+```{eval-rst}
 .. important::
     If you try to create with the same value as an already existing activity, you will get a `py42.exceptions.Py42TrustedActivityConflictError`.
 

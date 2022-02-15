@@ -1,6 +1,6 @@
 # Security Data
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.clients.securitydata.SecurityDataClient
     :members:
     :show-inheritance:

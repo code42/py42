@@ -1,6 +1,6 @@
 # Util
 
-```eval_rst
+```{eval-rst}
 .. automodule:: py42.util
     :members:
 ```

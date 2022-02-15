@@ -88,8 +88,8 @@ html_theme_options = {
     # TOC options
     "navigation_depth": 4,
     "titles_only": True,
-    "collapse_navigation": False
-    }
+    "collapse_navigation": False,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,

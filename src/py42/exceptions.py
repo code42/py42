@@ -354,8 +354,19 @@ class Py42CloudAliasLimitExceededError(Py42BadRequestError):
     already has the max amount of supported cloud aliases."""
 
     def __init__(self, exception, message=None):
-        message = message or "Cloud alias limit exceeded."
+        message = (
+            message
+            or "Cloud alias limit exceeded. A max of 2 cloud aliases are allowed."
+        )
         super(Py42BadRequestError, self).__init__(exception, message)
+
+
+class Py42CloudAliasCharacterLimitExceededError(Py42Error):
+    """An exception raised when trying to add a cloud alias to a user that exceeds the max character limit."""
+
+    def __init__(self):
+        message = "Cloud alias character limit exceeded. Max 50 characters."
+        super().__init__(message)
 
 
 class Py42BadRestoreRequestError(Py42BadRequestError):

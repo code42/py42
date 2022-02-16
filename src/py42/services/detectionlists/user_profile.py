@@ -1,4 +1,5 @@
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42CloudAliasCharacterLimitExceededError
 from py42.exceptions import Py42CloudAliasLimitExceededError
 from py42.services import BaseService
 
@@ -124,6 +125,12 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+
+        # check if alias > 50 characters
+        # this error checking is handled by the frontend of the console
+        if len(alias) > 50:
+            raise Py42CloudAliasCharacterLimitExceededError
+
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
@@ -133,7 +140,7 @@ class DetectionListUserService(BaseService):
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
-            if "Cloud usernames must be less than or equal to" in err.response.text:
+            if "A max of 2 cloud aliases are allowed" in err.response.text:
                 raise Py42CloudAliasLimitExceededError(err)
             raise err
 

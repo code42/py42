@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 1.21.1 - 2022-02-18
+
+### Fixed
+
+- Bug with incorrect error being raised `sdk.detectionlists.add_user_cloud_alias()`
+
 ## 1.21.0 - 2022-02-18
 
 ### Added

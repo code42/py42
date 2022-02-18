@@ -140,9 +140,9 @@ class DetectionListUserService(BaseService):
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
-            if "A max of 2 cloud aliases are allowed" in err.response.text:
+            if "Cloud usernames must be less than or equal to" in err.response.text:
                 raise Py42CloudAliasLimitExceededError(err)
-            raise err
+            raise
 
     def remove_cloud_alias(self, user_id, alias):
         """Remove one or more cloud alias.

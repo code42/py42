@@ -185,7 +185,7 @@ class TestDetectionListUserClient:
         detection_list_user_client = DetectionListUserService(
             mock_connection, user_context, mock_user_client
         )
-        text = "AddCloudAliases: A max of 2 cloud aliases are allowed"
+        text = "Cloud usernames must be less than or equal to 2"
         mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, text
         )

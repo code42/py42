@@ -22,6 +22,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
         - `DestinationCategory`
         - `DestinationName`
 
+### Fixed
+
+- Improved error handling for `sdk.detectionlists.add_user_cloud_alias()`
+
 ## 1.20.0 - 2022-01-10
 
 ### Added

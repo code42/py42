@@ -87,7 +87,7 @@ The benefits of the py42 helper attributes/methods is that the values mimic what
 vs the minutes expected by the API endpoint), so you don't have to worry about doing conversions yourself. But since
 the underlying dict is accessible, you aren't constrained to only what py42 has so far implemented.
 
-```eval_rst
+```{eval-rst}
 .. warning::
     When manually changing values on the underlying dict, those aren't registered in the `.changes` property and thus
     won't be captured in debug logs by the `sdk.devices.update_settings()` method.

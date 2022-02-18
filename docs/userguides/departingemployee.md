@@ -25,7 +25,7 @@ except Py42UserAlreadyAddedError:
     print("The user is already on the Departing Employee list.")
 ```
 
-```eval_rst
+```{eval-rst}
 .. important::
     If the user is already in the Departing Employees list, you will get an `py42.exceptions.Py42UserAlreadyAddedError`.
 

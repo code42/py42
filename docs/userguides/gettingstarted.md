@@ -60,7 +60,7 @@ pip install py42-[VERSION].tar.gz
 
 ## Authentication
 
-```eval_rst
+```{eval-rst}
 .. important:: py42 currently only supports token-based authentication.
 ```
 

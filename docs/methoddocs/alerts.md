@@ -1,6 +1,6 @@
 # Alerts
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.clients.alerts.AlertsClient
     :members:
     :show-inheritance:
@@ -15,14 +15,14 @@ that match multiple filter rules.
 
 See [Executing Searches](../userguides/searches.md) for more on building search queries.
 
-```eval_rst
+```{eval-rst}
 .. automodule:: py42.sdk.queries.alerts.filters.alert_filter
     :members:
     :inherited-members:
     :show-inheritance:
 ```
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.sdk.queries.alerts.alert_query.AlertQuery
     :members:
     :show-inheritance:

@@ -21,7 +21,7 @@ uid = user["users"][0]["userUid"]
 response = sdk.detectionlists.high_risk_employee.add(user_id)
 ```
 
-```eval_rst
+```{eval-rst}
 .. important::
     If the user is already in the High Risk Employee list, you will get a `py42.exceptions.Py42UserAlreadyAddedError`.
 

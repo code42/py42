@@ -1,6 +1,6 @@
 # Shared Query Filters
 
-```eval_rst
+```{eval-rst}
 .. automodule:: py42.sdk.queries.query_filter
     :members:
     :inherited-members:

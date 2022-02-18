@@ -1,12 +1,12 @@
 # Trusted Activities
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.clients.trustedactivities.TrustedActivityType
     :members:
     :show-inheritance:
 ```
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.clients.trustedactivities.TrustedActivitiesClient
     :members:
     :show-inheritance:

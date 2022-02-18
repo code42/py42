@@ -12,8 +12,6 @@
 import os
 import sys
 
-from recommonmark.transform import AutoStructify
-
 import py42.__version__ as meta
 
 # -- Project information -----------------------------------------------------
@@ -37,7 +35,10 @@ release = f"py42 v{meta.__version__}"
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "recommonmark"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "myst_parser"]
+
+# Add myst_parser types to suppress warnings
+suppress_warnings = ["myst.header"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -81,7 +82,14 @@ html_logo = "logo.png"
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
-html_theme_options = {"style_nav_header_background": "#f0f0f0", "logo_only": True}
+html_theme_options = {
+    "style_nav_header_background": "#f0f0f0",
+    "logo_only": True,
+    # TOC options
+    "navigation_depth": 4,
+    "titles_only": True,
+    "collapse_navigation": False,
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -106,15 +114,7 @@ html_css_files = ["custom.css"]
 
 
 def setup(app):
-    app.add_config_value(
-        "recommonmark_config",
-        {
-            # 'url_resolver': lambda url: github_doc_root + url,            'auto_toc_tree_maxdepth': 2,
-            "enable_eval_rst": True
-        },
-        True,
-    )
-    app.add_transform(AutoStructify)
+    pass
 
 
 sys.path.insert(0, os.path.abspath(".."))

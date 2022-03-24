@@ -18,6 +18,7 @@
     Backup Sets <userguides/backupsets>
     userguides/cases
     userguides/trustedactivities
+    userguides/v2apis
 ```
 
 * [Getting Started](userguides/gettingstarted.md)

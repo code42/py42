@@ -8,6 +8,11 @@ proxies = None
 # True, False, or a path to a CA bundle to use.
 verify_ssl_certs = True
 
+# Controls whether we want to use the APIs for the updated file event data model.
+# Set to True to use V2 APIs compatible with the new file event data model.
+# Defaults to False until V1 API deprecation.
+use_v2_file_event_data = False
+
 items_per_page = 500
 security_events_per_page = 10000
 

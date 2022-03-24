@@ -1,5 +1,6 @@
 import json
 
+import py42.settings as settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.services import BaseService
@@ -16,6 +17,9 @@ class FileEventService(BaseService):
         """Searches for file events matching the query criteria.
         `REST Documentation <https://developer.code42.com/api/#operation/searchEventsUsingPOST>`__
 
+        The existing data model for file events will be DEPRECATED on XX-YY-ZZZZ.
+        To use the updated data model for file events, update your settings<https://developer.code42.com>.
+
         Args:
             query (:class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str or unicode):
                 A composed :class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery`
@@ -25,13 +29,16 @@ class FileEventService(BaseService):
             :class:`py42.response.Py42Response`: A response containing the query results.
         """
 
+        version = "v2" if settings.use_v2_file_event_data else "v1"
+        uri = f"/forensic-search/queryservice/api/{version}/fileevent"
+
         if isinstance(query, str):
             query = json.loads(query)
         else:
             query = dict(query)
 
         try:
-            uri = "/forensic-search/queryservice/api/v1/fileevent"
+
             return self._connection.post(uri, json=query)
         except Py42BadRequestError as err:
             if "INVALID_PAGE_TOKEN" in str(err.response.text):

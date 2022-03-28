@@ -7,8 +7,8 @@ from py42.util import parse_timestamp_to_milliseconds_precision
 class CaseStatus(Choices):
     """Constants available for setting the status of a case.
 
-        * ``OPEN``
-        * ``CLOSED``
+    * ``OPEN``
+    * ``CLOSED``
     """
 
     OPEN = "OPEN"

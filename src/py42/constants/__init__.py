@@ -9,8 +9,8 @@ from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeFilt
 class SortDirection(Choices):
     """Constants available to set Code42 request `sort_direction` when sorting returned lists in responses.
 
-        * ``ASC``
-        * ``DESC``
+    * ``ASC``
+    * ``DESC``
     """
 
     DESC = "DESC"

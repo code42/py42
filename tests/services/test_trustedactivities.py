@@ -90,7 +90,8 @@ class TestTrustedActivitiesService:
     def test_create_called_with_expected_url_and_params(self, mock_connection):
         trusted_activities_service = TrustedActivitiesService(mock_connection)
         trusted_activities_service.create(
-            "DOMAIN", "test.com",
+            "DOMAIN",
+            "test.com",
         )
         assert mock_connection.post.call_args[0][0] == _BASE_URI
         data = {

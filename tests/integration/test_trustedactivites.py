@@ -9,7 +9,8 @@ class TestTrustedActivities:
         return connection.trustedactivities.create("DOMAIN", "test.com")
 
     def test_get_all_trusted_activities(
-        self, connection,
+        self,
+        connection,
     ):
         page_gen = connection.trustedactivities.get_all()
         for response in page_gen:
@@ -17,7 +18,8 @@ class TestTrustedActivities:
             break
 
     def test_get_all_trusted_activities_with_optional_params(
-        self, connection,
+        self,
+        connection,
     ):
         page_gen = connection.trustedactivities.get_all(type="DOMAIN", page_size=1)
         for response in page_gen:

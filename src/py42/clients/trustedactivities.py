@@ -4,8 +4,8 @@ from py42.choices import Choices
 class TrustedActivityType(Choices):
     """Constants available for setting the type of a trusted activity.
 
-        * ``DOMAIN``
-        * ``SLACK``
+    * ``DOMAIN``
+    * ``SLACK``
     """
 
     DOMAIN = "DOMAIN"

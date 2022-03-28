@@ -236,13 +236,13 @@ class DeviceService(BaseService):
     def get_agent_state(self, guid, property_name):
         """Gets the agent state of the device.
 
-            Args:
-                guid (str): The globally unique identifier of the device.
-                property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
+        Args:
+            guid (str): The globally unique identifier of the device.
+            property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
 
-            Returns:
-                :class:`py42.response.Py42Response`: A response containing settings information.
-            """
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing settings information.
+        """
         uri = "/api/v14/agent-state/view-by-device-guid"
         params = {"deviceGuid": guid, "propertyName": property_name}
         return self._connection.get(uri, params=params)
@@ -250,12 +250,12 @@ class DeviceService(BaseService):
     def get_agent_full_disk_access_state(self, guid):
         """Gets the full disk access status of a device.
 
-            Args:
-                guid (str): The globally unique identifier of the device.
+        Args:
+            guid (str): The globally unique identifier of the device.
 
-            Returns:
-                :class:`py42.response.Py42Response`: A response containing settings information.
-            """
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing settings information.
+        """
         return self.get_agent_state(guid, "fullDiskAccess")
 
     def get_settings(self, guid):

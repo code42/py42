@@ -12,9 +12,9 @@ from py42.services.util import get_all_pages
 class HighRiskEmployeeFilters(_DetectionListFilters, Choices):
     """Constants available for filtering High Risk Employee search results.
 
-        * ``OPEN``
-        * ``EXFILTRATION_30_DAYS``
-        * ``EXFILTRATION_24_HOURS``
+    * ``OPEN``
+    * ``EXFILTRATION_30_DAYS``
+    * ``EXFILTRATION_24_HOURS``
     """
 
 

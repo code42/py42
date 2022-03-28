@@ -16,10 +16,10 @@ _DATE_FORMAT = "%Y-%m-%d"
 class DepartingEmployeeFilters(_DetectionListFilters, Choices):
     """Constants available for filtering Departing Employee search results.
 
-        * ``OPEN``
-        * ``EXFILTRATION_30_DAYS``
-        * ``EXFILTRATION_24_HOURS``
-        * ``LEAVING_TODAY``
+    * ``OPEN``
+    * ``EXFILTRATION_30_DAYS``
+    * ``EXFILTRATION_24_HOURS``
+    * ``LEAVING_TODAY``
     """
 
     LEAVING_TODAY = "LEAVING_TODAY"

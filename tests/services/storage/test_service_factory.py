@@ -119,7 +119,9 @@ class TestStorageSessionManager:
         with pytest.raises(Py42StorageSessionInitializationError):
             storage_session_manager.get_storage_connection(mock_tmp_auth)
 
-    def test_get_storage_session_get_saved_session_initially_returns_none(self,):
+    def test_get_storage_session_get_saved_session_initially_returns_none(
+        self,
+    ):
         storage_session_manager = ConnectionManager()
         assert (
             storage_session_manager.get_saved_connection_for_url("testhost.com") is None

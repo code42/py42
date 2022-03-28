@@ -1,17 +1,18 @@
 # View or Modify device settings
 
-Use py42 to easily view and update the settings for devices with the `DeviceSettings` object.
+Use py42 to easily view and update the settings for devices with the `DeviceSettings` and `IncydrDeviceSettings` objects for Crashplan and Incydr customers, respectively.
 
-The `DeviceSettings` object is a wrapper around the complex nested dict that the Code42 `Computer` API endpoint expects,
+The [Device Settings](../methoddocs/devicesettings.md) objects are wrappers around the complex nested dict that the Code42 `Computer` API endpoint expects,
 providing helper properties that can be used to get/set values, without having to know the underlying nested structure.
 
-To get started, create a `DeviceSettings` object for a given device guid:
+To get started, create a `DeviceSettings` or `IncydrDeviceSettings` object for a given device guid.  The `get_settings()` method will create the appropriate object automatically based on the corresponding service running on the device:
 
 ```python
 device_settings = sdk.devices.get_settings(908765043021)
 ```
 
-Some common non-modifiable details about the device are accessible as read-only properties:
+Details on which settings can be updated and which are non-modifiable can be found in the method documentation [Device Settings](../methoddocs/devicesettings.md). These may differ between services.
+Some common non-modifiable settings fields are accessible as read-only properties on the object:
 
 ```python
 >>> device_settings.computer_id
@@ -24,28 +25,16 @@ Some common non-modifiable details about the device are accessible as read-only 
 494842
 >>> device_settings.version
 1525200006800
->>> device_settings.available_destinations
-{'632540230984925185': 'PROe Cloud, US - West', '43': 'PROe Cloud, US'}
 ```
 
 And to change settings, in most cases you can just assign new values to the corresponding attribute:
 
 ```python
->>> device_settings.name
-"Admin's Computer"
->>> device_settings.name = "Bob's Laptop"
+>>> device_settings.notes
+"A note on this device."
+>>> device_settings.notes = "A note on this device."
 ```
-
-Because device backup settings are tied to a given "Backup Set", of which there could be more than one, the `DeviceSettings.backup_sets`
-property returns a list of `BackupSet` wrapper classes that help manage backup configuration settings.
-
-```python
->>> device_settings.backup_sets
-[<BackupSet: id: 1, name: 'Primary - Backup Set'>, <BackupSet: id: 298010138, name: 'Secondary (large files) - Backup Set'>]
-```
-
-See the [Configuring Backup Sets](backupsets.md) guide for details on managing backup set settings.
-
+The below section provides more detail on managing backup settings for Crashplan customers.
 
 For convenience and logging purposes, all changes are tracked in the `.changes` property of the `DeviceSettings` objects.
 
@@ -62,7 +51,28 @@ with the server response:
 <Py42Response [status=200, data={'active': True, 'address': '192.168.74.144:4247', 'alertState': 0, 'alertStates': ['OK'], ...}]>
 ```
 
-## Advanced Usage
+
+## Crashplan
+
+### Backup settings
+
+The available backup destinations for a device can be found on the read-only `availableDestinations` property:
+```python
+>>> device_settings.available_destinations
+{'632540230984925185': 'PROe Cloud, US - West', '43': 'PROe Cloud, US'}
+```
+
+Because device backup settings are tied to a given "Backup Set", of which there could be more than one, the `DeviceSettings.backup_sets`
+property returns a list of `BackupSet` wrapper classes that help manage backup configuration settings.
+
+```python
+>>> device_settings.backup_sets
+[<BackupSet: id: 1, name: 'Primary - Backup Set'>, <BackupSet: id: 298010138, name: 'Secondary (large files) - Backup Set'>]
+```
+
+See the [Configuring Backup Sets](backupsets.md) guide for details on managing backup set settings.
+
+### Advanced usage
 
 Because `DeviceSettings` is a subclass of `UserDict` with added attributes/methods to help easily access/modify setting values,
 the underlying dict that ultimately gets posted to the server is stored on the `.data` attribute of `DeviceSettings` instances,

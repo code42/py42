@@ -3,6 +3,7 @@ from time import time
 
 from py42 import settings
 from py42.clients.settings.device_settings import DeviceSettings
+from py42.clients.settings.device_settings import IncydrDeviceSettings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42OrgNotFoundError
 from py42.services import BaseService
@@ -267,20 +268,25 @@ class DeviceService(BaseService):
             :class:`py42.clients.settings.device_settings.DeviceSettings`: A class to help manage device settings.
         """
         settings = self.get_by_guid(guid, incSettings=True)
-        return DeviceSettings(settings.data)
+        print(settings.data)
+        if settings.data["service"].lower() == "crashplan":
+            return DeviceSettings(settings.data)
+        else:
+            return IncydrDeviceSettings(settings.data)
 
     def update_settings(self, device_settings):
-        """Updates a device's settings based on changes to the passed in `DeviceSettings` instance.
+        """Updates a device's settings based on changes to the passed in `DeviceSettings` or `IncydrDeviceSettings` instance.  The appropriate instance for each device is returned by the `get_settings()` method.
 
         Args:
-            device_settings (`DeviceSettings`): An instance of `DeviceSettings` with desired modifications to settings.
+            device_settings (`DeviceSettings` OR `IncydrDeviceSettings`): An instance of `DeviceSettings` (Crashplan) or `IncydrDeviceSettings` (Incydr) with desired modifications to settings.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the result of the setting change.
+            :class:`py42.response.Py42Response`: A response containing the result of the settings changes.
         """
         device_settings = dict(device_settings)
         device_id = device_settings["computerId"]
         uri = f"/api/v1/Computer/{device_id}"
-        new_config_date_ms = str(int(time() * 1000))
-        device_settings["settings"]["configDateMs"] = new_config_date_ms
+        if isinstance(device_settings, DeviceSettings):
+            new_config_date_ms = str(int(time() * 1000))
+            device_settings["settings"]["configDateMs"] = new_config_date_ms
         return self._connection.put(uri, json=device_settings)

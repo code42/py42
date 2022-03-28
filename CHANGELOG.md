@@ -11,7 +11,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## Unreleased
 
 ### Added
-- `IncyderDeviceSettings` class to allow users to manage the settings on individual Incyder devices.
+- `IncydrDeviceSettings` class to allow users to manage the settings on individual Incydr devices.
 
 ## 1.21.1 - 2022-02-22
 

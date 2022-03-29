@@ -218,8 +218,6 @@ class TestDeviceService:
         client = DeviceService(mock_connection)
         client.update_settings(settings)
         uri = f"/api/v1/Computer/{device_id}"
-        assert "settings" in settings
-        assert "configDateMs" in settings["settings"]
         mock_connection.put.assert_called_once_with(uri, json=settings)
 
     def test_update_settings_calls_api_with_expected_params_when_incydr(
@@ -231,5 +229,4 @@ class TestDeviceService:
         client = DeviceService(mock_connection)
         client.update_settings(settings)
         uri = f"/api/v1/Computer/{device_id}"
-        assert "settings" not in settings
         mock_connection.put.assert_called_once_with(uri, json=settings)

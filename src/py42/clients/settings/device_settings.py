@@ -19,7 +19,7 @@ destination_not_added_error = Py42Error(
 
 
 class IncydrDeviceSettings(UserDict):
-    """Class used to manage individual Incydr devices.  These devices have no backup settings and are only the **notes** and **external reference** fields are modifiable."""
+    """Class used to manage individual Incydr devices.  These devices have no backup settings and only the **notes** and **external reference** fields are modifiable."""
 
     def __init__(self, settings_dict):
         self.changes = {}

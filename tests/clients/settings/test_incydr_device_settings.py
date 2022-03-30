@@ -26,8 +26,8 @@ INCYDR_DEVICE_DICT_W_SETTINGS = {
     "userUid": "1010090007721726158",
     "orgId": 424242,
     "orgUid": "985187827481212202",
-    "computerExtRef": None,
-    "notes": None,
+    "computerExtRef": "ext ref",
+    "notes": "My device setting note!",
     "parentComputerId": None,
     "parentComputerGuid": None,
     "lastConnected": "2021-07-22T12:38:54.854Z",
@@ -73,7 +73,10 @@ class TestIncydrDeviceSettings:
         with pytest.raises(AttributeError):
             setattr(self.device_settings, name, expected_value)
 
-    @pytest.mark.parametrize("param", [("notes", None), ("external_reference", None)])
+    @pytest.mark.parametrize(
+        "param",
+        [("notes", "My device setting note!"), ("external_reference", "ext ref")],
+    )
     def test_device_settings_get_mutable_properties_return_expected_values(self, param):
         name, expected_value = param
         assert getattr(self.device_settings, name) == expected_value

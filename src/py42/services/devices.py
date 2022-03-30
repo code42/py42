@@ -268,7 +268,6 @@ class DeviceService(BaseService):
             :class:`py42.clients.settings.device_settings.DeviceSettings`: A class to help manage device settings.
         """
         settings = self.get_by_guid(guid, incSettings=True)
-        print(settings.data)
         if settings.data["service"].lower() == "crashplan":
             return DeviceSettings(settings.data)
         else:

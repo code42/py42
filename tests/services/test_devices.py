@@ -182,7 +182,6 @@ class TestDeviceService:
         self, mocker, mock_connection
     ):
         text = """{"service": "Artemis"}"""
-        # response = """{'computerId': 3985, 'name': '994627866755117009', 'osHostname': 'DESKTOP-I2SKEML', 'guid': '994627866755117009', 'type': 'COMPUTER', 'status': 'Active', 'active': True, 'blocked': False, 'alertState': 0, 'alertStates': ['OK'], 'userId': 6340, 'userUid': '994627866352463825', 'orgId': 3332, 'orgUid': '985187827481212202', 'computerExtRef': None, 'notes': None, 'parentComputerId': None, 'parentComputerGuid': None, 'lastConnected': '2021-02-17T20:00:06.959Z', 'osName': 'win', 'osVersion': 'DontKnow', 'osArch': 'DontKnow', 'address': None, 'remoteAddress': None, 'javaVersion': '', 'modelInfo': '', 'timeZone': None, 'version': 0, 'productVersion': '1.1.1970', 'buildVersion': None, 'creationDate': '2021-02-17T20:00:06.994Z', 'modificationDate': '2021-02-17T20:00:06.994Z', 'loginDate': '2021-02-17T20:00:06.959Z', 'service': None, 'orgSettings': {'securityKeyLocked': False}}"""
         requests_response = mocker.MagicMock(spec=Response)
         requests_response.text = text
         client = DeviceService(mock_connection)

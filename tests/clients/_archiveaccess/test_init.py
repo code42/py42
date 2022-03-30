@@ -301,8 +301,10 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
 
 
 def mock_get_file_path_metadata_responses(mocker, storage_archive_service, responses):
-    storage_archive_service.get_file_path_metadata.side_effect = get_get_file_path_metadata_mock(
-        mocker, TEST_SESSION_ID, TEST_DEVICE_GUID, responses
+    storage_archive_service.get_file_path_metadata.side_effect = (
+        get_get_file_path_metadata_mock(
+            mocker, TEST_SESSION_ID, TEST_DEVICE_GUID, responses
+        )
     )
 
 
@@ -339,7 +341,10 @@ class TestArchiveContentStreamer:
             file_size_poller,
         )
         archive_accessor.stream_from_backup(
-            TEST_BACKUP_SET_ID, "/", file_size_calc_timeout=0, show_deleted=True,
+            TEST_BACKUP_SET_ID,
+            "/",
+            file_size_calc_timeout=0,
+            show_deleted=True,
         )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "/")]
         restore_job_manager.get_stream.assert_called_once_with(
@@ -367,7 +372,9 @@ class TestArchiveContentStreamer:
         )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, USERS_DIR)]
         restore_job_manager.get_stream.assert_called_once_with(
-            TEST_BACKUP_SET_ID, expected_file_selection, show_deleted=True,
+            TEST_BACKUP_SET_ID,
+            expected_file_selection,
+            show_deleted=True,
         )
 
     def test_stream_from_backup_with_file_path_calls_get_stream(
@@ -391,11 +398,17 @@ class TestArchiveContentStreamer:
             get_file_selection(FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR)
         ]
         restore_job_manager.get_stream.assert_called_once_with(
-            TEST_BACKUP_SET_ID, expected_file_selection, show_deleted=None,
+            TEST_BACKUP_SET_ID,
+            expected_file_selection,
+            show_deleted=None,
         )
 
     def test_stream_from_backup_normalizes_windows_paths(
-        self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
+        self,
+        mocker,
+        storage_archive_service,
+        restore_job_manager,
+        file_size_poller,
     ):
         mock_walking_tree_for_windows_path(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
@@ -411,11 +424,17 @@ class TestArchiveContentStreamer:
         )
         expected_file_selection = [get_file_selection(FileType.DIRECTORY, "C:/")]
         restore_job_manager.get_stream.assert_called_once_with(
-            TEST_BACKUP_SET_ID, expected_file_selection, show_deleted=None,
+            TEST_BACKUP_SET_ID,
+            expected_file_selection,
+            show_deleted=None,
         )
 
     def test_stream_from_backup_calls_get_file_size_with_expected_params(
-        self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
+        self,
+        mocker,
+        storage_archive_service,
+        restore_job_manager,
+        file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
@@ -461,16 +480,32 @@ class TestArchiveContentStreamer:
         )
         expected_file_selection = [
             get_file_selection(
-                FileType.FILE, TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR, 1, 2, 3,
+                FileType.FILE,
+                TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR,
+                1,
+                2,
+                3,
             ),
-            get_file_selection(FileType.DIRECTORY, TEST_DOWNLOADS_DIR, 4, 5, 6,),
+            get_file_selection(
+                FileType.DIRECTORY,
+                TEST_DOWNLOADS_DIR,
+                4,
+                5,
+                6,
+            ),
         ]
         restore_job_manager.get_stream.assert_called_once_with(
-            TEST_BACKUP_SET_ID, expected_file_selection, show_deleted=None,
+            TEST_BACKUP_SET_ID,
+            expected_file_selection,
+            show_deleted=None,
         )
 
     def test_stream_from_backup_with_file_not_in_archive_raises_exception(
-        self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
+        self,
+        mocker,
+        storage_archive_service,
+        restore_job_manager,
+        file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
@@ -491,7 +526,11 @@ class TestArchiveContentStreamer:
         restore_job_manager.get_stream.assert_not_called()
 
     def test_stream_from_backup_with_unicode_file_path_not_in_archive_raises_exception(
-        self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
+        self,
+        mocker,
+        storage_archive_service,
+        restore_job_manager,
+        file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
@@ -513,7 +552,11 @@ class TestArchiveContentStreamer:
         restore_job_manager.get_stream.assert_not_called()
 
     def test_stream_from_backup_with_drive_not_in_archive_raises_exception(
-        self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
+        self,
+        mocker,
+        storage_archive_service,
+        restore_job_manager,
+        file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
@@ -537,7 +580,11 @@ class TestArchiveContentStreamer:
         restore_job_manager.get_stream.assert_not_called()
 
     def test_stream_from_backup_with_case_sensitive_drive_not_in_archive_raises_exception(
-        self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
+        self,
+        mocker,
+        storage_archive_service,
+        restore_job_manager,
+        file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(
@@ -561,7 +608,11 @@ class TestArchiveContentStreamer:
         restore_job_manager.get_stream.assert_not_called()
 
     def test_stream_from_backup_uses_show_deleted_param_on_get_file_path_metadata(
-        self, mocker, storage_archive_service, restore_job_manager, file_size_poller,
+        self,
+        mocker,
+        storage_archive_service,
+        restore_job_manager,
+        file_size_poller,
     ):
         mock_walking_to_downloads_folder(mocker, storage_archive_service)
         archive_accessor = ArchiveContentStreamer(

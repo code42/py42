@@ -176,7 +176,9 @@ class SecurityDataClient:
             version["storageNodeURL"]
         )
         token = pds.get_download_token(
-            version["archiveGuid"], version["fileId"], version["versionTimestamp"],
+            version["archiveGuid"],
+            version["fileId"],
+            version["versionTimestamp"],
         )
         return pds.get_file(str(token))
 

@@ -108,7 +108,11 @@ class ArchiveContentStreamer(ArchiveExplorer):
     """A class with methods for restoring files from backup."""
 
     def stream_from_backup(
-        self, backup_set_id, file_paths, file_size_calc_timeout=None, show_deleted=None,
+        self,
+        backup_set_id,
+        file_paths,
+        file_size_calc_timeout=None,
+        show_deleted=None,
     ):
         file_selections = self.create_file_selections(
             backup_set_id, file_paths, file_size_calc_timeout
@@ -173,7 +177,10 @@ def _create_file_selections(file_paths, metadata_list, file_sizes=None):
             "selected": True,
         }
         selection = FileSelection(
-            file, size_info["numFiles"], size_info["numDirs"], size_info["size"],
+            file,
+            size_info["numFiles"],
+            size_info["numDirs"],
+            size_info["size"],
         )
         file_selections.append(selection)
     return file_selections

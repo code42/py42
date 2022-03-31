@@ -18,7 +18,7 @@
     Backup Sets <userguides/backupsets>
     userguides/cases
     userguides/trustedactivities
-    userguides/v2apis
+    V2 File Events <userguides/v2apis>
 ```
 
 * [Getting Started](userguides/gettingstarted.md)
@@ -32,3 +32,4 @@
 * [Backup Sets](userguides/backupsets.md)
 * [Cases](userguides/cases.md)
 * [Trust Settings](userguides/trustedactivities.md)
+* [V2 File Events](userguides/v2apis.md)

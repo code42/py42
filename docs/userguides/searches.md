@@ -18,6 +18,15 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 ```
 
+To query for V2 file events, import the corresponding filter modules and `FileEventQuery` object:
+```python
+import py42.sdk
+from py42.sdk.queries.fileevents.v2 import *
+```
+
+**For more details on the V2 file event, see the [V2EVENTGUIDE](v2apis.md)**
+
+
 You must create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type
 (in the form of a class), such as `EmailSender`, and an operator (in the form of a function), such as `is_in()`.
 Some example filter groups look like this:
@@ -34,6 +43,11 @@ It is also possible to create `query_filter.FilterGroups` from raw JSON. For exa
 raw_json = """{"filterClause":"AND","filters":[{"display":null,"value":"P1D","operator":"WITHIN_THE_LAST","term":"eventTimestamp"}]}"""
 json_dict = json.loads(raw_json)
 filter_group = FilterGroup.from_dict(json_dict)
+```
+
+```{eval-rst}
+.. important::
+    The filter terms and query objects for file events have changed for V2.  Make sure you're using the appropriate modules to construct your queries.
 ```
 
 There are two operators when building `file_event_query.FileEventQuery` objects: `any()` and `all()`.

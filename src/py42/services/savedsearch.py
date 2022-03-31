@@ -5,6 +5,8 @@ from py42.services import BaseService
 class SavedSearchService(BaseService):
     """A service to interact with saved search APIs."""
 
+    # TODO: saved search V2 API is not yet available.
+
     _version = "v1"
     _resource = f"/forensic-search/queryservice/api/{_version}/saved"
 

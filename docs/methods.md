@@ -4,7 +4,7 @@
 ```{eval-rst}
 .. toctree::
     :hidden:
-    :maxdepth: 2
+    :maxdepth: 4
     :glob:
 
     methoddocs/*
@@ -38,7 +38,8 @@ Explore the complete public documentation for `py42` below.
 * [Devices](methoddocs/devices.md)
 * [Device Settings](methoddocs/devicesettings.md)
 * [Exceptions](methoddocs/exceptions.md)
-* [File Event Queries](methoddocs/fileeventqueries.md)
+* [File Event Queries - V2](methoddocs/fileeventqueriesv2.md)
+* [File Event Queries - V1](methoddocs/fileeventqueries.md)
 * [Legal Hold](methoddocs/legalhold.md)
 * [Orgs](methoddocs/orgs.md)
 * [Org Settings](methoddocs/orgsettings.md)

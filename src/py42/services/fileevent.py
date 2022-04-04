@@ -61,8 +61,6 @@ class FileEventService(BaseService):
     def get_file_location_detail_by_sha256(self, checksum):
         """Get file location details based on SHA256 hash.
 
-        # TODO: unknown status as of 4-4-22
-
         Args:
             checksum (str): SHA256 checksum of a file.
 

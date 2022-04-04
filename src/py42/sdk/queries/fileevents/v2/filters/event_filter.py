@@ -4,19 +4,19 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventFilterTimestam
 
 
 class EventObserver(FileEventFilterStringField, Choices):
-    """Class that filters events by event source.
+    """Class that filters events by event observer.
 
-    Available observer types are provided as class attributes:
-        - :attr:`Observer.ENDPOINT`
-        - :attr:`Observer.GOOGLE_DRIVE`
-        - :attr:`Observer.ONE_DRIVE`
-        - :attr:`Observer.BOX`
-        - :attr:`Observer.GMAIL`
-        - :attr:`Observer.OFFICE_365`
+    Available event observer types are provided as class attributes:
+        - :attr:`EventObserver.ENDPOINT`
+        - :attr:`EventObserver.GOOGLE_DRIVE`
+        - :attr:`EventObserver.ONE_DRIVE`
+        - :attr:`EventObserver.BOX`
+        - :attr:`EventObserver.GMAIL`
+        - :attr:`EventObserver.OFFICE_365`
 
     Example::
 
-        filter = Observer.is_in([Observer.ENDPOINT, Observer.BOX])
+        filter = EventObserver.is_in([EventObserver.ENDPOINT, EventObserver.BOX])
 
     """
 

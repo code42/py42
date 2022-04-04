@@ -18,7 +18,7 @@ class FileEventService(BaseService):
         """Searches for file events matching the query criteria.
         `REST Documentation <https://developer.code42.com/api/#operation/searchEventsUsingPOST>`__
 
-        The existing data model for file events will be DEPRECATED on XX-YY-ZZZZ.
+        The existing data model for file events will be DEPRECATED in late spring 2023. TODO: placeholder
         To use the updated data model for file events, update your settings<https://developer.code42.com>.
 
         Args:
@@ -50,7 +50,6 @@ class FileEventService(BaseService):
             query = dict(query)
 
         try:
-            print(query)  # TODO
             return self._connection.post(uri, json=query)
         except Py42BadRequestError as err:
             if "INVALID_PAGE_TOKEN" in str(err.response.text):
@@ -61,6 +60,8 @@ class FileEventService(BaseService):
 
     def get_file_location_detail_by_sha256(self, checksum):
         """Get file location details based on SHA256 hash.
+
+        # TODO: unknown status as of 4-4-22
 
         Args:
             checksum (str): SHA256 checksum of a file.

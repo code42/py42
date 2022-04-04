@@ -52,7 +52,7 @@ class FileOwner(FileEventFilterStringField):
 class FilePath(FileEventFilterStringField):
     """Class that filters events by path of the file observed."""
 
-    _term = "file.path"
+    _term = "file.directory"
 
 
 class FileSize(FileEventFilterComparableField):

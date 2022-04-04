@@ -8,7 +8,7 @@ For details on the updated File Event Model, see [Code42's support article](http
 
 ## Updating settings
 
-First, update your `use_v2_file_event_data` setting to ensure py42 is using the appropriate V2 APIs:
+First, update your `use_v2_file_event_data` setting configuration to ensure py42 is using the appropriate V2 API paths:
 
 ```python
 import py42.sdk

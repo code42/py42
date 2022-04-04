@@ -47,6 +47,7 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 .. automethod:: py42.sdk.queries.fileevents.v2.file_event_query.create_less_than_filter_group
 ```
 
+More helper methods for constructing queries can be found in [Shared Query Filters](sharedqueryfilters.md).
 
 ### Destination Filters
 

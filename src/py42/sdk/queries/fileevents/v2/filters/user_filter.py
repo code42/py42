@@ -11,3 +11,10 @@ class UserId(FileEventFilterStringField):
     """Class that filters events by the Code42 user ID of the actor."""
 
     _term = "user.id"
+
+
+class UserDeviceUid(FileEventFilterStringField):
+    """Class that filters events by the device UID of the actor."""
+
+    _term = "user.deviceUid"
+

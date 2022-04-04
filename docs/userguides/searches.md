@@ -22,7 +22,7 @@ import py42.sdk
 from py42.sdk.queries.fileevents.v2 import *
 ```
 
-**For more details on the V2 file event, see the [V2EVENTGUIDE](v2apis.md)**
+**For more details on the V2 file event, see the [V2 File Events Guide](v2apis.md)**
 
 
 You must create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type

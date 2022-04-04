@@ -42,9 +42,7 @@ class EventInserted(FileEventFilterTimestampField):
 
 
 class EventAction(FileEventFilterStringField, Choices):
-    """Class that filters events based on event action.
-
-    """
+    """Class that filters events based on event action."""
 
     _term = "event.action"
 

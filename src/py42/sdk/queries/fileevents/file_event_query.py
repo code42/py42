@@ -27,7 +27,11 @@ class FileEventQuery(BaseQuery):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.sort_key = "eventId"
+        import py42.settings
+
+        self.sort_key = (
+            "event.id" if py42.settings.use_v2_file_event_data else "eventId"
+        )
 
     def __str__(self):
         groups_string = ",".join(

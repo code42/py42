@@ -52,6 +52,8 @@ pyenv virtualenv 3.6.14 py42
 pyenv activate py42
 ```
 
+Note: Py42 supports pythons versions 3.6 through 3.9 - any versions within that range should work for your virtual environment. Use `pyenv --versions` to see all versions available for install. There are some known issues installing python 3.6 with pyenv on certain OS.
+
 If running into issues on Big Sur(Version 11) while installing python 3.6 the below may work
 
 ```bash
@@ -84,7 +86,7 @@ Next, with your virtual environment activated, install py42 and its development 
 ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs).
 
 ```bash
-pip install -e '.[dev]'
+pip install -e .'[dev]'
 ```
 
 Open the project in your IDE of choice and change the python environment to

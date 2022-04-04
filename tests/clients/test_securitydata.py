@@ -1,4 +1,5 @@
 import pytest
+import py42.settings
 from tests.conftest import create_mock_response
 
 from py42.clients.securitydata import SecurityDataClient
@@ -12,6 +13,8 @@ from py42.services.savedsearch import SavedSearchService
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.exfiltrateddata import ExfiltratedDataService
 from py42.services.storage.preservationdata import StoragePreservationDataService
+
+py42.settings.use_v2_file_event_data = False
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 RAW_QUERY = "RAW JSON QUERY"

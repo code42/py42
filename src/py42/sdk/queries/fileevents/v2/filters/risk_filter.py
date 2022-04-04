@@ -207,7 +207,33 @@ class TrustedActivity(QueryFilterBooleanField):
     _term = "risk.trusted"
 
 
-class TrustReason(QueryFilterStringField):
-    """Class that filters events based on the trust reason for the activity."""
+class TrustReason(QueryFilterStringField, Choices):
+    """Class that filters events based on the trust reason for the activity.
+
+    Available options are provided as class attributes:
+        - :attr: `TrustReason.TRUSTED_DOMAIN_BROWSER_URL`
+        - :attr: `TrustReason.TRUSTED_BROWSER_URL_PATH`
+        - :attr: `TrustReason.TRUSTED_DOMAIN_BROWSER_TAB_TITLE`
+        - :attr: `TrustReason.TRUSTED_BROWSER_TAB_INFOS`
+        - :attr: `TrustReason.TRUSTED_DOMAIN_EMAIL_RECIPIENT`
+        - :attr: `TrustReason.TRUSTED_DOMAIN_CLOUD_SYNC_USERNAME`
+        - :attr: `TrustReason.TRUSTED_SLACK_WORKSPACE`
+        - :attr: `TrustReason.EVENT_PAIRING_SERVICE_MATCH`
+        - :attr: `TrustReason.EVENT_PAIRING_SERVICE_ENDPOINT_MATCH`
+        - :attr: `TrustReason.DOWNLOAD_TO_A_MANAGED_DEVICE`
+        - :attr: `TrustReason.SHARED_WITH_TRUSTED_USERS`
+    """
 
     _term = "risk.trustReason"
+
+    TRUSTED_DOMAIN_BROWSER_URL = "Trusted browser URL"
+    TRUSTED_BROWSER_URL_PATH = "Trusted specific URL path"
+    TRUSTED_DOMAIN_BROWSER_TAB_TITLE = "Trusted browser tab title"
+    TRUSTED_BROWSER_TAB_INFOS = "Trusted browser URL and/or tab title"
+    TRUSTED_DOMAIN_EMAIL_RECIPIENT = "Trusted email recipient"
+    TRUSTED_DOMAIN_CLOUD_SYNC_USERNAME = "Trusted sync username"
+    TRUSTED_SLACK_WORKSPACE = "Trusted Slack workspace"
+    EVENT_PAIRING_SERVICE_MATCH = "Event matched with cloud activity"
+    EVENT_PAIRING_SERVICE_ENDPOINT_MATCH = "Event matched with endpoint activity"
+    DOWNLOAD_TO_A_MANAGED_DEVICE = "Download to a managed device"
+    SHARED_WITH_TRUSTED_USERS = "Shared with trusted users"

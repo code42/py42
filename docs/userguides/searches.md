@@ -12,9 +12,7 @@ First, import the required modules and classes and create the SDK:
 
 ```python
 import py42.sdk
-from py42.sdk.queries.fileevents.filters import *
-from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
-
+from py42.sdk.queries.fileevents.v1 import *
 sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
 ```
 

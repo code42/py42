@@ -21,16 +21,8 @@ Leaving this setting as `False` means Py42 will **not** ingest V2 data or use th
 
 ## Querying file events
 
-To query for V2 file events, import the corresponding filter modules and `FileEventQuery` object:
+To query for V2 file events, import the V2 filter modules and `FileEventQuery` class with:
 ```python
-import py42.sdk
-from py42.sdk.queries.fileevents.v2.file_event_query import FileEventQuery
-from py42.sdk.queries.fileevents.v2.filters import *
-```
-
-alternatively, you can import all the V2 modules at once with:
-```python
-import py42.sdk
 from py42.sdk.queries.fileevents.v2 import *
 ```
 

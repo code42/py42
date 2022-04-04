@@ -4,7 +4,7 @@ from py42.sdk.queries.query_filter import QueryFilterStringField
 
 
 class Destination(QueryFilterStringField):
-    """ Class that filters events based on the destination name. """
+    """Class that filters events based on the destination name."""
 
     _term = "destination.name"
 

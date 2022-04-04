@@ -82,7 +82,7 @@ class SourceCategory(FileEventFilterStringField, Choices):
         - :attr:`SourceCategory.SOURCE_CODE_REPOSITORY`
         - :attr:`SourceCategory.UNCATEGORIZED`
         - :attr:`SourceCategory.UNKNOWN`
-        """
+    """
 
     _term = "source.category"
 

@@ -4,8 +4,6 @@ import py42.settings as settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42InvalidPageTokenError
-from py42.sdk.queries.fileevents.file_event_query import FileEventQuery as QueryV1
-from py42.sdk.queries.fileevents.v2.file_event_query import FileEventQuery as QueryV2
 from py42.services import BaseService
 
 
@@ -33,14 +31,15 @@ class FileEventService(BaseService):
         """
 
         # check if query type matches settings
-        if isinstance(query, QueryV1) and settings.use_v2_file_event_data:
-            raise Py42Error(
-                "Bad Request. You cannot use a V1 query with V2 settings enabled. For more details on working with V2 file event data, see the 'V2 File Events' user guide at https://py42docs.code42.com/."
-            )
-        elif isinstance(query, QueryV2) and not settings.use_v2_file_event_data:
-            raise Py42Error(
-                "Bad Request. You cannot use a V2 query with V2 settings disabled. For more details on working with V2 file event data, see the 'V2 File Events' user guide at https://py42docs.code42.com/."
-            )
+        if not isinstance(query, str):
+            if query.sort_key == "eventId" and settings.use_v2_file_event_data:
+                raise Py42Error(
+                    "Bad Request. You cannot use a V1 query with V2 settings enabled. For more details on working with V2 file event data, see the 'V2 File Events' user guide at https://py42docs.code42.com/."
+                )
+            elif query.sort_key == "event.id" and not settings.use_v2_file_event_data:
+                raise Py42Error(
+                    "Bad Request. You cannot use a V2 query with V2 settings disabled. For more details on working with V2 file event data, see the 'V2 File Events' user guide at https://py42docs.code42.com/."
+                )
 
         version = "v2" if settings.use_v2_file_event_data else "v1"
         uri = f"/forensic-search/queryservice/api/{version}/fileevent"

@@ -36,7 +36,10 @@ class ArchiveAccessorFactory:
             restore_job_manager,
             file_size_poller,
         ) = self._create_archive_accessor_dependencies(
-            storage_archive_service, device_guid, private_password, encryption_key,
+            storage_archive_service,
+            device_guid,
+            private_password,
+            encryption_key,
         )
         return accessor_class(
             device_guid,
@@ -66,7 +69,10 @@ class ArchiveAccessorFactory:
             restore_job_manager,
             file_size_poller,
         ) = self._create_archive_accessor_dependencies(
-            push_service, device_guid, private_password, encryption_key,
+            push_service,
+            device_guid,
+            private_password,
+            encryption_key,
         )
         destination_guid = (
             destination_guid
@@ -87,13 +93,17 @@ class ArchiveAccessorFactory:
         self, storage_archive_service, device_guid, private_password, encryption_key
     ):
         decryption_keys = self._get_decryption_keys(
-            device_guid, private_password, encryption_key,
+            device_guid,
+            private_password,
+            encryption_key,
         )
         session_id = self._create_restore_session(
             storage_archive_service, device_guid, **decryption_keys
         )
         restore_job_manager = create_restore_job_manager(
-            storage_archive_service, device_guid, session_id,
+            storage_archive_service,
+            device_guid,
+            session_id,
         )
         file_size_poller = create_file_size_poller(storage_archive_service, device_guid)
         return decryption_keys, session_id, restore_job_manager, file_size_poller

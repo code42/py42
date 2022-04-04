@@ -48,7 +48,7 @@ def minutes_to_days(minutes):
 def bytes_to_gb(bytes):
     if bytes == -1:  # special "unlimited" value
         return bytes
-    gb = bytes / 1000 ** 3
+    gb = bytes / 1000**3
     if isinstance(gb, float) and gb.is_integer():
         return int(gb)
     return gb
@@ -58,6 +58,6 @@ def gb_to_bytes(gb):
     if gb == -1:  # special "unlimited" value
         return gb
     try:
-        return gb * 1000 ** 3
+        return gb * 1000**3
     except ValueError:
         raise AttributeError("value must be numeric.")

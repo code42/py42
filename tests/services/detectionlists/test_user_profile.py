@@ -36,7 +36,10 @@ class TestDetectionListUserClient:
 
     @pytest.fixture
     def mock_user_client_raises_exception(
-        self, mocker, mock_connection, user_context,
+        self,
+        mocker,
+        mock_connection,
+        user_context,
     ):
         user_client = UserService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(

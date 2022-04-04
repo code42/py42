@@ -51,7 +51,8 @@ class OrgSettings(UserDict):
     """Notes field for this Org."""
 
     quota_settings_inherited = SettingProperty(
-        "quota_settings_inherited", ["settings", "isUsingQuotaDefaults"],
+        "quota_settings_inherited",
+        ["settings", "isUsingQuotaDefaults"],
     )
     """Determines if Org Quota settings (`maximum_user_subscriptions`, `org_backup_quota`,
     `user_backup_quota`, `archive_hold_days`) are inherited from parent organization.
@@ -105,7 +106,8 @@ class OrgSettings(UserDict):
     """Limit (in MB) to amount of data restorable by non-admin users via web restore."""
 
     reporting_settings_inherited = SettingProperty(
-        "reporting_settings_inherited", ["settings", "isUsingReportingDefaults"],
+        "reporting_settings_inherited",
+        ["settings", "isUsingReportingDefaults"],
     )
     """Determines if Org Reporting settings (`backup_warning_email_days`,
     `backup_critical_email_days', `backup_alert_recipient_emails`) are inherited from

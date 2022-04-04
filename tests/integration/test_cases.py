@@ -9,7 +9,8 @@ class TestCases:
         return connection.cases.create(f"integration_test_{timestamp}")
 
     def test_get_all_cases(
-        self, connection,
+        self,
+        connection,
     ):
         page_gen = connection.cases.get_all()
         for response in page_gen:

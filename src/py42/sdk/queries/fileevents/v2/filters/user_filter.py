@@ -17,4 +17,3 @@ class UserDeviceUid(FileEventFilterStringField):
     """Class that filters events by the device UID of the actor."""
 
     _term = "user.deviceUid"
-

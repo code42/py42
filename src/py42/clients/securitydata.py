@@ -8,6 +8,7 @@ from py42.sdk.queries.fileevents.v2.filters.file_filter import MD5 as MD5_V2
 from py42.sdk.queries.fileevents.v2.filters.file_filter import SHA256 as SHA256_V2
 from py42.services.util import escape_quote_chars
 
+
 class SecurityDataClient:
     def __init__(
         self,
@@ -73,7 +74,9 @@ class SecurityDataClient:
         Returns:
             Returns a stream of the requested file.
         """
-        response = self._search_by_hash(checksum, SHA256_V2 if py42.settings.use_v2_file_event_data else SHA256)
+        response = self._search_by_hash(
+            checksum, SHA256_V2 if py42.settings.use_v2_file_event_data else SHA256
+        )
         events = response["fileEvents"]
         info = _get_version_lookup_info(events)
         if not len(events) or not info:
@@ -89,7 +92,9 @@ class SecurityDataClient:
         Returns:
             Returns a stream of the requested file.
         """
-        response = self._search_by_hash(checksum, MD5_V2 if py42.settings.use_v2_file_event_data else MD5)
+        response = self._search_by_hash(
+            checksum, MD5_V2 if py42.settings.use_v2_file_event_data else MD5
+        )
         events = response["fileEvents"]
         info = _get_version_lookup_info(events)
         if not len(events) or not info:
@@ -98,7 +103,9 @@ class SecurityDataClient:
 
     def _search_by_hash(self, checksum, checksum_type):
         query = FileEventQuery.all(checksum_type.eq(checksum))
-        query.sort_key = "@timestamp" if py42.settings.use_v2_file_event_data else "eventTimestamp"
+        query.sort_key = (
+            "@timestamp" if py42.settings.use_v2_file_event_data else "eventTimestamp"
+        )
         query.sort_direction = "desc"
         response = self.search_file_events(query)
         return response

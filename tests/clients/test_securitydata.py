@@ -1,7 +1,7 @@
 import pytest
-import py42.settings
 from tests.conftest import create_mock_response
 
+import py42.settings
 from py42.clients.securitydata import SecurityDataClient
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
@@ -315,7 +315,6 @@ class TestSecurityClient:
         mock.storage_node_client = storage_node_client
         mock.exfiltration_client = exfiltration_client
         return mock
-
 
     def test_stream_file_by_sha256_with_exact_match_response_calls_get_version_list_with_expected_params(
         self,
@@ -925,6 +924,7 @@ class TestSecurityClient:
         pds_config_v2,
     ):
         import py42.settings
+
         py42.settings.use_v2_file_event_data = True
 
         security_client = SecurityDataClient(

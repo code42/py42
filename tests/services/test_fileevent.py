@@ -114,6 +114,7 @@ class TestFileEventService:
         self, connection, successful_response
     ):
         import py42.settings
+
         py42.settings.use_v2_file_event_data = True
         service = FileEventService(connection)
         connection.post.return_value = successful_response

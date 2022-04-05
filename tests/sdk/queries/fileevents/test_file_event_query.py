@@ -166,6 +166,7 @@ def test_file_event_str_gives_correct_json_representation_when_using_v2_data(
     event_filter_group,
 ):
     import py42.settings
+
     py42.settings.use_v2_file_event_data = True
     query = FileEventQuery()
     py42.settings.use_v2_file_event_data = False
@@ -173,4 +174,3 @@ def test_file_event_str_gives_correct_json_representation_when_using_v2_data(
         str(query)
         == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"event.id", "pgNum":1, "pgSize":10000}'
     )
-

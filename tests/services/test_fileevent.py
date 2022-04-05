@@ -7,14 +7,20 @@ from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters import FileName
+from py42.sdk.queries.fileevents.v2.filters import FileName as FileNameV2
 from py42.services._connection import Connection
 from py42.services.fileevent import FileEventService
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
+FILE_EVENT_URI_V2 = "/forensic-search/queryservice/api/v2/fileevent"
 
 
 def _create_test_query(test_filename="*"):
     return FileEventQuery(FileName.eq(test_filename))
+
+
+def _create_v2_test_query(test_filename="*"):
+    return FileEventQuery(FileNameV2.eq(test_filename))
 
 
 @pytest.fixture()
@@ -102,3 +108,16 @@ class TestFileEventService:
             "/forensic-search/queryservice/api/v1/filelocations",
             params={"sha256": "abc"},
         )
+
+    # V2 TESTS
+    def test_search_calls_post_with_uri_and_query_v2(
+        self, connection, successful_response
+    ):
+        import py42.settings
+        py42.settings.use_v2_file_event_data = True
+        service = FileEventService(connection)
+        connection.post.return_value = successful_response
+        query = _create_v2_test_query()
+        service.search(query)
+        py42.settings.use_v2_file_event_data = False
+        connection.post.assert_called_once_with(FILE_EVENT_URI_V2, json=dict(query))

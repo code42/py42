@@ -163,7 +163,7 @@ class DetectionListUserService(BaseService):
         return self._connection.post(uri, json=data)
 
     def refresh(self, user_id):
-        """Refresh SCIM attributes of a user.
+        """Refresh SCIM attributes of a user. # TODO: does it have a new API?
 
         Args:
             user_id (str or int): The user_id of the user whose attributes need to be refreshed.

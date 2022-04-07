@@ -38,7 +38,8 @@ class DepartingEmployeeService(BaseService):
         self._user_profile_service = user_profile_service
 
     def add(self, user_id, departure_date=None):
-        """Adds a user to the Departing Employees list.
+        """DEPRECATED # TODO
+        Adds a user to the Departing Employees list.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_AddEmployee>`__
 
         Raises a :class:`Py42UserAlreadyAddedError` when a user already exists in the Departing Employee \
@@ -69,7 +70,8 @@ class DepartingEmployeeService(BaseService):
             raise
 
     def remove(self, user_id):
-        """Removes a user from the Departing Employees list.
+        """DEPRECATED # TODO
+        Removes a user from the Departing Employees list.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_RemoveUser>`__
 
         Args:
@@ -88,7 +90,8 @@ class DepartingEmployeeService(BaseService):
             raise Py42UserNotOnListError(err, user_id, "departing-employee")
 
     def get(self, user_id):
-        """Gets departing employee data of a user.
+        """DEPRECATED # TODO
+        Gets departing employee data of a user.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_GetEmployee>`__
 
         Args:
@@ -109,7 +112,8 @@ class DepartingEmployeeService(BaseService):
         sort_direction="DESC",
         page_size=_PAGE_SIZE,
     ):
-        """Gets all Departing Employees.
+        """DEPRECATED # TODO
+        Gets all Departing Employees.
 
         Args:
             filter_type (str, optional): Constants available at
@@ -141,7 +145,8 @@ class DepartingEmployeeService(BaseService):
         sort_direction="DESC",
         page_size=_PAGE_SIZE,
     ):
-        """Gets a single page of Departing Employees.
+        """DEPRECATED # TODO
+        Gets a single page of Departing Employees.
 
         Args:
             page_num (int): The page number to request.
@@ -169,7 +174,8 @@ class DepartingEmployeeService(BaseService):
         return self._connection.post(uri, json=data)
 
     def set_alerts_enabled(self, alerts_enabled=True):
-        """Enable or disable email alerting on Departing Employee exposure events.
+        """DEPRECATED # TODO
+        Enable or disable email alerting on Departing Employee exposure events.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_SetAlertState>`__
 
         Args:
@@ -184,7 +190,8 @@ class DepartingEmployeeService(BaseService):
         return self._connection.post(uri, json=data)
 
     def update_departure_date(self, user_id, departure_date):
-        """Add or modify details of an existing Departing Employee case.
+        """DEPRECATED # TODO
+        Add or modify details of an existing Departing Employee case.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_UpdateDepartureDate>`__
 
         Args:

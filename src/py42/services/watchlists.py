@@ -37,7 +37,13 @@ class WatchlistsService(BaseService):
     def delete(self, watchlist_id):
         uri = f"{self._uri_prefix}/{watchlist_id}"
         try:
-            return self._connection.delete(uri)
+            response = self._connection.delete(uri)
+            # delete dictionary entry if success
+            if response.status_code == 200:
+                for k, v in self._watchlist_type_id_map.items():
+                    if v == watchlist_id:
+                        del self._watchlist_type_id_map[k]
+            return response
         except Py42NotFoundError as err:
             raise Py42WatchlistIdNotFound(err, watchlist_id)
 
@@ -108,7 +114,7 @@ class WatchlistsService(BaseService):
             id = self._watchlist_type_id_map[watchlist_type]
         except ValueError:
             # if specified watchlist type not found, raise error
-            raise Py42Error(f"Watchlist of type '{watchlist_type}' doesn't exist.")
+            raise Py42NotFoundError(f"Watchlist of type '{watchlist_type}' doesn't exist.")
         self.delete_included_users_by_watchlist_type(user_ids, id)
 
     def get_page_watchlist_members(self, watchlist_id, page=None, page_size=None):

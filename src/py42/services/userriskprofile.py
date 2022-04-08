@@ -118,7 +118,7 @@ class UserRiskProfileService(BaseService):
 def _parse_date_string(date):
     # assumes dates are in the format "DAY-MONTH-YEAR" (TODO - this can change)
     try:
-        day, month, year = (int(i) for i in date.split("-"))
+        year, month, day = (int(i) for i in date.split("-"))
         return day, month, year
     except ValueError:
-        raise Py42Error("Unable to parse date.  Expected format 'DD-MM-YYYY'.")
+        raise Py42Error("Unable to parse date.  Expected format 'yyyy-mm-dd'.")

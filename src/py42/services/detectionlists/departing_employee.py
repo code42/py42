@@ -11,6 +11,7 @@ from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
+from py42.clients.watchlists import WatchlistType
 
 _DATE_FORMAT = "%Y-%m-%d"
 
@@ -29,17 +30,19 @@ class DepartingEmployeeFilters(_DetectionListFilters, Choices):
 
 
 class DepartingEmployeeService(BaseService):
-    """A service for interacting with Code42 Departing Employee APIs."""
+    """DEPRECATED # TODO
+    A service for interacting with Code42 Departing Employee APIs."""
 
     _uri_prefix = "v2/departingemployee/{0}"
 
     _CREATED_AT = "CREATED_AT"
 
-    def __init__(self, session, user_context, user_profile_service, watchlist_service):
+    def __init__(self, session, user_context, user_profile_service, watchlist_service, user_risk_profile_service):
         super().__init__(session)
         self._user_context = user_context
         self._user_profile_service = user_profile_service
         self._watchlist_service = watchlist_service
+        self._user_risk_profile_service = user_risk_profile_service
 
     def add(self, user_id, departure_date=None):
         """DEPRECATED # TODO
@@ -58,20 +61,16 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+
+        # if datetime instance, convert to string.
         if isinstance(departure_date, datetime):
             departure_date = departure_date.strftime(_DATE_FORMAT)
-        tenant_id = self._user_context.get_current_tenant_id()
-        data = {
-            "tenantId": tenant_id,
-            "userId": user_id,
-            "departureDate": departure_date,
-        }
-        uri = self._uri_prefix.format("add")
-        try:
-            return self._connection.post(uri, json=data)
-        except Py42BadRequestError as err:
-            handle_user_already_added_error(err, user_id, "departing-employee list")
-            raise
+
+        # add user to Departing Employees watchlist
+        self._watchlist_service.add_included_users_by_watchlist_type([user_id], WatchlistType.DEPARTING_EMPLOYEE)
+
+        # update user risk profile with departing date
+        self._user_risk_profile_service.update(user_id, end_date=departure_date, paths="endDate")
 
     def remove(self, user_id):
         """DEPRECATED # TODO
@@ -85,13 +84,8 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format("remove")
-        data = {"userId": user_id, "tenantId": tenant_id}
-        try:
-            return self._connection.post(uri, json=data)
-        except Py42NotFoundError as err:
-            raise Py42UserNotOnListError(err, user_id, "departing-employee")
+        # remove user from Departing Employees watchlist
+        return self._watchlist_service.delete_included_users_by_watchlist_type([user_id], WatchlistType.DEPARTING_EMPLOYEE)
 
     def get(self, user_id):
         """DEPRECATED # TODO
@@ -104,10 +98,7 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        tenant_id = self._user_context.get_current_tenant_id()
-        uri = self._uri_prefix.format("get")
-        data = {"userId": user_id, "tenantId": tenant_id}
-        return self._connection.post(uri, json=data)
+        return self._user_risk_profile_service.get(user_id)
 
     def get_all(
         self,
@@ -140,6 +131,7 @@ class DepartingEmployeeService(BaseService):
             sort_direction=sort_direction,
             page_size=page_size or _PAGE_SIZE,
         )
+        return
 
     def get_page(
         self,

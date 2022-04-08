@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from deprecated.sphinx import deprecated
+
 from py42.choices import Choices
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError
@@ -14,7 +16,8 @@ _DATE_FORMAT = "%Y-%m-%d"
 
 
 class DepartingEmployeeFilters(_DetectionListFilters, Choices):
-    """Constants available for filtering Departing Employee search results.
+    """DEPRECATED TODO
+    Constants available for filtering Departing Employee search results.
 
     * ``OPEN``
     * ``EXFILTRATION_30_DAYS``
@@ -32,10 +35,11 @@ class DepartingEmployeeService(BaseService):
 
     _CREATED_AT = "CREATED_AT"
 
-    def __init__(self, session, user_context, user_profile_service):
+    def __init__(self, session, user_context, user_profile_service, watchlist_service):
         super().__init__(session)
         self._user_context = user_context
         self._user_profile_service = user_profile_service
+        self._watchlist_service = watchlist_service
 
     def add(self, user_id, departure_date=None):
         """DEPRECATED # TODO
@@ -48,7 +52,7 @@ class DepartingEmployeeService(BaseService):
         Args:
             user_id (str or int): The Code42 userUid of the user you want to add to the departing \
                 employees list.
-            departure_date (str or datetime, optional): Date in yyyy-MM-dd format or instance of datetime.
+            departure_date (str or datetime, optional): Date in yyyy-MM-dd format or instance of datetime. \
                 Date is treated as UTC. Defaults to None.
 
         Returns:

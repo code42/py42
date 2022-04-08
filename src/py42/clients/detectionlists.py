@@ -155,7 +155,9 @@ class DetectionListsClient:
         if not isinstance(tags, (list, tuple)):
             tags = [tags]
         for tag in tags:
-            self._watchlist_service.delete_included_users_by_watchlist_type([user_id], tag)
+            self._watchlist_service.delete_included_users_by_watchlist_type(
+                [user_id], tag
+            )
 
     def add_user_cloud_alias(self, user_id, alias):
         """DEPRECATED. TODO

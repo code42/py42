@@ -37,7 +37,9 @@ class DetectionListUserService(BaseService):
         return self._connection.post(uri, json=data)
 
     def get(self, username):
-        """Get user details by username.
+        """DEPRECATED
+
+        Get user details by username.
 
         Args:
             username (str): Username of the user.
@@ -163,7 +165,9 @@ class DetectionListUserService(BaseService):
         return self._connection.post(uri, json=data)
 
     def refresh(self, user_id):
-        """Refresh SCIM attributes of a user. # TODO: does it have a new API?
+        """DEPRECATED.
+
+        Refresh SCIM attributes of a user. # TODO: does it have a new API? - NO
 
         Args:
             user_id (str or int): The user_id of the user whose attributes need to be refreshed.

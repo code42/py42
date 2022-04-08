@@ -1,4 +1,5 @@
-from py42.exceptions import Py42BadRequestError, Py42Error
+from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42Error
 from py42.exceptions import Py42InvalidWatchlistType
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42WatchlistIdNotFound
@@ -90,9 +91,7 @@ class WatchlistsService(BaseService):
         except ValueError:
             # if watchlist of specified type not found, create watchlist
             id = (self.create(watchlist_type)).data["watchlistId"]
-        self.add_included_users_by_watchlist_id(
-            user_ids, id
-        )
+        self.add_included_users_by_watchlist_id(user_ids, id)
 
     def delete_included_users_by_watchlist_id(self, user_ids, watchlist_id):
         if not isinstance(user_ids, (list, tuple)):
@@ -110,10 +109,7 @@ class WatchlistsService(BaseService):
         except ValueError:
             # if specified watchlist type not found, raise error
             raise Py42Error(f"Watchlist of type '{watchlist_type}' doesn't exist.")
-        self.delete_included_users_by_watchlist_type(
-            user_ids,
-            id
-        )
+        self.delete_included_users_by_watchlist_type(user_ids, id)
 
     def get_page_watchlist_members(self, watchlist_id, page=None, page_size=None):
         data = {
@@ -137,5 +133,3 @@ class WatchlistsService(BaseService):
             return self._connection.get(uri)
         except Py42NotFoundError as err:
             raise Py42WatchlistIdOrUserIdNotFound(err, watchlist_id, user_id)
-
-

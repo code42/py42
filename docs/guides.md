@@ -18,6 +18,8 @@
     Backup Sets <userguides/backupsets>
     userguides/cases
     userguides/trustedactivities
+    userguides/userriskprofile
+    userguides/watchlists
 ```
 
 * [Getting Started](userguides/gettingstarted.md)

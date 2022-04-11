@@ -1,4 +1,3 @@
-from py42.choices import Choices
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserNotOnListError
@@ -7,33 +6,33 @@ from py42.services.detectionlists import _DetectionListFilters
 from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
+from py42.util import get_attribute_keys_from_class
 
 
-class HighRiskEmployeeFilters(_DetectionListFilters, Choices):
-    """Constants available for filtering High Risk Employee search results.
+class HighRiskEmployeeFilters(_DetectionListFilters):
+    """Constants available for filtering High Risk Employee search results."""
 
-    * ``OPEN``
-    * ``EXFILTRATION_30_DAYS``
-    * ``EXFILTRATION_24_HOURS``
-    """
+    @staticmethod
+    def choices():
+        return get_attribute_keys_from_class(HighRiskEmployeeFilters)
 
 
 class HighRiskEmployeeService(BaseService):
     """A service for interacting with High Risk Employee APIs."""
 
-    _resource = "v2/highriskemployee"
+    _resource = u"v2/highriskemployee"
 
     def __init__(self, connection, user_context, user_profile_service):
-        super().__init__(connection)
+        super(HighRiskEmployeeService, self).__init__(connection)
         self._user_context = user_context
         self._user_profile_service = user_profile_service
 
     def _make_uri(self, action):
-        return f"{self._resource}{action}"
+        return u"{}{}".format(self._resource, action)
 
     def _add_high_risk_employee(self, tenant_id, user_id):
-        data = {"tenantId": tenant_id, "userId": user_id}
-        uri = self._make_uri("/add")
+        data = {u"tenantId": tenant_id, u"userId": user_id}
+        uri = self._make_uri(u"/add")
         return self._connection.post(uri, json=data)
 
     def add(self, user_id):
@@ -54,7 +53,7 @@ class HighRiskEmployeeService(BaseService):
         try:
             return self._add_high_risk_employee(tenant_id, user_id)
         except Py42BadRequestError as err:
-            handle_user_already_added_error(err, user_id, "high-risk-employee list")
+            handle_user_already_added_error(err, user_id, u"high-risk-employee list")
             raise
 
     def set_alerts_enabled(self, enabled=True):
@@ -68,10 +67,10 @@ class HighRiskEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "alertsEnabled": enabled,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"alertsEnabled": enabled,
         }
-        uri = self._make_uri("/setalertstate")
+        uri = self._make_uri(u"/setalertstate")
         return self._connection.post(uri, json=data)
 
     def remove(self, user_id):
@@ -86,14 +85,14 @@ class HighRiskEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
         }
-        uri = self._make_uri("/remove")
+        uri = self._make_uri(u"/remove")
         try:
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
-            raise Py42UserNotOnListError(err, user_id, "high-risk-employee")
+            raise Py42UserNotOnListError(err, user_id, u"high-risk-employee")
 
     def get(self, user_id):
         """Gets user information.
@@ -107,10 +106,10 @@ class HighRiskEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
         }
-        uri = self._make_uri("/get")
+        uri = self._make_uri(u"/get")
         return self._connection.post(uri, json=data)
 
     def get_all(
@@ -124,9 +123,10 @@ class HighRiskEmployeeService(BaseService):
         `Rest Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_Search>`__
 
         Args:
-            filter_type (str, optional): Constants available at
-                :class:`py42.constants.HighRiskEmployeeFilters`.
-                Defaults to ``OPEN``.
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                or ``OPEN``. Constants are available at
+                :class:`py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
+                Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str, optional): ``ASC`` or ``DESC``. Constants available at
                 :class:`py42.constants.SortDirection`. Defaults to None.
@@ -140,7 +140,7 @@ class HighRiskEmployeeService(BaseService):
 
         return get_all_pages(
             self.get_page,
-            "items",
+            u"items",
             filter_type=filter_type,
             sort_key=sort_key,
             sort_direction=sort_direction,
@@ -159,8 +159,9 @@ class HighRiskEmployeeService(BaseService):
 
         Args:
             page_num (int): The page number to request.
-            filter_type (str, optional): Constants available at
-                :class:`py42.constants.HighRiskEmployeeFilters`.
+            filter_type (str, optional): ``EXFILTRATION_30_DAYS``, ``EXFILTRATION_24_HOURS``,
+                or ``OPEN``. Constants are available at
+                :class:`py42.services.detectionlists.high_risk_employee.HighRiskEmployeeFilters`.
                 Defaults to "OPEN".
             sort_key (str, optional): Sort results based by field. Defaults to None.
             sort_direction (str. optional): ``ASC`` or ``DESC``. Constants available at
@@ -173,12 +174,12 @@ class HighRiskEmployeeService(BaseService):
         """
 
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "filterType": filter_type,
-            "pgNum": page_num,
-            "pgSize": page_size,
-            "srtKey": sort_key,
-            "srtDirection": sort_direction,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"filterType": filter_type,
+            u"pgNum": page_num,
+            u"pgSize": page_size,
+            u"srtKey": sort_key,
+            u"srtDirection": sort_direction,
         }
-        uri = self._make_uri("/search")
+        uri = self._make_uri(u"/search")
         return self._connection.post(uri, json=data)

@@ -1,5 +1,4 @@
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42CloudAliasCharacterLimitExceededError
 from py42.exceptions import Py42CloudAliasLimitExceededError
 from py42.services import BaseService
 
@@ -10,15 +9,15 @@ class DetectionListUserService(BaseService):
     `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
     """
 
-    _resource = "v2/user"
+    _resource = u"v2/user"
 
     def __init__(self, connection, user_context, user_service):
-        super().__init__(connection)
+        super(DetectionListUserService, self).__init__(connection)
         self._user_context = user_context
         self._user_service = user_service
 
     def _make_uri(self, action):
-        return f"{self._resource}{action}"
+        return u"{}{}".format(self._resource, action)
 
     def get_by_id(self, user_id):
         """Get user details by user UID.
@@ -30,16 +29,14 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
         }
-        uri = self._make_uri("/getbyid")
+        uri = self._make_uri(u"/getbyid")
         return self._connection.post(uri, json=data)
 
     def get(self, username):
-        """DEPRECATED
-
-        Get user details by username.
+        """Get user details by username.
 
         Args:
             username (str): Username of the user.
@@ -48,10 +45,10 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "username": username,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"username": username,
         }
-        uri = self._make_uri("/getbyusername")
+        uri = self._make_uri(u"/getbyusername")
         return self._connection.post(uri, json=data)
 
     def update_notes(self, user_id, notes):
@@ -65,11 +62,11 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "notes": notes,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"notes": notes,
         }
-        uri = self._make_uri("/updatenotes")
+        uri = self._make_uri(u"/updatenotes")
         return self._connection.post(uri, json=data)
 
     def add_risk_tags(self, user_id, tags):
@@ -88,11 +85,11 @@ class DetectionListUserService(BaseService):
             tags = [tags]
 
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "riskFactors": tags,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"riskFactors": tags,
         }
-        uri = self._make_uri("/addriskfactors")
+        uri = self._make_uri(u"/addriskfactors")
         return self._connection.post(uri, json=data)
 
     def remove_risk_tags(self, user_id, tags):
@@ -110,11 +107,11 @@ class DetectionListUserService(BaseService):
             tags = [tags]
 
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "riskFactors": tags,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"riskFactors": tags,
         }
-        uri = self._make_uri("/removeriskfactors")
+        uri = self._make_uri(u"/removeriskfactors")
         return self._connection.post(uri, json=data)
 
     def add_cloud_alias(self, user_id, alias):
@@ -127,24 +124,18 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-
-        # check if alias > 50 characters
-        # this error checking is handled by the frontend of the console
-        if len(alias) > 50:
-            raise Py42CloudAliasCharacterLimitExceededError
-
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "cloudUsernames": [alias],
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"cloudUsernames": [alias],
         }
-        uri = self._make_uri("/addcloudusernames")
+        uri = self._make_uri(u"/addcloudusernames")
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as err:
             if "Cloud usernames must be less than or equal to" in err.response.text:
                 raise Py42CloudAliasLimitExceededError(err)
-            raise
+            raise err
 
     def remove_cloud_alias(self, user_id, alias):
         """Remove one or more cloud alias.
@@ -157,17 +148,15 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
-            "cloudUsernames": [alias],
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
+            u"cloudUsernames": [alias],
         }
-        uri = self._make_uri("/removecloudusernames")
+        uri = self._make_uri(u"/removecloudusernames")
         return self._connection.post(uri, json=data)
 
     def refresh(self, user_id):
-        """DEPRECATED.
-
-        Refresh SCIM attributes of a user. # TODO: does it have a new API? - NO
+        """Refresh SCIM attributes of a user.
 
         Args:
             user_id (str or int): The user_id of the user whose attributes need to be refreshed.
@@ -176,8 +165,8 @@ class DetectionListUserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         data = {
-            "tenantId": self._user_context.get_current_tenant_id(),
-            "userId": user_id,
+            u"tenantId": self._user_context.get_current_tenant_id(),
+            u"userId": user_id,
         }
-        uri = self._make_uri("/refresh")
+        uri = self._make_uri(u"/refresh")
         return self._connection.post(uri, json=data)

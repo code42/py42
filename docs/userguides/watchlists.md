@@ -48,10 +48,10 @@ Use the `included_users` methods to manage individual users who are explicitly i
 
 Py42 allows you to reference a watchlist either by its ID or by its type. If adding individual users to a watchlist with the `add_included_users_by_watchlist_type()` method, py42 will create the watchlist for you if it doesn't already exist.
 
-For example, Tte following code demonstrates two methods to add users to the Departing Employees watchlist:
+For example, the following code demonstrates two methods to add users to the Departing Employees watchlist:
 
 ```python
-user_ids = ["test-user-1@gmail.com", "test-user-2@gmail.com"]
+user_ids = ["test-user-123", "test-user-456"]
 
 # METHOD 1: add by watchlist id
 sdk.watchlists.add_included_users_by_watchlist_id(user_ids, watchlist_id)

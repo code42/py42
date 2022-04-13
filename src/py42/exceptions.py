@@ -598,14 +598,16 @@ class Py42InvalidWatchlistType(Py42BadRequestError):
 class Py42UserRiskProfileNotFound(Py42NotFoundError):
     """An exception raised when the user with the given ID for a user risk profile was not found."""
 
-    def __init__(self, exception, user_id):
-        message = f"User risk profile for user with the ID '{user_id}' not found."
+    def __init__(self, exception, user_id, identifier="ID"):
+        message = (
+            f"User risk profile for user with the {identifier} '{user_id}' not found."
+        )
         super().__init__(exception, message, user_id)
         self._user_id = user_id
 
     @property
-    def user_id(self):
-        """The user ID."""
+    def user(self):
+        """The user identifier."""
         return self._user_id
 
 

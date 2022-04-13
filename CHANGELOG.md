@@ -21,15 +21,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `create()`
     - `get_page_included_users()`
     - `get_all_included_users()`
-    - `add_included_users_by_watchlist_id`
-    - `add_included_users_by_watchlist_type`
-    - `delete_included_users_by_watchlist_id`
-    - `delete_included_users_by_watchlist_type`
+    - `add_included_users_by_watchlist_id()`
+    - `add_included_users_by_watchlist_type()`
+    - `delete_included_users_by_watchlist_id()`
+    - `delete_included_users_by_watchlist_type()`
     - `get_page_watchlist_members()`
     - `get_all_watchlist_members()`
     - `get_watchlist_member()`
   - `UserRiskProfile` client includes the following methods:
-    - `get()`
+    - `get_by_id()`
+    - `get_by_username()`
     - `update()`
     - `get_page()`
     - `get_all()`

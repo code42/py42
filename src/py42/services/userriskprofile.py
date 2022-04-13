@@ -12,13 +12,29 @@ class UserRiskProfileService(BaseService):
 
     _uri_prefix = "/v1/user-risk-profiles"
 
-    def get(self, user_id):
+    def get_by_id(self, user_id):
         uri = f"{self._uri_prefix}/{user_id}"
         try:
             return self._connection.get(uri)
         # catch not found error
         except Py42NotFoundError as err:
             raise Py42UserRiskProfileNotFound(err, user_id)
+
+    def get_by_username(self, username):
+        user_id = None
+        generator = self.get_all()
+
+        # get the first page of user profiles
+        for page in generator:
+            for user in page.data["userRiskProfiles"]:
+                if user["username"] == username:
+                    user_id = user["userId"]
+                    break
+
+        try:
+            return self.get_by_id(user_id)
+        except Py42NotFoundError as err:
+            raise Py42UserRiskProfileNotFound(err, username, identifier="username")
 
     def update(self, user_id, start_date=None, end_date=None, notes=None, paths=None):
         start_day, start_month, start_year = (

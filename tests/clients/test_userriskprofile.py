@@ -5,6 +5,7 @@ from py42.services.userriskprofile import UserRiskProfileService
 
 
 USER_ID = "123"
+USERNAME = "risk-user@code42.com"
 
 
 @pytest.fixture
@@ -13,12 +14,19 @@ def mock_user_risk_profile_service(mocker):
 
 
 class TestUserRiskProfileClient:
-    def test_get_calls_service_with_expected_params(
+    def test_get_by_id_calls_service_with_expected_params(
         self, mock_user_risk_profile_service
     ):
         user_risk_profile_client = UserRiskProfileClient(mock_user_risk_profile_service)
-        user_risk_profile_client.get(USER_ID)
-        mock_user_risk_profile_service.get.assert_called_once_with(USER_ID)
+        user_risk_profile_client.get_by_id(USER_ID)
+        mock_user_risk_profile_service.get_by_id.assert_called_once_with(USER_ID)
+
+    def test_get_by_username_calls_service_with_expected_params(
+        self, mock_user_risk_profile_service
+    ):
+        user_risk_profile_client = UserRiskProfileClient(mock_user_risk_profile_service)
+        user_risk_profile_client.get_by_username(USERNAME)
+        mock_user_risk_profile_service.get_by_username.assert_called_once_with(USERNAME)
 
     def test_update_calls_service_with_expected_params(
         self, mock_user_risk_profile_service

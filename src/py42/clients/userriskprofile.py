@@ -7,8 +7,8 @@ class UserRiskProfileClient:
     def __init__(self, user_risk_profile_service):
         self._user_risk_profile_service = user_risk_profile_service
 
-    def get(self, user_id):
-        """Get a user risk profile.
+    def get_by_id(self, user_id):
+        """Get a user risk profile by a user UID.
 
         Args:
                 user_id (str): A unique user UID.
@@ -16,7 +16,18 @@ class UserRiskProfileClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
-        return self._user_risk_profile_service.get(user_id)
+        return self._user_risk_profile_service.get_by_id(user_id)
+
+    def get_by_username(self, username):
+        """Get a user risk profile by username.
+
+        Args:
+                username (str): A username.
+
+        Returns:
+                :class:`py42.response.Py42Response`
+        """
+        return self._user_risk_profile_service.get_by_username(username)
 
     def update(self, user_id, start_date=None, end_date=None, notes=None, paths=None):
         """Update a user risk profile.

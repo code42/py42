@@ -1,17 +1,26 @@
+import json
+
 import pytest
+from requests import Response
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
 import py42.settings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError
+from py42.response import Py42Response
 from py42.services.userriskprofile import UserRiskProfileService
 
-
+USER_ID = "user-42"
+USERNAME = "risk-user@code42.com"
 GET_ALL_RESPONSE = '{"userRiskProfiles":["test"], "totalCount":1}'
 GET_ALL_RESPONSE_EMPTY = '{"userRiskProfiles": [], "totalCount":0}'
+GET_ALL_RESPONSE_POPULATED = {
+    "userRiskProfiles": [{"username": "risk-user@code42.com", "userId": "user-42"}],
+    "totalCount": 1,
+}
 CLOUD_ALIASES = ["test@code42.com", "user1@email.com"]
-USER_ID = "user-42"
+
 
 URI = "/v1/user-risk-profiles"
 
@@ -32,23 +41,35 @@ def mock_not_found_error(mocker):
 
 
 class TestUserRiskProfileService:
-    def test_get_calls_get_with_expected_params(self, mock_connection):
+    def test_get_by_id_calls_get_with_expected_params(self, mock_connection):
         user_risk_profile_service = UserRiskProfileService(mock_connection)
-        user_risk_profile_service.get(USER_ID)
+        user_risk_profile_service.get_by_id(USER_ID)
         mock_connection.get.assert_called_once_with(f"{URI}/{USER_ID}")
 
-    def test_get_raises_py42_not_found_when_id_not_found(
+    def test_get_by_id_raises_py42_not_found_when_id_not_found(
         self, mock_connection, mock_not_found_error
     ):
         user_risk_profile_service = UserRiskProfileService(mock_connection)
         mock_connection.get.side_effect = mock_not_found_error
         with pytest.raises(Py42NotFoundError) as err:
-            user_risk_profile_service.get("fake-id")
+            user_risk_profile_service.get_by_id("fake-id")
 
         assert (
             err.value.args[0]
             == "User risk profile for user with the ID 'fake-id' not found."
         )
+
+    def test_get_by_username_calls_get_with_expected_params(
+        self, mock_connection, mocker
+    ):
+        requests_response = mocker.MagicMock(spec=Response)
+        requests_response.text = json.dumps(GET_ALL_RESPONSE_POPULATED)
+        py42_response = Py42Response(requests_response)
+        mock_connection.get.return_value = py42_response
+
+        user_risk_profile_service = UserRiskProfileService(mock_connection)
+        user_risk_profile_service.get_by_username(USERNAME)
+        mock_connection.get.assert_called_with(f"{URI}/{USER_ID}")
 
     def test_update_calls_patch_with_expected_params_when_all_fields_provided(
         self, mock_connection

@@ -4,22 +4,12 @@ A user risk profile is created for each user.  Use py42 to manage these user ris
 
 ## Update a User Risk Profile
 
-Determine the user ID to manage a user's risk profile.  For example, the following code uses the `get_all()` method to look for the ID of a user with the username `test.user@code42.com`.
+Determine the user ID to manage a user's risk profile.  For example, the following code uses the `get_username()` method to find the ID of a user with the username `test.user@code42.com`.
 
 ```python
-import py42.util
+response = sdk.userriskprofile.get_username()
 
-# retrieve user UID
-generator = sdk.userriskprofile.get_all()
-
-# get the first page of user profiles
-for response in generator:
-    page = response
-    break
-
-for user in page.data["userRiskProfiles"]:
-    if user["username"] == "test.user@code42.com":
-        user_id = user["userId"]
+user_id = response.data["userId"]
 ```
 
 Use the user ID with the `update()` method to manage a user risk profiles' `startDate`, `endDate`, and `notes` fields.

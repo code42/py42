@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+## Added
+- Support for V2 file event data.
+  - Set `py42.settings.use_v2_file_event_data = True` to use the V2 file event APIs.
+  - Use the V2 filters and queries from `py42.sdk.queries.fileevents.v2`
+
 ## 1.22.0 - 2022-04-01
 
 ### Added

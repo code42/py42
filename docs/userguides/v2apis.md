@@ -4,7 +4,7 @@
 .. warning:: V1 File Event APIs and query requests are **deprecated**.  They are estimated to be removed late spring 2023. # TODO: PLACEHOLDER (tentative date)
 ```
 
-For details on the updated File Event Model, see [Code42's support article](https://support.code42.com/) and V2 API documentation on the [Developer Portal](https://developer.code42.com/). # TODO: PLACEHOLDER
+For details on the updated File Event Model, see [Code42's support article](https://support.code42.com/) and V2 API documentation on the [Developer Portal](https://developer.code42.com/). # TODO: PLACEHOLDER LINKS
 
 ## Updating settings
 

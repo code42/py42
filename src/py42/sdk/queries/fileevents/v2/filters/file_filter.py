@@ -87,6 +87,6 @@ class Shared(QueryFilterBooleanField):
     (applies to cloud data source events only).
     """
 
-    # TODO: this field is not in the new data model yet?
+    # TODO: this field has not been mapped to the new model yet.
 
     _term = "file.shared"

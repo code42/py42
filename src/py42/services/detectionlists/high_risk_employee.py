@@ -1,3 +1,5 @@
+from warnings import warn
+
 from py42.choices import Choices
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError
@@ -8,7 +10,6 @@ from py42.services.detectionlists import _PAGE_SIZE
 from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
 
-from warnings import warn
 
 class HighRiskEmployeeFilters(_DetectionListFilters, Choices):
     """Deprecated. Constants available for filtering High Risk Employee search results.
@@ -26,7 +27,11 @@ class HighRiskEmployeeService(BaseService):
 
     def __init__(self, connection, user_context, user_profile_service):
         """This throws a deprecation warning on initialization."""
-        warn(f'{self.__class__.__name__} is being deprecated. Use the Watchlists and User Risk Profile clients instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            f"{self.__class__.__name__} is being deprecated. Use the Watchlists and User Risk Profile clients instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(connection)
         self._user_context = user_context
         self._user_profile_service = user_profile_service
@@ -53,7 +58,11 @@ class HighRiskEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        warn('Detection lists are deprecated. Use watchlists instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "Detection lists are deprecated. Use watchlists instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         tenant_id = self._user_context.get_current_tenant_id()
         try:
             return self._add_high_risk_employee(tenant_id, user_id)
@@ -71,7 +80,7 @@ class HighRiskEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        warn('This method is deprecated.', DeprecationWarning, stacklevel=2)
+        warn("This method is deprecated.", DeprecationWarning, stacklevel=2)
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "alertsEnabled": enabled,
@@ -90,7 +99,11 @@ class HighRiskEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        warn('Detection lists are deprecated. Use watchlists instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "Detection lists are deprecated. Use watchlists instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
@@ -112,7 +125,11 @@ class HighRiskEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        warn('This method is deprecated. Use user_risk_profile.get() instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "This method is deprecated. Use user_risk_profile.get() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
@@ -144,7 +161,11 @@ class HighRiskEmployeeService(BaseService):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of users.
         """
-        warn('This method is deprecated. Use user_risk_profile.get_all() instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "This method is deprecated. Use user_risk_profile.get_all() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         return get_all_pages(
             self.get_page,
@@ -180,7 +201,11 @@ class HighRiskEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        warn('This method is deprecated. Use user_risk_profile.get_page() instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "This method is deprecated. Use user_risk_profile.get_page() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),

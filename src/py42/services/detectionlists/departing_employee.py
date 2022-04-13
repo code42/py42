@@ -34,7 +34,11 @@ class DepartingEmployeeService(BaseService):
     _CREATED_AT = "CREATED_AT"
 
     def __init__(self, session, user_context, user_profile_service):
-        warn(f'{self.__class__.__name__} is being deprecated. Use the Watchlists and User Risk Profile clients instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            f"{self.__class__.__name__} is being deprecated. Use the Watchlists and User Risk Profile clients instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(session)
         self._user_context = user_context
         self._user_profile_service = user_profile_service
@@ -55,7 +59,11 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        warn('Detection lists are deprecated. Use watchlists instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "Detection lists are deprecated. Use watchlists instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if isinstance(departure_date, datetime):
             departure_date = departure_date.strftime(_DATE_FORMAT)
         tenant_id = self._user_context.get_current_tenant_id()
@@ -82,7 +90,11 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        warn('Detection lists are deprecated. Use watchlists instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "Detection lists are deprecated. Use watchlists instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format("remove")
         data = {"userId": user_id, "tenantId": tenant_id}
@@ -101,7 +113,11 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        warn('This method is deprecated. Use user_risk_profile.get() instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "This method is deprecated. Use user_risk_profile.get() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format("get")
         data = {"userId": user_id, "tenantId": tenant_id}
@@ -129,7 +145,11 @@ class DepartingEmployeeService(BaseService):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of departing employees.
         """
-        warn('This method is deprecated. Use user_risk_profile.get_all() instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "This method is deprecated. Use user_risk_profile.get_all() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return get_all_pages(
             self.get_page,
             "items",
@@ -163,7 +183,11 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        warn('This method is deprecated. Use user_risk_profile.get_page() instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "This method is deprecated. Use user_risk_profile.get_page() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         uri = self._uri_prefix.format("search")
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
@@ -185,7 +209,7 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        warn('This method is deprecated.', DeprecationWarning, stacklevel=2)
+        warn("This method is deprecated.", DeprecationWarning, stacklevel=2)
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format("setalertstate")
         data = {"tenantId": tenant_id, "alertsEnabled": alerts_enabled}
@@ -203,7 +227,11 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        warn('This method is deprecated. Use user_risk_profile.update() instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            "This method is deprecated. Use user_risk_profile.update() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         tenant_id = self._user_context.get_current_tenant_id()
         if isinstance(departure_date, datetime):
             departure_date = departure_date.strftime(_DATE_FORMAT)

@@ -1,3 +1,5 @@
+import warnings
+
 from requests.auth import HTTPBasicAuth
 
 from py42.exceptions import Py42Error
@@ -7,8 +9,7 @@ from py42.services._auth import CustomJWTAuth
 from py42.services._connection import Connection
 from py42.usercontext import UserContext
 
-import warnings
-warnings.simplefilter('always', DeprecationWarning)
+warnings.simplefilter("always", DeprecationWarning)
 
 
 def from_local_account(host_address, username, password, totp=None):

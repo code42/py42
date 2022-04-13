@@ -1,8 +1,9 @@
+from warnings import warn
+
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42CloudAliasCharacterLimitExceededError
 from py42.exceptions import Py42CloudAliasLimitExceededError
 from py42.services import BaseService
-from warnings import warn
 
 
 class DetectionListUserService(BaseService):
@@ -14,7 +15,11 @@ class DetectionListUserService(BaseService):
     _resource = "v2/user"
 
     def __init__(self, connection, user_context, user_service):
-        warn(f'{self.__class__.__name__} is being deprecated. Use the Watchlists and User Risk Profile clients instead.', DeprecationWarning, stacklevel=2)
+        warn(
+            f"{self.__class__.__name__} is being deprecated. Use the Watchlists and User Risk Profile clients instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(connection)
         self._user_context = user_context
         self._user_service = user_service

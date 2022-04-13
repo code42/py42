@@ -67,6 +67,3 @@ sdk.watchlists.get_all_included_users(watchlist_id)
 ```
 
 The `delete_included_users_by_watchlist_id()` and `delete_included_users_by_watchlist_type()` methods can be used similarly to remove users from a watchlist.
-
-
-

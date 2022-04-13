@@ -11,7 +11,7 @@ class UserRiskProfileClient:
         """Get a user risk profile.
 
         Args:
-                user_id (str): A unique user ID.
+                user_id (str): A unique user UID.
 
         Returns:
                 :class:`py42.response.Py42Response`
@@ -22,14 +22,18 @@ class UserRiskProfileClient:
         """Update a user risk profile.
 
         Args:
-                user_id (str): The ID of the user to update.
-                start_date (str): The start date of the user risk profile to be updated. Expects format of 'DD-MM-YYYY'. Defaults to None.
-                paths (list(str), optional): The set of field mask paths.  Defaults to None.  If None, it will assume that any provided values for ``start_date``, ``end_date``, and ``notes`` for are intended to be updated on the user risk profile.
+                user_id (str): The UID of the user to update.
+                start_date (str): The start date of the user risk profile to be updated. Expects format of 'YYYY-MM-DD'. Defaults to None.
+                end_date (str): The departure date of the user risk profile to be updated. Expects format of 'YYYY-MM-DD'. Defaults to None.
+                notes (str): The notes field of the user risk profile to be updated. Defaults to None
+                paths (list(str), optional): The set of field mask paths. Defaults to None. If None, it will assume that any provided values for ``startDate``, ``endDate``, and ``notes`` for are intended to be updated on the user risk profile. Example: ["endDate", "startDate"]
 
         Returns:
                 :class:`py42.response.Py42Response`
         """
-        return self._user_risk_profile_service.update(user_id, paths)
+        return self._user_risk_profile_service.update(
+            user_id, start_date, end_date, notes, paths
+        )
 
     def get_page(
         self,
@@ -52,7 +56,7 @@ class UserRiskProfileClient:
         Args:
                 page (integer, optional): The desired page of user risk profile results to retrieve.  Defaults to None
                 page_size (integer, optional): The desired number of results per page.  Defaults to None
-                manager_id (str, optional): Matches users whose manager has the given Code42 user ID.  Defaults to None
+                manager_id (str, optional): Matches users whose manager has the given Code42 user UID.  Defaults to None
                 title (str, optional): Matches users with the given job title.  Defaults to None
                 division (str, optional): Matches users in the given division.  Defaults to None
                 department (str, optional): Matches users in the given department.  Defaults to None
@@ -97,10 +101,10 @@ class UserRiskProfileClient:
         deleted=None,
         support_user=None,
     ):
-        """Get a page of user risk profiles.
+        """Get all user risk profiles.
 
         Args:
-                manager_id (str, optional): Matches users whose manager has the given Code42 user ID.  Defaults to None
+                manager_id (str, optional): Matches users whose manager has the given Code42 user UID.  Defaults to None
                 title (str, optional): Matches users with the given job title.  Defaults to None
                 division (str, optional): Matches users in the given division.  Defaults to None
                 department (str, optional): Matches users in the given department.  Defaults to None
@@ -113,7 +117,7 @@ class UserRiskProfileClient:
                 support_user (boolean, optional): Matches users by whether the user is a support user.  Defaults to None
 
         Returns:
-                :class:`py42.response.Py42Response`
+                generator: An object that iterates over :class:`py42.response.Py42Response` objects that each contain a page of user risk profiles.
         """
         return self._user_risk_profile_service.get_all(
             manager_id,
@@ -129,24 +133,28 @@ class UserRiskProfileClient:
             support_user,
         )
 
-    def add_cloud_aliases(self, user_id):
+    def add_cloud_aliases(self, user_id, cloud_alias):
         """Add cloud aliases to a user risk profile.
 
         Args:
-                user_id (str): The ID of the user to add cloud aliases.
+                user_id (str): The UID of the user to add cloud aliases.
+                cloud_alias (str or list(str)): The alias(es) to add to the user risk profile. Each user starts with a default alias of their code42 username and can have one additional cloud alias.
 
         Returns:
                 :class:`py42.response.Py42Response`
         """
-        return self._user_risk_profile_service.add_cloud_aliases(user_id)
+        return self._user_risk_profile_service.add_cloud_aliases(user_id, cloud_alias)
 
-    def delete_cloud_aliases(self, user_id):
+    def delete_cloud_aliases(self, user_id, cloud_aliases):
         """Delete cloud aliases from a user risk profile.
 
         Args:
-                user_id (str): The ID of the user to delete cloud aliases.
+                user_id (str): The UID of the user to delete cloud aliases.
+                cloud_aliases (str or list(str)): The alias(es) to remove from the user risk profile. Each user starts with a default alias of their code42 username and can have one additional cloud alias.
 
         Returns:
                 :class:`py42.response.Py42Response`
         """
-        return self._user_risk_profile_service.delete_cloud_aliases(user_id)
+        return self._user_risk_profile_service.delete_cloud_aliases(
+            user_id, cloud_aliases
+        )

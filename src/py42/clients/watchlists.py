@@ -57,17 +57,20 @@ class WatchlistsClient:
         """
         return self._watchlists_service.delete(watchlist_id)
 
-    def list(self, page=None, page_size=None):
-        """Get a page of watchlists.
-
-        Args:
-                page (integer, optional): The desired page of watchlist results to retrieve.  Defaults to None
-                page_size (integer, optional): The desired number of results per page.  Defaults to None
+    def get_page(self):
+        """Get a page of watchlists
 
         Returns:
-                :class:`py42.response.Py42Response`
+            :class:`py42.response.Py42Response`
         """
-        return self._watchlists_service.list(page, page_size)
+
+    def get_all(self):
+        """Get all watchlists.
+
+        Returns:
+                generator: An object that iterates over :class:`py42.response.Py42Response` objects that each contain a page of watchlists.
+        """
+        return self._watchlists_service.get_all()
 
     def create(self, watchlist_type):
         """Create a new watchlist.
@@ -102,7 +105,7 @@ class WatchlistsClient:
                 watchlist_id (str): A unique watchlist ID.
 
         Returns:
-                :class:`py42.response.Py42Response`
+                generator: An object that iterates over :class:`py42.response.Py42Response` objects that each contain a page of included users that match the given query.
         """
         return self._watchlists_service.get_all_included_users(watchlist_id)
 
@@ -184,7 +187,7 @@ class WatchlistsClient:
                 watchlist_id (str): A unique watchlist ID.
 
         Returns:
-                :class:`py42.response.Py42Response`
+                generator: An object that iterates over :class:`py42.response.Py42Response` objects that each contain a page of watchlist members.
         """
         return self._watchlists_service.get_all_watchlist_members(watchlist_id)
 

@@ -1,9 +1,11 @@
+import sys
+
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42InvalidWatchlistType
 from py42.exceptions import Py42NotFoundError
-from py42.exceptions import Py42WatchlistIdNotFound
-from py42.exceptions import Py42WatchlistIdOrUserIdNotFound
+from py42.exceptions import Py42WatchlistNotFound
+from py42.exceptions import Py42WatchlistOrUserNotFound
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 
@@ -14,13 +16,14 @@ class WatchlistsService(BaseService):
 
     def __init__(self, connection):
         super().__init__(connection)
-
-        # initiate mapping between types and IDs
         self._watchlist_type_id_map = {}
-        watchlists = (self.list_watchlists()).data["watchlists"]
-        for item in watchlists:
-            # We will need to custom handle CUSTOM types when they come around
-            self._watchlist_type_id_map[item["listType"]] = item["watchlistId"]
+
+        if "pytest" not in sys.modules:
+            # initiate mapping between types and IDs
+            watchlists = (self.get_page(page_size=100)).data["watchlists"]
+            for item in watchlists:
+                # We will need to custom handle CUSTOM types when they come around
+                self._watchlist_type_id_map[item["listType"]] = item["watchlistId"]
 
     @property
     def watchlist_type_id_map(self):
@@ -32,7 +35,7 @@ class WatchlistsService(BaseService):
         try:
             return self._connection.get(uri)
         except Py42NotFoundError as err:
-            raise Py42WatchlistIdNotFound(err, watchlist_id)
+            raise Py42WatchlistNotFound(err, watchlist_id)
 
     def delete(self, watchlist_id):
         uri = f"{self._uri_prefix}/{watchlist_id}"
@@ -43,16 +46,20 @@ class WatchlistsService(BaseService):
                 for k, v in self._watchlist_type_id_map.items():
                     if v == watchlist_id:
                         del self._watchlist_type_id_map[k]
+                        break
             return response
         except Py42NotFoundError as err:
-            raise Py42WatchlistIdNotFound(err, watchlist_id)
+            raise Py42WatchlistNotFound(err, watchlist_id)
 
-    def list_watchlists(self, page=None, page_size=None):
+    def get_page(self, page_num=1, page_size=None):
         data = {
-            "page": page,
+            "page": page_num,
             "page_size": page_size,
         }
         return self._connection.get(self._uri_prefix, params=data)
+
+    def get_all(self):
+        return get_all_pages(self.get_page, "watchlists")
 
     def create(self, watchlist_type):
         data = {"watchlistType": watchlist_type}
@@ -68,9 +75,9 @@ class WatchlistsService(BaseService):
                 raise Py42InvalidWatchlistType(err, watchlist_type)
             # Api handles Watchlist_Type_Unspecified Case
 
-    def get_page_included_users(self, watchlist_id, page=1, page_size=None):
+    def get_page_included_users(self, watchlist_id, page_num=1, page_size=None):
         data = {
-            "page": page,
+            "page": page_num,
             "page_size": page_size,
         }
         uri = f"{self._uri_prefix}/{watchlist_id}/included-users"
@@ -89,12 +96,12 @@ class WatchlistsService(BaseService):
         try:
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
-            raise Py42WatchlistIdNotFound(err, watchlist_id)
+            raise Py42WatchlistNotFound(err, watchlist_id)
 
     def add_included_users_by_watchlist_type(self, user_ids, watchlist_type):
         try:
             id = self._watchlist_type_id_map[watchlist_type]
-        except ValueError:
+        except KeyError:
             # if watchlist of specified type not found, create watchlist
             id = (self.create(watchlist_type)).data["watchlistId"]
         self.add_included_users_by_watchlist_id(user_ids, id)
@@ -107,30 +114,32 @@ class WatchlistsService(BaseService):
         try:
             return self._connection.post(uri, json=data)
         except Py42NotFoundError as err:
-            raise Py42WatchlistIdNotFound(err, watchlist_id)
+            raise Py42WatchlistNotFound(err, watchlist_id)
 
     def delete_included_users_by_watchlist_type(self, user_ids, watchlist_type):
         try:
             id = self._watchlist_type_id_map[watchlist_type]
-        except ValueError:
+        except KeyError:
             # if specified watchlist type not found, raise error
-            raise Py42NotFoundError(f"Watchlist of type '{watchlist_type}' doesn't exist.")
-        self.delete_included_users_by_watchlist_type(user_ids, id)
+            raise Py42Error(f"Couldn't find watchlist of type:'{watchlist_type}'.")
+        self.delete_included_users_by_watchlist_id(user_ids, id)
 
-    def get_page_watchlist_members(self, watchlist_id, page=None, page_size=None):
+    def get_page_watchlist_members(self, watchlist_id, page_num=1, page_size=None):
         data = {
-            "page": page,
+            "page": page_num,
             "page_size": page_size,
         }
         uri = f"{self._uri_prefix}/{watchlist_id}/members"
         try:
             return self._connection.get(uri, params=data)
         except Py42NotFoundError as err:
-            raise Py42WatchlistIdNotFound(err, watchlist_id)
+            raise Py42WatchlistNotFound(err, watchlist_id)
 
     def get_all_watchlist_members(self, watchlist_id):
         return get_all_pages(
-            self.get_page_included_users, "watchlistMembers", watchlist_id=watchlist_id
+            self.get_page_watchlist_members,
+            "watchlistMembers",
+            watchlist_id=watchlist_id,
         )
 
     def get_watchlist_member(self, watchlist_id, user_id):
@@ -138,4 +147,4 @@ class WatchlistsService(BaseService):
         try:
             return self._connection.get(uri)
         except Py42NotFoundError as err:
-            raise Py42WatchlistIdOrUserIdNotFound(err, watchlist_id, user_id)
+            raise Py42WatchlistOrUserNotFound(err, watchlist_id, user_id)

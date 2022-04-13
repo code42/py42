@@ -7,6 +7,9 @@ from py42.services._auth import CustomJWTAuth
 from py42.services._connection import Connection
 from py42.usercontext import UserContext
 
+import warnings
+warnings.simplefilter('always', DeprecationWarning)
+
 
 def from_local_account(host_address, username, password, totp=None):
     """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using the

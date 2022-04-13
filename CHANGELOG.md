@@ -8,6 +8,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Added
+- `Watchlists` and `UserRiskProfile` clients
+  - These features replace the `DetectionLists` client as well as its `DepartingEmployee` and `HighRiskEmployee` services.  All related classes and methods have been marked as deprecated and will raise deprecation warnings.
+  - `Watchlists` client includes the following methods:
+    - `get()`
+    - `delete()`
+    - `get_page()`
+    - `get_all()`
+    - `create()`
+    - `get_page_included_users()`
+    - `get_all_included_users()`
+    - `add_included_users_by_watchlist_id`
+    - `add_included_users_by_watchlist_type`
+    - `delete_included_users_by_watchlist_id`
+    - `delete_included_users_by_watchlist_type`
+    - `get_page_watchlist_members()`
+    - `get_all_watchlist_members()`
+    - `get_watchlist_member()`
+  - `UserRiskProfile` client includes the following methods:
+    - `get()`
+    - `update()`
+    - `get_page()`
+    - `get_all()`
+    - `add_cloud_aliases()`
+    - `delete_cloud_aliases()`
+
 ## 1.22.0 - 2022-04-01
 
 ### Added

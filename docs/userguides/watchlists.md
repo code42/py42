@@ -2,20 +2,20 @@
 
 Use py42 to create and manage watchlists.
 
-Watchlists have replaced the Departing Employees and High Risk Employees detections lists. See the [Code42 Support Documentation](https://support.code42.com/Incydr/Admin/Monitoring_and_managing/Manage_watchlists) on managing watchlists for more information.
+Watchlists have replaced the Departing Employees and High Risk Employees detections lists. See the [Code42 support documentation](https://support.code42.com/Incydr/Admin/Monitoring_and_managing/Manage_watchlists) on managing watchlists for more information.
 
 ## Create a Watchlist
 
 ```python
 from py42.constants import WatchlistType
 
-watchlist = sdk.watchlists.create(WatchlistType.DEPARTING_EMPLOYEE)
+watchlist = sdk.watchlists.create(WatchlistType.DEPARTING)
 
 # store the id of the new watchlist
 watchlist_id = watchlist.data["watchlistId"]
 ```
 
-Available watchlist types are available as constants in the [WatchlistType](https://py42docs.code42.com/en/stable/methoddocs/constants.html#py42.constants.WatchlistType) class.
+Watchlist types are available as constants in the [WatchlistType](https://py42docs.code42.com/en/stable/methoddocs/constants.html#py42.constants.WatchlistType) class.
 
 ## View Watchlist Details
 
@@ -48,7 +48,7 @@ Use the `included_users` methods to manage individual users who are explicitly i
 
 Py42 allows you to reference a watchlist either by its ID or by its type. If adding individual users to a watchlist with the `add_included_users_by_watchlist_type()` method, py42 will create the watchlist for you if it doesn't already exist.
 
-For example, the following code demonstrates two methods to add users to the Departing Employees watchlist:
+For example, the following code demonstrates two methods to add users to the Departing watchlist:
 
 ```python
 user_ids = ["test-user-123", "test-user-456"]
@@ -59,8 +59,8 @@ sdk.watchlists.add_included_users_by_watchlist_id(user_ids, watchlist_id)
 # METHOD 2: add by watchlist type
 from py42.constants import WatchlistType
 
-# this method will create the DEPARTING_EMPLOYEE watchlist for you if it doesn't already exist
-sdk.watchlists.add_included_users_by_watchlist_type(user_ids, WatchlistType.DEPARTING_EMPLOYEE)
+# this method will create the DEPARTING watchlist for you if it doesn't already exist
+sdk.watchlists.add_included_users_by_watchlist_type(user_ids, WatchlistType.DEPARTING)
 
 # View your updated watchlist users
 sdk.watchlists.get_all_included_users(watchlist_id)

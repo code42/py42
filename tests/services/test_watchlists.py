@@ -154,7 +154,7 @@ class TestWatchlistsService:
         requests_response.text = json.dumps(WATCHLIST_RESPONSE)
         mock_connection.post.return_value = Py42Response(requests_response)
 
-        watchlists_service.create(WatchlistType.DEPARTING_EMPLOYEE)
+        watchlists_service.create(WatchlistType.DEPARTING)
 
         mock_connection.post.assert_called_once_with(
             URI, json={"watchlistType": "DEPARTING_EMPLOYEE"}

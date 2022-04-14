@@ -16,7 +16,7 @@ Use the user ID with the `update()` method to manage a user risk profiles' `star
 
 The `startDate` and `endDate` arguments expect a format of `YYYY-MM-DD`.
 
-The following code updates departure date of the user risk profile to March 1st, 2025:
+The following code updates the departure date of the user risk profile to March 1st, 2025:
 
 ```python
 # update the user risk profile
@@ -26,7 +26,7 @@ sdk.userriskprofile.update(user_id, end_date="2025-03-01", notes="Updated the de
 py42.util.print_response(sdk.userriskprofile.get(user_id))
 ```
 
-The `paths` arguments only needs to be provided if you want to clear one of the `startDate`, `endDate`, or `notes` fields.  In cases where those fields are otherwise being updated (with values provided for their respective arguments) py42 will set the paths variable for you.
+The `paths` argument only needs to be provided if you want to clear one of the `startDate`, `endDate`, or `notes` fields.  In cases where those fields are otherwise being updated (with values provided for their respective arguments) py42 will set the paths variable for you.
 
 For example, the following code will clear the `endDate` and `notes` fields:
 
@@ -38,7 +38,7 @@ sdk.userriskprofile.update(user_id, paths=["endDate", "notes"])
 ## Manage Cloud Aliases
 
 Each user risk profile starts with a default alias of their code42 username and can have one additional cloud alias.
-use the `UserRiskProfileClient` to manage these aliases.
+Use the `UserRiskProfileClient` to manage these aliases.
 
 Use `add_cloud_aliases()` to assign additional cloud aliases to a user:
 

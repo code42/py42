@@ -1,5 +1,6 @@
 import json
-from datetime import date, datetime
+from datetime import date
+from datetime import datetime
 
 import pytest
 from requests import Response

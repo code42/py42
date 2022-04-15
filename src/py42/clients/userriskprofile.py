@@ -29,26 +29,27 @@ class UserRiskProfileClient:
         """
         return self._user_risk_profile_service.get_by_username(username)
 
-    def update(self, user_id, start_date=None, end_date=None, notes=None, paths=None):
+    def update(self, user_id, start_date=None, end_date=None, notes=None):
         """Update a user risk profile.
+
+        For each arg, if None is provided, the value will not be updated. Pass an empty string if you want to clear that value from the profile.
 
         Args:
                 user_id (str): The UID of the user to update.
-                start_date (str): The start date of the user risk profile to be updated. Expects format of 'YYYY-MM-DD'. Defaults to None.
-                end_date (str): The departure date of the user risk profile to be updated. Expects format of 'YYYY-MM-DD'. Defaults to None.
-                notes (str): The notes field of the user risk profile to be updated. Defaults to None
-                paths (list(str), optional): The set of field mask paths. Defaults to None. If None, it will assume that any provided values for ``startDate``, ``endDate``, and ``notes`` for are intended to be updated on the user risk profile. Example: ["endDate", "startDate"]
+                start_date (str or datetime, optional): The start date of the user risk profile to be updated. Expects format of 'YYYY-MM-DD' or instance of datetime. Defaults to None.
+                end_date (str or datetime, optional): The departure date of the user risk profile to be updated. Expects format of 'YYYY-MM-DD' or instance of datetime. Defaults to None.
+                notes (str, optional): The notes field of the user risk profile to be updated. Defaults to None
 
         Returns:
                 :class:`py42.response.Py42Response`
         """
         return self._user_risk_profile_service.update(
-            user_id, start_date, end_date, notes, paths
+            user_id, start_date, end_date, notes
         )
 
     def get_page(
         self,
-        page=None,
+        page_num=1,
         page_size=None,
         manager_id=None,
         title=None,
@@ -65,7 +66,7 @@ class UserRiskProfileClient:
         """Get a page of user risk profiles.
 
         Args:
-                page (integer, optional): The desired page of user risk profile results to retrieve.  Defaults to None
+                page_num (integer, optional): The desired page of user risk profile results to retrieve.  Defaults to None
                 page_size (integer, optional): The desired number of results per page.  Defaults to None
                 manager_id (str, optional): Matches users whose manager has the given Code42 user UID.  Defaults to None
                 title (str, optional): Matches users with the given job title.  Defaults to None
@@ -83,7 +84,7 @@ class UserRiskProfileClient:
                 :class:`py42.response.Py42Response`
         """
         return self._user_risk_profile_service.get_page(
-            page,
+            page_num,
             page_size,
             manager_id,
             title,
@@ -148,7 +149,7 @@ class UserRiskProfileClient:
         """Add cloud aliases to a user risk profile.
 
         Args:
-                user_id (str): The UID of the user to add cloud aliases.
+                user_id (str): The user UID.
                 cloud_alias (str or list(str)): The alias(es) to add to the user risk profile. Each user starts with a default alias of their code42 username and can have one additional cloud alias.
 
         Returns:
@@ -160,7 +161,7 @@ class UserRiskProfileClient:
         """Delete cloud aliases from a user risk profile.
 
         Args:
-                user_id (str): The UID of the user to delete cloud aliases.
+                user_id (str): The user UID.
                 cloud_aliases (str or list(str)): The alias(es) to remove from the user risk profile. Each user starts with a default alias of their code42 username and can have one additional cloud alias.
 
         Returns:

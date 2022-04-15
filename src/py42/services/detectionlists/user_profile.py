@@ -7,7 +7,7 @@ from py42.services import BaseService
 
 
 class DetectionListUserService(BaseService):
-    """Administrator utility to manage High Risk employees information.
+    """Deprecated.  Use WATCHLISTSCLIENT and USERCLIENT instead. Administrator utility to manage High Risk employees information.
 
     `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
     """
@@ -15,11 +15,6 @@ class DetectionListUserService(BaseService):
     _resource = "v2/user"
 
     def __init__(self, connection, user_context, user_service):
-        warn(
-            f"{self.__class__.__name__} is being deprecated. Use the Watchlists and User Risk Profile clients instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
         super().__init__(connection)
         self._user_context = user_context
         self._user_service = user_service
@@ -28,7 +23,7 @@ class DetectionListUserService(BaseService):
         return f"{self._resource}{action}"
 
     def get_by_id(self, user_id):
-        """Deprecated. Get user details by user UID.
+        """Deprecated. Use userriskprofile.get_by_id() instead. Get user details by user UID.
 
         Args:
             user_id (str or int): UID of the user.
@@ -36,6 +31,12 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "This method is deprecated. Use userriskprofile.get_by_id() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
@@ -44,7 +45,7 @@ class DetectionListUserService(BaseService):
         return self._connection.post(uri, json=data)
 
     def get(self, username):
-        """Deprecated. Get user details by username.
+        """Deprecated. Use userriskprofile.get_by_username() instead. Get user details by username.
 
         Args:
             username (str): Username of the user.
@@ -52,6 +53,12 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "This method is deprecated. Use userriskprofile.get_by_username() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "username": username,
@@ -60,7 +67,7 @@ class DetectionListUserService(BaseService):
         return self._connection.post(uri, json=data)
 
     def update_notes(self, user_id, notes):
-        """Deprecated. Add or update notes related to the user.
+        """Deprecated. Use userriskprofile.update() instead. Add or update notes related to the user.
 
         Args:
             user_id (str or int): The user_id whose notes need to be updated.
@@ -69,6 +76,12 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "This method is deprecated. Use userriskprofile.update() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
@@ -78,7 +91,7 @@ class DetectionListUserService(BaseService):
         return self._connection.post(uri, json=data)
 
     def add_risk_tags(self, user_id, tags):
-        """Deprecated. Add one or more tags.
+        """Deprecated. Use watchlists instead. Add one or more tags.
 
         Args:
             user_id (str or int): The user_id whose tag(s) needs to be updated.
@@ -88,6 +101,11 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Risk tags are deprecated. Use watchlists instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         if not isinstance(tags, (list, tuple)):
             tags = [tags]
@@ -101,7 +119,7 @@ class DetectionListUserService(BaseService):
         return self._connection.post(uri, json=data)
 
     def remove_risk_tags(self, user_id, tags):
-        """Deprecated. Remove one or more tags.Args:
+        """Deprecated. Use watchlists instead. Remove one or more tags.Args:
 
         Args:
             user_id (str or int): The user_id whose tag(s) needs to be removed.
@@ -111,6 +129,12 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Risk tags are deprecated. Use watchlists instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         if not isinstance(tags, (list, tuple)):
             tags = [tags]
 
@@ -123,7 +147,7 @@ class DetectionListUserService(BaseService):
         return self._connection.post(uri, json=data)
 
     def add_cloud_alias(self, user_id, alias):
-        """Deprecated. Add a cloud alias.
+        """Deprecated. Use userriskprofile.add_cloud_aliases() instead. Add a cloud alias.
 
         Args:
             user_id (str or int): The user_id whose alias needs to be updated.
@@ -132,7 +156,11 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-
+        warn(
+            "This method is deprecated. Use userriskprofile.add_cloud_aliases() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         # check if alias > 50 characters
         # this error checking is handled by the frontend of the console
         if len(alias) > 50:
@@ -152,7 +180,7 @@ class DetectionListUserService(BaseService):
             raise
 
     def remove_cloud_alias(self, user_id, alias):
-        """Deprecated. Remove one or more cloud alias.
+        """Deprecated. Use userriskprofile.delete_cloud_aliases() instead. Remove one or more cloud alias.
 
         Args:
             user_id (str or int): The user_id whose alias needs to be removed.
@@ -161,6 +189,11 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "This method is deprecated. Use userriskprofile.delete_cloud_aliases() instead",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,
@@ -178,6 +211,8 @@ class DetectionListUserService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn("This method is deprecated.", DeprecationWarning, stacklevel=2)
+
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
             "userId": user_id,

@@ -1,5 +1,3 @@
-import sys
-
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42InvalidWatchlistType
@@ -18,16 +16,15 @@ class WatchlistsService(BaseService):
         super().__init__(connection)
         self._watchlist_type_id_map = {}
 
-        if "pytest" not in sys.modules:
-            # initiate mapping between types and IDs
-            watchlists = (self.get_page(page_size=100)).data["watchlists"]
-            for item in watchlists:
-                # We will need to custom handle CUSTOM types when they come around
-                self._watchlist_type_id_map[item["listType"]] = item["watchlistId"]
-
     @property
     def watchlist_type_id_map(self):
         """Map watchlist types to IDs, if they exist."""
+        if not self._watchlist_type_id_map:
+            self._watchlist_type_id_map = {}
+            watchlists = self.get_page(page_size=100).data["watchLists"]
+            for item in watchlists:
+                # We will need to custom handle CUSTOM types when they come around
+                self._watchlist_type_id_map[item["listType"]] = item["watchlistId"]
         return self._watchlist_type_id_map
 
     def get(self, watchlist_id):

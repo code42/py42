@@ -57,13 +57,6 @@ class WatchlistsClient:
         """
         return self._watchlists_service.delete(watchlist_id)
 
-    def get_page(self):
-        """Get a page of watchlists
-
-        Returns:
-            :class:`py42.response.Py42Response`
-        """
-
     def get_all(self):
         """Get all watchlists.
 
@@ -82,21 +75,6 @@ class WatchlistsClient:
                 :class:`py42.response.Py42Response`
         """
         return self._watchlists_service.create(watchlist_type)
-
-    def get_page_included_users(self, watchlist_id, page=None, page_size=None):
-        """Get page of users explicitly included on a watchlist.
-
-        Args:
-                watchlist_id (str): A unique watchlist ID.
-                page (integer, optional): The desired page of included users to retrieve.  Defaults to None
-                page_size (integer, optional): The desired number of results per page.  Defaults to None
-
-        Returns:
-                :class:`py42.response.Py42Response`
-        """
-        return self._watchlists_service.get_page_included_users(
-            watchlist_id, page, page_size
-        )
 
     def get_all_included_users(self, watchlist_id):
         """Get all users explicitly included on a watchlist.
@@ -163,21 +141,6 @@ class WatchlistsClient:
         """
         return self._watchlists_service.delete_included_users_by_watchlist_type(
             user_ids, watchlist_type
-        )
-
-    def get_page_watchlist_members(self, watchlist_id, page=None, page_size=None):
-        """Get a page of all members of a watchlist.
-
-        Args:
-                watchlist_id (str): A unique watchlist ID.
-                page (integer, optional): The desired page of members to retrieve.  Defaults to None
-                page_size (integer, optional): The desired number of results per page.  Defaults to None
-
-        Returns:
-                :class:`py42.response.Py42Response`
-        """
-        return self._watchlists_service.get_page_watchlist_members(
-            watchlist_id, page, page_size
         )
 
     def get_all_watchlist_members(self, watchlist_id):

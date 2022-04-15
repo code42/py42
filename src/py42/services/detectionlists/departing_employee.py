@@ -34,17 +34,12 @@ class DepartingEmployeeService(BaseService):
     _CREATED_AT = "CREATED_AT"
 
     def __init__(self, session, user_context, user_profile_service):
-        warn(
-            f"{self.__class__.__name__} is being deprecated. Use the Watchlists and User Risk Profile clients instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
         super().__init__(session)
         self._user_context = user_context
         self._user_profile_service = user_profile_service
 
     def add(self, user_id, departure_date=None):
-        """Deprecated. Adds a user to the Departing Employees list.
+        """Deprecated. Use watchlists instead. Adds a user to the Departing Employees list.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_AddEmployee>`__
 
         Raises a :class:`Py42UserAlreadyAddedError` when a user already exists in the Departing Employee \
@@ -80,7 +75,7 @@ class DepartingEmployeeService(BaseService):
             raise
 
     def remove(self, user_id):
-        """Deprecated. Removes a user from the Departing Employees list.
+        """Deprecated. Use watchlists instead. Removes a user from the Departing Employees list.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_RemoveUser>`__
 
         Args:
@@ -104,7 +99,7 @@ class DepartingEmployeeService(BaseService):
             raise Py42UserNotOnListError(err, user_id, "departing-employee")
 
     def get(self, user_id):
-        """Deprecated. Gets departing employee data of a user.
+        """Deprecated. Use userriskprofile.get_by_id() instead. Gets departing employee data of a user.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_GetEmployee>`__
 
         Args:
@@ -114,7 +109,7 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         warn(
-            "This method is deprecated. Use user_risk_profile.get() instead.",
+            "This method is deprecated. Use userriskprofile.get_by_id() instead.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -130,7 +125,7 @@ class DepartingEmployeeService(BaseService):
         sort_direction="DESC",
         page_size=_PAGE_SIZE,
     ):
-        """Deprecated. Gets all Departing Employees.
+        """Deprecated. Use userriskprofile.get_all(). Gets all Departing Employees.
 
         Args:
             filter_type (str, optional): Constants available at
@@ -146,7 +141,7 @@ class DepartingEmployeeService(BaseService):
             that each contain a page of departing employees.
         """
         warn(
-            "This method is deprecated. Use user_risk_profile.get_all() instead.",
+            "This method is deprecated. Use userriskprofile.get_all() instead.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -167,7 +162,7 @@ class DepartingEmployeeService(BaseService):
         sort_direction="DESC",
         page_size=_PAGE_SIZE,
     ):
-        """Deprecated. Gets a single page of Departing Employees.
+        """Deprecated. Use userriskprofile.get_page() instead. Gets a single page of Departing Employees.
 
         Args:
             page_num (int): The page number to request.
@@ -184,7 +179,7 @@ class DepartingEmployeeService(BaseService):
         """
 
         warn(
-            "This method is deprecated. Use user_risk_profile.get_page() instead.",
+            "This method is deprecated. Use userriskprofile.get_page() instead.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -216,7 +211,7 @@ class DepartingEmployeeService(BaseService):
         return self._connection.post(uri, json=data)
 
     def update_departure_date(self, user_id, departure_date):
-        """Deprecated. Add or modify details of an existing Departing Employee case.
+        """Deprecated. Use userriskprofile.update() instead. Add or modify details of an existing Departing Employee case.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_UpdateDepartureDate>`__
 
         Args:
@@ -228,7 +223,7 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         warn(
-            "This method is deprecated. Use user_risk_profile.update() instead.",
+            "This method is deprecated. Use userriskprofile.update() instead.",
             DeprecationWarning,
             stacklevel=2,
         )

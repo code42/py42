@@ -89,6 +89,7 @@ class TestWatchlistsService:
         self, mock_connection, mocker
     ):
         watchlists_service = WatchlistsService(mock_connection)
+        watchlists_service._watchlist_type_id_map = {}
         watchlists_service.watchlist_type_id_map[WATCHLIST_TYPE] = WATCHLIST_ID
 
         # mock delete response
@@ -148,6 +149,7 @@ class TestWatchlistsService:
         self, mocker, mock_connection
     ):
         watchlists_service = WatchlistsService(mock_connection)
+        watchlists_service._watchlist_type_id_map = {}
 
         # mock create call response
         requests_response = mocker.MagicMock(spec=Response)
@@ -258,6 +260,7 @@ class TestWatchlistsService:
         user_ids = ["user@email.com", "test@code42.com"]
 
         # set watchlist dict
+        watchlists_service._watchlist_type_id_map = {}
         watchlists_service.watchlist_type_id_map[WATCHLIST_TYPE] = WATCHLIST_ID
 
         watchlists_service.add_included_users_by_watchlist_type(
@@ -273,6 +276,7 @@ class TestWatchlistsService:
     ):
         watchlists_service = WatchlistsService(mock_connection)
         user_ids = ["user@email.com", "test@code42.com"]
+        watchlists_service._watchlist_type_id_map = {}
 
         # mock create call response
         requests_response = mocker.MagicMock(spec=Response)
@@ -324,6 +328,7 @@ class TestWatchlistsService:
         user_ids = ["user@email.com", "test@code42.com"]
 
         # set watchlist dict
+        watchlists_service._watchlist_type_id_map = {}
         watchlists_service.watchlist_type_id_map[WATCHLIST_TYPE] = WATCHLIST_ID
 
         watchlists_service.delete_included_users_by_watchlist_type(

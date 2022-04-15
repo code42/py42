@@ -26,12 +26,6 @@ class HighRiskEmployeeService(BaseService):
     _resource = "v2/highriskemployee"
 
     def __init__(self, connection, user_context, user_profile_service):
-        """This throws a deprecation warning on initialization."""
-        warn(
-            f"{self.__class__.__name__} is being deprecated. Use the Watchlists and User Risk Profile clients instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
         super().__init__(connection)
         self._user_context = user_context
         self._user_profile_service = user_profile_service
@@ -45,7 +39,7 @@ class HighRiskEmployeeService(BaseService):
         return self._connection.post(uri, json=data)
 
     def add(self, user_id):
-        """Deprecated. Adds a user to the High Risk Employee detection list.
+        """Deprecated. Use watchlists instead. Adds a user to the High Risk Employee detection list.
 
         Raises a :class:`Py42UserAlreadyAddedError` when a user already exists in the High Risk Employee
         detection list.
@@ -89,7 +83,7 @@ class HighRiskEmployeeService(BaseService):
         return self._connection.post(uri, json=data)
 
     def remove(self, user_id):
-        """Deprecated. Removes a user from the High Risk Employee detection list.
+        """Deprecated. Use watchlists instead. Removes a user from the High Risk Employee detection list.
         `Rest Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_RemoveUser>`__
 
         Args:
@@ -115,7 +109,7 @@ class HighRiskEmployeeService(BaseService):
             raise Py42UserNotOnListError(err, user_id, "high-risk-employee")
 
     def get(self, user_id):
-        """Deprecated. Gets user information.
+        """Deprecated. Use userriskprofile.get_by_id() instead. Gets user information.
         `Rest Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_GetEmployee>`__
 
         Args:
@@ -126,7 +120,7 @@ class HighRiskEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
         warn(
-            "This method is deprecated. Use user_risk_profile.get() instead.",
+            "This method is deprecated. Use userriskprofile.get_by_id() instead.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -144,7 +138,7 @@ class HighRiskEmployeeService(BaseService):
         sort_direction=None,
         page_size=_PAGE_SIZE,
     ):
-        """Deprecated. Searches High Risk Employee list. Filter results by filter_type.
+        """Deprecated. Use userriskprofile.get_all() instead. Searches High Risk Employee list. Filter results by filter_type.
         `Rest Documentation <https://developer.code42.com/api/#operation/HighRiskEmployeeControllerV2_Search>`__
 
         Args:
@@ -162,7 +156,7 @@ class HighRiskEmployeeService(BaseService):
             that each contain a page of users.
         """
         warn(
-            "This method is deprecated. Use user_risk_profile.get_all() instead.",
+            "This method is deprecated. Use userriskprofile.get_all() instead.",
             DeprecationWarning,
             stacklevel=2,
         )
@@ -184,7 +178,7 @@ class HighRiskEmployeeService(BaseService):
         sort_direction=None,
         page_size=_PAGE_SIZE,
     ):
-        """Deprecated. Gets a single page of High Risk Employees.
+        """Deprecated. Use userriskprofile.get_page() instead. Gets a single page of High Risk Employees.
 
         Args:
             page_num (int): The page number to request.
@@ -202,7 +196,7 @@ class HighRiskEmployeeService(BaseService):
         """
 
         warn(
-            "This method is deprecated. Use user_risk_profile.get_page() instead.",
+            "This method is deprecated. Use userriskprofile.get_page() instead.",
             DeprecationWarning,
             stacklevel=2,
         )

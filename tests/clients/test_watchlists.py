@@ -45,24 +45,6 @@ class TestWatchlistsClient:
         watchlists_client.create(WATCHLIST_TYPE)
         mock_watchlists_service.create.assert_called_once_with(WATCHLIST_TYPE)
 
-    def test_get_page_included_users_calls_service_with_expected_params(
-        self, mock_watchlists_service
-    ):
-        watchlists_client = WatchlistsClient(mock_watchlists_service)
-        watchlists_client.get_page_included_users(WATCHLIST_ID)
-        mock_watchlists_service.get_page_included_users.assert_called_once_with(
-            WATCHLIST_ID, None, None
-        )
-
-    def test_get_page_included_users_calls_service_with_optional_params(
-        self, mock_watchlists_service
-    ):
-        watchlists_client = WatchlistsClient(mock_watchlists_service)
-        watchlists_client.get_page_included_users(WATCHLIST_ID, page=1, page_size=10)
-        mock_watchlists_service.get_page_included_users.assert_called_once_with(
-            WATCHLIST_ID, 1, 10
-        )
-
     def test_get_all_included_users_calls_service_with_expected_params(
         self, mock_watchlists_service
     ):
@@ -114,24 +96,6 @@ class TestWatchlistsClient:
             user_ids, WATCHLIST_TYPE
         )
 
-    def test_get_page_watchlist_members_calls_service_with_expected_params(
-        self, mock_watchlists_service
-    ):
-        watchlists_client = WatchlistsClient(mock_watchlists_service)
-        watchlists_client.get_page_watchlist_members(WATCHLIST_ID)
-        mock_watchlists_service.get_page_watchlist_members.assert_called_once_with(
-            WATCHLIST_ID, None, None
-        )
-
-    def test_get_page_watchlist_members_calls_service_with_optional_params(
-        self, mock_watchlists_service
-    ):
-        watchlists_client = WatchlistsClient(mock_watchlists_service)
-        watchlists_client.get_page_watchlist_members(WATCHLIST_ID, page=1, page_size=10)
-        mock_watchlists_service.get_page_watchlist_members.assert_called_once_with(
-            WATCHLIST_ID, 1, 10
-        )
-
     def test_get_watchlist_member_calls_service_with_expected_params(
         self, mock_watchlists_service
     ):
@@ -139,4 +103,13 @@ class TestWatchlistsClient:
         watchlists_client.get_watchlist_member(WATCHLIST_ID, "123")
         mock_watchlists_service.get_watchlist_member.assert_called_once_with(
             WATCHLIST_ID, "123"
+        )
+
+    def test_get_all_watchlist_members_calls_service_with_expected_params(
+        self, mock_watchlists_service
+    ):
+        watchlists_client = WatchlistsClient(mock_watchlists_service)
+        watchlists_client.get_all_watchlist_members(WATCHLIST_ID)
+        mock_watchlists_service.get_all_watchlist_members.assert_called_once_with(
+            WATCHLIST_ID
         )

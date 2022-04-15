@@ -1,3 +1,5 @@
+import datetime
+
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42CloudAliasCharacterLimitExceededError
 from py42.exceptions import Py42CloudAliasLimitExceededError
@@ -6,6 +8,8 @@ from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserRiskProfileNotFound
 from py42.services import BaseService
 from py42.services.util import get_all_pages
+
+_DATE_FORMAT = "%Y-%m-%d"
 
 
 class UserRiskProfileService(BaseService):
@@ -37,24 +41,31 @@ class UserRiskProfileService(BaseService):
             raise Py42UserRiskProfileNotFound(err, username, identifier="username")
 
     def update(self, user_id, start_date=None, end_date=None, notes=None, paths=None):
+        # Build paths field
+        if not paths:
+            paths = []
+            if start_date is not None:
+                paths += ["startDate"]
+                if start_date == "":
+                    start_date = None
+            if end_date is not None:
+                paths += ["endDate"]
+                if end_date == "":
+                    end_date = None
+            if notes is not None:
+                paths += ["notes"]
+                if notes == "":
+                    notes = None
+        if not paths:
+            raise Py42Error("No fields provided. No values will be updated.")
+
+        # parse date strings
         start_day, start_month, start_year = (
             _parse_date_string(start_date) if start_date else (None, None, None)
         )
         end_day, end_month, end_year = (
             _parse_date_string(end_date) if end_date else (None, None, None)
         )
-
-        # if paths unspecified, assume provided values
-        if not paths:
-            paths = []
-            if start_date:
-                paths += ["startDate"]
-            if end_date:
-                paths += ["endDate"]
-            if notes:
-                paths += ["notes"]
-        if not paths:
-            raise Py42Error("No fields or paths provided. No values will be updated.")
 
         params = {"paths": ", ".join(paths)}
         data = {
@@ -169,7 +180,11 @@ class UserRiskProfileService(BaseService):
 
 
 def _parse_date_string(date):
-    # assumes dates are in the format "yyyy-mm-dd" (TODO - this can change)
+    # handle date-time
+    if isinstance(date, (datetime.date, datetime.datetime)):
+        date = date.strftime(_DATE_FORMAT)
+
+    # assumes dates are in the format "yyyy-mm-dd"
     try:
         year, month, day = (int(i) for i in date.split("-"))
         return day, month, year

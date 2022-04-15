@@ -562,7 +562,7 @@ class Py42WatchlistNotFound(Py42NotFoundError):
 
 
 class Py42WatchlistOrUserNotFound(Py42NotFoundError):
-    """An exception raised when the trusted activity ID does not exist."""
+    """An exception raised when the watchlist ID or the User ID does not exist."""
 
     def __init__(self, exception, watchlist_id, user_id):
         message = f"Watchlist ID '{watchlist_id}' or User ID '{user_id}' not found."

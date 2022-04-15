@@ -34,18 +34,16 @@ class TestUserRiskProfileClient:
         user_risk_profile_client = UserRiskProfileClient(mock_user_risk_profile_service)
         user_risk_profile_client.update(USER_ID)
         mock_user_risk_profile_service.update.assert_called_once_with(
-            USER_ID, None, None, None, None
+            USER_ID, None, None, None
         )
 
     def test_update_calls_service_with_optional_params(
         self, mock_user_risk_profile_service
     ):
         user_risk_profile_client = UserRiskProfileClient(mock_user_risk_profile_service)
-        user_risk_profile_client.update(
-            USER_ID, "2022-1-1", "2022-4-1", "notes", ["end_date", "notes"]
-        )
+        user_risk_profile_client.update(USER_ID, "2022-1-1", "2022-4-1", "notes")
         mock_user_risk_profile_service.update.assert_called_once_with(
-            USER_ID, "2022-1-1", "2022-4-1", "notes", ["end_date", "notes"]
+            USER_ID, "2022-1-1", "2022-4-1", "notes"
         )
 
     def test_get_page_calls_service_with_expected_params(
@@ -59,7 +57,7 @@ class TestUserRiskProfileClient:
         self, mock_user_risk_profile_service
     ):
         user_risk_profile_client = UserRiskProfileClient(mock_user_risk_profile_service)
-        user_risk_profile_client.get_page(page=1, page_size=10)
+        user_risk_profile_client.get_page(page_num=1, page_size=10)
         mock_user_risk_profile_service.get_page.assert_called_once_with(
             1, 10, None, None, None, None, None, None, None, None, None, None, None
         )

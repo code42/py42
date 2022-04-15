@@ -1,4 +1,5 @@
 import json
+from datetime import date, datetime
 
 import pytest
 from requests import Response
@@ -75,28 +76,6 @@ class TestUserRiskProfileService:
         self, mock_connection
     ):
         user_risk_profile_service = UserRiskProfileService(mock_connection)
-        paths = ["endDate", "startDate", "notes"]
-        user_risk_profile_service.update(
-            USER_ID,
-            start_date="2010-07-01",
-            end_date="2022-01-04",
-            notes="this is a test note.",
-            paths=paths,
-        )
-        params = {"paths": ", ".join(paths)}
-        data = {
-            "endDate": {"day": 4, "month": 1, "year": 2022},
-            "notes": "this is a test note.",
-            "startDate": {"day": 1, "month": 7, "year": 2010},
-        }
-        mock_connection.patch.assert_called_once_with(
-            f"{URI}/{USER_ID}", json=data, params=params
-        )
-
-    def test_update_calls_patch_with_expected_params_when_fields_provided(
-        self, mock_connection
-    ):
-        user_risk_profile_service = UserRiskProfileService(mock_connection)
         paths = ["startDate", "endDate", "notes"]
         user_risk_profile_service.update(
             USER_ID,
@@ -114,12 +93,33 @@ class TestUserRiskProfileService:
             f"{URI}/{USER_ID}", json=data, params=params
         )
 
-    def test_update_calls_patch_with_expected_params_when_paths_provided(
+    def test_update_calls_patch_with_expected_params_when_datetime_provided(
         self, mock_connection
     ):
         user_risk_profile_service = UserRiskProfileService(mock_connection)
-        paths = ["end_date", "start_date", "notes"]
-        user_risk_profile_service.update(USER_ID, paths=paths)
+        paths = ["startDate", "endDate", "notes"]
+        user_risk_profile_service.update(
+            USER_ID,
+            start_date=date(2010, 7, 1),
+            end_date=datetime(2022, 1, 4),
+            notes="this is a test note.",
+        )
+        params = {"paths": ", ".join(paths)}
+        data = {
+            "endDate": {"day": 4, "month": 1, "year": 2022},
+            "notes": "this is a test note.",
+            "startDate": {"day": 1, "month": 7, "year": 2010},
+        }
+        mock_connection.patch.assert_called_once_with(
+            f"{URI}/{USER_ID}", json=data, params=params
+        )
+
+    def test_update_calls_patch_with_expected_params_when_empty_strings_provided(
+        self, mock_connection
+    ):
+        user_risk_profile_service = UserRiskProfileService(mock_connection)
+        paths = ["startDate", "endDate", "notes"]
+        user_risk_profile_service.update(USER_ID, end_date="", start_date="", notes="")
         params = {"paths": ", ".join(paths)}
         data = {
             "endDate": {"day": None, "month": None, "year": None},

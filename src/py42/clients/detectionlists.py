@@ -171,7 +171,7 @@ class DetectionListsClient:
         `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_RefreshUser>`__
 
         Args:
-            user_id (str or int): The userUid of the user    whose attributes you wish to refresh.
+            user_id (str or int): The userUid of the user whose attributes you wish to refresh.
 
         Returns:
             :class:`py42.response.Py42Response`

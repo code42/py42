@@ -47,10 +47,12 @@ eval "$(pyenv virtualenv-init -)"
 Then, create your virtual environment.
 
 ```bash
-pyenv install 3.6.14
-pyenv virtualenv 3.6.14 py42
+pyenv install 3.9.10
+pyenv virtualenv 3.9.10 py42
 pyenv activate py42
 ```
+
+**Note**: Py42 for end users supports Pythons versions <3.6 and <4 - However due to some of the build dependencies, you'll need a version >=3.7 for your virtual environment.  Use `pyenv --versions` to see all versions available for install. There are some known issues installing python 3.6 with pyenv on certain OS.
 
 If running into issues on Big Sur(Version 11) while installing python 3.6 the below may work
 
@@ -184,12 +186,14 @@ To simply test that the documentation build without errors, you can run:
 tox -e docs
 ```
 
+Note that the `myst-parser` dependency that contributes to building the docs requires python 3.7+.
+
 #### Running the docs locally
 
 To build and run the documentation locally, run the following from the `docs` directory:
 
 ```bash
-pip install sphinx myst_parser sphinx_rtd_theme
+pip install sphinx myst-parser sphinx_rtd_theme
 make html
 ```
 

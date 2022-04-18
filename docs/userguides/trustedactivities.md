@@ -11,7 +11,7 @@ from py42.constants import TrustedActivityType
 
 response = sdk.trustedactivities.create(TrustedActivityType.DOMAIN, "test-domain.com")
 ```
-Constants for the each type of trusted activity are available at [Trusted Activity Type](../methoddocs/constants.html#py42.constants.TrustedActivityType)
+Constants for the each type of trusted activity are available at [Trusted Activity Type](https://py42docs.code42.com/en/stable/methoddocs/constants.html#py42.constants.TrustedActivityType)
 
 
 Once you've created a trusted activity, or if you're working with an existing one, you can use the trusted activity's `resourceId` to view details about it.

@@ -4,7 +4,7 @@ from py42.exceptions import Py42UnableToCreateProfileError
 
 
 class RiskTags(Choices):
-    """Deprecated. Use WATCHLISTSCLIENT and USERCLIENT instead. Constants available as risk tags for :meth:`~py42.clients.detectionlists.DetectionListsClient.add_user_risk_tags()`
+    """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Constants available as risk tags for :meth:`~py42.clients.detectionlists.DetectionListsClient.add_user_risk_tags()`
     and :meth:`~py42.clients.detectionlists.DetectionListsClient.remove_user_risk_tags()`.
 
         * ``FLIGHT_RISK``
@@ -26,7 +26,7 @@ class RiskTags(Choices):
 
 
 class DetectionListsClient:
-    """`Deprecated. Use WATCHLISTSCLIENT and USERCLIENT instead. Rest documentation <https://developer.code42.com/api/#tag/Detection-Lists>`__"""
+    """`Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Rest documentation <https://developer.code42.com/api/#tag/Detection-Lists>`__"""
 
     def __init__(
         self,

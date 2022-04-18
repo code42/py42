@@ -7,7 +7,7 @@ from py42.services import BaseService
 
 
 class DetectionListUserService(BaseService):
-    """Deprecated.  Use WATCHLISTSCLIENT and USERCLIENT instead. Administrator utility to manage High Risk employees information.
+    """Deprecated.  Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Administrator utility to manage High Risk employees information.
 
     `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Detection_list_management_APIs>`__
     """

@@ -15,7 +15,7 @@ _DATE_FORMAT = "%Y-%m-%d"
 
 
 class DepartingEmployeeFilters(_DetectionListFilters, Choices):
-    """Deprecated. Constants available for filtering Departing Employee search results.
+    """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Constants available for filtering Departing Employee search results.
 
     * ``OPEN``
     * ``EXFILTRATION_30_DAYS``
@@ -27,7 +27,7 @@ class DepartingEmployeeFilters(_DetectionListFilters, Choices):
 
 
 class DepartingEmployeeService(BaseService):
-    """Deprecated. A service for interacting with Code42 Departing Employee APIs."""
+    """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. A service for interacting with Code42 Departing Employee APIs."""
 
     _uri_prefix = "v2/departingemployee/{0}"
 

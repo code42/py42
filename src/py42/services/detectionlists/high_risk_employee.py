@@ -12,7 +12,7 @@ from py42.services.util import get_all_pages
 
 
 class HighRiskEmployeeFilters(_DetectionListFilters, Choices):
-    """Deprecated. Constants available for filtering High Risk Employee search results.
+    """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Constants available for filtering High Risk Employee search results.
 
     * ``OPEN``
     * ``EXFILTRATION_30_DAYS``
@@ -21,7 +21,7 @@ class HighRiskEmployeeFilters(_DetectionListFilters, Choices):
 
 
 class HighRiskEmployeeService(BaseService):
-    """Deprecated. A service for interacting with High Risk Employee APIs."""
+    """`Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. A service for interacting with High Risk Employee APIs."""
 
     _resource = "v2/highriskemployee"
 

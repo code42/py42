@@ -47,7 +47,9 @@ Explore the complete public documentation for `py42` below.
 * [Shared Query Filters](methoddocs/sharedqueryfilters.md)
 * [Trusted Activities](methoddocs/trustedactivities.md)
 * [Users](methoddocs/users.md)
+* [User Risk Profiles](methoddocs/userriskprofile.md)
 * [Util](methoddocs/util.md)
+* [Watchlists](methoddocs/watchlists.md)
 
 ```{eval-rst}
 .. automodule:: py42.sdk

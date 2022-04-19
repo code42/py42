@@ -18,6 +18,8 @@
     Backup Sets <userguides/backupsets>
     userguides/cases
     userguides/trustedactivities
+    userguides/userriskprofile
+    userguides/watchlists
 ```
 
 * [Getting Started](userguides/gettingstarted.md)
@@ -31,3 +33,5 @@
 * [Backup Sets](userguides/backupsets.md)
 * [Cases](userguides/cases.md)
 * [Trust Settings](userguides/trustedactivities.md)
+* [User Risk Profiles](userguides/userriskprofile.md)
+* [Watchlists](userguides/watchlists.md)

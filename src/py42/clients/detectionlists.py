@@ -4,7 +4,7 @@ from py42.exceptions import Py42UnableToCreateProfileError
 
 
 class RiskTags(Choices):
-    """Constants available as risk tags for :meth:`~py42.clients.detectionlists.DetectionListsClient.add_user_risk_tags()`
+    """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Constants available as risk tags for :meth:`~py42.clients.detectionlists.DetectionListsClient.add_user_risk_tags()`
     and :meth:`~py42.clients.detectionlists.DetectionListsClient.remove_user_risk_tags()`.
 
         * ``FLIGHT_RISK``
@@ -26,7 +26,7 @@ class RiskTags(Choices):
 
 
 class DetectionListsClient:
-    """`Rest documentation <https://developer.code42.com/api/#tag/Detection-Lists>`__"""
+    """`Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Rest documentation <https://developer.code42.com/api/#tag/Detection-Lists>`__"""
 
     def __init__(
         self,
@@ -65,7 +65,7 @@ class DetectionListsClient:
             raise
 
     def get_user(self, username):
-        """Get user details by username.
+        """Deprecated. Use userriskprofile.get_by_username() instead. Get user details by username.
         `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_GetByUsername>`__
 
         Args:
@@ -74,10 +74,11 @@ class DetectionListsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+
         return self._user_profile_service.get(username)
 
     def get_user_by_id(self, user_id):
-        """Get user details by user_id.
+        """Deprecated. Use userriskprofile.get_by_id() instead. Get user details by user_id.
         `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_GetByUserId>`__
 
         Args:
@@ -86,10 +87,11 @@ class DetectionListsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+
         return self._user_profile_service.get_by_id(user_id)
 
     def update_user_notes(self, user_id, notes):
-        """Add or update notes related to the user.
+        """Deprecated. Use userriskprofile.update() instead. Add or update notes related to the user.
         `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_UpdateNotes>`__
 
         Args:
@@ -99,10 +101,11 @@ class DetectionListsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+
         return self._user_profile_service.update_notes(user_id, notes)
 
     def add_user_risk_tags(self, user_id, tags):
-        """Add one or more risk factor tags.
+        """Deprecated. Use watchlists instead. Add one or more risk factor tags.
         `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_AddRiskFactors>`__
 
         Args:
@@ -115,10 +118,11 @@ class DetectionListsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+
         return self._user_profile_service.add_risk_tags(user_id, tags)
 
     def remove_user_risk_tags(self, user_id, tags):
-        """Remove one or more risk factor tags.
+        """Deprecated. Use watchlists instead. Remove one or more risk factor tags.
         `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_RemoveRiskFactors>`__
 
         Args:
@@ -131,10 +135,11 @@ class DetectionListsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+
         return self._user_profile_service.remove_risk_tags(user_id, tags)
 
     def add_user_cloud_alias(self, user_id, alias):
-        """Add a cloud alias to a user.
+        """Deprecated. Use userriskprofile.add_cloud_aliases() instead. Add a cloud alias to a user.
         `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_AddCloudUsernames>`__
 
         Args:
@@ -144,10 +149,11 @@ class DetectionListsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+
         return self._user_profile_service.add_cloud_alias(user_id, alias)
 
     def remove_user_cloud_alias(self, user_id, alias):
-        """Remove a cloud alias from a user.
+        """Deprecated. Use userriskprofile.delete_cloud_aliases() instead. Remove a cloud alias from a user.
         `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_RemoveCloudUsernames>`__
 
         Args:
@@ -157,10 +163,11 @@ class DetectionListsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+
         return self._user_profile_service.remove_cloud_alias(user_id, alias)
 
     def refresh_user_scim_attributes(self, user_id):
-        """Refresh SCIM attributes of a user.
+        """Deprecated. Refresh SCIM attributes of a user.
         `Rest Documentation <https://developer.code42.com/api/#operation/UserControllerV2_RefreshUser>`__
 
         Args:

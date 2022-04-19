@@ -37,5 +37,7 @@ Services = namedtuple(
         "cases",
         "casesfileevents",
         "trustedactivities",
+        "userriskprofile",
+        "watchlists",
     ],
 )

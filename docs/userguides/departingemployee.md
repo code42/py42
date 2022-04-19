@@ -37,4 +37,4 @@ sdk.detectionlists.departing_employee.remove(user_id)
 ```
 
 For complete details, see
- [Departing Employee](../methoddocs/detectionlists.html#departing-employee).
+ [Departing Employee](../methoddocs/detectionlists.md#departing-employees).

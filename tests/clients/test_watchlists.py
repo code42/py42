@@ -74,22 +74,22 @@ class TestWatchlistsClient:
             user_ids, WATCHLIST_TYPE
         )
 
-    def test_delete_included_users_by_watchlist_id_calls_service_with_expected_params(
+    def test_remove_included_users_by_watchlist_id_calls_service_with_expected_params(
         self, mock_watchlists_service
     ):
         watchlists_client = WatchlistsClient(mock_watchlists_service)
         user_ids = ["1a", "2b", "3c"]
-        watchlists_client.delete_included_users_by_watchlist_id(user_ids, WATCHLIST_ID)
+        watchlists_client.remove_included_users_by_watchlist_id(user_ids, WATCHLIST_ID)
         mock_watchlists_service.delete_included_users_by_watchlist_id.assert_called_once_with(
             user_ids, WATCHLIST_ID
         )
 
-    def test_delete_included_users_by_watchlist_tyoe_calls_service_with_expected_params(
+    def test_remove_included_users_by_watchlist_tyoe_calls_service_with_expected_params(
         self, mock_watchlists_service
     ):
         watchlists_client = WatchlistsClient(mock_watchlists_service)
         user_ids = ["1a", "2b", "3c"]
-        watchlists_client.delete_included_users_by_watchlist_type(
+        watchlists_client.remove_included_users_by_watchlist_type(
             user_ids, WATCHLIST_TYPE
         )
         mock_watchlists_service.delete_included_users_by_watchlist_type.assert_called_once_with(

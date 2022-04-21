@@ -115,7 +115,7 @@ class WatchlistsClient:
             user_ids, watchlist_type
         )
 
-    def delete_included_users_by_watchlist_id(self, user_ids, watchlist_id):
+    def remove_included_users_by_watchlist_id(self, user_ids, watchlist_id):
         """Remove users that are explicitly included on a watchlist.
 
         Args:
@@ -129,7 +129,7 @@ class WatchlistsClient:
             user_ids, watchlist_id
         )
 
-    def delete_included_users_by_watchlist_type(self, user_ids, watchlist_type):
+    def remove_included_users_by_watchlist_type(self, user_ids, watchlist_type):
         """Remove users that are explicitly included on a watchlist.
 
         Args:

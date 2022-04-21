@@ -21,8 +21,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `get_all_included_users()`
     - `add_included_users_by_watchlist_id()`
     - `add_included_users_by_watchlist_type()`
-    - `delete_included_users_by_watchlist_id()`
-    - `delete_included_users_by_watchlist_type()`
+    - `remove_included_users_by_watchlist_id()`
+    - `remove_included_users_by_watchlist_type()`
     - `get_all_watchlist_members()`
     - `get_watchlist_member()`
   - `UserRiskProfile` client includes the following methods:

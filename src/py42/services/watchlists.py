@@ -21,7 +21,7 @@ class WatchlistsService(BaseService):
         """Map watchlist types to IDs, if they exist."""
         if not self._watchlist_type_id_map:
             self._watchlist_type_id_map = {}
-            watchlists = self.get_page(page_size=100).data["watchLists"]
+            watchlists = self.get_page(page_size=100).data["watchlists"]
             for item in watchlists:
                 # We will need to custom handle CUSTOM types when they come around
                 self._watchlist_type_id_map[item["listType"]] = item["watchlistId"]
@@ -40,9 +40,9 @@ class WatchlistsService(BaseService):
             response = self._connection.delete(uri)
             # delete dictionary entry if success
             if response.status_code == 200:
-                for k, v in self._watchlist_type_id_map.items():
+                for k, v in self.watchlist_type_id_map.items():
                     if v == watchlist_id:
-                        del self._watchlist_type_id_map[k]
+                        del self.watchlist_type_id_map[k]
                         break
             return response
         except Py42NotFoundError as err:
@@ -62,7 +62,7 @@ class WatchlistsService(BaseService):
         data = {"watchlistType": watchlist_type}
         try:
             response = self._connection.post(self._uri_prefix, json=data)
-            self._watchlist_type_id_map[watchlist_type] = response.data["watchlistId"]
+            self.watchlist_type_id_map[watchlist_type] = response.data["watchlistId"]
             return response
         except Py42BadRequestError as err:
             if (
@@ -97,7 +97,7 @@ class WatchlistsService(BaseService):
 
     def add_included_users_by_watchlist_type(self, user_ids, watchlist_type):
         try:
-            id = self._watchlist_type_id_map[watchlist_type]
+            id = self.watchlist_type_id_map[watchlist_type]
         except KeyError:
             # if watchlist of specified type not found, create watchlist
             id = (self.create(watchlist_type)).data["watchlistId"]
@@ -115,7 +115,7 @@ class WatchlistsService(BaseService):
 
     def delete_included_users_by_watchlist_type(self, user_ids, watchlist_type):
         try:
-            id = self._watchlist_type_id_map[watchlist_type]
+            id = self.watchlist_type_id_map[watchlist_type]
         except KeyError:
             # if specified watchlist type not found, raise error
             raise Py42Error(f"Couldn't find watchlist of type:'{watchlist_type}'.")

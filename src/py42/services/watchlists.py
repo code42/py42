@@ -21,7 +21,7 @@ class WatchlistsService(BaseService):
         """Map watchlist types to IDs, if they exist."""
         if not self._watchlist_type_id_map:
             self._watchlist_type_id_map = {}
-            watchlists = self.get_page(page_size=100).data["watchLists"]
+            watchlists = self.get_page(page_size=100).data["watchlists"]
             for item in watchlists:
                 # We will need to custom handle CUSTOM types when they come around
                 self._watchlist_type_id_map[item["listType"]] = item["watchlistId"]

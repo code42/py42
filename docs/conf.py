@@ -17,7 +17,7 @@ import py42.__version__ as meta
 # -- Project information -----------------------------------------------------
 
 project = "py42"
-copyright = "2020, Code42 Software"
+copyright = "2022, Code42 Software"
 author = "Code42 Software"
 
 # The short X.Y version
@@ -29,8 +29,8 @@ release = f"py42 v{meta.__version__}"
 # -- General configuration ---------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-#
-# needs_sphinx = '1.0'
+
+needs_sphinx = '4.4.0'
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom

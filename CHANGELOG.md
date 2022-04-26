@@ -34,6 +34,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `add_cloud_aliases()`
     - `delete_cloud_aliases()`
 
+### Fixed
+
+- Bug where attempting to restore from an empty archive would throw a confusing `TypeError`, we now raise appropriate `Py42ArchiveFileNotFoundError`.
+
 ## 1.22.0 - 2022-04-01
 
 ### Added

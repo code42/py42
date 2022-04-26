@@ -13,7 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## Added
 - Support for V2 file event data.
   - Set `py42.settings.use_v2_file_event_data = True` to use the V2 file event APIs.
-  - Use the V2 filters and queries from `py42.sdk.queries.fileevents.v2`
+  - Use queries built with V2 filters from `py42.sdk.queries.fileevents.v2`.
 
 - `Watchlists` and `UserRiskProfile` clients
   - These features replace the `DetectionLists` client as well as its `DepartingEmployee` and `HighRiskEmployee` services.  All related classes and methods have been marked as deprecated and will raise deprecation warnings.

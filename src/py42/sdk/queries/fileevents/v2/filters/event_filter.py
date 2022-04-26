@@ -53,9 +53,7 @@ class EventAction(FileEventFilterStringField, Choices):
     SYNC_APP_CREATED = "sync-app-created"
     SYNC_APP_MODIFIED = "sync-app-modified"
     SYNC_APP_DELETED = "sync-app-deleted"
-    FILE_SHARED_LINK = "file-shared-link"
-    FILE_SHARED_DOMAIN = "file-shared-domain"
-    FILE_SHARED_DIRECT = "file-shared-direct"
+    FILE_SHARED = "file-shared"
 
     # Event Type in v1
     FILE_CREATED = "file-created"
@@ -65,3 +63,19 @@ class EventAction(FileEventFilterStringField, Choices):
     FILE_MODIFIED = "file-modified"
     FILE_PRINTED = "file-printed"
     APPLICATION_READ = "application-read"
+
+
+class EventId(FileEventFilterStringField):
+    """Class that filters events by event ID."""
+
+    _term = "event.id"
+
+
+class EventShareType(FileEventFilterStringField):
+    """Class that filters events by share type."""
+
+    _term = "event.shareType"
+
+    SHARED_VIA_LINK = "SharedViaLink"
+    IS_PUBLIC = "IsPublic"
+    OUTSIDE_TRUSTED_DOMAIN = "OutsideTrustedDomains"

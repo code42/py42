@@ -547,6 +547,70 @@ class Py42TrustedActivityIdNotFound(Py42NotFoundError):
         return self._resource_id
 
 
+class Py42WatchlistNotFound(Py42NotFoundError):
+    """An exception raised when the watchlist with the given ID was not found."""
+
+    def __init__(self, exception, resource_id):
+        message = f"Watchlist ID '{resource_id}' not found."
+        super().__init__(exception, message, resource_id)
+        self._watchlist_id = resource_id
+
+    @property
+    def watchlist_id(self):
+        """The watchlist ID."""
+        return self._watchlist_id
+
+
+class Py42WatchlistOrUserNotFound(Py42NotFoundError):
+    """An exception raised when the watchlist ID or the User ID does not exist."""
+
+    def __init__(self, exception, watchlist_id, user_id):
+        message = f"Watchlist ID '{watchlist_id}' or User ID '{user_id}' not found."
+        super().__init__(exception, message, watchlist_id, user_id)
+        self._watchlist_id = watchlist_id
+        self._user_id = user_id
+
+    @property
+    def watchlist_id(self):
+        """The watchlist ID."""
+        return self._watchlist_id
+
+    @property
+    def user_id(self):
+        """The user ID."""
+        return self._user_id
+
+
+class Py42InvalidWatchlistType(Py42BadRequestError):
+    """An exception raised when an invalid watchlist type is specified."""
+
+    def __init__(self, exception, watchlist_type):
+        message = f"'{watchlist_type}' cannot be converted to a valid watchlist type.  Please look at the WatchlistType class for valid types."
+        super().__init__(exception, message, watchlist_type)
+        self._watchlist_type = watchlist_type
+
+    @property
+    def watchlist_type(self):
+        """The specified watchlist type."""
+        return self._watchlist_type
+
+
+class Py42UserRiskProfileNotFound(Py42NotFoundError):
+    """An exception raised when the user with the given ID for a user risk profile was not found."""
+
+    def __init__(self, exception, user_id, identifier="ID"):
+        message = (
+            f"User risk profile for user with the {identifier} '{user_id}' not found."
+        )
+        super().__init__(exception, message, user_id)
+        self._user_id = user_id
+
+    @property
+    def user(self):
+        """The user identifier."""
+        return self._user_id
+
+
 def raise_py42_error(raised_error):
     """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
     HTTPError's response status code.

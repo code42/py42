@@ -50,7 +50,7 @@ response = sdk.detectionlists.add_user_risk_tags(user_id, tag_list)
 response = sdk.detectionlists.remove_user_risk_tags(user_id, tag_list)
 ```
 
-Constants for Risk tags are available at [Risk Tags](../methoddocs/constants.html#py42.constants.RiskTags)
+Constants for Risk tags are available at [Risk Tags](https://py42docs.code42.com/en/stable/methoddocs/constants.html#py42.constants.RiskTags)
 
 For complete details, see
- [High Risk Employee](../methoddocs/detectionlists.html#high-risk-employee).
+ [High Risk Employee](../methoddocs/detectionlists.md#high-risk-employee).

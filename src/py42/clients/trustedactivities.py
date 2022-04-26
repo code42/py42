@@ -40,7 +40,7 @@ class TrustedActivitiesClient:
         `Rest documentation <https://developer.code42.com/api>`__
 
         Args:
-            type (str): Type of the trusted activity. Defaults to None. Constants available at :class:`py42.constants.TrustedActivityType`.
+            type (str): Type of the trusted activity. Constants available at :class:`py42.constants.TrustedActivityType`.
             value (str): The URL of the domain or name of the Slack workspace.
             description (str, optional): Description of the trusted activity.
 

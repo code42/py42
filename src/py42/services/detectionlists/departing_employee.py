@@ -1,4 +1,5 @@
 from datetime import datetime
+from warnings import warn
 
 from py42.choices import Choices
 from py42.exceptions import Py42BadRequestError
@@ -14,7 +15,7 @@ _DATE_FORMAT = "%Y-%m-%d"
 
 
 class DepartingEmployeeFilters(_DetectionListFilters, Choices):
-    """Constants available for filtering Departing Employee search results.
+    """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Constants available for filtering Departing Employee search results.
 
     * ``OPEN``
     * ``EXFILTRATION_30_DAYS``
@@ -26,7 +27,7 @@ class DepartingEmployeeFilters(_DetectionListFilters, Choices):
 
 
 class DepartingEmployeeService(BaseService):
-    """A service for interacting with Code42 Departing Employee APIs."""
+    """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. A service for interacting with Code42 Departing Employee APIs."""
 
     _uri_prefix = "v2/departingemployee/{0}"
 
@@ -38,7 +39,7 @@ class DepartingEmployeeService(BaseService):
         self._user_profile_service = user_profile_service
 
     def add(self, user_id, departure_date=None):
-        """Adds a user to the Departing Employees list.
+        """Deprecated. Use watchlists instead. Adds a user to the Departing Employees list.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_AddEmployee>`__
 
         Raises a :class:`Py42UserAlreadyAddedError` when a user already exists in the Departing Employee \
@@ -53,6 +54,11 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Detection lists are deprecated. Use watchlists instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if isinstance(departure_date, datetime):
             departure_date = departure_date.strftime(_DATE_FORMAT)
         tenant_id = self._user_context.get_current_tenant_id()
@@ -69,7 +75,7 @@ class DepartingEmployeeService(BaseService):
             raise
 
     def remove(self, user_id):
-        """Removes a user from the Departing Employees list.
+        """Deprecated. Use watchlists instead. Removes a user from the Departing Employees list.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_RemoveUser>`__
 
         Args:
@@ -79,6 +85,11 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
+        warn(
+            "Detection lists are deprecated. Use watchlists instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format("remove")
         data = {"userId": user_id, "tenantId": tenant_id}
@@ -88,7 +99,7 @@ class DepartingEmployeeService(BaseService):
             raise Py42UserNotOnListError(err, user_id, "departing-employee")
 
     def get(self, user_id):
-        """Gets departing employee data of a user.
+        """Deprecated. Use userriskprofile.get_by_id() instead. Gets departing employee data of a user.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_GetEmployee>`__
 
         Args:
@@ -97,6 +108,11 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "This method is deprecated. Use userriskprofile.get_by_id() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format("get")
         data = {"userId": user_id, "tenantId": tenant_id}
@@ -109,7 +125,7 @@ class DepartingEmployeeService(BaseService):
         sort_direction="DESC",
         page_size=_PAGE_SIZE,
     ):
-        """Gets all Departing Employees.
+        """Deprecated. Use userriskprofile.get_all(). Gets all Departing Employees.
 
         Args:
             filter_type (str, optional): Constants available at
@@ -124,6 +140,11 @@ class DepartingEmployeeService(BaseService):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of departing employees.
         """
+        warn(
+            "This method is deprecated. Use userriskprofile.get_all() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return get_all_pages(
             self.get_page,
             "items",
@@ -141,7 +162,7 @@ class DepartingEmployeeService(BaseService):
         sort_direction="DESC",
         page_size=_PAGE_SIZE,
     ):
-        """Gets a single page of Departing Employees.
+        """Deprecated. Use userriskprofile.get_page() instead. Gets a single page of Departing Employees.
 
         Args:
             page_num (int): The page number to request.
@@ -157,6 +178,11 @@ class DepartingEmployeeService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
+        warn(
+            "This method is deprecated. Use userriskprofile.get_page() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         uri = self._uri_prefix.format("search")
         data = {
             "tenantId": self._user_context.get_current_tenant_id(),
@@ -169,7 +195,7 @@ class DepartingEmployeeService(BaseService):
         return self._connection.post(uri, json=data)
 
     def set_alerts_enabled(self, alerts_enabled=True):
-        """Enable or disable email alerting on Departing Employee exposure events.
+        """Deprecated. Enable or disable email alerting on Departing Employee exposure events.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_SetAlertState>`__
 
         Args:
@@ -178,13 +204,14 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn("This method is deprecated.", DeprecationWarning, stacklevel=2)
         tenant_id = self._user_context.get_current_tenant_id()
         uri = self._uri_prefix.format("setalertstate")
         data = {"tenantId": tenant_id, "alertsEnabled": alerts_enabled}
         return self._connection.post(uri, json=data)
 
     def update_departure_date(self, user_id, departure_date):
-        """Add or modify details of an existing Departing Employee case.
+        """Deprecated. Use userriskprofile.update() instead. Add or modify details of an existing Departing Employee case.
         `REST Documentation <https://developer.code42.com/api/#operation/DepartingEmployeeControllerV2_UpdateDepartureDate>`__
 
         Args:
@@ -195,7 +222,11 @@ class DepartingEmployeeService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-
+        warn(
+            "This method is deprecated. Use userriskprofile.update() instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         tenant_id = self._user_context.get_current_tenant_id()
         if isinstance(departure_date, datetime):
             departure_date = departure_date.strftime(_DATE_FORMAT)

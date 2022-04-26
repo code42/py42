@@ -15,6 +15,29 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
   - Set `py42.settings.use_v2_file_event_data = True` to use the V2 file event APIs.
   - Use the V2 filters and queries from `py42.sdk.queries.fileevents.v2`
 
+- `Watchlists` and `UserRiskProfile` clients
+  - These features replace the `DetectionLists` client as well as its `DepartingEmployee` and `HighRiskEmployee` services.  All related classes and methods have been marked as deprecated and will raise deprecation warnings.
+  - `Watchlists` client includes the following methods:
+    - `get()`
+    - `delete()`
+    - `get_all()`
+    - `create()`
+    - `get_all_included_users()`
+    - `add_included_users_by_watchlist_id()`
+    - `add_included_users_by_watchlist_type()`
+    - `remove_included_users_by_watchlist_id()`
+    - `remove_included_users_by_watchlist_type()`
+    - `get_all_watchlist_members()`
+    - `get_watchlist_member()`
+  - `UserRiskProfile` client includes the following methods:
+    - `get_by_id()`
+    - `get_by_username()`
+    - `update()`
+    - `get_page()`
+    - `get_all()`
+    - `add_cloud_aliases()`
+    - `delete_cloud_aliases()`
+
 ## 1.22.0 - 2022-04-01
 
 ### Added

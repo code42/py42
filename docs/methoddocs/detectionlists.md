@@ -1,5 +1,7 @@
 # Detection Lists
 
+**Detection lists have been deprecated. Use [Watchlists](watchlists.md) instead.**
+
 ```{eval-rst}
 .. autoclass:: py42.clients.detectionlists.DetectionListsClient
     :members:

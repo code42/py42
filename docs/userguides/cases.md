@@ -27,7 +27,7 @@ from py42.constants import CaseStatus
 response = sdk.cases.update(case_number, status=CaseStatus.CLOSED)
 ```
 
-Case statuses can be set to either `OPEN` or `CLOSED`.  Constants for these statuses are available at [Case Status](../methoddocs/constants.html#py42.constants.CaseStatus)
+Case statuses can be set to either `OPEN` or `CLOSED`.  Constants for these statuses are available at [Case Status](https://py42docs.code42.com/en/stable/methoddocs/constants.html#py42.constants.CaseStatus).
 
 ## View Details for all OPEN Cases
 

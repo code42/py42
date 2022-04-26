@@ -111,8 +111,10 @@ class Py42Response:
             if not self._data:
                 response_dict = json.loads(self._response.text)
                 if type(response_dict) == dict:
-                    data = response_dict.get("data")
-                    self._data = data if data is not None else response_dict
+                    if "data" in response_dict:
+                        self._data = response_dict["data"]
+                    else:
+                        self._data = response_dict
                 else:
                     self._data = response_dict
         except ValueError:

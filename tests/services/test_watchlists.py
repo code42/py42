@@ -252,10 +252,10 @@ class TestWatchlistsService:
         )
 
     def test_add_included_users_by_watchlist_id_raises_py42_not_found_when_id_not_found(
-        self, mock_connection, mock_not_found_error
+        self, mock_connection, mock_watchlist_not_found_error
     ):
         watchlists_service = WatchlistsService(mock_connection)
-        mock_connection.post.side_effect = mock_not_found_error
+        mock_connection.post.side_effect = mock_watchlist_not_found_error
         with pytest.raises(Py42WatchlistNotFound) as err:
             watchlists_service.add_included_users_by_watchlist_id(
                 watchlist_id="invalid-id", user_ids=["user1", "user2"]

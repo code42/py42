@@ -50,7 +50,11 @@ class UserRiskProfileService(BaseService):
                 data["startDate"] = None
             else:
                 start_day, start_month, start_year = _parse_date_string(start_date)
-                data["startDate"] = {"day": start_day, "month": start_month, "year": start_year}
+                data["startDate"] = {
+                    "day": start_day,
+                    "month": start_month,
+                    "year": start_year,
+                }
         if end_date is not None:
             paths += ["endDate"]
             if end_date == "":

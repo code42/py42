@@ -44,7 +44,7 @@ def mock_user_not_found_error(mocker):
 
 @pytest.fixture
 def mock_watchlist_not_found_error(mocker):
-    return create_mock_error(Py42BadRequestError, mocker, "User not found")
+    return create_mock_error(Py42BadRequestError, mocker, "Watchlist not found")
 
 @pytest.fixture
 def mock_get_all_included_users_response(mocker):
@@ -346,10 +346,10 @@ class TestWatchlistsService:
         )
 
     def test_delete_included_users_by_watchlist_id_raises_py42_not_found_when_id_not_found(
-        self, mock_connection, mock_not_found_error
+        self, mock_connection, mock_watchlist_not_found_error
     ):
         watchlists_service = WatchlistsService(mock_connection)
-        mock_connection.post.side_effect = mock_not_found_error
+        mock_connection.post.side_effect = mock_watchlist_not_found_error
         with pytest.raises(Py42WatchlistNotFound) as err:
             watchlists_service.delete_included_users_by_watchlist_id(
                 watchlist_id="invalid-id", user_ids=["user1", "user2"]

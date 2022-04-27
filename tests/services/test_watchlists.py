@@ -38,13 +38,16 @@ URI = "/v1/watchlists"
 def mock_not_found_error(mocker):
     return create_mock_error(Py42NotFoundError, mocker, "Not Found Error Msg")
 
+
 @pytest.fixture
 def mock_user_not_found_error(mocker):
     return create_mock_error(Py42BadRequestError, mocker, "User not found")
 
+
 @pytest.fixture
 def mock_watchlist_not_found_error(mocker):
     return create_mock_error(Py42BadRequestError, mocker, "Watchlist not found")
+
 
 @pytest.fixture
 def mock_get_all_included_users_response(mocker):

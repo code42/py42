@@ -92,8 +92,12 @@ class WatchlistsService(BaseService):
         uri = f"{self._uri_prefix}/{watchlist_id}/included-users/add"
         try:
             return self._connection.post(uri, json=data)
-        except Py42NotFoundError as err:
-            raise Py42WatchlistNotFound(err, watchlist_id)
+        except Py42BadRequestError as err:
+            if "Watchlist not found" in err.response.text:
+                raise Py42WatchlistNotFound(err, watchlist_id)
+            if "User not found" in err.response.text:
+                raise Py42NotFoundError(err, message=err.response.text)
+            raise
 
     def add_included_users_by_watchlist_type(self, user_ids, watchlist_type):
         try:
@@ -110,8 +114,12 @@ class WatchlistsService(BaseService):
         uri = f"{self._uri_prefix}/{watchlist_id}/included-users/delete"
         try:
             return self._connection.post(uri, json=data)
-        except Py42NotFoundError as err:
-            raise Py42WatchlistNotFound(err, watchlist_id)
+        except Py42BadRequestError as err:
+            if "Watchlist not found" in err.response.text:
+                raise Py42WatchlistNotFound(err, watchlist_id)
+            if "User not found" in err.response.text:
+                raise Py42NotFoundError(err, message=err.response.text)
+            raise
 
     def delete_included_users_by_watchlist_type(self, user_ids, watchlist_type):
         try:

@@ -38,6 +38,13 @@ URI = "/v1/watchlists"
 def mock_not_found_error(mocker):
     return create_mock_error(Py42NotFoundError, mocker, "Not Found Error Msg")
 
+@pytest.fixture
+def mock_user_not_found_error(mocker):
+    return create_mock_error(Py42BadRequestError, mocker, "User not found")
+
+@pytest.fixture
+def mock_watchlist_not_found_error(mocker):
+    return create_mock_error(Py42BadRequestError, mocker, "User not found")
 
 @pytest.fixture
 def mock_get_all_included_users_response(mocker):
@@ -253,6 +260,18 @@ class TestWatchlistsService:
 
         assert err.value.args[0] == "Watchlist ID 'invalid-id' not found."
 
+    def test_add_included_users_by_watchlist_id_raises_py42_not_found_when_user_id_not_found(
+        self, mock_connection, mock_user_not_found_error
+    ):
+        watchlists_service = WatchlistsService(mock_connection)
+        mock_connection.post.side_effect = mock_user_not_found_error
+        with pytest.raises(Py42NotFoundError) as err:
+            watchlists_service.add_included_users_by_watchlist_id(
+                watchlist_id="invalid-id", user_ids=["user1", "user2"]
+            )
+
+        assert err.value.args[0] == "User not found"
+
     def test_add_included_users_by_watchlist_type_calls_add_with_expected_params_when_watchlist_exists(
         self, mock_connection
     ):
@@ -296,6 +315,23 @@ class TestWatchlistsService:
             f"{URI}/{WATCHLIST_ID}/included-users/add", json=data
         )
 
+    def test_add_included_users_by_watchlist_type_raises_py42_not_found_when_user_id_not_found(
+        self, mock_connection, mock_user_not_found_error
+    ):
+        watchlists_service = WatchlistsService(mock_connection)
+
+        # set watchlist dict
+        watchlists_service._watchlist_type_id_map = {}
+        watchlists_service.watchlist_type_id_map[WATCHLIST_TYPE] = WATCHLIST_ID
+
+        mock_connection.post.side_effect = mock_user_not_found_error
+        with pytest.raises(Py42NotFoundError) as err:
+            watchlists_service.add_included_users_by_watchlist_type(
+                user_ids=["user1", "user2"], watchlist_type=WATCHLIST_TYPE
+            )
+
+        assert err.value.args[0] == "User not found"
+
     def test_delete_included_users_by_watchlist_id_calls_post_with_expected_params_and_updates_dict(
         self, mock_connection
     ):
@@ -320,6 +356,18 @@ class TestWatchlistsService:
             )
 
         assert err.value.args[0] == "Watchlist ID 'invalid-id' not found."
+
+    def test_delete_included_users_by_watchlist_id_raises_py42_not_found_when_user_id_not_found(
+        self, mock_connection, mock_user_not_found_error
+    ):
+        watchlists_service = WatchlistsService(mock_connection)
+        mock_connection.post.side_effect = mock_user_not_found_error
+        with pytest.raises(Py42NotFoundError) as err:
+            watchlists_service.delete_included_users_by_watchlist_id(
+                watchlist_id="invalid-id", user_ids=["user1", "user2"]
+            )
+
+        assert err.value.args[0] == "User not found"
 
     def test_delete_included_users_by_watchlist_type_calls_post_with_expected_params_when_watchlist_exists(
         self, mock_connection
@@ -354,6 +402,23 @@ class TestWatchlistsService:
         assert (
             err.value.args[0] == f"Couldn't find watchlist of type:'{WATCHLIST_TYPE}'."
         )
+
+    def test_delete_included_users_by_watchlist_type_raises_py42_not_found_when_user_id_not_found(
+        self, mock_connection, mock_user_not_found_error
+    ):
+        watchlists_service = WatchlistsService(mock_connection)
+
+        # set watchlist dict
+        watchlists_service._watchlist_type_id_map = {}
+        watchlists_service.watchlist_type_id_map[WATCHLIST_TYPE] = WATCHLIST_ID
+
+        mock_connection.post.side_effect = mock_user_not_found_error
+        with pytest.raises(Py42NotFoundError) as err:
+            watchlists_service.delete_included_users_by_watchlist_type(
+                user_ids=["user1", "user2"], watchlist_type=WATCHLIST_TYPE
+            )
+
+        assert err.value.args[0] == "User not found"
 
     def test_get_page_members_calls_get_with_expected_params(self, mock_connection):
         watchlists_service = WatchlistsService(mock_connection)

@@ -1,6 +1,4 @@
 import pytest
-
-from py42.exceptions import Py42Error
 from tests.conftest import create_mock_response
 from tests.conftest import get_file_selection
 from tests.conftest import TEST_ACCEPTING_GUID
@@ -17,6 +15,7 @@ from py42.clients._archiveaccess import ArchiveExplorer
 from py42.clients._archiveaccess import FileType
 from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
 from py42.clients.archive import ArchiveClient
+from py42.exceptions import Py42Error
 
 
 TEST_ARCHIVE_GUID = "4224"
@@ -118,7 +117,11 @@ class TestArchiveClient:
         )
 
     def test_stream_from_backup_when_given_backup_set_id_calls_archive_accessor_stream_from_backup_with_expected_params(
-        self, mocker, archive_accessor_factory, archive_service, archive_content_streamer
+        self,
+        mocker,
+        archive_accessor_factory,
+        archive_service,
+        archive_content_streamer,
     ):
         backup_set_text = f'{{"backupSets": [{{"backupSetId": "{TEST_BACKUP_SET_ID}"}}, {{"backupSetId": "1"}}]}}'
         backup_set_response = create_mock_response(mocker, backup_set_text)
@@ -145,7 +148,11 @@ class TestArchiveClient:
         )
 
     def test_stream_from_backup_raises_error_when_given_invalid_backup_set_id(
-        self, mocker, archive_accessor_factory, archive_service, archive_content_streamer
+        self,
+        mocker,
+        archive_accessor_factory,
+        archive_service,
+        archive_content_streamer,
     ):
         backup_set_text = f'{{"backupSets": [{{"backupSetId": "{TEST_BACKUP_SET_ID}"}}, {{"backupSetId": "1"}}]}}'
         backup_set_response = create_mock_response(mocker, backup_set_text)
@@ -165,8 +172,10 @@ class TestArchiveClient:
                 backup_set_id="100",
                 show_deleted=True,
             )
-        assert "backup_set_id='100' not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]" in str(
-            err)
+        assert (
+            "backup_set_id='100' not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]"
+            in str(err)
+        )
 
     def test_stream_to_device_calls_accessor_stream_to_device(
         self,
@@ -303,7 +312,10 @@ class TestArchiveClient:
                 backup_set_id="100",
                 show_deleted=True,
             )
-        assert "backup_set_id='100' not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]" in str(err)
+        assert (
+            "backup_set_id='100' not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]"
+            in str(err)
+        )
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(
         self, archive_accessor_factory, archive_service

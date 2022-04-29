@@ -198,7 +198,9 @@ class ArchiveClient:
         backup_set_ids = [bs["backupSetId"] for bs in backup_sets]
         if backup_set_id:
             if backup_set_id not in backup_set_ids:
-                raise Py42Error(f"backup_set_id={backup_set_id} not found in device backup sets: {backup_sets}")
+                raise Py42Error(
+                    f"backup_set_id={backup_set_id} not found in device backup sets: {backup_sets}"
+                )
             return backup_set_id
         # id=1 is the "default" backup set, use this if it exists and no explicit id
         # is provided by user
@@ -207,7 +209,7 @@ class ArchiveClient:
         elif len(backup_set_ids) > 0:
             return backup_set_ids[0]
         else:
-            raise Py42Error(f"Failed to get backup sets for device.")
+            raise Py42Error("Failed to get backup sets for device.")
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific

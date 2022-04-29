@@ -123,9 +123,9 @@ class TestUserRiskProfileService:
         user_risk_profile_service.update(USER_ID, end_date="", start_date="", notes="")
         params = {"paths": ", ".join(paths)}
         data = {
-            "endDate": {"day": None, "month": None, "year": None},
+            "endDate": None,
             "notes": None,
-            "startDate": {"day": None, "month": None, "year": None},
+            "startDate": None,
         }
         mock_connection.patch.assert_called_once_with(
             f"{URI}/{USER_ID}", json=data, params=params

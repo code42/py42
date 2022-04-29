@@ -168,7 +168,6 @@ class TestDeviceService:
         assert "The organization with UID 'TestOrgUid' was not found." in str(err.value)
         assert err.value.org_uid == "TestOrgUid"
 
-
     def test_upgrade_calls_upgrade_with_uri_and_params(
         self, mock_connection, successful_response
     ):

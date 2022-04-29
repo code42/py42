@@ -173,7 +173,7 @@ class TestArchiveClient:
                 show_deleted=True,
             )
         assert (
-            "backup_set_id='100' not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]"
+            "backup_set_id=100 not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]"
             in str(err)
         )
 
@@ -313,7 +313,7 @@ class TestArchiveClient:
                 show_deleted=True,
             )
         assert (
-            "backup_set_id='100' not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]"
+            "backup_set_id=100 not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]"
             in str(err)
         )
 

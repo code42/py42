@@ -11,6 +11,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## Unreleased
 
 ### Added
+
 - `Watchlists` and `UserRiskProfile` clients
   - These features replace the `DetectionLists` client as well as its `DepartingEmployee` and `HighRiskEmployee` services.  All related classes and methods have been marked as deprecated and will raise deprecation warnings.
   - `Watchlists` client includes the following methods:
@@ -33,6 +34,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `get_all()`
     - `add_cloud_aliases()`
     - `delete_cloud_aliases()`
+
+- `sdk.devices.upgrade()` to instruct the Code42 cloud to upgrade an individual device to the latest available version.
 
 ### Fixed
 

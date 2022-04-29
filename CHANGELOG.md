@@ -11,6 +11,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ## Unreleased
 
 ### Added
+
 - `Watchlists` and `UserRiskProfile` clients
   - These features replace the `DetectionLists` client as well as its `DepartingEmployee` and `HighRiskEmployee` services.  All related classes and methods have been marked as deprecated and will raise deprecation warnings.
   - `Watchlists` client includes the following methods:
@@ -34,7 +35,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `add_cloud_aliases()`
     - `delete_cloud_aliases()`
 
-- `archive.stream_from_backup()` and `archive.stream_to_device()` methods now accept an optional `backup_set_id` parameter to identify which backup set to restore from (only applicable to V3 archives).
+- `sdk.devices.upgrade()` to instruct the Code42 cloud to upgrade an individual device to the latest available version.
+
+- `sdk.archive.stream_from_backup()` and `sdk.archive.stream_to_device()` methods now accept an optional `backup_set_id` parameter to identify which backup set to restore from (only applicable to V3 archives).
 
 ### Fixed
 

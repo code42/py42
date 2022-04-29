@@ -1,4 +1,6 @@
 import pytest
+
+from py42.exceptions import Py42Error
 from tests.conftest import create_mock_response
 from tests.conftest import get_file_selection
 from tests.conftest import TEST_ACCEPTING_GUID
@@ -116,8 +118,11 @@ class TestArchiveClient:
         )
 
     def test_stream_from_backup_when_given_backup_set_id_calls_archive_accessor_stream_from_backup_with_expected_params(
-        self, archive_accessor_factory, archive_service, archive_content_streamer
+        self, mocker, archive_accessor_factory, archive_service, archive_content_streamer
     ):
+        backup_set_text = f'{{"backupSets": [{{"backupSetId": "{TEST_BACKUP_SET_ID}"}}, {{"backupSetId": "1"}}]}}'
+        backup_set_response = create_mock_response(mocker, backup_set_text)
+        archive_service.get_backup_sets.return_value = backup_set_response
         archive_accessor_factory.create_archive_accessor.return_value = (
             archive_content_streamer
         )
@@ -129,15 +134,39 @@ class TestArchiveClient:
             TEST_PASSWORD,
             TEST_ENCRYPTION_KEY,
             file_size_calc_timeout=10000,
-            backup_set_id="100",
+            backup_set_id=TEST_BACKUP_SET_ID,
             show_deleted=True,
         )
         archive_content_streamer.stream_from_backup.assert_called_once_with(
-            "100",
+            TEST_BACKUP_SET_ID,
             TEST_PATHS,
             file_size_calc_timeout=10000,
             show_deleted=True,
         )
+
+    def test_stream_from_backup_raises_error_when_given_invalid_backup_set_id(
+        self, mocker, archive_accessor_factory, archive_service, archive_content_streamer
+    ):
+        backup_set_text = f'{{"backupSets": [{{"backupSetId": "{TEST_BACKUP_SET_ID}"}}, {{"backupSetId": "1"}}]}}'
+        backup_set_response = create_mock_response(mocker, backup_set_text)
+        archive_service.get_backup_sets.return_value = backup_set_response
+        archive_accessor_factory.create_archive_accessor.return_value = (
+            archive_content_streamer
+        )
+        archive = ArchiveClient(archive_accessor_factory, archive_service)
+        with pytest.raises(Py42Error) as err:
+            archive.stream_from_backup(
+                TEST_PATHS,
+                TEST_DEVICE_GUID,
+                TEST_DESTINATION_GUID_1,
+                TEST_PASSWORD,
+                TEST_ENCRYPTION_KEY,
+                file_size_calc_timeout=10000,
+                backup_set_id="100",
+                show_deleted=True,
+            )
+        assert "backup_set_id='100' not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]" in str(
+            err)
 
     def test_stream_to_device_calls_accessor_stream_to_device(
         self,
@@ -233,17 +262,48 @@ class TestArchiveClient:
             archive_password=TEST_PASSWORD,
             encryption_key=TEST_ENCRYPTION_KEY,
             file_size_calc_timeout=100,
-            backup_set_id="100",
+            backup_set_id=TEST_BACKUP_SET_ID,
             show_deleted=True,
         )
         archive_content_pusher.stream_to_device.assert_called_once_with(
             TEST_RESTORE_PATH,
             TEST_ACCEPTING_GUID,
             TEST_FILE_SELECTIONS,
-            "100",
+            TEST_BACKUP_SET_ID,
             True,
             False,
         )
+
+    def test_stream_to_device_raises_error_if_provided_backup_set_id_invalid(
+        self,
+        mocker,
+        archive_accessor_factory,
+        archive_service,
+        archive_explorer,
+        archive_content_pusher,
+    ):
+        backup_set_text = f'{{"backupSets": [{{"backupSetId": "{TEST_BACKUP_SET_ID}"}}, {{"backupSetId": "1"}}]}}'
+        backup_set_response = create_mock_response(mocker, backup_set_text)
+        archive_service.get_backup_sets.return_value = backup_set_response
+        archive_accessor_factory.create_archive_accessor.return_value = archive_explorer
+        archive_accessor_factory.create_archive_content_pusher.return_value = (
+            archive_content_pusher
+        )
+        archive = ArchiveClient(archive_accessor_factory, archive_service)
+        with pytest.raises(Py42Error) as err:
+            archive.stream_to_device(
+                TEST_PATHS,
+                TEST_DEVICE_GUID,
+                TEST_ACCEPTING_GUID,
+                TEST_RESTORE_PATH,
+                destination_guid=TEST_DESTINATION_GUID_1,
+                archive_password=TEST_PASSWORD,
+                encryption_key=TEST_ENCRYPTION_KEY,
+                file_size_calc_timeout=100,
+                backup_set_id="100",
+                show_deleted=True,
+            )
+        assert "backup_set_id='100' not found in device backup sets: [{'backupSetId': 'backup-set-id'}, {'backupSetId': '1'}]" in str(err)
 
     def test_get_backup_sets_calls_archive_service_get_backup_sets_with_expected_params(
         self, archive_accessor_factory, archive_service

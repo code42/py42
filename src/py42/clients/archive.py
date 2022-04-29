@@ -50,6 +50,7 @@ class ArchiveClient:
         encryption_key=None,
         show_deleted=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
+        backup_set_id=None,
     ):
         """Streams a file from a backup archive to memory. This method uses the same endpoint
         as restoring from Console and therefore has all the same considerations.
@@ -75,6 +76,9 @@ class ArchiveClient:
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
+            backup_set_id (str, optional): The ID of the backup set restore from (only useful for V3 archives).
+                If not supplied, the default backup set (id=1) will be used if it exists, otherwise
+                the first in the list of existing backup sets will be used.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.
@@ -100,9 +104,10 @@ class ArchiveClient:
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        backup_set_id = self._select_backup_set_id(
-            device_guid, archive_accessor.destination_guid
-        )
+        if not backup_set_id:
+            backup_set_id = self._select_backup_set_id(
+                device_guid, archive_accessor.destination_guid
+            )
         return archive_accessor.stream_from_backup(
             backup_set_id,
             file_paths,
@@ -122,6 +127,7 @@ class ArchiveClient:
         show_deleted=None,
         overwrite_existing_files=False,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
+        backup_set_id=None,
     ):
         """Streams a file from a backup archive to a specified device.
 
@@ -151,6 +157,9 @@ class ArchiveClient:
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
+            backup_set_id (str, optional): The ID of the backup set restore from (only useful for V3 archives).
+                If not supplied, the default backup set (id=1) will be used if it exists, otherwise
+                the first in the list of existing backup sets will be used.
 
         Returns:
             :class:`py42.response.Py42Response`.
@@ -162,9 +171,10 @@ class ArchiveClient:
             private_password=archive_password,
             encryption_key=encryption_key,
         )
-        backup_set_id = self._select_backup_set_id(
-            device_guid, explorer.destination_guid
-        )
+        if not backup_set_id:
+            backup_set_id = self._select_backup_set_id(
+                device_guid, explorer.destination_guid
+            )
         file_selections = explorer.create_file_selections(
             backup_set_id, file_paths, file_size_calc_timeout
         )

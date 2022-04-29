@@ -34,6 +34,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `add_cloud_aliases()`
     - `delete_cloud_aliases()`
 
+- `archive.stream_from_backup()` and `archive.stream_to_device()` methods now accept an optional `backup_set_id` parameter to identify which backup set to restore from (only applicable to V3 archives).
+
 ### Fixed
 
 - Bug where attempting to restore from an empty archive would throw a confusing `TypeError`, we now raise appropriate `Py42ArchiveFileNotFoundError`.

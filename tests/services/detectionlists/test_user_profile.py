@@ -3,6 +3,7 @@ from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42CloudAliasCharacterLimitExceededError
 from py42.exceptions import Py42CloudAliasLimitExceededError
 from py42.services.detectionlists.user_profile import DetectionListUserService
 from py42.services.users import UserService
@@ -35,21 +36,14 @@ class TestDetectionListUserClient:
 
     @pytest.fixture
     def mock_user_client_raises_exception(
-        self, mocker, mock_connection, user_context,
+        self,
+        mocker,
+        mock_connection,
+        user_context,
     ):
         user_client = UserService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, ""
-        )
-        return user_client
-
-    @pytest.fixture
-    def mock_user_client_error_on_adding_cloud_aliases(
-        self, mocker, mock_connection, user_context,
-    ):
-        user_client = UserService(mock_connection)
-        mock_connection.post.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, CLOUD_ALIAS_LIMIT_EXCEEDED_ERROR_MESSAGE
         )
         return user_client
 
@@ -189,16 +183,28 @@ class TestDetectionListUserClient:
         )
 
     def test_add_cloud_alias_limit_raises_custom_error_on_limit(
-        self,
-        mock_connection,
-        user_context,
-        mock_user_client_error_on_adding_cloud_aliases,
+        self, mocker, mock_connection, user_context, mock_user_client
     ):
         detection_list_user_client = DetectionListUserService(
-            mock_connection,
-            user_context,
-            mock_user_client_error_on_adding_cloud_aliases,
+            mock_connection, user_context, mock_user_client
+        )
+        text = "Cloud usernames must be less than or equal to 2"
+        mock_connection.post.side_effect = create_mock_error(
+            Py42BadRequestError, mocker, text
         )
         with pytest.raises(Py42CloudAliasLimitExceededError) as err:
             detection_list_user_client.add_cloud_alias("942897397520289999", "Test")
         assert "Cloud alias limit exceeded." in str(err.value)
+
+    def test_add_cloud_alias_when_over_character_limit_raises_custom_error(
+        self, mock_connection, user_context, mock_user_client
+    ):
+        detection_list_user_client = DetectionListUserService(
+            mock_connection, user_context, mock_user_client
+        )
+        with pytest.raises(Py42CloudAliasCharacterLimitExceededError) as err:
+            detection_list_user_client.add_cloud_alias(
+                "942897397520289999",
+                "a-very-long-cloud-alias-which-exceeds-the-character-limit-of-fifty-characters-per-alias",
+            )
+        assert "Cloud alias character limit exceeded." in str(err.value)

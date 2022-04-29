@@ -51,12 +51,12 @@ class Py42ChecksumNotFoundError(Py42ResponseError):
 
     @property
     def checksum_name(self):
-        """ The checksum name. """
+        """The checksum name."""
         return self._checksum_name
 
     @property
     def checksum_value(self):
-        """ The checksum value. """
+        """The checksum value."""
         return self.checksum_value
 
 
@@ -96,7 +96,7 @@ class Py42DeviceNotConnectedError(Py42ResponseError):
 
     @property
     def device_guid(self):
-        """ The device GUID. """
+        """The device GUID."""
         return self._device_guid
 
 
@@ -177,7 +177,7 @@ class Py42OrgNotFoundError(Py42BadRequestError):
 
     @property
     def org_uid(self):
-        """" The org UID. """
+        """ " The org UID."""
         return self._org_uid
 
 
@@ -193,12 +193,12 @@ class Py42ActiveLegalHoldError(Py42BadRequestError):
 
     @property
     def resource(self):
-        """ The user or device resource. """
+        """The user or device resource."""
         return self._resource
 
     @property
     def resource_id(self):
-        """ The resource ID. """
+        """The resource ID."""
         return self._resource_id
 
 
@@ -213,7 +213,7 @@ class Py42UserAlreadyAddedError(Py42BadRequestError):
 
     @property
     def user_id(self):
-        """ The user ID. """
+        """The user ID."""
         return self._user_id
 
 
@@ -228,7 +228,7 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
 
     @property
     def uid(self):
-        """ The UID of the legal hold resource. """
+        """The UID of the legal hold resource."""
         return self._resource_uid
 
 
@@ -253,7 +253,7 @@ class Py42LegalHoldAlreadyDeactivatedError(Py42BadRequestError):
 
     @property
     def legal_hold_matter_uid(self):
-        """ The legal hold matter UID. """
+        """The legal hold matter UID."""
         return self._legal_hold_matter_uid
 
 
@@ -269,7 +269,7 @@ class Py42LegalHoldAlreadyActiveError(Py42BadRequestError):
 
     @property
     def legal_hold_matter_uid(self):
-        """ The legal hold matter UID. """
+        """The legal hold matter UID."""
         return self._legal_hold_matter_uid
 
 
@@ -285,12 +285,12 @@ class Py42InvalidRuleOperationError(Py42HTTPError):
 
     @property
     def rule_id(self):
-        """ The rule ID. """
+        """The rule ID."""
         return self._rule_id
 
     @property
     def source(self):
-        """ The rule source. """
+        """The rule source."""
         return self._source
 
 
@@ -329,7 +329,7 @@ class Py42InvalidEmailError(Py42InternalServerError):
 
     @property
     def email(self):
-        """ The email being assigned to a user. """
+        """The email being assigned to a user."""
         return self._email
 
 
@@ -354,8 +354,19 @@ class Py42CloudAliasLimitExceededError(Py42BadRequestError):
     already has the max amount of supported cloud aliases."""
 
     def __init__(self, exception, message=None):
-        message = message or "Cloud alias limit exceeded."
+        message = (
+            message
+            or "Cloud alias limit exceeded. A max of 2 cloud aliases are allowed."
+        )
         super(Py42BadRequestError, self).__init__(exception, message)
+
+
+class Py42CloudAliasCharacterLimitExceededError(Py42Error):
+    """An exception raised when trying to add a cloud alias to a user that exceeds the max character limit."""
+
+    def __init__(self):
+        message = "Cloud alias character limit exceeded. Max 50 characters."
+        super().__init__(message)
 
 
 class Py42BadRestoreRequestError(Py42BadRequestError):
@@ -377,7 +388,7 @@ class Py42InvalidPageTokenError(Py42BadRequestError):
 
     @property
     def page_token(self):
-        """ The page token. """
+        """The page token."""
         return self._page_token
 
 
@@ -392,12 +403,12 @@ class Py42UserNotOnListError(Py42NotFoundError):
 
     @property
     def user_id(self):
-        """ The user ID. """
+        """The user ID."""
         return self._user_id
 
     @property
     def list_name(self):
-        """ The list name. """
+        """The list name."""
         return self._list_name
 
 
@@ -419,7 +430,7 @@ class Py42UnableToCreateProfileError(Py42BadRequestError):
 
     @property
     def username(self):
-        """ The username of the user. """
+        """The username of the user."""
         return self._username
 
 
@@ -433,7 +444,7 @@ class Py42InvalidRuleError(Py42NotFoundError):
 
     @property
     def rule_id(self):
-        """ The observer rule ID. """
+        """The observer rule ID."""
         return self._rule_id
 
 
@@ -455,7 +466,7 @@ class Py42CaseNameExistsError(Py42BadRequestError):
 
     @property
     def case_name(self):
-        """ The case name. """
+        """The case name."""
         return self._case_name
 
 
@@ -477,7 +488,7 @@ class Py42InvalidCaseUserError(Py42BadRequestError):
 
     @property
     def user(self):
-        """ The user UID. """
+        """The user UID."""
         return self._user_uid
 
 
@@ -510,7 +521,7 @@ class Py42TrustedActivityConflictError(Py42ConflictError):
 
     @property
     def value(self):
-        """ The domain, URL or workspace name. """
+        """The domain, URL or workspace name."""
         return self._value
 
 
@@ -532,8 +543,72 @@ class Py42TrustedActivityIdNotFound(Py42NotFoundError):
 
     @property
     def resource_id(self):
-        """ The resource ID. """
+        """The resource ID."""
         return self._resource_id
+
+
+class Py42WatchlistNotFound(Py42NotFoundError):
+    """An exception raised when the watchlist with the given ID was not found."""
+
+    def __init__(self, exception, resource_id):
+        message = f"Watchlist ID '{resource_id}' not found."
+        super().__init__(exception, message, resource_id)
+        self._watchlist_id = resource_id
+
+    @property
+    def watchlist_id(self):
+        """The watchlist ID."""
+        return self._watchlist_id
+
+
+class Py42WatchlistOrUserNotFound(Py42NotFoundError):
+    """An exception raised when the watchlist ID or the User ID does not exist."""
+
+    def __init__(self, exception, watchlist_id, user_id):
+        message = f"Watchlist ID '{watchlist_id}' or User ID '{user_id}' not found."
+        super().__init__(exception, message, watchlist_id, user_id)
+        self._watchlist_id = watchlist_id
+        self._user_id = user_id
+
+    @property
+    def watchlist_id(self):
+        """The watchlist ID."""
+        return self._watchlist_id
+
+    @property
+    def user_id(self):
+        """The user ID."""
+        return self._user_id
+
+
+class Py42InvalidWatchlistType(Py42BadRequestError):
+    """An exception raised when an invalid watchlist type is specified."""
+
+    def __init__(self, exception, watchlist_type):
+        message = f"'{watchlist_type}' cannot be converted to a valid watchlist type.  Please look at the WatchlistType class for valid types."
+        super().__init__(exception, message, watchlist_type)
+        self._watchlist_type = watchlist_type
+
+    @property
+    def watchlist_type(self):
+        """The specified watchlist type."""
+        return self._watchlist_type
+
+
+class Py42UserRiskProfileNotFound(Py42NotFoundError):
+    """An exception raised when the user with the given ID for a user risk profile was not found."""
+
+    def __init__(self, exception, user_id, identifier="ID"):
+        message = (
+            f"User risk profile for user with the {identifier} '{user_id}' not found."
+        )
+        super().__init__(exception, message, user_id)
+        self._user_id = user_id
+
+    @property
+    def user(self):
+        """The user identifier."""
+        return self._user_id
 
 
 def raise_py42_error(raised_error):

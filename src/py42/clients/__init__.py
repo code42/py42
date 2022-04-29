@@ -12,5 +12,7 @@ Clients = namedtuple(
         "cases",
         "loginconfig",
         "trustedactivities",
+        "userriskprofile",
+        "watchlists",
     ],
 )

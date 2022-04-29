@@ -13,7 +13,7 @@ class Actor(FileEventFilterStringField):
 
 class DirectoryID(FileEventFilterStringField):
     """Class that filters events by unique identifier of the cloud drive or folder where the event
-     occurred (applies to cloud data source events only).
+    occurred (applies to cloud data source events only).
     """
 
     _term = "directoryId"

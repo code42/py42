@@ -1,6 +1,6 @@
 # Response
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.response.Py42Response
     :members:
     :show-inheritance:

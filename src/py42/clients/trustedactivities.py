@@ -4,8 +4,8 @@ from py42.choices import Choices
 class TrustedActivityType(Choices):
     """Constants available for setting the type of a trusted activity.
 
-        * ``DOMAIN``
-        * ``SLACK``
+    * ``DOMAIN``
+    * ``SLACK``
     """
 
     DOMAIN = "DOMAIN"
@@ -23,7 +23,7 @@ class TrustedActivitiesClient:
 
     def get_all(self, type=None, page_size=None):
         """Gets all trusted activities.
-        `Rest documentation <https://developer.code42.com/api>`
+        `Rest documentation <https://developer.code42.com/api>`__
 
         Args:
             type (str, optional): Type of the trusted activity. Defaults to None. Constants available at :class:`py42.constants.TrustedActivityType`.
@@ -37,10 +37,10 @@ class TrustedActivitiesClient:
 
     def create(self, type, value, description=None):
         """Gets all trusted activities with the given type.
-        `Rest documentation <https://developer.code42.com/api>`
+        `Rest documentation <https://developer.code42.com/api>`__
 
         Args:
-            type (str): Type of the trusted activity. Defaults to None. Constants available at :class:`py42.constants.TrustedActivityType`.
+            type (str): Type of the trusted activity. Constants available at :class:`py42.constants.TrustedActivityType`.
             value (str): The URL of the domain or name of the Slack workspace.
             description (str, optional): Description of the trusted activity.
 
@@ -51,7 +51,7 @@ class TrustedActivitiesClient:
 
     def get(self, id):
         """Retrieve trusted activity details by given resource number.
-        `Rest documentation <https://developer.code42.com/api>`
+        `Rest documentation <https://developer.code42.com/api>`__
 
         Args:
             id (int): Resource number of the trusted activity or domain.
@@ -63,7 +63,7 @@ class TrustedActivitiesClient:
 
     def update(self, id, value=None, description=None):
         """Updates trusted activity details by given resource number.
-        `Rest documentation <https://developer.code42.com/api>`
+        `Rest documentation <https://developer.code42.com/api>`__
 
         Args:
             id (int): Resource number of the trusted activity.
@@ -79,7 +79,7 @@ class TrustedActivitiesClient:
 
     def delete(self, id):
         """Deletes a trusted activity by given resource number.
-        `Rest documentation <https://developer.code42.com/api>`
+        `Rest documentation <https://developer.code42.com/api>`__
 
         Args:
             id (int): Resource number of the trusted activity or domain.

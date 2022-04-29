@@ -1,12 +1,12 @@
 # Users
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.services.users.UserService
     :members:
     :show-inheritance:
 ```
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.usercontext.UserContext
     :members:
     :show-inheritance:

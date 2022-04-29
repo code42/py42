@@ -42,7 +42,11 @@ class StorageArchiveService(RestoreService):
         return self._connection.get(uri, params=params)
 
     def create_file_size_job(
-        self, device_guid, file_id, timestamp=None, show_deleted=None,
+        self,
+        device_guid,
+        file_id,
+        timestamp=None,
+        show_deleted=None,
     ):
         uri = "/api/WebRestoreFileSizePolling"
         json_dict = {

@@ -123,7 +123,8 @@ class TestFileSizePoller:
         return create_job
 
     def get_file_sizes_polling_status_side_effect(
-        self, mocker,
+        self,
+        mocker,
     ):
         def get_status(job_id, device_guid):
             if job_id == self.DOWNLOADS_JOB:
@@ -139,11 +140,11 @@ class TestFileSizePoller:
     def test_get_file_sizes_returns_sizes_for_each_id(
         self, mocker, storage_archive_service
     ):
-        storage_archive_service.create_file_size_job.side_effect = self.get_create_job_side_effect(
-            mocker
+        storage_archive_service.create_file_size_job.side_effect = (
+            self.get_create_job_side_effect(mocker)
         )
-        storage_archive_service.get_file_size_job.side_effect = self.get_file_sizes_polling_status_side_effect(
-            mocker
+        storage_archive_service.get_file_size_job.side_effect = (
+            self.get_file_sizes_polling_status_side_effect(mocker)
         )
         poller = FileSizePoller(storage_archive_service, TEST_DEVICE_GUID)
         actual = poller.get_file_sizes(
@@ -169,8 +170,8 @@ class TestFileSizePoller:
     def test_get_file_sizes_waits_for_size_calculation(
         self, mocker, storage_archive_service
     ):
-        storage_archive_service.create_file_size_job.side_effect = self.get_create_job_side_effect(
-            mocker
+        storage_archive_service.create_file_size_job.side_effect = (
+            self.get_create_job_side_effect(mocker)
         )
 
         desktop_statuses = ["DONE", "WORKING", "WORKING"]
@@ -202,8 +203,8 @@ class TestFileSizePoller:
                 *args, **kwargs
             )
 
-        storage_archive_service.create_file_size_job.side_effect = self.get_create_job_side_effect(
-            mocker
+        storage_archive_service.create_file_size_job.side_effect = (
+            self.get_create_job_side_effect(mocker)
         )
         storage_archive_service.get_file_size_job.side_effect = take_too_long
         poller = FileSizePoller(storage_archive_service, TEST_DEVICE_GUID)

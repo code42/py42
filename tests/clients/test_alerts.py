@@ -208,7 +208,10 @@ class TestAlertsClient:
         assert alert_client.rules
 
     def test_alerts_client_calls_search_with_expected_value(
-        self, mock_alerts_service, mock_alert_rules_service, mock_alert_query,
+        self,
+        mock_alerts_service,
+        mock_alert_rules_service,
+        mock_alert_query,
     ):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.search(mock_alert_query)
@@ -222,7 +225,9 @@ class TestAlertsClient:
         mock_alerts_service.get_details.assert_called_once_with(self._alert_ids)
 
     def test_alerts_client_calls_update_state_with_resolve_state_and_expected_value(
-        self, mock_alerts_service, mock_alert_rules_service,
+        self,
+        mock_alerts_service,
+        mock_alert_rules_service,
     ):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.resolve(self._alert_ids)
@@ -231,7 +236,9 @@ class TestAlertsClient:
         )
 
     def test_alerts_client_calls_update_state_with_reopen_state_and_expected_value(
-        self, mock_alerts_service, mock_alert_rules_service,
+        self,
+        mock_alerts_service,
+        mock_alert_rules_service,
     ):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.reopen(self._alert_ids)
@@ -240,7 +247,9 @@ class TestAlertsClient:
         )
 
     def test_alerts_client_calls_update_state_with_state_and_expected_value(
-        self, mock_alerts_service, mock_alert_rules_service,
+        self,
+        mock_alerts_service,
+        mock_alert_rules_service,
     ):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.update_state("RESOLVED", self._alert_ids)
@@ -249,14 +258,18 @@ class TestAlertsClient:
         )
 
     def test_alerts_client_calls_update_note_with_expected_value_and_param(
-        self, mock_alerts_service, mock_alert_rules_service,
+        self,
+        mock_alerts_service,
+        mock_alert_rules_service,
     ):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.update_note("alert-id", "a note")
         mock_alerts_service.update_note.assert_called_once_with("alert-id", "a note")
 
     def test_alerts_client_calls_search_all_pages_with_expected_value_and_param(
-        self, mock_alerts_service, mock_alert_rules_service,
+        self,
+        mock_alerts_service,
+        mock_alert_rules_service,
     ):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         query = AlertQuery()
@@ -264,7 +277,9 @@ class TestAlertsClient:
         mock_alerts_service.search_all_pages.assert_called_once_with(query)
 
     def test_alerts_client_calls_get_aggregate_data_with_expected_value_and_param(
-        self, mock_alerts_service, mock_alert_rules_service,
+        self,
+        mock_alerts_service,
+        mock_alert_rules_service,
     ):
         alert_client = AlertsClient(mock_alerts_service, mock_alert_rules_service)
         alert_client.get_aggregate_data("alert-id")

@@ -32,7 +32,10 @@ class TestArchiveAccessFactory:
         assert ArchiveAccessorFactory(archive_service, storage_service_factory)
 
     def test_create_archive_accessor_with_device_guid_and_destination_guid_returns(
-        self, archive_service, storage_service_factory, storage_archive_service,
+        self,
+        archive_service,
+        storage_service_factory,
+        storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
@@ -45,7 +48,10 @@ class TestArchiveAccessFactory:
         )
 
     def test_create_archive_accessor_calls_storage_service_factory_with_correct_args(
-        self, archive_service, storage_service_factory, storage_archive_service,
+        self,
+        archive_service,
+        storage_service_factory,
+        storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
@@ -55,11 +61,15 @@ class TestArchiveAccessFactory:
         )
         accessor_factory.create_archive_accessor(TEST_DEVICE_GUID, ArchiveAccessor)
         storage_service_factory.create_archive_service.assert_called_with(
-            TEST_DEVICE_GUID, TEST_DESTINATION_GUID_1,
+            TEST_DEVICE_GUID,
+            TEST_DESTINATION_GUID_1,
         )
 
     def test_create_archive_accessor_with_opt_dest_guid_calls_storage_service_factory_with_correct_args(
-        self, archive_service, storage_service_factory, storage_archive_service,
+        self,
+        archive_service,
+        storage_service_factory,
+        storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
@@ -68,14 +78,19 @@ class TestArchiveAccessFactory:
             archive_service, storage_service_factory
         )
         accessor_factory.create_archive_accessor(
-            TEST_DEVICE_GUID, ArchiveAccessor, TEST_DESTINATION_GUID_1,
+            TEST_DEVICE_GUID,
+            ArchiveAccessor,
+            TEST_DESTINATION_GUID_1,
         )
         storage_service_factory.create_archive_service.assert_called_with(
             TEST_DEVICE_GUID, TEST_DESTINATION_GUID_1
         )
 
     def test_create_archive_accessor_creates_web_restore_session_with_correct_args(
-        self, archive_service, storage_service_factory, storage_archive_service,
+        self,
+        archive_service,
+        storage_service_factory,
+        storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
@@ -90,7 +105,10 @@ class TestArchiveAccessFactory:
         )
 
     def test_create_archive_accessor_when_given_private_password_creates_expected_restore_session(
-        self, archive_service, storage_service_factory, storage_archive_service,
+        self,
+        archive_service,
+        storage_service_factory,
+        storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
@@ -99,7 +117,9 @@ class TestArchiveAccessFactory:
             archive_service, storage_service_factory
         )
         accessor_factory.create_archive_accessor(
-            TEST_DEVICE_GUID, ArchiveAccessor, private_password=TEST_PASSWORD,
+            TEST_DEVICE_GUID,
+            ArchiveAccessor,
+            private_password=TEST_PASSWORD,
         )
         storage_archive_service.create_restore_session.assert_called_once_with(
             TEST_DEVICE_GUID,
@@ -108,7 +128,10 @@ class TestArchiveAccessFactory:
         )
 
     def test_create_archive_accessor_when_given_encryption_key_creates_expected_restore_session(
-        self, archive_service, storage_service_factory, storage_archive_service,
+        self,
+        archive_service,
+        storage_service_factory,
+        storage_archive_service,
     ):
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service
@@ -127,7 +150,11 @@ class TestArchiveAccessFactory:
         )
 
     def test_create_archive_accessor_calls_create_restore_job_manager_with_correct_args(
-        self, mocker, archive_service, storage_service_factory, storage_archive_service,
+        self,
+        mocker,
+        archive_service,
+        storage_service_factory,
+        storage_archive_service,
     ):
         spy = mocker.spy(
             py42.clients._archiveaccess.accessorfactory, "create_restore_job_manager"

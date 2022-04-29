@@ -143,7 +143,10 @@ class TestHighRiskEmployeeClient:
         assert posted_data["userId"] == "942897397520289999"
 
     def test_get_posts_expected_data(
-        self, user_context, mock_connection, mock_detection_list_user_client,
+        self,
+        user_context,
+        mock_connection,
+        mock_detection_list_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
@@ -159,7 +162,10 @@ class TestHighRiskEmployeeClient:
         )
 
     def test_get_all_posts_expected_data(
-        self, user_context, mock_connection, mock_detection_list_user_client,
+        self,
+        user_context,
+        mock_connection,
+        mock_detection_list_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client

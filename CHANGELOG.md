@@ -12,7 +12,69 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- `Watchlists` and `UserRiskProfile` clients
+  - These features replace the `DetectionLists` client as well as its `DepartingEmployee` and `HighRiskEmployee` services.  All related classes and methods have been marked as deprecated and will raise deprecation warnings.
+  - `Watchlists` client includes the following methods:
+    - `get()`
+    - `delete()`
+    - `get_all()`
+    - `create()`
+    - `get_all_included_users()`
+    - `add_included_users_by_watchlist_id()`
+    - `add_included_users_by_watchlist_type()`
+    - `remove_included_users_by_watchlist_id()`
+    - `remove_included_users_by_watchlist_type()`
+    - `get_all_watchlist_members()`
+    - `get_watchlist_member()`
+  - `UserRiskProfile` client includes the following methods:
+    - `get_by_id()`
+    - `get_by_username()`
+    - `update()`
+    - `get_page()`
+    - `get_all()`
+    - `add_cloud_aliases()`
+    - `delete_cloud_aliases()`
+
 - `sdk.devices.upgrade()` to instruct the Code42 cloud to upgrade an individual device to the latest available version.
+
+### Fixed
+
+- Bug where attempting to restore from an empty archive would throw a confusing `TypeError`, we now raise appropriate `Py42ArchiveFileNotFoundError`.
+
+## 1.22.0 - 2022-04-01
+
+### Added
+- `IncydrDeviceSettings` class to allow users to manage the settings on individual Incydr devices.
+
+## 1.21.1 - 2022-02-22
+
+### Fixed
+
+- Bug with incorrect error being raised `sdk.detectionlists.add_user_cloud_alias()`
+
+## 1.21.0 - 2022-02-18
+
+### Added
+
+- New file event filter query classes:
+    - in `sdk.queries.fileevents.filters.source_filters`:
+        - `SourceCategory`
+        - `SourceName`
+        - `SourceTabTitles`
+        - `SourceTabUrls`
+    - in `sdk.queries.filevents.filters.exposure_filters`:
+        - `DestinationCategory`
+        - `DestinationName`
+
+### Fixed
+
+- Improved error handling for `sdk.detectionlists.add_user_cloud_alias()`
+
+## 1.20.0 - 2022-01-10
+
+### Added
+
+- New file event filter query `sdk.queries.fileevents.filers.risk_filter.RiskScore` to search for file events based on riskScore values.
 
 ### Changed
 

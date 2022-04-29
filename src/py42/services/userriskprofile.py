@@ -40,39 +40,38 @@ class UserRiskProfileService(BaseService):
         except Py42NotFoundError as err:
             raise Py42UserRiskProfileNotFound(err, username, identifier="username")
 
-    def update(self, user_id, start_date=None, end_date=None, notes=None, paths=None):
+    def update(self, user_id, start_date=None, end_date=None, notes=None):
         # Build paths field
-        if not paths:
-            paths = []
-            if start_date is not None:
-                paths += ["startDate"]
-                if start_date == "":
-                    start_date = None
-            if end_date is not None:
-                paths += ["endDate"]
-                if end_date == "":
-                    end_date = None
-            if notes is not None:
-                paths += ["notes"]
-                if notes == "":
-                    notes = None
+        paths = []
+        data = {}
+        if start_date is not None:
+            paths += ["startDate"]
+            if start_date == "":
+                data["startDate"] = None
+            else:
+                start_day, start_month, start_year = _parse_date_string(start_date)
+                data["startDate"] = {
+                    "day": start_day,
+                    "month": start_month,
+                    "year": start_year,
+                }
+        if end_date is not None:
+            paths += ["endDate"]
+            if end_date == "":
+                data["endDate"] = None
+            else:
+                end_day, end_month, end_year = _parse_date_string(end_date)
+                data["endDate"] = {"day": end_day, "month": end_month, "year": end_year}
+        if notes is not None:
+            paths += ["notes"]
+            if notes == "":
+                data["notes"] = None
+            else:
+                data["notes"] = notes
         if not paths:
             raise Py42Error("No fields provided. No values will be updated.")
 
-        # parse date strings
-        start_day, start_month, start_year = (
-            _parse_date_string(start_date) if start_date else (None, None, None)
-        )
-        end_day, end_month, end_year = (
-            _parse_date_string(end_date) if end_date else (None, None, None)
-        )
-
         params = {"paths": ", ".join(paths)}
-        data = {
-            "endDate": {"day": end_day, "month": end_month, "year": end_year},
-            "notes": notes,
-            "startDate": {"day": start_day, "month": start_month, "year": start_year},
-        }
         uri = f"{self._uri_prefix}/{user_id}"
         try:
             return self._connection.patch(uri, json=data, params=params)

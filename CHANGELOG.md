@@ -14,6 +14,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 - Support for V2 file event data.
   - Set `py42.settings.use_v2_file_event_data = True` to use the V2 file event APIs.
   - Use queries built with V2 filters from `py42.sdk.queries.fileevents.v2`.
+### Added
 
 - `Watchlists` and `UserRiskProfile` clients
   - These features replace the `DetectionLists` client as well as its `DepartingEmployee` and `HighRiskEmployee` services.  All related classes and methods have been marked as deprecated and will raise deprecation warnings.
@@ -37,6 +38,14 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `get_all()`
     - `add_cloud_aliases()`
     - `delete_cloud_aliases()`
+
+- `sdk.devices.upgrade()` to instruct the Code42 cloud to upgrade an individual device to the latest available version.
+
+- `sdk.archive.stream_from_backup()` and `sdk.archive.stream_to_device()` methods now accept an optional `backup_set_id` parameter to identify which backup set to restore from (only applicable to V3 archives).
+
+### Fixed
+
+- Bug where attempting to restore from an empty archive would throw a confusing `TypeError`, we now raise appropriate `Py42ArchiveFileNotFoundError`.
 
 ## 1.22.0 - 2022-04-01
 

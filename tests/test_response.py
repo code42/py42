@@ -11,6 +11,7 @@ JSON_DICT_WITH_DATA_NODE = '{"data": {"item_list_key": {"foo": "foo_val"}}}'
 
 JSON_LIST_NO_DATA_NODE = '{"item_list_key": [{"foo": "foo_val"}, {"bar": "bar_val"}]}'
 JSON_DICT_NO_DATA_NODE = '{"item_list_key": {"foo": "foo_val", "bar": "bar_val"}}'
+JSON_DICT_EMPTY_DATA_NODE = '{"data": []}'
 
 PLAIN_TEXT = "TEST_PLAIN_TEXT"
 
@@ -45,6 +46,13 @@ class TestPy42Response:
         return mock_response
 
     @pytest.fixture
+    def mock_response_dict_empty_data_node(self, mocker):
+        mock_response = mocker.MagicMock(spec=Response)
+        mock_response.content = JSON_DICT_EMPTY_DATA_NODE.encode("utf-8")
+        mock_response.text = JSON_DICT_EMPTY_DATA_NODE
+        return mock_response
+
+    @pytest.fixture
     def mock_response_not_json(self, mocker):
         mock_response = mocker.MagicMock(spec=Response)
         mock_response.status_code = 200
@@ -76,6 +84,12 @@ class TestPy42Response:
     ):
         response = Py42Response(mock_response_dict_no_data_node)
         assert type(response["item_list_key"]) == dict
+
+    def test_getitem_returns_empty_list_empty_data_node(
+        self, mock_response_dict_empty_data_node
+    ):
+        response = Py42Response(mock_response_dict_empty_data_node)
+        assert response.data == []
 
     def test_setitem_modifies_dict_keys_with_data_node_to_expected_value(
         self, mock_response_dict_data_node

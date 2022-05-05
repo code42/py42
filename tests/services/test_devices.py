@@ -14,6 +14,7 @@ from py42.response import Py42Response
 from py42.services.devices import DeviceService
 
 COMPUTER_URI = "/api/v1/Computer"
+UPGRADE_URI = "/api/v4/device-upgrade/upgrade-device"
 
 DEFAULT_GET_DEVICES_PARAMS = {
     "active": None,
@@ -166,6 +167,15 @@ class TestDeviceService:
 
         assert "The organization with UID 'TestOrgUid' was not found." in str(err.value)
         assert err.value.org_uid == "TestOrgUid"
+
+    def test_upgrade_calls_upgrade_with_uri_and_params(
+        self, mock_connection, successful_response
+    ):
+        mock_connection.get.return_value = successful_response
+        service = DeviceService(mock_connection)
+        service.upgrade("DEVICE_ID")
+        expected_params = {"deviceGuid": "DEVICE_ID"}
+        mock_connection.post.assert_called_once_with(UPGRADE_URI, json=expected_params)
 
     def test_get_settings_returns_crashplan_settings_when_crashplan_service(
         self, mocker, mock_connection

@@ -1,7 +1,6 @@
 from py42.choices import Choices
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterComparableField
 from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.query_filter import QueryFilterBooleanField
 
 
 class FileCategory(FileEventFilterStringField, Choices):
@@ -80,13 +79,3 @@ class DirectoryId(FileEventFilterStringField):
     """Class that filters events by the directory ID of the file observed."""
 
     _term = "file.directoryId"
-
-
-class Shared(QueryFilterBooleanField):
-    """Class that filters events by the shared status of the file at the time the event occurred
-    (applies to cloud data source events only).
-    """
-
-    # TODO: this field has not been mapped to the new model yet.
-
-    _term = "file.shared"

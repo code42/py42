@@ -12,8 +12,9 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Added
 - Support for V2 file event data.
-  - Set `py42.settings.use_v2_file_event_data = True` to use the V2 file event APIs.
+  - Set `py42.settings.use_v2_file_event_data = True` to use the V2 file event and saved search APIs.
   - Use queries built with V2 filters from `py42.sdk.queries.fileevents.v2`.
+
 ### Added
 
 - `Watchlists` and `UserRiskProfile` clients

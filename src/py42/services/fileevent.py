@@ -1,4 +1,5 @@
 import json
+from warnings import warn
 
 import py42.settings as settings
 from py42.exceptions import Py42BadRequestError
@@ -18,8 +19,8 @@ class FileEventService(BaseService):
         """Searches for file events matching the query criteria.
         `REST Documentation <https://developer.code42.com/api/#operation/searchEventsUsingPOST>`__
 
-        The existing data model for file events will be DEPRECATED in late spring 2023. TODO: placeholder
-        To use the updated data model for file events, update your settings<https://developer.code42.com>.
+        The existing data model for file events is deprecated.
+        To use the updated data model for file events, `update your settings <https://py42docs.code42.com/en/stable/userguides/v2apis.html>`__.
 
         Args:
             query (:class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str or unicode):
@@ -29,6 +30,13 @@ class FileEventService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the query results.
         """
+        # deprecation warning for v1 file events
+        if not settings.use_v2_file_event_data:
+            warn(
+                "V1 file events are deprecated.  Set 'py42.settings.use_v2_file_event_data = True' to use V2 file events.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
 
         # check if query type matches settings
         if not isinstance(query, str):

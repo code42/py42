@@ -1,14 +1,22 @@
 # File Event Queries - V2
 
+For details on using the new file event data model, see the [V2 File Events User Guide](../userguides/v2apis.md).
+
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.v2.file_event_query.FileEventQuery
+.. autoclass:: py42.sdk.queries.fileevents.file_event_query.FileEventQuery
     :members:
     :show-inheritance:
+    :noindex:
 ```
 
 ## Saved Searches
 
-    # TODO: saved search V2 API is not yet available.
+```{eval-rst}
+.. autoclass:: py42.services.savedsearch.SavedSearchService
+    :members:
+    :show-inheritance:
+    :noindex:
+```
 
 
 ## Filter Classes
@@ -32,19 +40,23 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 ### Filter Group Helper Methods
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.v2.file_event_query.create_exists_filter_group
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_exists_filter_group
+    :noindex:
 ```
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.v2.file_event_query.create_not_exists_filter_group
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_not_exists_filter_group
+    :noindex:
 ```
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.v2.file_event_query.create_greater_than_filter_group
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_greater_than_filter_group
+    :noindex:
 ```
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.v2.file_event_query.create_less_than_filter_group
+.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_less_than_filter_group
+    :noindex:
 ```
 
 More helper methods for constructing queries can be found in [Shared Query Filters](sharedqueryfilters.md).

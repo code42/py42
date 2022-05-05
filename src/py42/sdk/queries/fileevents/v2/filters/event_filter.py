@@ -76,6 +76,6 @@ class EventShareType(FileEventFilterStringField):
 
     _term = "event.shareType"
 
-    SHARED_VIA_LINK = "SharedViaLink"
-    IS_PUBLIC = "IsPublic"
-    OUTSIDE_TRUSTED_DOMAIN = "OutsideTrustedDomains"
+    PUBLIC_LINK_SHARE = "Anyone with the link"
+    DOMAIN_SHARE = "Anyone in your organization"
+    DIRECT_USER_SHARE = "Shared with specific people"

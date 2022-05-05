@@ -4,6 +4,7 @@ import pytest
 from tests.conftest import create_mock_error
 
 from py42.exceptions import Py42BadRequestError
+from py42.exceptions import Py42Error
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.filters import FileName
@@ -110,7 +111,7 @@ class TestFileEventService:
         )
 
     # V2 TESTS
-    def test_search_calls_post_with_uri_and_query_v2(
+    def test_search_uses_v2_uri_and_query_if_v2_settings_enabled(
         self, connection, successful_response
     ):
         import py42.settings
@@ -122,3 +123,33 @@ class TestFileEventService:
         service.search(query)
         py42.settings.use_v2_file_event_data = False
         connection.post.assert_called_once_with(FILE_EVENT_URI_V2, json=dict(query))
+
+    def test_search_raises_exception_if_using_v1_query_with_v2_settings_enabled(
+        self, connection
+    ):
+        import py42.settings
+
+        query = _create_test_query()
+        py42.settings.use_v2_file_event_data = True
+        service = FileEventService(connection)
+        with pytest.raises(Py42Error) as err:
+            service.search(query)
+            py42.settings.use_v2_file_event_data = False
+
+        assert "You cannot use a V1 query with V2 settings enabled" in err.value.args[0]
+
+    def test_search_raises_exception_if_using_v2_query_with_v2_settings_disabled(
+        self, connection
+    ):
+        import py42.settings
+
+        py42.settings.use_v2_file_event_data = True
+        query = _create_v2_test_query()
+        service = FileEventService(connection)
+        py42.settings.use_v2_file_event_data = False
+        with pytest.raises(Py42Error) as err:
+            service.search(query)
+
+        assert (
+            "You cannot use a V2 query with V2 settings disabled" in err.value.args[0]
+        )

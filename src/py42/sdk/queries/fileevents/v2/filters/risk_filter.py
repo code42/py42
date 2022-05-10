@@ -6,7 +6,7 @@ from py42.sdk.queries.query_filter import QueryFilterStringField
 
 
 class RiskIndicator(FileEventFilterStringField):
-    """Class that filters events by the type of risk indicator.
+    """V2 filter class that filters events by the type of risk indicator.
 
     Available options are provided as class attributes:
         - :attr:`RiskIndicator.CloudDataExposures.PUBLIC_CORPORATE_BOX`
@@ -176,7 +176,7 @@ class RiskIndicator(FileEventFilterStringField):
 
 
 class RiskSeverity(FileEventFilterStringField, Choices):
-    """Class that filters events by risk severity.
+    """V2 filter class that filters events by risk severity.
 
     Available options are provided as class attributes:
         - :attr:`RiskSeverity.LOW`
@@ -196,19 +196,19 @@ class RiskSeverity(FileEventFilterStringField, Choices):
 
 
 class RiskScore(QueryFilterStringField, FileEventFilterComparableField):
-    """Class that filters events by risk score."""
+    """V2 filter class that filters events by risk score."""
 
     _term = "risk.score"
 
 
 class TrustedActivity(QueryFilterBooleanField):
-    """Class that filters events based on whether activity can be trusted."""
+    """V2 filter class that filters events based on whether activity can be trusted."""
 
     _term = "risk.trusted"
 
 
 class TrustReason(QueryFilterStringField, Choices):
-    """Class that filters events based on the trust reason for the activity.
+    """V2 filter class that filters events based on the trust reason for the activity.
 
     Available options are provided as class attributes:
         - :attr: `TrustReason.TRUSTED_DOMAIN_BROWSER_URL`

@@ -4,7 +4,7 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringFi
 
 
 class FileCategory(FileEventFilterStringField, Choices):
-    """Class that filters events by category of the file observed.
+    """V2 filter class that filters events by category of the file observed.
 
     Available file categories are provided as class attributes:
         - :attr:`FileCategory.AUDIO`
@@ -37,25 +37,25 @@ class FileCategory(FileEventFilterStringField, Choices):
 
 
 class FileName(FileEventFilterStringField):
-    """Class that filters events by the name of the file observed."""
+    """V2 filter class that filters events by the name of the file observed."""
 
     _term = "file.name"
 
 
 class FileOwner(FileEventFilterStringField):
-    """Class that filters events by the owner of the file observed."""
+    """V2 filter class that filters events by the owner of the file observed."""
 
     _term = "file.owner"
 
 
 class FilePath(FileEventFilterStringField):
-    """Class that filters events by path of the file observed."""
+    """V2 filter class that filters events by path of the file observed."""
 
     _term = "file.directory"
 
 
 class FileSize(FileEventFilterComparableField):
-    """Class that filters events by size of the file observed.
+    """V2 filter class that filters events by size of the file observed.
 
     Size ``value`` must be bytes.
     """
@@ -64,18 +64,18 @@ class FileSize(FileEventFilterComparableField):
 
 
 class MD5(FileEventFilterStringField):
-    """Class that filters events by the MD5 hash of the file observed."""
+    """V2 filter class that filters events by the MD5 hash of the file observed."""
 
     _term = "file.hash.md5"
 
 
 class SHA256(FileEventFilterStringField):
-    """Class that filters events by SHA256 hash of the file observed."""
+    """V2 filter class that filters events by SHA256 hash of the file observed."""
 
     _term = "file.hash.sha256"
 
 
 class DirectoryId(FileEventFilterStringField):
-    """Class that filters events by the directory ID of the file observed."""
+    """V2 filter class that filters events by the directory ID of the file observed."""
 
     _term = "file.directoryId"

@@ -5,7 +5,7 @@ from py42.sdk.queries.query_filter import QueryFilterBooleanField
 
 
 class EventTimestamp(FileEventFilterTimestampField, Choices):
-    """Class that filters events based on the timestamp of the event that occurred.
+    """V1 filter class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These
     constants should be used only with class method `within_the_last`:
@@ -38,7 +38,7 @@ class EventTimestamp(FileEventFilterTimestampField, Choices):
 
 
 class EventType(FileEventFilterStringField, Choices):
-    """Class that filters file events based on event type.
+    """V1 filter class that filters file events based on event type.
 
     Available event types are provided as class attributes:
 
@@ -66,7 +66,7 @@ class EventType(FileEventFilterStringField, Choices):
 
 
 class InsertionTimestamp(FileEventFilterTimestampField):
-    """Class that filters events based on the timestamp of when the event was actually added to the
+    """V1 filter class that filters events based on the timestamp of when the event was actually added to the
     event store (which can be after the event occurred on the device itself).
 
     `value` must be a POSIX timestamp. (see the :ref:`Dates <anchor_dates>` section of the Basics
@@ -77,7 +77,7 @@ class InsertionTimestamp(FileEventFilterTimestampField):
 
 
 class Source(FileEventFilterStringField, Choices):
-    """Class that filters events by event source.
+    """V1 filter class that filters events by event source.
 
     Available source types are provided as class attributes:
         - :attr:`Source.ENDPOINT`
@@ -104,12 +104,12 @@ class Source(FileEventFilterStringField, Choices):
 
 
 class MimeTypeMismatch(QueryFilterBooleanField):
-    """Class that filters events by whether or not a file's mime type matches its extension type."""
+    """V1 filter class that filters events by whether or not a file's mime type matches its extension type."""
 
     _term = "mimeTypeMismatch"
 
 
 class OutsideActiveHours(QueryFilterBooleanField):
-    """Class that filters events by whether or not they occurred outside a user's typical working hours"""
+    """V1 filter class that filters events by whether or not they occurred outside a user's typical working hours"""
 
     _term = "outsideActiveHours"

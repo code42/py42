@@ -5,7 +5,7 @@ from py42.sdk.queries.query_filter import QueryFilterStringField
 
 
 class RiskIndicator(FileEventFilterStringField):
-    """Class that filters events by risk indicator.
+    """V1 filter class that filters events by risk indicator.
 
     Available options are provided as class attributes:
         - :attr:`RiskIndicator.CloudDataExposures.PUBLIC_CORPORATE_BOX`
@@ -175,7 +175,7 @@ class RiskIndicator(FileEventFilterStringField):
 
 
 class RiskSeverity(FileEventFilterStringField, Choices):
-    """Class that filters events by risk severity.
+    """V1 filter class that filters events by risk severity.
 
     Available options are provided as class attributes:
         - :attr:`RiskSeverity.LOW`
@@ -195,6 +195,6 @@ class RiskSeverity(FileEventFilterStringField, Choices):
 
 
 class RiskScore(QueryFilterStringField, FileEventFilterComparableField):
-    """Class that filters events by risk score."""
+    """V1 filter class that filters events by risk score."""
 
     _term = "riskScore"

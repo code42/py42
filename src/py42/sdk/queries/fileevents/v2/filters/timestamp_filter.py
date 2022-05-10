@@ -3,7 +3,7 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventFilterTimestam
 
 
 class EventTimestamp(FileEventFilterTimestampField, Choices):
-    """Class that filters events based on the timestamp of the event that occurred.
+    """V2 filter class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These
     constants should be used only with class method `within_the_last`:

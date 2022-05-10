@@ -4,7 +4,7 @@ from py42.sdk.queries.fileevents.file_event_query import FileEventFilterTimestam
 
 
 class EventObserver(FileEventFilterStringField, Choices):
-    """Class that filters events by event observer.
+    """V2 filter class that filters events by event observer.
 
     Available event observer types are provided as class attributes:
         - :attr:`EventObserver.ENDPOINT`
@@ -31,7 +31,7 @@ class EventObserver(FileEventFilterStringField, Choices):
 
 
 class EventInserted(FileEventFilterTimestampField):
-    """Class that filters events based on the timestamp of when the event was actually added to the
+    """V2 filter class that filters events based on the timestamp of when the event was actually added to the
     event store (which can be after the event occurred on the device itself).
 
     `value` must be a POSIX timestamp. (see the :ref:`Dates <anchor_dates>` section of the Basics
@@ -42,7 +42,7 @@ class EventInserted(FileEventFilterTimestampField):
 
 
 class EventAction(FileEventFilterStringField, Choices):
-    """Class that filters events based on event action."""
+    """V2 filter class that filters events based on event action."""
 
     _term = "event.action"
 
@@ -66,13 +66,13 @@ class EventAction(FileEventFilterStringField, Choices):
 
 
 class EventId(FileEventFilterStringField):
-    """Class that filters events by event ID."""
+    """V2 filter class that filters events by event ID."""
 
     _term = "event.id"
 
 
 class EventShareType(FileEventFilterStringField):
-    """Class that filters events by share type."""
+    """V2 filter class that filters events by share type."""
 
     _term = "event.shareType"
 

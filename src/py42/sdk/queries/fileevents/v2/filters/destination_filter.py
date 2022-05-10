@@ -4,43 +4,43 @@ from py42.sdk.queries.query_filter import QueryFilterStringField
 
 
 class Destination(QueryFilterStringField):
-    """Class that filters events based on the destination name."""
+    """V2 filter class that filters events based on the destination name."""
 
     _term = "destination.name"
 
 
 class EmailSubject(QueryFilterStringField):
-    """Class that filters events based on the email's subject (applies to email events only)."""
+    """V2 filter class that filters events based on the email's subject (applies to email events only)."""
 
     _term = "destination.email.subject"
 
 
 class EmailRecipients(QueryFilterStringField):
-    """Class that filters events based on the email's recipient list (applies to email events only)."""
+    """V2 filter class that filters events based on the email's recipient list (applies to email events only)."""
 
     _term = "destination.email.recipients"
 
 
 class DestinationPrivateIPAddress(FileEventFilterStringField):
-    """Class that filters events by private (LAN) IP address of the destination device."""
+    """V2 filter class that filters events by private (LAN) IP address of the destination device."""
 
     _term = "destination.privateIp"
 
 
 class DestinationIPAddress(FileEventFilterStringField):
-    """Class that filters events by public (WAN) IP address of the destination device."""
+    """V2 filter class that filters events by public (WAN) IP address of the destination device."""
 
     _term = "destination.ip"
 
 
 class DestinationUserEmail(FileEventFilterStringField):
-    """Class that filters events by the signed in user email of the destination device."""
+    """V2 filter class that filters events by the signed in user email of the destination device."""
 
     _term = "destination.user.email"
 
 
 class DestinationTabUrls(FileEventFilterStringField):
-    """Class that filters events based on all the URLs of the browser tabs at the time the file
+    """V2 filter class that filters events based on all the URLs of the browser tabs at the time the file
     contents were read by the browser (applies to ``read by browser or other app`` events only).
     """
 
@@ -48,7 +48,7 @@ class DestinationTabUrls(FileEventFilterStringField):
 
 
 class DestinationTabTitles(FileEventFilterStringField):
-    """Class that filters events based on the name of all the browser tabs or application windows that were
+    """V2 filter class that filters events based on the name of all the browser tabs or application windows that were
     open when a browser or other app event occurred (applies to ``read by browser or other app``
     events only).
     """
@@ -57,7 +57,7 @@ class DestinationTabTitles(FileEventFilterStringField):
 
 
 class DestinationCategory(FileEventFilterStringField, Choices):
-    """Class that filters events based on the category of the file event destination.
+    """V2 filter class that filters events based on the category of the file event destination.
 
     Available options are provided as class attributes:
         - :attr:`DestinationCategory.CLOUD_STORAGE`
@@ -85,18 +85,18 @@ class DestinationCategory(FileEventFilterStringField, Choices):
 
 
 class Printer(FileEventFilterStringField):
-    """Class that filters events by printer name."""
+    """V2 filter class that filters events by printer name."""
 
     _term = "destination.printerName"
 
 
 class PrintJobName(FileEventFilterStringField):
-    """Class that filters events by print job name."""
+    """V2 filter class that filters events by print job name."""
 
     _term = "destination.printJobName"
 
 
 class DestinationOperatingSystem(FileEventFilterStringField):
-    """Class that filters events by the operating system of the destination device."""
+    """V2 filter class that filters events by the operating system of the destination device."""
 
     _term = "destination.operatingSystem"

@@ -1,9 +1,9 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.sdk.queries.fileevents.util import _FileEventFilterComparableField
 from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 
 
-class FileCategory(_FileEventFilterStringField, Choices):
+class FileCategory(_FileEventFilterStringField, _Choices):
     """V1 filter class that filters events by category of the file observed.
 
     Available file categories are provided as class attributes:

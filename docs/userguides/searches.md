@@ -24,14 +24,14 @@ from py42.sdk.queries.fileevents.v1 import *
 **For more details on updating to V2 file events, see the [V2 File Events Guide](v2apis.md)**
 
 You must create `query_filter.FilterGroup` objects to conduct searches. Filter groups have a type
-(in the form of a class), such as `Email.Sender`, and an operator (in the form of a function), such as `is_in()`.
+(in the form of a class), such as `email.Sender`, and an operator (in the form of a function), such as `is_in()`.
 Some example filter groups look like this:
 
 ```python
 from py42.sdk.queries.fileevents.v2 import *
-source_email_filter = Source.EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
-event_action_filter = Event.Action.exists()
-destination_ip_filter = Destination.PrivateIpAddress.eq("127.0.0.1")
+source_email_filter = source.EmailSender.is_in(["test.user@example.com", "test.sender@example.com"])
+event_action_filter = event.Action.exists()
+destination_ip_filter = destination.PrivateIpAddress.eq("127.0.0.1")
 ```
 
 It is also possible to create `query_filter.FilterGroups` from raw JSON. For example:
@@ -70,9 +70,9 @@ use case for programs that need to conditionally build up filters:
 
 filter_list = []
 if need_trusted:
-    filter_list.append(Risk.Trusted.is_true())
+    filter_list.append(risk.Trusted.is_true())
 elif need_user_emails:
-    user_email_filter = User.Email.is_in(["foo@example.com", "baz@example.com"])
+    user_email_filter = user.Email.is_in(["foo@example.com", "baz@example.com"])
     filter_list.append(user_email_filter)
 # Notice the use of the '*' operator to unpack filter_list
 query = FileEventQuery(*filter_list)
@@ -83,7 +83,7 @@ To execute the search, use `securitydata.SecurityModule.search_file_events()`:
 ```python
 # Prints the MD5 hashes of all the events where files were read by browser or other app.
 
-query = FileEventQuery(Event.Action.eq(Event.Action.APPLICATION_READ))
+query = FileEventQuery(event.Action.eq(event.Action.APPLICATION_READ))
 response = sdk.securitydata.search_file_events(query)
 file_events = response["fileEvents"]
 for event in file_events:
@@ -93,7 +93,7 @@ for event in file_events:
 If the number of events exceeds 10,000 against a query, use `securitydata.SecurityModule.search_all_file_events()`:
 
 ```python
-query = FileEventQuery(Event.Action.eq(Event.Action.APPLICATION_READ))
+query = FileEventQuery(event.Action.eq(event.Action.APPLICATION_READ))
 response = sdk.securitydata.search_all_file_events(query)
 file_events = response["fileEvents"]
 for event in file_events:

@@ -1,7 +1,8 @@
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
 from py42.sdk.queries.fileevents.v2.file_event_query import FileEventQuery
-from py42.sdk.queries.fileevents.v2.filters.file import File
+from py42.sdk.queries.fileevents.v2.filters.file import MD5
+from py42.sdk.queries.fileevents.v2.filters.file import SHA256
 from py42.services.util import escape_quote_chars
 
 
@@ -70,7 +71,7 @@ class SecurityDataClient:
         Returns:
             Returns a stream of the requested file.
         """
-        response = self._search_by_hash(checksum, File.SHA256)
+        response = self._search_by_hash(checksum, SHA256)
         events = response["fileEvents"]
         info = _get_version_lookup_info(events)
         if not len(events) or not info:
@@ -86,7 +87,7 @@ class SecurityDataClient:
         Returns:
             Returns a stream of the requested file.
         """
-        response = self._search_by_hash(checksum, File.MD5)
+        response = self._search_by_hash(checksum, MD5)
         events = response["fileEvents"]
         info = _get_version_lookup_info(events)
         if not len(events) or not info:

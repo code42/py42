@@ -1,121 +1,134 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 from py42.sdk.queries.query_filter import _QueryFilterStringField
 
 
-class Source:
-    class EmailSender(_QueryFilterStringField):
-        """V2 filter class that filters events based on the email's sender (applies to email events only)."""
+class EmailSender(_QueryFilterStringField):
+    """V2 filter class that filters events based on the email's sender (applies to email events only)."""
 
-        _term = "source.email.sender"
+    _term = "source.email.sender"
 
-    class EmailFrom(_QueryFilterStringField):
-        """V2 filter class that filters events based on the display name of the email's sender, as it appears in
-        the \"From:\" field in the email (applies to email events only).
-        """
 
-        _term = "source.email.from"
+class EmailFrom(_QueryFilterStringField):
+    """V2 filter class that filters events based on the display name of the email's sender, as it appears in
+    the \"From:\" field in the email (applies to email events only).
+    """
 
-    class RemovableMediaName(_FileEventFilterStringField):
-        """V2 filter class that filters events based on the name of the removable media involved in the exposure
-        (applies to ``removable media`` events only).
-        """
+    _term = "source.email.from"
 
-        _term = "source.removableMedia.name"
 
-    class RemovableMediaVendor(_FileEventFilterStringField):
-        """V2 filter class that filters events based on the vendor of the removable media device involved in the
-        exposure (applies to ``removable media`` events only).
-        """
+class RemovableMediaName(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the name of the removable media involved in the exposure
+    (applies to ``removable media`` events only).
+    """
 
-        _term = "source.removableMedia.vendor"
+    _term = "source.removableMedia.name"
 
-    class RemovableMediaMediaName(_FileEventFilterStringField):
-        """V2 filter class that filters events based on the name of the removable media (as reported by the
-        vendor/device, usually very similar to RemovableMediaName) involved in the exposure (applies to
-        ``removable media`` events only).
-        """
 
-        _term = "source.removableMedia.mediaName"
+class RemovableMediaVendor(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the vendor of the removable media device involved in the
+    exposure (applies to ``removable media`` events only).
+    """
 
-    class RemovableMediaVolumeName(_FileEventFilterStringField):
-        """V2 filter class that filters events based on the name of the formatted volume (as reported by the
-        operating system) of the removable media device involved in the exposure (applies to
-        ``removable media`` events only).
-        """
+    _term = "source.removableMedia.vendor"
 
-        _term = "source.removableMedia.volumeName"
 
-    class RemovableMediaPartitionID(_FileEventFilterStringField):
-        """V2 filter class that filters events based on the unique identifier assigned (by the operating system)
-        to the removable media involved in the exposure (applies to ``removable media`` events only).
-        """
+class RemovableMediaMediaName(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the name of the removable media (as reported by the
+    vendor/device, usually very similar to RemovableMediaName) involved in the exposure (applies to
+    ``removable media`` events only).
+    """
 
-        _term = "source.removableMedia.partitionId"
+    _term = "source.removableMedia.mediaName"
 
-    class RemovableMediaSerialNumber(_FileEventFilterStringField):
-        """V2 filter class that filters events based on the serial number of the connected hardware as reported
-        by the operating system (applies to ``removable media`` events only).
-        """
 
-        _term = "source.removableMedia.serialNumber"
+class RemovableMediaVolumeName(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the name of the formatted volume (as reported by the
+    operating system) of the removable media device involved in the exposure (applies to
+    ``removable media`` events only).
+    """
 
-    class Category(_FileEventFilterStringField, Choices):
-        """
-        V2 filter class that filters events based on source category.
+    _term = "source.removableMedia.volumeName"
 
-        Available options are provided as class attributes:
-            - :attr:`SourceCategory.BUSINESS_TOOLS`
-            - :attr:`SourceCategory.CLOUD_STORAGE`
-            - :attr:`SourceCategory.DEVICE`
-            - :attr:`SourceCategory.EMAIL`
-            - :attr:`SourceCategory.MESSAGING`
-            - :attr:`SourceCategory.MULTIPLE_POSSIBILITIES`
-            - :attr:`SourceCategory.SOCIAL_MEDIA`
-            - :attr:`SourceCategory.SOURCE_CODE_REPOSITORY`
-            - :attr:`SourceCategory.UNCATEGORIZED`
-            - :attr:`SourceCategory.UNKNOWN`
-        """
 
-        _term = "source.category"
+class RemovableMediaPartitionID(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the unique identifier assigned (by the operating system)
+    to the removable media involved in the exposure (applies to ``removable media`` events only).
+    """
 
-        BUSINESS_TOOLS = "Business Tools"
-        CLOUD_STORAGE = "Cloud Storage"
-        DEVICE = "Device"
-        EMAIL = "Email"
-        MESSAGING = "Messaging"
-        MULTIPLE_POSSIBILITIES = "Multiple Possibilities"
-        SOCIAL_MEDIA = "Social Media"
-        SOURCE_CODE_REPOSITORY = "Source Code Repository"
-        UNCATEGORIZED = "Uncategorized"
-        UNKNOWN = "Unknown"
+    _term = "source.removableMedia.partitionId"
 
-    class Name(_FileEventFilterStringField):
-        """V2 filter class that filters events based on source name."""
 
-        _term = "source.name"
+class RemovableMediaSerialNumber(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the serial number of the connected hardware as reported
+    by the operating system (applies to ``removable media`` events only).
+    """
 
-    class TabTitles(_FileEventFilterStringField):
-        """V2 filter class that filters events based on source tab titles (for 'browser or other app' events)."""
+    _term = "source.removableMedia.serialNumber"
 
-        _term = "source.tabs.title"
 
-    class TabUrls(_FileEventFilterStringField):
-        """V2 filter class that filters events based on source tab URLs (for 'browser or other app' events)."""
+class Category(_FileEventFilterStringField, _Choices):
+    """
+    V2 filter class that filters events based on source category.
 
-        _term = "source.tabs.url"
+    Available options are provided as class attributes:
+        - :attr:`source.Category.BUSINESS_TOOLS`
+        - :attr:`source.Category.CLOUD_STORAGE`
+        - :attr:`source.Category.DEVICE`
+        - :attr:`source.Category.EMAIL`
+        - :attr:`source.Category.MESSAGING`
+        - :attr:`source.Category.MULTIPLE_POSSIBILITIES`
+        - :attr:`source.Category.SOCIAL_MEDIA`
+        - :attr:`source.Category.SOURCE_CODE_REPOSITORY`
+        - :attr:`source.Category.UNCATEGORIZED`
+        - :attr:`source.Category.UNKNOWN`
+    """
 
-    class OperatingSystem(_FileEventFilterStringField):
-        """V2 filter class that filters events by the operating system of the source device."""
+    _term = "source.category"
 
-        _term = "source.operatingSystem"
+    BUSINESS_TOOLS = "Business Tools"
+    CLOUD_STORAGE = "Cloud Storage"
+    DEVICE = "Device"
+    EMAIL = "Email"
+    MESSAGING = "Messaging"
+    MULTIPLE_POSSIBILITIES = "Multiple Possibilities"
+    SOCIAL_MEDIA = "Social Media"
+    SOURCE_CODE_REPOSITORY = "Source Code Repository"
+    UNCATEGORIZED = "Uncategorized"
+    UNKNOWN = "Unknown"
 
-    class PrivateIpAddress(_FileEventFilterStringField):
-        """V2 filter class that filters events by private (LAN) IP address of the source device."""
 
-        _term = "destination.privateIp"
+class Name(_FileEventFilterStringField):
+    """V2 filter class that filters events based on source name."""
 
-    class IpAddress(_FileEventFilterStringField):
-        """V2 filter class that filters events by public (WAN) IP address of the source device."""
+    _term = "source.name"
 
-        _term = "source.ip"
+
+class TabTitles(_FileEventFilterStringField):
+    """V2 filter class that filters events based on source tab titles (for 'browser or other app' events)."""
+
+    _term = "source.tabs.title"
+
+
+class TabUrls(_FileEventFilterStringField):
+    """V2 filter class that filters events based on source tab URLs (for 'browser or other app' events)."""
+
+    _term = "source.tabs.url"
+
+
+class OperatingSystem(_FileEventFilterStringField):
+    """V2 filter class that filters events by the operating system of the source device."""
+
+    _term = "source.operatingSystem"
+
+
+class PrivateIpAddress(_FileEventFilterStringField):
+    """V2 filter class that filters events by private (LAN) IP address of the source device."""
+
+    _term = "destination.privateIp"
+
+
+class IpAddress(_FileEventFilterStringField):
+    """V2 filter class that filters events by public (WAN) IP address of the source device."""
+
+    _term = "source.ip"

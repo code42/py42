@@ -1,25 +1,25 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.sdk.queries.fileevents.util import _FileEventFilterTimestampField
 
 
-class Timestamp(_FileEventFilterTimestampField, Choices):
+class Timestamp(_FileEventFilterTimestampField, _Choices):
     """V2 filter class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These
     constants should be used only with class method `within_the_last`:
 
-        - :attr:`EventTimestamp.FIFTEEN_MINUTES`
-        - :attr:`EventTimestamp.ONE_HOUR`
-        - :attr:`EventTimestamp.THREE_HOURS`
-        - :attr:`EventTimestamp.TWELVE_HOURS`
-        - :attr:`EventTimestamp.ONE_DAY`
-        - :attr:`EventTimestamp.THREE_DAYS`
-        - :attr:`EventTimestamp.SEVEN_DAYS`
-        - :attr:`EventTimestamp.FOURTEEN_DAYS`
-        - :attr:`EventTimestamp.THIRTY_DAYS`
+        - :attr:`timestamp.Timestamp.FIFTEEN_MINUTES`
+        - :attr:`timestamp.Timestamp.ONE_HOUR`
+        - :attr:`timestamp.Timestamp.THREE_HOURS`
+        - :attr:`timestamp.Timestamp.TWELVE_HOURS`
+        - :attr:`timestamp.Timestamp.ONE_DAY`
+        - :attr:`timestamp.Timestamp.THREE_DAYS`
+        - :attr:`timestamp.Timestamp.SEVEN_DAYS`
+        - :attr:`timestamp.Timestamp.FOURTEEN_DAYS`
+        - :attr:`timestamp.Timestamp.THIRTY_DAYS`
 
     Example::
-        filter = Timestamp.within_the_last(EventTimestamp.SEVEN_DAYS)
+        filter = timestamp.Timestamp.within_the_last(EventTimestamp.SEVEN_DAYS)
     """
 
     _term = "@timestamp"

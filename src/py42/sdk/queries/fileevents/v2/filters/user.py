@@ -1,18 +1,19 @@
 from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 
 
-class User:
-    class Email(_FileEventFilterStringField):
-        """V2 filter class that filters events by the Code42 user email of the actor."""
+class Email(_FileEventFilterStringField):
+    """V2 filter class that filters events by the Code42 user email of the actor."""
 
-        _term = "user.email"
+    _term = "user.email"
 
-    class Id(_FileEventFilterStringField):
-        """V2 filter class that filters events by the Code42 user ID of the actor."""
 
-        _term = "user.id"
+class Id(_FileEventFilterStringField):
+    """V2 filter class that filters events by the Code42 user ID of the actor."""
 
-    class DeviceUid(_FileEventFilterStringField):
-        """V2 filter class that filters events by the device UID of the actor."""
+    _term = "user.id"
 
-        _term = "user.deviceUid"
+
+class DeviceUid(_FileEventFilterStringField):
+    """V2 filter class that filters events by the device UID of the actor."""
+
+    _term = "user.deviceUid"

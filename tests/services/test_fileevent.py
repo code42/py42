@@ -12,7 +12,7 @@ from py42.sdk.queries.fileevents.filters import FileName
 from py42.sdk.queries.fileevents.v2.file_event_query import (
     FileEventQuery as FileEventQueryV2,
 )
-from py42.sdk.queries.fileevents.v2.filters.file import File
+from py42.sdk.queries.fileevents.v2.filters.file import Name
 from py42.services._connection import Connection
 from py42.services.fileevent import FileEventService
 
@@ -25,7 +25,7 @@ def _create_test_query(test_filename="*"):
 
 
 def _create_v2_test_query(test_filename="*"):
-    return FileEventQueryV2(File.Name.eq(test_filename))
+    return FileEventQueryV2(Name.eq(test_filename))
 
 
 @pytest.fixture()

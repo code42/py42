@@ -1,8 +1,8 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 
 
-class ExposureType(_FileEventFilterStringField, Choices):
+class ExposureType(_FileEventFilterStringField, _Choices):
     """V1 filter class that filters events based on exposure type.
 
     Available options are provided as class attributes:
@@ -91,7 +91,7 @@ class RemovableMediaSerialNumber(_FileEventFilterStringField):
     _term = "removableMediaSerialNumber"
 
 
-class SyncDestination(_FileEventFilterStringField, Choices):
+class SyncDestination(_FileEventFilterStringField, _Choices):
     """V1 filter class that filters events based on the name of the cloud service the file is synced with
     (applies to ``synced to cloud service`` events only).
 
@@ -141,7 +141,7 @@ class WindowTitle(_FileEventFilterStringField):
     _term = "tabTitles"
 
 
-class DestinationCategory(_FileEventFilterStringField, Choices):
+class DestinationCategory(_FileEventFilterStringField, _Choices):
     """V1 filter class that filters events based on the category of the file event destination.
 
     Available options are provided as class attributes:

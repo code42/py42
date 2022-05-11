@@ -1,4 +1,4 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.sdk.queries.fileevents.util import _FileEventFilterComparableField
 from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 from py42.sdk.queries.query_filter import _QueryFilterStringField
@@ -90,7 +90,7 @@ class RiskIndicator(_FileEventFilterStringField):
             + RiskIndicator.UserBehavior.choices()
         )
 
-    class CloudDataExposures(Choices):
+    class CloudDataExposures(_Choices):
         PUBLIC_CORPORATE_BOX = "Public link from corporate Box"
         PUBLIC_CORPORATE_GOOGLE_DRIVE = "Public link from corporate Google Drive"
         PUBLIC_CORPORATE_ONEDRIVE = "Public link from corporate OneDrive"
@@ -99,7 +99,7 @@ class RiskIndicator(_FileEventFilterStringField):
         SHARED_CORPORATE_GOOGLE_DRIVE = "Shared from corporate Google Drive"
         SHARED_CORPORATE_ONEDRIVE = "Shared from corporate OneDrive"
 
-    class CloudStorageUploads(Choices):
+    class CloudStorageUploads(_Choices):
         AMAZON_DRIVE = "Amazon Drive upload"
         BOX = "Box upload"
         DROPBOX = "Dropbox upload"
@@ -109,14 +109,14 @@ class RiskIndicator(_FileEventFilterStringField):
         ONEDRIVE = "OneDrive upload"
         ZOHO = "Zoho WorkDrive upload"
 
-    class CodeRepositoryUploads(Choices):
+    class CodeRepositoryUploads(_Choices):
         BITBUCKET = "Bitbucket upload"
         GITHUB = "GitHub upload"
         GITLAB = "GitLab upload"
         SOURCEFORGE = "SourceForge upload"
         STASH = "Stash upload"
 
-    class EmailServiceUploads(Choices):
+    class EmailServiceUploads(_Choices):
         ONESIXTHREE_DOT_COM = "163.com upload"
         ONETWOSIX_DOT_COM = "126.com upload"
         AOL = "AOL upload"
@@ -132,11 +132,11 @@ class RiskIndicator(_FileEventFilterStringField):
         YAHOO = "Yahoo upload"
         ZOHO_MAIL = "Zoho Mail upload"
 
-    class ExternalDevices(Choices):
+    class ExternalDevices(_Choices):
         AIRDROP = "AirDrop"
         REMOVABLE_MEDIA = "Removable media"
 
-    class FileCategories(Choices):
+    class FileCategories(_Choices):
         AUDIO = "Audio"
         DOCUMENT = "Document"
         EXECUTABLE = "Executable"
@@ -150,23 +150,23 @@ class RiskIndicator(_FileEventFilterStringField):
         VIRTUAL_DISK_IMAGE = "Virtual Disk Image"
         ZIP = "Zip"
 
-    class MessagingServiceUploads(Choices):
+    class MessagingServiceUploads(_Choices):
         FACEBOOK_MESSENGER = "Facebook Messenger upload"
         MICROSOFT_TEAMS = "Microsoft Teams upload"
         SLACK = "Slack upload"
         WHATSAPP = "WhatsApp upload"
 
-    class Other(Choices):
+    class Other(_Choices):
         OTHER = "Other destination"
         UNKNOWN = "Unknown destination"
 
-    class SocialMediaUploads(Choices):
+    class SocialMediaUploads(_Choices):
         FACEBOOK = "Facebook upload"
         LINKEDIN = "LinkedIn upload"
         REDDIT = "Reddit upload"
         TWITTER = "Twitter upload"
 
-    class UserBehavior(Choices):
+    class UserBehavior(_Choices):
         FILE_MISMATCH = "File mismatch"
         OFF_HOURS = "Off hours"
         REMOTE = "Remote"
@@ -174,7 +174,7 @@ class RiskIndicator(_FileEventFilterStringField):
         RARE_DESTINATION_USE = "Rare use of destination"
 
 
-class RiskSeverity(_FileEventFilterStringField, Choices):
+class RiskSeverity(_FileEventFilterStringField, _Choices):
     """V1 filter class that filters events by risk severity.
 
     Available options are provided as class attributes:

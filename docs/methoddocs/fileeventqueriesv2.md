@@ -34,7 +34,7 @@ that match multiple filter rules.
 
 Example:
 
-To search for events observed for certain set of documents, you can use the `File.Name` and `File.MD5` filter classes to
+To search for events observed for certain set of documents, you can use the `file.Name` and `file.MD5` filter classes to
 construct `FilterGroup`s that will search for matching filenames or (in case someone renamed the sensitive file) the
 known MD5 hashes of the files:
 
@@ -44,34 +44,10 @@ known MD5 hashes of the files:
 
 See [Executing Searches](../userguides/searches.md) for more on building search queries.
 
-### Filter Group Helper Methods
-
-```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.util.create_exists_filter_group
-    :noindex:
-```
-
-```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.util.create_not_exists_filter_group
-    :noindex:
-```
-
-```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.util.create_greater_than_filter_group
-    :noindex:
-```
-
-```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.util.create_less_than_filter_group
-    :noindex:
-```
-
-More helper methods for constructing queries can be found in [Shared Query Filters](sharedqueryfilters.md).
-
 ### Destination Filters
 
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.v2.filters.destination.Destination
+.. automodule:: py42.sdk.queries.fileevents.v2.filters.destination
     :members:
     :inherited-members:
     :show-inheritance:
@@ -80,7 +56,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Event Filters
 
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.v2.filters.event.Event
+.. automodule:: py42.sdk.queries.fileevents.v2.filters.event
     :members:
     :inherited-members:
     :show-inheritance:
@@ -89,7 +65,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### File Filters
 
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.v2.filters.file.File
+.. automodule:: py42.sdk.queries.fileevents.v2.filters.file
     :members:
     :inherited-members:
     :show-inheritance:
@@ -98,7 +74,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Process Filters
 
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.v2.filters.process.Process
+.. automodule:: py42.sdk.queries.fileevents.v2.filters.process
     :members:
     :inherited-members:
     :show-inheritance:
@@ -107,7 +83,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Risk Filters
 
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.v2.filters.risk.Risk
+.. automodule:: py42.sdk.queries.fileevents.v2.filters.risk
     :members:
     :inherited-members:
     :show-inheritance:
@@ -116,7 +92,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Source Filters
 
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.v2.filters.source.Source
+.. automodule:: py42.sdk.queries.fileevents.v2.filters.source
     :members:
     :inherited-members:
     :show-inheritance:
@@ -125,7 +101,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Timestamp Filters
 
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.v2.filters.timestamp.Timestamp
+.. automodule:: py42.sdk.queries.fileevents.v2.filters.timestamp
     :members:
     :inherited-members:
     :show-inheritance:
@@ -134,7 +110,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### User Filters
 
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.v2.filters.user.User
+.. automodule:: py42.sdk.queries.fileevents.v2.filters.user
     :members:
     :inherited-members:
     :show-inheritance:

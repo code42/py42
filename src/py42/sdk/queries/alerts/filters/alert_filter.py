@@ -1,4 +1,4 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.sdk.queries.query_filter import _QueryFilterStringField
 from py42.sdk.queries.query_filter import _QueryFilterTimestampField
 from py42.sdk.queries.query_filter import create_filter_group
@@ -113,7 +113,7 @@ class RuleId(_QueryFilterStringField):
     _term = "ruleId"
 
 
-class RuleSource(_QueryFilterStringField, Choices):
+class RuleSource(_QueryFilterStringField, _Choices):
     """Class that filters alerts based on rule source.
 
     Available options are:
@@ -129,7 +129,7 @@ class RuleSource(_QueryFilterStringField, Choices):
     HIGH_RISK_EMPLOYEE = "High Risk Employee"
 
 
-class RuleType(_QueryFilterStringField, Choices):
+class RuleType(_QueryFilterStringField, _Choices):
     """Class that filters alerts based on rule type.
 
     Available options are:
@@ -151,7 +151,7 @@ class Description(AlertQueryFilterStringField):
     _term = "description"
 
 
-class Severity(_QueryFilterStringField, Choices):
+class Severity(_QueryFilterStringField, _Choices):
     """Class that filters alerts based on severity.
 
     Available options are:
@@ -170,7 +170,7 @@ class Severity(_QueryFilterStringField, Choices):
     LOW = "LOW"
 
 
-class AlertState(_QueryFilterStringField, Choices):
+class AlertState(_QueryFilterStringField, _Choices):
     """Class that filters alerts based on alert state.
 
     Available options are:

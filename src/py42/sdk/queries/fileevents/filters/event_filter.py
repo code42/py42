@@ -1,10 +1,10 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 from py42.sdk.queries.fileevents.util import _FileEventFilterTimestampField
 from py42.sdk.queries.query_filter import _QueryFilterBooleanField
 
 
-class EventTimestamp(_FileEventFilterTimestampField, Choices):
+class EventTimestamp(_FileEventFilterTimestampField, _Choices):
     """V1 filter class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These
@@ -37,7 +37,7 @@ class EventTimestamp(_FileEventFilterTimestampField, Choices):
     THIRTY_DAYS = "P30D"
 
 
-class EventType(_FileEventFilterStringField, Choices):
+class EventType(_FileEventFilterStringField, _Choices):
     """V1 filter class that filters file events based on event type.
 
     Available event types are provided as class attributes:
@@ -76,7 +76,7 @@ class InsertionTimestamp(_FileEventFilterTimestampField):
     _term = "insertionTimestamp"
 
 
-class Source(_FileEventFilterStringField, Choices):
+class Source(_FileEventFilterStringField, _Choices):
     """V1 filter class that filters events by event source.
 
     Available source types are provided as class attributes:

@@ -1,4 +1,4 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 from py42.sdk.queries.query_filter import _QueryFilterBooleanField
 
@@ -35,7 +35,7 @@ class SharedWith(_FileEventFilterStringField):
     _term = "sharedWith"
 
 
-class SharingTypeAdded(_FileEventFilterStringField, Choices):
+class SharingTypeAdded(_FileEventFilterStringField, _Choices):
     """V1 filter class that filters results to include events where a file's sharing permissions were
     changed to a value that increases exposure (applies to cloud data source events only).
 

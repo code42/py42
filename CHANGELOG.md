@@ -42,6 +42,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Fixed
 
 - Bug where attempting to restore from an empty archive would throw a confusing `TypeError`, we now raise appropriate `Py42ArchiveFileNotFoundError`.
+- Py42 now automatically sleeps and retries file event search queries if a 429 (too many requests) error is hit.
 
 ## 1.22.0 - 2022-04-01
 

@@ -12,8 +12,16 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Added
 - Support for V2 file event data.
-  - Set `py42.settings.use_v2_file_event_data = True` to use the V2 file event and saved search APIs.
-  - Use queries built with V2 filters from `py42.sdk.queries.fileevents.v2`.
+  - Use queries built with V2 filters by importing the appropriate modules with `from py42.sdk.queries.fileevents.v2 import *`. Documentation is available for all V2 filter terms.
+  - The following functions will now use V2 apis for searching file events if sent a V2 query object:
+    - `securitydata.search_file_events()`
+    - `securitydata.search_all_file_events()`
+  - All saved search methods now have an optional `use_v2=False` argument.  Set `use_v2=True` to opt into using the V2 saved search APIs. The following methods now accept this arg:
+    - `securitydata.savedsearches.get()`
+    - `securitydata.savedsearches.get_by_id()`
+    - `securitydata.savedsearches.get_query()`
+    - `securitydata.savedsearches.execute()`
+    - `securitydata.savedsearches.search_file_events()`
 
 ### Added
 

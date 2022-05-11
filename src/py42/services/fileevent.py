@@ -17,9 +17,10 @@ class FFSQueryRetryStrategy(Retry):
 
     def get_retry_after(self, response):
         retry_after = super().get_retry_after(response)
-        debug.logger.info(
-            f"Forensic search rate limit hit, retrying after: {int(retry_after)} seconds."
-        )
+        if retry_after is not None:
+            debug.logger.info(
+                f"Forensic search rate limit hit, retrying after: {int(retry_after)} seconds."
+            )
         return retry_after
 
     def get_backoff_time(self):

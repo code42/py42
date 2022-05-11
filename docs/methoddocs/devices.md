@@ -1,6 +1,6 @@
 # Devices
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.services.devices.DeviceService
     :members:
     :show-inheritance:

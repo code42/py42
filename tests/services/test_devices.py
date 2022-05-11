@@ -5,12 +5,16 @@ from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
 import py42
+from py42.clients.settings.device_settings import DeviceSettings
+from py42.clients.settings.device_settings import IncydrDeviceSettings
 from py42.exceptions import Py42ActiveLegalHoldError
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42OrgNotFoundError
+from py42.response import Py42Response
 from py42.services.devices import DeviceService
 
 COMPUTER_URI = "/api/v1/Computer"
+UPGRADE_URI = "/api/v4/device-upgrade/upgrade-device"
 
 DEFAULT_GET_DEVICES_PARAMS = {
     "active": None,
@@ -145,7 +149,9 @@ class TestDeviceService:
             client.deactivate(1234)
 
         expected = "Cannot deactivate the device with ID 1234 as the device is involved in a legal hold matter."
-        assert str(err.value) == expected
+        assert expected in str(err.value)
+        assert err.value.resource == "device"
+        assert err.value.resource_id == 1234
 
     def test_get_page_when_org_not_found_raises_expected_error(
         self, mocker, mock_connection
@@ -159,4 +165,77 @@ class TestDeviceService:
         with pytest.raises(Py42OrgNotFoundError) as err:
             service.get_page(1, org_uid="TestOrgUid")
 
-        assert str(err.value) == "The organization with UID 'TestOrgUid' was not found."
+        assert "The organization with UID 'TestOrgUid' was not found." in str(err.value)
+        assert err.value.org_uid == "TestOrgUid"
+
+    def test_upgrade_calls_upgrade_with_uri_and_params(
+        self, mock_connection, successful_response
+    ):
+        mock_connection.get.return_value = successful_response
+        service = DeviceService(mock_connection)
+        service.upgrade("DEVICE_ID")
+        expected_params = {"deviceGuid": "DEVICE_ID"}
+        mock_connection.post.assert_called_once_with(UPGRADE_URI, json=expected_params)
+
+    def test_get_settings_returns_crashplan_settings_when_crashplan_service(
+        self, mocker, mock_connection
+    ):
+        text = """{"service": "Crashplan", "availableDestinations": "", "settings": {"serviceBackupConfig": {"backupConfig": {"backupSets": ""}}}}"""
+        requests_response = mocker.MagicMock(spec=Response)
+        requests_response.text = text
+        client = DeviceService(mock_connection)
+        mock_connection.get.return_value = Py42Response(requests_response)
+        settings = client.get_settings("42")
+        assert isinstance(settings, DeviceSettings)
+
+    def test_get_settings_returns_incydr_settings_when_artemis_service(
+        self, mocker, mock_connection
+    ):
+        text = """{"service": "Artemis"}"""
+        requests_response = mocker.MagicMock(spec=Response)
+        requests_response.text = text
+        client = DeviceService(mock_connection)
+        mock_connection.get.return_value = Py42Response(requests_response)
+        settings = client.get_settings("42")
+        assert isinstance(settings, IncydrDeviceSettings)
+
+    def test_get_settings_returns_incydr_settings_when_unspecified_service(
+        self, mocker, mock_connection
+    ):
+        text = """{"service": ""}"""
+        requests_response = mocker.MagicMock(spec=Response)
+        requests_response.text = text
+        client = DeviceService(mock_connection)
+        mock_connection.get.return_value = Py42Response(requests_response)
+        settings = client.get_settings("42")
+        assert isinstance(settings, IncydrDeviceSettings)
+
+    def test_update_settings_calls_api_with_expected_params_when_crashplan(
+        self, mock_connection
+    ):
+        device_id = "123"
+        device_dict = {
+            "computerId": device_id,
+            "service": "Crashplan",
+            "availableDestinations": "",
+            "settings": {
+                "configDateMs": "123",
+                "serviceBackupConfig": {"backupConfig": {"backupSets": ""}},
+            },
+        }
+        settings = DeviceSettings(device_dict)
+        client = DeviceService(mock_connection)
+        client.update_settings(settings)
+        uri = f"/api/v1/Computer/{device_id}"
+        mock_connection.put.assert_called_once_with(uri, json=settings)
+
+    def test_update_settings_calls_api_with_expected_params_when_incydr(
+        self, mock_connection
+    ):
+        device_id = "123"
+        device_dict = {"computerId": device_id, "service": "Artemis"}
+        settings = IncydrDeviceSettings(device_dict)
+        client = DeviceService(mock_connection)
+        client.update_settings(settings)
+        uri = f"/api/v1/Computer/{device_id}"
+        mock_connection.put.assert_called_once_with(uri, json=settings)

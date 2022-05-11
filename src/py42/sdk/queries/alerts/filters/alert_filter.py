@@ -155,15 +155,18 @@ class Severity(QueryFilterStringField, Choices):
     """Class that filters alerts based on severity.
 
     Available options are:
+        - :attr:`Severity.CRITICAL`
         - :attr:`Severity.HIGH`
-        - :attr:`Severity.MEDIUM`
+        - :attr:`Severity.MODERATE`
         - :attr:`Severity.LOW`
     """
 
-    _term = "severity"
+    _term = "riskSeverity"
 
+    CRITICAL = "CRITICAL"
     HIGH = "HIGH"
-    MEDIUM = "MEDIUM"
+    MEDIUM = "MODERATE"
+    MODERATE = "MODERATE"
     LOW = "LOW"
 
 

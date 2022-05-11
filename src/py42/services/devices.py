@@ -3,6 +3,7 @@ from time import time
 
 from py42 import settings
 from py42.clients.settings.device_settings import DeviceSettings
+from py42.clients.settings.device_settings import IncydrDeviceSettings
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42OrgNotFoundError
 from py42.services import BaseService
@@ -235,13 +236,13 @@ class DeviceService(BaseService):
     def get_agent_state(self, guid, property_name):
         """Gets the agent state of the device.
 
-            Args:
-                guid (str): The globally unique identifier of the device.
-                property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
+        Args:
+            guid (str): The globally unique identifier of the device.
+            property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
 
-            Returns:
-                :class:`py42.response.Py42Response`: A response containing settings information.
-            """
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing settings information.
+        """
         uri = "/api/v14/agent-state/view-by-device-guid"
         params = {"deviceGuid": guid, "propertyName": property_name}
         return self._connection.get(uri, params=params)
@@ -249,12 +250,12 @@ class DeviceService(BaseService):
     def get_agent_full_disk_access_state(self, guid):
         """Gets the full disk access status of a device.
 
-            Args:
-                guid (str): The globally unique identifier of the device.
+        Args:
+            guid (str): The globally unique identifier of the device.
 
-            Returns:
-                :class:`py42.response.Py42Response`: A response containing settings information.
-            """
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing settings information.
+        """
         return self.get_agent_state(guid, "fullDiskAccess")
 
     def get_settings(self, guid):
@@ -267,20 +268,36 @@ class DeviceService(BaseService):
             :class:`py42.clients.settings.device_settings.DeviceSettings`: A class to help manage device settings.
         """
         settings = self.get_by_guid(guid, incSettings=True)
-        return DeviceSettings(settings.data)
+        if settings.data["service"].lower() == "crashplan":
+            return DeviceSettings(settings.data)
+        else:
+            return IncydrDeviceSettings(settings.data)
 
     def update_settings(self, device_settings):
-        """Updates a device's settings based on changes to the passed in `DeviceSettings` instance.
+        """Updates a device's settings based on changes to the passed in `DeviceSettings` or `IncydrDeviceSettings` instance.  The appropriate instance for each device is returned by the `get_settings()` method.
 
         Args:
-            device_settings (`DeviceSettings`): An instance of `DeviceSettings` with desired modifications to settings.
+            device_settings (`DeviceSettings` OR `IncydrDeviceSettings`): An instance of `DeviceSettings` (Crashplan) or `IncydrDeviceSettings` (Incydr) with desired modifications to settings.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the result of the setting change.
+            :class:`py42.response.Py42Response`: A response containing the result of the settings changes.
         """
         device_settings = dict(device_settings)
         device_id = device_settings["computerId"]
         uri = f"/api/v1/Computer/{device_id}"
-        new_config_date_ms = str(int(time() * 1000))
-        device_settings["settings"]["configDateMs"] = new_config_date_ms
+        if isinstance(device_settings, DeviceSettings):
+            new_config_date_ms = str(int(time() * 1000))
+            device_settings["settings"]["configDateMs"] = new_config_date_ms
         return self._connection.put(uri, json=device_settings)
+
+    def upgrade(self, guid):
+        """Instructs a device to upgrade to the latest available version.
+
+        Args:
+            guid (str): The globally unique identifier of the device.
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing the result of the upgrade request.
+        """
+        uri = "/api/v4/device-upgrade/upgrade-device"
+        return self._connection.post(uri, json={"deviceGuid": guid})

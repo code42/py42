@@ -68,7 +68,8 @@ class TestSavedSearchService:
         file_event_service = FileEventService(mock_connection)
         saved_search_client = SavedSearchService(mock_connection, file_event_service)
         saved_search_client.execute(
-            "test-id", page_number=test_custom_page_num,
+            "test-id",
+            page_number=test_custom_page_num,
         )
         assert mock_connection.post.call_count == 1
         posted_data = mock_connection.post.call_args[1]["json"]

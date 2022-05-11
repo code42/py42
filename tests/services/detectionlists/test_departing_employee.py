@@ -137,7 +137,8 @@ class TestDepartingEmployeeClient:
             client.add("user_id")
 
         expected = "User with ID user_id is already on the departing-employee list."
-        assert str(err.value) == expected
+        assert expected in str(err.value)
+        assert err.value.user_id == "user_id"
 
     def test_remove_posts_expected_data_and_to_expected_url(
         self,

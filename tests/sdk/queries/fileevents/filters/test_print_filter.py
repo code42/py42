@@ -9,7 +9,8 @@ from py42.sdk.queries.fileevents.filters.print_filter import PrintJobName
 
 
 @pytest.mark.parametrize(
-    "filter_criteria, test_filter", [(Printer.eq, IS), (Printer.not_eq, IS_NOT)],
+    "filter_criteria, test_filter",
+    [(Printer.eq, IS), (Printer.not_eq, IS_NOT)],
 )
 def test_equality_printer_name_filter_gives_correct_json_representation(
     filter_criteria, test_filter
@@ -20,7 +21,8 @@ def test_equality_printer_name_filter_gives_correct_json_representation(
 
 
 @pytest.mark.parametrize(
-    "filter_criteria, test_filter", [(Printer.is_in, IS_IN), (Printer.not_in, NOT_IN)],
+    "filter_criteria, test_filter",
+    [(Printer.is_in, IS_IN), (Printer.not_in, NOT_IN)],
 )
 def test_multi_value_printer_name_gives_correct_json_representation(
     filter_criteria, test_filter

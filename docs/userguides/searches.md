@@ -3,7 +3,7 @@
 py42 features a powerful, flexible query system for quickly and easily searching file events and alerts.
 This guide explains the syntax for building queries and executing searches.
 
-```eval_rst
+```{eval-rst}
 .. _anchor_search_file_events:
 ```
 ## Search File Events
@@ -95,7 +95,7 @@ while response["nextPgToken"] is not None:
         print(event["md5Checksum"])
 ```
 
-```eval_rst
+```{eval-rst}
 .. _anchor_search_alerts:
 ```
 ## Search Alerts

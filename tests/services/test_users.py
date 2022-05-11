@@ -242,7 +242,8 @@ class TestUserService:
         with pytest.raises(Py42OrgNotFoundError) as err:
             service.get_page(1, org_uid="TestOrgUid")
 
-        assert str(err.value) == "The organization with UID 'TestOrgUid' was not found."
+        assert "The organization with UID 'TestOrgUid' was not found." in str(err.value)
+        assert err.value.org_uid == "TestOrgUid"
 
     def test_get_page_when_bad_request_raises(self, mocker, mock_connection):
         mock_connection.get.side_effect = create_mock_error(
@@ -267,7 +268,9 @@ class TestUserService:
             "Cannot deactivate the user with ID 1234 as the user is involved in "
             "a legal hold matter."
         )
-        assert str(err.value) == expected
+        assert expected in str(err.value)
+        assert err.value.resource == "user"
+        assert err.value.resource_id == 1234
 
     def test_update_user_calls_put_with_expected_url_and_params(
         self, mock_connection, put_api_mock_response
@@ -342,7 +345,8 @@ class TestUserService:
         with pytest.raises(Py42InvalidEmailError) as err:
             user_service.update_user("123", username="foo", email="test")
 
-        assert str(err.value) == "'test' is not a valid email."
+        assert "'test' is not a valid email." in str(err.value)
+        assert err.value.email == "test"
 
     def test_update_user_when_get_internal_server_error_containing_password_invalid_raises_expected_error(
         self, mock_connection, invalid_password_error_response

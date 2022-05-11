@@ -1,6 +1,6 @@
 # Org Settings
 
-```eval_rst
+```{eval-rst}
 .. autoclass:: py42.clients.settings.org_settings.OrgSettings
     :members:
     :show-inheritance:

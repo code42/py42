@@ -1,5 +1,22 @@
 # py42, the Code42 Python SDK
 
+```{eval-rst}
+.. toctree::
+    :hidden:
+    :maxdepth: 2
+
+    guides
+```
+
+```{eval-rst}
+.. toctree::
+    :hidden:
+    :maxdepth: 2
+
+    methods
+```
+
+
 [![license](https://img.shields.io/pypi/l/py42.svg)](https://pypi.org/project/py42/)
 [![versions](https://img.shields.io/pypi/pyversions/py42.svg)](https://pypi.org/project/py42/)
 

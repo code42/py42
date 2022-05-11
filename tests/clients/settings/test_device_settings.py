@@ -582,7 +582,8 @@ class TestDeviceSettings:
         ],
     )
     def test_device_settings_setting_mutable_property_updates_dict_correctly_and_registers_changes(
-        self, param,
+        self,
+        param,
     ):
         setattr(self.device_settings, param.name, param.new_val)
         assert (
@@ -617,7 +618,8 @@ class TestDeviceSettings:
         ],
     )
     def test_device_settings_setting_mutable_property_updates_dict_correctly_and_registers_changes_when_setting_locked(
-        self, param,
+        self,
+        param,
     ):
         setattr(self.device_settings, param.name, param.new_val)
         assert (
@@ -633,11 +635,15 @@ class TestDeviceSettings:
 class TestDeviceSettingsBackupSets:
     device_settings = DeviceSettings(deepcopy(DEVICE_DICT_W_SETTINGS))
 
-    def test_backup_set_destinations_property_returns_expected_value(self,):
+    def test_backup_set_destinations_property_returns_expected_value(
+        self,
+    ):
         expected_destinations = {"4200": "Dest42 <LOCKED>", "4300": "Dest43"}
         assert self.device_settings.backup_sets[0].destinations == expected_destinations
 
-    def test_backup_set_add_destination_when_destination_available(self,):
+    def test_backup_set_add_destination_when_destination_available(
+        self,
+    ):
         self.device_settings.backup_sets[0].add_destination(4400)
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
@@ -660,7 +666,9 @@ class TestDeviceSettingsBackupSets:
             == expected_destinations_dict
         )
 
-    def test_backup_set_add_destination_when_destination_not_available_raises(self,):
+    def test_backup_set_add_destination_when_destination_not_available_raises(
+        self,
+    ):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",
@@ -673,7 +681,9 @@ class TestDeviceSettingsBackupSets:
             == expected_destinations_property
         )
 
-    def test_backup_set_remove_destination_when_destination_available(self,):
+    def test_backup_set_remove_destination_when_destination_available(
+        self,
+    ):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",
@@ -694,7 +704,9 @@ class TestDeviceSettingsBackupSets:
             == expected_destinations_dict
         )
 
-    def test_backup_set_remove_destination_when_destination_not_available_raises(self,):
+    def test_backup_set_remove_destination_when_destination_not_available_raises(
+        self,
+    ):
         expected_destinations_property = {
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",

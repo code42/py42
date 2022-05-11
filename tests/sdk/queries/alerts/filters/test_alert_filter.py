@@ -141,27 +141,27 @@ def test_actor_not_contains_str_gives_correct_json_representation():
 
 def test_severity_eq_str_gives_correct_json_representation():
     _filter = Severity.eq("HIGH")
-    expected = IS.format("severity", "HIGH")
+    expected = IS.format("riskSeverity", "HIGH")
     assert str(_filter) == expected
 
 
 def test_severity_not_eq_str_gives_correct_json_representation():
     _filter = Severity.not_eq("HIGH")
-    expected = IS_NOT.format("severity", "HIGH")
+    expected = IS_NOT.format("riskSeverity", "HIGH")
     assert str(_filter) == expected
 
 
 def test_severity_is_in_str_gives_correct_json_representation():
-    items = ["HIGH", "MEDIUM", "LOW"]
+    items = ["HIGH", "MODERATE", "LOW"]
     _filter = Severity.is_in(items)
-    expected = IS_IN.format("severity", *sorted(items))
+    expected = IS_IN.format("riskSeverity", *sorted(items))
     assert str(_filter) == expected
 
 
 def test_severity_not_in_str_gives_correct_json_representation():
-    items = ["HIGH", "MEDIUM", "LOW"]
+    items = ["HIGH", "MODERATE", "LOW"]
     _filter = Severity.not_in(items)
-    expected = NOT_IN.format("severity", *sorted(items))
+    expected = NOT_IN.format("riskSeverity", *sorted(items))
     assert str(_filter) == expected
 
 
@@ -363,7 +363,7 @@ def test_rule_type_choices_returns_set():
 
 def test_severity_choices_returns_set():
     choices = Severity.choices()
-    valid_set = {"HIGH", "MEDIUM", "LOW"}
+    valid_set = {"CRITICAL", "HIGH", "MODERATE", "LOW"}
     assert set(choices) == valid_set
 
 

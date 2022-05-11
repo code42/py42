@@ -1,6 +1,6 @@
 # Exceptions
 
-```eval_rst
+```{eval-rst}
 .. automodule:: py42.exceptions
     :members:
     :inherited-members:

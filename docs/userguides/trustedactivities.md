@@ -11,7 +11,7 @@ from py42.constants import TrustedActivityType
 
 response = sdk.trustedactivities.create(TrustedActivityType.DOMAIN, "test-domain.com")
 ```
-Constants for the each type of trusted activity are available at [Trusted Activity Type](../methoddocs/constants.html#py42.constants.TrustedActivityType)
+Constants for the each type of trusted activity are available at [Trusted Activity Type](https://py42docs.code42.com/en/stable/methoddocs/constants.html#py42.constants.TrustedActivityType)
 
 
 Once you've created a trusted activity, or if you're working with an existing one, you can use the trusted activity's `resourceId` to view details about it.
@@ -29,7 +29,7 @@ response = sdk.trustedactivities.update(resource_id, description="This is a trus
 
 To clear the description of a trusted activity, pass an empty string `description=""` to the `update()` method.
 
-```eval_rst
+```{eval-rst}
 .. important::
     If you try to create with the same value as an already existing activity, you will get a `py42.exceptions.Py42TrustedActivityConflictError`.
 

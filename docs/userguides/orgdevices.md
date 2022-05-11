@@ -35,15 +35,18 @@ for page in response:
 ```
 
 As another example, you might have the Cross Org Administrator role and want to get all the active devices for
-just one of your organizations. To do this, use the `py42.sdk.clients.devices.OrgClient.get_by_name()`
-method. The `get_by_name()` method returns a list of organizations matching the name you give it.
+just one of your organizations.  First use `orgs.get_all()` to return a list of all current organizations and find the UID of the desired organization. Then use the organization's UID to get information on its devices.
 
 ```python
 # For each active device in the engineering organization, print its GUID and operating system.
 
 # Assume there is only one org named "Engineering"
-engineering_org = sdk.orgs.get_by_name("Engineering")[0]
-engineering_org_uid = engineering_org["orgUid"]
+for page in sdk.orgs.get_all():
+    for org in page["orgs"]:
+        if org["orgName"] == "Engineering":
+            engineering_org_uid = org["orgUid"]
+            break
+
 response = sdk.devices.get_all(active=True, org_uid=engineering_org_uid)
 for page in response:
     devices = page["computers"]

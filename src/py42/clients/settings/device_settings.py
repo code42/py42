@@ -18,6 +18,60 @@ destination_not_added_error = Py42Error(
 )
 
 
+class IncydrDeviceSettings(UserDict):
+    """Class used to manage individual Incydr devices.  These devices have no backup settings and only the **notes** and **external reference** fields are modifiable."""
+
+    def __init__(self, settings_dict):
+        self.changes = {}
+        self.data = settings_dict
+
+    @property
+    def name(self):
+        """Name of this device. Read-only."""
+        return self.data["name"]
+
+    @property
+    def computer_id(self):
+        """Identifier of this device. Read-only."""
+        return self.data["computerId"]
+
+    @property
+    def device_id(self):
+        """Identifier of this device (alias of `.computer_id`). Read only."""
+        return self.computer_id
+
+    @property
+    def guid(self):
+        """Globally unique identifier of this device. Read-only."""
+        return self.data["guid"]
+
+    @property
+    def org_id(self):
+        """Identifier of the organization this device belongs to. Read-only."""
+        return self.data["orgId"]
+
+    @property
+    def user_id(self):
+        """Identifier of the user this device belongs to. Read-only."""
+        return self.data["userId"]
+
+    @property
+    def version(self):
+        """Latest reported Code42 client version number for this device. Read-only."""
+        return self.data["version"]
+
+    external_reference = SettingProperty(
+        name="external_reference", location=["computerExtRef"]
+    )
+    """External reference field for this device."""
+
+    notes = SettingProperty(name="notes", location=["notes"])
+    """Notes field for this device."""
+
+    def __repr__(self):
+        return f"<IncydrDeviceSettings: guid: {self.data['guid']}, name: {self.data['name']}>"
+
+
 class DeviceSettingsDefaults(UserDict):
     """Class used for managing an Organization's Device Default settings. Also acts as a
     base class for `DeviceSettings` to manage individual device settings."""
@@ -422,7 +476,7 @@ class BackupSet(UserDict):
 
     def unlock_destination(self, destination_guid):
         """Unlocks an in-use destination, allowing the device owner to remove this
-        destination from their backup. Raises a :class:`Py42Error` if the supplied destination
+        destination from their backup. Raises a :class:`~py42.exceptions.Py42Error` if the supplied destination
         guid is not in use on this backup set, or not available to the parent device/org.
         """
         destination_guid = str(destination_guid)

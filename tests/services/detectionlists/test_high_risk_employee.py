@@ -88,7 +88,8 @@ class TestHighRiskEmployeeClient:
             client.add("user_id")
 
         expected = "User with ID user_id is already on the high-risk-employee list."
-        assert str(err.value) == expected
+        assert expected in str(err.value)
+        assert err.value.user_id == "user_id"
 
     def test_set_alerts_enabled_posts_expected_data_with_default_value(
         self, user_context, mock_connection, mock_detection_list_user_client
@@ -142,7 +143,10 @@ class TestHighRiskEmployeeClient:
         assert posted_data["userId"] == "942897397520289999"
 
     def test_get_posts_expected_data(
-        self, user_context, mock_connection, mock_detection_list_user_client,
+        self,
+        user_context,
+        mock_connection,
+        mock_detection_list_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client
@@ -158,7 +162,10 @@ class TestHighRiskEmployeeClient:
         )
 
     def test_get_all_posts_expected_data(
-        self, user_context, mock_connection, mock_detection_list_user_client,
+        self,
+        user_context,
+        mock_connection,
+        mock_detection_list_user_client,
     ):
         high_risk_employee_client = HighRiskEmployeeService(
             mock_connection, user_context, mock_detection_list_user_client

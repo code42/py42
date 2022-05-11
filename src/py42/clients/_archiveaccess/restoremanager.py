@@ -9,7 +9,11 @@ from py42.util import format_dict
 def create_restore_job_manager(
     storage_archive_service, device_guid, archive_session_id
 ):
-    return RestoreJobManager(storage_archive_service, device_guid, archive_session_id,)
+    return RestoreJobManager(
+        storage_archive_service,
+        device_guid,
+        archive_session_id,
+    )
 
 
 def create_file_size_poller(storage_archive_service, device_guid):

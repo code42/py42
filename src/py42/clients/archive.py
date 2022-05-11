@@ -1,5 +1,6 @@
 from py42.clients._archiveaccess import ArchiveContentStreamer
 from py42.clients._archiveaccess import ArchiveExplorer
+from py42.exceptions import Py42Error
 
 
 _FILE_SIZE_CALC_TIMEOUT = 10
@@ -50,6 +51,7 @@ class ArchiveClient:
         encryption_key=None,
         show_deleted=None,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
+        backup_set_id=None,
     ):
         """Streams a file from a backup archive to memory. This method uses the same endpoint
         as restoring from Console and therefore has all the same considerations.
@@ -75,6 +77,9 @@ class ArchiveClient:
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
+            backup_set_id (str, optional): The ID of the backup set restore from (only useful for V3 archives).
+                If not supplied, the default backup set (id=1) will be used if it exists, otherwise
+                the first in the list of existing backup sets will be used.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the streamed content.
@@ -101,7 +106,7 @@ class ArchiveClient:
             encryption_key=encryption_key,
         )
         backup_set_id = self._select_backup_set_id(
-            device_guid, archive_accessor.destination_guid
+            device_guid, archive_accessor.destination_guid, backup_set_id
         )
         return archive_accessor.stream_from_backup(
             backup_set_id,
@@ -122,6 +127,7 @@ class ArchiveClient:
         show_deleted=None,
         overwrite_existing_files=False,
         file_size_calc_timeout=_FILE_SIZE_CALC_TIMEOUT,
+        backup_set_id=None,
     ):
         """Streams a file from a backup archive to a specified device.
 
@@ -151,6 +157,9 @@ class ArchiveClient:
             file_size_calc_timeout (int, optional): Set to limit the amount of seconds spent calculating
                 file sizes when crafting the request. Set to 0 or None to ignore file sizes altogether.
                 Defaults to 10.
+            backup_set_id (str, optional): The ID of the backup set restore from (only useful for V3 archives).
+                If not supplied, the default backup set (id=1) will be used if it exists, otherwise
+                the first in the list of existing backup sets will be used.
 
         Returns:
             :class:`py42.response.Py42Response`.
@@ -163,7 +172,7 @@ class ArchiveClient:
             encryption_key=encryption_key,
         )
         backup_set_id = self._select_backup_set_id(
-            device_guid, explorer.destination_guid
+            device_guid, explorer.destination_guid, backup_set_id
         )
         file_selections = explorer.create_file_selections(
             backup_set_id, file_paths, file_size_calc_timeout
@@ -184,16 +193,23 @@ class ArchiveClient:
             overwrite_existing_files,
         )
 
-    def _select_backup_set_id(self, device_guid, destination_guid):
+    def _select_backup_set_id(self, device_guid, destination_guid, backup_set_id):
         backup_sets = self.get_backup_sets(device_guid, destination_guid)["backupSets"]
-        if not backup_sets:
-            return None
-        for backup_set in backup_sets:
-            backup_set_id = backup_set["backupSetId"]
-            if str(backup_set_id) == _DEFAULT_BACKUP_SET_ID:
-                return backup_set_id
-
-        return backup_sets[0]["backupSetId"]
+        backup_set_ids = [bs["backupSetId"] for bs in backup_sets]
+        if backup_set_id:
+            if backup_set_id not in backup_set_ids:
+                raise Py42Error(
+                    f"backup_set_id={backup_set_id} not found in device backup sets: {backup_sets}"
+                )
+            return backup_set_id
+        # id=1 is the "default" backup set, use this if it exists and no explicit id
+        # is provided by user
+        elif "1" in backup_set_ids:
+            return "1"
+        elif len(backup_set_ids) > 0:
+            return backup_set_ids[0]
+        else:
+            raise Py42Error("Failed to get backup sets for device.")
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific

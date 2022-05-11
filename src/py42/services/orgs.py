@@ -160,13 +160,13 @@ class OrgService(BaseService):
     def get_agent_state(self, org_id, property_name):
         """Gets the agent state of the devices in the org.
 
-            Args:
-                org_id (str): The org's identifier.
-                property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
+        Args:
+            org_id (str): The org's identifier.
+            property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
 
-            Returns:
-                :class:`py42.response.Py42Response`: A response containing settings information.
-            """
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing settings information.
+        """
         uri = "/api/v14/agent-state/view-by-organization-id"
         params = {"orgId": org_id, "propertyName": property_name}
         return self._connection.get(uri, params=params)
@@ -174,12 +174,12 @@ class OrgService(BaseService):
     def get_agent_full_disk_access_states(self, org_id):
         """Gets the full disk access status for devices in an org.
 
-            Args:
-                org_id (str): The org's identifier.
+        Args:
+            org_id (str): The org's identifier.
 
-            Returns:
-                :class:`py42.response.Py42Response`: A response containing settings information.
-            """
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing settings information.
+        """
         return self.get_agent_state(org_id, "fullDiskAccess")
 
     def get_settings(self, org_id):
@@ -190,7 +190,7 @@ class OrgService(BaseService):
 
         Returns:
             :class:`py42.clients._settings_managers.OrgSettings`: A class to help manage org settings.
-                """
+        """
         org_settings = self.get_by_id(
             org_id, incSettings=True, incDeviceDefaults=True, incInheritedOrgInfo=True
         )

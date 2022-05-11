@@ -1,3 +1,5 @@
+import warnings
+
 from requests.auth import HTTPBasicAuth
 
 from py42.exceptions import Py42Error
@@ -7,6 +9,8 @@ from py42.services._auth import BearerAuth
 from py42.services._auth import CustomJWTAuth
 from py42.services._connection import Connection
 from py42.usercontext import UserContext
+
+warnings.simplefilter("always", DeprecationWarning)
 
 
 def from_api_client(host_address, client_id, secret):
@@ -290,6 +294,24 @@ class SDKClient:
         """
         return self._clients.trustedactivities
 
+    @property
+    def userriskprofile(self):
+        """A collection of methods and properties for managing user risk profiles.
+
+        Returns:
+            :class:`py42.clients.userriskprofile.UserRiskProfileClient`
+        """
+        return self._clients.userriskprofile
+
+    @property
+    def watchlists(self):
+        """A collection of methods and properties for managing watchlists.
+
+        Returns:
+            :class:`py42.clients.watchlists.WatchlistsClient`
+        """
+        return self._clients.watchlists
+
 
 def _init_services(main_connection, main_auth, auth_flag=None):
     # services are imported within function to prevent circular imports when a service
@@ -315,6 +337,8 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     from py42.services.savedsearch import SavedSearchService
     from py42.services.trustedactivities import TrustedActivitiesService
     from py42.services.users import UserService
+    from py42.services.watchlists import WatchlistsService
+    from py42.services.userriskprofile import UserRiskProfileService
 
     alert_rules_key = "FedObserver-API_URL"
     alerts_key = "AlertService-API_URL"
@@ -325,6 +349,7 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     audit_logs_key = "AUDIT-LOG_API-URL"
     cases_key = "CASES_API-URL"
     trusted_activities_key = "TRUSTED-DOMAINS_API-URL"
+    watchlists_key = "watchlists-API_URL"
 
     kv_connection = Connection.from_microservice_prefix(main_connection, kv_prefix)
     kv_service = KeyValueStoreService(kv_connection)
@@ -356,6 +381,9 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     trusted_activities_conn = Connection.from_microservice_key(
         kv_service, trusted_activities_key, auth=main_auth
     )
+    watchlists_conn = Connection.from_microservice_key(
+        kv_service, watchlists_key, auth=main_auth
+    )
 
     services = Services(
         administration=administration_svc,
@@ -381,6 +409,8 @@ def _init_services(main_connection, main_auth, auth_flag=None):
         cases=CasesService(cases_conn),
         casesfileevents=CasesFileEventsService(cases_conn),
         trustedactivities=TrustedActivitiesService(trusted_activities_conn),
+        userriskprofile=UserRiskProfileService(watchlists_conn),
+        watchlists=WatchlistsService(watchlists_conn),
     )
 
     return services, user_ctx
@@ -403,6 +433,8 @@ def _init_clients(services, connection):
     from py42.clients.trustedactivities import TrustedActivitiesClient
     from py42.services.storage._service_factory import ConnectionManager
     from py42.services.storage._service_factory import StorageServiceFactory
+    from py42.clients.userriskprofile import UserRiskProfileClient
+    from py42.clients.watchlists import WatchlistsClient
 
     authority = AuthorityClient(
         administration=services.administration,
@@ -433,6 +465,8 @@ def _init_clients(services, connection):
     auditlogs = AuditLogsClient(services.auditlogs)
     loginconfig = LoginConfigurationClient(connection)
     trustedactivities = TrustedActivitiesClient(services.trustedactivities)
+    userriskprofile = UserRiskProfileClient(services.userriskprofile)
+    watchlists = WatchlistsClient(services.watchlists)
     clients = Clients(
         authority=authority,
         detectionlists=detectionlists,
@@ -443,5 +477,7 @@ def _init_clients(services, connection):
         cases=CasesClient(services.cases, services.casesfileevents),
         loginconfig=loginconfig,
         trustedactivities=trustedactivities,
+        userriskprofile=userriskprofile,
+        watchlists=watchlists,
     )
     return clients

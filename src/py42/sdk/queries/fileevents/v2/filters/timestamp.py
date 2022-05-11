@@ -1,8 +1,8 @@
 from py42.choices import Choices
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterTimestampField
+from py42.sdk.queries.fileevents.util import _FileEventFilterTimestampField
 
 
-class EventTimestamp(FileEventFilterTimestampField, Choices):
+class Timestamp(_FileEventFilterTimestampField, Choices):
     """V2 filter class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These
@@ -19,7 +19,7 @@ class EventTimestamp(FileEventFilterTimestampField, Choices):
         - :attr:`EventTimestamp.THIRTY_DAYS`
 
     Example::
-        filter = EventTimestamp.within_the_last(EventTimestamp.SEVEN_DAYS)
+        filter = Timestamp.within_the_last(EventTimestamp.SEVEN_DAYS)
     """
 
     _term = "@timestamp"

@@ -20,17 +20,6 @@ FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 RAW_QUERY = "RAW JSON QUERY"
 USER_UID = "user-uid"
 PDS_EXCEPTION_MESSAGE = "No file with hash {0} available for download."
-FILE_EVENTS_RESPONSE = """{
-    "fileEvents":[
-        {
-            "deviceUid": "testdeviceUid",
-            "fileName": "testfileName",
-            "filePath": "/test/file/path/",
-            "md5Checksum":"testmd5-2",
-            "sha256Checksum":"testsha256-2"
-        }
-    ]
-}"""
 FILE_EVENTS_RESPONSE_V2 = """{
     "fileEvents":[
         {
@@ -220,7 +209,7 @@ class TestSecurityClient:
 
     @pytest.fixture
     def file_event_search(self, mocker):
-        return create_mock_response(mocker, FILE_EVENTS_RESPONSE)
+        return create_mock_response(mocker, FILE_EVENTS_RESPONSE_V2)
 
     @pytest.fixture
     def file_event_search_v2(self, mocker):
@@ -246,7 +235,7 @@ class TestSecurityClient:
         mock = mocker.MagicMock()
         file_download = create_mock_response(mocker, "PDSDownloadToken=token")
         file_event_service.search.return_value = create_mock_response(
-            mocker, FILE_EVENTS_RESPONSE
+            mocker, FILE_EVENTS_RESPONSE_V2
         )
         preservation_data_service.get_file_version_list.return_value = (
             create_mock_response(mocker, PDS_FILE_VERSIONS)
@@ -358,7 +347,7 @@ class TestSecurityClient:
         pds_config,
     ):
         pds_config.file_event_service.search.return_value = create_mock_response(
-            mocker, FILE_EVENTS_RESPONSE.replace("-2", "-6")
+            mocker, FILE_EVENTS_RESPONSE_V2.replace("-2", "-6")
         )
         security_client = SecurityDataClient(
             pds_config.file_event_service,
@@ -539,7 +528,7 @@ class TestSecurityClient:
         pds_config,
     ):
         pds_config.file_event_service.search.return_value = create_mock_response(
-            mocker, FILE_EVENTS_RESPONSE.replace("-2", "-6")
+            mocker, FILE_EVENTS_RESPONSE_V2.replace("-2", "-6")
         )
 
         security_client = SecurityDataClient(
@@ -917,46 +906,3 @@ class TestSecurityClient:
             storage_service_factory,
         )
         security_client.search_all_file_events(FileEventQuery.all(), page_token=None)
-
-    # V2 TESTS
-    def test_stream_file_by_sha256_calls_get_version_list_with_expected_params_when_v2(
-        self,
-        pds_config_v2,
-    ):
-        import py42.settings
-
-        py42.settings.use_v2_file_event_data = True
-
-        security_client = SecurityDataClient(
-            pds_config_v2.file_event_service,
-            pds_config_v2.preservation_data_service,
-            pds_config_v2.saved_search_service,
-            pds_config_v2.storage_service_factory,
-        )
-
-        response = security_client.stream_file_by_sha256("testsha256-2")
-        version_list_params = [
-            "testdeviceUid",
-            "testmd5-2",
-            "testsha256-2",
-            "/test/file/path/testfileName",
-        ]
-        pds_config_v2.preservation_data_service.get_file_version_list.assert_called_once_with(
-            *version_list_params
-        )
-        pds_config_v2.storage_service_factory.create_preservation_data_service.assert_called_once_with(
-            "https://host-2.example.com"
-        )
-
-        py42.settings.use_v2_file_event_data = False
-
-        assert (
-            pds_config_v2.file_event_service.get_file_location_detail_by_sha256.call_count
-            == 0
-        )
-        assert pds_config_v2.preservation_data_service.find_file_version.call_count == 0
-        expected_download_token_params = ["archiveid-2", "fileid-2", 12344]
-        pds_config_v2.storage_node_client.get_download_token.assert_called_once_with(
-            *expected_download_token_params
-        )
-        assert response == b"stream"

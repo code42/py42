@@ -38,7 +38,7 @@ Explore the complete public documentation for `py42` below.
 * [Devices](methoddocs/devices.md)
 * [Device Settings](methoddocs/devicesettings.md)
 * [Exceptions](methoddocs/exceptions.md)
-* [File Event Queries - V1](methoddocs/fileeventqueries.md)
+* [(DEPRECATED) File Event Queries - V1](methoddocs/fileeventqueries.md)
 * [File Event Queries - V2](methoddocs/fileeventqueriesv2.md)
 * [Legal Hold](methoddocs/legalhold.md)
 * [Orgs](methoddocs/orgs.md)

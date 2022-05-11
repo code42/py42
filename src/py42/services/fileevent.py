@@ -1,9 +1,7 @@
 import json
 from warnings import warn
 
-import py42.settings as settings
 from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42Error
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.services import BaseService
 
@@ -23,38 +21,30 @@ class FileEventService(BaseService):
         To use the updated data model for file events, `update your settings <https://py42docs.code42.com/en/stable/userguides/v2apis.html>`__.
 
         Args:
-            query (:class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery` or str or unicode):
-                A composed :class:`~py42.sdk.queries.fileevents.file_event_query.FileEventQuery`
+            query (:class:`~py42.sdk.queries.fileevents.v2.file_event_query.FileEventQuery` or str or unicode):
+                A composed :class:`~py42.sdk.queries.fileevents.v2.file_event_query.FileEventQuery`
                 object or the raw query as a JSON formatted string.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the query results.
         """
-        # deprecation warning for v1 file events
-        if not settings.use_v2_file_event_data:
-            warn(
-                "V1 file events are deprecated.  Set 'py42.settings.use_v2_file_event_data = True' to use V2 file events.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
-        # check if query type matches settings
-        if not isinstance(query, str):
-            if query.sort_key == "eventId" and settings.use_v2_file_event_data:
-                raise Py42Error(
-                    "Bad Request. You cannot use a V1 query with V2 settings enabled. For more details on working with V2 file event data, see the 'V2 File Events' user guide at https://py42docs.code42.com/."
-                )
-            elif query.sort_key == "event.id" and not settings.use_v2_file_event_data:
-                raise Py42Error(
-                    "Bad Request. You cannot use a V2 query with V2 settings disabled. For more details on working with V2 file event data, see the 'V2 File Events' user guide at https://py42docs.code42.com/."
-                )
-
-        version = "v2" if settings.use_v2_file_event_data else "v1"
-        uri = f"/forensic-search/queryservice/api/{version}/fileevent"
-
+        # if string query
         if isinstance(query, str):
             query = json.loads(query)
+            # v2 fields are accessible via dot notation (exception of "@timestamp")
+            version = "v2" if "." in query["srtKey"] or "@" in query["srtKey"] else "v1"
+            uri = f"/forensic-search/queryservice/api/{version}/fileevent"
+        # else query object
         else:
+            # deprecation warning for v1 file events
+            if query.version == "v1":
+                warn(
+                    "V1 file events are deprecated.  Use V2 queries instead.",
+                    DeprecationWarning,
+                    stacklevel=2,
+                )
+
+            uri = f"/forensic-search/queryservice/api/{query.version}/fileevent"
             query = dict(query)
 
         try:

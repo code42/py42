@@ -1,10 +1,10 @@
 from py42.choices import Choices
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterTimestampField
-from py42.sdk.queries.query_filter import QueryFilterBooleanField
+from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
+from py42.sdk.queries.fileevents.util import _FileEventFilterTimestampField
+from py42.sdk.queries.query_filter import _QueryFilterBooleanField
 
 
-class EventTimestamp(FileEventFilterTimestampField, Choices):
+class EventTimestamp(_FileEventFilterTimestampField, Choices):
     """V1 filter class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These
@@ -37,7 +37,7 @@ class EventTimestamp(FileEventFilterTimestampField, Choices):
     THIRTY_DAYS = "P30D"
 
 
-class EventType(FileEventFilterStringField, Choices):
+class EventType(_FileEventFilterStringField, Choices):
     """V1 filter class that filters file events based on event type.
 
     Available event types are provided as class attributes:
@@ -65,7 +65,7 @@ class EventType(FileEventFilterStringField, Choices):
     PRINTED = "PRINTED"
 
 
-class InsertionTimestamp(FileEventFilterTimestampField):
+class InsertionTimestamp(_FileEventFilterTimestampField):
     """V1 filter class that filters events based on the timestamp of when the event was actually added to the
     event store (which can be after the event occurred on the device itself).
 
@@ -76,7 +76,7 @@ class InsertionTimestamp(FileEventFilterTimestampField):
     _term = "insertionTimestamp"
 
 
-class Source(FileEventFilterStringField, Choices):
+class Source(_FileEventFilterStringField, Choices):
     """V1 filter class that filters events by event source.
 
     Available source types are provided as class attributes:
@@ -103,13 +103,13 @@ class Source(FileEventFilterStringField, Choices):
     OFFICE_365 = "Office365"
 
 
-class MimeTypeMismatch(QueryFilterBooleanField):
+class MimeTypeMismatch(_QueryFilterBooleanField):
     """V1 filter class that filters events by whether or not a file's mime type matches its extension type."""
 
     _term = "mimeTypeMismatch"
 
 
-class OutsideActiveHours(QueryFilterBooleanField):
+class OutsideActiveHours(_QueryFilterBooleanField):
     """V1 filter class that filters events by whether or not they occurred outside a user's typical working hours"""
 
     _term = "outsideActiveHours"

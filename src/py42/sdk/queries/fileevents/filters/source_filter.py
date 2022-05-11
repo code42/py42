@@ -1,8 +1,8 @@
 from py42.choices import Choices
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
+from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 
 
-class SourceCategory(FileEventFilterStringField, Choices):
+class SourceCategory(_FileEventFilterStringField, Choices):
     """
     V1 filter class that filters events based on source category.
 
@@ -33,19 +33,19 @@ class SourceCategory(FileEventFilterStringField, Choices):
     UNKNOWN = "Unknown"
 
 
-class SourceName(FileEventFilterStringField):
+class SourceName(_FileEventFilterStringField):
     """V1 filter class that filters events based on source name."""
 
     _term = "sourceName"
 
 
-class SourceTabTitles(FileEventFilterStringField):
+class SourceTabTitles(_FileEventFilterStringField):
     """V1 filter class that filters events based on source tab titles (for 'browser or other app' events)."""
 
     _term = "sourceTabTitles"
 
 
-class SourceTabUrls(FileEventFilterStringField):
+class SourceTabUrls(_FileEventFilterStringField):
     """V1 filter class that filters events based on source tab URLs (for 'browser or other app' events)."""
 
     _term = "sourceTabUrls"

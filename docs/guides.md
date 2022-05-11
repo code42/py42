@@ -34,9 +34,7 @@
 * [Backup Sets](userguides/backupsets.md)
 * [Cases](userguides/cases.md)
 * [Trust Settings](userguides/trustedactivities.md)
-<<<<<<< HEAD
 * [V2 File Events](userguides/v2apis.md)
-=======
 * [User Risk Profiles](userguides/userriskprofile.md)
 * [Watchlists](userguides/watchlists.md)
 >>>>>>> main

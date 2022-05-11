@@ -6,19 +6,6 @@
 
 For details on the updated File Event Model, see the V2 File Events API documentation on the [Developer Portal](https://developer.code42.com/api/#tag/File-Events).
 
-## Updating settings
-
-First, update your `use_v2_file_event_data` setting configuration to ensure py42 is using the appropriate V2 API paths:
-
-```python
-import py42.sdk
-import py42.settings
-
-py42.settings.use_v2_file_event_data = True
-```
-
-Leaving this setting as `False` means Py42 will **not** ingest V2 data or use the new corresponding V2 APIs for searching file events and saved searches.
-
 ## Querying file events
 
 To query for V2 file events, import the V2 filter modules and `FileEventQuery` class with:
@@ -28,4 +15,17 @@ from py42.sdk.queries.fileevents.v2 import *
 
 Using the `FileEventQuery` and filter classes, construct a query and search for file events as detailed in the [Executing Searches Guide](searches.md).
 
-Retrieving saved searches with V2 settings enabled will convert existing saved search queries to the V2 data model.  Existing V1 queries that cannot be properly converted will be excluded from the response.
+## Saved Searches
+
+All saved search methods functions have an additional optional `use_v2=False` argument.  If set to `True`, the saved search module will ingest from the V2 saved search APIs.  The `use_v2` argument defaults to `False` and the V1 saved searches are still available.
+
+For example, use the following to view all saved searches with the new V2 apis:
+
+```python
+import py42.sdk
+
+sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk.securitydata.savedsearches.get(use_v2=True)
+```
+
+Retrieving saved searches with V2 settings enabled will retrieve existing V1 saved search queries translated to the V2 model.  Existing V1 queries that cannot be properly converted to V2 will be omitted from the response.

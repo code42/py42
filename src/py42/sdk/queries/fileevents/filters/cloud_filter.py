@@ -1,9 +1,9 @@
 from py42.choices import Choices
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.query_filter import QueryFilterBooleanField
+from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
+from py42.sdk.queries.query_filter import _QueryFilterBooleanField
 
 
-class Actor(FileEventFilterStringField):
+class Actor(_FileEventFilterStringField):
     """V1 filter class that filters events by the cloud service username of the event originator
     (applies to cloud data source events only).
     """
@@ -11,7 +11,7 @@ class Actor(FileEventFilterStringField):
     _term = "actor"
 
 
-class DirectoryID(FileEventFilterStringField):
+class DirectoryID(_FileEventFilterStringField):
     """V1 filter class that filters events by unique identifier of the cloud drive or folder where the event
     occurred (applies to cloud data source events only).
     """
@@ -19,7 +19,7 @@ class DirectoryID(FileEventFilterStringField):
     _term = "directoryId"
 
 
-class Shared(QueryFilterBooleanField):
+class Shared(_QueryFilterBooleanField):
     """V1 filter class that filters events by the shared status of the file at the time the event occurred
     (applies to cloud data source events only).
     """
@@ -27,7 +27,7 @@ class Shared(QueryFilterBooleanField):
     _term = "shared"
 
 
-class SharedWith(FileEventFilterStringField):
+class SharedWith(_FileEventFilterStringField):
     """V1 filter class that filters events by the list of users who had been granted access to the file at the
     time of the event (applies to cloud data source events only).
     """
@@ -35,7 +35,7 @@ class SharedWith(FileEventFilterStringField):
     _term = "sharedWith"
 
 
-class SharingTypeAdded(FileEventFilterStringField, Choices):
+class SharingTypeAdded(_FileEventFilterStringField, Choices):
     """V1 filter class that filters results to include events where a file's sharing permissions were
     changed to a value that increases exposure (applies to cloud data source events only).
 

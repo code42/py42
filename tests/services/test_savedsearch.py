@@ -1,7 +1,12 @@
 from tests.conftest import create_mock_response
 
 from py42 import settings
-from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
+from py42.sdk.queries.fileevents.file_event_query import (
+    FileEventQuery as FileEventQueryV1,
+)
+from py42.sdk.queries.fileevents.v2.file_event_query import (
+    FileEventQuery as FileEventQueryV2,
+)
 from py42.services.fileevent import FileEventService
 from py42.services.savedsearch import SavedSearchService
 
@@ -117,62 +122,55 @@ class TestSavedSearchService:
             == "/forensic-search/queryservice/api/v1/saved/test-id"
         )
 
-    # V2 TESTS
-    def test_get_calls_with_v2_uri_if_v2_settings_enabled(
+    def test_get_query_builds_v1_query_if_not_use_v2_flag(
         self, mock_connection, mocker
     ):
-        import py42.settings
-
-        py42.settings.use_v2_file_event_data = True
-        file_event_service = FileEventService(mock_connection)
-        saved_search_service = SavedSearchService(mock_connection, file_event_service)
-        saved_search_service.get()
-        py42.settings.use_v2_file_event_data = False
-        mock_connection.get.assert_called_once_with(
-            "/forensic-search/queryservice/api/v2/saved"
-        )
-
-    def test_get_by_id_calls_v2_uri_if_v2_settings_enabled(self, mock_connection):
-        import py42.settings
-
-        py42.settings.use_v2_file_event_data = True
-        file_event_service = FileEventService(mock_connection)
-        saved_search_service = SavedSearchService(mock_connection, file_event_service)
-        saved_search_service.get_by_id("test-id")
-        py42.settings.use_v2_file_event_data = False
-        mock_connection.get.assert_called_once_with(
-            "/forensic-search/queryservice/api/v2/saved/test-id"
-        )
-
-    def test_get_query_builds_v2_query_if_v2_settings_enabled(
-        self, mock_connection, mocker
-    ):
-        import py42.settings
-
-        py42.settings.use_v2_file_event_data = True
         response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.post.return_value = response
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
         query = saved_search_service.get_query("test-id")
-        py42.settings.use_v2_file_event_data = False
+        assert isinstance(query, FileEventQueryV1)
+        assert query.version == "v1"
+        assert query.sort_key == "eventId"
+
+    # V2 TESTS
+    def test_get_calls_with_v2_uri_if_use_v2_flag(self, mock_connection):
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.get(use_v2=True)
+        mock_connection.get.assert_called_once_with(
+            "/forensic-search/queryservice/api/v2/saved"
+        )
+
+    def test_get_by_id_calls_v2_uri_if_use_v2_flag(self, mock_connection):
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        saved_search_service.get_by_id("test-id", use_v2=True)
+        mock_connection.get.assert_called_once_with(
+            "/forensic-search/queryservice/api/v2/saved/test-id"
+        )
+
+    def test_get_query_builds_v2_query_if_use_v2_flag(self, mock_connection, mocker):
+        response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
+        mock_connection.post.return_value = response
+        file_event_service = FileEventService(mock_connection)
+        saved_search_service = SavedSearchService(mock_connection, file_event_service)
+        query = saved_search_service.get_query("test-id", use_v2=True)
+        assert isinstance(query, FileEventQueryV2)
+        assert query.version == "v2"
         assert query.sort_key == "event.id"
 
-    def test_execute_calls_search_with_v2_uri_if_v2_settings_enabled(
+    def test_execute_calls_search_with_v2_uri_if_use_v2_flag(
         self, mock_connection, mocker
     ):
-        import py42.settings
-
-        py42.settings.use_v2_file_event_data = True
-
         response = create_mock_response(mocker, SAVED_SEARCH_GET_RESPONSE)
         mock_connection.post.return_value = response
 
         file_event_service = FileEventService(mock_connection)
         saved_search_service = SavedSearchService(mock_connection, file_event_service)
-        saved_search_service.execute("test-id")
-        expected_query = FileEventQuery.from_dict({"groups": []})
-        py42.settings.use_v2_file_event_data = False
+        saved_search_service.execute("test-id", use_v2=True)
+        expected_query = FileEventQueryV2.from_dict({"groups": []})
         mock_connection.post.assert_called_once_with(
             "/forensic-search/queryservice/api/v2/fileevent", json=dict(expected_query)
         )

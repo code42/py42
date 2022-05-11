@@ -2,8 +2,8 @@ from datetime import datetime
 
 import pytest
 
+from py42.sdk.queries.query_filter import _QueryFilter
 from py42.sdk.queries.query_filter import FilterGroup
-from py42.sdk.queries.query_filter import QueryFilter
 from py42.util import MICROSECOND_FORMAT
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
@@ -47,12 +47,12 @@ def event_filter_group_list(event_filter_group):
 
 @pytest.fixture
 def query_filter():
-    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    return _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
 
 
 @pytest.fixture
 def unicode_query_filter():
-    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
+    return _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
 
 
 def format_timestamp(test_time):

@@ -3,13 +3,19 @@
 For details on using the new file event data model, see the [V2 File Events User Guide](../userguides/v2apis.md).
 
 ```{eval-rst}
-.. autoclass:: py42.sdk.queries.fileevents.file_event_query.FileEventQuery
+.. autoclass:: py42.sdk.queries.fileevents.v2.file_event_query.FileEventQuery
     :members:
     :show-inheritance:
     :noindex:
 ```
 
 ## Saved Searches
+
+```{eval-rst}
+.. important::
+    Make sure to set the optional argument `use_v2=True` on saved search functions to get V2 file event data and queries.
+
+```
 
 ```{eval-rst}
 .. autoclass:: py42.services.savedsearch.SavedSearchService
@@ -28,34 +34,35 @@ that match multiple filter rules.
 
 Example:
 
-To search for events observed for certain set of documents, you can use the `FileName` and `MD5` filter classes to
+To search for events observed for certain set of documents, you can use the `File.Name` and `File.MD5` filter classes to
 construct `FilterGroup`s that will search for matching filenames or (in case someone renamed the sensitive file) the
 known MD5 hashes of the files:
 
-    filename_filter = FileName.is_in(['confidential_plans.docx', 'confidential_plan_projections.xlsx'])
-    md5_filter = MD5.is_in(['133765f4fff5e3038b9352a4d14e1532', 'ea16f0cbfc76f6eba292871f8a8c794b'])
+    from py42.sdk.queries.fileevents.v2 import *
+    filename_filter = File.Name.is_in(['confidential_plans.docx', 'confidential_plan_projections.xlsx'])
+    md5_filter = File.MD5.is_in(['133765f4fff5e3038b9352a4d14e1532', 'ea16f0cbfc76f6eba292871f8a8c794b'])
 
 See [Executing Searches](../userguides/searches.md) for more on building search queries.
 
 ### Filter Group Helper Methods
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_exists_filter_group
+.. automethod:: py42.sdk.queries.fileevents.util.create_exists_filter_group
     :noindex:
 ```
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_not_exists_filter_group
+.. automethod:: py42.sdk.queries.fileevents.util.create_not_exists_filter_group
     :noindex:
 ```
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_greater_than_filter_group
+.. automethod:: py42.sdk.queries.fileevents.util.create_greater_than_filter_group
     :noindex:
 ```
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_less_than_filter_group
+.. automethod:: py42.sdk.queries.fileevents.util.create_less_than_filter_group
     :noindex:
 ```
 
@@ -64,7 +71,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Destination Filters
 
 ```{eval-rst}
-.. automodule:: py42.sdk.queries.fileevents.v2.filters.destination_filter
+.. autoclass:: py42.sdk.queries.fileevents.v2.filters.destination.Destination
     :members:
     :inherited-members:
     :show-inheritance:
@@ -73,7 +80,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Event Filters
 
 ```{eval-rst}
-.. automodule:: py42.sdk.queries.fileevents.v2.filters.event_filter
+.. autoclass:: py42.sdk.queries.fileevents.v2.filters.event.Event
     :members:
     :inherited-members:
     :show-inheritance:
@@ -82,7 +89,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### File Filters
 
 ```{eval-rst}
-.. automodule:: py42.sdk.queries.fileevents.v2.filters.file_filter
+.. autoclass:: py42.sdk.queries.fileevents.v2.filters.file.File
     :members:
     :inherited-members:
     :show-inheritance:
@@ -91,7 +98,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Process Filters
 
 ```{eval-rst}
-.. automodule:: py42.sdk.queries.fileevents.v2.filters.process_filter
+.. autoclass:: py42.sdk.queries.fileevents.v2.filters.process.Process
     :members:
     :inherited-members:
     :show-inheritance:
@@ -100,7 +107,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Risk Filters
 
 ```{eval-rst}
-.. automodule:: py42.sdk.queries.fileevents.v2.filters.risk_filter
+.. autoclass:: py42.sdk.queries.fileevents.v2.filters.risk.Risk
     :members:
     :inherited-members:
     :show-inheritance:
@@ -109,7 +116,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Source Filters
 
 ```{eval-rst}
-.. automodule:: py42.sdk.queries.fileevents.v2.filters.source_filter
+.. autoclass:: py42.sdk.queries.fileevents.v2.filters.source.Source
     :members:
     :inherited-members:
     :show-inheritance:
@@ -118,7 +125,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### Timestamp Filters
 
 ```{eval-rst}
-.. automodule:: py42.sdk.queries.fileevents.v2.filters.timestamp_filter
+.. autoclass:: py42.sdk.queries.fileevents.v2.filters.timestamp.Timestamp
     :members:
     :inherited-members:
     :show-inheritance:
@@ -127,7 +134,7 @@ More helper methods for constructing queries can be found in [Shared Query Filte
 ### User Filters
 
 ```{eval-rst}
-.. automodule:: py42.sdk.queries.fileevents.v2.filters.user_filter
+.. autoclass:: py42.sdk.queries.fileevents.v2.filters.user.User
     :members:
     :inherited-members:
     :show-inheritance:

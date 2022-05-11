@@ -1,4 +1,4 @@
-# File Event Queries - V1
+# File Event Queries - V1 (DEPRECATED)
 
 ```{eval-rst}
 .. warning:: V1 file events, saved searches, and queries are **deprecated**.
@@ -40,19 +40,19 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
 ### Event Filters
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_exists_filter_group
+.. automethod:: py42.sdk.queries.fileevents.util.create_exists_filter_group
 ```
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_not_exists_filter_group
+.. automethod:: py42.sdk.queries.fileevents.util.create_not_exists_filter_group
 ```
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_greater_than_filter_group
+.. automethod:: py42.sdk.queries.fileevents.util.create_greater_than_filter_group
 ```
 
 ```{eval-rst}
-.. automethod:: py42.sdk.queries.fileevents.file_event_query.create_less_than_filter_group
+.. automethod:: py42.sdk.queries.fileevents.util.create_less_than_filter_group
 ```
 
 ```{eval-rst}

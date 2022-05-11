@@ -1,12 +1,12 @@
 import json
 
 from requests.adapters import HTTPAdapter
+from urllib3 import Retry
 
+import py42.settings.debug as debug
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.services import BaseService
-import py42.settings.debug as debug
-from urllib3 import Retry
 
 
 class FFSQueryRetryStrategy(Retry):
@@ -17,9 +17,10 @@ class FFSQueryRetryStrategy(Retry):
 
     def get_retry_after(self, response):
         retry_after = super().get_retry_after(response)
-        debug.logger.info(
-            f"Forensic search rate limit hit, retrying after: {int(retry_after)} seconds."
-        )
+        if retry_after is not None:
+            debug.logger.info(
+                f"Forensic search rate limit hit, retrying after: {int(retry_after)} seconds."
+            )
         return retry_after
 
     def get_backoff_time(self):
@@ -41,10 +42,14 @@ class FileEventService(BaseService):
         super().__init__(*args, **kwargs)
         # configure retry backoff for FFS rate limiter
         retry_strategy = FFSQueryRetryStrategy(
-            status=3,                  # retry up to 3 times
-            backoff_factor=5,          # if `retry-after` header isn't present, use 5 second exponential backoff
-            allowed_methods=["POST"],  # POST isn't a default allowed method due to it usually modifying resources
-            status_forcelist=[429],    # this only handles 429 errors, it won't retry on 5xx
+            status=3,  # retry up to 3 times
+            backoff_factor=5,  # if `retry-after` header isn't present, use 5 second exponential backoff
+            allowed_methods=[
+                "POST"
+            ],  # POST isn't a default allowed method due to it usually modifying resources
+            status_forcelist=[
+                429
+            ],  # this only handles 429 errors, it won't retry on 5xx
         )
         file_event_adapter = HTTPAdapter(
             pool_connections=200,

@@ -2,7 +2,6 @@ import json
 
 import pytest
 import requests
-
 from tests.conftest import create_mock_error
 
 from py42.exceptions import Py42BadRequestError

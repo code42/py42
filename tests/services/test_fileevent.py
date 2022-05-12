@@ -1,6 +1,7 @@
 import json
 
 import pytest
+import requests
 from tests.conftest import create_mock_error
 
 from py42.exceptions import Py42BadRequestError
@@ -39,7 +40,9 @@ def mock_invalid_page_token_connection(mocker, connection):
 class TestFileEventService:
     @pytest.fixture
     def connection(self, mocker):
-        return mocker.MagicMock(spec=Connection)
+        connection = mocker.MagicMock(spec=Connection)
+        connection._session = mocker.MagicMock(spec=requests.Session)
+        return connection
 
     def test_search_calls_post_with_uri_and_query(
         self, connection, successful_response

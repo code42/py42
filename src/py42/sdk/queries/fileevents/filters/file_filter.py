@@ -1,10 +1,10 @@
-from py42.choices import Choices
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterComparableField
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
+from py42.choices import _Choices
+from py42.sdk.queries.fileevents.util import _FileEventFilterComparableField
+from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 
 
-class FileCategory(FileEventFilterStringField, Choices):
-    """Class that filters events by category of the file observed.
+class FileCategory(_FileEventFilterStringField, _Choices):
+    """V1 filter class that filters events by category of the file observed.
 
     Available file categories are provided as class attributes:
         - :attr:`FileCategory.AUDIO`
@@ -38,26 +38,26 @@ class FileCategory(FileEventFilterStringField, Choices):
     ZIP = "Archive"
 
 
-class FileName(FileEventFilterStringField):
-    """Class that filters events by the name of the file observed."""
+class FileName(_FileEventFilterStringField):
+    """V1 filter class that filters events by the name of the file observed."""
 
     _term = "fileName"
 
 
-class FileOwner(FileEventFilterStringField):
-    """Class that filters events by the owner of the file observed."""
+class FileOwner(_FileEventFilterStringField):
+    """V1 filter class that filters events by the owner of the file observed."""
 
     _term = "fileOwner"
 
 
-class FilePath(FileEventFilterStringField):
-    """Class that filters events by path of the file observed."""
+class FilePath(_FileEventFilterStringField):
+    """V1 filter class that filters events by path of the file observed."""
 
     _term = "filePath"
 
 
-class FileSize(FileEventFilterComparableField):
-    """Class that filters events by size of the file observed.
+class FileSize(_FileEventFilterComparableField):
+    """V1 filter class that filters events by size of the file observed.
 
     Size ``value`` must be bytes.
     """
@@ -65,13 +65,13 @@ class FileSize(FileEventFilterComparableField):
     _term = "fileSize"
 
 
-class MD5(FileEventFilterStringField):
-    """Class that filters events by the MD5 hash of the file observed."""
+class MD5(_FileEventFilterStringField):
+    """V1 filter class that filters events by the MD5 hash of the file observed."""
 
     _term = "md5Checksum"
 
 
-class SHA256(FileEventFilterStringField):
-    """Class that filters events by SHA256 hash of the file observed."""
+class SHA256(_FileEventFilterStringField):
+    """V1 filter class that filters events by SHA256 hash of the file observed."""
 
     _term = "sha256Checksum"

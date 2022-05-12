@@ -1,9 +1,9 @@
-from py42.choices import Choices
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
+from py42.choices import _Choices
+from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
 
 
-class ExposureType(FileEventFilterStringField, Choices):
-    """Class that filters events based on exposure type.
+class ExposureType(_FileEventFilterStringField, _Choices):
+    """V1 filter class that filters events based on exposure type.
 
     Available options are provided as class attributes:
         - :attr:`ExposureType.SHARED_VIA_LINK`
@@ -25,40 +25,40 @@ class ExposureType(FileEventFilterStringField, Choices):
     OUTSIDE_TRUSTED_DOMAINS = "OutsideTrustedDomains"
 
 
-class ProcessName(FileEventFilterStringField):
-    """Class that filters events based on the process name involved in the exposure (applies to
+class ProcessName(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the process name involved in the exposure (applies to
     ``read by browser or other app`` events only).
     """
 
     _term = "processName"
 
 
-class ProcessOwner(FileEventFilterStringField):
-    """Class that filters events based on the process owner that was involved in the exposure
+class ProcessOwner(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the process owner that was involved in the exposure
     (applies to ``read by browser or other app`` events only).
     """
 
     _term = "processOwner"
 
 
-class RemovableMediaName(FileEventFilterStringField):
-    """Class that filters events based on the name of the removable media involved in the exposure
+class RemovableMediaName(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the name of the removable media involved in the exposure
     (applies to ``removable media`` events only).
     """
 
     _term = "removableMediaName"
 
 
-class RemovableMediaVendor(FileEventFilterStringField):
-    """Class that filters events based on the vendor of the removable media device involved in the
+class RemovableMediaVendor(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the vendor of the removable media device involved in the
     exposure (applies to ``removable media`` events only).
     """
 
     _term = "removableMediaVendor"
 
 
-class RemovableMediaMediaName(FileEventFilterStringField):
-    """Class that filters events based on the name of the removable media (as reported by the
+class RemovableMediaMediaName(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the name of the removable media (as reported by the
     vendor/device, usually very similar to RemovableMediaName) involved in the exposure (applies to
     ``removable media`` events only).
     """
@@ -66,8 +66,8 @@ class RemovableMediaMediaName(FileEventFilterStringField):
     _term = "removableMediaMediaName"
 
 
-class RemovableMediaVolumeName(FileEventFilterStringField):
-    """Class that filters events based on the name of the formatted volume (as reported by the
+class RemovableMediaVolumeName(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the name of the formatted volume (as reported by the
     operating system) of the removable media device involved in the exposure (applies to
     ``removable media`` events only).
     """
@@ -75,24 +75,24 @@ class RemovableMediaVolumeName(FileEventFilterStringField):
     _term = "removableMediaVolumeName"
 
 
-class RemovableMediaPartitionID(FileEventFilterStringField):
-    """Class that filters events based on the unique identifier assigned (by the operating system)
+class RemovableMediaPartitionID(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the unique identifier assigned (by the operating system)
     to the removable media involved in the exposure (applies to ``removable media`` events only).
     """
 
     _term = "removableMediaPartitionId"
 
 
-class RemovableMediaSerialNumber(FileEventFilterStringField):
-    """Class that filters events based on the serial number of the connected hardware as reported
+class RemovableMediaSerialNumber(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the serial number of the connected hardware as reported
     by the operating system (applies to ``removable media`` events only).
     """
 
     _term = "removableMediaSerialNumber"
 
 
-class SyncDestination(FileEventFilterStringField, Choices):
-    """Class that filters events based on the name of the cloud service the file is synced with
+class SyncDestination(_FileEventFilterStringField, _Choices):
+    """V1 filter class that filters events based on the name of the cloud service the file is synced with
     (applies to ``synced to cloud service`` events only).
 
     Available options are provided as class attributes:
@@ -116,24 +116,24 @@ class SyncDestination(FileEventFilterStringField, Choices):
     ONEDRIVE = "OneDrive"
 
 
-class SyncDestinationUsername(FileEventFilterStringField):
-    """Class that filters events based on the username associated with the cloud service
+class SyncDestinationUsername(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the username associated with the cloud service
     the file is synced with (applies to ``synced to cloud service`` events only).
     """
 
     _term = "syncDestinationUsername"
 
 
-class TabURL(FileEventFilterStringField):
-    """Class that filters events based on all the URLs of the browser tabs at the time the file
+class TabURL(_FileEventFilterStringField):
+    """V1 filter class that filters events based on all the URLs of the browser tabs at the time the file
     contents were read by the browser (applies to ``read by browser or other app`` events only).
     """
 
     _term = "tabUrls"
 
 
-class WindowTitle(FileEventFilterStringField):
-    """Class that filters events based on the name of all the browser tabs or application windows that were
+class WindowTitle(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the name of all the browser tabs or application windows that were
     open when a browser or other app event occurred (applies to ``read by browser or other app``
     events only).
     """
@@ -141,8 +141,8 @@ class WindowTitle(FileEventFilterStringField):
     _term = "tabTitles"
 
 
-class DestinationCategory(FileEventFilterStringField, Choices):
-    """Class that filters events based on the category of the file event destination.
+class DestinationCategory(_FileEventFilterStringField, _Choices):
+    """V1 filter class that filters events based on the category of the file event destination.
 
     Available options are provided as class attributes:
         - :attr:`DestinationCategory.CLOUD_STORAGE`
@@ -169,7 +169,7 @@ class DestinationCategory(FileEventFilterStringField, Choices):
     UNKNOWN = "Unknown"
 
 
-class DestinationName(FileEventFilterStringField):
-    """Class that filters events based on the name of the file event destination."""
+class DestinationName(_FileEventFilterStringField):
+    """V1 filter class that filters events based on the name of the file event destination."""
 
     _term = "destinationName"

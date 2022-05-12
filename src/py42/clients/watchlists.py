@@ -1,7 +1,7 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 
 
-class WatchlistType(Choices):
+class WatchlistType(_Choices):
     """Constants available for setting the type of watchlist.
 
     * ``CONTRACT_EMPLOYEE``

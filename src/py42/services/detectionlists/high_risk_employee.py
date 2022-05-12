@@ -1,6 +1,6 @@
 from warnings import warn
 
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserNotOnListError
@@ -11,7 +11,7 @@ from py42.services.detectionlists import handle_user_already_added_error
 from py42.services.util import get_all_pages
 
 
-class HighRiskEmployeeFilters(_DetectionListFilters, Choices):
+class HighRiskEmployeeFilters(_DetectionListFilters, _Choices):
     """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Constants available for filtering High Risk Employee search results.
 
     * ``OPEN``

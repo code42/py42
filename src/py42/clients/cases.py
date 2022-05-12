@@ -1,10 +1,10 @@
 from datetime import datetime
 
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.util import parse_timestamp_to_milliseconds_precision
 
 
-class CaseStatus(Choices):
+class CaseStatus(_Choices):
     """Constants available for setting the status of a case.
 
     * ``OPEN``

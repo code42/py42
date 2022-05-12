@@ -1,9 +1,9 @@
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42UnableToCreateProfileError
 
 
-class RiskTags(Choices):
+class RiskTags(_Choices):
     """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Constants available as risk tags for :meth:`~py42.clients.detectionlists.DetectionListsClient.add_user_risk_tags()`
     and :meth:`~py42.clients.detectionlists.DetectionListsClient.remove_user_risk_tags()`.
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 from warnings import warn
 
-from py42.choices import Choices
+from py42.choices import _Choices
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UserNotOnListError
@@ -14,7 +14,7 @@ from py42.services.util import get_all_pages
 _DATE_FORMAT = "%Y-%m-%d"
 
 
-class DepartingEmployeeFilters(_DetectionListFilters, Choices):
+class DepartingEmployeeFilters(_DetectionListFilters, _Choices):
     """Deprecated. Use :class:`~py42.clients.watchlists.WatchlistsClient` and :class:`~py42.clients.userriskprofile.UserRiskProfileClient` instead. Constants available for filtering Departing Employee search results.
 
     * ``OPEN``

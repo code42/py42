@@ -5,16 +5,27 @@ from tests.conftest import create_mock_error
 
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidPageTokenError
-from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
+from py42.sdk.queries.fileevents.file_event_query import (
+    FileEventQuery as FileEventQueryV1,
+)
 from py42.sdk.queries.fileevents.filters import FileName
+from py42.sdk.queries.fileevents.v2.file_event_query import (
+    FileEventQuery as FileEventQueryV2,
+)
+from py42.sdk.queries.fileevents.v2.filters.file import Name
 from py42.services._connection import Connection
 from py42.services.fileevent import FileEventService
 
 FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
+FILE_EVENT_URI_V2 = "/forensic-search/queryservice/api/v2/fileevent"
 
 
 def _create_test_query(test_filename="*"):
-    return FileEventQuery(FileName.eq(test_filename))
+    return FileEventQueryV1(FileName.eq(test_filename))
+
+
+def _create_v2_test_query(test_filename="*"):
+    return FileEventQueryV2(Name.eq(test_filename))
 
 
 @pytest.fixture()
@@ -102,3 +113,23 @@ class TestFileEventService:
             "/forensic-search/queryservice/api/v1/filelocations",
             params={"sha256": "abc"},
         )
+
+    # V2 TESTS
+    def test_search_uses_v2_uri_and_query_if_v2_query(
+        self, connection, successful_response
+    ):
+        service = FileEventService(connection)
+        connection.post.return_value = successful_response
+        query = _create_v2_test_query()
+        service.search(query)
+        connection.post.assert_called_once_with(FILE_EVENT_URI_V2, json=dict(query))
+
+    def test_search_when_given_str_type_v2_query_calls_post_with_uri_and_query(
+        self, connection, successful_response
+    ):
+        service = FileEventService(connection)
+        connection.post.return_value = successful_response
+        query = str(_create_v2_test_query())
+        service.search(query)
+        expected = json.loads(query)
+        connection.post.assert_called_once_with(FILE_EVENT_URI_V2, json=expected)

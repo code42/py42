@@ -1,8 +1,8 @@
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
-from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
-from py42.sdk.queries.fileevents.filters.file_filter import MD5
-from py42.sdk.queries.fileevents.filters.file_filter import SHA256
+from py42.sdk.queries.fileevents.v2.file_event_query import FileEventQuery
+from py42.sdk.queries.fileevents.v2.filters.file import MD5
+from py42.sdk.queries.fileevents.v2.filters.file import SHA256
 from py42.services.util import escape_quote_chars
 
 
@@ -33,7 +33,7 @@ class SecurityDataClient:
         `REST Documentation <https://developer.code42.com/api/#operation/searchEventsUsingPOST>`__
 
         Args:
-            query (str or :class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`):
+            query (str or :class:`py42.sdk.queries.fileevents.v2.file_event_query.FileEventQuery`):
                 The file event query to filter search results.
 
         Returns:
@@ -47,7 +47,7 @@ class SecurityDataClient:
         `REST Documentation <https://developer.code42.com/api/#operation/searchEventsUsingPOST>`__
 
         Args:
-            query (str or :class:`py42.sdk.queries.fileevents.file_event_query.FileEventQuery`):
+            query (str or :class:`py42.sdk.queries.fileevents.v2.file_event_query.FileEventQuery`):
                 The file event query to filter search results.
             page_token (str, optional): A token used to indicate the starting point for
                 additional page results. For the first page, do not pass ``page_token``. For
@@ -96,7 +96,7 @@ class SecurityDataClient:
 
     def _search_by_hash(self, checksum, checksum_type):
         query = FileEventQuery.all(checksum_type.eq(checksum))
-        query.sort_key = "eventTimestamp"
+        query.sort_key = "@timestamp"
         query.sort_direction = "desc"
         response = self.search_file_events(query)
         return response
@@ -200,11 +200,11 @@ def _parse_file_location_response(locations):
 
 def _get_version_lookup_info(events):
     for event in events:
-        device_guid = event["deviceUid"]
-        md5 = event["md5Checksum"]
-        sha256 = event["sha256Checksum"]
-        fileName = event["fileName"]
-        filePath = event["filePath"]
+        device_guid = event["user"]["deviceUid"]
+        md5 = event["file"]["hash"]["md5"]
+        sha256 = event["file"]["hash"]["sha256"]
+        fileName = event["file"]["name"]
+        filePath = event["file"]["directory"]
 
         if device_guid and md5 and sha256 and fileName and filePath:
             path = f"{filePath}{fileName}"

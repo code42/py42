@@ -4,11 +4,11 @@
 - [Installation](#installation)
 - [Run a full build](#run-a-full-build)
 - [Coding Style](#coding-style)
-  - [General](#general)
   - [Wrapping web APIs](#wrapping-web-apis)
   - [Style linter](#style-linter)
 - [Tests](#tests)
   - [Writing tests](#writing-tests)
+    - [Integration tests](#integration-tests)
 - [Documentation](#documentation)
   - [Generating documentation](#generating-documentation)
     - [Performing a test build](#performing-a-test-build)
@@ -86,7 +86,7 @@ Next, with your virtual environment activated, install py42 and its development 
 ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs).
 
 ```bash
-pip install -e '.[dev]'
+pip install -e .'[dev]'
 ```
 
 Open the project in your IDE of choice and change the python environment to

@@ -1,10 +1,8 @@
-from warnings import warn
-
 from py42.sdk.queries import BaseQuery
 
 
 class FileEventQuery(BaseQuery):
-    """Helper class for building V1 Code42 Forensic Search queries.
+    """Helper class for building V2 Code42 Forensic Search queries.
 
     A FileEventQuery instance's ``all()`` and ``any()`` take one or more
     :class:`~py42.sdk.queries.query_filter.FilterGroup` objects to construct a query that
@@ -24,17 +22,11 @@ class FileEventQuery(BaseQuery):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        warn(
-            "V1 file events and saved searches are deprecated.  Use `from py42.sdk.queries.fileevents.v2 import *` to build V2 queries instead..",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-
-        self.sort_key = "eventId"
+        self.sort_key = "event.id"
 
     @property
     def version(self):
-        return "v1"
+        return "v2"
 
     def __str__(self):
         groups_string = ",".join(

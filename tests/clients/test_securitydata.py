@@ -18,14 +18,14 @@ FILE_EVENT_URI = "/forensic-search/queryservice/api/v1/fileevent"
 RAW_QUERY = "RAW JSON QUERY"
 USER_UID = "user-uid"
 PDS_EXCEPTION_MESSAGE = "No file with hash {0} available for download."
-FILE_EVENTS_RESPONSE = """{
+FILE_EVENTS_RESPONSE_V2 = """{
     "fileEvents":[
         {
-            "deviceUid": "testdeviceUid",
-            "fileName": "testfileName",
-            "filePath": "/test/file/path/",
-            "md5Checksum":"testmd5-2",
-            "sha256Checksum":"testsha256-2"
+            "@timestamp": "1",
+            "user": { "deviceUid": "testdeviceUid" },
+            "file": { "name": "testfileName", "directory": "/test/file/path/",
+                "hash": { "md5": "testmd5-2", "sha256": "testsha256-2" }
+            }
         }
     ]
 }"""
@@ -209,7 +209,11 @@ class TestSecurityClient:
 
     @pytest.fixture
     def file_event_search(self, mocker):
-        return create_mock_response(mocker, FILE_EVENTS_RESPONSE)
+        return create_mock_response(mocker, FILE_EVENTS_RESPONSE_V2)
+
+    @pytest.fixture
+    def file_event_search_v2(self, mocker):
+        return create_mock_response(mocker, FILE_EVENTS_RESPONSE_V2)
 
     @pytest.fixture
     def file_location(self, mocker):
@@ -231,7 +235,48 @@ class TestSecurityClient:
         mock = mocker.MagicMock()
         file_download = create_mock_response(mocker, "PDSDownloadToken=token")
         file_event_service.search.return_value = create_mock_response(
-            mocker, FILE_EVENTS_RESPONSE
+            mocker, FILE_EVENTS_RESPONSE_V2
+        )
+        preservation_data_service.get_file_version_list.return_value = (
+            create_mock_response(mocker, PDS_FILE_VERSIONS)
+        )
+        file_event_service.get_file_location_detail_by_sha256.return_value = (
+            create_mock_response(mocker, FILE_LOCATION_RESPONSE)
+        )
+        storage_node_client = mocker.MagicMock(spec=StoragePreservationDataService)
+        storage_node_client.get_download_token.return_value = file_download
+        storage_node_client.get_file.return_value = b"stream"
+        storage_service_factory.create_preservation_data_service.return_value = (
+            storage_node_client
+        )
+        exfiltration_client = mocker.MagicMock(spec=ExfiltratedDataService)
+        exfiltration_client.get_download_token.return_value = file_download
+        exfiltration_client.get_file.return_value = b"stream"
+        storage_service_factory.create_exfiltrated_data_service.return_value = (
+            exfiltration_client
+        )
+
+        mock.storage_service_factory = storage_service_factory
+        mock.file_event_service = file_event_service
+        mock.preservation_data_service = preservation_data_service
+        mock.saved_search_service = saved_search_service
+        mock.storage_node_client = storage_node_client
+        mock.exfiltration_client = exfiltration_client
+        return mock
+
+    @pytest.fixture
+    def pds_config_v2(
+        self,
+        mocker,
+        storage_service_factory,
+        file_event_service,
+        preservation_data_service,
+        saved_search_service,
+    ):
+        mock = mocker.MagicMock()
+        file_download = create_mock_response(mocker, "PDSDownloadToken=token")
+        file_event_service.search.return_value = create_mock_response(
+            mocker, FILE_EVENTS_RESPONSE_V2
         )
         preservation_data_service.get_file_version_list.return_value = (
             create_mock_response(mocker, PDS_FILE_VERSIONS)
@@ -302,7 +347,7 @@ class TestSecurityClient:
         pds_config,
     ):
         pds_config.file_event_service.search.return_value = create_mock_response(
-            mocker, FILE_EVENTS_RESPONSE.replace("-2", "-6")
+            mocker, FILE_EVENTS_RESPONSE_V2.replace("-2", "-6")
         )
         security_client = SecurityDataClient(
             pds_config.file_event_service,
@@ -483,7 +528,7 @@ class TestSecurityClient:
         pds_config,
     ):
         pds_config.file_event_service.search.return_value = create_mock_response(
-            mocker, FILE_EVENTS_RESPONSE.replace("-2", "-6")
+            mocker, FILE_EVENTS_RESPONSE_V2.replace("-2", "-6")
         )
 
         security_client = SecurityDataClient(

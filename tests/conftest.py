@@ -8,7 +8,7 @@ from py42.clients._archiveaccess import FileType
 from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42UnauthorizedError
 from py42.response import Py42Response
-from py42.sdk.queries.query_filter import QueryFilter
+from py42.sdk.queries.query_filter import _QueryFilter
 from py42.services._connection import Connection
 from py42.usercontext import UserContext
 
@@ -160,7 +160,7 @@ def exception():
 @pytest.fixture
 def query_filter_list():
     return [
-        QueryFilter(
+        _QueryFilter(
             EVENT_FILTER_FIELD_NAME + str(suffix),
             OPERATOR_STRING + str(suffix),
             VALUE_STRING + str(suffix),
@@ -171,12 +171,12 @@ def query_filter_list():
 
 @pytest.fixture
 def query_filter():
-    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    return _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
 
 
 @pytest.fixture
 def unicode_query_filter():
-    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
+    return _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
 
 
 @pytest.fixture

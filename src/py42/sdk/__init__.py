@@ -10,6 +10,7 @@ from py42.services._connection import Connection
 from py42.usercontext import UserContext
 
 warnings.simplefilter("always", DeprecationWarning)
+warnings.simplefilter("always", UserWarning)
 
 
 def from_local_account(host_address, username, password, totp=None):

@@ -1,5 +1,7 @@
 from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
-
+from py42.sdk.queries.fileevents.v2.file_event_query import (
+    FileEventQuery as FileEventQueryV2,
+)
 
 JSON_QUERY_BASE = '{{"groupClause":"{0}", "groups":[{1}], "srtDir":"{4}", "srtKey":"{5}", "pgNum":{2}, "pgSize":{3}}}'
 
@@ -159,4 +161,14 @@ def test_file_event_str_gives_correct_json_representation_when_pg_token_is_set(
     assert (
         str(query)
         == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}'
+    )
+
+
+def test_file_event_str_gives_correct_json_representation_when_using_v2_data(
+    event_filter_group,
+):
+    query = FileEventQueryV2()
+    assert (
+        str(query)
+        == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"event.id", "pgNum":1, "pgSize":10000}'
     )

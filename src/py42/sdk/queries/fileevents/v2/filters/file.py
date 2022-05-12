@@ -35,6 +35,8 @@ class Category(_FileEventFilterStringField, _Choices):
     VIRTUAL_DISK_IMAGE = "VirtualDiskImage"
     ZIP = "Archive"
 
+    _term = "file.category"
+
 
 class Name(_FileEventFilterStringField):
     """V2 filter class that filters events by the name of the file observed."""

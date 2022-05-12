@@ -46,7 +46,6 @@ class SavedSearchService(BaseService):
             )
 
         self._version = "v2" if use_v2 else "v1"
-        print(self.uri)
         return self._connection.get(self.uri)
 
     def get_by_id(self, search_id, use_v2=False):

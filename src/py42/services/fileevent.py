@@ -1,9 +1,35 @@
 import json
 from warnings import warn
 
+from requests.adapters import HTTPAdapter
+from urllib3 import Retry
+
+import py42.settings.debug as debug
 from py42.exceptions import Py42BadRequestError
 from py42.exceptions import Py42InvalidPageTokenError
 from py42.services import BaseService
+
+
+class FFSQueryRetryStrategy(Retry):
+    """The forensic search service helpfully responds with a 'retry-after' header, telling us how long until the rate
+    limiter is reset. We subclass :class:`urllib3.Retry` just to add a bit of logging so the user can tell why the
+    request might look like it's hanging.
+    """
+
+    def get_retry_after(self, response):
+        retry_after = super().get_retry_after(response)
+        if retry_after is not None:
+            debug.logger.info(
+                f"Forensic search rate limit hit, retrying after: {int(retry_after)} seconds."
+            )
+        return retry_after
+
+    def get_backoff_time(self):
+        backoff_time = super().get_backoff_time()
+        debug.logger.info(
+            f"Forensic search rate limit hit, retrying after: {backoff_time} seconds."
+        )
+        return backoff_time
 
 
 class FileEventService(BaseService):
@@ -12,6 +38,10 @@ class FileEventService(BaseService):
     See the :ref:`Executing Searches User Guide <anchor_search_file_events>` to learn more about how
     to construct a query.
     """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._retry_adapter_mounted = False
 
     def search(self, query):
         """Searches for file events matching the query criteria.
@@ -28,6 +58,8 @@ class FileEventService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the query results.
         """
+        self._mount_retry_adapter()
+
         # if string query
         if isinstance(query, str):
             query = json.loads(query)
@@ -65,5 +97,31 @@ class FileEventService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing file details.
         """
+        self._mount_retry_adapter()
+
         uri = "/forensic-search/queryservice/api/v1/filelocations"
         return self._connection.get(uri, params={"sha256": checksum})
+
+    def _mount_retry_adapter(self):
+        """Sets custom Retry strategy for FFS url requests to gracefully handle being rate-limited on FFS queries."""
+        if not self._retry_adapter_mounted:
+            retry_strategy = FFSQueryRetryStrategy(
+                status=3,  # retry up to 3 times
+                backoff_factor=5,  # if `retry-after` header isn't present, use 5 second exponential backoff
+                allowed_methods=[
+                    "POST"
+                ],  # POST isn't a default allowed method due to it usually modifying resources
+                status_forcelist=[
+                    429
+                ],  # this only handles 429 errors, it won't retry on 5xx
+            )
+            file_event_adapter = HTTPAdapter(
+                pool_connections=200,
+                pool_maxsize=4,
+                pool_block=True,
+                max_retries=retry_strategy,
+            )
+            self._connection._session.mount(
+                self._connection.host_address, file_event_adapter
+            )
+            self._retry_adapter_mounted = True

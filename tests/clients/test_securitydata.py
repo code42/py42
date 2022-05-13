@@ -1,4 +1,5 @@
 import pytest
+import requests
 from tests.conftest import create_mock_response
 
 from py42.clients.securitydata import SecurityDataClient
@@ -155,7 +156,9 @@ AVAILABLE_VERSION_RESPONSE = """{
 class TestSecurityClient:
     @pytest.fixture
     def connection(self, mocker):
-        return mocker.MagicMock(spec=Connection)
+        connection = mocker.MagicMock(spec=Connection)
+        connection._session = mocker.MagicMock(spec=requests.Session)
+        return connection
 
     @pytest.fixture
     def storage_service_factory(self, mocker):

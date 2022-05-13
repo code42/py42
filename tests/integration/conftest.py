@@ -65,7 +65,8 @@ def _get_api_client_sdk(host, client, secret):
         return _sdk.from_api_client(host, client, secret)
     except Exception as err:
         pytest.exit(
-            f"Failed to init API client SDK for integration tests: {err}", returncode=1,
+            f"Failed to init API client SDK for integration tests: {err}",
+            returncode=1,
         )
 
 

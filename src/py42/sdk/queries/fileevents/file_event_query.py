@@ -1,6 +1,11 @@
 from warnings import warn
 
 from py42.sdk.queries import BaseQuery
+from py42.sdk.queries.fileevents.util import FileEventFilterComparableField
+from py42.sdk.queries.fileevents.util import FileEventFilterStringField
+from py42.sdk.queries.fileevents.util import FileEventFilterTimestampField
+
+# import from util for backwards-compatibility
 
 
 class FileEventQuery(BaseQuery):

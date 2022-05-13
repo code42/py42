@@ -1,4 +1,6 @@
-from py42.sdk.queries.query_filter import _QueryFilterStringField
+from py42.sdk.queries.query_filter import (
+    QueryFilterStringField as _QueryFilterStringField,
+)
 
 
 class EmailPolicyName(_QueryFilterStringField):

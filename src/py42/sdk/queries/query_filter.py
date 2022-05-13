@@ -19,7 +19,7 @@ def create_query_filter(term, operator, value=None):
         :class:`~py42.sdk.queries.query_filter.QueryFilter`
     """
 
-    return _QueryFilter(term, operator, value)
+    return QueryFilter(term, operator, value)
 
 
 def create_filter_group(query_filter_list, filter_clause):
@@ -184,7 +184,7 @@ def create_within_the_last_filter_group(term, value):
     return create_filter_group(filter_list, "AND")
 
 
-class _QueryFilterStringField:
+class QueryFilterStringField:
     """Helper class for creating filters where the search value is a string."""
 
     _term = "override_string_field_name"
@@ -245,7 +245,7 @@ class _QueryFilterStringField:
         return create_not_in_filter_group(cls._term, value_list)
 
 
-class _QueryFilterTimestampField:
+class QueryFilterTimestampField:
     """Helper class for creating filters where the search value is a timestamp."""
 
     _term = "override_timestamp_field_name"
@@ -339,7 +339,7 @@ class _QueryFilterTimestampField:
         )
 
 
-class _QueryFilterBooleanField:
+class QueryFilterBooleanField:
     """Helper class for creating filters where the search value is a boolean."""
 
     _term = "override_boolean_field_name"
@@ -365,7 +365,7 @@ class _QueryFilterBooleanField:
         return create_eq_filter_group(cls._term, "FALSE")
 
 
-class _QueryFilter:
+class QueryFilter:
     """Class for constructing a single filter object for use in a search query.
 
     When :func:`str()` is called on a :class:`~py42.sdk.queries.query_filter.QueryFilter`
@@ -435,7 +435,7 @@ class _QueryFilter:
             yield key, output_dict[key]
 
     def __eq__(self, other):
-        if isinstance(other, (_QueryFilter, tuple, list)):
+        if isinstance(other, (QueryFilter, tuple, list)):
             return tuple(self) == tuple(other)
         elif isinstance(other, str):
             return str(self) == other
@@ -477,7 +477,7 @@ class FilterGroup:
         Returns:
             :class:`~py42.sdk.queries.query_filter.FilterGroup`
         """
-        filter_list = [_QueryFilter.from_dict(item) for item in _dict["filters"]]
+        filter_list = [QueryFilter.from_dict(item) for item in _dict["filters"]]
         return cls(filter_list, filter_clause=_dict["filterClause"])
 
     @property

@@ -1,6 +1,10 @@
-from py42.choices import _Choices
-from py42.sdk.queries.fileevents.util import _FileEventFilterComparableField
-from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
+from py42.choices import Choices as _Choices
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterComparableField as _FileEventFilterComparableField,
+)
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterStringField as _FileEventFilterStringField,
+)
 
 
 class FileCategory(_FileEventFilterStringField, _Choices):

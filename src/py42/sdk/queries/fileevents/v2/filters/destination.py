@@ -1,6 +1,10 @@
-from py42.choices import _Choices
-from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
-from py42.sdk.queries.query_filter import _QueryFilterStringField
+from py42.choices import Choices as _Choices
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterStringField as _FileEventFilterStringField,
+)
+from py42.sdk.queries.query_filter import (
+    QueryFilterStringField as _QueryFilterStringField,
+)
 
 
 class Name(_QueryFilterStringField):

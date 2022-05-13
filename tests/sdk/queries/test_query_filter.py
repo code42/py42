@@ -2,8 +2,6 @@ from datetime import datetime
 
 import pytest
 
-from py42.sdk.queries.query_filter import _QueryFilter
-from py42.sdk.queries.query_filter import _QueryFilterTimestampField
 from py42.sdk.queries.query_filter import create_eq_filter_group
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_in_range_filter_group
@@ -14,6 +12,8 @@ from py42.sdk.queries.query_filter import create_on_or_after_filter_group
 from py42.sdk.queries.query_filter import create_on_or_before_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
 from py42.sdk.queries.query_filter import FilterGroup
+from py42.sdk.queries.query_filter import QueryFilter
+from py42.sdk.queries.query_filter import QueryFilterTimestampField
 
 
 EVENT_FILTER_FIELD_NAME = "filter_field_name"
@@ -34,7 +34,7 @@ def json_query_filter_with_suffix(suffix):
 
 
 def test_query_filter_constructs_successfully():
-    assert _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    assert QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
 
 
 def test_query_filter_str_outputs_correct_json_representation(query_filter):
@@ -49,12 +49,12 @@ def test_query_filter_unicode_outputs_correct_json_representation(unicode_query_
 def test_query_filter_from_dict_gives_correct_json_representation():
     filter_dict = {"operator": "IS", "term": "testterm", "value": "testval"}
     filter_json = '{"operator":"IS", "term":"testterm", "value":"testval"}'
-    alert_query = _QueryFilter.from_dict(filter_dict)
+    alert_query = QueryFilter.from_dict(filter_dict)
     assert str(alert_query) == filter_json
 
 
 def test_query_filter_dict_gives_expected_dict_representation(event_filter_group):
-    query_filter = _QueryFilter("testterm", "IS", value="testval")
+    query_filter = QueryFilter("testterm", "IS", value="testval")
     alert_query_query_dict = dict(query_filter)
     assert alert_query_query_dict["term"] == "testterm"
     assert alert_query_query_dict["operator"] == "IS"
@@ -62,17 +62,17 @@ def test_query_filter_dict_gives_expected_dict_representation(event_filter_group
 
 
 def test_query_filter_term_returns_expected_value():
-    query_filter = _QueryFilter("testterm", "IS", value="testval")
+    query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.term == "testterm"
 
 
 def test_query_filter_operator_returns_expected_value():
-    query_filter = _QueryFilter("testterm", "IS", value="testval")
+    query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.operator == "IS"
 
 
 def test_query_filter_value_returns_expected_value():
-    query_filter = _QueryFilter("testterm", "IS", value="testval")
+    query_filter = QueryFilter("testterm", "IS", value="testval")
     assert query_filter.value == "testval"
 
 
@@ -246,26 +246,26 @@ def test_create_query_filter_returns_obj_with_correct_json_representation():
 
 
 def test_compare_query_filters_with_equivalent_args_returns_true():
-    query_filter1 = _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
-    query_filter2 = _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    query_filter1 = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    query_filter2 = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
     assert query_filter1 == query_filter2
 
 
 def test_compare_query_filters_with_different_values_returns_false():
-    query_filter1 = _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, "TEST")
-    query_filter2 = _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, "NOT_TEST")
+    query_filter1 = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, "TEST")
+    query_filter2 = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, "NOT_TEST")
     assert query_filter1 != query_filter2
 
 
 def test_compare_query_filters_with_different_operators_returns_false():
-    query_filter1 = _QueryFilter(EVENT_FILTER_FIELD_NAME, "IS", VALUE_STRING)
-    query_filter2 = _QueryFilter(EVENT_FILTER_FIELD_NAME, "IS_NOT", VALUE_STRING)
+    query_filter1 = QueryFilter(EVENT_FILTER_FIELD_NAME, "IS", VALUE_STRING)
+    query_filter2 = QueryFilter(EVENT_FILTER_FIELD_NAME, "IS_NOT", VALUE_STRING)
     assert query_filter1 != query_filter2
 
 
 def test_compare_query_filters_with_different_terms_returns_false():
-    query_filter1 = _QueryFilter("TEST", OPERATOR_STRING, VALUE_STRING)
-    query_filter2 = _QueryFilter("NOT_TEST", OPERATOR_STRING, VALUE_STRING)
+    query_filter1 = QueryFilter("TEST", OPERATOR_STRING, VALUE_STRING)
+    query_filter2 = QueryFilter("NOT_TEST", OPERATOR_STRING, VALUE_STRING)
     assert query_filter1 != query_filter2
 
 
@@ -286,7 +286,7 @@ def test_compare_query_filters_with_different_terms_returns_false():
     ],
 )
 def test_compare_query_filter_with_expected_equivalent_returns_true(equivalent):
-    query_filter = _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    query_filter = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
     assert query_filter == equivalent
 
 
@@ -329,7 +329,7 @@ def test_compare_query_filter_with_expected_equivalent_returns_true(equivalent):
     ],
 )
 def test_compare_query_filter_with_expected_different_returns_false(different):
-    query_filter = _QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
+    query_filter = QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
     assert query_filter != different
 
 
@@ -354,9 +354,9 @@ def test_compare_filter_group_with_equivalent_multiple_args_in_different_order_r
 @pytest.mark.parametrize(
     "filter_class",
     [
-        _QueryFilter("term", "IS", "value1"),
-        _QueryFilter("term", "IS", "value2"),
-        _QueryFilter("term", "IS", "value3"),
+        QueryFilter("term", "IS", "value1"),
+        QueryFilter("term", "IS", "value2"),
+        QueryFilter("term", "IS", "value3"),
     ],
 )
 def test_filter_group_contains_expected_query_filter_returns_true(filter_class):
@@ -370,9 +370,9 @@ def test_filter_group_contains_expected_query_filter_returns_true(filter_class):
 @pytest.mark.parametrize(
     "filter_class",
     [
-        _QueryFilter("term", "IS", "value4"),
-        _QueryFilter("different_term", "IS", "value2"),
-        _QueryFilter("term", "DIFFERENT_OPERATOR", "value3"),
+        QueryFilter("term", "IS", "value4"),
+        QueryFilter("different_term", "IS", "value2"),
+        QueryFilter("term", "DIFFERENT_OPERATOR", "value3"),
     ],
 )
 def test_filter_group_when_does_not_contain_expected_query_filter_returns_false(
@@ -424,7 +424,7 @@ class Test_QueryFilterTimestampField:
             ],
         }
 
-        qf = _QueryFilterTimestampField.on_or_after(timestamp)
+        qf = QueryFilterTimestampField.on_or_after(timestamp)
         assert dict(qf) == expected
 
     @pytest.mark.parametrize(
@@ -447,7 +447,7 @@ class Test_QueryFilterTimestampField:
                 }
             ],
         }
-        assert dict(_QueryFilterTimestampField.on_or_before(timestamp)) == expected
+        assert dict(QueryFilterTimestampField.on_or_before(timestamp)) == expected
 
     @pytest.mark.parametrize(
         "start_timestamp, end_timestamp",
@@ -479,7 +479,7 @@ class Test_QueryFilterTimestampField:
         }
 
         assert (
-            dict(_QueryFilterTimestampField.in_range(start_timestamp, end_timestamp))
+            dict(QueryFilterTimestampField.in_range(start_timestamp, end_timestamp))
             == expected
         )
 
@@ -508,7 +508,7 @@ class Test_QueryFilterTimestampField:
                 },
             ],
         }
-        assert dict(_QueryFilterTimestampField.on_same_day(timestamp)) == expected
+        assert dict(QueryFilterTimestampField.on_same_day(timestamp)) == expected
 
     def test_on_or_after_with_decimals(self):
         expected = {
@@ -522,7 +522,7 @@ class Test_QueryFilterTimestampField:
             ],
         }
 
-        qf = _QueryFilterTimestampField.on_or_after(1599736333.123456)
+        qf = QueryFilterTimestampField.on_or_after(1599736333.123456)
         assert dict(qf) == expected
 
     def test_on_or_before_with_decimals(self):
@@ -537,7 +537,7 @@ class Test_QueryFilterTimestampField:
             ],
         }
         assert (
-            dict(_QueryFilterTimestampField.on_or_before(1599736333.123456)) == expected
+            dict(QueryFilterTimestampField.on_or_before(1599736333.123456)) == expected
         )
 
     def test_in_range_with_decimals(self):
@@ -558,8 +558,6 @@ class Test_QueryFilterTimestampField:
         }
 
         assert (
-            dict(
-                _QueryFilterTimestampField.in_range(1599736333.123456, 1599739994.6789)
-            )
+            dict(QueryFilterTimestampField.in_range(1599736333.123456, 1599739994.6789))
             == expected
         )

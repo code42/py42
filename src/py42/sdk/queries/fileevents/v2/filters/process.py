@@ -1,4 +1,6 @@
-from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterStringField as _FileEventFilterStringField,
+)
 
 
 class Executable(_FileEventFilterStringField):

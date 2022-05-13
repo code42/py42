@@ -1,8 +1,8 @@
-from py42.choices import _Choices
-from py42.sdk.queries.query_filter import _QueryFilterStringField
-from py42.sdk.queries.query_filter import _QueryFilterTimestampField
+from py42.choices import Choices
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
+from py42.sdk.queries.query_filter import QueryFilterStringField
+from py42.sdk.queries.query_filter import QueryFilterTimestampField
 from py42.util import MICROSECOND_FORMAT
 from py42.util import parse_timestamp_to_microseconds_precision
 
@@ -42,7 +42,7 @@ def create_not_contains_filter_group(term, value):
     return create_filter_group(filter_list, "AND")
 
 
-class AlertQueryFilterStringField(_QueryFilterStringField):
+class AlertQueryFilterStringField(QueryFilterStringField):
     @classmethod
     def contains(cls, value):
         """Creates a :class:`~py42.sdk.queries.query_filter.FilterGroup` for filtering
@@ -76,7 +76,7 @@ class AlertQueryFilterStringField(_QueryFilterStringField):
         return create_not_contains_filter_group(cls._term, value)
 
 
-class AlertQueryFilterTimestampField(_QueryFilterTimestampField):
+class AlertQueryFilterTimestampField(QueryFilterTimestampField):
     """Helper class for creating alert filters where the search value is a timestamp."""
 
     @staticmethod
@@ -107,13 +107,13 @@ class RuleName(AlertQueryFilterStringField):
     _term = "name"
 
 
-class RuleId(_QueryFilterStringField):
+class RuleId(QueryFilterStringField):
     """Class that filters alerts based on rule identifier."""
 
     _term = "ruleId"
 
 
-class RuleSource(_QueryFilterStringField, _Choices):
+class RuleSource(QueryFilterStringField, Choices):
     """Class that filters alerts based on rule source.
 
     Available options are:
@@ -129,7 +129,7 @@ class RuleSource(_QueryFilterStringField, _Choices):
     HIGH_RISK_EMPLOYEE = "High Risk Employee"
 
 
-class RuleType(_QueryFilterStringField, _Choices):
+class RuleType(QueryFilterStringField, Choices):
     """Class that filters alerts based on rule type.
 
     Available options are:
@@ -151,7 +151,7 @@ class Description(AlertQueryFilterStringField):
     _term = "description"
 
 
-class Severity(_QueryFilterStringField, _Choices):
+class Severity(QueryFilterStringField, Choices):
     """Class that filters alerts based on severity.
 
     Available options are:
@@ -170,7 +170,7 @@ class Severity(_QueryFilterStringField, _Choices):
     LOW = "LOW"
 
 
-class AlertState(_QueryFilterStringField, _Choices):
+class AlertState(QueryFilterStringField, Choices):
     """Class that filters alerts based on alert state.
 
     Available options are:

@@ -1,5 +1,7 @@
-from py42.choices import _Choices
-from py42.sdk.queries.fileevents.util import _FileEventFilterTimestampField
+from py42.choices import Choices as _Choices
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterTimestampField as _FileEventFilterTimestampField,
+)
 
 
 class Timestamp(_FileEventFilterTimestampField, _Choices):

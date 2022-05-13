@@ -1,4 +1,6 @@
-from py42.sdk.queries.query_filter import _QueryFilterBooleanField
+from py42.sdk.queries.query_filter import (
+    QueryFilterBooleanField as _QueryFilterBooleanField,
+)
 
 
 class TrustedActivity(_QueryFilterBooleanField):

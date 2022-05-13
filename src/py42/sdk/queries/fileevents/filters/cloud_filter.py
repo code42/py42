@@ -1,6 +1,8 @@
-from py42.choices import _Choices
-from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
-from py42.sdk.queries.query_filter import _QueryFilterBooleanField
+from py42.choices import Choices as _Choices
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterStringField as _FileEventFilterStringField,
+)
+from py42.sdk.queries.query_filter import QueryFilterBooleanField
 
 
 class Actor(_FileEventFilterStringField):
@@ -19,7 +21,7 @@ class DirectoryID(_FileEventFilterStringField):
     _term = "directoryId"
 
 
-class Shared(_QueryFilterBooleanField):
+class Shared(QueryFilterBooleanField):
     """V1 filter class that filters events by the shared status of the file at the time the event occurred
     (applies to cloud data source events only).
     """

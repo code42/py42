@@ -1,8 +1,8 @@
-from py42.sdk.queries.query_filter import _QueryFilterStringField
-from py42.sdk.queries.query_filter import _QueryFilterTimestampField
 from py42.sdk.queries.query_filter import create_filter_group
 from py42.sdk.queries.query_filter import create_query_filter
 from py42.sdk.queries.query_filter import create_within_the_last_filter_group
+from py42.sdk.queries.query_filter import QueryFilterStringField
+from py42.sdk.queries.query_filter import QueryFilterTimestampField
 
 
 def create_exists_filter_group(term):
@@ -69,7 +69,7 @@ def create_less_than_filter_group(term, value):
     return create_filter_group(filter_list, "AND")
 
 
-class _FileEventFilterStringField(_QueryFilterStringField):
+class FileEventFilterStringField(QueryFilterStringField):
     """Helper class for creating filters with the ``EXISTS``/``NOT_EXISTS`` filter clauses."""
 
     @classmethod
@@ -93,7 +93,7 @@ class _FileEventFilterStringField(_QueryFilterStringField):
         return create_not_exists_filter_group(cls._term)
 
 
-class _FileEventFilterComparableField:
+class FileEventFilterComparableField:
     """Helper class for creating filters with the ``GREATER_THAN``/``LESS_THAN`` filter clauses."""
 
     _term = "override_boolean_field_name"
@@ -127,7 +127,7 @@ class _FileEventFilterComparableField:
         return create_less_than_filter_group(cls._term, value)
 
 
-class _FileEventFilterTimestampField(_QueryFilterTimestampField):
+class FileEventFilterTimestampField(QueryFilterTimestampField):
     @classmethod
     def within_the_last(cls, value):
         """Returns a :class:`~py42.sdk.queries.query_filter.FilterGroup` that is useful

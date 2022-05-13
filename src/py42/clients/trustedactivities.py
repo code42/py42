@@ -1,7 +1,7 @@
-from py42.choices import _Choices
+from py42.choices import Choices
 
 
-class TrustedActivityType(_Choices):
+class TrustedActivityType(Choices):
     """Constants available for setting the type of a trusted activity.
 
     * ``DOMAIN``

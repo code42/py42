@@ -1,7 +1,7 @@
 from py42.util import get_attribute_values_from_class
 
 
-class _Choices:
+class Choices:
     """Helper class to provide the choices() method to a class."""
 
     @classmethod

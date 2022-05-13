@@ -1,6 +1,10 @@
-from py42.choices import _Choices
-from py42.sdk.queries.fileevents.util import _FileEventFilterComparableField
-from py42.sdk.queries.fileevents.util import _FileEventFilterStringField
+from py42.choices import Choices as _Choices
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterStringField as _FileEventFilterStringField,
+)
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterTimestampField as _FileEventFilterTimestampField,
+)
 
 
 class Category(_FileEventFilterStringField, _Choices):
@@ -56,7 +60,7 @@ class Directory(_FileEventFilterStringField):
     _term = "file.directory"
 
 
-class Size(_FileEventFilterComparableField):
+class Size(_FileEventFilterTimestampField):
     """V2 filter class that filters events by size in bytes of the file observed.
 
     Size ``value`` must be bytes.

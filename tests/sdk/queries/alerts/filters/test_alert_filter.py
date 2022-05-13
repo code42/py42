@@ -20,10 +20,8 @@ from py42.sdk.queries.alerts.filters import RuleName
 from py42.sdk.queries.alerts.filters import RuleSource
 from py42.sdk.queries.alerts.filters import RuleType
 from py42.sdk.queries.alerts.filters import Severity
-from py42.sdk.queries.alerts.filters.alert_filter import create_contains_filter_group
-from py42.sdk.queries.alerts.filters.alert_filter import (
-    create_not_contains_filter_group,
-)
+from py42.sdk.queries.alerts.util import create_contains_filter_group
+from py42.sdk.queries.alerts.util import create_not_contains_filter_group
 from py42.util import MICROSECOND_FORMAT
 
 

@@ -402,7 +402,7 @@ def test_filter_group_when_changed_filter_clause_has_correct_json_representation
     )
 
 
-class TestQueryFilterTimestampField:
+class Test_QueryFilterTimestampField:
     @pytest.mark.parametrize(
         "timestamp",
         [

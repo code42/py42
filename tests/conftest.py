@@ -182,6 +182,7 @@ def unicode_query_filter():
 @pytest.fixture
 def mock_connection(mocker):
     connection = mocker.MagicMock(spec=Connection)
+    connection._session = mocker.MagicMock(spec=Session)
     connection.headers = {}
 
     return connection

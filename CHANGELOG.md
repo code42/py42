@@ -24,6 +24,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `securitydata.savedsearches.execute()`
     - `securitydata.savedsearches.search_file_events()`
 
+### Fixed
+
+- A bug where `sdk.watchlists.add_included_users_by_watchlist_type()` and `sdk.watchlists.delete_included_users_by_watchlist_type()` were not returning the response object.
+
 ## 1.23.0 - 2022-05-12
 
 ### Added

@@ -1,11 +1,17 @@
-from py42.choices import Choices
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterComparableField
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.query_filter import QueryFilterStringField
+from py42.choices import Choices as _Choices
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterComparableField as _FileEventFilterComparableField,
+)
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterStringField as _FileEventFilterStringField,
+)
+from py42.sdk.queries.query_filter import (
+    QueryFilterStringField as _QueryFilterStringField,
+)
 
 
-class RiskIndicator(FileEventFilterStringField):
-    """Class that filters events by risk indicator.
+class RiskIndicator(_FileEventFilterStringField):
+    """V1 filter class that filters events by risk indicator.
 
     Available options are provided as class attributes:
         - :attr:`RiskIndicator.CloudDataExposures.PUBLIC_CORPORATE_BOX`
@@ -90,7 +96,7 @@ class RiskIndicator(FileEventFilterStringField):
             + RiskIndicator.UserBehavior.choices()
         )
 
-    class CloudDataExposures(Choices):
+    class CloudDataExposures(_Choices):
         PUBLIC_CORPORATE_BOX = "Public link from corporate Box"
         PUBLIC_CORPORATE_GOOGLE_DRIVE = "Public link from corporate Google Drive"
         PUBLIC_CORPORATE_ONEDRIVE = "Public link from corporate OneDrive"
@@ -99,7 +105,7 @@ class RiskIndicator(FileEventFilterStringField):
         SHARED_CORPORATE_GOOGLE_DRIVE = "Shared from corporate Google Drive"
         SHARED_CORPORATE_ONEDRIVE = "Shared from corporate OneDrive"
 
-    class CloudStorageUploads(Choices):
+    class CloudStorageUploads(_Choices):
         AMAZON_DRIVE = "Amazon Drive upload"
         BOX = "Box upload"
         DROPBOX = "Dropbox upload"
@@ -109,14 +115,14 @@ class RiskIndicator(FileEventFilterStringField):
         ONEDRIVE = "OneDrive upload"
         ZOHO = "Zoho WorkDrive upload"
 
-    class CodeRepositoryUploads(Choices):
+    class CodeRepositoryUploads(_Choices):
         BITBUCKET = "Bitbucket upload"
         GITHUB = "GitHub upload"
         GITLAB = "GitLab upload"
         SOURCEFORGE = "SourceForge upload"
         STASH = "Stash upload"
 
-    class EmailServiceUploads(Choices):
+    class EmailServiceUploads(_Choices):
         ONESIXTHREE_DOT_COM = "163.com upload"
         ONETWOSIX_DOT_COM = "126.com upload"
         AOL = "AOL upload"
@@ -132,11 +138,11 @@ class RiskIndicator(FileEventFilterStringField):
         YAHOO = "Yahoo upload"
         ZOHO_MAIL = "Zoho Mail upload"
 
-    class ExternalDevices(Choices):
+    class ExternalDevices(_Choices):
         AIRDROP = "AirDrop"
         REMOVABLE_MEDIA = "Removable media"
 
-    class FileCategories(Choices):
+    class FileCategories(_Choices):
         AUDIO = "Audio"
         DOCUMENT = "Document"
         EXECUTABLE = "Executable"
@@ -150,23 +156,23 @@ class RiskIndicator(FileEventFilterStringField):
         VIRTUAL_DISK_IMAGE = "Virtual Disk Image"
         ZIP = "Zip"
 
-    class MessagingServiceUploads(Choices):
+    class MessagingServiceUploads(_Choices):
         FACEBOOK_MESSENGER = "Facebook Messenger upload"
         MICROSOFT_TEAMS = "Microsoft Teams upload"
         SLACK = "Slack upload"
         WHATSAPP = "WhatsApp upload"
 
-    class Other(Choices):
+    class Other(_Choices):
         OTHER = "Other destination"
         UNKNOWN = "Unknown destination"
 
-    class SocialMediaUploads(Choices):
+    class SocialMediaUploads(_Choices):
         FACEBOOK = "Facebook upload"
         LINKEDIN = "LinkedIn upload"
         REDDIT = "Reddit upload"
         TWITTER = "Twitter upload"
 
-    class UserBehavior(Choices):
+    class UserBehavior(_Choices):
         FILE_MISMATCH = "File mismatch"
         OFF_HOURS = "Off hours"
         REMOTE = "Remote"
@@ -174,8 +180,8 @@ class RiskIndicator(FileEventFilterStringField):
         RARE_DESTINATION_USE = "Rare use of destination"
 
 
-class RiskSeverity(FileEventFilterStringField, Choices):
-    """Class that filters events by risk severity.
+class RiskSeverity(_FileEventFilterStringField, _Choices):
+    """V1 filter class that filters events by risk severity.
 
     Available options are provided as class attributes:
         - :attr:`RiskSeverity.LOW`
@@ -194,7 +200,7 @@ class RiskSeverity(FileEventFilterStringField, Choices):
     NO_RISK_INDICATED = "NO_RISK_INDICATED"
 
 
-class RiskScore(QueryFilterStringField, FileEventFilterComparableField):
-    """Class that filters events by risk score."""
+class RiskScore(_QueryFilterStringField, _FileEventFilterComparableField):
+    """V1 filter class that filters events by risk score."""
 
     _term = "riskScore"

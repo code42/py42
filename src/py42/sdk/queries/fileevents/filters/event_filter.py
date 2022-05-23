@@ -1,11 +1,17 @@
-from py42.choices import Choices
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterStringField
-from py42.sdk.queries.fileevents.file_event_query import FileEventFilterTimestampField
-from py42.sdk.queries.query_filter import QueryFilterBooleanField
+from py42.choices import Choices as _Choices
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterStringField as _FileEventFilterStringField,
+)
+from py42.sdk.queries.fileevents.util import (
+    FileEventFilterTimestampField as _FileEventFilterTimestampField,
+)
+from py42.sdk.queries.query_filter import (
+    QueryFilterBooleanField as _QueryFilterBooleanField,
+)
 
 
-class EventTimestamp(FileEventFilterTimestampField, Choices):
-    """Class that filters events based on the timestamp of the event that occurred.
+class EventTimestamp(_FileEventFilterTimestampField, _Choices):
+    """V1 filter class that filters events based on the timestamp of the event that occurred.
 
     Available event timestamp constants are provided as class attributes, These
     constants should be used only with class method `within_the_last`:
@@ -37,8 +43,8 @@ class EventTimestamp(FileEventFilterTimestampField, Choices):
     THIRTY_DAYS = "P30D"
 
 
-class EventType(FileEventFilterStringField, Choices):
-    """Class that filters file events based on event type.
+class EventType(_FileEventFilterStringField, _Choices):
+    """V1 filter class that filters file events based on event type.
 
     Available event types are provided as class attributes:
 
@@ -65,8 +71,8 @@ class EventType(FileEventFilterStringField, Choices):
     PRINTED = "PRINTED"
 
 
-class InsertionTimestamp(FileEventFilterTimestampField):
-    """Class that filters events based on the timestamp of when the event was actually added to the
+class InsertionTimestamp(_FileEventFilterTimestampField):
+    """V1 filter class that filters events based on the timestamp of when the event was actually added to the
     event store (which can be after the event occurred on the device itself).
 
     `value` must be a POSIX timestamp. (see the :ref:`Dates <anchor_dates>` section of the Basics
@@ -76,8 +82,8 @@ class InsertionTimestamp(FileEventFilterTimestampField):
     _term = "insertionTimestamp"
 
 
-class Source(FileEventFilterStringField, Choices):
-    """Class that filters events by event source.
+class Source(_FileEventFilterStringField, _Choices):
+    """V1 filter class that filters events by event source.
 
     Available source types are provided as class attributes:
         - :attr:`Source.ENDPOINT`
@@ -103,13 +109,13 @@ class Source(FileEventFilterStringField, Choices):
     OFFICE_365 = "Office365"
 
 
-class MimeTypeMismatch(QueryFilterBooleanField):
-    """Class that filters events by whether or not a file's mime type matches its extension type."""
+class MimeTypeMismatch(_QueryFilterBooleanField):
+    """V1 filter class that filters events by whether or not a file's mime type matches its extension type."""
 
     _term = "mimeTypeMismatch"
 
 
-class OutsideActiveHours(QueryFilterBooleanField):
-    """Class that filters events by whether or not they occurred outside a user's typical working hours"""
+class OutsideActiveHours(_QueryFilterBooleanField):
+    """V1 filter class that filters events by whether or not they occurred outside a user's typical working hours"""
 
     _term = "outsideActiveHours"

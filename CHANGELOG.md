@@ -18,6 +18,26 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
   - `create_policy()` - Does **not** allow optional arg `policy`.
   - `get_custodians_page()` - Does **not** allow optional arg `legal_hold_membership_uid`.
   - `get_events_page()`/`get_all_events()` - **Not available**.
+  
+- Support for V2 file event data.
+  - Use queries built with V2 filters by importing the appropriate modules with `from py42.sdk.queries.fileevents.v2 import *`. Documentation is available for all V2 filter terms.
+  - The following functions will now use V2 apis for searching file events if sent a V2 query object:
+    - `securitydata.search_file_events()`
+    - `securitydata.search_all_file_events()`
+  - All saved search methods now have an optional `use_v2=False` argument.  Set `use_v2=True` to opt into using the V2 saved search APIs. The following methods now accept this arg:
+    - `securitydata.savedsearches.get()`
+    - `securitydata.savedsearches.get_by_id()`
+    - `securitydata.savedsearches.get_query()`
+    - `securitydata.savedsearches.execute()`
+    - `securitydata.savedsearches.search_file_events()`
+
+### Fixed
+
+- A bug where `sdk.watchlists.add_included_users_by_watchlist_type()` and `sdk.watchlists.delete_included_users_by_watchlist_type()` were not returning the response object.
+
+## 1.23.0 - 2022-05-12
+
+### Added
 
 - `Watchlists` and `UserRiskProfile` clients
   - These features replace the `DetectionLists` client as well as its `DepartingEmployee` and `HighRiskEmployee` services.  All related classes and methods have been marked as deprecated and will raise deprecation warnings.
@@ -49,6 +69,11 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Fixed
 
 - Bug where attempting to restore from an empty archive would throw a confusing `TypeError`, we now raise appropriate `Py42ArchiveFileNotFoundError`.
+- Py42 now automatically sleeps and retries file event search queries if a 429 (too many requests) error is hit.
+
+### Deprecated
+
+- The `DetectionLists` client including its `DepartingEmployee` and `HighRiskEmployee` services.
 
 ## 1.22.0 - 2022-04-01
 

@@ -45,7 +45,6 @@ class UserService(BaseService):
             :class:`py42.response.Py42Response`
         """
 
-        # TODO
         uri = "/api/v1/User"
         data = {
             "orgUid": org_uid,
@@ -219,7 +218,7 @@ class UserService(BaseService):
         files. Backups will continue if the user is still active.
 
         Args:
-            user_id (int): A ID for a user.
+            user_id (int): An ID for a user.
 
         Returns:
             :class:`py42.response.Py42Response`

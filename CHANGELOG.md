@@ -8,9 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## 1.23.0 - 2022-05-12
+## Unreleased
 
-## Added
+### Added
+
 - Support for V2 file event data.
   - Use queries built with V2 filters by importing the appropriate modules with `from py42.sdk.queries.fileevents.v2 import *`. Documentation is available for all V2 filter terms.
   - The following functions will now use V2 apis for searching file events if sent a V2 query object:
@@ -22,6 +23,8 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
     - `securitydata.savedsearches.get_query()`
     - `securitydata.savedsearches.execute()`
     - `securitydata.savedsearches.search_file_events()`
+
+## 1.23.0 - 2022-05-12
 
 ### Added
 
@@ -56,6 +59,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Bug where attempting to restore from an empty archive would throw a confusing `TypeError`, we now raise appropriate `Py42ArchiveFileNotFoundError`.
 - Py42 now automatically sleeps and retries file event search queries if a 429 (too many requests) error is hit.
+
+### Deprecated
+
+- The `DetectionLists` client including its `DepartingEmployee` and `HighRiskEmployee` services.
 
 ## 1.22.0 - 2022-04-01
 

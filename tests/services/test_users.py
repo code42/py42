@@ -533,7 +533,7 @@ class TestUserService:
         user_id = 12345
         service.deactivate(user_id, block_user=True)
         uri = f"{USER_URI_V3}/{TEST_USER_UID}/deactivate"
-        data = {"blockUser": True}
+        data = {"block": True}
         mock_connection.post.assert_called_once_with(uri, json=data)
 
     @patch.object(
@@ -546,7 +546,7 @@ class TestUserService:
         user_id = 12345
         service.reactivate(user_id, unblock_user=True)
         uri = f"{USER_URI_V3}/{TEST_USER_UID}/activate"
-        data = {"unblockUser": True}
+        data = {"unblock": True}
         mock_connection.post.assert_called_once_with(uri, json=data)
 
     @patch.object(

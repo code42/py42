@@ -252,7 +252,7 @@ class UserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         uri = f"/api/v3/users/{self._get_user_uid_by_id(user_id)}/deactivate"
-        data = {"blockUser": block_user}
+        data = {"block": block_user}
         try:
             return self._connection.post(uri, json=data)
         except Py42BadRequestError as ex:
@@ -270,7 +270,7 @@ class UserService(BaseService):
             :class:`py42.response.Py42Response`
         """
         uri = f"/api/v3/users/{self._get_user_uid_by_id(user_id)}/activate"
-        params = {"unblockUser": unblock_user}
+        params = {"unblock": unblock_user}
         return self._connection.post(uri, json=params)
 
     def change_org_assignment(self, user_id, org_id):

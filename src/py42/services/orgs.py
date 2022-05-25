@@ -2,7 +2,7 @@ from collections import namedtuple
 
 from py42 import settings
 from py42.clients.settings.org_settings import OrgSettings
-from py42.exceptions import Py42Error
+from py42.exceptions import Py42Error, Py42InternalServerError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 
@@ -33,12 +33,12 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/v1/Org/"
+        uri = "/api/v3/orgs"
         data = {
             "orgName": org_name,
             "orgExtRef": org_ext_ref,
             "notes": notes,
-            "parentOrgUid": parent_org_uid,
+            "parentOrgGuid": parent_org_uid,
         }
         return self._connection.post(uri, json=data)
 
@@ -51,6 +51,9 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
+        # TODO - to be released in 10.5
+        # uri = f"/api/v3/orgs/{self._get_guid_from_id(org_id)}"
+
         uri = f"/api/v1/Org/{org_id}"
         return self._connection.get(uri, params=kwargs)
 
@@ -63,6 +66,10 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
+        # TODO - to be released in 10.5
+        # uri = f"/api/v3/orgs/{self._get_guid_from_id(org_uid, id_key="orgUid")}"
+        # params = dict(**kwargs)
+
         uri = f"/api/v1/Org/{org_uid}"
         params = dict(idType="orgUid", **kwargs)
         return self._connection.get(uri, params=params)
@@ -79,8 +86,11 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        page_size = page_size or settings.items_per_page
+        # TODO - to be released in 10.5
+        # uri = f"/api/v3/orgs
+
         uri = "/api/v1/Org"
+        page_size = page_size or settings.items_per_page
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
         return self._connection.get(uri, params=params)
 
@@ -105,8 +115,8 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/v1/OrgBlock/{org_id}"
-        return self._connection.put(uri)
+        uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}/block"
+        return self._connection.post(uri)
 
     def unblock(self, org_id):
         """Removes a block, if one exists, on an organization and its descendants with the given
@@ -118,8 +128,8 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/v1/OrgBlock/{org_id}"
-        return self._connection.delete(uri)
+        uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}/unblock"
+        return self._connection.post(uri)
 
     def deactivate(self, org_id):
         """Deactivates the organization with the given ID, including all users, plans, and
@@ -131,8 +141,8 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/v1/OrgDeactivation/{org_id}"
-        return self._connection.put(uri)
+        uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}/deactivate"
+        return self._connection.post(uri)
 
     def reactivate(self, org_id):
         """Reactivates the organization with the given ID. Backups are *not* restarted
@@ -144,18 +154,26 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = f"/api/v1/OrgDeactivation/{org_id}"
-        return self._connection.delete(uri)
+        uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}/activate"
+        return self._connection.post(uri)
 
     def get_current(self, **kwargs):
         """Gets the organization for the currently signed-in user.
+
+        WARNING: This method is incompatible with api client authentication.
 
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization for the
             currently signed-in user.
         """
         uri = "/api/v1/Org/my"
-        return self._connection.get(uri, params=kwargs)
+        try:
+            return self._connection.get(uri, params=kwargs)
+        except Py42InternalServerError as err:
+            raise Py42InternalServerError(
+                err,
+                message="Server Error. Please be aware that this method is incompatible with api client authentication."
+            )
 
     def get_agent_state(self, org_id, property_name):
         """Gets the agent state of the devices in the org.
@@ -194,6 +212,7 @@ class OrgService(BaseService):
         org_settings = self.get_by_id(
             org_id, incSettings=True, incDeviceDefaults=True, incInheritedOrgInfo=True
         )
+        # TODO - status of this endpoint re: orgs rewrite
         uri = f"/api/OrgSetting/{org_id}"
         t_settings = self._connection.get(uri)
         return OrgSettings(org_settings.data, t_settings.data)
@@ -212,6 +231,7 @@ class OrgService(BaseService):
         org_settings_response = org_response = None
 
         if org_settings.packets:
+            # TODO - status of this endpoint re: orgs rewrite
             uri = f"/api/OrgSetting/{org_id}"
             payload = {"packets": org_settings.packets}
             try:
@@ -221,6 +241,9 @@ class OrgService(BaseService):
                 org_settings_response = ex
 
         if org_settings.changes:
+            # TODO - to be released in 10.5
+            # uri = f"/api/v3/orgs/{self._get_guid_from_id(org_id)}
+
             uri = f"/api/v1/Org/{org_id}"
             try:
                 org_response = self._connection.put(uri, json=org_settings.data)
@@ -232,3 +255,15 @@ class OrgService(BaseService):
             org_response=org_response,
             org_settings_response=org_settings_response,
         )
+
+    def _get_guid_by_id(self, org_id, id_key="orgId"):
+        # Identity crisis helper method.
+        # Old orgs methods accepted IDs. New apis take GUIDs.
+        # Use additional lookup to prevent breaking changes.
+        pages = self.get_all()
+        for page in pages:
+            for org in page['orgs']:
+                if org[id_key] == org_id:
+                    return org['orgGuid']
+
+

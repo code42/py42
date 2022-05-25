@@ -16,7 +16,7 @@ class StorageAuth(C42RenewableAuth):
         raise NotImplementedError()
 
     def _get_auth_token(self, login_token):
-        uri = "api/AuthToken"
+        uri = "api/v1/AuthToken"
         response = self._storage_connection.post(
             uri, headers={"Authorization": f"login_token {login_token}"}
         )

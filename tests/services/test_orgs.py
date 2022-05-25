@@ -1,11 +1,11 @@
 from unittest.mock import patch
 
 import pytest
-
-from py42.exceptions import Py42InternalServerError
-from tests.conftest import create_mock_response, create_mock_error
+from tests.conftest import create_mock_error
+from tests.conftest import create_mock_response
 
 import py42.settings
+from py42.exceptions import Py42InternalServerError
 from py42.services.orgs import OrgService
 
 
@@ -16,15 +16,12 @@ COMPUTER_URI = "/api/v1/Org"
 ORGS_V3_URI = "/api/v3/orgs"
 TEST_ORG_GUID = "12345-org-guid"
 
-MOCK_GET_ORG_RESPONSE = (
-    """{"totalCount": 3000, "orgs": [{"orgName": "foo", "orgId": "12345", "orgUid": "123", "orgGuid":"12345-org-guid"}]}"""
-)
+MOCK_GET_ORG_RESPONSE = """{"totalCount": 3000, "orgs": [{"orgName": "foo", "orgId": "12345", "orgUid": "123", "orgGuid":"12345-org-guid"}]}"""
 
 MOCK_EMPTY_GET_ORGS_RESPONSE = """{"totalCount": 3000, "orgs": []}"""
 
 
 class TestOrgService:
-
     @pytest.fixture
     def mock_get_all_response(self, mocker):
         yield create_mock_response(mocker, MOCK_GET_ORG_RESPONSE)
@@ -85,7 +82,12 @@ class TestOrgService:
 
     def test_create_org_calls_post_with_expected_uri_and_params(self, mock_connection):
         service = OrgService(mock_connection)
-        service.create_org("My New Org", org_ext_ref="Org Ext Ref", notes="my org notes.", parent_org_uid="parent-123")
+        service.create_org(
+            "My New Org",
+            org_ext_ref="Org Ext Ref",
+            notes="my org notes.",
+            parent_org_uid="parent-123",
+        )
         data = {
             "orgName": "My New Org",
             "orgExtRef": "Org Ext Ref",
@@ -151,7 +153,9 @@ class TestOrgService:
         uri = f"{COMPUTER_URI}/my"
         mock_connection.get.assert_called_once_with(uri, params={})
 
-    def test_get_current_returns_note_about_api_client_support_when_internal_server_error(self, mock_connection, mocker):
+    def test_get_current_returns_note_about_api_client_support_when_internal_server_error(
+        self, mock_connection, mocker
+    ):
         service = OrgService(mock_connection)
         mock_connection.get.side_effect = create_mock_error(
             Py42InternalServerError, mocker, "Server Error"
@@ -161,5 +165,3 @@ class TestOrgService:
 
         expected = "Please be aware that this method is incompatible with api client authentication."
         assert expected in err.value.args[0]
-
-

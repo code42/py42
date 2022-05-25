@@ -2,7 +2,8 @@ from collections import namedtuple
 
 from py42 import settings
 from py42.clients.settings.org_settings import OrgSettings
-from py42.exceptions import Py42Error, Py42InternalServerError
+from py42.exceptions import Py42Error
+from py42.exceptions import Py42InternalServerError
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 
@@ -172,7 +173,7 @@ class OrgService(BaseService):
         except Py42InternalServerError as err:
             raise Py42InternalServerError(
                 err,
-                message="Server Error. Please be aware that this method is incompatible with api client authentication."
+                message="Server Error. Please be aware that this method is incompatible with api client authentication.",
             )
 
     def get_agent_state(self, org_id, property_name):
@@ -262,8 +263,6 @@ class OrgService(BaseService):
         # Use additional lookup to prevent breaking changes.
         pages = self.get_all()
         for page in pages:
-            for org in page['orgs']:
+            for org in page["orgs"]:
                 if org[id_key] == org_id:
-                    return org['orgGuid']
-
-
+                    return org["orgGuid"]

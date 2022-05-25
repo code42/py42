@@ -185,7 +185,7 @@ class TestLegalHoldService:
         service = LegalHoldService(mock_connection)
         service.get_events_page("legalhold", None, None, 20, 200)
         mock_connection.get.assert_called_once_with(
-            "/api/LegalHoldEventReport",
+            "/api/v1/LegalHoldEventReport",
             params={
                 "legalHoldUid": "legalhold",
                 "minEventDate": None,

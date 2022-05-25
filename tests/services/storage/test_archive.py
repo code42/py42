@@ -22,10 +22,10 @@ JSON_KEYWORD = "json"
 ARGS_INDEX = 0
 KWARGS_INDEX = 1
 
-WEB_RESTORE_SESSION_URL = "/api/WebRestoreSession"
+WEB_RESTORE_SESSION_URL = "/api/v1/WebRestoreSession"
 START_WEB_RESTORE_JOB_URL = "/api/v9/restore/web"
-WEB_RESTORE_JOB_URL = "/api/WebRestoreJob"
-WEB_RESTORE_JOB_RESULT_URL = "/api/WebRestoreJobResult"
+WEB_RESTORE_JOB_URL = "/api/v1/WebRestoreJob"
+WEB_RESTORE_JOB_RESULT_URL = "/api/v1/WebRestoreJobResult"
 
 
 FILE_PATH = "/directory/file.txt"
@@ -66,7 +66,7 @@ class TestStorageArchiveService:
             "session_id", "device_id", "regex", 1000, "timestamp", True
         )
         connection.get.assert_called_once_with(
-            "/api/WebRestoreSearch",
+            "/api/v1/WebRestoreSearch",
             params={
                 "webRestoreSessionId": "session_id",
                 "guid": "device_id",
@@ -83,7 +83,7 @@ class TestStorageArchiveService:
             "device_guid", "file_id", "timestamp", True, "backupset_id"
         )
         connection.get.assert_called_once_with(
-            "/api/WebRestoreFileSize",
+            "/api/v1/WebRestoreFileSize",
             params={
                 "guid": "device_guid",
                 "fileId": "file_id",
@@ -103,14 +103,14 @@ class TestStorageArchiveService:
             "showDeleted": False,
         }
         connection.post.assert_called_once_with(
-            "/api/WebRestoreFileSizePolling", json=json_dict
+            "/api/v1/WebRestoreFileSizePolling", json=json_dict
         )
 
     def test_get_file_size_job_calls_get_with_expected_params(self, connection):
         storage_archive_service = StorageArchiveService(connection)
         storage_archive_service.get_file_size_job("job_id", "device_guid")
         connection.get.assert_called_once_with(
-            "/api/WebRestoreFileSizePolling",
+            "/api/v1/WebRestoreFileSizePolling",
             params={"jobId": "job_id", "guid": "device_guid"},
         )
 
@@ -128,7 +128,7 @@ class TestStorageArchiveService:
             include_os_metadata=True,
         )
         connection.get.assert_called_once_with(
-            "/api/WebRestoreTreeNode",
+            "/api/v1/WebRestoreTreeNode",
             params={
                 "webRestoreSessionId": TEST_SESSION_ID,
                 "guid": TEST_DEVICE_GUID,

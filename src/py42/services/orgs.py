@@ -213,7 +213,7 @@ class OrgService(BaseService):
             org_id, incSettings=True, incDeviceDefaults=True, incInheritedOrgInfo=True
         )
         # TODO - status of this endpoint re: orgs rewrite
-        uri = f"/api/OrgSetting/{org_id}"
+        uri = f"/api/v1/OrgSetting/{org_id}"
         t_settings = self._connection.get(uri)
         return OrgSettings(org_settings.data, t_settings.data)
 
@@ -232,7 +232,7 @@ class OrgService(BaseService):
 
         if org_settings.packets:
             # TODO - status of this endpoint re: orgs rewrite
-            uri = f"/api/OrgSetting/{org_id}"
+            uri = f"/api/v1/OrgSetting/{org_id}"
             payload = {"packets": org_settings.packets}
             try:
                 org_settings_response = self._connection.put(uri, json=payload)

@@ -162,7 +162,7 @@ class TestLegalHoldApiClientService:
             service.get_matter_by_uid(TEST_MATTER_UID)
 
         expected = f"Matter with UID '{TEST_MATTER_UID}' can not be found. Your account may not have permission to view the matter."
-        assert str(err.value) == expected
+        assert expected in str(err.value)
 
     def test_get_all_matters_calls_get_expected_number_of_times(
         self,
@@ -251,7 +251,7 @@ class TestLegalHoldApiClientService:
             service.get_custodians_page(1)
 
         assert (
-            str(err.value) == "At least one criteria must be specified; "
+            str(err.value) == "At least one criteria must be specified: "
             "legal_hold_membership_uid, legal_hold_matter_uid, user_uid, or user."
         )
 
@@ -278,7 +278,7 @@ class TestLegalHoldApiClientService:
         expected = (
             "User with ID user is already on the legal hold matter id=legal, name=NAME."
         )
-        assert str(err.value) == expected
+        assert expected in str(err.value)
 
     def test_add_to_matter_raises_py42_error_if_membership_uid_not_found_or_forbidden(
         self, mocker, mock_connection

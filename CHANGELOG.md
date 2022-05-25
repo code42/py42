@@ -18,7 +18,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
   - `create_policy()` - Does **not** allow optional arg `policy`.
   - `get_custodians_page()` - Does **not** allow optional arg `legal_hold_membership_uid`.
   - `get_events_page()`/`get_all_events()` - **Not available**.
-  
+
 - Support for V2 file event data.
   - Use queries built with V2 filters by importing the appropriate modules with `from py42.sdk.queries.fileevents.v2 import *`. Documentation is available for all V2 filter terms.
   - The following functions will now use V2 apis for searching file events if sent a V2 query object:

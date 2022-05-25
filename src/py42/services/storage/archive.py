@@ -12,7 +12,7 @@ class StorageArchiveService(RestoreService):
         show_deleted=None,
     ):
         # session_id is a web restore session ID (see create_restore_session)
-        uri = "/api/WebRestoreSearch"
+        uri = "/api/v1/WebRestoreSearch"
         params = {
             "webRestoreSessionId": session_id,
             "guid": device_guid,
@@ -31,7 +31,7 @@ class StorageArchiveService(RestoreService):
         show_deleted=None,
         backup_set_id=None,
     ):
-        uri = "/api/WebRestoreFileSize"
+        uri = "/api/v1/WebRestoreFileSize"
         params = {
             "guid": device_guid,
             "fileId": file_id,
@@ -48,7 +48,7 @@ class StorageArchiveService(RestoreService):
         timestamp=None,
         show_deleted=None,
     ):
-        uri = "/api/WebRestoreFileSizePolling"
+        uri = "/api/v1/WebRestoreFileSizePolling"
         json_dict = {
             "guid": device_guid,
             "fileId": file_id,
@@ -58,7 +58,7 @@ class StorageArchiveService(RestoreService):
         return self._connection.post(uri, json=json_dict)
 
     def get_file_size_job(self, job_id, device_guid):
-        uri = "/api/WebRestoreFileSizePolling"
+        uri = "/api/v1/WebRestoreFileSizePolling"
         params = {
             "jobId": job_id,
             "guid": device_guid,
@@ -78,7 +78,7 @@ class StorageArchiveService(RestoreService):
         include_os_metadata=None,
     ):
         # session_id is a web restore session ID (see create_restore_session)
-        uri = "/api/WebRestoreTreeNode"
+        uri = "/api/v1/WebRestoreTreeNode"
         params = {
             "webRestoreSessionId": session_id,
             "guid": device_guid,
@@ -122,11 +122,11 @@ class StorageArchiveService(RestoreService):
         return self._connection.post(uri, json=json_dict)
 
     def cancel_restore(self, job_id):
-        uri = "/api/WebRestoreJob"
+        uri = "/api/v1/WebRestoreJob"
         json_dict = {"jobId": job_id}
         return self._connection.delete(uri, json=json_dict)
 
     def stream_restore_result(self, job_id):
-        uri = f"/api/WebRestoreJobResult/{job_id}"
+        uri = f"/api/v1/WebRestoreJobResult/{job_id}"
         headers = {"Accept": "application/octet-stream"}
         return self._connection.get(uri, stream=True, headers=headers)

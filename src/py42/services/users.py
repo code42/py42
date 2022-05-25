@@ -314,7 +314,7 @@ class UserService(BaseService):
 
         Args:
             user_id (int): An ID for a user.
-            role_name (str): The name of the role to assign to the user.
+        role_name (str): The name or ID of the role to assign to the user. e.g. "Desktop User" (name) or "desktop-user" (ID)
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -331,7 +331,7 @@ class UserService(BaseService):
 
         Args:
             user_id (int): An ID for a user.
-            role_name (str): The name of the role to unassign from the user.
+            role_name (str): The name or ID of the role to unassign from the user. e.g. "Desktop User" (name) or "desktop-user" (ID)
 
         Returns:
             :class:`py42.response.Py42Response`
@@ -406,7 +406,7 @@ class UserService(BaseService):
     def _update_role_ids(self, role_name, role_ids, add=True):
 
         for role in self.get_available_roles():
-            if role["roleName"] == role_name:
+            if (role["roleName"] == role_name) or (role["roleId"] == role_name):
                 if add:
                     role_ids.append(role["roleId"])
                 else:

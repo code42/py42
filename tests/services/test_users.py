@@ -337,6 +337,36 @@ class TestUserService:
             "customer-cloud-admin",
         ]
 
+    def test_update_role_ids_calls_get_available_roles_and_returns_role_ids_when_and_given_role_id(
+        self, mock_connection, mock_get_available_roles_response
+    ):
+        mock_connection.get.return_value = mock_get_available_roles_response
+        service = UserService(mock_connection)
+        role_ids = ["desktop-user", "proe-user", "customer-cloud-admin"]
+        role_name = "alert-emails"
+        updated_role_ids = service._update_role_ids(role_name, role_ids, add=True)
+        mock_connection.get.assert_called_once_with("/api/v1/role")
+        assert updated_role_ids == [
+            "desktop-user",
+            "proe-user",
+            "customer-cloud-admin",
+            "alert-emails",
+        ]
+
+    def test_update_role_ids_calls_get_available_roles_and_returns_role_ids_when_remove_and_given_role_id(
+        self, mock_connection, mock_get_available_roles_response
+    ):
+        mock_connection.get.return_value = mock_get_available_roles_response
+        service = UserService(mock_connection)
+        role_ids = ["desktop-user", "proe-user", "customer-cloud-admin"]
+        role_name = "desktop-user"
+        updated_role_ids = service._update_role_ids(role_name, role_ids, add=False)
+        mock_connection.get.assert_called_once_with("/api/v1/role")
+        assert updated_role_ids == [
+            "proe-user",
+            "customer-cloud-admin",
+        ]
+
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_connection):
         service = UserService(mock_connection)
         service.get_page(10, True, "email", "org", "role", 100, "q")

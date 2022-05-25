@@ -26,7 +26,7 @@ class OrgSettings(UserDict):
 
     @property
     def packets(self):
-        """The setting packets for any modifications to be posted to the /api/OrgSettings
+        """The setting packets for any modifications to be posted to the /api/v1/OrgSettings
         endpoint.
         """
         return list(self._packets.values())

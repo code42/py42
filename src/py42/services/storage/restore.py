@@ -25,7 +25,7 @@ class RestoreService(BaseService):
         encryption_key=None,
     ):
         """Creates a web restore connection."""
-        uri = "/api/WebRestoreSession"
+        uri = "/api/v1/WebRestoreSession"
         json_dict = {
             "computerGuid": device_guid,
             "dataKeyToken": data_key_token,
@@ -42,7 +42,7 @@ class RestoreService(BaseService):
             raise
 
     def get_restore_status(self, job_id):
-        uri = f"/api/WebRestoreJob/{job_id}"
+        uri = f"/api/v1/WebRestoreJob/{job_id}"
         return self._connection.get(uri)
 
 

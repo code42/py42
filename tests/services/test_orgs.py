@@ -80,6 +80,11 @@ class TestOrgService:
         service.get_agent_full_disk_access_states("ORG_ID")
         service.get_agent_state.assert_called_once_with("ORG_ID", "fullDiskAccess")
 
+    @patch.object(
+        py42.services.orgs.OrgService,
+        "_get_guid_by_id",
+        return_value="parent-guid-123",
+    )
     def test_create_org_calls_post_with_expected_uri_and_params(self, mock_connection):
         service = OrgService(mock_connection)
         service.create_org(
@@ -92,7 +97,7 @@ class TestOrgService:
             "orgName": "My New Org",
             "orgExtRef": "Org Ext Ref",
             "notes": "my org notes.",
-            "parentOrgGuid": "parent-123",
+            "parentOrgGuid": "parent-guid-123",
         }
         mock_connection.post.assert_called_once_with(ORGS_V3_URI, json=data)
 

@@ -34,12 +34,16 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+
+        # get parent org GUID from UID :)
+        parent_org_guid = self._get_guid_by_id(parent_org_uid, id_key="orgUid")
+
         uri = "/api/v3/orgs"
         data = {
             "orgName": org_name,
             "orgExtRef": org_ext_ref,
             "notes": notes,
-            "parentOrgGuid": parent_org_uid,
+            "parentOrgGuid": parent_org_guid,
         }
         return self._connection.post(uri, json=data)
 

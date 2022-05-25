@@ -78,7 +78,7 @@ class TestFileArchiveTmpAuth:
         }
         mock_tmp_auth_conn.post.assert_called_once_with("/api/v1/LoginToken", json=data)
         mock_storage_auth_token_conn.post.assert_called_once_with(
-            "api/AuthToken",
+            "api/v1/AuthToken",
             headers={"Authorization": "login_token TEST_TMP_TOKEN_VALUE"},
         )
 

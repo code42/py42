@@ -194,7 +194,7 @@ class OrgService(BaseService):
         org_settings = self.get_by_id(
             org_id, incSettings=True, incDeviceDefaults=True, incInheritedOrgInfo=True
         )
-        uri = f"/api/OrgSetting/{org_id}"
+        uri = f"/api/v1/OrgSetting/{org_id}"
         t_settings = self._connection.get(uri)
         return OrgSettings(org_settings.data, t_settings.data)
 
@@ -212,7 +212,7 @@ class OrgService(BaseService):
         org_settings_response = org_response = None
 
         if org_settings.packets:
-            uri = f"/api/OrgSetting/{org_id}"
+            uri = f"/api/v1/OrgSetting/{org_id}"
             payload = {"packets": org_settings.packets}
             try:
                 org_settings_response = self._connection.put(uri, json=payload)

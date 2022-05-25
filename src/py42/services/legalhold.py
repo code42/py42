@@ -306,7 +306,7 @@ class LegalHoldService(BaseService):
             "pgNum": page_num,
             "pgSize": page_size,
         }
-        uri = "/api/LegalHoldEventReport"
+        uri = "/api/v1/LegalHoldEventReport"
 
         return self._connection.get(uri, params=params)
 

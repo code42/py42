@@ -60,7 +60,7 @@ def from_jwt_provider(host_address, jwt_provider):
     """
 
     client = SDKClient.from_jwt_provider(host_address, jwt_provider)
-    client.users.get_current()
+    client.usercontext.get_current_tenant_id()
     return client
 
 

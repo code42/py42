@@ -19,6 +19,17 @@ class OrgService(BaseService):
     deactivate organizations.
     """
 
+    def __init(self, connection):
+        super().__init__(connection)
+        self._org_id_map = {}
+
+    @property
+    def org_id_map(self):
+        """Map org guids to ids."""
+        if not self._org_id_map:
+            self._org_id_map = {}
+        return self._org_id_map
+
     def create_org(self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None):
         """Creates a new organization.
 
@@ -265,8 +276,19 @@ class OrgService(BaseService):
         # Identity crisis helper method.
         # Old orgs methods accepted IDs. New apis take GUIDs.
         # Use additional lookup to prevent breaking changes.
-        pages = self.get_all()
-        for page in pages:
-            for org in page["orgs"]:
-                if org[id_key] == org_id:
-                    return org["orgGuid"]
+
+        try:
+            # check cached
+            return self.org_id_map[org_id]
+        except KeyError:
+            guid = ""
+            pages = self.get_all()
+            for page in pages:
+                for org in page["orgs"]:
+                    # cache results
+                    self.org_id_map[org_id] = org["orgGuid"]
+                    if org[id_key] == org_id:
+                        guid = org["orgGuid"]
+        if guid:
+            return guid
+        raise Py42Error(f"Couldn't find an Org with ID '{org_id}' ")

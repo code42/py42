@@ -104,3 +104,87 @@ class OperatingSystem(_FileEventFilterStringField):
     """V2 filter class that filters events by the operating system of the destination device."""
 
     _term = "destination.operatingSystem"
+
+
+class PrintedFilesBackupPath(_FileEventFilterStringField):
+    """V2 filter class that filters events by the printed file backup path."""
+
+    _term = "destination.printedFilesBackupPath"
+
+
+class TabTitleErrors(_FileEventFilterStringField):
+    """V2 filter class that filters events based on destination tab title errors (for 'browser or other app' events)."""
+
+    _term = "destination.tabs.titleError"
+
+
+class TabUrlErrors(_FileEventFilterStringField):
+    """V2 filter class that filters events based on destination tab URL Errors (for 'browser or other app' events)."""
+
+    _term = "destination.tabs.urlError"
+
+
+class RemovableMediaName(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the name of the removable media involved in the exposure
+    (applies to ``removable media`` events only).
+    """
+
+    _term = "destination.removableMedia.name"
+
+
+class RemovableMediaVendor(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the vendor of the removable media device involved in the
+    exposure (applies to ``removable media`` events only).
+    """
+
+    _term = "destination.removableMedia.vendor"
+
+
+class RemovableMediaMediaName(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the name of the removable media (as reported by the
+    vendor/device, usually very similar to RemovableMediaName) involved in the exposure (applies to
+    ``removable media`` events only).
+    """
+
+    _term = "destination.removableMedia.mediaName"
+
+
+class RemovableMediaVolumeName(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the name of the formatted volume (as reported by the
+    operating system) of the removable media device involved in the exposure (applies to
+    ``removable media`` events only).
+    """
+
+    _term = "destination.removableMedia.volumeName"
+
+
+class RemovableMediaPartitionID(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the unique identifier assigned (by the operating system)
+    to the removable media involved in the exposure (applies to ``removable media`` events only).
+    """
+
+    _term = "destination.removableMedia.partitionId"
+
+
+class RemovableMediaSerialNumber(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the serial number of the connected hardware as reported
+    by the operating system (applies to ``removable media`` events only).
+    """
+
+    _term = "destination.removableMedia.serialNumber"
+
+
+class RemovableMediaCapacity(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the capacity of the connected hardware as reported
+    by the operating system (applies to ``removable media`` events only).
+    """
+
+    _term = "destination.removableMedia.capacity"
+
+
+class RemovableMediaBusType(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the bus type of the connected hardware as reported
+    by the operating system (applies to ``removable media`` events only).
+    """
+
+    _term = "destination.removableMedia.busType"

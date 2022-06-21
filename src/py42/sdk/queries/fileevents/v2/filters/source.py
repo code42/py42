@@ -71,6 +71,22 @@ class RemovableMediaSerialNumber(_FileEventFilterStringField):
     _term = "source.removableMedia.serialNumber"
 
 
+class RemovableMediaCapacity(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the capacity of the connected hardware as reported
+    by the operating system (applies to ``removable media`` events only).
+    """
+
+    _term = "source.removableMedia.capacity"
+
+
+class RemovableMediaBusType(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the bus type of the connected hardware as reported
+    by the operating system (applies to ``removable media`` events only).
+    """
+
+    _term = "source.removableMedia.busType"
+
+
 class Category(_FileEventFilterStringField, _Choices):
     """
     V2 filter class that filters events based on source category.
@@ -120,6 +136,18 @@ class TabUrls(_FileEventFilterStringField):
     _term = "source.tabs.url"
 
 
+class TabTitleErrors(_FileEventFilterStringField):
+    """V2 filter class that filters events based on source tab title errors (for 'browser or other app' events)."""
+
+    _term = "source.tabs.titleError"
+
+
+class TabUrlErrors(_FileEventFilterStringField):
+    """V2 filter class that filters events based on source tab URL Errors (for 'browser or other app' events)."""
+
+    _term = "source.tabs.urlError"
+
+
 class OperatingSystem(_FileEventFilterStringField):
     """V2 filter class that filters events by the operating system of the source device."""
 
@@ -136,3 +164,9 @@ class IpAddress(_FileEventFilterStringField):
     """V2 filter class that filters events by public (WAN) IP address of the source device."""
 
     _term = "source.ip"
+
+
+class Domain(_FileEventFilterStringField):
+    """V2 filter class that filters events by the domain of the source device."""
+
+    _term = "source.domain"

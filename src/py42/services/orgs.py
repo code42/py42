@@ -19,7 +19,7 @@ class OrgService(BaseService):
     deactivate organizations.
     """
 
-    def __init(self, connection):
+    def __init__(self, connection):
         super().__init__(connection)
         self._org_id_map = {}
 
@@ -28,6 +28,10 @@ class OrgService(BaseService):
         """Map org guids to ids."""
         if not self._org_id_map:
             self._org_id_map = {}
+            pages = self.get_all()
+            for page in pages:
+                for org in page["orgs"]:
+                    self._org_id_map[org["orgId"]] = org["orgGuid"]
         return self._org_id_map
 
     def create_org(self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None):
@@ -56,7 +60,12 @@ class OrgService(BaseService):
             "notes": notes,
             "parentOrgGuid": parent_org_guid,
         }
-        return self._connection.post(uri, json=data)
+        response = self._connection.post(uri, json=data)
+
+        # update ID store
+        self.org_id_map[response["orgId"]] = response["orgGuid"]
+
+        return response
 
     def get_by_id(self, org_id, **kwargs):
         """Gets the organization with the given ID.
@@ -67,10 +76,7 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
-        # TODO - to be released in 10.5
-        # uri = f"/api/v3/orgs/{self._get_guid_from_id(org_id)}"
-
-        uri = f"/api/v1/Org/{org_id}"
+        uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}"
         return self._connection.get(uri, params=kwargs)
 
     def get_by_uid(self, org_uid, **kwargs):
@@ -82,15 +88,10 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the organization.
         """
-        # TODO - to be released in 10.5
-        # uri = f"/api/v3/orgs/{self._get_guid_from_id(org_uid, id_key="orgUid")}"
-        # params = dict(**kwargs)
+        uri = f'/api/v3/orgs/{self._get_guid_by_id(org_uid, id_key="orgUid")}'
+        return self._connection.get(uri, params=kwargs)
 
-        uri = f"/api/v1/Org/{org_uid}"
-        params = dict(idType="orgUid", **kwargs)
-        return self._connection.get(uri, params=params)
-
-    def get_page(self, page_num, page_size=None, **kwargs):
+    def get_page(self, page_num=1, page_size=None, **kwargs):
         """Gets an individual page of organizations.
 
         Args:
@@ -102,10 +103,7 @@ class OrgService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-        # TODO - to be released in 10.5
-        # uri = f"/api/v3/orgs
-
-        uri = "/api/v1/Org"
+        uri = "/api/v3/orgs"
         page_size = page_size or settings.items_per_page
         params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
         return self._connection.get(uri, params=params)
@@ -216,6 +214,8 @@ class OrgService(BaseService):
         """
         return self.get_agent_state(org_id, "fullDiskAccess")
 
+    # TODO - status of this org settings with api clients
+
     def get_settings(self, org_id):
         """Gets setting data for an org and returns an `OrgSettingsManager` for the target org.
 
@@ -228,7 +228,6 @@ class OrgService(BaseService):
         org_settings = self.get_by_id(
             org_id, incSettings=True, incDeviceDefaults=True, incInheritedOrgInfo=True
         )
-        # TODO - status of this endpoint re: orgs rewrite
         uri = f"/api/v1/OrgSetting/{org_id}"
         t_settings = self._connection.get(uri)
         return OrgSettings(org_settings.data, t_settings.data)
@@ -247,7 +246,6 @@ class OrgService(BaseService):
         org_settings_response = org_response = None
 
         if org_settings.packets:
-            # TODO - status of this endpoint re: orgs rewrite
             uri = f"/api/v1/OrgSetting/{org_id}"
             payload = {"packets": org_settings.packets}
             try:
@@ -257,9 +255,6 @@ class OrgService(BaseService):
                 org_settings_response = ex
 
         if org_settings.changes:
-            # TODO - to be released in 10.5
-            # uri = f"/api/v3/orgs/{self._get_guid_from_id(org_id)}
-
             uri = f"/api/v1/Org/{org_id}"
             try:
                 org_response = self._connection.put(uri, json=org_settings.data)
@@ -272,23 +267,39 @@ class OrgService(BaseService):
             org_settings_response=org_settings_response,
         )
 
+    def update_org(self, org_id, name=None, notes=None, ext_ref=None):
+        """Updates an org. Only fields associated with passed parameters will be updated.
+
+
+        Args:
+            org_id (str): The org's identifier.
+            name (str, optional): The updated name for the org.
+            notes (str, optional): The updated notes for the org.
+            ext_ref (str, optional): The updated external reference for the org.
+
+        Returns:
+            :class:`py42.response.Py42Response`:
+        """
+        uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}"
+        data = {"orgName": name, "orgExtRef": ext_ref, "notes": notes}
+        self._connection.put(uri, json=data)
+
     def _get_guid_by_id(self, org_id, id_key="orgId"):
         # Identity crisis helper method.
         # Old orgs methods accepted IDs. New apis take GUIDs.
         # Use additional lookup to prevent breaking changes.
 
-        try:
-            # check cached
-            return self.org_id_map[org_id]
-        except KeyError:
+        if id_key != "orgId":
             guid = ""
             pages = self.get_all()
             for page in pages:
                 for org in page["orgs"]:
-                    # cache results
-                    self.org_id_map[org_id] = org["orgGuid"]
                     if org[id_key] == org_id:
-                        guid = org["orgGuid"]
-        if guid:
-            return guid
-        raise Py42Error(f"Couldn't find an Org with ID '{org_id}' ")
+                        return org["orgGuid"]
+            if not guid:
+                raise Py42Error(f"Couldn't find an Org with ID '{org_id}'.")
+        else:
+            try:
+                return self.org_id_map[org_id]
+            except KeyError:
+                raise Py42Error(f"Couldn't find an Org with ID '{org_id}'.")

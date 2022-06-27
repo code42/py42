@@ -30,13 +30,18 @@ class TestOrgService:
     def mock_get_all_empty_response(self, mocker):
         yield create_mock_response(mocker, MOCK_EMPTY_GET_ORGS_RESPONSE)
 
+    @patch.object(
+        py42.services.orgs.OrgService,
+        "_get_guid_by_id",
+        return_value="org-guid-123",
+    )
     def test_get_org_by_id_calls_get_with_uri_and_params(
         self, mock_connection, successful_response
     ):
         mock_connection.get.return_value = successful_response
         service = OrgService(mock_connection)
         service.get_by_id(12345)
-        uri = f"{COMPUTER_URI}/12345"
+        uri = f"{ORGS_V3_URI}/org-guid-123"
         mock_connection.get.assert_called_once_with(uri, params={})
 
     def test_get_all_calls_get_expected_number_of_times(
@@ -58,7 +63,7 @@ class TestOrgService:
         service = OrgService(mock_connection)
         service.get_page(3, 25)
         mock_connection.get.assert_called_once_with(
-            "/api/v1/Org", params={"pgNum": 3, "pgSize": 25}
+            ORGS_V3_URI, params={"pgNum": 3, "pgSize": 25}
         )
 
     def test_get_agent_state_calls_get_with_uri_and_params(
@@ -101,12 +106,16 @@ class TestOrgService:
         }
         mock_connection.post.assert_called_once_with(ORGS_V3_URI, json=data)
 
+    @patch.object(
+        py42.services.orgs.OrgService,
+        "_get_guid_by_id",
+        return_value="org-guid-123",
+    )
     def test_get_by_uid_calls_get_with_expected_uri_and_params(self, mock_connection):
         service = OrgService(mock_connection)
-        service.get_by_uid("12345")
-        uri = f"{COMPUTER_URI}/12345"
-        params = dict(idType="orgUid")
-        mock_connection.get.assert_called_once_with(uri, params=params)
+        service.get_by_uid("UID-12345")
+        uri = f"{ORGS_V3_URI}/org-guid-123"
+        mock_connection.get.assert_called_once_with(uri, params={})
 
     @patch.object(
         py42.services.orgs.OrgService,
@@ -170,3 +179,17 @@ class TestOrgService:
 
         expected = "Please be aware that this method is incompatible with api client authentication."
         assert expected in err.value.args[0]
+
+    @patch.object(
+        py42.services.orgs.OrgService,
+        "_get_guid_by_id",
+        return_value=TEST_ORG_GUID,
+    )
+    def test_update_org_calls_put_with_expected_uri_and_params(self, mock_connection):
+        service = OrgService(mock_connection)
+        service.update_org(
+            12345, name="new org name", notes="new org notes", ext_ref="123"
+        )
+        uri = f"{ORGS_V3_URI}/{TEST_ORG_GUID}"
+        data = {"orgName": "new org name", "orgExtRef": "123", "notes": "new org notes"}
+        mock_connection.put.assert_called_once_with(uri, json=data)

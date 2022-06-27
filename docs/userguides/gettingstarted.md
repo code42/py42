@@ -83,7 +83,7 @@ sdk = py42.sdk.from_local_account("https://console.code42.com", "username@code42
 
 ### Api Clients
 
-Py42 also supports api clients.  You can use the api key and secret generated through the Code42 console to initiate the `SDKClient`.
+Py42 also supports api clients.  You can use the client ID and secret generated through the Code42 console to initiate the `SDKClient`.
 
 ```python
 import py42.sdk

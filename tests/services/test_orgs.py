@@ -61,10 +61,8 @@ class TestOrgService:
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_connection):
         service = OrgService(mock_connection)
-        service.get_page(3, 25)
-        mock_connection.get.assert_called_once_with(
-            ORGS_V3_URI, params={"pgNum": 3, "pgSize": 25}
-        )
+        service.get_page()
+        mock_connection.get.assert_called_once_with(ORGS_V3_URI)
 
     def test_get_agent_state_calls_get_with_uri_and_params(
         self, mock_connection, successful_response

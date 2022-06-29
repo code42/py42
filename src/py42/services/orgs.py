@@ -1,6 +1,5 @@
 from collections import namedtuple
 
-from py42 import settings
 from py42.clients.settings.org_settings import OrgSettings
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42InternalServerError
@@ -95,18 +94,14 @@ class OrgService(BaseService):
         """Gets an individual page of organizations.
 
         Args:
-            page_num (int): The page number to request.
-            page_size (int, optional): The number of organizations to return per page.
-                Defaults to `py42.settings.items_per_page`.
-            kwargs (dict, optional): Additional advanced-user arguments. Defaults to None.
+            page_num (int, optional): DEPRECATED.
+            page_size (int, optional): DEPRECATED.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
         uri = "/api/v3/orgs"
-        page_size = page_size or settings.items_per_page
-        params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
-        return self._connection.get(uri, params=params)
+        return self._connection.get(uri)
 
     def get_all(self, **kwargs):
         """Gets all organizations.

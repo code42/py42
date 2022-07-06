@@ -4,7 +4,6 @@ from py42.clients.settings.org_settings import OrgSettings
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42InternalServerError
 from py42.services import BaseService
-from py42.services.util import get_all_pages
 
 OrgSettingsResponse = namedtuple(
     "OrgSettingsResponse", ["error", "org_response", "org_settings_response"]
@@ -27,10 +26,9 @@ class OrgService(BaseService):
         """Map org guids to ids."""
         if not self._org_id_map:
             self._org_id_map = {}
-            pages = self.get_all()
-            for page in pages:
-                for org in page["orgs"]:
-                    self._org_id_map[org["orgId"]] = org["orgGuid"]
+            page = self.get_page()
+            for org in page["orgs"]:
+                self._org_id_map[org["orgId"]] = org["orgGuid"]
         return self._org_id_map
 
     def create_org(self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None):
@@ -110,7 +108,7 @@ class OrgService(BaseService):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of organizations.
         """
-        return get_all_pages(self.get_page, "orgs", **kwargs)
+        yield self.get_page()
 
     def block(self, org_id):
         """Blocks the organization with the given org ID as well as its child organizations. A
@@ -288,11 +286,10 @@ class OrgService(BaseService):
 
         if id_key != "orgId":
             guid = ""
-            pages = self.get_all()
-            for page in pages:
-                for org in page["orgs"]:
-                    if org[id_key] == org_id:
-                        return org["orgGuid"]
+            page = self.get_page()
+            for org in page["orgs"]:
+                if org[id_key] == org_id:
+                    return org["orgGuid"]
             if not guid:
                 raise Py42Error(f"Couldn't find an Org with ID '{org_id}'.")
         else:

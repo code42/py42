@@ -80,6 +80,15 @@ See [Executing Searches](../userguides/searches.md) for more on building search 
     :show-inheritance:
 ```
 
+### Report Filters
+
+```{eval-rst}
+.. automodule:: py42.sdk.queries.fileevents.v2.filters.report
+    :members:
+    :inherited-members:
+    :show-inheritance:
+```
+
 ### Risk Filters
 
 ```{eval-rst}

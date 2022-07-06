@@ -245,3 +245,9 @@ class TrustReason(_QueryFilterStringField, _Choices):
     EVENT_PAIRING_SERVICE_ENDPOINT_MATCH = "Event matched with endpoint activity"
     DOWNLOAD_TO_A_MANAGED_DEVICE = "Download to a managed device"
     SHARED_WITH_TRUSTED_USERS = "Shared with trusted users"
+
+
+class IndicatorsWeight(_QueryFilterStringField, _FileEventFilterComparableField):
+    """V2 filter class that filters events by the risk indicator weight."""
+
+    _term = "risk.indicators.weight"

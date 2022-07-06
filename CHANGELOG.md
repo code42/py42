@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 1.25.0 - Unreleased
+
+### Added
+
+- Added remaining query filter terms and classes for all V2 file event fields.
+
 ## 1.24.0 - 2022-06-03
 
 ### Added

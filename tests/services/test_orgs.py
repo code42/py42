@@ -8,10 +8,6 @@ import py42.settings
 from py42.exceptions import Py42InternalServerError
 from py42.services.orgs import OrgService
 
-
-# TODO - update GET/PUT endpoints to be released in 10.5
-
-
 COMPUTER_URI = "/api/v1/Org"
 ORGS_V3_URI = "/api/v3/orgs"
 TEST_ORG_GUID = "12345-org-guid"

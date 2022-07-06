@@ -209,8 +209,8 @@ class OrgService(BaseService):
         """
         return self.get_agent_state(org_id, "fullDiskAccess")
 
-    # TODO - status of this org settings with api clients
-
+    # TODO - this method won't be supported by API clients.  A plan for how to handle this and similar methods
+    # TODO - will need to be determined prior to a full py42 api-client support release.
     def get_settings(self, org_id):
         """Gets setting data for an org and returns an `OrgSettingsManager` for the target org.
 
@@ -227,6 +227,8 @@ class OrgService(BaseService):
         t_settings = self._connection.get(uri)
         return OrgSettings(org_settings.data, t_settings.data)
 
+    # TODO - this method won't be supported by API clients.  A plan for how to handle this and similar methods
+    # TODO - will need to be determined prior to a full py42 api-client support release.
     def update_settings(self, org_settings):
         """Updates an org's settings based on changes to the passed in `OrgSettings` instance.
 

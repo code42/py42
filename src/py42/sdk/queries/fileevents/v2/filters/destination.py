@@ -73,6 +73,34 @@ class Category(_FileEventFilterStringField, _Choices):
         - :attr:`destination.category.SOURCE_CODE_REPOSITORY`
         - :attr:`destination.category.UNCATEGORIZED`
         - :attr:`destination.category.UNKNOWN`
+        - :attr:`destination.category.BUSINESS_INTELLIGENCE_TOOLS`
+        - :attr:`destination.category.CIVIL_SERVICES`
+        - :attr:`destination.category.CLOUD_COMPUTING`
+        - :attr:`destination.category.CODING_TOOLS`
+        - :attr:`destination.category.CONTRACT_MANAGEMENT`
+        - :attr:`destination.category.CRM_TOOLS`
+        - :attr:`destination.category.DESIGN_TOOLS`
+        - :attr:`destination.category.E_COMMERCE`
+        - :attr:`destination.category.FILE_CONVERSION_TOOLS`
+        - :attr:`destination.category.FINANCIAL_SERVICES`
+        - :attr:`destination.category.HEALTHCARE_AND_INSURANCE`
+        - :attr:`destination.category.HR_TOOLS`
+        - :attr:`destination.category.IMAGE_HOSTING`
+        - :attr:`destination.category.IT_SERVICES`
+        - :attr:`destination.category.JOB_LISTINGS`
+        - :attr:`destination.category.LEARNING_PLATFORMS`
+        - :attr:`destination.category.MARKETING_TOOLS`
+        - :attr:`destination.category.PDF_MANAGER`
+        - :attr:`destination.category.PHOTO_PRINTING`
+        - :attr:`destination.category.PRODUCTIVITY_TOOLS`
+        - :attr:`destination.category.PROFESSIONAL_SERVICES`
+        - :attr:`destination.category.REAL_ESTATE`
+        - :attr:`destination.category.SALES_TOOLS`
+        - :attr:`destination.category.SEARCH_ENGINE`
+        - :attr:`destination.category.SHIPPING`
+        - :attr:`destination.category.SOFTWARE`
+        - :attr:`destination.category.TRAVEL`
+        - :attr:`destination.category.WEB_HOSTING`
     """
 
     _term = "destination.category"
@@ -86,6 +114,34 @@ class Category(_FileEventFilterStringField, _Choices):
     SOURCE_CODE_REPOSITORY = "Source Code Repository"
     UNCATEGORIZED = "Uncategorized"
     UNKNOWN = "Unknown"
+    BUSINESS_INTELLIGENCE_TOOLS = "Business Intelligence Tools"
+    CIVIL_SERVICES = "Civil Services"
+    CLOUD_COMPUTING = "Cloud Computing"
+    CODING_TOOLS = "Coding Tools"
+    CONTRACT_MANAGEMENT = "Contract Management"
+    CRM_TOOLS = "CRM Tools"
+    DESIGN_TOOLS = "Design Tools"
+    E_COMMERCE = "E-commerce"
+    FILE_CONVERSION_TOOLS = "File Conversion Tools"
+    FINANCIAL_SERVICES = "Financial Services"
+    HEALTHCARE_AND_INSURANCE = "Healthcare & Insurance"
+    HR_TOOLS = "HR Tools"
+    IMAGE_HOSTING = "Image Hosting"
+    IT_SERVICES = "IT Services"
+    JOB_LISTINGS = "Job Listings"
+    LEARNING_PLATFORMS = "Learning Platforms"
+    MARKETING_TOOLS = "Marketing Tools"
+    PDF_MANAGER = "PDF Manager"
+    PHOTO_PRINTING = "Photo Printing"
+    PRODUCTIVITY_TOOLS = "Productivity Tools"
+    PROFESSIONAL_SERVICES = "Professional Services"
+    REAL_ESTATE = "Real Estate"
+    SALES_TOOLS = "Sales Tools"
+    SEARCH_ENGINE = "Search Engine"
+    SHIPPING = "Shipping"
+    SOFTWARE = "Software"
+    TRAVEL = "Travel"
+    WEB_HOSTING = "Web Hosting"
 
 
 class PrinterName(_FileEventFilterStringField):

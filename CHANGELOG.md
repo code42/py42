@@ -12,6 +12,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ### Added
 
+- Added new filter terms for the following file event fields to `py42.sdk.queries.fileevents.v2.filters`:
+  - `destination.Category`
+  - `source.Category`
+  - `risk.Indicators`
 - Added remaining query filter terms and classes for all V2 file event fields.
 
 ## 1.24.0 - 2022-06-03

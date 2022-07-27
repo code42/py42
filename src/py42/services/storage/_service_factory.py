@@ -1,6 +1,4 @@
-from threading import Lock
-
-from py42.exceptions import Py42StorageSessionInitializationError
+from functools import lru_cache
 from py42.services._connection import Connection
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.exfiltrateddata import ExfiltratedDataService
@@ -9,15 +7,15 @@ from py42.services.storage.restore import PushRestoreService
 
 
 class StorageServiceFactory:
-    def __init__(self, connection, device_service, connection_manager):
+    def __init__(self, connection, device_service):
         self._connection = connection
         self._device_service = device_service
-        self._connection_manager = connection_manager
 
     def create_push_restore_service(self, device_guid):
         conn = Connection.from_device_connection(self._connection, device_guid)
         return PushRestoreService(conn)
 
+    @lru_cache
     def create_archive_service(self, device_guid, destination_guid):
         url = self.get_storage_url(device_guid, destination_guid)
         conn = self._connection.clone(url)
@@ -48,13 +46,3 @@ class StorageServiceFactory:
         if not destination_list:
             raise Exception(f"No destinations found for device guid: {device_guid}")
         return destination_list[0]["targetComputerGuid"]
-
-
-class ConnectionManager:
-    def __init__(self, session_cache=None):
-        self._session_cache = session_cache or {}
-        self._list_update_lock = Lock()
-
-    def get_saved_connection_for_url(self, url):
-        return self._session_cache.get(url.lower())
-

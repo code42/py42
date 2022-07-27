@@ -7,7 +7,6 @@ from py42.exceptions import Py42HTTPError
 from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
 from py42.services.devices import DeviceService
-from py42.services.storage._auth import StorageAuth
 from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.archive import StorageArchiveService

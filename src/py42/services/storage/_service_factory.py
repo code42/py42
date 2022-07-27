@@ -2,7 +2,6 @@ from threading import Lock
 
 from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
-from py42.services.storage._auth import FileArchiveAuth
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.exfiltrateddata import ExfiltratedDataService
 from py42.services.storage.preservationdata import StoragePreservationDataService
@@ -20,9 +19,15 @@ class StorageServiceFactory:
         return PushRestoreService(conn)
 
     def create_archive_service(self, device_guid, destination_guid):
-        auth = FileArchiveAuth(self._connection, "my", device_guid, destination_guid)
-        conn = self._connection_manager.get_storage_connection(auth)
+        url = self.get_storage_url(device_guid, destination_guid)
+        conn = self._connection.clone(url)
         return StorageArchiveService(conn)
+
+    def get_storage_url(self, device_guid, destination_guid):
+        uri = "api/v1/webRestoreInfo"
+        params = {"srcGuid": device_guid, "destGuid": destination_guid}
+        response = self._connection.get(uri, params=params)
+        return response["serverUrl"]
 
     def create_preservation_data_service(self, host_address):
         main_connection = self._connection.clone(host_address)

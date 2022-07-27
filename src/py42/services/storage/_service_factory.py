@@ -58,19 +58,3 @@ class ConnectionManager:
     def get_saved_connection_for_url(self, url):
         return self._session_cache.get(url.lower())
 
-    def get_storage_connection(self, storage_auth):
-        try:
-            url = storage_auth.get_storage_url()
-            connection = self.get_saved_connection_for_url(url)
-            if connection is None:
-                with self._list_update_lock:
-                    connection = self.get_saved_connection_for_url(url)
-                    if connection is None:
-                        connection = Connection.from_host_address(
-                            url, auth=storage_auth
-                        )
-                        self._session_cache[url.lower()] = connection
-        except Exception as ex:
-            message = f"Failed to create or retrieve connection, caused by: {ex}"
-            raise Py42StorageSessionInitializationError(ex, message)
-        return connection

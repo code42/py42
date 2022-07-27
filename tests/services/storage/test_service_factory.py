@@ -1,10 +1,8 @@
 import pytest
-from requests import Response, Session
+from requests import Session
 from tests.conftest import create_mock_response
 from tests.conftest import TEST_DEVICE_GUID
 
-from py42.exceptions import Py42HTTPError
-from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
 from py42.services.devices import DeviceService
 from py42.services.storage._service_factory import StorageServiceFactory

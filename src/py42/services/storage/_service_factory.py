@@ -1,4 +1,5 @@
 from functools import lru_cache
+
 from py42.services._connection import Connection
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.exfiltrateddata import ExfiltratedDataService
@@ -15,7 +16,7 @@ class StorageServiceFactory:
         conn = Connection.from_device_connection(self._connection, device_guid)
         return PushRestoreService(conn)
 
-    @lru_cache
+    @lru_cache  # noqa: B019
     def create_archive_service(self, device_guid, destination_guid):
         url = self.get_storage_url(device_guid, destination_guid)
         conn = self._connection.clone(url)

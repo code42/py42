@@ -31,7 +31,7 @@ def mock_connection_with_storage_lookup(mocker):
 
     def mock_get(url, params):
         server_url = "{}-{}".format(*params.values())
-        if url == "api/v1/webRestoreInfo":
+        if url == "api/v1/WebRestoreInfo":
             return create_mock_response(mocker, f'{{"serverUrl": "{server_url}"}}')
         else:
             return create_mock_response(mocker, "")

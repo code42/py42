@@ -23,7 +23,7 @@ class StorageServiceFactory:
         return StorageArchiveService(conn)
 
     def get_storage_url(self, device_guid, destination_guid):
-        uri = "api/v1/webRestoreInfo"
+        uri = "api/v1/WebRestoreInfo"
         params = {"srcGuid": device_guid, "destGuid": destination_guid}
         response = self._connection.get(uri, params=params)
         return response["serverUrl"]

@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.26.0 - Unreleased
 
 ### Added
 
@@ -18,6 +18,20 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
   - `create_policy()` - Does **not** allow optional arg `policy`.
   - `get_custodians_page()` - Does **not** allow optional arg `legal_hold_membership_uid`.
   - `get_events_page()`/`get_all_events()` - **Not available**.
+
+## 1.25.0 - 2022-07-27
+
+### Added
+
+- Added new filter terms for the following file event fields to `py42.sdk.queries.fileevents.v2.filters`:
+  - `destination.Category`
+  - `source.Category`
+  - `risk.Indicators`
+- Added remaining query filter terms and classes for all V2 file event fields.
+
+## 1.24.0 - 2022-06-03
+
+### Added
 
 - Support for V2 file event data.
   - Use queries built with V2 filters by importing the appropriate modules with `from py42.sdk.queries.fileevents.v2 import *`. Documentation is available for all V2 filter terms.

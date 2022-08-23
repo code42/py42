@@ -382,7 +382,13 @@ class Py42InvalidPageTokenError(Py42BadRequestError):
     """An error raised when the page token given is invalid."""
 
     def __init__(self, exception, page_token):
-        message = f'Invalid page token: "{page_token}".'
+        message = (
+            f'Invalid page token: "{page_token}".\n'
+            "Page tokens match the last event ID received in a previous query.  "
+            "Your page token may be invalid if the original query has changed "
+            "such that the corresponding event is being filtered out of the results, "
+            "or if the event has expired according to your data retention policy."
+        )
         super().__init__(exception, message, page_token)
         self._page_token = page_token
 

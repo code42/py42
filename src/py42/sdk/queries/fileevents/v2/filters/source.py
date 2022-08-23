@@ -71,6 +71,22 @@ class RemovableMediaSerialNumber(_FileEventFilterStringField):
     _term = "source.removableMedia.serialNumber"
 
 
+class RemovableMediaCapacity(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the capacity of the connected hardware as reported
+    by the operating system (applies to ``removable media`` events only).
+    """
+
+    _term = "source.removableMedia.capacity"
+
+
+class RemovableMediaBusType(_FileEventFilterStringField):
+    """V2 filter class that filters events based on the bus type of the connected hardware as reported
+    by the operating system (applies to ``removable media`` events only).
+    """
+
+    _term = "source.removableMedia.busType"
+
+
 class Category(_FileEventFilterStringField, _Choices):
     """
     V2 filter class that filters events based on source category.
@@ -86,6 +102,34 @@ class Category(_FileEventFilterStringField, _Choices):
         - :attr:`source.Category.SOURCE_CODE_REPOSITORY`
         - :attr:`source.Category.UNCATEGORIZED`
         - :attr:`source.Category.UNKNOWN`
+        - :attr:`source.category.BUSINESS_INTELLIGENCE_TOOLS`
+        - :attr:`source.category.CIVIL_SERVICES`
+        - :attr:`source.category.CLOUD_COMPUTING`
+        - :attr:`source.category.CODING_TOOLS`
+        - :attr:`source.category.CONTRACT_MANAGEMENT`
+        - :attr:`source.category.CRM_TOOLS`
+        - :attr:`source.category.DESIGN_TOOLS`
+        - :attr:`source.category.E_COMMERCE`
+        - :attr:`source.category.FILE_CONVERSION_TOOLS`
+        - :attr:`source.category.FINANCIAL_SERVICES`
+        - :attr:`source.category.HEALTHCARE_AND_INSURANCE`
+        - :attr:`source.category.HR_TOOLS`
+        - :attr:`source.category.IMAGE_HOSTING`
+        - :attr:`source.category.IT_SERVICES`
+        - :attr:`source.category.JOB_LISTINGS`
+        - :attr:`source.category.LEARNING_PLATFORMS`
+        - :attr:`source.category.MARKETING_TOOLS`
+        - :attr:`source.category.PDF_MANAGER`
+        - :attr:`source.category.PHOTO_PRINTING`
+        - :attr:`source.category.PRODUCTIVITY_TOOLS`
+        - :attr:`source.category.PROFESSIONAL_SERVICES`
+        - :attr:`source.category.REAL_ESTATE`
+        - :attr:`source.category.SALES_TOOLS`
+        - :attr:`source.category.SEARCH_ENGINE`
+        - :attr:`source.category.SHIPPING`
+        - :attr:`source.category.SOFTWARE`
+        - :attr:`source.category.TRAVEL`
+        - :attr:`source.category.WEB_HOSTING`
     """
 
     _term = "source.category"
@@ -100,6 +144,34 @@ class Category(_FileEventFilterStringField, _Choices):
     SOURCE_CODE_REPOSITORY = "Source Code Repository"
     UNCATEGORIZED = "Uncategorized"
     UNKNOWN = "Unknown"
+    BUSINESS_INTELLIGENCE_TOOLS = "Business Intelligence Tools"
+    CIVIL_SERVICES = "Civil Services"
+    CLOUD_COMPUTING = "Cloud Computing"
+    CODING_TOOLS = "Coding Tools"
+    CONTRACT_MANAGEMENT = "Contract Management"
+    CRM_TOOLS = "CRM Tools"
+    DESIGN_TOOLS = "Design Tools"
+    E_COMMERCE = "E-commerce"
+    FILE_CONVERSION_TOOLS = "File Conversion Tools"
+    FINANCIAL_SERVICES = "Financial Services"
+    HEALTHCARE_AND_INSURANCE = "Healthcare & Insurance"
+    HR_TOOLS = "HR Tools"
+    IMAGE_HOSTING = "Image Hosting"
+    IT_SERVICES = "IT Services"
+    JOB_LISTINGS = "Job Listings"
+    LEARNING_PLATFORMS = "Learning Platforms"
+    MARKETING_TOOLS = "Marketing Tools"
+    PDF_MANAGER = "PDF Manager"
+    PHOTO_PRINTING = "Photo Printing"
+    PRODUCTIVITY_TOOLS = "Productivity Tools"
+    PROFESSIONAL_SERVICES = "Professional Services"
+    REAL_ESTATE = "Real Estate"
+    SALES_TOOLS = "Sales Tools"
+    SEARCH_ENGINE = "Search Engine"
+    SHIPPING = "Shipping"
+    SOFTWARE = "Software"
+    TRAVEL = "Travel"
+    WEB_HOSTING = "Web Hosting"
 
 
 class Name(_FileEventFilterStringField):
@@ -120,6 +192,18 @@ class TabUrls(_FileEventFilterStringField):
     _term = "source.tabs.url"
 
 
+class TabTitleErrors(_FileEventFilterStringField):
+    """V2 filter class that filters events based on source tab title errors (for 'browser or other app' events)."""
+
+    _term = "source.tabs.titleError"
+
+
+class TabUrlErrors(_FileEventFilterStringField):
+    """V2 filter class that filters events based on source tab URL Errors (for 'browser or other app' events)."""
+
+    _term = "source.tabs.urlError"
+
+
 class OperatingSystem(_FileEventFilterStringField):
     """V2 filter class that filters events by the operating system of the source device."""
 
@@ -129,10 +213,16 @@ class OperatingSystem(_FileEventFilterStringField):
 class PrivateIpAddress(_FileEventFilterStringField):
     """V2 filter class that filters events by private (LAN) IP address of the source device."""
 
-    _term = "destination.privateIp"
+    _term = "source.privateIp"
 
 
 class IpAddress(_FileEventFilterStringField):
     """V2 filter class that filters events by public (WAN) IP address of the source device."""
 
     _term = "source.ip"
+
+
+class Domain(_FileEventFilterStringField):
+    """V2 filter class that filters events by the domain of the source device."""
+
+    _term = "source.domain"

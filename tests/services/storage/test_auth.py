@@ -3,7 +3,6 @@ from requests import Request
 from tests.conftest import create_mock_response
 
 from py42.services._connection import Connection
-from py42.services.storage._auth import FileArchiveAuth
 
 TEST_USER_ID = "0123456789"
 TEST_DEVICE_GUID = "testdeviceguid"
@@ -39,80 +38,3 @@ def mock_storage_auth_token_conn(mocker):
         return_value=mock_connection,
     )
     return mock_connection
-
-
-class TestFileArchiveTmpAuth:
-    def test_call_returns_request_with_expected_header(
-        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
-    ):
-        auth = FileArchiveAuth(
-            mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
-        )
-        request = auth(mock_request)
-        assert request.headers["Authorization"] == "token TEST_V1-TOKEN_VALUE"
-
-    def test_call_only_calls_auth_apis_first_time(
-        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
-    ):
-        auth = FileArchiveAuth(
-            mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
-        )
-        auth(mock_request)
-        assert mock_tmp_auth_conn.post.call_count == 1
-        assert mock_storage_auth_token_conn.post.call_count == 1
-        auth(mock_request)
-        assert mock_tmp_auth_conn.post.call_count == 1
-        assert mock_storage_auth_token_conn.post.call_count == 1
-
-    def test_call_calls_auth_apis_with_expected_urls(
-        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
-    ):
-        auth = FileArchiveAuth(
-            mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
-        )
-        auth(mock_request)
-        data = {
-            "userId": TEST_USER_ID,
-            "sourceGuid": TEST_DEVICE_GUID,
-            "destinationGuid": TEST_DESTINATION_GUID,
-        }
-        mock_tmp_auth_conn.post.assert_called_once_with("/api/v1/LoginToken", json=data)
-        mock_storage_auth_token_conn.post.assert_called_once_with(
-            "api/v1/AuthToken",
-            headers={"Authorization": "login_token TEST_TMP_TOKEN_VALUE"},
-        )
-
-    def test_clear_credentials_causes_auth_api_to_be_called_on_subsequent_calls(
-        self, mock_tmp_auth_conn, mock_request, mock_storage_auth_token_conn
-    ):
-        auth = FileArchiveAuth(
-            mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
-        )
-        auth(mock_request)
-        assert mock_tmp_auth_conn.post.call_count == 1
-        assert mock_storage_auth_token_conn.post.call_count == 1
-        auth.clear_credentials()
-        auth(mock_request)
-        assert mock_tmp_auth_conn.post.call_count == 2
-        assert mock_storage_auth_token_conn.post.call_count == 2
-
-    def test_get_storage_url_returns_expected_value(
-        self, mock_tmp_auth_conn, mock_storage_auth_token_conn
-    ):
-        auth = FileArchiveAuth(
-            mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
-        )
-        assert auth.get_storage_url() == "testhost.com"
-
-    def test_get_storage_url_only_calls_auth_api_first_time(
-        self, mock_tmp_auth_conn, mock_storage_auth_token_conn
-    ):
-        auth = FileArchiveAuth(
-            mock_tmp_auth_conn, TEST_USER_ID, TEST_DEVICE_GUID, TEST_DESTINATION_GUID
-        )
-        auth.get_storage_url()
-        assert mock_tmp_auth_conn.post.call_count == 1
-        assert mock_storage_auth_token_conn.post.call_count == 1
-        auth.get_storage_url()
-        assert mock_tmp_auth_conn.post.call_count == 1
-        assert mock_storage_auth_token_conn.post.call_count == 1

@@ -1,25 +1,14 @@
 import pytest
-from requests import Response
+from requests import Session
 from tests.conftest import create_mock_response
 from tests.conftest import TEST_DEVICE_GUID
 
-from py42.exceptions import Py42HTTPError
-from py42.exceptions import Py42StorageSessionInitializationError
 from py42.services._connection import Connection
 from py42.services.devices import DeviceService
-from py42.services.storage._auth import StorageAuth
-from py42.services.storage._service_factory import ConnectionManager
 from py42.services.storage._service_factory import StorageServiceFactory
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.exfiltrateddata import ExfiltratedDataService
 from py42.services.storage.preservationdata import StoragePreservationDataService
-
-
-@pytest.fixture
-def mock_tmp_auth(mocker):
-    mock = mocker.MagicMock(spec=StorageAuth)
-    mock.get_storage_url.return_value = "testhost.com"
-    return mock
 
 
 @pytest.fixture
@@ -33,26 +22,52 @@ def mock_device_service(mocker):
 
 
 @pytest.fixture
-def mock_connection_manager(mocker):
-    mock = mocker.MagicMock(spec=ConnectionManager)
-    return mock
+def mock_connection_with_storage_lookup(mocker):
+    mock_session = mocker.MagicMock(spec=Session)
+    mock_session.headers = {}
+    connection = Connection.from_host_address(
+        "https://example.com", session=mock_session
+    )
+
+    def mock_get(url, params):
+        server_url = "{}-{}".format(*params.values())
+        if url == "api/v1/WebRestoreInfo":
+            return create_mock_response(mocker, f'{{"serverUrl": "{server_url}"}}')
+        else:
+            return create_mock_response(mocker, "")
+
+    connection.get = mock_get
+    return connection
 
 
 class TestStorageServiceFactory:
     def test_create_archive_service(
-        self, mock_successful_connection, mock_device_service, mock_connection_manager
+        self, mock_connection_with_storage_lookup, mock_device_service
     ):
         factory = StorageServiceFactory(
-            mock_successful_connection, mock_device_service, mock_connection_manager
+            mock_connection_with_storage_lookup, mock_device_service
         )
         service = factory.create_archive_service("testguid", None)
         assert type(service) == StorageArchiveService
 
-    def test_create_archive_service_when_given_destination_guid_does_not_call_device_service(
-        self, mock_successful_connection, mock_device_service, mock_connection_manager
+    def test_create_archive_service_caches_results_for_same_args(
+        self, mock_connection_with_storage_lookup, mock_device_service
     ):
         factory = StorageServiceFactory(
-            mock_successful_connection, mock_device_service, mock_connection_manager
+            mock_connection_with_storage_lookup, mock_device_service
+        )
+        service = factory.create_archive_service("123", "456")
+        service_2 = factory.create_archive_service("456", "789")
+        service_3 = factory.create_archive_service("123", "456")
+        assert service._connection.host_address == "https://123-456"
+        assert service_2._connection.host_address == "https://456-789"
+        assert service._connection is service_3._connection
+
+    def test_create_archive_service_when_given_destination_guid_does_not_call_device_service(
+        self, mock_connection_with_storage_lookup, mock_device_service
+    ):
+        factory = StorageServiceFactory(
+            mock_connection_with_storage_lookup, mock_device_service
         )
         service = factory.create_archive_service("testguid", destination_guid=42)
         assert mock_device_service.get_by_guid.call_count == 0
@@ -60,13 +75,12 @@ class TestStorageServiceFactory:
 
     def test_auto_select_destination_guid_when_device_has_no_destination_raises_exception(
         self,
-        mock_successful_connection,
+        mock_connection_with_storage_lookup,
         mock_device_service,
-        mock_connection_manager,
         mocker,
     ):
         factory = StorageServiceFactory(
-            mock_successful_connection, mock_device_service, mock_connection_manager
+            mock_connection_with_storage_lookup, mock_device_service
         )
         response = create_mock_response(mocker, '{"backupUsage": []}')
         mock_device_service.get_by_guid.return_value = response
@@ -74,65 +88,19 @@ class TestStorageServiceFactory:
             factory.auto_select_destination_guid(TEST_DEVICE_GUID)
 
     def test_preservation_data_service(
-        self, mock_successful_connection, mock_device_service, mock_connection_manager
+        self, mock_connection_with_storage_lookup, mock_device_service
     ):
         factory = StorageServiceFactory(
-            mock_successful_connection, mock_device_service, mock_connection_manager
+            mock_connection_with_storage_lookup, mock_device_service
         )
         service = factory.create_preservation_data_service("testhost.com")
         assert type(service) == StoragePreservationDataService
 
     def test_exfiltrated_data_service(
-        self, mock_successful_connection, mock_device_service, mock_connection_manager
+        self, mock_connection_with_storage_lookup, mock_device_service
     ):
         factory = StorageServiceFactory(
-            mock_successful_connection, mock_device_service, mock_connection_manager
+            mock_connection_with_storage_lookup, mock_device_service
         )
         service = factory.create_exfiltrated_data_service("testhost.com")
         assert type(service) == ExfiltratedDataService
-
-
-class TestStorageSessionManager:
-    def test_get_storage_session_calls_session_factory_with_token_provider(
-        self, mock_tmp_auth
-    ):
-        storage_session_manager = ConnectionManager()
-        connection = storage_session_manager.get_storage_connection(mock_tmp_auth)
-        assert type(connection) == Connection
-
-    def test_get_storage_session_with_multiple_calls_returns_same_session(
-        self, mock_tmp_auth
-    ):
-        storage_session_manager = ConnectionManager()
-        session1 = storage_session_manager.get_storage_connection(mock_tmp_auth)
-        session2 = storage_session_manager.get_storage_connection(mock_tmp_auth)
-        assert session1 is session2
-
-    def test_get_storage_session_raises_session_init_error_when_tmp_auth_raises_http_error(
-        self, mock_tmp_auth, http_error, mocker
-    ):
-        error = http_error
-        error.response = mocker.MagicMock(spec=Response)
-        error.response.text = ""
-        mock_tmp_auth.get_storage_url.side_effect = Py42HTTPError(error)
-        storage_session_manager = ConnectionManager()
-        with pytest.raises(Py42StorageSessionInitializationError):
-            storage_session_manager.get_storage_connection(mock_tmp_auth)
-
-    def test_get_storage_session_get_saved_session_initially_returns_none(
-        self,
-    ):
-        storage_session_manager = ConnectionManager()
-        assert (
-            storage_session_manager.get_saved_connection_for_url("testhost.com") is None
-        )
-
-    def test_get_saved_session_returns_session_after_successful_call_to_get_session(
-        self, mock_tmp_auth
-    ):
-        storage_session_manager = ConnectionManager()
-        storage_session_manager.get_storage_connection(mock_tmp_auth)
-        assert (
-            storage_session_manager.get_saved_connection_for_url("testhost.com")
-            is not None
-        )

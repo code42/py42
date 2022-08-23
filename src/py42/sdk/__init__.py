@@ -77,7 +77,9 @@ def from_jwt_provider(host_address, jwt_provider):
         :class:`py42.sdk.SDKClient`
     """
 
-    return SDKClient.from_jwt_provider(host_address, jwt_provider)
+    client = SDKClient.from_jwt_provider(host_address, jwt_provider)
+    client.usercontext.get_current_tenant_id()
+    return client
 
 
 class SDKClient:
@@ -432,7 +434,6 @@ def _init_clients(services, connection):
     from py42.clients.loginconfig import LoginConfigurationClient
     from py42.clients.securitydata import SecurityDataClient
     from py42.clients.trustedactivities import TrustedActivitiesClient
-    from py42.services.storage._service_factory import ConnectionManager
     from py42.services.storage._service_factory import StorageServiceFactory
     from py42.clients.userriskprofile import UserRiskProfileClient
     from py42.clients.watchlists import WatchlistsClient
@@ -448,9 +449,7 @@ def _init_clients(services, connection):
     detectionlists = DetectionListsClient(
         services.userprofile, services.departingemployee, services.highriskemployee
     )
-    storage_service_factory = StorageServiceFactory(
-        connection, services.devices, ConnectionManager()
-    )
+    storage_service_factory = StorageServiceFactory(connection, services.devices)
     alertrules = AlertRulesClient(services.alerts, services.alertrules)
     securitydata = SecurityDataClient(
         services.fileevents,

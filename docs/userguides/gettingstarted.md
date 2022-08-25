@@ -65,15 +65,15 @@ pip install py42-[VERSION].tar.gz
 ```
 
 To initialize the `py42.sdk.SDKClient`, you must provide your credentials. If you are writing a script,
-we recommend using a secure password storage library, such as `keyring`, for retrieving passwords. However, subsequent
+we recommend using a secure password storage library, such as `keyring`, for retrieving passwords amd secrets. However, subsequent
 requests use JWT authentication.
-
-If your account uses [two-factor authentication](https://support.code42.com/Administrator/Cloud/Configuring/Two-factor_authentication_for_local_users), include the time-based one-time password (TOTP) when you initialize the `py42.sdk.SDKClient`.
-You can also provide a callable object that returns a TOTP. If you pass a callable, it will be called whenever a new TOTP is required to renew the authentication token.
 
 ### Basic Authentication
 
 Py42 supports basic auth with your Code42 username and password.
+
+If your account uses [two-factor authentication](https://support.code42.com/Administrator/Cloud/Configuring/Two-factor_authentication_for_local_users), include the time-based one-time password (TOTP) when you initialize the `py42.sdk.SDKClient`.
+You can also provide a callable object that returns a TOTP. If you pass a callable, it will be called whenever a new TOTP is required to renew the authentication token.
 
 ```python
 import py42.sdk
@@ -81,7 +81,7 @@ import py42.sdk
 sdk = py42.sdk.from_local_account("https://console.code42.com", "username@code42.com", "password")
 ```
 
-### Api Clients
+### Code42 API Clients
 
 Py42 also supports api clients.  You can use the client ID and secret generated through the Code42 console to initiate the `SDKClient`.
 

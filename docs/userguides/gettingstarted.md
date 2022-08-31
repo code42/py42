@@ -65,7 +65,7 @@ pip install py42-[VERSION].tar.gz
 ```
 
 To initialize the `py42.sdk.SDKClient`, you must provide your credentials. If you are writing a script,
-we recommend using a secure password storage library, such as `keyring`, for retrieving passwords amd secrets. However, subsequent
+we recommend using a secure password storage library, such as `keyring`, for retrieving passwords and secrets. However, subsequent
 requests use JWT authentication.
 
 ### Basic Authentication

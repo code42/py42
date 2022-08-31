@@ -20,9 +20,12 @@ class OrgSettings(UserDict):
         self._t_settings = t_settings
         self._packets = {}
         self.changes = {}
-        self.device_defaults = DeviceSettingsDefaults(
-            self.data["deviceDefaults"], org_settings=self
-        )
+        try:
+            self.device_defaults = DeviceSettingsDefaults(
+                self.data["deviceDefaults"], org_settings=self
+            )
+        except KeyError:
+            self.device_defaults = None
 
     @property
     def packets(self):

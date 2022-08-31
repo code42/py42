@@ -293,8 +293,6 @@ class DeviceService(BaseService):
     def upgrade(self, guid):
         """Instructs a device to upgrade to the latest available version.
 
-        WARNING: This method is incompatible with api client authentication.
-
         Args:
             guid (str): The globally unique identifier of the device.
 

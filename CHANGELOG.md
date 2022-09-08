@@ -19,6 +19,12 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
   - `get_custodians_page()` - Does **not** allow optional arg `legal_hold_membership_uid`.
   - `get_events_page()`/`get_all_events()` - **Not available**.
 
+## 1.25.1 - 2022-09-07
+
+### Updated
+
+- Internal authentication flow changes for `sdk.archive.stream_from_backup()` and `sdk.archive.stream_to_device()` methods.
+
 ## 1.25.0 - 2022-07-27
 
 ### Added

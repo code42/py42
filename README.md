@@ -98,7 +98,7 @@ There are a few default settings that affect the behavior of the client.
 | Name | Description | Default |
 | ---- | ----------- | ------- |
 | verify_ssl_certs | Controls whether the SDK verifies the server's certificate.<br>Possible values: `True`, `False`, or a path to a CA bundle to use.| `True`
-| proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](http://docs.python-requests.org/en/master/user/advanced/?highlight=proxies#proxies) for more info.| `None`
+| proxies | Dictionary mapping protocol or protocol and hostname to the URL of the proxy.<br>See [the Requests library's documentation on proxies](https://requests.readthedocs.io/en/latest/user/advanced/?highlight=proxy#proxies) for more info.| `None`
 | debug.level | Controls log level | `logging.NOTSET`
 | debug.logger | Controls logger used | `logging.Logger` with `StreamHandler` sending to `sys.stderr`
 | items_per_page | Controls how many items are retrieved per request for methods that loops over several "pages" of items in order to collect them all. | 500

@@ -53,6 +53,24 @@ def _get_sdk(host, user, pw):
 
 
 @pytest.fixture(scope="session")
+def api_client_connection():
+    host = os.environ.get("C42_HOST") or "http://127.0.0.1:4200"
+    client = os.environ.get("C42_API_CLIENT_ID") or "client_id"
+    secret = os.environ.get("C42_API_CLIENT_SECRET") or "secret"
+    return _get_api_client_sdk(host, client, secret)
+
+
+def _get_api_client_sdk(host, client, secret):
+    try:
+        return _sdk.from_api_client(host, client, secret)
+    except Exception as err:
+        pytest.exit(
+            f"Failed to init API client SDK for integration tests: {err}",
+            returncode=1,
+        )
+
+
+@pytest.fixture(scope="session")
 def timestamp():
     return convert_datetime_to_epoch(datetime.utcnow())
 

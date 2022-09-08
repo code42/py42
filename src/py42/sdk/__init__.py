@@ -4,6 +4,7 @@ from requests.auth import HTTPBasicAuth
 
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42UnauthorizedError
+from py42.services._auth import ApiClientAuth
 from py42.services._auth import BearerAuth
 from py42.services._auth import CustomJWTAuth
 from py42.services._connection import Connection
@@ -11,6 +12,23 @@ from py42.usercontext import UserContext
 
 warnings.simplefilter("always", DeprecationWarning)
 warnings.simplefilter("always", UserWarning)
+
+
+def from_api_client(host_address, client_id, secret):
+    """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
+    an API client ID and secret.
+
+    Args:
+        host_address (str): The domain name of the Code42 instance being authenticated to, e.g.
+            console.us.code42.com
+        client_id (str): The client ID of the API client to authenticate with.
+        secret (str): The secret of the API client to authenticate with.
+
+    Returns:
+        :class:`py42.sdk.SDKClient`
+    """
+
+    return SDKClient.from_api_client(host_address, client_id, secret)
 
 
 def from_local_account(host_address, username, password, totp=None):
@@ -65,10 +83,35 @@ def from_jwt_provider(host_address, jwt_provider):
 
 
 class SDKClient:
-    def __init__(self, main_connection, auth):
-        services, user_ctx = _init_services(main_connection, auth)
+    def __init__(self, main_connection, auth, auth_flag=None):
+        services, user_ctx = _init_services(main_connection, auth, auth_flag)
         self._clients = _init_clients(services, main_connection)
         self._user_ctx = user_ctx
+        self._auth_flag = auth_flag
+
+    @classmethod
+    def from_api_client(cls, host_address, client_id, secret):
+        """Creates a :class:`~py42.sdk.SDKClient` object for accessing the Code42 REST APIs using
+        an API client ID and secret.
+
+        Args:
+            host_address (str): The domain name of the Code42 instance being authenticated to, e.g.
+                console.us.code42.com
+            client_id (str): The client ID of the API client to authenticate with.
+            secret (str): The secret of the API client to authenticate with.
+
+        Returns:
+            :class:`py42.sdk.SDKClient`
+        """
+
+        basic_auth = HTTPBasicAuth(client_id, secret)
+        auth_connection = Connection.from_host_address(host_address, auth=basic_auth)
+        api_client_auth = ApiClientAuth(auth_connection)
+        main_connection = Connection.from_host_address(
+            host_address, auth=api_client_auth
+        )
+        api_client_auth.get_credentials()
+        return cls(main_connection, api_client_auth, auth_flag=1)
 
     @classmethod
     def from_local_account(cls, host_address, username, password, totp=None):
@@ -113,7 +156,7 @@ class SDKClient:
         """
         custom_auth = CustomJWTAuth(jwt_provider)
         main_connection = Connection.from_host_address(host_address, auth=custom_auth)
-
+        custom_auth.get_credentials()
         return cls(main_connection, custom_auth)
 
     @property
@@ -273,7 +316,7 @@ class SDKClient:
         return self._clients.watchlists
 
 
-def _init_services(main_connection, main_auth):
+def _init_services(main_connection, main_auth, auth_flag=None):
     # services are imported within function to prevent circular imports when a service
     # imports anything from py42.sdk.queries
     from py42.services import Services
@@ -291,6 +334,7 @@ def _init_services(main_connection, main_auth):
     from py42.services.devices import DeviceService
     from py42.services.fileevent import FileEventService
     from py42.services.legalhold import LegalHoldService
+    from py42.services.legalholdapiclient import LegalHoldApiClientService
     from py42.services.orgs import OrgService
     from py42.services.preservationdata import PreservationDataService
     from py42.services.savedsearch import SavedSearchService
@@ -348,7 +392,10 @@ def _init_services(main_connection, main_auth):
         administration=administration_svc,
         archive=ArchiveService(main_connection),
         devices=DeviceService(main_connection),
-        legalhold=LegalHoldService(main_connection),
+        # Only use updated legal hold client if initialized with API Client authorization
+        legalhold=LegalHoldApiClientService(main_connection)
+        if auth_flag
+        else LegalHoldService(main_connection),
         orgs=OrgService(main_connection),
         users=UserService(main_connection),
         alertrules=AlertRulesService(alert_rules_conn, user_ctx, user_profile_svc),

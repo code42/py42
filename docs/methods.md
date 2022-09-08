@@ -41,6 +41,7 @@ Explore the complete public documentation for `py42` below.
 * [(DEPRECATED) File Event Queries - V1](methoddocs/fileeventqueries.md)
 * [File Event Queries - V2](methoddocs/fileeventqueriesv2.md)
 * [Legal Hold](methoddocs/legalhold.md)
+* [Legal Hold - API Clients](methoddocs/legalholdapiclient.md)
 * [Orgs](methoddocs/orgs.md)
 * [Org Settings](methoddocs/orgsettings.md)
 * [Response](methoddocs/response.md)

@@ -8,6 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 1.26.0 - 2022-09-08
+
+### Added
+
+- Support for Code42 API Clients. You can instantiate py42 using a client ID and secret via `py42.sdk.from_api_client()`.
+
+- New Legal Hold Client which supports API Client authentication.  This updated client will only be attached to the SDK if initialized with `py42.sdk.from_api_client()`, otherwise the original client will be used.  This new client includes the following changes from the existing client:
+  - `create_policy()` - Does **not** allow optional arg `policy`.
+  - `get_custodians_page()` - Does **not** allow optional arg `legal_hold_membership_uid`.
+  - `get_events_page()`/`get_all_events()` - **Not available**.
+
 ## 1.25.1 - 2022-09-07
 
 ### Updated

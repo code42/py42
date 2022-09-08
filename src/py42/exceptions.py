@@ -219,7 +219,7 @@ class Py42UserAlreadyAddedError(Py42BadRequestError):
 
 class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
     """An exception raised when a legal hold matter is inaccessible from your account or
-    the matter ID is not valid."""
+    the matter UID is not valid."""
 
     def __init__(self, exception, resource_uid, legal_hold_resource="matter"):
         message = f"{legal_hold_resource.capitalize()} with UID '{resource_uid}' can not be found. Your account may not have permission to view the {legal_hold_resource.lower()}."

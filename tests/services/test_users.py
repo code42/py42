@@ -1,3 +1,6 @@
+import json
+from unittest.mock import patch
+
 import pytest
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
@@ -9,12 +12,14 @@ from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidEmailError
 from py42.exceptions import Py42InvalidPasswordError
 from py42.exceptions import Py42InvalidUsernameError
+from py42.exceptions import Py42NotFoundError
 from py42.exceptions import Py42OrgNotFoundError
 from py42.exceptions import Py42UserAlreadyExistsError
 from py42.exceptions import Py42UsernameMustBeEmailError
 from py42.services.users import UserService
 
 USER_URI = "/api/v1/User"
+USER_URI_V3 = "/api/v3/users"
 DEFAULT_GET_ALL_PARAMS = {
     "active": None,
     "email": None,
@@ -32,9 +37,78 @@ MOCK_USERNAME_MUST_BE_EMAIL_TEXT = '{"data": [{"name": "USERNAME_NOT_AN_EMAIL"}]
 MOCK_INVALID_EMAIL_TEXT = '{"data": [{"name": "EMAIL_INVALID"}]}'
 MOCK_INVALID_PASSWORD_TEXT = '{"data": [{"name": "NEW_PASSWORD_INVALID"}]}'
 MOCK_INVALID_USERNAME_TEXT = '{"data": [{"name": "INVALID_USERNAME"}]}'
+TEST_USER_UID = "1004210042"
+MOCK_ROLE_IDS = ["desktop-user", "proe-user", "customer-cloud-admin"]
+MOCK_GET_USER_BY_ID_RESPONSE = {
+    "data": {
+        "userId": 12345,
+        "userUid": TEST_USER_UID,
+        "status": "Active",
+        "username": "test@code42.com",
+        "email": "test@code42.com",
+        "firstName": "test",
+        "lastName": "mctest",
+    }
+}
+MOCK_ROLES_LIST = [
+    {
+        "roleId": "desktop-user",
+        "roleName": "Desktop User",
+        "modificationDate": "2022-01-14T17:30:29.227+00:00",
+        "creationDate": "2019-01-10T20:29:51.343+00:00",
+        "permissionIds": [],
+    },
+    {
+        "roleId": "proe-user",
+        "roleName": "PROe User",
+        "modificationDate": "2022-01-14T17:30:29.098+00:00",
+        "creationDate": "2019-01-10T20:29:51.607+00:00",
+        "permissionIds": [],
+    },
+    {
+        "roleId": "customer-cloud-admin",
+        "roleName": "Customer Cloud Admin",
+        "modificationDate": "2022-05-06T18:11:21.780+00:00",
+        "creationDate": "2019-01-10T20:29:51.330+00:00",
+        "permissionIds": [],
+    },
+]
+MOCK_GET_ROLES_RESPONSE = {"data": MOCK_ROLES_LIST}
+MOCK_ALL_ROLES_LIST = MOCK_ROLES_LIST.copy()
+MOCK_ALL_ROLES_LIST.append(
+    {
+        "roleId": "alert-emails",
+        "roleName": "Alert Emails",
+        "numberOfUsers": 1,
+        "creationDate": "2019-01-10T20:29:51.241Z",
+        "modificationDate": "2021-02-03T21:12:20.660Z",
+        "permissions": [
+            {
+                "permission": "admin.receives_alert.email",
+                "description": "Receives automated backup reports and alerts by email",
+            }
+        ],
+    }
+)
+
+MOCK_GET_AVAILABLE_ROLES_RESPONSE = {"data": MOCK_ALL_ROLES_LIST}
 
 
 class TestUserService:
+    @pytest.fixture
+    def mock_get_available_roles_response(self, mocker):
+        return create_mock_response(
+            mocker, json.dumps(MOCK_GET_AVAILABLE_ROLES_RESPONSE)
+        )
+
+    @pytest.fixture
+    def mock_get_user_by_id_response(self, mocker):
+        return create_mock_response(mocker, json.dumps(MOCK_GET_USER_BY_ID_RESPONSE))
+
+    @pytest.fixture
+    def mock_get_roles_response(self, mocker):
+        return create_mock_response(mocker, json.dumps(MOCK_GET_ROLES_RESPONSE))
+
     @pytest.fixture
     def mock_get_users_response(self, mocker):
         return create_mock_response(mocker, MOCK_GET_USER_RESPONSE)
@@ -183,7 +257,7 @@ class TestUserService:
     ):
         service = UserService(mock_connection)
         service.get_scim_data_by_uid("USER_ID")
-        uri = "/api/v7/scim-user-data/collated-view"
+        uri = "/api/v18/scim-user-data/collated-view"
         mock_connection.get.assert_called_once_with(uri, params={"userId": "USER_ID"})
 
     def test_get_available_roles_calls_get_with_expected_uri(self, mock_connection):
@@ -192,27 +266,106 @@ class TestUserService:
         uri = "/api/v1/role"
         mock_connection.get.assert_called_once_with(uri)
 
+    @patch.object(
+        py42.services.users.UserService,
+        "_get_user_uid_by_id",
+        return_value=TEST_USER_UID,
+    )
     def test_get_roles_calls_get_with_expected_uri(self, mock_connection):
+        user_id = 12345
         service = UserService(mock_connection)
-        service.get_roles(12345)
-        uri = "/api/v1/UserRole/12345"
-        mock_connection.get.assert_called_once_with(uri)
+        service.get_roles(user_id)
+        uri = f"{USER_URI_V3}/{TEST_USER_UID}/roles"
+        mock_connection.get.assert_called_with(uri)
 
-    def test_add_role_calls_post_with_expected_uri_and_data(self, mock_connection):
-        service = UserService(mock_connection)
-        service.add_role(12345, "Test Role Name")
-        uri = "/api/v1/UserRole"
-        assert mock_connection.post.call_args[0][0] == uri
-        assert mock_connection.post.call_args[1]["json"]["roleName"] == "Test Role Name"
-        assert mock_connection.post.call_args[1]["json"]["userId"] == 12345
-
-    def test_delete_role_calls_delete_with_expected_uri_and_params(
-        self, mock_connection
+    def test_get_role_ids_calls_get_roles_and_returns_role_ids(
+        self, mock_connection, mock_get_roles_response
     ):
+        user_id = 12345
+
+        with patch.object(
+            py42.services.users.UserService,
+            "get_roles",
+            return_value=mock_get_roles_response,
+        ) as mock_get_roles:
+            service = UserService(mock_connection)
+            role_ids = service._get_role_ids(user_id)
+
+        mock_get_roles.assert_called_once_with(user_id)
+        assert role_ids == ["desktop-user", "proe-user", "customer-cloud-admin"]
+
+    @patch.object(
+        py42.services.users.UserService,
+        "_get_user_uid_by_id",
+        return_value=TEST_USER_UID,
+    )
+    def test_update_roles_calls_put_with_expected_uri(self, mock_connection):
         service = UserService(mock_connection)
-        service.remove_role(12345, "Test Role Name")
-        uri = "/api/v1/UserRole?userId=12345&roleName=Test%20Role%20Name"
-        mock_connection.delete.assert_called_once_with(uri)
+        role_ids = ["role-1", "role.name.2"]
+        service._update_roles(12345, role_ids)
+        uri = f"/api/v3/users/{TEST_USER_UID}/roles"
+        data = {"roleIds": role_ids}
+        mock_connection.put.assert_called_once_with(uri, json=data)
+
+    def test_update_role_ids_calls_get_available_roles_and_returns_role_ids_when_add(
+        self, mock_connection, mock_get_available_roles_response
+    ):
+        mock_connection.get.return_value = mock_get_available_roles_response
+        service = UserService(mock_connection)
+        role_ids = ["desktop-user", "proe-user", "customer-cloud-admin"]
+        role_name = "Alert Emails"
+        updated_role_ids = service._update_role_ids(role_name, role_ids, add=True)
+        mock_connection.get.assert_called_once_with("/api/v1/role")
+        assert updated_role_ids == [
+            "desktop-user",
+            "proe-user",
+            "customer-cloud-admin",
+            "alert-emails",
+        ]
+
+    def test_update_role_ids_calls_get_available_roles_and_returns_role_ids_when_remove(
+        self, mock_connection, mock_get_available_roles_response
+    ):
+        mock_connection.get.return_value = mock_get_available_roles_response
+        service = UserService(mock_connection)
+        role_ids = ["desktop-user", "proe-user", "customer-cloud-admin"]
+        role_name = "Desktop User"
+        updated_role_ids = service._update_role_ids(role_name, role_ids, add=False)
+        mock_connection.get.assert_called_once_with("/api/v1/role")
+        assert updated_role_ids == [
+            "proe-user",
+            "customer-cloud-admin",
+        ]
+
+    def test_update_role_ids_calls_get_available_roles_and_returns_role_ids_when_and_given_role_id(
+        self, mock_connection, mock_get_available_roles_response
+    ):
+        mock_connection.get.return_value = mock_get_available_roles_response
+        service = UserService(mock_connection)
+        role_ids = ["desktop-user", "proe-user", "customer-cloud-admin"]
+        role_name = "alert-emails"
+        updated_role_ids = service._update_role_ids(role_name, role_ids, add=True)
+        mock_connection.get.assert_called_once_with("/api/v1/role")
+        assert updated_role_ids == [
+            "desktop-user",
+            "proe-user",
+            "customer-cloud-admin",
+            "alert-emails",
+        ]
+
+    def test_update_role_ids_calls_get_available_roles_and_returns_role_ids_when_remove_and_given_role_id(
+        self, mock_connection, mock_get_available_roles_response
+    ):
+        mock_connection.get.return_value = mock_get_available_roles_response
+        service = UserService(mock_connection)
+        role_ids = ["desktop-user", "proe-user", "customer-cloud-admin"]
+        role_name = "desktop-user"
+        updated_role_ids = service._update_role_ids(role_name, role_ids, add=False)
+        mock_connection.get.assert_called_once_with("/api/v1/role")
+        assert updated_role_ids == [
+            "proe-user",
+            "customer-cloud-admin",
+        ]
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_connection):
         service = UserService(mock_connection)
@@ -257,7 +410,7 @@ class TestUserService:
     def test_deactivate_when_user_in_legal_hold_raises_active_legal_hold_error(
         self, mocker, mock_connection
     ):
-        mock_connection.put.side_effect = create_mock_error(
+        mock_connection.post.side_effect = create_mock_error(
             Py42BadRequestError, mocker, "ACTIVE_LEGAL_HOLD"
         )
         client = UserService(mock_connection)
@@ -375,3 +528,101 @@ class TestUserService:
         mock_connection.put.side_effect = internal_server_error
         with pytest.raises(Py42InternalServerError):
             user_service.update_user("123", username="foo")
+
+    @patch.object(
+        py42.services.users.UserService,
+        "_get_user_uid_by_id",
+        return_value=TEST_USER_UID,
+    )
+    def test_block_calls_post_with_expected_uri(self, mock_connection):
+        service = UserService(mock_connection)
+        user_id = 12345
+        service.block(user_id)
+        uri = f"{USER_URI_V3}/{TEST_USER_UID}/block"
+        mock_connection.post.assert_called_once_with(uri)
+
+    @patch.object(
+        py42.services.users.UserService,
+        "_get_user_uid_by_id",
+        return_value=TEST_USER_UID,
+    )
+    def test_unblock_calls_post_with_expected_uri(self, mock_connection):
+        service = UserService(mock_connection)
+        user_id = 12345
+        service.unblock(user_id)
+        uri = f"{USER_URI_V3}/{TEST_USER_UID}/unblock"
+        mock_connection.post.assert_called_once_with(uri)
+
+    @patch.object(
+        py42.services.users.UserService,
+        "_get_user_uid_by_id",
+        return_value=TEST_USER_UID,
+    )
+    def test_deactivate_calls_post_with_expected_url_and_params(self, mock_connection):
+        service = UserService(mock_connection)
+        user_id = 12345
+        service.deactivate(user_id, block_user=True)
+        uri = f"{USER_URI_V3}/{TEST_USER_UID}/deactivate"
+        data = {"block": True}
+        mock_connection.post.assert_called_once_with(uri, json=data)
+
+    @patch.object(
+        py42.services.users.UserService,
+        "_get_user_uid_by_id",
+        return_value=TEST_USER_UID,
+    )
+    def test_reactivate_calls_post_with_expected_url_and_params(self, mock_connection):
+        service = UserService(mock_connection)
+        user_id = 12345
+        service.reactivate(user_id, unblock_user=True)
+        uri = f"{USER_URI_V3}/{TEST_USER_UID}/activate"
+        data = {"unblock": True}
+        mock_connection.post.assert_called_once_with(uri, json=data)
+
+    @patch.object(
+        py42.services.users.UserService,
+        "_get_user_uid_by_id",
+        return_value=TEST_USER_UID,
+    )
+    def test_change_org_assignment_calls_post_with_url_and_params(
+        self, mock_connection
+    ):
+        service = UserService(mock_connection)
+        user_id = 12345
+        org_id = 67890
+        service.change_org_assignment(user_id, org_id)
+        uri = f"{USER_URI_V3}/{TEST_USER_UID}/move"
+        data = {"orgId": org_id}
+        mock_connection.post.assert_called_once_with(uri, json=data)
+
+    def test_get_user_uid_by_id_calls_get_with_expected_uri_and_returns_uid(
+        self, mock_connection, mock_get_user_by_id_response
+    ):
+        user_id = 12345
+        service = UserService(mock_connection)
+        mock_connection.get.return_value = mock_get_user_by_id_response
+        uid = service._get_user_uid_by_id(user_id)
+        uri = f"/api/v1/User/{user_id}"
+        mock_connection.get.assert_called_once_with(uri, params={})
+        assert uid == TEST_USER_UID
+
+    def test_get_current_calls_get_with_expected_uri(self, mock_connection):
+        service = UserService(mock_connection)
+        service.get_current()
+        uri = "/api/v1/User/my"
+        mock_connection.get.assert_called_once_with(uri, params={})
+
+    def test_get_current_raises_error_about_api_clients_if_user_not_found(
+        self, mock_connection, mocker
+    ):
+        service = UserService(mock_connection)
+        mock_connection.get.side_effect = create_mock_error(
+            Py42NotFoundError,
+            mocker,
+            """[{"name":"SYSTEM","description":"User not found"}]""",
+        )
+        with pytest.raises(Py42NotFoundError) as err:
+            service.get_current()
+        assert (
+            "User not found.  Please be aware that this method is incompatible with api client authentication."
+        ) in str(err.value)

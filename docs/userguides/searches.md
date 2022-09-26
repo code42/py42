@@ -124,7 +124,9 @@ filters = [AlertState.eq(AlertState.OPEN), Severity.is_in([Severity.HIGH, Severi
 query = AlertQuery(*filters)
 ```
 
-To execute the search, use the `alerts.AlertClient.search()` method:
+For a full list of available filters, see the [alerts method docs](../methoddocs/alerts.md#filter-classes).
+
+To execute the search, use the `sdk.alerts.search()` method:
 
 ```python
 # Prints the actor property from each search result

@@ -12,7 +12,8 @@ class WatchlistType(Choices):
     * ``NEW_EMPLOYEE``
     * ``PERFORMANCE_CONCERNS``
     * ``POOR_SECURITY_PRACTICES``
-    * ``SUSPICIOUS_SYSTEM_ACTIVITY``"
+    * ``SUSPICIOUS_SYSTEM_ACTIVITY``
+    * ``CUSTOM``
     """
 
     CONTRACTOR = "CONTRACT_EMPLOYEE"
@@ -24,6 +25,7 @@ class WatchlistType(Choices):
     PERFORMANCE_CONCERNS = "PERFORMANCE_CONCERNS"
     POOR_SECURITY_PRACTICES = "POOR_SECURITY_PRACTICES"
     SUSPICIOUS_SYSTEM_ACTIVITY = "SUSPICIOUS_SYSTEM_ACTIVITY"
+    CUSTOM = "CUSTOM"
 
 
 class WatchlistsClient:
@@ -65,7 +67,7 @@ class WatchlistsClient:
         """
         return self._watchlists_service.get_all()
 
-    def create(self, watchlist_type):
+    def create(self, watchlist_type, title=None, description=None):
         """Create a new watchlist.
 
         Args:
@@ -74,7 +76,11 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
-        return self._watchlists_service.create(watchlist_type)
+        if watchlist_type == "CUSTOM" and not title:
+            raise ValueError("`title` value is required for custom watchlists.")
+        return self._watchlists_service.create(
+            watchlist_type, title=title, description=description
+        )
 
     def get_all_included_users(self, watchlist_id):
         """Get all users explicitly included on a watchlist.

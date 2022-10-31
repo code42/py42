@@ -72,6 +72,8 @@ class WatchlistsClient:
 
         Args:
                 watchlist_type (str): Type of watchlist. Constants available at :class:`py42.constants.WatchlistType`.
+                title (str, optional): Name of watchlist (for `CUSTOM` watchlists only).
+                description (str, optional): Description of watchlist (for `CUSTOM` watchlists only).
 
         Returns:
                 :class:`py42.response.Py42Response`
@@ -117,6 +119,10 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        if watchlist_type == "CUSTOM":
+            raise ValueError(
+                "Users can only be added to CUSTOM watchlists by watchlist ID."
+            )
         return self._watchlists_service.add_included_users_by_watchlist_type(
             user_ids, watchlist_type
         )
@@ -145,6 +151,10 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        if watchlist_type == "CUSTOM":
+            raise ValueError(
+                "Users can only be removed from CUSTOM watchlists by watchlist ID."
+            )
         return self._watchlists_service.delete_included_users_by_watchlist_type(
             user_ids, watchlist_type
         )

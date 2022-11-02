@@ -1,9 +1,11 @@
 from collections import namedtuple
 
+from py42 import settings
 from py42.clients.settings.org_settings import OrgSettings
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42InternalServerError
 from py42.services import BaseService
+from py42.services.util import get_all_pages
 
 OrgSettingsResponse = namedtuple(
     "OrgSettingsResponse", ["error", "org_response", "org_settings_response"]
@@ -92,14 +94,18 @@ class OrgService(BaseService):
         """Gets an individual page of organizations.
 
         Args:
-            page_num (int, optional): DEPRECATED.
-            page_size (int, optional): DEPRECATED.
+            page_num (int): The page number to request.
+            page_size (int, optional): The number of organizations to return per page.
+                Defaults to `py42.settings.items_per_page`.
+            kwargs (dict, optional): Additional advanced-user arguments. Defaults to None.
 
         Returns:
             :class:`py42.response.Py42Response`
         """
-        uri = "/api/v3/orgs"
-        return self._connection.get(uri)
+        page_size = page_size or settings.items_per_page
+        uri = "/api/v1/Org"
+        params = dict(pgNum=page_num, pgSize=page_size, **kwargs)
+        return self._connection.get(uri, params=params)
 
     def get_all(self, **kwargs):
         """Gets all organizations.
@@ -108,7 +114,7 @@ class OrgService(BaseService):
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of organizations.
         """
-        yield self.get_page()
+        return get_all_pages(self.get_page, "orgs", **kwargs)
 
     def block(self, org_id):
         """Blocks the organization with the given org ID as well as its child organizations. A

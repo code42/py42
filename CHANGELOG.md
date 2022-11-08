@@ -10,6 +10,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 ## Unreleased
 
+### Added
+
+- `sdk.watchlists.create()` now supports the `CUSTOM` watchlist type, and accepts `title` and `description` keyword arguments (only applicable to `CUSTOM` watchlist types).
+
 ### Fixed
 
 - Reverted `sdk.orgs.get_page()` method to use `/v1/orgs` endpoint due to paging bug in `/v3/orgs` endpoint. `sdk.orgs.get_all()` has also been reverted accordingly.

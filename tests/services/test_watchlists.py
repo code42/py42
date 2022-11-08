@@ -169,7 +169,12 @@ class TestWatchlistsService:
         watchlists_service.create(WatchlistType.DEPARTING)
 
         mock_connection.post.assert_called_once_with(
-            URI, json={"watchlistType": "DEPARTING_EMPLOYEE"}
+            URI,
+            json={
+                "watchlistType": "DEPARTING_EMPLOYEE",
+                "title": None,
+                "description": None,
+            },
         )
         assert (
             watchlists_service.watchlist_type_id_map["DEPARTING_EMPLOYEE"]

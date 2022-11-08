@@ -58,8 +58,12 @@ class WatchlistsService(BaseService):
     def get_all(self):
         return get_all_pages(self.get_page, "watchlists")
 
-    def create(self, watchlist_type):
-        data = {"watchlistType": watchlist_type}
+    def create(self, watchlist_type, title=None, description=None):
+        data = {
+            "watchlistType": watchlist_type,
+            "title": title,
+            "description": description,
+        }
         try:
             response = self._connection.post(self._uri_prefix, json=data)
             self.watchlist_type_id_map[watchlist_type] = response.data["watchlistId"]

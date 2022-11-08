@@ -43,7 +43,16 @@ class TestWatchlistsClient:
     ):
         watchlists_client = WatchlistsClient(mock_watchlists_service)
         watchlists_client.create(WATCHLIST_TYPE)
-        mock_watchlists_service.create.assert_called_once_with(WATCHLIST_TYPE)
+        mock_watchlists_service.create.assert_called_once_with(
+            WATCHLIST_TYPE, title=None, description=None
+        )
+
+    def test_create_custom_without_title_raises_exception(
+        self, mock_watchlists_service
+    ):
+        watchlists_client = WatchlistsClient(mock_watchlists_service)
+        with pytest.raises(ValueError):
+            watchlists_client.create("CUSTOM")
 
     def test_get_all_included_users_calls_service_with_expected_params(
         self, mock_watchlists_service

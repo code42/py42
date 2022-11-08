@@ -22,6 +22,14 @@ class TestOrgService:
     def mock_get_page_response(self, mocker):
         return create_mock_response(mocker, MOCK_GET_ORG_RESPONSE)
 
+    @pytest.fixture
+    def mock_get_all_response(self, mocker):
+        yield create_mock_response(mocker, MOCK_GET_ORG_RESPONSE)
+
+    @pytest.fixture
+    def mock_get_all_empty_response(self, mocker):
+        yield create_mock_response(mocker, MOCK_EMPTY_GET_ORGS_RESPONSE)
+
     @patch.object(
         py42.services.orgs.OrgService,
         "_get_guid_by_id",
@@ -36,21 +44,27 @@ class TestOrgService:
         uri = f"{ORGS_V3_URI}/org-guid-123"
         mock_connection.get.assert_called_once_with(uri, params={})
 
-    def test_get_all_calls_get_page_and_returns_generator(
-        self, mock_connection, mock_get_page_response
+    def test_get_all_calls_get_expected_number_of_times(
+        self, mock_connection, mock_get_all_response, mock_get_all_empty_response
     ):
         py42.settings.items_per_page = 1
         service = OrgService(mock_connection)
-        mock_connection.get.side_effect = mock_get_page_response
+        mock_connection.get.side_effect = [
+            mock_get_all_response,
+            mock_get_all_response,
+            mock_get_all_empty_response,
+        ]
         for _ in service.get_all():
             pass
         py42.settings.items_per_page = 500
-        assert mock_connection.get.call_count == 1
+        assert mock_connection.get.call_count == 3
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_connection):
         service = OrgService(mock_connection)
-        service.get_page()
-        mock_connection.get.assert_called_once_with(ORGS_V3_URI)
+        service.get_page(3, 25)
+        mock_connection.get.assert_called_once_with(
+            "/api/v1/Org", params={"pgNum": 3, "pgSize": 25}
+        )
 
     def test_get_agent_state_calls_get_with_uri_and_params(
         self, mock_connection, successful_response

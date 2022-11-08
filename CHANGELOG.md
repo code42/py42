@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## Unreleased
+
+### Fixed
+
+- Reverted `sdk.orgs.get_page()` method to use `/v1/orgs` endpoint due to paging bug in `/v3/orgs` endpoint. `sdk.orgs.get_all()` has also been reverted accordingly.
+
 ## 1.26.0 - 2022-09-08
 
 ### Added

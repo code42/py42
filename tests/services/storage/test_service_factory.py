@@ -3,6 +3,7 @@ from requests import Session
 from tests.conftest import create_mock_response
 from tests.conftest import TEST_DEVICE_GUID
 
+from py42.exceptions import Py42Error
 from py42.services._connection import Connection
 from py42.services.devices import DeviceService
 from py42.services.storage._service_factory import StorageServiceFactory
@@ -84,7 +85,7 @@ class TestStorageServiceFactory:
         )
         response = create_mock_response(mocker, '{"backupUsage": []}')
         mock_device_service.get_by_guid.return_value = response
-        with pytest.raises(Exception):
+        with pytest.raises(Py42Error):
             factory.auto_select_destination_guid(TEST_DEVICE_GUID)
 
     def test_preservation_data_service(

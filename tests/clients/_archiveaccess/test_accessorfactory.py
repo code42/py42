@@ -175,13 +175,13 @@ class TestArchiveAccessFactory:
     def test_create_archive_accessor_raises_exception_when_create_backup_client_raises(
         self, archive_service, storage_service_factory
     ):
-        storage_service_factory.create_archive_service.side_effect = Exception(
+        storage_service_factory.create_archive_service.side_effect = ValueError(
             "Exception in create_backup_client"
         )
         accessor_factory = ArchiveAccessorFactory(
             archive_service, storage_service_factory
         )
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             accessor_factory.create_archive_accessor(
                 INVALID_DEVICE_GUID, ArchiveAccessor
             )

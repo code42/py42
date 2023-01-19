@@ -2,7 +2,7 @@ import pytest
 from tests.conftest import create_mock_response
 
 from py42.clients.userriskprofile import UserRiskProfileClient
-from py42.exceptions import Py42Error
+from py42.exceptions import Py42Error, Py42NotFoundError
 from py42.response import Py42Response
 from py42.services.userriskprofile import UserRiskProfileService
 from py42.services.users import UserService
@@ -44,7 +44,7 @@ class TestUserRiskProfileClient:
         mock_user_service.get_by_username.assert_called_once_with(USERNAME)
         mock_user_risk_profile_service.get_by_id.assert_called_once_with("1234")
 
-    def test_get_by_username_raises_py42error_with_response_when_username_not_found(
+    def test_get_by_username_raises_Py42NotFoundError_with_response_when_username_not_found(
         self, mocker, mock_user_risk_profile_service, mock_user_service
     ):
         mock_user_service.get_by_username.return_value = create_mock_response(
@@ -53,7 +53,7 @@ class TestUserRiskProfileClient:
         user_risk_profile_client = UserRiskProfileClient(
             mock_user_risk_profile_service, mock_user_service
         )
-        with pytest.raises(Py42Error) as err:
+        with pytest.raises(Py42NotFoundError) as err:
             user_risk_profile_client.get_by_username(USERNAME)
 
         assert isinstance(err.value.response, Py42Response)

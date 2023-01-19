@@ -1,4 +1,4 @@
-from py42.exceptions import Py42Error
+from py42.exceptions import Py42Error, Py42UserRiskProfileNotFound, Py42NotFoundError
 
 
 class UserRiskProfileClient:
@@ -33,9 +33,9 @@ class UserRiskProfileClient:
         """
         user_response = self._user_service.get_by_username(username)
         if len(user_response.data["users"]) == 0:
-            err = Py42Error(f"Username '{username}' not found.")
+            err = Py42Error()
             err.response = user_response
-            raise err
+            raise Py42NotFoundError(err, message=f"Username '{username}' not found.")
         user_id = user_response.data["users"][0]["userUid"]
         return self.get_by_id(user_id)
 

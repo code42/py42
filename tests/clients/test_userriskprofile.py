@@ -2,7 +2,7 @@ import pytest
 from tests.conftest import create_mock_response
 
 from py42.clients.userriskprofile import UserRiskProfileClient
-from py42.exceptions import Py42Error, Py42NotFoundError
+from py42.exceptions import Py42NotFoundError
 from py42.response import Py42Response
 from py42.services.userriskprofile import UserRiskProfileService
 from py42.services.users import UserService

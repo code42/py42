@@ -1,4 +1,5 @@
-from py42.exceptions import Py42Error, Py42UserRiskProfileNotFound, Py42NotFoundError
+from py42.exceptions import Py42Error
+from py42.exceptions import Py42NotFoundError
 
 
 class UserRiskProfileClient:

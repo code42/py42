@@ -17,6 +17,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Fixed
 
 - Reverted `sdk.orgs.get_page()` method to use `/v1/orgs` endpoint due to paging bug in `/v3/orgs` endpoint. `sdk.orgs.get_all()` has also been reverted accordingly.
+- `sdk.userriskprofile.get_by_username()` now uses a more efficient method to look up the userUid from the username for retrieving the User Risk Profile.
 
 ## 1.26.0 - 2022-09-08
 

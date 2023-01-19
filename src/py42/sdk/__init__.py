@@ -465,7 +465,7 @@ def _init_clients(services, connection):
     auditlogs = AuditLogsClient(services.auditlogs)
     loginconfig = LoginConfigurationClient(connection)
     trustedactivities = TrustedActivitiesClient(services.trustedactivities)
-    userriskprofile = UserRiskProfileClient(services.userriskprofile)
+    userriskprofile = UserRiskProfileClient(services.userriskprofile, services.users)
     watchlists = WatchlistsClient(services.watchlists)
     clients = Clients(
         authority=authority,

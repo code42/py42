@@ -1,11 +1,16 @@
+from py42.exceptions import Py42Error
+from py42.exceptions import Py42NotFoundError
+
+
 class UserRiskProfileClient:
     """A client to expose the user risk profile API.
 
     `Rest Documentation <https://developer.code42.com/api/#tag/User-Risk-Profiles>`__
     """
 
-    def __init__(self, user_risk_profile_service):
+    def __init__(self, user_risk_profile_service, user_service):
         self._user_risk_profile_service = user_risk_profile_service
+        self._user_service = user_service
 
     def get_by_id(self, user_id):
         """Get a user risk profile by a user UID.
@@ -27,7 +32,13 @@ class UserRiskProfileClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
-        return self._user_risk_profile_service.get_by_username(username)
+        user_response = self._user_service.get_by_username(username)
+        if len(user_response.data["users"]) == 0:
+            err = Py42Error()
+            err.response = user_response
+            raise Py42NotFoundError(err, message=f"Username '{username}' not found.")
+        user_id = user_response.data["users"][0]["userUid"]
+        return self.get_by_id(user_id)
 
     def update(self, user_id, start_date=None, end_date=None, notes=None):
         """Update a user risk profile.

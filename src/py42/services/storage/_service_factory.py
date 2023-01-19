@@ -1,5 +1,6 @@
 from functools import lru_cache
 
+from py42.exceptions import Py42Error
 from py42.services._connection import Connection
 from py42.services.storage.archive import StorageArchiveService
 from py42.services.storage.exfiltrateddata import ExfiltratedDataService
@@ -45,5 +46,5 @@ class StorageServiceFactory:
         # take the first destination guid we find
         destination_list = response["backupUsage"]
         if not destination_list:
-            raise Exception(f"No destinations found for device guid: {device_guid}")
+            raise Py42Error(f"No destinations found for device guid: {device_guid}")
         return destination_list[0]["targetComputerGuid"]

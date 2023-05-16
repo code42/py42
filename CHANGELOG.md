@@ -8,6 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 1.26.2 - Unreleased
+
+### Changed
+
+- Updated required versions of `requests>=2.25.0` and `urllib3>=1.26.6,<2`
+
 ## 1.26.1 - 2023-01-20
 
 ### Added

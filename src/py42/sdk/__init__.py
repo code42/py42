@@ -251,16 +251,6 @@ class SDKClient:
         return self._clients.securitydata
 
     @property
-    def detectionlists(self):
-        """A collection of properties each containing methods for managing specific detection
-        lists, such as departing employees.
-
-        Returns:
-            :class:`py42.clients.detectionlists.DetectionListsClient`
-        """
-        return self._clients.detectionlists
-
-    @property
     def alerts(self):
         """A collection of methods related to retrieving and updating alerts rules.
 
@@ -328,9 +318,6 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     from py42.services.auditlogs import AuditLogsService
     from py42.services.cases import CasesService
     from py42.services.casesfileevents import CasesFileEventsService
-    from py42.services.detectionlists.departing_employee import DepartingEmployeeService
-    from py42.services.detectionlists.high_risk_employee import HighRiskEmployeeService
-    from py42.services.detectionlists.user_profile import DetectionListUserService
     from py42.services.devices import DeviceService
     from py42.services.fileevent import FileEventService
     from py42.services.legalhold import LegalHoldService
@@ -347,7 +334,6 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     alerts_key = "AlertService-API_URL"
     file_events_key = "FORENSIC_SEARCH-API_URL"
     preservation_data_key = "PRESERVATION-DATA-SERVICE_API-URL"
-    employee_case_mgmt_key = "employeecasemanagementV2-API_URL"
     kv_prefix = "simple-key-value-store"
     audit_logs_key = "AUDIT-LOG_API-URL"
     cases_key = "CASES_API-URL"
@@ -369,17 +355,12 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     pds_conn = Connection.from_microservice_key(
         kv_service, preservation_data_key, auth=main_auth
     )
-    ecm_conn = Connection.from_microservice_key(
-        kv_service, employee_case_mgmt_key, auth=main_auth
-    )
     audit_logs_conn = Connection.from_microservice_key(
         kv_service, audit_logs_key, auth=main_auth
     )
-    user_svc = UserService(main_connection)
     administration_svc = AdministrationService(main_connection)
     file_event_svc = FileEventService(file_events_conn)
     user_ctx = UserContext(administration_svc)
-    user_profile_svc = DetectionListUserService(ecm_conn, user_ctx, user_svc)
     cases_conn = Connection.from_microservice_key(kv_service, cases_key, auth=main_auth)
     trusted_activities_conn = Connection.from_microservice_key(
         kv_service, trusted_activities_key, auth=main_auth
@@ -387,6 +368,7 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     watchlists_conn = Connection.from_microservice_key(
         kv_service, watchlists_key, auth=main_auth
     )
+    userriskprofile_svc = UserRiskProfileService(watchlists_conn)
 
     services = Services(
         administration=administration_svc,
@@ -398,21 +380,16 @@ def _init_services(main_connection, main_auth, auth_flag=None):
         else LegalHoldService(main_connection),
         orgs=OrgService(main_connection),
         users=UserService(main_connection),
-        alertrules=AlertRulesService(alert_rules_conn, user_ctx, user_profile_svc),
+        alertrules=AlertRulesService(alert_rules_conn, user_ctx, userriskprofile_svc),
         alerts=AlertService(alerts_conn, user_ctx),
         fileevents=file_event_svc,
         savedsearch=SavedSearchService(file_events_conn, file_event_svc),
         preservationdata=PreservationDataService(pds_conn),
-        departingemployee=DepartingEmployeeService(
-            ecm_conn, user_ctx, user_profile_svc
-        ),
-        highriskemployee=HighRiskEmployeeService(ecm_conn, user_ctx, user_profile_svc),
-        userprofile=user_profile_svc,
         auditlogs=AuditLogsService(audit_logs_conn),
         cases=CasesService(cases_conn),
         casesfileevents=CasesFileEventsService(cases_conn),
         trustedactivities=TrustedActivitiesService(trusted_activities_conn),
-        userriskprofile=UserRiskProfileService(watchlists_conn),
+        userriskprofile=userriskprofile_svc,
         watchlists=WatchlistsService(watchlists_conn),
     )
 
@@ -430,7 +407,6 @@ def _init_clients(services, connection):
     from py42.clients.auditlogs import AuditLogsClient
     from py42.clients.authority import AuthorityClient
     from py42.clients.cases import CasesClient
-    from py42.clients.detectionlists import DetectionListsClient
     from py42.clients.loginconfig import LoginConfigurationClient
     from py42.clients.securitydata import SecurityDataClient
     from py42.clients.trustedactivities import TrustedActivitiesClient
@@ -445,9 +421,6 @@ def _init_clients(services, connection):
         legalhold=services.legalhold,
         orgs=services.orgs,
         users=services.users,
-    )
-    detectionlists = DetectionListsClient(
-        services.userprofile, services.departingemployee, services.highriskemployee
     )
     storage_service_factory = StorageServiceFactory(connection, services.devices)
     alertrules = AlertRulesClient(services.alerts, services.alertrules)
@@ -469,7 +442,6 @@ def _init_clients(services, connection):
     watchlists = WatchlistsClient(services.watchlists)
     clients = Clients(
         authority=authority,
-        detectionlists=detectionlists,
         alerts=alerts,
         securitydata=securitydata,
         archive=archive,

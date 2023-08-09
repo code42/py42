@@ -46,7 +46,7 @@ MOCK_USER_GET_RESPONSE = """
 
 
 @pytest.fixture
-def mock_user_service(mocker):
+def mock_user_profile_service(mocker):
     response = create_mock_response(mocker, MOCK_USER_GET_RESPONSE)
     service = mocker.MagicMock(spec=UserRiskProfileService)
     service.get_by_id.return_value = response
@@ -55,10 +55,10 @@ def mock_user_service(mocker):
 
 class TestAlertRulesService:
     def test_add_user_posts_expected_data(
-        self, mock_connection, user_context, mock_user_service
+        self, mock_connection, user_context, mock_user_profile_service
     ):
         alert_rule_service = AlertRulesService(
-            mock_connection, user_context, mock_user_service
+            mock_connection, user_context, mock_user_profile_service
         )
         alert_rule_service.add_user("rule-id", "user-id")
 
@@ -74,10 +74,10 @@ class TestAlertRulesService:
         )
 
     def test_remove_user_posts_expected_data(
-        self, mock_connection, user_context, mock_user_service
+        self, mock_connection, user_context, mock_user_profile_service
     ):
         alert_rule_service = AlertRulesService(
-            mock_connection, user_context, mock_user_service
+            mock_connection, user_context, mock_user_profile_service
         )
         alert_rule_service.remove_user("rule-id", "user-id")
 
@@ -91,10 +91,10 @@ class TestAlertRulesService:
         )
 
     def test_remove_all_users_posts_expected_data(
-        self, mock_connection, user_context, mock_user_service
+        self, mock_connection, user_context, mock_user_profile_service
     ):
         alert_rule_service = AlertRulesService(
-            mock_connection, user_context, mock_user_service
+            mock_connection, user_context, mock_user_profile_service
         )
         alert_rule_service.remove_all_users("rule-id")
 
@@ -113,7 +113,7 @@ class TestAlertRulesService:
         mocker,
         mock_connection,
         user_context,
-        mock_user_service,
+        mock_user_profile_service,
     ):
         response = mocker.MagicMock(spec=Response)
         response.status_code = 400
@@ -123,7 +123,7 @@ class TestAlertRulesService:
         alert_rule_service = AlertRulesService(
             mock_connection,
             user_context,
-            mock_user_service,
+            mock_user_profile_service,
         )
         with pytest.raises(Py42InvalidRuleError) as e:
             alert_rule_service.add_user("invalid-rule-id", "user-id")

@@ -368,7 +368,7 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     watchlists_conn = Connection.from_microservice_key(
         kv_service, watchlists_key, auth=main_auth
     )
-    userriskprofile_svc = UserRiskProfileService(watchlists_conn)
+    user_risk_profile_svc = UserRiskProfileService(watchlists_conn)
 
     services = Services(
         administration=administration_svc,
@@ -380,7 +380,7 @@ def _init_services(main_connection, main_auth, auth_flag=None):
         else LegalHoldService(main_connection),
         orgs=OrgService(main_connection),
         users=UserService(main_connection),
-        alertrules=AlertRulesService(alert_rules_conn, user_ctx, userriskprofile_svc),
+        alertrules=AlertRulesService(alert_rules_conn, user_ctx, user_risk_profile_svc),
         alerts=AlertService(alerts_conn, user_ctx),
         fileevents=file_event_svc,
         savedsearch=SavedSearchService(file_events_conn, file_event_svc),
@@ -389,7 +389,7 @@ def _init_services(main_connection, main_auth, auth_flag=None):
         cases=CasesService(cases_conn),
         casesfileevents=CasesFileEventsService(cases_conn),
         trustedactivities=TrustedActivitiesService(trusted_activities_conn),
-        userriskprofile=userriskprofile_svc,
+        userriskprofile=user_risk_profile_svc,
         watchlists=WatchlistsService(watchlists_conn),
     )
 

@@ -69,15 +69,15 @@ returned by the generator gives you access to the actual list of items. Use the 
 for working with generators and paging in py42:
 
 ```python
-# Prints the username and notes for all departing employees
+# Prints the username and user ID for all employees included on a watchlist
 
-pages = sdk.detectionlists.departing_employee.get_all()  # pages has 'generator' type
+pages = sdk.watchlists.get_all_included_users(WATCHLIST_ID)  # pages has 'generator' type
 for page in pages:  # page has 'Py42Response' type
-    employees = page["items"]
-    for employee in employees:
-        username = employee["userName"]
-        notes = employee["notes"]
-        print(f"{employee}: {notes}")
+    users = page["includedUsers"]
+    for user in users:
+        username = user["username"]
+        user_id = user["userId"]
+        print(f"{username}: {user_id}")
 ```
 
 Each page is a typical py42 response. The next section covers what you can do with `Py42Response` objects.

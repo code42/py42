@@ -13,7 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 ### Removed
 
 - Removed the `detectionlists` client, which included `high_risk_employee` and `departing_employee` clients.
-- APIs had been deprecated and were replaced by the `Watchlists` client
+- APIs had been deprecated and were replaced by the `Watchlists` client.  APIs are no longer available regardless of Py42 version.
 
 ## 1.26.2 - 2023-05-16
 

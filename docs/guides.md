@@ -10,8 +10,6 @@
     Getting Started <userguides/gettingstarted>
     Basics <userguides/basics>
     userguides/searches
-    userguides/departingemployee
-    userguides/highriskemployee
     userguides/orgdevices
     Device Settings <userguides/devicesettings>
     Org Settings <userguides/orgsettings>
@@ -26,8 +24,6 @@
 * [Getting Started](userguides/gettingstarted.md)
 * [Basics](userguides/basics.md)
 * [Executing Searches](userguides/searches.md)
-* [Departing Employee](userguides/departingemployee.md)
-* [High Risk Employee](userguides/highriskemployee.md)
 * [Get Active Devices From An Organization](userguides/orgdevices.md)
 * [Device Settings](userguides/devicesettings.md)
 * [Org Settings](userguides/orgsettings.md)

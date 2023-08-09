@@ -10,10 +10,6 @@ def rule_id(connection, observer_id):
 
 @pytest.mark.integration
 class TestAlertRules:
-    def test_rules_add_user(self, connection, new_user, observer_id):
-        response = connection.alerts.rules.add_user(observer_id, new_user["userUid"])
-        assert_successful_response(response)
-
     def test_rules_get_all(self, connection):
         response_gen = connection.alerts.rules.get_all()
         for response in response_gen:

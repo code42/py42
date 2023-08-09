@@ -34,7 +34,6 @@ Explore the complete public documentation for `py42` below.
 * [Backup Sets](methoddocs/backupset.md)
 * [Cases](methoddocs/cases.md)
 * [Constants](methoddocs/constants.md)
-* [Detection Lists](methoddocs/detectionlists.md)
 * [Devices](methoddocs/devices.md)
 * [Device Settings](methoddocs/devicesettings.md)
 * [Exceptions](methoddocs/exceptions.md)

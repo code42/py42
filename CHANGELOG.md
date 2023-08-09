@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 1.27.0 - 2023-08-04
+
+### Removed
+
+- Removed the `detectionlists` client, which included `high_risk_employee` and `departing_employee` clients.
+- APIs had been deprecated and were replaced by the `Watchlists` client.  APIs are no longer available regardless of Py42 version.
+
 ## 1.26.2 - 2023-05-16
 
 ### Changed

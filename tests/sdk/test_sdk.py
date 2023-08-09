@@ -6,7 +6,6 @@ from py42.clients.alerts import AlertsClient
 from py42.clients.archive import ArchiveClient
 from py42.clients.auditlogs import AuditLogsClient
 from py42.clients.cases import CasesClient
-from py42.clients.detectionlists import DetectionListsClient
 from py42.exceptions import Py42UnauthorizedError
 from py42.sdk import from_local_account
 from py42.sdk import SDKClient
@@ -58,10 +57,6 @@ class TestSDK:
     def test_has_alert_service_set(self, py42_connection, mock_auth):
         client = SDKClient(py42_connection, mock_auth)
         assert type(client.alerts) == AlertsClient
-
-    def test_has_detection_lists_service_set(self, py42_connection, mock_auth):
-        client = SDKClient(py42_connection, mock_auth)
-        assert type(client.detectionlists) == DetectionListsClient
 
     def test_has_legal_hold_service_set(self, py42_connection, mock_auth):
         client = SDKClient(py42_connection, mock_auth)

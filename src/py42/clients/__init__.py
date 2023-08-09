@@ -6,7 +6,6 @@ Clients = namedtuple(
         "alerts",
         "archive",
         "authority",
-        "detectionlists",
         "securitydata",
         "auditlogs",
         "cases",

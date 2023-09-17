@@ -287,13 +287,12 @@ class OrgService(BaseService):
         # Use additional lookup to prevent breaking changes.
 
         if id_key != "orgId":
-            guid = ""
-            page = self.get_page()
-            for org in page["orgs"]:
-                if org[id_key] == org_id:
-                    return org["orgGuid"]
-            if not guid:
-                raise Py42Error(f"Couldn't find an Org with ID '{org_id}'.")
+            pages = self.get_all()
+            for page in pages:
+                for org in page.data["orgs"]:
+                    if org[id_key] == org_id:
+                        return org["orgGuid"]
+            raise Py42Error(f"Couldn't find an Org with {id_key} '{org_id}'.")
         else:
             try:
                 return self.org_id_map[org_id]

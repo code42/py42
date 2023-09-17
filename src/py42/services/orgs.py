@@ -28,9 +28,10 @@ class OrgService(BaseService):
         """Map org guids to ids."""
         if not self._org_id_map:
             self._org_id_map = {}
-            page = self.get_page()
-            for org in page["orgs"]:
-                self._org_id_map[org["orgId"]] = org["orgGuid"]
+            pages = self.get_all()
+            for page in pages:
+                for org in page.data["orgs"]:
+                    self._org_id_map[org["orgId"]] = org["orgGuid"]
         return self._org_id_map
 
     def create_org(self, org_name, org_ext_ref=None, notes=None, parent_org_uid=None):

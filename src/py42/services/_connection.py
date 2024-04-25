@@ -162,7 +162,7 @@ class Connection:
         auth=None,
         hooks=None,
         stream=False,
-        timeout=60,
+        timeout=180,
         cert=None,
         proxies=None,
     ):

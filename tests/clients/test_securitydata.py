@@ -799,7 +799,7 @@ class TestSecurityClient:
             "srtDir": "asc",
             "srtKey": "eventId",
             "pgToken": "",
-            "pgSize": 10000,
+            "pgSize": 500,
         }
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
         assert response is successful_response
@@ -833,7 +833,7 @@ class TestSecurityClient:
             "srtDir": "asc",
             "srtKey": "eventId",
             "pgToken": "abc",
-            "pgSize": 10000,
+            "pgSize": 500,
         }
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
         assert response is successful_response
@@ -861,7 +861,7 @@ class TestSecurityClient:
             "srtDir": "asc",
             "srtKey": "eventId",
             "pgToken": escaped_token,
-            "pgSize": 10000,
+            "pgSize": 500,
         }
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
 
@@ -887,7 +887,7 @@ class TestSecurityClient:
             "srtDir": "asc",
             "srtKey": "eventId",
             "pgToken": escaped_token,
-            "pgSize": 10000,
+            "pgSize": 500,
         }
         connection.post.assert_called_once_with(FILE_EVENT_URI, json=expected)
 

@@ -685,6 +685,7 @@ class TestSecurityClient:
             "eventid-2",
             "deviceuid-2",
             "/test/file/path-2/",
+            "testsha256-2",
             12344,
         ]
         pds_config.exfiltration_client.get_download_token.assert_called_once_with(
@@ -711,6 +712,7 @@ class TestSecurityClient:
             "eventid-2",
             "deviceuid-2",
             "/test/file/path-2/",
+            "testsha256-2",
             12344,
         ]
         pds_config.exfiltration_client.get_download_token.assert_called_once_with(
@@ -737,6 +739,7 @@ class TestSecurityClient:
             "eventid-3",
             "deviceuid-3",
             "/test/file/path-3/",
+            "testsha256-3",
             12346,
         ]
         pds_config.exfiltration_client.get_download_token.assert_called_once_with(
@@ -763,6 +766,7 @@ class TestSecurityClient:
             "eventid-3",
             "deviceuid-3",
             "/test/file/path-3/",
+            "testsha256-3",
             12346,
         ]
         pds_config.exfiltration_client.get_download_token.assert_called_once_with(

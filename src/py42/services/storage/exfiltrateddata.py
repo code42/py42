@@ -11,7 +11,9 @@ class ExfiltratedDataService(BaseService):
         super().__init__(main_session)
         self._streaming_session = streaming_session
 
-    def get_download_token(self, event_id, device_id, file_path, timestamp):
+    def get_download_token(
+        self, event_id, device_id, file_path, file_sha256, timestamp
+    ):
         """Get EDS download token for a file.
 
         Args:
@@ -23,8 +25,10 @@ class ExfiltratedDataService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing download token for the file.
         """
-        params = "deviceUid={}&eventId={}&filePath={}&versionTimestamp={}"
-        params = params.format(device_id, event_id, quote(file_path), timestamp)
+        params = "deviceUid={}&eventId={}&filePath={}&fileSHA256={}&versionTimestamp={}"
+        params = params.format(
+            device_id, event_id, quote(file_path), file_sha256, timestamp
+        )
         resource = "file-download-token"
         headers = {"Accept": "*/*"}
         uri = f"{self._base_uri}{resource}?{params}"

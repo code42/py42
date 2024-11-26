@@ -13,6 +13,7 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 #### Fixed
 
 - An issue where the page size of file event queries was higher than intended.
+- An issue where streaming file by hash did not use the hash.
 
 ## 1.27.1 - 2024-04-25
 

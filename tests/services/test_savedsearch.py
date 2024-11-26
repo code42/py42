@@ -58,7 +58,7 @@ class TestSavedSearchService:
         assert mock_connection.post.call_count == 1
         posted_data = mock_connection.post.call_args[1]["json"]
         assert (
-            posted_data["pgSize"] == 10000
+            posted_data["pgSize"] == 500
             and posted_data["pgNum"] == 1
             and posted_data["groups"] == []
         )

@@ -7,7 +7,7 @@ JSON_QUERY_BASE = '{{"groupClause":"{0}", "groups":[{1}], "srtDir":"{4}", "srtKe
 
 
 def build_query_json(group_clause, group_list):
-    return JSON_QUERY_BASE.format(group_clause, group_list, 1, 10000, "asc", "eventId")
+    return JSON_QUERY_BASE.format(group_clause, group_list, 1, 500, "asc", "eventId")
 
 
 def test_file_event_query_repr_does_not_throw_type_error():
@@ -85,7 +85,7 @@ def test_file_event_query_str_with_page_num_gives_correct_json_representation(
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.page_number = 5
     json_query_str = JSON_QUERY_BASE.format(
-        "AND", event_filter_group, 5, 10000, "asc", "eventId"
+        "AND", event_filter_group, 5, 500, "asc", "eventId"
     )
     assert str(file_event_query) == json_query_str
 
@@ -107,7 +107,7 @@ def test_file_event_query_str_with_sort_direction_gives_correct_json_representat
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.sort_direction = "desc"
     json_query_str = JSON_QUERY_BASE.format(
-        "AND", event_filter_group, 1, 10000, "desc", "eventId"
+        "AND", event_filter_group, 1, 500, "desc", "eventId"
     )
     assert str(file_event_query) == json_query_str
 
@@ -118,7 +118,7 @@ def test_file_event_query_str_with_sort_key_gives_correct_json_representation(
     file_event_query = FileEventQuery(event_filter_group)
     file_event_query.sort_key = "some_field_to_sort_by"
     json_query_str = JSON_QUERY_BASE.format(
-        "AND", event_filter_group, 1, 10000, "asc", "some_field_to_sort_by"
+        "AND", event_filter_group, 1, 500, "asc", "some_field_to_sort_by"
     )
     assert str(file_event_query) == json_query_str
 
@@ -131,9 +131,7 @@ def test_file_event_query_from_dict_gives_correct_json_representation():
     group_str = '{"filterClause":"AND", "filters":[{"operator":"IS", "term":"testterm", "value":"testval"}]}'
     file_event_query_dict = {"groupClause": "AND", "groups": [group]}
     file_event_query = FileEventQuery.from_dict(file_event_query_dict)
-    json_query_str = JSON_QUERY_BASE.format(
-        "AND", group_str, 1, 10000, "asc", "eventId"
-    )
+    json_query_str = JSON_QUERY_BASE.format("AND", group_str, 1, 500, "asc", "eventId")
     assert str(file_event_query) == json_query_str
 
 
@@ -142,7 +140,7 @@ def test_file_event_query_dict_gives_expected_dict_representation(event_filter_g
     file_event_query_dict = dict(file_event_query)
     assert file_event_query_dict["groupClause"] == "AND"
     assert file_event_query_dict["pgNum"] == 1
-    assert file_event_query_dict["pgSize"] == 10000
+    assert file_event_query_dict["pgSize"] == 500
     assert file_event_query_dict["srtDir"] == "asc"
     assert file_event_query_dict["srtKey"] == "eventId"
     assert type(file_event_query_dict["groups"]) == list
@@ -155,12 +153,12 @@ def test_file_event_str_gives_correct_json_representation_when_pg_token_is_set(
     assert query.page_token is None
     assert (
         str(query)
-        == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgNum":1, "pgSize":10000}'
+        == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgNum":1, "pgSize":500}'
     )
     query.page_token = "abc"
     assert (
         str(query)
-        == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":10000}'
+        == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"eventId", "pgToken":"abc", "pgSize":500}'
     )
 
 
@@ -170,5 +168,5 @@ def test_file_event_str_gives_correct_json_representation_when_using_v2_data(
     query = FileEventQueryV2()
     assert (
         str(query)
-        == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"event.id", "pgNum":1, "pgSize":10000}'
+        == '{"groupClause":"AND", "groups":[], "srtDir":"asc", "srtKey":"event.id", "pgNum":1, "pgSize":500}'
     )

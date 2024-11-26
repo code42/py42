@@ -17,8 +17,10 @@ class TestExfiltratedDataService:
         service = ExfiltratedDataService(
             mock_successful_connection, mock_successful_connection
         )
-        service.get_download_token("testeventid", "testdeviceid", "testfilepath", 1223)
-        qry = "deviceUid=testdeviceid&eventId=testeventid&filePath=testfilepath&versionTimestamp=1223"
+        service.get_download_token(
+            "testeventid", "testdeviceid", "testfilepath", "testSHA256", 1223
+        )
+        qry = "deviceUid=testdeviceid&eventId=testeventid&filePath=testfilepath&fileSHA256=testSHA256&versionTimestamp=1223"
         expected = f"api/v1/file-download-token?{qry}"
         mock_successful_connection.get.assert_called_once_with(
             expected, headers={"Accept": "*/*"}

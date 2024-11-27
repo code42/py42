@@ -167,6 +167,7 @@ class SecurityDataClient:
             version["eventId"],
             version["deviceUid"],
             version["filePath"],
+            version["fileSHA256"],
             version["versionTimestamp"],
         )
         return eds.get_file(str(token))

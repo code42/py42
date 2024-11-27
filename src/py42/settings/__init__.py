@@ -9,7 +9,7 @@ proxies = None
 verify_ssl_certs = True
 
 items_per_page = 500
-security_events_per_page = 10000
+security_events_per_page = 500
 
 _custom_user_suffix = ""
 _python_version = f"{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}"

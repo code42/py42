@@ -8,9 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
-## Unreleased
+## 1.27.2 - 2024-11-27
 
-#### Fixed
+### Fixed
 
 - An issue where the page size of file event queries was higher than intended.
 - An issue where streaming file by hash did not use the hash.

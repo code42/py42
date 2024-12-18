@@ -5,7 +5,7 @@ import pytest
 import py42.settings as settings
 from py42.__version__ import __version__
 
-DEFAULT_USER_AGENT_FORMAT = "py42 {0} python {1}"
+DEFAULT_USER_AGENT_FORMAT = "py42/{0} python/{1}"
 
 
 @pytest.fixture
@@ -29,3 +29,10 @@ def test_get_user_agent_returns_correct_value_after_setting_suffix(default_user_
     assert settings.get_user_agent_string() == f"{default_user_agent} example-suffix"
     # reset settings to default
     settings.set_user_agent_suffix("")
+
+
+def test_get_user_agent_returns_correct_value_after_setting_prefix(default_user_agent):
+    settings.set_user_agent_prefix("example-prefix")
+    assert settings.get_user_agent_string() == f"example-prefix {default_user_agent}"
+    # reset settings to default
+    settings.set_user_agent_prefix("")

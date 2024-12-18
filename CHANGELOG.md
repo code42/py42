@@ -14,9 +14,10 @@ how a consumer would use the library (e.g. adding unit tests, updating documenta
 
 - Ended support for python 3.8, which is end-of-life.
 
-## Changed
+### Added
 
-- Added configuration to prefix the user-agent.
+- A setting to add a prefix to the user-agent.
+
 
 ## 1.27.2 - 2024-11-27
 

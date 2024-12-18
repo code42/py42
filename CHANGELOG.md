@@ -8,6 +8,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 1.27.3 - 2024-12-18
+
+## Removed
+
+- Ended support for python 3.8, which is end-of-life.
+
+## Changed
+
+- Added configuration to prefix the user-agent.
+
 ## 1.27.2 - 2024-11-27
 
 ### Fixed

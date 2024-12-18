@@ -44,9 +44,9 @@ setup(
         ],
         "docs": [
             "sphinx==8.1.3",
-            "myst-parser==0.17.2",
-            "sphinx_rtd_theme==1.0.0",
-            "docutils == 0.16",
+            "myst-parser==4.0.0",
+            "sphinx_rtd_theme==3.0.2",
+            "docutils == 0.21.2",
         ],
     },
     classifiers=[

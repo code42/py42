@@ -43,10 +43,10 @@ setup(
             "tox==3.24.0",
         ],
         "docs": [
-            "sphinx==4.4.0",
-            "myst-parser==0.17.2",
-            "sphinx_rtd_theme==1.0.0",
-            "docutils == 0.16",
+            "sphinx==8.1.3",
+            "myst-parser==4.0.0",
+            "sphinx_rtd_theme==3.0.2",
+            "docutils == 0.21.2",
         ],
     },
     classifiers=[
@@ -55,10 +55,9 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: Implementation :: CPython",
     ],
 )

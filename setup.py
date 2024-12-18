@@ -43,7 +43,7 @@ setup(
             "tox==3.24.0",
         ],
         "docs": [
-            "sphinx==4.4.0",
+            "sphinx==8.1.3",
             "myst-parser==0.17.2",
             "sphinx_rtd_theme==1.0.0",
             "docutils == 0.16",

@@ -27,8 +27,6 @@ class AlertsClient:
 
         Args:
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
-                See the :ref:`Executing Searches User Guide <anchor_search_alerts>` to learn more
-                about how to construct a query.
             page_num (int, optional): The page number to get. Defaults to 1.
             page_size (int, optional): The number of items per page. Defaults to `py42.settings.items_per_page`.
 
@@ -46,8 +44,6 @@ class AlertsClient:
 
         Args:
             query (:class:`py42.sdk.queries.alerts.alert_query.AlertQuery`): An alert query.
-                See the :ref:`Executing Searches User Guide <anchor_search_alerts>` to learn more
-                about how to construct a query.
 
         Returns:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects

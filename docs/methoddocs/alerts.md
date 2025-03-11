@@ -13,8 +13,6 @@ Call the appropriate classmethod on your desired filter class with the `value` y
 `FilterGroup` object that can be passed to `AlertQuery`'s `all()` or `any()` methods to create complex queries
 that match multiple filter rules.
 
-See [Executing Searches](../userguides/searches.md) for more on building search queries.
-
 ```{eval-rst}
 .. automodule:: py42.sdk.queries.alerts.filters.alert_filter
     :members:

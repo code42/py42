@@ -1,7 +1,5 @@
 # File Event Queries - V2
 
-For details on using the new file event data model, see the [V2 File Events User Guide](../userguides/v2apis.md).
-
 ```{eval-rst}
 .. autoclass:: py42.sdk.queries.fileevents.v2.file_event_query.FileEventQuery
     :members:
@@ -41,8 +39,6 @@ known MD5 hashes of the files:
     from py42.sdk.queries.fileevents.v2 import *
     filename_filter = File.Name.is_in(['confidential_plans.docx', 'confidential_plan_projections.xlsx'])
     md5_filter = File.MD5.is_in(['133765f4fff5e3038b9352a4d14e1532', 'ea16f0cbfc76f6eba292871f8a8c794b'])
-
-See [Executing Searches](../userguides/searches.md) for more on building search queries.
 
 ### Destination Filters
 

@@ -1,5 +1,4 @@
-
-# py42, the official Code42 Python SDK
+# CrashPlan fork of py42, this will become the  official CrashPlan Python SDK
 
 ![Build status](https://github.com/code42/py42/workflows/build/badge.svg)
 [![codecov.io](https://codecov.io/github/code42/py42/coverage.svg?branch=main)](https://codecov.io/github/code42/py42?branch=main)

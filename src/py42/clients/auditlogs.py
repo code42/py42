@@ -1,3 +1,8 @@
+from warnings import warn
+
+# Incydr functionality is deprecated as of 2025-03.
+
+
 class AuditLogsClient:
     """`Rest documentation <https://developer.code42.com/api/#tag/Audit-Log>`__"""
 
@@ -43,6 +48,11 @@ class AuditLogsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._audit_log_service.get_page(
             page_num=page_num,
             page_size=page_size,
@@ -88,6 +98,11 @@ class AuditLogsClient:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of audit logs.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._audit_log_service.get_all(
             begin_time=begin_time,
             end_time=end_time,

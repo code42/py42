@@ -1,6 +1,10 @@
+from warnings import warn
+
 from py42 import settings
 from py42.exceptions import Py42InternalServerError
 from py42.exceptions import Py42InvalidRuleOperationError
+
+# Incydr functionality is deprecated as of 2025-03.
 
 
 class AlertRulesClient:
@@ -52,6 +56,11 @@ class AlertRulesClient:
         Returns
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         try:
             return self._alert_rules_service.add_user(rule_id, user_id)
         except Py42InternalServerError as err:
@@ -74,6 +83,11 @@ class AlertRulesClient:
         Returns
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         try:
             return self._alert_rules_service.remove_user(rule_id, user_id)
         except Py42InternalServerError as err:
@@ -92,6 +106,11 @@ class AlertRulesClient:
         Returns
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         try:
             return self._alert_rules_service.remove_all_users(rule_id)
         except Py42InternalServerError as err:
@@ -118,6 +137,11 @@ class AlertRulesClient:
         Returns:
              :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         page_size = page_size or settings.items_per_page
         return self._alerts_service.get_rules_page(
             sort_key=sort_key,
@@ -138,6 +162,11 @@ class AlertRulesClient:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of rules.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alerts_service.get_all_rules(
             sort_key=sort_key, sort_direction=sort_direction
         )
@@ -152,6 +181,11 @@ class AlertRulesClient:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of rules with the given name.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alerts_service.get_all_rules_by_name(rule_name)
 
     def get_by_observer_id(self, observer_id):
@@ -163,6 +197,11 @@ class AlertRulesClient:
         Returns
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alerts_service.get_rule_by_observer_id(observer_id)
 
 

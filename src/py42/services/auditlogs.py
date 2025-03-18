@@ -17,6 +17,8 @@ _FILTER_PARAMS = (
 
 HEADER_MAP = {"CSV": {"Accept": "text/csv"}, "CEF": {"Accept": "text/x-cef"}}
 
+# Incydr functionality is deprecated as of 2025-03.
+
 
 class AuditLogsService(BaseService):
     """https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Search_Audit_Log_events_with_the_Code42_API"""

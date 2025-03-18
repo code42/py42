@@ -5,6 +5,8 @@ from py42.sdk.queries.query_filter import create_eq_filter_group
 from py42.services import BaseService
 from py42.services.util import get_all_pages
 
+# Incydr functionality is deprecated as of 2025-03.
+
 
 class AlertService(BaseService):
     _uri_prefix = "/svc/api"

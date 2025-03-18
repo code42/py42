@@ -1,7 +1,7 @@
 # File Event Queries - V1 (DEPRECATED)
 
 ```{eval-rst}
-.. warning:: V1 file events, saved searches, and queries are **deprecated**.
+.. warning:: Incydr functionality is **deprecated**. Use the resources at https://developer.code42.com/ instead.
 ```
 
 ```{eval-rst}

@@ -1,4 +1,8 @@
-# File Event Queries - V2
+# File Event Queries - V2 (DEPRECATED)
+
+```{eval-rst}
+.. warning:: Incydr functionality is **deprecated**. Use the resources at https://developer.code42.com/ instead.
+```
 
 ```{eval-rst}
 .. autoclass:: py42.sdk.queries.fileevents.v2.file_event_query.FileEventQuery

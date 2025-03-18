@@ -1,9 +1,13 @@
+from warnings import warn
+
 from py42.exceptions import Py42ChecksumNotFoundError
 from py42.exceptions import Py42Error
 from py42.sdk.queries.fileevents.v2.file_event_query import FileEventQuery
 from py42.sdk.queries.fileevents.v2.filters.file import MD5
 from py42.sdk.queries.fileevents.v2.filters.file import SHA256
 from py42.services.util import escape_quote_chars
+
+# Incydr functionality is deprecated as of 2025-03.
 
 
 class SecurityDataClient:
@@ -40,6 +44,11 @@ class SecurityDataClient:
             :class:`py42.response.Py42Response`: A response containing the first 10,000
             events.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._file_event_service.search(query)
 
     def search_all_file_events(self, query, page_token=""):
@@ -57,6 +66,11 @@ class SecurityDataClient:
         Returns:
             :class:`py42.response.Py42Response`: A response containing a page of events.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         query.page_token = escape_quote_chars(page_token)
         response = self._file_event_service.search(query)
@@ -71,6 +85,11 @@ class SecurityDataClient:
         Returns:
             Returns a stream of the requested file.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         response = self._search_by_hash(checksum, SHA256)
         events = response["fileEvents"]
         info = _get_version_lookup_info(events)
@@ -87,6 +106,11 @@ class SecurityDataClient:
         Returns:
             Returns a stream of the requested file.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         response = self._search_by_hash(checksum, MD5)
         events = response["fileEvents"]
         info = _get_version_lookup_info(events)

@@ -1,4 +1,8 @@
+from warnings import warn
+
 from py42.sdk.queries import BaseQuery
+
+# Incydr functionality is deprecated as of 2025-03.
 
 
 class AlertQuery(BaseQuery):
@@ -18,6 +22,12 @@ class AlertQuery(BaseQuery):
         rule_name_filter = RuleName.contains("EmailRule")
         query = AlertQuery.all(state_filter, rule_name_filter)
     """
+
+    warn(
+        "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

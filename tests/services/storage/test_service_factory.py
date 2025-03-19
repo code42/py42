@@ -3,13 +3,11 @@ from requests import Session
 from tests.conftest import create_mock_response
 from tests.conftest import TEST_DEVICE_GUID
 
-from py42.exceptions import Py42Error
-from py42.services._connection import Connection
-from py42.services.devices import DeviceService
-from py42.services.storage._service_factory import StorageServiceFactory
-from py42.services.storage.archive import StorageArchiveService
-from py42.services.storage.exfiltrateddata import ExfiltratedDataService
-from py42.services.storage.preservationdata import StoragePreservationDataService
+from pycpg.exceptions import PycpgError
+from pycpg.services._connection import Connection
+from pycpg.services.devices import DeviceService
+from pycpg.services.storage._service_factory import StorageServiceFactory
+from pycpg.services.storage.archive import StorageArchiveService
 
 
 @pytest.fixture
@@ -85,23 +83,5 @@ class TestStorageServiceFactory:
         )
         response = create_mock_response(mocker, '{"backupUsage": []}')
         mock_device_service.get_by_guid.return_value = response
-        with pytest.raises(Py42Error):
+        with pytest.raises(PycpgError):
             factory.auto_select_destination_guid(TEST_DEVICE_GUID)
-
-    def test_preservation_data_service(
-        self, mock_connection_with_storage_lookup, mock_device_service
-    ):
-        factory = StorageServiceFactory(
-            mock_connection_with_storage_lookup, mock_device_service
-        )
-        service = factory.create_preservation_data_service("testhost.com")
-        assert type(service) == StoragePreservationDataService
-
-    def test_exfiltrated_data_service(
-        self, mock_connection_with_storage_lookup, mock_device_service
-    ):
-        factory = StorageServiceFactory(
-            mock_connection_with_storage_lookup, mock_device_service
-        )
-        service = factory.create_exfiltrated_data_service("testhost.com")
-        assert type(service) == ExfiltratedDataService

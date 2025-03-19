@@ -11,53 +11,42 @@
 ```
 
 The main SDK object by which all other methods are accessed is created by
-calling `py42.sdk.from_local_account` or `py42.sdk.from_jwt_provider`. For example:
+calling `pycpg.sdk.from_local_account` or `pycpg.sdk.from_jwt_provider`. For example:
 
 ```python
-import py42.sdk
+import pycpg.sdk
 
-sdk = py42.sdk.from_local_account("console.us.code42.com", "john.doe@example.com", "my_pw")
+sdk = pycpg.sdk.from_local_account("console.us1.crashPlan.com", "john.doe@example.com", "my_pw")
 # access properties on 'sdk' to explore all the available methods
 ```
 
 ```{eval-rst}
 .. important::
-    `py42` only supports token-based authentication.
+    `pycpg` only supports token-based authentication.
 ```
 
-Explore the complete public documentation for `py42` below.
+Explore the complete public documentation for `pycpg` below.
 
-* [Alerts](methoddocs/alerts.md)
-* [Alert Rules](methoddocs/alertrules.md)
 * [Archive](methoddocs/archive.md)
 * [Audit Logs](methoddocs/auditlogs.md)
 * [Backup Sets](methoddocs/backupset.md)
-* [Cases](methoddocs/cases.md)
 * [Constants](methoddocs/constants.md)
 * [Devices](methoddocs/devices.md)
 * [Device Settings](methoddocs/devicesettings.md)
 * [Exceptions](methoddocs/exceptions.md)
-* [(DEPRECATED) File Event Queries - V1](methoddocs/fileeventqueries.md)
-* [File Event Queries - V2](methoddocs/fileeventqueriesv2.md)
 * [Legal Hold](methoddocs/legalhold.md)
 * [Legal Hold - API Clients](methoddocs/legalholdapiclient.md)
 * [Orgs](methoddocs/orgs.md)
 * [Org Settings](methoddocs/orgsettings.md)
-* [Response](methoddocs/response.md)
-* [Security Data](methoddocs/securitydata.md)
-* [Shared Query Filters](methoddocs/sharedqueryfilters.md)
-* [Trusted Activities](methoddocs/trustedactivities.md)
 * [Users](methoddocs/users.md)
-* [User Risk Profiles](methoddocs/userriskprofile.md)
 * [Util](methoddocs/util.md)
-* [Watchlists](methoddocs/watchlists.md)
 
 ```{eval-rst}
-.. automodule:: py42.sdk
+.. automodule:: pycpg.sdk
     :members:
     :show-inheritance:
 
-.. autoclass:: py42.sdk.SDKClient
+.. autoclass:: pycpg.sdk.SDKClient
     :members:
     :show-inheritance:
 ```

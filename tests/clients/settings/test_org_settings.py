@@ -11,9 +11,9 @@ from tests.clients.conftest import TEST_EXTERNAL_DOCUMENTS_DIR
 from tests.clients.conftest import TEST_HOME_DIR
 from tests.clients.conftest import TEST_PHOTOS_DIR
 
-from py42.clients.settings import get_val
-from py42.clients.settings.org_settings import OrgSettings
-from py42.exceptions import Py42Error
+from pycpg.clients.settings import get_val
+from pycpg.clients.settings.org_settings import OrgSettings
+from pycpg.exceptions import PycpgError
 
 ONEGB = 1000000000
 
@@ -24,71 +24,17 @@ TEST_T_SETTINGS_DICT = {
         "locked": False,
         "id": 510808,
     },
-    "org-securityTools-device-detection-enable": {
-        "scope": "ORG",
-        "value": "true",
-        "locked": False,
-        "id": 537575,
-    },
-    "device_engine_pause_allowedTypes": {
-        "scope": "ORG",
-        "value": '["legalHold","backup"]',
-        "locked": False,
-        "id": 537575,
-    },
-    "device_advancedExfiltrationDetection_enabled": {
-        "scope": "ORG",
-        "value": "true",
-        "locked": False,
-        "id": 537575,
-    },
-    "org_securityTools_printer_detection_enable": {
-        "scope": "ORG",
-        "value": "true",
-        "locked": False,
-        "id": 537575,
-    },
     "device_network_dscp_preferIP4": {
         "scope": "ORG",
         "value": "false",
         "locked": False,
         "id": 537575,
     },
-    "org-securityTools-cloud-detection-enable": {
+    "cpg.msa.acceptance": {
         "scope": "ORG",
-        "value": "true",
-        "locked": False,
-        "id": 537575,
-    },
-    "org-securityTools-enable": {
-        "scope": "ORG",
-        "value": "true",
-        "locked": False,
-        "id": 537575,
-    },
-    "c42.msa.acceptance": {
-        "scope": "ORG",
-        "value": "917633711460206173;tim.putnam+legacyadmin@code42.com;2019-09-05T17:05:09:046",
+        "value": "917633711460206173;tim.putnam+legacyadmin@crashPlan.com;2019-09-05T17:05:09:046",
         "locked": True,
         "id": 510682,
-    },
-    "org-securityTools-yara-scanner-enable": {
-        "scope": "ORG",
-        "value": "true",
-        "locked": False,
-        "id": 510853,
-    },
-    "org-securityTools-restore-detection-enable": {
-        "scope": "ORG",
-        "value": "true",
-        "locked": False,
-        "id": 510853,
-    },
-    "device_fileForensics_enabled": {
-        "scope": "ORG",
-        "value": "true",
-        "locked": False,
-        "id": 537575,
     },
     "device_webRestore_enabled": {
         "scope": "ORG",
@@ -106,12 +52,6 @@ TEST_T_SETTINGS_DICT = {
         "scope": "ORG",
         "value": '{"peak":{"wan":{"active":"256","idle":"0"},"lan":{"active":"256","idle":"256"}},"offPeak":{"wan":{"active":0,"idle":0},"lan":{"active":0,"idle":0}}}',
         "locked": True,
-        "id": 537575,
-    },
-    "org-securityTools-open-file-detection-enable": {
-        "scope": "ORG",
-        "value": "true",
-        "locked": False,
         "id": 537575,
     },
     "device_network_utilization_schedule": {
@@ -303,144 +243,6 @@ class TestOrgSettings:
         attr, expected = param
         assert getattr(org_settings.device_defaults, attr) == expected
 
-    def test_org_settings_endpoint_monitoring_enabled_returns_expected_results(
-        self, org_settings_dict
-    ):
-        t_setting = deepcopy(TEST_T_SETTINGS_DICT)
-        t_setting["org-securityTools-enable"]["value"] = "true"
-        org_settings = OrgSettings(org_settings_dict, t_setting)
-        assert org_settings.endpoint_monitoring_enabled is True
-
-        t_setting["org-securityTools-enable"]["value"] = "false"
-        org_settings = OrgSettings(org_settings_dict, t_setting)
-        assert org_settings.endpoint_monitoring_enabled is False
-
-    def test_org_settings_set_endpoint_monitoring_enabled_to_true_from_false_creates_expected_packets(
-        self, org_settings_dict
-    ):
-        t_setting = deepcopy(TEST_T_SETTINGS_DICT)
-        t_setting["org-securityTools-enable"]["value"] = "true"
-        org_settings = OrgSettings(org_settings_dict, t_setting)
-        org_settings.endpoint_monitoring_enabled = False
-        assert {
-            "key": "org-securityTools-enable",
-            "value": "false",
-            "locked": False,
-        } in org_settings.packets
-        assert {
-            "key": "device_advancedExfiltrationDetection_enabled",
-            "value": "false",
-            "locked": False,
-        } in org_settings.packets
-        assert {
-            "key": "org-securityTools-cloud-detection-enable",
-            "value": "false",
-            "locked": False,
-        } in org_settings.packets
-        assert {
-            "key": "org-securityTools-open-file-detection-enable",
-            "value": "false",
-            "locked": False,
-        } in org_settings.packets
-        assert {
-            "key": "org-securityTools-device-detection-enable",
-            "value": "false",
-            "locked": False,
-        } in org_settings.packets
-        assert {
-            "key": "org_securityTools_printer_detection_enable",
-            "value": "false",
-            "locked": False,
-        } in org_settings.packets
-        assert len(org_settings.packets) == 6
-
-    def test_org_settings_set_endpoint_monitoring_enabled_to_false_from_true_creates_expected_packets(
-        self, org_settings_dict
-    ):
-        t_setting = deepcopy(TEST_T_SETTINGS_DICT)
-        t_setting["org-securityTools-enable"]["value"] = "false"
-        org_settings = OrgSettings(org_settings_dict, t_setting)
-        org_settings.endpoint_monitoring_enabled = True
-        assert {
-            "key": "org-securityTools-enable",
-            "value": "true",
-            "locked": False,
-        } in org_settings.packets
-        assert {
-            "key": "device_advancedExfiltrationDetection_enabled",
-            "value": "true",
-            "locked": False,
-        } in org_settings.packets
-        assert len(org_settings.packets) == 2
-
-    @pytest.mark.parametrize(
-        "param",
-        [
-            (
-                "endpoint_monitoring_removable_media_enabled",
-                "org-securityTools-device-detection-enable",
-            ),
-            (
-                "endpoint_monitoring_cloud_sync_enabled",
-                "org-securityTools-cloud-detection-enable",
-            ),
-            (
-                "endpoint_monitoring_browser_and_applications_enabled",
-                "org-securityTools-open-file-detection-enable",
-            ),
-            (
-                "endpoint_monitoring_file_metadata_collection_enabled",
-                "device_fileForensics_enabled",
-            ),
-        ],
-    )
-    def test_org_settings_set_endpoint_monitoring_sub_categories_when_endpoint_monitoring_disabled_sets_endpoint_monitoring_enabled(
-        self, param, org_settings_dict
-    ):
-        attr, key = param
-        t_setting = deepcopy(TEST_T_SETTINGS_DICT)
-        settings = deepcopy(org_settings_dict)
-        t_setting["org-securityTools-enable"]["value"] = "false"
-        org_settings = OrgSettings(settings, t_setting)
-        setattr(org_settings, attr, True)
-        packet_keys = [packet["key"] for packet in org_settings.packets]
-        assert key in packet_keys
-        assert "org-securityTools-enable" in packet_keys
-        for packet in org_settings.packets:
-            if packet["key"] == "org-securityTools-enable":
-                assert packet["value"] == "true"
-            if packet["key"] == key:
-                assert packet["value"] == "true"
-
-    @pytest.mark.parametrize(
-        "param",
-        [
-            param(
-                name="endpoint_monitoring_file_metadata_scan_enabled",
-                new_val=True,
-                expected_stored_val="true",
-                dict_location="device_fileForensics_scan_enabled",
-            ),
-            param(
-                name="endpoint_monitoring_file_metadata_ingest_scan_enabled",
-                new_val=True,
-                expected_stored_val="true",
-                dict_location="device_fileForensics_enqueue_scan_events_during_ingest",
-            ),
-            param(
-                name="endpoint_monitoring_background_priority_enabled",
-                new_val=True,
-                expected_stored_val="true",
-                dict_location="device_background_priority_enabled",
-            ),
-            param(
-                name="web_restore_enabled",
-                new_val=True,
-                expected_stored_val="true",
-                dict_location="device_webRestore_enabled",
-            ),
-        ],
-    )
     def test_org_settings_set_independent_t_setting_properties(
         self, param, org_settings_dict
     ):
@@ -461,22 +263,6 @@ class TestOrgSettings:
         for packet in org_settings.packets:
             if packet["key"] == param.dict_location:
                 assert packet["value"] == "false"
-
-    def test_missing_t_settings_return_none_when_accessed_by_property(
-        self, org_settings_dict
-    ):
-        org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)
-        assert org_settings.endpoint_monitoring_file_metadata_scan_enabled is None
-        assert (
-            org_settings.endpoint_monitoring_file_metadata_ingest_scan_enabled is None
-        )
-        assert org_settings.endpoint_monitoring_background_priority_enabled is None
-        assert org_settings.endpoint_monitoring_custom_applications_win is None
-        assert org_settings.endpoint_monitoring_custom_applications_mac is None
-        assert (
-            org_settings.endpoint_monitoring_file_metadata_collection_exclusions is None
-        )
-
     @pytest.mark.parametrize(
         "param",
         [
@@ -616,7 +402,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets:
             "43": "PROe Cloud, US <LOCKED>",
             "673679195225718785": "PROe Cloud, AMS",
         }
-        with pytest.raises(Py42Error):
+        with pytest.raises(PycpgError):
             org_settings.device_defaults.backup_sets[1].add_destination(404)
         assert (
             org_settings.device_defaults.backup_sets[1].destinations
@@ -649,7 +435,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets:
             "43": "PROe Cloud, US <LOCKED>",
             "673679195225718785": "PROe Cloud, AMS",
         }
-        with pytest.raises(Py42Error):
+        with pytest.raises(PycpgError):
             org_settings.device_defaults.backup_sets[1].remove_destination(404)
         assert (
             org_settings.device_defaults.backup_sets[1].destinations

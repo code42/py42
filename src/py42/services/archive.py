@@ -1,6 +1,6 @@
-from py42 import settings
-from py42.services import BaseService
-from py42.services.util import get_all_pages
+from pycpg import settings
+from pycpg.services import BaseService
+from pycpg.services.util import get_all_pages
 
 
 class ArchiveService(BaseService):
@@ -16,7 +16,7 @@ class ArchiveService(BaseService):
             archive_guid (str): The GUID for the archive.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing archive information.
+            :class:`pycpg.response.PycpgResponse`: A response containing archive information.
         """
         uri = f"/api/v1/Archive/{archive_guid}"
         return self._connection.get(uri)
@@ -26,10 +26,10 @@ class ArchiveService(BaseService):
 
         Args:
             page_num (int): The page number to request.
-            page_size (int, optional): The number of archives to return per page. Defaults to `py42.settings.items_per_page`.
+            page_size (int, optional): The number of archives to return per page. Defaults to `pycpg.settings.items_per_page`.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v1/Archive"
         page_size = page_size or settings.items_per_page
@@ -45,7 +45,7 @@ class ArchiveService(BaseService):
                 userUid, destinationGuid)
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of archives.
         """
         params = {id_type: id_value}

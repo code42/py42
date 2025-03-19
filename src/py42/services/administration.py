@@ -1,4 +1,4 @@
-from py42.services import BaseService
+from pycpg.services import BaseService
 
 
 class AdministrationService(BaseService):

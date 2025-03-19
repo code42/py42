@@ -2,10 +2,10 @@ import sys
 
 import pytest
 
-import py42.settings as settings
-from py42.__version__ import __version__
+import pycpg.settings as settings
+from pycpg.__version__ import __version__
 
-DEFAULT_USER_AGENT_FORMAT = "py42/{0} python/{1}"
+DEFAULT_USER_AGENT_FORMAT = "pycpg/{0} python/{1}"
 
 
 @pytest.fixture
@@ -13,8 +13,8 @@ def default_user_agent():
     python_version = (
         f"{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}"
     )
-    py42_version = __version__
-    default_user_agent = DEFAULT_USER_AGENT_FORMAT.format(py42_version, python_version)
+    pycpg_version = __version__
+    default_user_agent = DEFAULT_USER_AGENT_FORMAT.format(pycpg_version, python_version)
     return default_user_agent
 
 

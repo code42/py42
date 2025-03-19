@@ -1,8 +1,8 @@
 import pytest
 from tests.conftest import create_mock_response
 
-from py42.services.administration import AdministrationService
-from py42.usercontext import UserContext
+from pycpg.services.administration import AdministrationService
+from pycpg.usercontext import UserContext
 
 _GET_CURRENT_USER = """
 {

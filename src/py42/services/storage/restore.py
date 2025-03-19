@@ -1,9 +1,9 @@
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42BadRestoreRequestError
-from py42.exceptions import Py42InternalServerError
-from py42.exceptions import Py42InvalidArchiveEncryptionKey
-from py42.exceptions import Py42InvalidArchivePassword
-from py42.services import BaseService
+from pycpg.exceptions import PycpgBadRequestError
+from pycpg.exceptions import PycpgBadRestoreRequestError
+from pycpg.exceptions import PycpgInternalServerError
+from pycpg.exceptions import PycpgInvalidArchiveEncryptionKey
+from pycpg.exceptions import PycpgInvalidArchivePassword
+from pycpg.services import BaseService
 
 
 class PushRestoreLocation:
@@ -34,11 +34,11 @@ class RestoreService(BaseService):
         }
         try:
             return self._connection.post(uri, json=json_dict)
-        except Py42InternalServerError as err:
+        except PycpgInternalServerError as err:
             if "PRIVATE_PASSWORD_INVALID" in err.response.text:
-                raise Py42InvalidArchivePassword(err)
+                raise PycpgInvalidArchivePassword(err)
             elif "CUSTOM_KEY_INVALID" in err.response.text:
-                raise Py42InvalidArchiveEncryptionKey(err)
+                raise PycpgInvalidArchiveEncryptionKey(err)
             raise
 
     def get_restore_status(self, job_id):
@@ -86,7 +86,7 @@ class PushRestoreService(RestoreService):
         }
         try:
             return self._connection.post(uri, json=json_dict)
-        except Py42BadRequestError as err:
+        except PycpgBadRequestError as err:
             if "CREATE_FAILED" in err.response.text:
-                raise Py42BadRestoreRequestError(err)
+                raise PycpgBadRestoreRequestError(err)
             raise

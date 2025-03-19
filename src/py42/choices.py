@@ -1,4 +1,4 @@
-from py42.util import get_attribute_values_from_class
+from pycpg.util import get_attribute_values_from_class
 
 
 class Choices:

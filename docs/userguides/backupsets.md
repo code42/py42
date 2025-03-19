@@ -1,11 +1,11 @@
 # Configuring Backup Sets
 
-Code42 devices' backup configurations are managed by "Backup Sets", which can be configured either at the individual
+CrashPlan devices' backup configurations are managed by "Backup Sets", which can be configured either at the individual
 device level, or set as default configurations at the org level.
 
-The py42 `BackupSet` class can be used to view and change the settings of a given backup set.
+The pycpg `BackupSet` class can be used to view and change the settings of a given backup set.
 
-`BackupSet` instances are automatically constructed by py42 and attached to their corresponding `DeviceSettings` or
+`BackupSet` instances are automatically constructed by pycpg and attached to their corresponding `DeviceSettings` or
 `OrgSettings` objects, and stored in the `.backup_sets` properties (`DeviceSettings.backup_sets` or
 `OrgSettings.device_defaults.backup_sets`).
 

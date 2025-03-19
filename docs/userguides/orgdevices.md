@@ -1,16 +1,16 @@
 # Get Active Devices From an Organization
 
-Using py42, you can retrieve information about the active devices in your organization for various use cases. For example, you might want to create a simple report that illustrates how many devices are running each operating system in your Code42 environment. Your user role determines which devices you have access to.
+Using pycpg, you can retrieve information about the active devices in your organization for various use cases. For example, you might want to create a simple report that illustrates how many devices are running each operating system in your CrashPlan environment. Your user role determines which devices you have access to.
 
 To begin, initialize the SDK:
 ```python
-import py42.sdk
-sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+import pycpg.sdk
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
 ```
 
 ### The `DeviceClient.get_all()` Function
 
-Next, use `py42.sdk.clients.devices.DeviceClient` to search for active devices in your
+Next, use `pycpg.sdk.clients.devices.DeviceClient` to search for active devices in your
 organization. Use the `active` parameter on the `get_all()` method.
 
 The `active` parameter has three different states:

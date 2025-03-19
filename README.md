@@ -1,31 +1,33 @@
-# CrashPlan fork of py42, this will become the  official CrashPlan Python SDK
+# CrashPlan fork of pycpg, this will become the  official CrashPlan Python SDK
 
-![Build status](https://github.com/code42/py42/workflows/build/badge.svg)
-[![codecov.io](https://codecov.io/github/code42/py42/coverage.svg?branch=main)](https://codecov.io/github/code42/py42?branch=main)
-[![versions](https://img.shields.io/pypi/pyversions/py42.svg)](https://pypi.org/project/py42/)
+
+
+![Build status](https://github.com/CrashPlan-Labs/pycpg/workflows/build/badge.svg)
+[![codecov.io](https://codecov.io/github/crashPlan/pycpg/coverage.svg?branch=main)](https://codecov.io/github/crashPlan/pycpg?branch=main)
+[![versions](https://img.shields.io/pypi/pyversions/pycpg.svg)](https://pypi.org/project/pycpg/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Documentation Status](https://readthedocs.org/projects/py42/badge/?version=latest)](https://py42docs.code42.com/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/pycpg/badge/?version=latest)](https://pycpgdocs.crashPlan.com/en/latest/?badge=latest)
 
 
-`py42` is a Python wrapper around the Code42 REST APIs that also provides several other useful utility methods.
-It is designed to be used for developing your own tools for working with Code42 data while avoiding the overhead
+`pycpg` is a Python wrapper around the CrashPlan REST APIs that also provides several other useful utility methods.
+It is designed to be used for developing your own tools for working with CrashPlan data while avoiding the overhead
 of session / authentication management.
 
 ## Requirements
 
 - Python 3.6.0+
-- Code42 Server 6.8.x+ or cloud environment (e.g. console.us.code42.com or crashplan.com)
+- CrashPlan Server 6.8.x+ or cloud environment (e.g. console.us.crashPlan.com or crashplan.com)
 
 ## Installation
 
-Run the `setup.py` script to install the py42 package and its dependencies on your system.
+Run the `setup.py` script to install the pycpg package and its dependencies on your system.
 You will likely need administrative privileges for this.
 
 ```bash
 $ python setup.py install
 ```
 
-## Hello, py42
+## Hello, pycpg
 
 Here's a simple example to verify the installation and your server/account.
 
@@ -38,18 +40,18 @@ $ python
 Import a couple essentials
 
 ```python
->>> import py42.sdk
->>> import py42.util as util
+>>> import pycpg.sdk
+>>> import pycpg.util as util
 ```
 
 Initialize the client.
 
 ```python
->>> sdk = py42.sdk.from_local_account("https://console.us.code42.com", "john.doe", "password")
+>>> sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "john.doe", "password")
 ```
 or alternatively
 ```
->>> sdk = py42.sdk.from_jwt_provider("https://console.us.code42.com", jwt_provider_function)
+>>> sdk = pycpg.sdk.from_jwt_provider("https://console.us1.crashPlan.com", jwt_provider_function)
 ```
 
 Get and print your user information.
@@ -102,12 +104,12 @@ There are a few default settings that affect the behavior of the client.
 | debug.logger | Controls logger used | `logging.Logger` with `StreamHandler` sending to `sys.stderr`
 | items_per_page | Controls how many items are retrieved per request for methods that loops over several "pages" of items in order to collect them all. | 500
 
-To override these settings, import `py42.settings` and override values as necessary before creating the client.
+To override these settings, import `pycpg.settings` and override values as necessary before creating the client.
  For example, to disable certificate validation in a dev environment:
 
 ```python
-import py42.sdk
-import py42.settings as settings
+import pycpg.sdk
+import pycpg.settings as settings
 import logging
 
 settings.verify_ssl_certs = False
@@ -119,17 +121,17 @@ custom_logger.addHandler(handler)
 settings.debug.logger = custom_logger
 settings.debug.level = logging.DEBUG
 
-sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
 ```
 
 ## Usage
 
-The SDK object opens availability to APIs across the Code42 environment, including storage nodes.
+The SDK object opens availability to APIs across the CrashPlan environment, including storage nodes.
 
 ```python
-import py42.sdk
+import pycpg.sdk
 
-sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
 
 # clients are organized by feature groups and accessible under the sdk object
 
@@ -154,8 +156,8 @@ with open("/path/to/my/file", 'wb') as f:
             f.write(chunk)
 
 # search file events
-from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
-from py42.sdk.queries.fileevents.filters import *
+from pycpg.sdk.queries.fileevents.file_event_query import FileEventQuery
+from pycpg.sdk.queries.fileevents.filters import *
 
 query = FileEventQuery.all(MD5.eq("e804d1eb229298b04522c5504b8131f0"))
 file_events = sdk.securitydata.search_file_events(query)
@@ -163,7 +165,7 @@ file_events = sdk.securitydata.search_file_events(query)
 
 ## Additional Resources
 
-For complete documentation on the Code42 web API that backs this SDK, here are some helpful resources:
+For complete documentation on the CrashPlan web API that backs this SDK, here are some helpful resources:
 
-- [Introduction to the Code42 API](https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Introduction_to_the_Code42_API)
-- [Code42 API documentation viewers](https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Introduction_to_the_Code42_API/Code42_API_documentation_viewer)
+- [Introduction to the CrashPlan API](https://support.crashplan.com/hc/en-us/articles/9057001723917--CrashPlan-API-syntax-and-usage)
+- [CrashPlan API documentation viewers](https://support.crashplan.com/hc/en-us/articles/9057096803469--CrashPlan-API-documentation-viewer-reference)

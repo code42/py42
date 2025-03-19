@@ -1,6 +1,6 @@
 from datetime import datetime as dt
 
-from py42.services.auditlogs import AuditLogsService
+from pycpg.services.auditlogs import AuditLogsService
 
 
 class TestAuditLogService:
@@ -52,7 +52,7 @@ class TestAuditLogService:
 
     def test_get_all_calls_actor_names_with_list_of_user_names(self, mock_connection):
         service = AuditLogsService(mock_connection)
-        for _ in service.get_all(usernames=["test@test.com", "test@code42.com"]):
+        for _ in service.get_all(usernames=["test@test.com", "test@crashPlan.com"]):
             pass
         expected_data = {
             "page": 0,
@@ -60,7 +60,7 @@ class TestAuditLogService:
             "dateRange": {},
             "eventTypes": [],
             "actorIds": [],
-            "actorNames": ["test@test.com", "test@code42.com"],
+            "actorNames": ["test@test.com", "test@crashPlan.com"],
             "actorIpAddresses": [],
             "affectedUserIds": [],
             "affectedUserNames": [],
@@ -72,7 +72,7 @@ class TestAuditLogService:
     def test_get_all_calls_all_params_in_valid_formats(self, mock_connection):
         service = AuditLogsService(mock_connection)
         for _ in service.get_all(
-            usernames=["test@test.com", "test@code42.com"],
+            usernames=["test@test.com", "test@crashPlan.com"],
             user_ids=["1208", "12089"],
             event_types="abc",
             user_ip_addresses=["127.0.0.1", "0.0.0.0"],
@@ -86,7 +86,7 @@ class TestAuditLogService:
             "dateRange": {},
             "eventTypes": ["abc"],
             "actorIds": ["1208", "12089"],
-            "actorNames": ["test@test.com", "test@code42.com"],
+            "actorNames": ["test@test.com", "test@crashPlan.com"],
             "actorIpAddresses": ["127.0.0.1", "0.0.0.0"],
             "affectedUserIds": [],
             "affectedUserNames": ["test_user@name.com"],
@@ -133,7 +133,7 @@ class TestAuditLogService:
             page_size=300,
             begin_time=None,
             end_time=None,
-            usernames=["test@test.com", "test@code42.com"],
+            usernames=["test@test.com", "test@crashPlan.com"],
             user_ids=["1208", "12089"],
             event_types="abc",
             user_ip_addresses=["127.0.0.1", "0.0.0.0"],
@@ -146,7 +146,7 @@ class TestAuditLogService:
             "dateRange": {},
             "eventTypes": ["abc"],
             "actorIds": ["1208", "12089"],
-            "actorNames": ["test@test.com", "test@code42.com"],
+            "actorNames": ["test@test.com", "test@crashPlan.com"],
             "actorIpAddresses": ["127.0.0.1", "0.0.0.0"],
             "affectedUserIds": [],
             "affectedUserNames": ["test_user@name.com"],
@@ -216,7 +216,7 @@ class TestAuditLogService:
             page_size=300,
             begin_time=None,
             end_time=None,
-            usernames=["test@test.com", "test@code42.com"],
+            usernames=["test@test.com", "test@crashPlan.com"],
             user_ids=["1208", "12089"],
             event_types="abc",
             user_ip_addresses=["127.0.0.1", "0.0.0.0"],
@@ -229,7 +229,7 @@ class TestAuditLogService:
             "dateRange": {},
             "eventTypes": ["abc"],
             "actorIds": ["1208", "12089"],
-            "actorNames": ["test@test.com", "test@code42.com"],
+            "actorNames": ["test@test.com", "test@crashPlan.com"],
             "actorIpAddresses": ["127.0.0.1", "0.0.0.0"],
             "affectedUserIds": [],
             "affectedUserNames": ["test_user@name.com"],
@@ -250,7 +250,7 @@ class TestAuditLogService:
             page_size=300,
             begin_time=None,
             end_time=None,
-            usernames=["test@test.com", "test@code42.com"],
+            usernames=["test@test.com", "test@crashPlan.com"],
             user_ids=["1208", "12089"],
             event_types="abc",
             user_ip_addresses=["127.0.0.1", "0.0.0.0"],
@@ -263,7 +263,7 @@ class TestAuditLogService:
             "dateRange": {},
             "eventTypes": ["abc"],
             "actorIds": ["1208", "12089"],
-            "actorNames": ["test@test.com", "test@code42.com"],
+            "actorNames": ["test@test.com", "test@crashPlan.com"],
             "actorIpAddresses": ["127.0.0.1", "0.0.0.0"],
             "affectedUserIds": [],
             "affectedUserNames": ["test_user@name.com"],
@@ -284,7 +284,7 @@ class TestAuditLogService:
             page_size=300,
             begin_time=None,
             end_time=None,
-            usernames=["test@test.com", "test@code42.com"],
+            usernames=["test@test.com", "test@crashPlan.com"],
             user_ids=["1208", "12089"],
             event_types="abc",
             user_ip_addresses=["127.0.0.1", "0.0.0.0"],
@@ -297,7 +297,7 @@ class TestAuditLogService:
             "dateRange": {},
             "eventTypes": ["abc"],
             "actorIds": ["1208", "12089"],
-            "actorNames": ["test@test.com", "test@code42.com"],
+            "actorNames": ["test@test.com", "test@crashPlan.com"],
             "actorIpAddresses": ["127.0.0.1", "0.0.0.0"],
             "affectedUserIds": [],
             "affectedUserNames": ["test_user@name.com"],

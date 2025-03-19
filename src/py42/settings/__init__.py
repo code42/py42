@@ -1,6 +1,6 @@
 import sys
 
-from py42.__version__ import __version__
+from pycpg.__version__ import __version__
 
 proxies = None
 
@@ -17,7 +17,7 @@ _python_version = f"{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_inf
 
 
 def get_user_agent_string():
-    return "{}py42/{} python/{}{}".format(
+    return "{}pycpg/{} python/{}{}".format(
         _custom_user_prefix, __version__, _python_version, _custom_user_suffix
     )
 

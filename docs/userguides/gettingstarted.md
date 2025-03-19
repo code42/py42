@@ -1,4 +1,4 @@
-# Getting started with py42
+# Getting started with pycpg
 
 * [Licensing](#licensing)
 * [Installation](#installation)
@@ -7,35 +7,35 @@
 
 ## Licensing
 
-This project uses the [MIT License](https://github.com/code42/py42/blob/main/LICENSE.md).
+This project uses the [MIT License](https://github.com/CrashPlan-Labs/pycpg/blob/main/LICENSE.md).
 
 ## Installation
 
-You can install py42 from PyPI, from source, or from distribution.
+You can install pycpg from PyPI, from source, or from distribution.
 
 ### From PyPI
 
 The easiest and most common way is to use `pip`:
 
 ```bash
-pip install py42
+pip install pycpg
 ```
 
-To install a previous version of py42 via `pip`, add the version number. For example, to install version
+To install a previous version of pycpg via `pip`, add the version number. For example, to install version
 0.4.1, you would enter:
 
 ```bash
-pip install py42==0.4.1
+pip install pycpg==0.4.1
 ```
 
-Visit the [project history](https://pypi.org/project/py42/#history) on PyPI to see all published versions.
+Visit the [project history](https://pypi.org/project/pycpg/#history) on PyPI to see all published versions.
 
 ### From source
 
-Alternatively, you can install py42 directly from [source code](https://github.com/code42/py42):
+Alternatively, you can install pycpg directly from [source code](https://github.com/CrashPlan-Labs/pycpg):
 
 ```bash
-git clone https://github.com/code42/py42.git
+git clone https://github.com/CrashPlan-Labs/pycpg.git
 ```
 
 When it finishes downloading, from the root project directory, run:
@@ -55,40 +55,40 @@ python setup.py sdist
 After it finishes building, the `.tar` ball will be located in the newly created `dist` directory. To install it, enter:
 
 ```bash
-pip install py42-[VERSION].tar.gz
+pip install pycpg-[VERSION].tar.gz
 ```
 
 ## Authentication
 
 ```{eval-rst}
-.. important:: py42 currently only supports token-based authentication.
+.. important:: pycpg currently only supports token-based authentication.
 ```
 
-To initialize the `py42.sdk.SDKClient`, you must provide your credentials. If you are writing a script,
+To initialize the `pycpg.sdk.SDKClient`, you must provide your credentials. If you are writing a script,
 we recommend using a secure password storage library, such as `keyring`, for retrieving passwords and secrets. However, subsequent
 requests use JWT authentication.
 
 ### Basic Authentication
 
-Py42 supports basic auth with your Code42 username and password.
+Pycpg supports basic auth with your CrashPlan username and password.
 
-If your account uses [two-factor authentication](https://support.code42.com/Administrator/Cloud/Configuring/Two-factor_authentication_for_local_users), include the time-based one-time password (TOTP) when you initialize the `py42.sdk.SDKClient`.
+If your account uses [two-factor authentication](https://support.crashPlan.com/Administrator/Cloud/Configuring/Two-factor_authentication_for_local_users), include the time-based one-time password (TOTP) when you initialize the `pycpg.sdk.SDKClient`.
 You can also provide a callable object that returns a TOTP. If you pass a callable, it will be called whenever a new TOTP is required to renew the authentication token.
 
 ```python
-import py42.sdk
+import pycpg.sdk
 
-sdk = py42.sdk.from_local_account("https://console.code42.com", "username@code42.com", "password")
+sdk = pycpg.sdk.from_local_account("https://console.crashPlan.com", "username@crashPlan.com", "password")
 ```
 
-### Code42 API Clients
+### CrashPlan API Clients
 
-Py42 also supports api clients.  You can use the client ID and secret generated through the Code42 console to initiate the `SDKClient`.
+Pycpg also supports api clients.  You can use the client ID and secret generated through the CrashPlan console to initiate the `SDKClient`.
 
 ```python
-import py42.sdk
+import pycpg.sdk
 
-sdk = py42.sdk.from_api_client("https://console.code42.com", "key-123-42", "my%secret!")
+sdk = pycpg.sdk.from_api_client("https://console.crashPlan.com", "key-123-42", "my%secret!")
 ```
 
 ## Troubleshooting and support
@@ -96,37 +96,37 @@ sdk = py42.sdk.from_api_client("https://console.code42.com", "key-123-42", "my%s
 ### Debug mode
 
 Debug mode may be useful if you are trying to determine if you are experiencing permissions issues. When debug mode is
-on, py42 logs HTTP request data to the console's stderr. Use the following as a guide for how to turn on debug mode in
-py42:
+on, pycpg logs HTTP request data to the console's stderr. Use the following as a guide for how to turn on debug mode in
+pycpg:
 
 ```python
-import py42.sdk
-import py42.settings
+import pycpg.sdk
+import pycpg.settings
 import logging
 
-py42.settings.debug.level = logging.DEBUG
+pycpg.settings.debug.level = logging.DEBUG
 ```
 
-To provide your own logger, just replace `py42.settings.debug.logger`:
+To provide your own logger, just replace `pycpg.settings.debug.logger`:
 
 ```
 custom_logger = logging.getLogger("my_app")
 handler = logging.FileHandler("my_app.log")
 custom_logger.addHandler(handler)
 
-py42.settings.debug.logger = custom_logger
+pycpg.settings.debug.logger = custom_logger
 ```
 
 ### File an issue on GitHub
 
-If you are experiencing an issue with py42, you can create a *New issue* at the
-[project repository](https://github.com/code42/py42/issues). See the Github [guide on creating an issue](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue) for more information.
+If you are experiencing an issue with pycpg, you can create a *New issue* at the
+[project repository](https://github.com/CrashPlan-Labs/pycpg/issues). See the Github [guide on creating an issue](https://help.github.com/en/github/managing-your-work-on-github/creating-an-issue) for more information.
 
-### Contact Code42 Support
+### Contact CrashPlan Support
 
 If you don't have a GitHub account and are experiencing issues, contact
-[Code42 support](https://support.code42.com/).
+[CrashPlan support](https://support.crashPlan.com/).
 
 ## What's next?
 
-Learn the basics by following the py42 [Basics guide](basics.md).
+Learn the basics by following the pycpg [Basics guide](basics.md).

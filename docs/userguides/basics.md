@@ -1,31 +1,31 @@
-# py42 Basics
+# pycpg Basics
 
-This guide explains the basic concepts of py42. Learning these basics can help you gain confidence in writing your own
+This guide explains the basic concepts of pycpg. Learning these basics can help you gain confidence in writing your own
 scripts.
-- [py42 Basics](#py42-basics)
+- [pycpg Basics](#pycpg-basics)
   - [Initialization](#initialization)
   - [Paging](#paging)
-  - [Py42Response](#py42response)
+  - [PycpgResponse](#pycpgresponse)
   - [Dates](#dates)
   - [Exceptions](#exceptions)
 
-The examples from this guide are intended as blanket concepts that apply to other areas in py42. For example, paging
+The examples from this guide are intended as blanket concepts that apply to other areas in pycpg. For example, paging
 over users and devices works the same way as over departing employees and alerts.
 
 ## Initialization
 
-To use py42, you must initialize the SDK:
+To use pycpg, you must initialize the SDK:
 
 ```python
-import py42.sdk
+import pycpg.sdk
 
-sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
 ```
 
-If your account uses [two-factor authentication](https://support.code42.com/Administrator/Cloud/Configuring/Two-factor_authentication_for_local_users), include the time-based one-time password:
+If your account uses [two-factor authentication](https://support.crashplan.com/hc/en-us/articles/8720828072717-Two-Factor-Authentication-for-CrashPlan), include the time-based one-time password:
 
 ```python
-sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password", totp="123456")
+sdk = pycpg.sdk.from_local_account("https://console.u1.crashPlan.com", "my_username", "my_password", totp="123456")
 ```
 
 Alternatively, define a function that returns the time-based one-time password:
@@ -34,7 +34,7 @@ Alternatively, define a function that returns the time-based one-time password:
 def promptForPassword():
     return input("Please input your authentication code: ")
 
-sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password", totp=promptForPassword)
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password", totp=promptForPassword)
 ```
 
 Alternatively, define a function that returns the auth token based on user's authentication approach
@@ -45,34 +45,34 @@ import requests
 from requests.auth import HTTPBasicAuth
 def jwt_provider():
     res = requests.get(
-            'https://console.us.code42.com/api/v3/auth/jwt?useBody=true',
+            'https://console.us1.crashPlan.com/api/v3/auth/jwt?useBody=true',
             auth=HTTPBasicAuth('username', 'password')
           )
     res_json = json.loads(res.text)
     return res_json['data']['v3_user_token']
 
-sdk_client = py42.sdk.from_jwt_provider("https://console.us.code42.com", jwt_provider)
+sdk_client = pycpg.sdk.from_jwt_provider("https://console.us1.crashPlan.com", jwt_provider)
 ```
 
 
 ## Paging
 
-py42 clients often have a method with the name (or name prefix) `get_all`  which handles iterating over pages of
+pycpg clients often have a method with the name (or name prefix) `get_all`  which handles iterating over pages of
 response items. Here are some examples:
-* `py42.sdk.devices.get_all()`
-* `py42.sdk.users.get_all()`
-* `py42.sdk.legalhold.get_all_matters()`
-* `py42.sdk.orgs.get_all()`
+* `pycpg.sdk.devices.get_all()`
+* `pycpg.sdk.users.get_all()`
+* `pycpg.sdk.legalhold.get_all_matters()`
+* `pycpg.sdk.orgs.get_all()`
 
 These methods each return a [python generator](https://wiki.python.org/moin/Generators). Looping over the pages
 returned by the generator gives you access to the actual list of items. Use the code snippet below as an example
-for working with generators and paging in py42:
+for working with generators and paging in pycpg:
 
 ```python
 # Prints the username and user ID for all employees included on a watchlist
 
 pages = sdk.watchlists.get_all_included_users(WATCHLIST_ID)  # pages has 'generator' type
-for page in pages:  # page has 'Py42Response' type
+for page in pages:  # page has 'PycpgResponse' type
     users = page["includedUsers"]
     for user in users:
         username = user["username"]
@@ -80,14 +80,14 @@ for page in pages:  # page has 'Py42Response' type
         print(f"{username}: {user_id}")
 ```
 
-Each page is a typical py42 response. The next section covers what you can do with `Py42Response` objects.
+Each page is a typical pycpg response. The next section covers what you can do with `PycpgResponse` objects.
 
-## Py42Response
+## PycpgResponse
 
-py42 clients return `Py42Response` objects which are intentionally similar to `requests.Response` objects.
-The `Py42Response` class hides unneeded metadata found on the raw `requests.Response.text` (which is available as
-`Py42Response.raw_text`), making it easier to get the most useful parts of the response. Also, the object is
-subscriptable, meaning you can access it with keys or indices (depending on the JSON type underneath `data` on Code42 API responses):
+pycpg clients return `PycpgResponse` objects which are intentionally similar to `requests.Response` objects.
+The `PycpgResponse` class hides unneeded metadata found on the raw `requests.Response.text` (which is available as
+`PycpgResponse.raw_text`), making it easier to get the most useful parts of the response. Also, the object is
+subscriptable, meaning you can access it with keys or indices (depending on the JSON type underneath `data` on CrashPlan API responses):
 
 ```python
 user = response["users"][0]
@@ -118,19 +118,19 @@ if cloud_usernames:
 
 ## Dates
 
-Most dates in py42 support [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) for date parameters. As an
+Most dates in pycpg support [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) for date parameters. As an
 example, see :class:`sdk.queries.filevents.filters.event_filter.EventTimestamp` which is used for querying file events
 by their event timestamp.
 
 ```python
 from datetime import datetime, timedelta
 
-import py42.sdk
-import py42.util
-from py42.sdk.queries.fileevents.file_event_query import FileEventQuery
-from py42.sdk.queries.fileevents.filters.event_filter import EventTimestamp
+import pycpg.sdk
+import pycpg.util
+from pycpg.sdk.queries.fileevents.file_event_query import FileEventQuery
+from pycpg.sdk.queries.fileevents.filters.event_filter import EventTimestamp
 
-sdk = py42.sdk.from_local_account("https://console.us.code42.com", "my_username", "my_password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
 
 # Get the epoch date 14 days in the past
 query_date = datetime.utcnow() - timedelta(days=14)
@@ -148,28 +148,28 @@ for event in file_events:
 
 ## Exceptions
 
-py42 throws some of its own exceptions when failures occur. py42 exceptions are found in the `py42.sdk.exceptions`
+pycpg throws some of its own exceptions when failures occur. pycpg exceptions are found in the `pycpg.sdk.exceptions`
 module. Some of the available exceptions are:
-* `Py42ForbiddenError`: (403) With your currently signed-in account, you don't have the necessary permissions
+* `PycpgForbiddenError`: (403) With your currently signed-in account, you don't have the necessary permissions
 to perform the action you were trying to do.
-* `Py42UnauthorizedError`: (401) The username or password is incorrect.
-* `Py42InternalServerError`: (500) Likely an unhandled issue on our servers.
+* `PycpgUnauthorizedError`: (401) The username or password is incorrect.
+* `PycpgInternalServerError`: (500) Likely an unhandled issue on our servers.
 
 For example, you are making a `create_sdk()` function and want to print a more user-friendly message when the provided
 username or password are incorrect:
 
 ```python
 import keyring
-import py42.sdk
-from py42.exceptions import Py42UnauthorizedError
+import pycpg.sdk
+from pycpg.exceptions import PycpgUnauthorizedError
 
 
 def create_sdk(username):
     """Tries to initialize SDK. If unauthorized, prints message and exits."""
     try:
         password = keyring.get_password("my_program", username)
-        return py42.sdk.from_local_account("www.authority.example.com", username, password)
-    except Py42UnauthorizedError:
+        return pycpg.sdk.from_local_account("www.authority.example.com", username, password)
+    except PycpgUnauthorizedError:
         print("Invalid username or password.")
         exit(1)
 ```

@@ -2,21 +2,21 @@ import pytest
 from requests import Response
 from tests.conftest import TEST_DEVICE_GUID
 
-import py42.settings as settings
-from py42.exceptions import Py42DeviceNotConnectedError
-from py42.exceptions import Py42Error
-from py42.exceptions import Py42FeatureUnavailableError
-from py42.exceptions import Py42InternalServerError
-from py42.exceptions import Py42UnauthorizedError
-from py42.response import Py42Response
-from py42.services._auth import C42RenewableAuth
-from py42.services._connection import ConnectedServerHostResolver
-from py42.services._connection import Connection
-from py42.services._connection import HostResolver
-from py42.services._connection import KnownUrlHostResolver
-from py42.services._connection import MicroserviceKeyHostResolver
-from py42.services._connection import MicroservicePrefixHostResolver
-from py42.services._keyvaluestore import KeyValueStoreService
+import pycpg.settings as settings
+from pycpg.exceptions import PycpgDeviceNotConnectedError
+from pycpg.exceptions import PycpgError
+from pycpg.exceptions import PycpgFeatureUnavailableError
+from pycpg.exceptions import PycpgInternalServerError
+from pycpg.exceptions import PycpgUnauthorizedError
+from pycpg.response import PycpgResponse
+from pycpg.services._auth import CPGRenewableAuth
+from pycpg.services._connection import ConnectedServerHostResolver
+from pycpg.services._connection import Connection
+from pycpg.services._connection import HostResolver
+from pycpg.services._connection import KnownUrlHostResolver
+from pycpg.services._connection import MicroserviceKeyHostResolver
+from pycpg.services._connection import MicroservicePrefixHostResolver
+from pycpg.services._keyvaluestore import KeyValueStoreService
 
 default_kwargs = {
     "timeout": 60,
@@ -43,7 +43,7 @@ def mock_host_resolver(mocker):
 
 @pytest.fixture
 def mock_auth(mocker):
-    return mocker.MagicMock(spec=C42RenewableAuth)
+    return mocker.MagicMock(spec=CPGRenewableAuth)
 
 
 @pytest.fixture
@@ -56,7 +56,7 @@ def mock_server_env_conn(mocker):
     mock_conn = mocker.MagicMock(spec=Connection)
     mock_response = mocker.MagicMock(spec=Response)
     mock_response.text = '{"stsBaseUrl": "sts-testsuffix"}'
-    mock_conn.get.return_value = Py42Response(mock_response)
+    mock_conn.get.return_value = PycpgResponse(mock_response)
     return mock_conn
 
 
@@ -65,7 +65,7 @@ def mock_server_env_conn_missing_sts_base_url(mocker):
     mock_conn = mocker.MagicMock(spec=Connection)
     mock_response = mocker.MagicMock(spec=Response)
     mock_response.text = "{}"
-    mock_conn.get.return_value = Py42Response(mock_response)
+    mock_conn.get.return_value = PycpgResponse(mock_response)
     return mock_conn
 
 
@@ -74,7 +74,7 @@ def mock_connected_server_conn(mocker):
     mock_conn = mocker.MagicMock(spec=Connection)
     mock_response = mocker.MagicMock(spec=Response)
     mock_response.text = f'{{"serverUrl": "{HOST_ADDRESS}"}}'
-    mock_conn.get.return_value = Py42Response(mock_response)
+    mock_conn.get.return_value = PycpgResponse(mock_response)
     return mock_conn
 
 
@@ -83,7 +83,7 @@ def mock_not_connected_server_conn(mocker):
     mock_conn = mocker.MagicMock(spec=Connection)
     mock_response = mocker.MagicMock(spec=Response)
     mock_response.text = '{"serverUrl": null}'
-    mock_conn.get.return_value = Py42Response(mock_response)
+    mock_conn.get.return_value = PycpgResponse(mock_response)
     return mock_conn
 
 
@@ -138,7 +138,7 @@ class TestMicroservicePrefixHostResolver:
         resolver = MicroservicePrefixHostResolver(
             mock_server_env_conn_missing_sts_base_url, "TESTPREFIX"
         )
-        with pytest.raises(Py42FeatureUnavailableError):
+        with pytest.raises(PycpgFeatureUnavailableError):
             resolver.get_host_address()
 
     def test_get_host_address_calls_correct_server_env_url(self, mock_server_env_conn):
@@ -164,7 +164,7 @@ class TestConnectedServerHostResolver:
         resolver = ConnectedServerHostResolver(
             mock_not_connected_server_conn, TEST_DEVICE_GUID
         )
-        with pytest.raises(Py42DeviceNotConnectedError) as err:
+        with pytest.raises(PycpgDeviceNotConnectedError) as err:
             resolver.get_host_address()
 
         expected_message = (
@@ -273,7 +273,7 @@ class TestConnection:
         self, mock_host_resolver, mock_auth, error_requests_session
     ):
         connection = Connection(mock_host_resolver, mock_auth, error_requests_session)
-        with pytest.raises(Py42InternalServerError):
+        with pytest.raises(PycpgInternalServerError):
             connection.get(URL)
 
     def test_connection_request_calls_auth_handler_when_making_first_request(
@@ -299,17 +299,17 @@ class TestConnection:
             mock_host_resolver, mock_auth, unauthorized_requests_session
         )
 
-        with pytest.raises(Py42UnauthorizedError):
+        with pytest.raises(PycpgUnauthorizedError):
             connection.get(URL)
 
         assert unauthorized_requests_session.send.call_count == 2
 
-    def test_connection_request_when_session_returns_none_raises_py42_error(
+    def test_connection_request_when_session_returns_none_raises_pycpg_error(
         self, mock_host_resolver, mock_auth, success_requests_session
     ):
         success_requests_session.send.return_value = None
         connection = Connection(mock_host_resolver, mock_auth, success_requests_session)
-        with pytest.raises(Py42Error):
+        with pytest.raises(PycpgError):
             connection.get(URL)
 
     def test_connection_request_when_no_data_does_not_include_content_type_header(

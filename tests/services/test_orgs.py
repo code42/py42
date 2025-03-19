@@ -4,9 +4,9 @@ import pytest
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
-import py42.settings
-from py42.exceptions import Py42InternalServerError
-from py42.services.orgs import OrgService
+import pycpg.settings
+from pycpg.exceptions import PycpgInternalServerError
+from pycpg.services.orgs import OrgService
 
 COMPUTER_URI = "/api/v1/Org"
 ORGS_V3_URI = "/api/v3/orgs"
@@ -31,7 +31,7 @@ class TestOrgService:
         yield create_mock_response(mocker, MOCK_EMPTY_GET_ORGS_RESPONSE)
 
     @patch.object(
-        py42.services.orgs.OrgService,
+        pycpg.services.orgs.OrgService,
         "_get_guid_by_id",
         return_value="org-guid-123",
     )
@@ -47,7 +47,7 @@ class TestOrgService:
     def test_get_all_calls_get_expected_number_of_times(
         self, mock_connection, mock_get_all_response, mock_get_all_empty_response
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = OrgService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_response,
@@ -56,7 +56,7 @@ class TestOrgService:
         ]
         for _ in service.get_all():
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_connection):
@@ -86,7 +86,7 @@ class TestOrgService:
         service.get_agent_state.assert_called_once_with("ORG_ID", "fullDiskAccess")
 
     @patch.object(
-        py42.services.orgs.OrgService,
+        pycpg.services.orgs.OrgService,
         "_get_guid_by_id",
         return_value="parent-guid-123",
     )
@@ -107,7 +107,7 @@ class TestOrgService:
         mock_connection.post.assert_called_once_with(ORGS_V3_URI, json=data)
 
     @patch.object(
-        py42.services.orgs.OrgService,
+        pycpg.services.orgs.OrgService,
         "_get_guid_by_id",
         return_value="org-guid-123",
     )
@@ -118,7 +118,7 @@ class TestOrgService:
         mock_connection.get.assert_called_once_with(uri, params={})
 
     @patch.object(
-        py42.services.orgs.OrgService,
+        pycpg.services.orgs.OrgService,
         "_get_guid_by_id",
         return_value=TEST_ORG_GUID,
     )
@@ -129,7 +129,7 @@ class TestOrgService:
         mock_connection.post.assert_called_once_with(uri)
 
     @patch.object(
-        py42.services.orgs.OrgService,
+        pycpg.services.orgs.OrgService,
         "_get_guid_by_id",
         return_value=TEST_ORG_GUID,
     )
@@ -140,7 +140,7 @@ class TestOrgService:
         mock_connection.post.assert_called_once_with(uri)
 
     @patch.object(
-        py42.services.orgs.OrgService,
+        pycpg.services.orgs.OrgService,
         "_get_guid_by_id",
         return_value=TEST_ORG_GUID,
     )
@@ -151,7 +151,7 @@ class TestOrgService:
         mock_connection.post.assert_called_once_with(uri)
 
     @patch.object(
-        py42.services.orgs.OrgService,
+        pycpg.services.orgs.OrgService,
         "_get_guid_by_id",
         return_value=TEST_ORG_GUID,
     )
@@ -172,16 +172,16 @@ class TestOrgService:
     ):
         service = OrgService(mock_connection)
         mock_connection.get.side_effect = create_mock_error(
-            Py42InternalServerError, mocker, "Server Error"
+            PycpgInternalServerError, mocker, "Server Error"
         )
-        with pytest.raises(Py42InternalServerError) as err:
+        with pytest.raises(PycpgInternalServerError) as err:
             service.get_current()
 
         expected = "Please be aware that this method is incompatible with api client authentication."
         assert expected in err.value.args[0]
 
     @patch.object(
-        py42.services.orgs.OrgService,
+        pycpg.services.orgs.OrgService,
         "_get_guid_by_id",
         return_value=TEST_ORG_GUID,
     )

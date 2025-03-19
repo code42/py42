@@ -1,6 +1,6 @@
-from py42.clients._archiveaccess import ArchiveContentStreamer
-from py42.clients._archiveaccess import ArchiveExplorer
-from py42.exceptions import Py42Error
+from pycpg.clients._archiveaccess import ArchiveContentStreamer
+from pycpg.clients._archiveaccess import ArchiveExplorer
+from pycpg.exceptions import PycpgError
 
 
 _FILE_SIZE_CALC_TIMEOUT = 10
@@ -23,7 +23,7 @@ class ArchiveClient:
             archive_guid (str): The GUID for the archive.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing archive
+            :class:`pycpg.response.PycpgResponse`: A response containing archive
             information.
         """
         return self._archive_service.get_single_archive(archive_guid)
@@ -35,7 +35,7 @@ class ArchiveClient:
             device_guid (str): The GUID for the device.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response`
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse`
             objects that each contain a page of archives.
         """
         return self._archive_service.get_all_archives_from_value(
@@ -56,7 +56,7 @@ class ArchiveClient:
         """Streams a file from a backup archive to memory. This method uses the same endpoint
         as restoring from Console and therefore has all the same considerations.
 
-        `Support Documentation <https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Restore_files_from_the_Code42_console#Troubleshooting>`__
+        `Support Documentation <https://support.crashplan.com/hc/en-us/articles/8766906552845--Download-files-from-the-web#01GBN5QKNAK4W1H0AZM4QBMQK8>`__
 
         Args:
             file_paths (str or list of str): The path or list of paths to the files or directories in
@@ -82,7 +82,7 @@ class ArchiveClient:
                 the first in the list of existing backup sets will be used.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the streamed content.
+            :class:`pycpg.response.PycpgResponse`: A response containing the streamed content.
 
         Usage example::
 
@@ -162,7 +162,7 @@ class ArchiveClient:
                 the first in the list of existing backup sets will be used.
 
         Returns:
-            :class:`py42.response.Py42Response`.
+            :class:`pycpg.response.PycpgResponse`.
         """
         explorer = self._archive_accessor_factory.create_archive_accessor(
             device_guid,
@@ -198,7 +198,7 @@ class ArchiveClient:
         backup_set_ids = [bs["backupSetId"] for bs in backup_sets]
         if backup_set_id:
             if backup_set_id not in backup_set_ids:
-                raise Py42Error(
+                raise PycpgError(
                     f"backup_set_id={backup_set_id} not found in device backup sets: {backup_sets}"
                 )
             return backup_set_id
@@ -209,12 +209,12 @@ class ArchiveClient:
         elif len(backup_set_ids) > 0:
             return backup_set_ids[0]
         else:
-            raise Py42Error("Failed to get backup sets for device.")
+            raise PycpgError("Failed to get backup sets for device.")
 
     def get_backup_sets(self, device_guid, destination_guid):
         """Gets all backup set names/identifiers referring to a single destination for a specific
         device.
-        `Learn more about backup sets. <https://support.code42.com/Administrator/Cloud/Configuring/Backup_sets>`__
+        `Learn more about backup sets. <https://support.crashplan.com/hc/en-us/articles/8599670071565-Backup-sets>`__
 
         Args:
             device_guid (str): The GUID of the device to get backup sets for.
@@ -222,7 +222,7 @@ class ArchiveClient:
                 backup sets for.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the backup sets.
+            :class:`pycpg.response.PycpgResponse`: A response containing the backup sets.
         """
         return self._archive_service.get_backup_sets(device_guid, destination_guid)
 
@@ -234,7 +234,7 @@ class ArchiveClient:
             org_id (int): The identification number of the organization to get restore history for.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of restore history.
         """
         return self._archive_service.get_all_restore_history(days, "orgId", org_id)
@@ -247,7 +247,7 @@ class ArchiveClient:
             user_id (int): The identification number of the user to get restore history for.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of restore history.
         """
         return self._archive_service.get_all_restore_history(days, "userId", user_id)
@@ -260,7 +260,7 @@ class ArchiveClient:
             device_id (int): The identification number of the device to get restore history for.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of restore history.
         """
         return self._archive_service.get_all_restore_history(
@@ -275,7 +275,7 @@ class ArchiveClient:
             purge_date (str): The date on which the archive should be purged in yyyy-MM-dd format
 
         Returns:
-            :class:`py42.response.Py42Response`: the response from the ColdStorage API.
+            :class:`pycpg.response.PycpgResponse`: the response from the ColdStorage API.
         """
         return self._archive_service.update_cold_storage_purge_date(
             archive_guid, purge_date
@@ -291,7 +291,7 @@ class ArchiveClient:
         """Returns a detailed list of cold storage archive information for a given org ID.
 
         Args:
-            org_id (str): The ID of a Code42 organization.
+            org_id (str): The ID of a CrashPlan organization.
             include_child_orgs (bool, optional): Determines whether cold storage information from
              the Org's children is also returned. Defaults to True.
             sort_key (str, optional): Sets the property by which the returned results will be sorted.
@@ -300,7 +300,7 @@ class ArchiveClient:
              asc or desc. Defaults to asc.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of cold storage archive information.
         """
         return self._archive_service.get_all_org_cold_storage_archives(

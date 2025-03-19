@@ -11,11 +11,11 @@ from tests.conftest import TEST_NODE_GUID
 from tests.conftest import TEST_RESTORE_PATH
 from tests.conftest import TEST_SESSION_ID
 
-from py42.clients._archiveaccess.restoremanager import FileSizePoller
-from py42.clients._archiveaccess.restoremanager import RestoreJobManager
-from py42.response import Py42Response
-from py42.services.storage.restore import PushRestoreExistingFiles
-from py42.services.storage.restore import PushRestoreLocation
+from pycpg.clients._archiveaccess.restoremanager import FileSizePoller
+from pycpg.clients._archiveaccess.restoremanager import RestoreJobManager
+from pycpg.response import PycpgResponse
+from pycpg.services.storage.restore import PushRestoreExistingFiles
+from pycpg.services.storage.restore import PushRestoreLocation
 
 
 class GetWebRestoreJobResponses:
@@ -88,7 +88,7 @@ def mock_get_restore_status_responses(mocker, storage_archive_service, json_resp
 
 
 def stream_restore_result_response_mock(mocker, storage_archive_service, chunks):
-    stream_restore_result_response = mocker.MagicMock(spec=Py42Response)
+    stream_restore_result_response = mocker.MagicMock(spec=PycpgResponse)
 
     def mock_stream_restore_result(job_id, **kwargs):
         stream_restore_result_response.iter_content.return_value = chunks

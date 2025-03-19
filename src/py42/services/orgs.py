@@ -1,11 +1,11 @@
 from collections import namedtuple
 
-from py42 import settings
-from py42.clients.settings.org_settings import OrgSettings
-from py42.exceptions import Py42Error
-from py42.exceptions import Py42InternalServerError
-from py42.services import BaseService
-from py42.services.util import get_all_pages
+from pycpg import settings
+from pycpg.clients.settings.org_settings import OrgSettings
+from pycpg.exceptions import PycpgError
+from pycpg.exceptions import PycpgInternalServerError
+from pycpg.services import BaseService
+from pycpg.services.util import get_all_pages
 
 OrgSettingsResponse = namedtuple(
     "OrgSettingsResponse", ["error", "org_response", "org_settings_response"]
@@ -13,7 +13,7 @@ OrgSettingsResponse = namedtuple(
 
 
 class OrgService(BaseService):
-    """A service for interacting with Code42 organization APIs.
+    """A service for interacting with CrashPlan organization APIs.
 
     Use the OrgService to create and retrieve organizations. You can also use it to block and
     deactivate organizations.
@@ -46,7 +46,7 @@ class OrgService(BaseService):
                 None.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
 
         # get parent org GUID from UID :)
@@ -73,7 +73,7 @@ class OrgService(BaseService):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the organization.
+            :class:`pycpg.response.PycpgResponse`: A response containing the organization.
         """
         uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}"
         return self._connection.get(uri, params=kwargs)
@@ -85,7 +85,7 @@ class OrgService(BaseService):
             org_uid (str): A UID for an organization.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the organization.
+            :class:`pycpg.response.PycpgResponse`: A response containing the organization.
         """
         uri = f'/api/v3/orgs/{self._get_guid_by_id(org_uid, id_key="orgUid")}'
         return self._connection.get(uri, params=kwargs)
@@ -96,11 +96,11 @@ class OrgService(BaseService):
         Args:
             page_num (int): The page number to request.
             page_size (int, optional): The number of organizations to return per page.
-                Defaults to `py42.settings.items_per_page`.
+                Defaults to `pycpg.settings.items_per_page`.
             kwargs (dict, optional): Additional advanced-user arguments. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         page_size = page_size or settings.items_per_page
         uri = "/api/v1/Org"
@@ -111,7 +111,7 @@ class OrgService(BaseService):
         """Gets all organizations.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of organizations.
         """
         return get_all_pages(self.get_page, "orgs", **kwargs)
@@ -126,7 +126,7 @@ class OrgService(BaseService):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}/block"
         return self._connection.post(uri)
@@ -139,7 +139,7 @@ class OrgService(BaseService):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}/unblock"
         return self._connection.post(uri)
@@ -152,7 +152,7 @@ class OrgService(BaseService):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}/deactivate"
         return self._connection.post(uri)
@@ -165,7 +165,7 @@ class OrgService(BaseService):
             org_id (int): An ID for an organization.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}/activate"
         return self._connection.post(uri)
@@ -176,14 +176,14 @@ class OrgService(BaseService):
         WARNING: This method is incompatible with api client authentication.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the organization for the
+            :class:`pycpg.response.PycpgResponse`: A response containing the organization for the
             currently signed-in user.
         """
         uri = "/api/v1/Org/my"
         try:
             return self._connection.get(uri, params=kwargs)
-        except Py42InternalServerError as err:
-            raise Py42InternalServerError(
+        except PycpgInternalServerError as err:
+            raise PycpgInternalServerError(
                 err,
                 message="Server Error. Please be aware that this method is incompatible with api client authentication.",
             )
@@ -196,7 +196,7 @@ class OrgService(BaseService):
             property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing settings information.
+            :class:`pycpg.response.PycpgResponse`: A response containing settings information.
         """
         uri = "/api/v14/agent-state/view-by-organization-id"
         params = {"orgId": org_id, "propertyName": property_name}
@@ -209,7 +209,7 @@ class OrgService(BaseService):
             org_id (str): The org's identifier.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing settings information.
+            :class:`pycpg.response.PycpgResponse`: A response containing settings information.
         """
         return self.get_agent_state(org_id, "fullDiskAccess")
 
@@ -220,7 +220,7 @@ class OrgService(BaseService):
             org_id (int,str): The identifier of the org.
 
         Returns:
-            :class:`py42.clients._settings_managers.OrgSettings`: A class to help manage org settings.
+            :class:`pycpg.clients._settings_managers.OrgSettings`: A class to help manage org settings.
         """
         org_settings = self.get_by_id(
             org_id, incSettings=True, incDeviceDefaults=True, incInheritedOrgInfo=True
@@ -236,7 +236,7 @@ class OrgService(BaseService):
             org_settings (`OrgSettings`): An `OrgSettings` instance with desired modifications to settings.
 
         Returns:
-            :class:`py42.services.orgs.OrgSettings`: A namedtuple containing the result of the setting change api calls.
+            :class:`pycpg.services.orgs.OrgSettings`: A namedtuple containing the result of the setting change api calls.
         """
         org_id = org_settings.org_id
         error = False
@@ -247,7 +247,7 @@ class OrgService(BaseService):
             payload = {"packets": org_settings.packets}
             try:
                 org_settings_response = self._connection.put(uri, json=payload)
-            except Py42Error as ex:
+            except PycpgError as ex:
                 error = True
                 org_settings_response = ex
 
@@ -255,7 +255,7 @@ class OrgService(BaseService):
             uri = f"/api/v1/Org/{org_id}"
             try:
                 org_response = self._connection.put(uri, json=org_settings.data)
-            except Py42Error as ex:
+            except PycpgError as ex:
                 error = True
                 org_response = ex
         return OrgSettingsResponse(
@@ -275,7 +275,7 @@ class OrgService(BaseService):
             ext_ref (str, optional): The updated external reference for the org.
 
         Returns:
-            :class:`py42.response.Py42Response`:
+            :class:`pycpg.response.PycpgResponse`:
         """
         uri = f"/api/v3/orgs/{self._get_guid_by_id(org_id)}"
         data = {"orgName": name, "orgExtRef": ext_ref, "notes": notes}
@@ -293,9 +293,9 @@ class OrgService(BaseService):
                 if org[id_key] == org_id:
                     return org["orgGuid"]
             if not guid:
-                raise Py42Error(f"Couldn't find an Org with ID '{org_id}'.")
+                raise PycpgError(f"Couldn't find an Org with ID '{org_id}'.")
         else:
             try:
                 return self.org_id_map[org_id]
             except KeyError:
-                raise Py42Error(f"Couldn't find an Org with ID '{org_id}'.")
+                raise PycpgError(f"Couldn't find an Org with ID '{org_id}'.")

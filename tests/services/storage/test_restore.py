@@ -9,11 +9,11 @@ from tests.conftest import TEST_SESSION_ID
 from tests.services.storage.test_archive import TEST_NUM_BYTES
 from tests.services.storage.test_archive import TEST_NUM_FILES
 
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42BadRestoreRequestError
-from py42.services.storage.restore import PushRestoreExistingFiles
-from py42.services.storage.restore import PushRestoreLocation
-from py42.services.storage.restore import PushRestoreService
+from pycpg.exceptions import PycpgBadRequestError
+from pycpg.exceptions import PycpgBadRestoreRequestError
+from pycpg.services.storage.restore import PushRestoreExistingFiles
+from pycpg.services.storage.restore import PushRestoreLocation
+from pycpg.services.storage.restore import PushRestoreService
 
 
 def _create_expected_restore_groups(file):
@@ -23,7 +23,7 @@ def _create_expected_restore_groups(file):
 @pytest.fixture
 def mock_restore_connection_with_bad_request(mocker, mock_connection):
     mock_connection.post.side_effect = create_mock_error(
-        Py42BadRequestError, mocker, "CREATE_FAILED"
+        PycpgBadRequestError, mocker, "CREATE_FAILED"
     )
     return mock_connection
 
@@ -78,7 +78,7 @@ class TestPushRestoreService:
     ):
         service = PushRestoreService(mock_restore_connection_with_bad_request)
         restore_groups = _create_expected_restore_groups(single_file_selection[0].file)
-        with pytest.raises(Py42BadRestoreRequestError) as err:
+        with pytest.raises(PycpgBadRestoreRequestError) as err:
             service.start_push_restore(
                 TEST_DEVICE_GUID,
                 TEST_ACCEPTING_GUID,

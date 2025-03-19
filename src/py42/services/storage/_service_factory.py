@@ -1,11 +1,9 @@
 from functools import lru_cache
 
-from py42.exceptions import Py42Error
-from py42.services._connection import Connection
-from py42.services.storage.archive import StorageArchiveService
-from py42.services.storage.exfiltrateddata import ExfiltratedDataService
-from py42.services.storage.preservationdata import StoragePreservationDataService
-from py42.services.storage.restore import PushRestoreService
+from pycpg.exceptions import PycpgError
+from pycpg.services._connection import Connection
+from pycpg.services.storage.archive import StorageArchiveService
+from pycpg.services.storage.restore import PushRestoreService
 
 
 class StorageServiceFactory:
@@ -29,16 +27,6 @@ class StorageServiceFactory:
         response = self._connection.get(uri, params=params)
         return response["serverUrl"]
 
-    def create_preservation_data_service(self, host_address):
-        main_connection = self._connection.clone(host_address)
-        streaming_connection = Connection.from_host_address(host_address)
-        return StoragePreservationDataService(main_connection, streaming_connection)
-
-    def create_exfiltrated_data_service(self, host_address):
-        main_connection = self._connection.clone(host_address)
-        streaming_connection = Connection.from_host_address(host_address)
-        return ExfiltratedDataService(main_connection, streaming_connection)
-
     def auto_select_destination_guid(self, device_guid):
         response = self._device_service.get_by_guid(
             device_guid, include_backup_usage=True
@@ -46,5 +34,5 @@ class StorageServiceFactory:
         # take the first destination guid we find
         destination_list = response["backupUsage"]
         if not destination_list:
-            raise Py42Error(f"No destinations found for device guid: {device_guid}")
+            raise PycpgError(f"No destinations found for device guid: {device_guid}")
         return destination_list[0]["targetComputerGuid"]

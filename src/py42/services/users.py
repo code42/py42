@@ -1,20 +1,20 @@
-from py42 import settings
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42InternalServerError
-from py42.exceptions import Py42InvalidEmailError
-from py42.exceptions import Py42InvalidPasswordError
-from py42.exceptions import Py42InvalidUsernameError
-from py42.exceptions import Py42NotFoundError
-from py42.exceptions import Py42OrgNotFoundError
-from py42.exceptions import Py42UserAlreadyExistsError
-from py42.exceptions import Py42UsernameMustBeEmailError
-from py42.services import BaseService
-from py42.services import handle_active_legal_hold_error
-from py42.services.util import get_all_pages
+from pycpg import settings
+from pycpg.exceptions import PycpgBadRequestError
+from pycpg.exceptions import PycpgInternalServerError
+from pycpg.exceptions import PycpgInvalidEmailError
+from pycpg.exceptions import PycpgInvalidPasswordError
+from pycpg.exceptions import PycpgInvalidUsernameError
+from pycpg.exceptions import PycpgNotFoundError
+from pycpg.exceptions import PycpgOrgNotFoundError
+from pycpg.exceptions import PycpgUserAlreadyExistsError
+from pycpg.exceptions import PycpgUsernameMustBeEmailError
+from pycpg.services import BaseService
+from pycpg.services import handle_active_legal_hold_error
+from pycpg.services.util import get_all_pages
 
 
 class UserService(BaseService):
-    """A service for interacting with Code42 user APIs. Use the UserService to create and retrieve
+    """A service for interacting with CrashPlan user APIs. Use the UserService to create and retrieve
     users. You can also use it to block and deactivate users.
     """
 
@@ -42,7 +42,7 @@ class UserService(BaseService):
             notes (str, optional): Descriptive information about the user. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
 
         uri = "/api/v1/User"
@@ -58,20 +58,20 @@ class UserService(BaseService):
 
         try:
             return self._connection.post(uri, json=data)
-        except Py42InternalServerError as err:
+        except PycpgInternalServerError as err:
             if "USER_DUPLICATE" in err.response.text:
-                raise Py42UserAlreadyExistsError(err)
+                raise PycpgUserAlreadyExistsError(err)
             raise
 
     def get_by_id(self, user_id, **kwargs):
         """Gets the user with the given ID.
-        `Rest Documentation <https://developer.code42.com/api/#tag/User/paths/~1v1~1users~1{userId}/get>`__
+        `Rest Documentation <https://developer.crashPlan.com/api/#tag/User/paths/~1v1~1users~1{userId}/get>`__
 
         Args:
             user_id (int): An ID for a user.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the user.
+            :class:`pycpg.response.PycpgResponse`: A response containing the user.
         """
         uri = f"/api/v1/User/{user_id}"
         return self._connection.get(uri, params=kwargs)
@@ -83,7 +83,7 @@ class UserService(BaseService):
             user_uid (str): A UID for a user.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the user.
+            :class:`pycpg.response.PycpgResponse`: A response containing the user.
         """
         uri = f"/api/v1/User/{user_uid}"
         params = dict(idType="uid", **kwargs)
@@ -96,7 +96,7 @@ class UserService(BaseService):
             username (str or unicode): A username for a user.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the user.
+            :class:`pycpg.response.PycpgResponse`: A response containing the user.
         """
 
         uri = "/api/v1/User"
@@ -109,13 +109,13 @@ class UserService(BaseService):
         WARNING: This method is incompatible with api client authentication.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the user.
+            :class:`pycpg.response.PycpgResponse`: A response containing the user.
         """
         uri = "/api/v1/User/my"
         try:
             return self._connection.get(uri, params=kwargs)
-        except Py42NotFoundError as err:
-            raise Py42NotFoundError(
+        except PycpgNotFoundError as err:
+            raise PycpgNotFoundError(
                 err,
                 message="User not found.  Please be aware that this method is incompatible with api client authentication.",
             )
@@ -142,12 +142,12 @@ class UserService(BaseService):
                 UID. Defaults to None.
             role_id (int, optional): Limits users to only those with a given role ID. Defaults to
                 None.
-            page_size (int, optional): The number of items on the page. Defaults to `py42.settings.items_per_page`.
+            page_size (int, optional): The number of items on the page. Defaults to `pycpg.settings.items_per_page`.
             q (str, optional): A generic query filter that searches across name, username, and
                 email. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
 
         uri = "/api/v1/User"
@@ -164,9 +164,9 @@ class UserService(BaseService):
         )
         try:
             return self._connection.get(uri, params=params)
-        except Py42BadRequestError as err:
+        except PycpgBadRequestError as err:
             if "Organization was not found" in str(err.response.text):
-                raise Py42OrgNotFoundError(err, org_uid)
+                raise PycpgOrgNotFoundError(err, org_uid)
             raise
 
     def get_all(
@@ -186,7 +186,7 @@ class UserService(BaseService):
                 email. Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of users.
         """
         return get_all_pages(
@@ -204,10 +204,10 @@ class UserService(BaseService):
         """Returns SCIM data such as division, department, and title for a given user.
 
         Args:
-            user_uid (str): A Code42 user uid.
+            user_uid (str): A CrashPlan user uid.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v18/scim-user-data/collated-view"
         params = dict(userId=user_uid)
@@ -221,7 +221,7 @@ class UserService(BaseService):
             user_id (int): An ID for a user.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
 
         uri = f"/api/v3/users/{self._get_user_uid_by_id(user_id)}/block"
@@ -235,7 +235,7 @@ class UserService(BaseService):
             user_id (int): An ID for a user.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v3/users/{self._get_user_uid_by_id(user_id)}/unblock"
         return self._connection.post(uri)
@@ -249,13 +249,13 @@ class UserService(BaseService):
             block_user (bool, optional): Blocks the user upon deactivation. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v3/users/{self._get_user_uid_by_id(user_id)}/deactivate"
         data = {"block": block_user}
         try:
             return self._connection.post(uri, json=data)
-        except Py42BadRequestError as ex:
+        except PycpgBadRequestError as ex:
             handle_active_legal_hold_error(ex, "user", user_id)
             raise
 
@@ -267,7 +267,7 @@ class UserService(BaseService):
             unblock_user (bool, optional): Whether or not to unblock the user. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v3/users/{self._get_user_uid_by_id(user_id)}/activate"
         params = {"unblock": unblock_user}
@@ -281,7 +281,7 @@ class UserService(BaseService):
             org_id (int): An ID for the organization to move the user to.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v3/users/{self._get_user_uid_by_id(user_id)}/move"
         data = {"orgId": org_id}
@@ -292,7 +292,7 @@ class UserService(BaseService):
         assign to other users.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v1/role"
         return self._connection.get(uri)
@@ -304,7 +304,7 @@ class UserService(BaseService):
             user_id (int): An ID for a user.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v3/users/{self._get_user_uid_by_id(user_id)}/roles"
         return self._connection.get(uri)
@@ -317,7 +317,7 @@ class UserService(BaseService):
         role_name (str): The name or ID of the role to assign to the user. e.g. "Desktop User" (name) or "desktop-user" (ID)
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
 
         # api calls broken into helper functions to simplify testing
@@ -334,7 +334,7 @@ class UserService(BaseService):
             role_name (str): The name or ID of the role to unassign from the user. e.g. "Desktop User" (name) or "desktop-user" (ID)
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
 
         # api calls broken into helper functions to simplify testing
@@ -357,7 +357,7 @@ class UserService(BaseService):
         """Updates an existing user.
 
         Args:
-            user_uid (str or int): A Code42 user UID.
+            user_uid (str or int): A CrashPlan user UID.
             username (str, optional): The username to which the user's username will be changed. Defaults to None.
             email (str, optional): The email to which the user's email will be changed. Defaults to None.
             password (str, optional): The password to which the user's password will be changed. Defaults to None.
@@ -367,7 +367,7 @@ class UserService(BaseService):
             archive_size_quota_bytes (int, optional): The quota in bytes that limits the user's archive size. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
 
         uri = f"/api/v1/User/{user_uid}?idType=uid"
@@ -382,21 +382,21 @@ class UserService(BaseService):
         }
         try:
             return self._connection.put(uri, json=data)
-        except Py42InternalServerError as err:
+        except PycpgInternalServerError as err:
             response_text = str(err.response.text)
             if "USERNAME_NOT_AN_EMAIL" in response_text:
-                raise Py42UsernameMustBeEmailError(err)
+                raise PycpgUsernameMustBeEmailError(err)
             elif "EMAIL_INVALID" in response_text:
-                raise Py42InvalidEmailError(email, err)
+                raise PycpgInvalidEmailError(email, err)
             elif "NEW_PASSWORD_INVALID" in response_text:
-                raise Py42InvalidPasswordError(err)
+                raise PycpgInvalidPasswordError(err)
             elif "INVALID_USERNAME" in response_text:
-                raise Py42InvalidUsernameError(err)
+                raise PycpgInvalidUsernameError(err)
             raise
 
     def _get_user_uid_by_id(self, user_id):
         # Identity crisis helper method.
-        # Old py42 methods accepted IDs. New apis take UIDs.
+        # Old pycpg methods accepted IDs. New apis take UIDs.
         # Use additional lookup to prevent breaking changes.
         return self.get_by_id(user_id)["userUid"]
 

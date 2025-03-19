@@ -4,14 +4,13 @@ from requests import Response
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
-import py42
-from py42.clients.settings.device_settings import DeviceSettings
-from py42.clients.settings.device_settings import IncydrDeviceSettings
-from py42.exceptions import Py42ActiveLegalHoldError
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42OrgNotFoundError
-from py42.response import Py42Response
-from py42.services.devices import DeviceService
+import pycpg
+from pycpg.clients.settings.device_settings import DeviceSettings
+from pycpg.exceptions import PycpgActiveLegalHoldError
+from pycpg.exceptions import PycpgBadRequestError
+from pycpg.exceptions import PycpgOrgNotFoundError
+from pycpg.response import PycpgResponse
+from pycpg.services.devices import DeviceService
 
 COMPUTER_URI = "/api/v1/Computer"
 UPGRADE_URI = "/api/v4/device-upgrade/upgrade-device"
@@ -83,7 +82,7 @@ class TestDeviceService:
     def test_get_all_calls_get_expected_number_of_times(
         self, mock_connection, mock_get_all_response, mock_get_all_empty_response
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = DeviceService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_response,
@@ -92,7 +91,7 @@ class TestDeviceService:
         ]
         for _ in service.get_all():
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_page_calls_get_with_expected_url_and_params(self, mock_connection):
@@ -141,11 +140,11 @@ class TestDeviceService:
                 base_err = mocker.MagicMock(spec=HTTPError)
                 base_err.response = mocker.MagicMock(spec=Response)
                 base_err.response.text = "ACTIVE_LEGAL_HOLD"
-                raise Py42BadRequestError(base_err)
+                raise PycpgBadRequestError(base_err)
 
         mock_connection.post.side_effect = side_effect
         client = DeviceService(mock_connection)
-        with pytest.raises(Py42ActiveLegalHoldError) as err:
+        with pytest.raises(PycpgActiveLegalHoldError) as err:
             client.deactivate(1234)
 
         expected = "Cannot deactivate the device with ID 1234 as the device is involved in a legal hold matter."
@@ -158,11 +157,11 @@ class TestDeviceService:
     ):
         text = '[{"name":"SYSTEM","description":"Unable to find org"}]'
         mock_connection.get.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, text
+            PycpgBadRequestError, mocker, text
         )
         service = DeviceService(mock_connection)
 
-        with pytest.raises(Py42OrgNotFoundError) as err:
+        with pytest.raises(PycpgOrgNotFoundError) as err:
             service.get_page(1, org_uid="TestOrgUid")
 
         assert "The organization with UID 'TestOrgUid' was not found." in str(err.value)
@@ -184,31 +183,10 @@ class TestDeviceService:
         requests_response = mocker.MagicMock(spec=Response)
         requests_response.text = text
         client = DeviceService(mock_connection)
-        mock_connection.get.return_value = Py42Response(requests_response)
+        mock_connection.get.return_value = PycpgResponse(requests_response)
         settings = client.get_settings("42")
         assert isinstance(settings, DeviceSettings)
 
-    def test_get_settings_returns_incydr_settings_when_artemis_service(
-        self, mocker, mock_connection
-    ):
-        text = """{"service": "Artemis"}"""
-        requests_response = mocker.MagicMock(spec=Response)
-        requests_response.text = text
-        client = DeviceService(mock_connection)
-        mock_connection.get.return_value = Py42Response(requests_response)
-        settings = client.get_settings("42")
-        assert isinstance(settings, IncydrDeviceSettings)
-
-    def test_get_settings_returns_incydr_settings_when_unspecified_service(
-        self, mocker, mock_connection
-    ):
-        text = """{"service": ""}"""
-        requests_response = mocker.MagicMock(spec=Response)
-        requests_response.text = text
-        client = DeviceService(mock_connection)
-        mock_connection.get.return_value = Py42Response(requests_response)
-        settings = client.get_settings("42")
-        assert isinstance(settings, IncydrDeviceSettings)
 
     def test_update_settings_calls_api_with_expected_params_when_crashplan(
         self, mock_connection
@@ -229,13 +207,4 @@ class TestDeviceService:
         uri = f"/api/v1/Computer/{device_id}"
         mock_connection.put.assert_called_once_with(uri, json=settings)
 
-    def test_update_settings_calls_api_with_expected_params_when_incydr(
-        self, mock_connection
-    ):
-        device_id = "123"
-        device_dict = {"computerId": device_id, "service": "Artemis"}
-        settings = IncydrDeviceSettings(device_dict)
-        client = DeviceService(mock_connection)
-        client.update_settings(settings)
-        uri = f"/api/v1/Computer/{device_id}"
-        mock_connection.put.assert_called_once_with(uri, json=settings)
+   

@@ -12,18 +12,18 @@
 import os
 import sys
 
-import py42.__version__ as meta
+import pycpg.__version__ as meta
 
 # -- Project information -----------------------------------------------------
 
-project = "py42"
-copyright = "2022, Code42 Software"
-author = "Code42 Software"
+project = "pycpg"
+copyright = "2025, CrashPlan Software"
+author = "CrashPlan Software"
 
 # The short X.Y version
-version = f"py42 v{meta.__version__}"
+version = f"pycpg v{meta.__version__}"
 # The full version, including alpha/beta/rc tags
-release = f"py42 v{meta.__version__}"
+release = f"pycpg v{meta.__version__}"
 
 
 # -- General configuration ---------------------------------------------------

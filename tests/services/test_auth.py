@@ -2,9 +2,9 @@ import pytest
 from requests import Request
 from tests.conftest import create_mock_response
 
-from py42.services._auth import ApiClientAuth
-from py42.services._auth import BearerAuth
-from py42.services._auth import CustomJWTAuth
+from pycpg.services._auth import ApiClientAuth
+from pycpg.services._auth import BearerAuth
+from pycpg.services._auth import CustomJWTAuth
 
 
 @pytest.fixture

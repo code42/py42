@@ -8,15 +8,15 @@ from requests.exceptions import HTTPError
 from requests.models import Request
 from requests.sessions import Session
 
-import py42.settings as settings
-from py42.exceptions import Py42DeviceNotConnectedError
-from py42.exceptions import Py42Error
-from py42.exceptions import Py42FeatureUnavailableError
-from py42.exceptions import raise_py42_error
-from py42.response import Py42Response
-from py42.services._auth import C42RenewableAuth
-from py42.settings import debug
-from py42.util import format_dict
+import pycpg.settings as settings
+from pycpg.exceptions import PycpgDeviceNotConnectedError
+from pycpg.exceptions import PycpgError
+from pycpg.exceptions import PycpgFeatureUnavailableError
+from pycpg.exceptions import raise_pycpg_error
+from pycpg.response import PycpgResponse
+from pycpg.services._auth import CPGRenewableAuth
+from pycpg.settings import debug
+from pycpg.util import format_dict
 
 SESSION_ADAPTER = HTTPAdapter(pool_connections=200, pool_maxsize=4, pool_block=True)
 
@@ -59,7 +59,7 @@ class MicroservicePrefixHostResolver(HostResolver):
         sts_base_url = response_json.get("stsBaseUrl")
 
         if not sts_base_url:
-            raise Py42FeatureUnavailableError(response)
+            raise PycpgFeatureUnavailableError(response)
 
         return sts_base_url
 
@@ -87,7 +87,7 @@ class ConnectedServerHostResolver(HostResolver):
             "api/v1/connectedServerUrl", params={"guid": self._device_guid}
         )
         if response["serverUrl"] is None:
-            raise Py42DeviceNotConnectedError(response, self._device_guid)
+            raise PycpgDeviceNotConnectedError(response, self._device_guid)
         return response["serverUrl"]
 
 
@@ -199,10 +199,10 @@ class Connection:
                     debug.logger.debug("Response data: <streamed>")
 
                 if 200 <= response.status_code <= 399:
-                    return Py42Response(response)
+                    return PycpgResponse(response)
 
                 if response.status_code == 401:
-                    if isinstance(self._auth, C42RenewableAuth):
+                    if isinstance(self._auth, CPGRenewableAuth):
                         self._auth.clear_credentials()
             else:
                 debug.logger.debug("Error! Could not retrieve response.")
@@ -281,12 +281,12 @@ def _create_user_headers(headers):
 def _handle_error(method, url, response):
     if response is None:
         msg = f"No response was returned for {method} request to {url}."
-        raise Py42Error(msg)
+        raise PycpgError(msg)
 
     try:
         response.raise_for_status()
     except HTTPError as ex:
-        raise_py42_error(ex)
+        raise_pycpg_error(ex)
 
 
 def _print_request(method, url, params=None, data=None, json=None):

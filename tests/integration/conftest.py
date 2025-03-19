@@ -3,8 +3,8 @@ from datetime import datetime
 
 import pytest
 
-import py42.sdk as _sdk
-from py42.util import convert_datetime_to_epoch
+import pycpg.sdk as _sdk
+from pycpg.util import convert_datetime_to_epoch
 
 
 def pytest_addoption(parser):
@@ -36,9 +36,9 @@ def observer_id(request):
 
 @pytest.fixture(scope="session")
 def connection():
-    host = os.environ.get("C42_HOST") or "http://127.0.0.1:4200"
-    user = os.environ.get("C42_USER") or "test.user@example.com"
-    pw = os.environ.get("C42_PW") or "password"
+    host = os.environ.get("CPG_HOST") or "http://127.0.0.1:4200"
+    user = os.environ.get("CPG_USER") or "test.user@example.com"
+    pw = os.environ.get("CPG_PW") or "password"
     return _get_sdk(host, user, pw)
 
 
@@ -54,9 +54,9 @@ def _get_sdk(host, user, pw):
 
 @pytest.fixture(scope="session")
 def api_client_connection():
-    host = os.environ.get("C42_HOST") or "http://127.0.0.1:4200"
-    client = os.environ.get("C42_API_CLIENT_ID") or "client_id"
-    secret = os.environ.get("C42_API_CLIENT_SECRET") or "secret"
+    host = os.environ.get("CPG_HOST") or "http://127.0.0.1:4200"
+    client = os.environ.get("CPG_API_CLIENT_ID") or "client_id"
+    secret = os.environ.get("CPG_API_CLIENT_SECRET") or "secret"
     return _get_api_client_sdk(host, client, secret)
 
 

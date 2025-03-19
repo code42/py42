@@ -1,15 +1,15 @@
 from collections import UserDict
 
-from py42.clients.settings import SettingProperty
-from py42.clients.settings import TSettingProperty
-from py42.clients.settings._converters import bool_to_str
-from py42.clients.settings._converters import bytes_to_gb
-from py42.clients.settings._converters import comma_separated_to_list
-from py42.clients.settings._converters import gb_to_bytes
-from py42.clients.settings._converters import str_to_bool
-from py42.clients.settings._converters import to_comma_separated
-from py42.clients.settings._converters import to_list
-from py42.clients.settings.device_settings import DeviceSettingsDefaults
+from pycpg.clients.settings import SettingProperty
+from pycpg.clients.settings import TSettingProperty
+from pycpg.clients.settings._converters import bool_to_str
+from pycpg.clients.settings._converters import bytes_to_gb
+from pycpg.clients.settings._converters import comma_separated_to_list
+from pycpg.clients.settings._converters import gb_to_bytes
+from pycpg.clients.settings._converters import str_to_bool
+from pycpg.clients.settings._converters import to_comma_separated
+from pycpg.clients.settings._converters import to_list
+from pycpg.clients.settings.device_settings import DeviceSettingsDefaults
 
 
 class OrgSettings(UserDict):
@@ -191,164 +191,7 @@ class OrgSettings(UserDict):
         set_converter=bool_to_str,
     )
 
-    @property
-    def endpoint_monitoring_enabled(self):
-        """Determines if endpoint monitoring settings are enabled for this org.
-
-        Disabling this property also disables "removable media", "cloud sync",
-        "browser and application monitoring" and "printer detection" properties.
-        """
-        return self._endpoint_monitoring_enabled
-
-    @endpoint_monitoring_enabled.setter
-    def endpoint_monitoring_enabled(self, val):
-        self._endpoint_monitoring_enabled = val
-        self._aed_enabled = val
-        if not val:
-            self._cloud_sync_enabled = val
-            self._browser_and_applications_enabled = val
-            self._removable_media_enabled = val
-            self._printer_detection_enabled = val
-
-    @property
-    def endpoint_monitoring_removable_media_enabled(self):
-        """Determines if removable media endpoint monitoring event capturing is enabled
-        for this org.
-        """
-        return self._removable_media_enabled
-
-    @endpoint_monitoring_removable_media_enabled.setter
-    def endpoint_monitoring_removable_media_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = value
-        self._removable_media_enabled = value
-
-    @property
-    def endpoint_monitoring_cloud_sync_enabled(self):
-        """Determines if cloud sync endpoint monitoring event capturing is enabled
-        for this org.
-        """
-        return self._cloud_sync_enabled
-
-    @endpoint_monitoring_cloud_sync_enabled.setter
-    def endpoint_monitoring_cloud_sync_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = value
-        self._cloud_sync_enabled = value
-
-    @property
-    def endpoint_monitoring_browser_and_applications_enabled(self):
-        """Determines if browser and other application activity endpoint monitoring
-        event capturing is enabled for this org.
-        """
-        return self._browser_and_applications_enabled
-
-    @endpoint_monitoring_browser_and_applications_enabled.setter
-    def endpoint_monitoring_browser_and_applications_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = value
-        self._browser_and_applications_enabled = value
-
-    @property
-    def endpoint_monitoring_printer_detection_enabled(self):
-        """Determines if printer endpoint monitoring event capturing is enabled for this
-        org.
-        """
-        return self._printer_detection_enabled
-
-    @endpoint_monitoring_printer_detection_enabled.setter
-    def endpoint_monitoring_printer_detection_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = value
-        self._printer_detection_enabled = value
-
-    @property
-    def endpoint_monitoring_file_metadata_collection_enabled(self):
-        """Determines if file metadata collection is enabled for this org."""
-        return self._file_metadata_collection_enabled
-
-    @endpoint_monitoring_file_metadata_collection_enabled.setter
-    def endpoint_monitoring_file_metadata_collection_enabled(self, value):
-        if value:
-            self.endpoint_monitoring_enabled = value
-        self._file_metadata_collection_enabled = value
-
-    endpoint_monitoring_file_metadata_scan_enabled = TSettingProperty(
-        "file_metadata_scan_enabled",
-        "device_fileForensics_scan_enabled",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-    """Determines if file metadata collection regular full scans are enabled for this
-    org.
-    """
-
-    endpoint_monitoring_file_metadata_ingest_scan_enabled = TSettingProperty(
-        "file_metadata_ingest_scan_enabled",
-        "device_fileForensics_enqueue_scan_events_during_ingest",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-    """Determines if file metadata collection does an initial full scan when first
-    enabled on devices.
-    """
-
-    endpoint_monitoring_background_priority_enabled = TSettingProperty(
-        "background_priority_enabled",
-        "device_background_priority_enabled",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-    """Determines if devices in this org have reduced priority in some IO bound tasks.
-    If enabled, devices may see improved general device performance at the expense of
-    some Code42 backup/security tasks taking longer.
-    """
-
-    endpoint_monitoring_custom_applications_win = TSettingProperty(
-        "custom_monitored_applications_win",
-        "device_org_winAppActivity_binaryWhitelist",
-        get_converter=comma_separated_to_list,
-        set_converter=to_comma_separated,
-    )
-    """List of additional applications the Code42 client monitors for file exfiltration
-    activity.
-
-    See `Support Documentation <https://support.code42.com/Administrator/Cloud/Configuring/Customize_applications_monitored_for_file_exfiltration>`__
-    for more details.
-    """
-
-    endpoint_monitoring_custom_applications_mac = TSettingProperty(
-        "custom_monitored_applications_mac",
-        "device_org_macAppActivity_binaryWhitelist",
-        get_converter=comma_separated_to_list,
-        set_converter=to_comma_separated,
-    )
-    """List of additional applications the Code42 client monitors for file exfiltration
-    activity.
-
-    See `Support Documentation <https://support.code42.com/Administrator/Cloud/Configuring/Customize_applications_monitored_for_file_exfiltration>`__
-    for more details.
-    """
-
-    endpoint_monitoring_file_metadata_collection_exclusions = TSettingProperty(
-        "file_metadata_collection_exclusions",
-        "device_fileForensics_fileExclusions_org",
-    )
-    """File types and file paths to exclude from file metadata collection.
-
-    See `Support Documentation <https://support.code42.com/Administrator/Cloud/Configuring/File_Metadata_Collection_exclusions>`__
-    for more details on the shape of the body this setting expects.
-    """
-
-    endpoint_monitoring_file_exfiltration_detection_exclusions = TSettingProperty(
-        "file_exfiltration_detection_exclusions",
-        "org_securityTools_detection_monitoring_exclusions",
-    )
-    """File types and file paths to exclude from file exfiltration detection.
-
-    See `Support Documentation <https://support.code42.com/Administrator/Cloud/Configuring/Endpoint_monitoring#ExcludePaths>`__
-    for more details on the shape of the body this setting expects.
-    """
+  
 
     web_restore_enabled = TSettingProperty(
         "web_restore_enabled",

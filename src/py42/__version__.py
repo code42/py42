@@ -1,3 +1,3 @@
-# py42
+# pycpg
 
-__version__ = "1.27.3"
+__version__ = "0.5.0"

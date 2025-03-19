@@ -5,18 +5,18 @@ import pytest
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
-import py42.settings
-from py42.exceptions import Py42ActiveLegalHoldError
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42InternalServerError
-from py42.exceptions import Py42InvalidEmailError
-from py42.exceptions import Py42InvalidPasswordError
-from py42.exceptions import Py42InvalidUsernameError
-from py42.exceptions import Py42NotFoundError
-from py42.exceptions import Py42OrgNotFoundError
-from py42.exceptions import Py42UserAlreadyExistsError
-from py42.exceptions import Py42UsernameMustBeEmailError
-from py42.services.users import UserService
+import pycpg.settings
+from pycpg.exceptions import PycpgActiveLegalHoldError
+from pycpg.exceptions import PycpgBadRequestError
+from pycpg.exceptions import PycpgInternalServerError
+from pycpg.exceptions import PycpgInvalidEmailError
+from pycpg.exceptions import PycpgInvalidPasswordError
+from pycpg.exceptions import PycpgInvalidUsernameError
+from pycpg.exceptions import PycpgNotFoundError
+from pycpg.exceptions import PycpgOrgNotFoundError
+from pycpg.exceptions import PycpgUserAlreadyExistsError
+from pycpg.exceptions import PycpgUsernameMustBeEmailError
+from pycpg.services.users import UserService
 
 USER_URI = "/api/v1/User"
 USER_URI_V3 = "/api/v3/users"
@@ -44,8 +44,8 @@ MOCK_GET_USER_BY_ID_RESPONSE = {
         "userId": 12345,
         "userUid": TEST_USER_UID,
         "status": "Active",
-        "username": "test@code42.com",
-        "email": "test@code42.com",
+        "username": "test@crashPlan.com",
+        "email": "test@crashPlan.com",
         "firstName": "test",
         "lastName": "mctest",
     }
@@ -127,36 +127,36 @@ class TestUserService:
 
     @pytest.fixture
     def internal_server_error(self, mocker):
-        return create_mock_error(Py42InternalServerError, mocker, "")
+        return create_mock_error(PycpgInternalServerError, mocker, "")
 
     @pytest.fixture
     def user_duplicate_error_response(self, mocker):
         return create_mock_error(
-            Py42InternalServerError, mocker, MOCK_USER_DUPLICATE_ERROR_TEXT
+            PycpgInternalServerError, mocker, MOCK_USER_DUPLICATE_ERROR_TEXT
         )
 
     @pytest.fixture
     def username_must_be_email_error_response(self, mocker):
         return create_mock_error(
-            Py42InternalServerError, mocker, MOCK_USERNAME_MUST_BE_EMAIL_TEXT
+            PycpgInternalServerError, mocker, MOCK_USERNAME_MUST_BE_EMAIL_TEXT
         )
 
     @pytest.fixture
     def invalid_email_error_response(self, mocker):
         return create_mock_error(
-            Py42InternalServerError, mocker, MOCK_INVALID_EMAIL_TEXT
+            PycpgInternalServerError, mocker, MOCK_INVALID_EMAIL_TEXT
         )
 
     @pytest.fixture
     def invalid_password_error_response(self, mocker):
         return create_mock_error(
-            Py42InternalServerError, mocker, MOCK_INVALID_PASSWORD_TEXT
+            PycpgInternalServerError, mocker, MOCK_INVALID_PASSWORD_TEXT
         )
 
     @pytest.fixture
     def invalid_username_error_response(self, mocker):
         return create_mock_error(
-            Py42InternalServerError, mocker, MOCK_INVALID_USERNAME_TEXT
+            PycpgInternalServerError, mocker, MOCK_INVALID_USERNAME_TEXT
         )
 
     def test_create_user_calls_post_with_expected_url_and_params(
@@ -194,7 +194,7 @@ class TestUserService:
         password = "password"
         name = "TESTNAME"
         note = "Test Note"
-        with pytest.raises(Py42UserAlreadyExistsError):
+        with pytest.raises(PycpgUserAlreadyExistsError):
             user_service.create_user(
                 org_uid, username, username, password, name, name, note
             )
@@ -204,7 +204,7 @@ class TestUserService:
     ):
         user_service = UserService(mock_connection)
         mock_connection.post.side_effect = internal_server_error
-        with pytest.raises(Py42InternalServerError):
+        with pytest.raises(PycpgInternalServerError):
             user_service.create_user("123", "123@example.com", "123@example.com")
 
     def test_get_all_calls_get_with_uri_and_params(
@@ -240,7 +240,7 @@ class TestUserService:
     def test_get_all_calls_get_expected_number_of_times(
         self, mock_connection, mock_get_users_response, mock_get_users_empty_response
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = UserService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_users_response,
@@ -249,7 +249,7 @@ class TestUserService:
         ]
         for _ in service.get_all():
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_scim_data_by_uid_calls_get_with_expected_uri_and_params(
@@ -267,7 +267,7 @@ class TestUserService:
         mock_connection.get.assert_called_once_with(uri)
 
     @patch.object(
-        py42.services.users.UserService,
+        pycpg.services.users.UserService,
         "_get_user_uid_by_id",
         return_value=TEST_USER_UID,
     )
@@ -284,7 +284,7 @@ class TestUserService:
         user_id = 12345
 
         with patch.object(
-            py42.services.users.UserService,
+            pycpg.services.users.UserService,
             "get_roles",
             return_value=mock_get_roles_response,
         ) as mock_get_roles:
@@ -295,7 +295,7 @@ class TestUserService:
         assert role_ids == ["desktop-user", "proe-user", "customer-cloud-admin"]
 
     @patch.object(
-        py42.services.users.UserService,
+        pycpg.services.users.UserService,
         "_get_user_uid_by_id",
         return_value=TEST_USER_UID,
     )
@@ -388,11 +388,11 @@ class TestUserService:
     ):
         text = '[{"name":"SYSTEM","description":"Organization was not found"}]'
         mock_connection.get.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, text
+            PycpgBadRequestError, mocker, text
         )
         service = UserService(mock_connection)
 
-        with pytest.raises(Py42OrgNotFoundError) as err:
+        with pytest.raises(PycpgOrgNotFoundError) as err:
             service.get_page(1, org_uid="TestOrgUid")
 
         assert "The organization with UID 'TestOrgUid' was not found." in str(err.value)
@@ -400,21 +400,21 @@ class TestUserService:
 
     def test_get_page_when_bad_request_raises(self, mocker, mock_connection):
         mock_connection.get.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, "BAD REQUEST"
+            PycpgBadRequestError, mocker, "BAD REQUEST"
         )
         service = UserService(mock_connection)
 
-        with pytest.raises(Py42BadRequestError):
+        with pytest.raises(PycpgBadRequestError):
             service.get_page(1, org_uid="TestOrgUid")
 
     def test_deactivate_when_user_in_legal_hold_raises_active_legal_hold_error(
         self, mocker, mock_connection
     ):
         mock_connection.post.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, "ACTIVE_LEGAL_HOLD"
+            PycpgBadRequestError, mocker, "ACTIVE_LEGAL_HOLD"
         )
         client = UserService(mock_connection)
-        with pytest.raises(Py42ActiveLegalHoldError) as err:
+        with pytest.raises(PycpgActiveLegalHoldError) as err:
             client.deactivate(1234)
 
         expected = (
@@ -485,7 +485,7 @@ class TestUserService:
     ):
         user_service = UserService(mock_connection)
         mock_connection.put.side_effect = username_must_be_email_error_response
-        with pytest.raises(Py42UsernameMustBeEmailError) as err:
+        with pytest.raises(PycpgUsernameMustBeEmailError) as err:
             user_service.update_user("123", username="foo")
 
         assert str(err.value) == "Username must be an email address."
@@ -495,7 +495,7 @@ class TestUserService:
     ):
         user_service = UserService(mock_connection)
         mock_connection.put.side_effect = invalid_email_error_response
-        with pytest.raises(Py42InvalidEmailError) as err:
+        with pytest.raises(PycpgInvalidEmailError) as err:
             user_service.update_user("123", username="foo", email="test")
 
         assert "'test' is not a valid email." in str(err.value)
@@ -506,7 +506,7 @@ class TestUserService:
     ):
         user_service = UserService(mock_connection)
         mock_connection.put.side_effect = invalid_password_error_response
-        with pytest.raises(Py42InvalidPasswordError) as err:
+        with pytest.raises(PycpgInvalidPasswordError) as err:
             user_service.update_user("123", username="foo", password="test")
 
         assert str(err.value) == "Invalid password."
@@ -516,7 +516,7 @@ class TestUserService:
     ):
         user_service = UserService(mock_connection)
         mock_connection.put.side_effect = invalid_username_error_response
-        with pytest.raises(Py42InvalidUsernameError) as err:
+        with pytest.raises(PycpgInvalidUsernameError) as err:
             user_service.update_user("123", username="foo")
 
         assert str(err.value) == "Invalid username."
@@ -526,11 +526,11 @@ class TestUserService:
     ):
         user_service = UserService(mock_connection)
         mock_connection.put.side_effect = internal_server_error
-        with pytest.raises(Py42InternalServerError):
+        with pytest.raises(PycpgInternalServerError):
             user_service.update_user("123", username="foo")
 
     @patch.object(
-        py42.services.users.UserService,
+        pycpg.services.users.UserService,
         "_get_user_uid_by_id",
         return_value=TEST_USER_UID,
     )
@@ -542,7 +542,7 @@ class TestUserService:
         mock_connection.post.assert_called_once_with(uri)
 
     @patch.object(
-        py42.services.users.UserService,
+        pycpg.services.users.UserService,
         "_get_user_uid_by_id",
         return_value=TEST_USER_UID,
     )
@@ -554,7 +554,7 @@ class TestUserService:
         mock_connection.post.assert_called_once_with(uri)
 
     @patch.object(
-        py42.services.users.UserService,
+        pycpg.services.users.UserService,
         "_get_user_uid_by_id",
         return_value=TEST_USER_UID,
     )
@@ -567,7 +567,7 @@ class TestUserService:
         mock_connection.post.assert_called_once_with(uri, json=data)
 
     @patch.object(
-        py42.services.users.UserService,
+        pycpg.services.users.UserService,
         "_get_user_uid_by_id",
         return_value=TEST_USER_UID,
     )
@@ -580,7 +580,7 @@ class TestUserService:
         mock_connection.post.assert_called_once_with(uri, json=data)
 
     @patch.object(
-        py42.services.users.UserService,
+        pycpg.services.users.UserService,
         "_get_user_uid_by_id",
         return_value=TEST_USER_UID,
     )
@@ -617,11 +617,11 @@ class TestUserService:
     ):
         service = UserService(mock_connection)
         mock_connection.get.side_effect = create_mock_error(
-            Py42NotFoundError,
+            PycpgNotFoundError,
             mocker,
             """[{"name":"SYSTEM","description":"User not found"}]""",
         )
-        with pytest.raises(Py42NotFoundError) as err:
+        with pytest.raises(PycpgNotFoundError) as err:
             service.get_current()
         assert (
             "User not found.  Please be aware that this method is incompatible with api client authentication."

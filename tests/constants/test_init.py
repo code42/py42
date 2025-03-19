@@ -1,4 +1,4 @@
-from py42.constants import SortDirection
+from pycpg.constants import SortDirection
 
 
 class TestSortDirection:

@@ -2,13 +2,13 @@ import pytest
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
-import py42
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42ForbiddenError
-from py42.exceptions import Py42LegalHoldCriteriaMissingError
-from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
-from py42.exceptions import Py42UserAlreadyAddedError
-from py42.services.legalhold import LegalHoldService
+import pycpg
+from pycpg.exceptions import PycpgBadRequestError
+from pycpg.exceptions import PycpgForbiddenError
+from pycpg.exceptions import PycpgLegalHoldCriteriaMissingError
+from pycpg.exceptions import PycpgLegalHoldNotFoundOrPermissionDeniedError
+from pycpg.exceptions import PycpgUserAlreadyAddedError
+from pycpg.services.legalhold import LegalHoldService
 
 LEGAL_HOLD_URI = "/api/v1/LegalHold"
 
@@ -78,10 +78,10 @@ class TestLegalHoldService:
         self, mocker, mock_connection, successful_response
     ):
         mock_connection.get.side_effect = create_mock_error(
-            Py42ForbiddenError, mocker, ""
+            PycpgForbiddenError, mocker, ""
         )
         service = LegalHoldService(mock_connection)
-        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+        with pytest.raises(PycpgLegalHoldNotFoundOrPermissionDeniedError) as err:
             service.get_matter_by_uid("matter")
 
         expected = "Matter with UID 'matter' can not be found. Your account may not have permission to view the matter."
@@ -94,7 +94,7 @@ class TestLegalHoldService:
         mock_get_all_matters_response,
         mock_get_all_matters_empty_response,
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = LegalHoldService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_matters_response,
@@ -103,7 +103,7 @@ class TestLegalHoldService:
         ]
         for _ in service.get_all_matters():
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_all_matter_custodians_calls_get_expected_number_of_times(
@@ -112,7 +112,7 @@ class TestLegalHoldService:
         mock_get_all_matter_custodians_response,
         mock_get_all_matter_custodians_empty_response,
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = LegalHoldService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_matter_custodians_response,
@@ -121,7 +121,7 @@ class TestLegalHoldService:
         ]
         for _ in service.get_all_matter_custodians(user="test"):
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_all_events_calls_get_expected_number_of_times(
@@ -130,7 +130,7 @@ class TestLegalHoldService:
         mock_get_all_events_response,
         mock_get_all_events_empty_response,
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = LegalHoldService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_events_response,
@@ -139,7 +139,7 @@ class TestLegalHoldService:
         ]
         for _ in service.get_all_events():
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_matters_page_calls_get_with_expected_url_and_params(
@@ -203,10 +203,10 @@ class TestLegalHoldService:
             "userUid, or userSearch"
         )
         mock_connection.get.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, text
+            PycpgBadRequestError, mocker, text
         )
         service = LegalHoldService(mock_connection)
-        with pytest.raises(Py42LegalHoldCriteriaMissingError) as err:
+        with pytest.raises(PycpgLegalHoldCriteriaMissingError) as err:
             service.get_custodians_page(1)
 
         assert (
@@ -228,11 +228,11 @@ class TestLegalHoldService:
         self, mocker, mock_connection
     ):
         mock_connection.post.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, "USER_ALREADY_IN_HOLD"
+            PycpgBadRequestError, mocker, "USER_ALREADY_IN_HOLD"
         )
         mock_connection.get.return_value = {"name": "NAME"}
         service = LegalHoldService(mock_connection)
-        with pytest.raises(Py42UserAlreadyAddedError) as err:
+        with pytest.raises(PycpgUserAlreadyAddedError) as err:
             service.add_to_matter("user", "legal")
 
         expected = (

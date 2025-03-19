@@ -1,7 +1,7 @@
 # Exceptions
 
 ```{eval-rst}
-.. automodule:: py42.exceptions
+.. automodule:: pycpg.exceptions
     :members:
     :inherited-members:
     :show-inheritance:

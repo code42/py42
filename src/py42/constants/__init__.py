@@ -1,11 +1,8 @@
-from py42.choices import Choices
-from py42.clients.cases import CaseStatus
-from py42.clients.trustedactivities import TrustedActivityType
-from py42.clients.watchlists import WatchlistType
+from pycpg.choices import Choices
 
 
 class SortDirection(Choices):
-    """Constants available to set Code42 request `sort_direction` when sorting returned lists in responses.
+    """Constants available to set CrashPlan request `sort_direction` when sorting returned lists in responses.
 
     * ``ASC``
     * ``DESC``

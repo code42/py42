@@ -13,11 +13,11 @@ from tests.conftest import TEST_PATH_TO_FILE_IN_DOWNLOADS_DIR
 from tests.conftest import TEST_RESTORE_PATH
 from tests.conftest import TEST_SESSION_ID
 
-from py42.clients._archiveaccess import ArchiveContentPusher
-from py42.clients._archiveaccess import ArchiveContentStreamer
-from py42.clients._archiveaccess import FileType
-from py42.exceptions import Py42ArchiveFileNotFoundError
-from py42.response import Py42Response
+from pycpg.clients._archiveaccess import ArchiveContentPusher
+from pycpg.clients._archiveaccess import ArchiveContentStreamer
+from pycpg.clients._archiveaccess import FileType
+from pycpg.exceptions import PycpgArchiveFileNotFoundError
+from pycpg.response import PycpgResponse
 
 
 USERS_DIR = "/Users"
@@ -293,7 +293,7 @@ def get_get_file_path_metadata_mock(mocker, session_id, device_guid, responses):
         mock_response = mocker.MagicMock(spec=Response)
         mock_response.status_code = 200
         mock_response.text = file_id_responses[file_id]
-        get_file_path_metadata_response = Py42Response(mock_response)
+        get_file_path_metadata_response = PycpgResponse(mock_response)
 
         return get_file_path_metadata_response
 
@@ -543,7 +543,7 @@ class TestArchiveContentStreamer:
         )
         invalid_path_in_downloads_folder = "/Users/qa/Downloads/吞"
 
-        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
+        with pytest.raises(PycpgArchiveFileNotFoundError) as e:
             archive_accessor.stream_from_backup(
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
@@ -570,7 +570,7 @@ class TestArchiveContentStreamer:
         invalid_path_in_downloads_folder = (
             "C:/Users/qa/Downloads/file-not-in-archive.txt"
         )
-        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
+        with pytest.raises(PycpgArchiveFileNotFoundError) as e:
             archive_accessor.stream_from_backup(
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )
@@ -598,7 +598,7 @@ class TestArchiveContentStreamer:
         invalid_path_in_downloads_folder = (
             "c:/Users/qa/Downloads/file-not-in-archive.txt"
         )
-        with pytest.raises(Py42ArchiveFileNotFoundError) as e:
+        with pytest.raises(PycpgArchiveFileNotFoundError) as e:
             archive_accessor.stream_from_backup(
                 TEST_BACKUP_SET_ID, invalid_path_in_downloads_folder
             )

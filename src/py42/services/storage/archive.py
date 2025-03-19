@@ -1,4 +1,4 @@
-from py42.services.storage.restore import RestoreService
+from pycpg.services.storage.restore import RestoreService
 
 
 class StorageArchiveService(RestoreService):

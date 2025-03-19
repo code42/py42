@@ -1,4 +1,4 @@
-from py42.response import Py42Response
+from pycpg.response import PycpgResponse
 
 
 class LoginConfigurationClient:
@@ -14,8 +14,8 @@ class LoginConfigurationClient:
             username (str): Username to retrieve login configuration for.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"{self._connection.host_address}/api/v3/LoginConfiguration"
         response = self._connection._session.get(uri, params={"username": username})
-        return Py42Response(response)
+        return PycpgResponse(response)

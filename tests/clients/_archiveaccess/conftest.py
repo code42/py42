@@ -2,10 +2,10 @@ import pytest
 from tests.conftest import create_mock_response
 from tests.conftest import TEST_SESSION_ID
 
-from py42.clients._archiveaccess.restoremanager import FileSizePoller
-from py42.clients._archiveaccess.restoremanager import RestoreJobManager
-from py42.services.storage.archive import StorageArchiveService
-from py42.services.storage.restore import PushRestoreService
+from pycpg.clients._archiveaccess.restoremanager import FileSizePoller
+from pycpg.clients._archiveaccess.restoremanager import RestoreJobManager
+from pycpg.services.storage.archive import StorageArchiveService
+from pycpg.services.storage.restore import PushRestoreService
 
 
 @pytest.fixture

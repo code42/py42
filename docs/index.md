@@ -1,4 +1,4 @@
-# py42, the Code42 Python SDK
+# pycpg, the CrashPlan Python SDK
 
 ```{eval-rst}
 .. toctree::
@@ -17,11 +17,11 @@
 ```
 
 
-[![license](https://img.shields.io/pypi/l/py42.svg)](https://pypi.org/project/py42/)
-[![versions](https://img.shields.io/pypi/pyversions/py42.svg)](https://pypi.org/project/py42/)
+[![license](https://img.shields.io/pypi/l/pycpg.svg)](https://pypi.org/project/pycpg/)
+[![versions](https://img.shields.io/pypi/pyversions/pycpg.svg)](https://pypi.org/project/pycpg/)
 
-`py42` is a Python wrapper around the Code42 REST APIs that also provides several utility methods. Use `py42` to
-develop your own tools for working with Code42 data while avoiding the overhead
+`pycpg` is a Python wrapper around the CrashPlan REST APIs that also provides several utility methods. Use `pycpg` to
+develop your own tools for working with CrashPlan data while avoiding the overhead
 of session / authentication management.
 
 ## Features

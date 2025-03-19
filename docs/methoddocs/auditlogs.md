@@ -1,7 +1,7 @@
 # Audit Logs
 
 ```{eval-rst}
-.. autoclass:: py42.clients.auditlogs.AuditLogsClient
+.. autoclass:: pycpg.clients.auditlogs.AuditLogsClient
     :members:
     :show-inheritance:
 ```

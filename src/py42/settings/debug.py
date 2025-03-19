@@ -9,7 +9,7 @@ class _DebugSettings:
     NONE = logging.NOTSET
 
     def __init__(self):
-        self.logger = logging.getLogger("py42")
+        self.logger = logging.getLogger("pycpg")
         self.logger.addHandler(logging.StreamHandler(sys.stderr))
 
     @property

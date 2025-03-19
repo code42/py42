@@ -2,41 +2,41 @@ import logging
 
 import pytest
 
-import py42
-from py42.settings import debug
+import pycpg
+from pycpg.settings import debug
 
 
 @pytest.fixture
 def none_enabled():
-    py42.settings.debug.level = debug.NONE
+    pycpg.settings.debug.level = debug.NONE
 
 
 @pytest.fixture
 def warning_enabled():
-    py42.settings.debug.level = logging.WARNING
+    pycpg.settings.debug.level = logging.WARNING
     yield warning_enabled
-    py42.settings.debug.level = debug.NONE
+    pycpg.settings.debug.level = debug.NONE
 
 
 @pytest.fixture
 def info_enabled():
-    py42.settings.debug.level = debug.INFO
+    pycpg.settings.debug.level = debug.INFO
     yield info_enabled
-    py42.settings.debug.level = debug.NONE
+    pycpg.settings.debug.level = debug.NONE
 
 
 @pytest.fixture
 def debug_enabled():
-    py42.settings.debug.level = debug.DEBUG
+    pycpg.settings.debug.level = debug.DEBUG
     yield debug_enabled
-    py42.settings.debug.level = debug.NONE
+    pycpg.settings.debug.level = debug.NONE
 
 
 @pytest.fixture
 def trace_enabled():
-    py42.settings.debug.level = debug.TRACE
+    pycpg.settings.debug.level = debug.TRACE
     yield trace_enabled
-    py42.settings.debug.level = debug.NONE
+    pycpg.settings.debug.level = debug.NONE
 
 
 test_logger_name = "test"
@@ -44,10 +44,10 @@ test_logger_name = "test"
 
 @pytest.fixture
 def custom_logger():
-    default_logger = py42.settings.debug.logger
-    py42.settings.debug.logger = logging.getLogger(test_logger_name)
+    default_logger = pycpg.settings.debug.logger
+    pycpg.settings.debug.logger = logging.getLogger(test_logger_name)
     yield custom_logger
-    py42.settings.debug.logger = default_logger
+    pycpg.settings.debug.logger = default_logger
 
 
 def test_setting_debug_level_to_warning_sets_default_logger_to_warning(warning_enabled):
@@ -95,5 +95,5 @@ def test_setting_debug_level_to_trace_sets_custom_logger_to_debug(
 
 
 def test_debug_settings_class_creates_default_logger():
-    assert debug.logger.name == "py42"
+    assert debug.logger.name == "pycpg"
     assert debug.level == logging.NOTSET

@@ -1,8 +1,8 @@
 # View or Modify organization settings
 
-Use py42 to easily view and update the settings for organizations with the `OrgSettings` object.
+Use pycpg to easily view and update the settings for organizations with the `OrgSettings` object.
 
-The `OrgSettings` object is a wrapper around the complex dicts that the Code42 `Org` and `OrgSettings` API endpoints expect,
+The `OrgSettings` object is a wrapper around the complex dicts that the CrashPlan `Org` and `OrgSettings` API endpoints expect,
 providing helper properties that can be used to get/set values, without having to know the underlying complexity of the APIs.
 
 To get started, create a `OrgSettings` object for a given org_id:
@@ -56,10 +56,10 @@ Because there are two endpoints that manage different organization settings valu
 method might make up to two requests to the server, depending on what `OrgSetting` values were actually modified. Because of the potential for two
 response values, `orgs.update_settings()` returns a `OrgSettingsResponse` namedtuple with the responses from both endpoints (if applicable), along with an
 `error` flag that indicates if any errors occurred. If an error occurred, the `org_response` or `org_settings_response` attributes will contain the
-`Py42Exception` that was raised instead of the `Py42Response`.
+`PycpgException` that was raised instead of the `PycpgResponse`.
 
 
 ```python
 >>> sdk.orgs.update_settings(org_settings)
-OrgSettingsResponse(error=False, org_response=<Py42Response [status=200, data={'active': True, 'blocked': False, 'classification': 'BASIC', 'configInheritanceCounts': {}, ...}]>, org_settings_response=None)
+OrgSettingsResponse(error=False, org_response=<PycpgResponse [status=200, data={'active': True, 'blocked': False, 'classification': 'BASIC', 'configInheritanceCounts': {}, ...}]>, org_settings_response=None)
 ```

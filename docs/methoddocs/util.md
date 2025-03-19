@@ -1,6 +1,6 @@
 # Util
 
 ```{eval-rst}
-.. automodule:: py42.util
+.. automodule:: pycpg.util
     :members:
 ```

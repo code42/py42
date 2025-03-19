@@ -1,14 +1,13 @@
 from collections import namedtuple
 from time import time
 
-from py42 import settings
-from py42.clients.settings.device_settings import DeviceSettings
-from py42.clients.settings.device_settings import IncydrDeviceSettings
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42OrgNotFoundError
-from py42.services import BaseService
-from py42.services import handle_active_legal_hold_error
-from py42.services.util import get_all_pages
+from pycpg import settings
+from pycpg.clients.settings.device_settings import DeviceSettings
+from pycpg.exceptions import PycpgBadRequestError
+from pycpg.exceptions import PycpgOrgNotFoundError
+from pycpg.services import BaseService
+from pycpg.services import handle_active_legal_hold_error
+from pycpg.services.util import get_all_pages
 
 DeviceSettingsResponse = namedtuple(
     "DeviceSettingsResponse", ["error", "settings_response", "device_settings_response"]
@@ -16,7 +15,7 @@ DeviceSettingsResponse = namedtuple(
 
 
 class DeviceService(BaseService):
-    """A class to interact with Code42 device/computer APIs."""
+    """A class to interact with CrashPlan device/computer APIs."""
 
     def get_page(
         self,
@@ -49,12 +48,12 @@ class DeviceService(BaseService):
             include_counts (bool, optional): A flag to denote whether to include total, warning,
                 and critical counts. Defaults to True.
             page_size (int, optional): The number of devices to return per page. Defaults to
-                `py42.settings.items_per_page`.
+                `pycpg.settings.items_per_page`.
             q (str, optional): Searches results flexibly by incomplete GUID, hostname,
                 computer name, etc. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
 
         uri = "/api/v1/Computer"
@@ -73,9 +72,9 @@ class DeviceService(BaseService):
         }
         try:
             return self._connection.get(uri, params=params)
-        except Py42BadRequestError as err:
+        except PycpgBadRequestError as err:
             if "Unable to find org" in str(err.response.text):
-                raise Py42OrgNotFoundError(err, org_uid)
+                raise PycpgOrgNotFoundError(err, org_uid)
             raise
 
     def get_all(
@@ -114,11 +113,11 @@ class DeviceService(BaseService):
                 computer name, etc. Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of devices.
 
             The devices returned by `get_all()` are based on the role and permissions of the user
-            authenticating the py42 SDK.
+            authenticating the pycpg SDK.
         """
 
         return get_all_pages(
@@ -144,7 +143,7 @@ class DeviceService(BaseService):
                 destination and its backup stats. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing device information.
+            :class:`pycpg.response.PycpgResponse`: A response containing device information.
         """
         uri = f"/api/v1/Computer/{device_id}"
         params = dict(incBackupUsage=include_backup_usage, **kwargs)
@@ -159,21 +158,21 @@ class DeviceService(BaseService):
                 destination and its backup stats. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing device information.
+            :class:`pycpg.response.PycpgResponse`: A response containing device information.
         """
         uri = f"/api/v1/Computer/{guid}"
         params = dict(idType="guid", incBackupUsage=include_backup_usage, **kwargs)
         return self._connection.get(uri, params=params)
 
     def block(self, device_id):
-        """Blocks a device causing the user not to be able to log in to or restore from Code42 on
+        """Blocks a device causing the user not to be able to log in to or restore from CrashPlan on
         that device.
 
         Args:
             device_id (int): The identification number of the device.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v1/ComputerBlock/{device_id}"
         return self._connection.put(uri)
@@ -185,7 +184,7 @@ class DeviceService(BaseService):
             device_id (int): The identification number of the device.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v1/ComputerBlock/{device_id}"
         return self._connection.delete(uri)
@@ -197,13 +196,13 @@ class DeviceService(BaseService):
             device_id (int): The identification number of the device.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v4/computer-deactivation/update"
         data = {"id": device_id}
         try:
             return self._connection.post(uri, json=data)
-        except Py42BadRequestError as ex:
+        except PycpgBadRequestError as ex:
             handle_active_legal_hold_error(ex, "device", device_id)
             raise
 
@@ -214,7 +213,7 @@ class DeviceService(BaseService):
             device_id (int): The identification number of the device.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v4/computer-deactivation/remove"
         data = {"id": device_id}
@@ -228,7 +227,7 @@ class DeviceService(BaseService):
             device_id (int): The identification number of the device.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v1/ComputerDeauthorization/{device_id}"
         return self._connection.put(uri)
@@ -241,7 +240,7 @@ class DeviceService(BaseService):
             property_name (str): The name of the property to retrieve (e.g. `fullDiskAccess`).
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing settings information.
+            :class:`pycpg.response.PycpgResponse`: A response containing settings information.
         """
         uri = "/api/v14/agent-state/view-by-device-guid"
         params = {"deviceGuid": guid, "propertyName": property_name}
@@ -254,7 +253,7 @@ class DeviceService(BaseService):
             guid (str): The globally unique identifier of the device.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing settings information.
+            :class:`pycpg.response.PycpgResponse`: A response containing settings information.
         """
         return self.get_agent_state(guid, "fullDiskAccess")
 
@@ -265,22 +264,19 @@ class DeviceService(BaseService):
             guid (int,str): The globally unique identifier of the device.
 
         Returns:
-            :class:`py42.clients.settings.device_settings.DeviceSettings`: A class to help manage device settings.
+            :class:`pycpg.clients.settings.device_settings.DeviceSettings`: A class to help manage device settings.
         """
         settings = self.get_by_guid(guid, incSettings=True)
-        if settings.data["service"].lower() == "crashplan":
-            return DeviceSettings(settings.data)
-        else:
-            return IncydrDeviceSettings(settings.data)
+        return DeviceSettings(settings.data)
 
     def update_settings(self, device_settings):
-        """Updates a device's settings based on changes to the passed in `DeviceSettings` or `IncydrDeviceSettings` instance.  The appropriate instance for each device is returned by the `get_settings()` method.
+        """Updates a device's settings based on changes to the passed in `DeviceSettings` instance.  The appropriate instance for each device is returned by the `get_settings()` method.
 
         Args:
-            device_settings (`DeviceSettings` OR `IncydrDeviceSettings`): An instance of `DeviceSettings` (Crashplan) or `IncydrDeviceSettings` (Incydr) with desired modifications to settings.
+            device_settings `DeviceSettings`: An instance of `DeviceSettings` (Crashplan) with desired modifications to settings.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the result of the settings changes.
+            :class:`pycpg.response.PycpgResponse`: A response containing the result of the settings changes.
         """
         device_settings = dict(device_settings)
         device_id = device_settings["computerId"]
@@ -297,7 +293,7 @@ class DeviceService(BaseService):
             guid (str): The globally unique identifier of the device.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the result of the upgrade request.
+            :class:`pycpg.response.PycpgResponse`: A response containing the result of the upgrade request.
         """
         uri = "/api/v4/device-upgrade/upgrade-device"
         return self._connection.post(uri, json={"deviceGuid": guid})

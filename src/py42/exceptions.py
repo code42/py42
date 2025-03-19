@@ -1,11 +1,11 @@
-from py42.settings import debug
+from pycpg.settings import debug
 
 
-class Py42Error(Exception):
-    """A generic, Py42 custom base exception."""
+class PycpgError(Exception):
+    """A generic, Pycpg custom base exception."""
 
 
-class Py42ResponseError(Py42Error):
+class PycpgResponseError(PycpgError):
     """A base custom class to manage all errors raised because of an HTTP response."""
 
     def __init__(self, response, message, *args):
@@ -18,7 +18,7 @@ class Py42ResponseError(Py42Error):
         return self._response
 
 
-class Py42ArchiveFileNotFoundError(Py42ResponseError):
+class PycpgArchiveFileNotFoundError(PycpgResponseError):
     """An exception raised when a resource file is not found or the path is invalid."""
 
     def __init__(self, response, device_guid, file_path):
@@ -40,7 +40,7 @@ class Py42ArchiveFileNotFoundError(Py42ResponseError):
         return self._file_path
 
 
-class Py42ChecksumNotFoundError(Py42ResponseError):
+class PycpgChecksumNotFoundError(PycpgResponseError):
     """An exception raised when a user-supplied hash could not successfully locate its corresponding resource."""
 
     def __init__(self, response, checksum_name, checksum_value):
@@ -60,8 +60,8 @@ class Py42ChecksumNotFoundError(Py42ResponseError):
         return self.checksum_value
 
 
-class Py42FeatureUnavailableError(Py42ResponseError):
-    """An exception raised when a requested feature is not supported in your Code42 environment."""
+class PycpgFeatureUnavailableError(PycpgResponseError):
+    """An exception raised when a requested feature is not supported in your CrashPlan environment."""
 
     def __init__(self, response):
         super().__init__(
@@ -70,7 +70,7 @@ class Py42FeatureUnavailableError(Py42ResponseError):
         )
 
 
-class Py42HTTPError(Py42ResponseError):
+class PycpgHTTPError(PycpgResponseError):
     """A base custom class to manage all HTTP errors raised by an API endpoint."""
 
     def __init__(self, exception, message=None, *args):
@@ -82,7 +82,7 @@ class Py42HTTPError(Py42ResponseError):
         super().__init__(exception.response, message, *args)
 
 
-class Py42DeviceNotConnectedError(Py42ResponseError):
+class PycpgDeviceNotConnectedError(PycpgResponseError):
     """An exception raised when trying to push a restore to a device that is not
     connected to an Authority server."""
 
@@ -100,7 +100,7 @@ class Py42DeviceNotConnectedError(Py42ResponseError):
         return self._device_guid
 
 
-class Py42InvalidArchivePassword(Py42HTTPError):
+class PycpgInvalidArchivePassword(PycpgHTTPError):
     """An exception raised when the password for unlocking an archive is invalid."""
 
     def __init__(self, exception):
@@ -108,7 +108,7 @@ class Py42InvalidArchivePassword(Py42HTTPError):
         super().__init__(exception, message)
 
 
-class Py42InvalidArchiveEncryptionKey(Py42HTTPError):
+class PycpgInvalidArchiveEncryptionKey(PycpgHTTPError):
     """An exception raised the encryption key for an archive is invalid."""
 
     def __init__(self, exception):
@@ -116,7 +116,7 @@ class Py42InvalidArchiveEncryptionKey(Py42HTTPError):
         super().__init__(exception, message)
 
 
-class Py42StorageSessionInitializationError(Py42HTTPError):
+class PycpgStorageSessionInitializationError(PycpgHTTPError):
     """An exception raised when the user is not authorized to initialize a storage session. This
     may occur when trying to restore a file or trying to get events for file activity on removable
     media, in cloud sync folders, and browser uploads."""
@@ -125,7 +125,7 @@ class Py42StorageSessionInitializationError(Py42HTTPError):
         super().__init__(exception, message)
 
 
-class Py42SessionInitializationError(Py42Error):
+class PycpgSessionInitializationError(PycpgError):
     """An exception raised when a user connection is invalid. A connection might be invalid due to
     connection timeout, invalid token, etc.
     """
@@ -138,35 +138,35 @@ class Py42SessionInitializationError(Py42Error):
         super().__init__(exception, message)
 
 
-class Py42BadRequestError(Py42HTTPError):
+class PycpgBadRequestError(PycpgHTTPError):
     """A wrapper to represent an HTTP 400 error."""
 
 
-class Py42UnauthorizedError(Py42HTTPError):
+class PycpgUnauthorizedError(PycpgHTTPError):
     """A wrapper to represent an HTTP 401 error."""
 
 
-class Py42ForbiddenError(Py42HTTPError):
+class PycpgForbiddenError(PycpgHTTPError):
     """A wrapper to represent an HTTP 403 error."""
 
 
-class Py42NotFoundError(Py42HTTPError):
+class PycpgNotFoundError(PycpgHTTPError):
     """A wrapper to represent an HTTP 404 error."""
 
 
-class Py42ConflictError(Py42HTTPError):
+class PycpgConflictError(PycpgHTTPError):
     """A wrapper to represent an HTTP 409 error."""
 
 
-class Py42InternalServerError(Py42HTTPError):
+class PycpgInternalServerError(PycpgHTTPError):
     """A wrapper to represent an HTTP 500 error."""
 
 
-class Py42TooManyRequestsError(Py42HTTPError):
+class PycpgTooManyRequestsError(PycpgHTTPError):
     """A wrapper to represent an HTTP 429 error."""
 
 
-class Py42OrgNotFoundError(Py42BadRequestError):
+class PycpgOrgNotFoundError(PycpgBadRequestError):
     """An exception raised when a 400 HTTP error message indicates that an
     organization was not found."""
 
@@ -181,7 +181,7 @@ class Py42OrgNotFoundError(Py42BadRequestError):
         return self._org_uid
 
 
-class Py42ActiveLegalHoldError(Py42BadRequestError):
+class PycpgActiveLegalHoldError(PycpgBadRequestError):
     """An exception raised when attempting to deactivate a user or device that is in an
     active legal hold."""
 
@@ -202,7 +202,7 @@ class Py42ActiveLegalHoldError(Py42BadRequestError):
         return self._resource_id
 
 
-class Py42UserAlreadyAddedError(Py42BadRequestError):
+class PycpgUserAlreadyAddedError(PycpgBadRequestError):
     """An exception raised when the user is already added to group or list, such as the
     Departing Employee list."""
 
@@ -217,7 +217,7 @@ class Py42UserAlreadyAddedError(Py42BadRequestError):
         return self._user_id
 
 
-class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
+class PycpgLegalHoldNotFoundOrPermissionDeniedError(PycpgForbiddenError):
     """An exception raised when a legal hold matter is inaccessible from your account or
     the matter UID is not valid."""
 
@@ -232,7 +232,7 @@ class Py42LegalHoldNotFoundOrPermissionDeniedError(Py42ForbiddenError):
         return self._resource_uid
 
 
-class Py42LegalHoldCriteriaMissingError(Py42BadRequestError):
+class PycpgLegalHoldCriteriaMissingError(PycpgBadRequestError):
     """An exception raised when a bad request was made to a Legal Hold endpoint."""
 
     def __init__(self, exception):
@@ -243,7 +243,7 @@ class Py42LegalHoldCriteriaMissingError(Py42BadRequestError):
         )
 
 
-class Py42LegalHoldAlreadyDeactivatedError(Py42BadRequestError):
+class PycpgLegalHoldAlreadyDeactivatedError(PycpgBadRequestError):
     """An exception raised when trying to deactivate a Legal Hold Matter that is already inactive."""
 
     def __init__(self, exception, legal_hold_matter_uid):
@@ -257,7 +257,7 @@ class Py42LegalHoldAlreadyDeactivatedError(Py42BadRequestError):
         return self._legal_hold_matter_uid
 
 
-class Py42LegalHoldAlreadyActiveError(Py42BadRequestError):
+class PycpgLegalHoldAlreadyActiveError(PycpgBadRequestError):
     """An exception raised when trying to activate a Legal Hold Matter that is already active."""
 
     def __init__(self, exception, legal_hold_matter_uid):
@@ -273,28 +273,8 @@ class Py42LegalHoldAlreadyActiveError(Py42BadRequestError):
         return self._legal_hold_matter_uid
 
 
-class Py42InvalidRuleOperationError(Py42HTTPError):
-    """An exception raised when trying to add or remove users to a system rule."""
 
-    def __init__(self, exception, rule_id, source):
-        msg = "Only alert rules with a source of 'Alerting' can be targeted by this command. "
-        msg += f"Rule {rule_id} has a source of '{source}'."
-        super().__init__(exception, msg, rule_id, source)
-        self._rule_id = rule_id
-        self._source = source
-
-    @property
-    def rule_id(self):
-        """The rule ID."""
-        return self._rule_id
-
-    @property
-    def source(self):
-        """The rule source."""
-        return self._source
-
-
-class Py42MFARequiredError(Py42UnauthorizedError):
+class PycpgMFARequiredError(PycpgUnauthorizedError):
     """Deprecated: An exception raised when a request requires multi-factor authentication"""
 
     def __init__(self, exception, message=None):
@@ -302,7 +282,7 @@ class Py42MFARequiredError(Py42UnauthorizedError):
         super().__init__(exception, message)
 
 
-class Py42UserAlreadyExistsError(Py42InternalServerError):
+class PycpgUserAlreadyExistsError(PycpgInternalServerError):
     """An exception raised when a user already exists"""
 
     def __init__(self, exception, message=None):
@@ -310,7 +290,7 @@ class Py42UserAlreadyExistsError(Py42InternalServerError):
         super().__init__(exception, message)
 
 
-class Py42UsernameMustBeEmailError(Py42InternalServerError):
+class PycpgUsernameMustBeEmailError(PycpgInternalServerError):
     """An exception raised when trying to set a non-email as a user's username
     in a cloud environment."""
 
@@ -319,7 +299,7 @@ class Py42UsernameMustBeEmailError(Py42InternalServerError):
         super().__init__(exception, message)
 
 
-class Py42InvalidEmailError(Py42InternalServerError):
+class PycpgInvalidEmailError(PycpgInternalServerError):
     """An exception raised when trying to set an invalid email as a user's email."""
 
     def __init__(self, email, exception):
@@ -333,7 +313,7 @@ class Py42InvalidEmailError(Py42InternalServerError):
         return self._email
 
 
-class Py42InvalidPasswordError(Py42InternalServerError):
+class PycpgInvalidPasswordError(PycpgInternalServerError):
     """An exception raised when trying to set an invalid password as a user's password."""
 
     def __init__(self, exception):
@@ -341,7 +321,7 @@ class Py42InvalidPasswordError(Py42InternalServerError):
         super().__init__(exception, message)
 
 
-class Py42InvalidUsernameError(Py42InternalServerError):
+class PycpgInvalidUsernameError(PycpgInternalServerError):
     """An exception raised when trying to set an invalid username as a user's username."""
 
     def __init__(self, exception):
@@ -349,27 +329,8 @@ class Py42InvalidUsernameError(Py42InternalServerError):
         super().__init__(exception, message)
 
 
-class Py42CloudAliasLimitExceededError(Py42BadRequestError):
-    """An Exception raised when trying to add a cloud alias to a user when that user
-    already has the max amount of supported cloud aliases."""
 
-    def __init__(self, exception, message=None):
-        message = (
-            message
-            or "Cloud alias limit exceeded. A max of 2 cloud aliases are allowed."
-        )
-        super(Py42BadRequestError, self).__init__(exception, message)
-
-
-class Py42CloudAliasCharacterLimitExceededError(Py42Error):
-    """An exception raised when trying to add a cloud alias to a user that exceeds the max character limit."""
-
-    def __init__(self):
-        message = "Cloud alias character limit exceeded. Max 50 characters."
-        super().__init__(message)
-
-
-class Py42BadRestoreRequestError(Py42BadRequestError):
+class PycpgBadRestoreRequestError(PycpgBadRequestError):
     """An error raised when the given restore arguments are not compatible and cause
     a bad request."""
 
@@ -378,7 +339,7 @@ class Py42BadRestoreRequestError(Py42BadRequestError):
         super().__init__(exception, message)
 
 
-class Py42InvalidPageTokenError(Py42BadRequestError):
+class PycpgInvalidPageTokenError(PycpgBadRequestError):
     """An error raised when the page token given is invalid."""
 
     def __init__(self, exception, page_token):
@@ -398,242 +359,24 @@ class Py42InvalidPageTokenError(Py42BadRequestError):
         return self._page_token
 
 
-class Py42UserNotOnListError(Py42NotFoundError):
-    """An exception raised when the user is not on a detection list."""
 
-    def __init__(self, exception, user_id, list_name):
-        message = f"User with ID '{user_id}' is not currently on the {list_name} list."
-        super(Py42NotFoundError, self).__init__(exception, message, user_id, list_name)
-        self._user_id = user_id
-        self._list_name = list_name
-
-    @property
-    def user_id(self):
-        """The user ID."""
-        return self._user_id
-
-    @property
-    def list_name(self):
-        """The list name."""
-        return self._list_name
-
-
-class Py42UnableToCreateProfileError(Py42BadRequestError):
-    """An error raised when trying to call the method for creating a detection-list
-    user when the user does not exist or is currently awaiting the profile to get
-    created on the back-end. Note: you are no longer able to create detection-list
-    profiles using the API; py42 only returns already existing profiles."""
-
-    def __init__(self, exception, username):
-        message = (
-            "Detection-list profiles are now created automatically on the server. "
-            f"Unable to find a detection-list profile for '{username}'. "
-            "It is possibly still being created if you just recently created the "
-            "Code42 user."
-        )
-        super().__init__(exception, message, username)
-        self._username = username
-
-    @property
-    def username(self):
-        """The username of the user."""
-        return self._username
-
-
-class Py42InvalidRuleError(Py42NotFoundError):
-    """An exception raised when the observer rule ID does not exist."""
-
-    def __init__(self, exception, rule_id):
-        message = f"Invalid Observer Rule ID '{rule_id}'."
-        super(Py42NotFoundError, self).__init__(exception, message, rule_id)
-        self._rule_id = rule_id
-
-    @property
-    def rule_id(self):
-        """The observer rule ID."""
-        return self._rule_id
-
-
-class Py42UpdateClosedCaseError(Py42BadRequestError):
-    """An error raised when trying to update a closed case."""
-
-    def __init__(self, exception):
-        msg = "Cannot update a closed case."
-        super().__init__(exception, msg)
-
-
-class Py42CaseNameExistsError(Py42BadRequestError):
-    """An error raised when trying to create a case with a name that already exists."""
-
-    def __init__(self, exception, case_name):
-        msg = f"Case name '{case_name}' already exists, please set another name."
-        super().__init__(exception, msg, case_name)
-        self._case_name = case_name
-
-    @property
-    def case_name(self):
-        """The case name."""
-        return self._case_name
-
-
-class Py42DescriptionLimitExceededError(Py42BadRequestError):
-    """An error raised when description of a case exceeds the allowed char length limit."""
-
-    def __init__(self, exception):
-        msg = "Description limit exceeded, max 250 characters allowed."
-        super().__init__(exception, msg)
-
-
-class Py42InvalidCaseUserError(Py42BadRequestError):
-    """An error raised when a case subject or assignee is not a valid user."""
-
-    def __init__(self, exception, user_uid):
-        msg = f"The provided {user_uid} is not a valid user."
-        super().__init__(exception, msg)
-        self._user_uid = user_uid
-
-    @property
-    def user(self):
-        """The user UID."""
-        return self._user_uid
-
-
-class Py42CaseAlreadyHasEventError(Py42BadRequestError):
-    """An error raised when event is already associated to the case."""
-
-    def __init__(self, exception):
-        msg = "Event is already associated to the case."
-        super().__init__(exception, msg)
-
-
-class Py42TrustedActivityInvalidChangeError(Py42BadRequestError):
-    """An error raised when an invalid change is being made to a trusted activity."""
-
-    def __init__(self, exception):
-        msg = "Invalid change to trusted activity. Trusted activity type cannot be changed."
-        super().__init__(exception, msg)
-
-
-class Py42TrustedActivityConflictError(Py42ConflictError):
-    """An error raised when theres a conflict with a trusted activity domain URL."""
-
-    def __init__(self, exception, value):
-        msg = (
-            f"Duplicate URL or workspace name, '{value}' already exists on your trusted list.  "
-            "Please provide a unique value"
-        )
-        super().__init__(exception, msg, value)
-        self._value = value
-
-    @property
-    def value(self):
-        """The domain, URL or workspace name."""
-        return self._value
-
-
-class Py42TrustedActivityInvalidCharacterError(Py42BadRequestError):
-    """An error raised when an invalid character is in a trusted activity value."""
-
-    def __init__(self, exception):
-        msg = "Invalid character in domain or Slack workspace name"
-        super().__init__(exception, msg)
-
-
-class Py42TrustedActivityIdNotFound(Py42NotFoundError):
-    """An exception raised when the trusted activity ID does not exist."""
-
-    def __init__(self, exception, resource_id):
-        message = f"Resource ID '{resource_id}' not found."
-        super().__init__(exception, message, resource_id)
-        self._resource_id = resource_id
-
-    @property
-    def resource_id(self):
-        """The resource ID."""
-        return self._resource_id
-
-
-class Py42WatchlistNotFound(Py42NotFoundError):
-    """An exception raised when the watchlist with the given ID was not found."""
-
-    def __init__(self, exception, resource_id):
-        message = f"Watchlist ID '{resource_id}' not found."
-        super().__init__(exception, message, resource_id)
-        self._watchlist_id = resource_id
-
-    @property
-    def watchlist_id(self):
-        """The watchlist ID."""
-        return self._watchlist_id
-
-
-class Py42WatchlistOrUserNotFound(Py42NotFoundError):
-    """An exception raised when the watchlist ID or the User ID does not exist."""
-
-    def __init__(self, exception, watchlist_id, user_id):
-        message = f"Watchlist ID '{watchlist_id}' or User ID '{user_id}' not found."
-        super().__init__(exception, message, watchlist_id, user_id)
-        self._watchlist_id = watchlist_id
-        self._user_id = user_id
-
-    @property
-    def watchlist_id(self):
-        """The watchlist ID."""
-        return self._watchlist_id
-
-    @property
-    def user_id(self):
-        """The user ID."""
-        return self._user_id
-
-
-class Py42InvalidWatchlistType(Py42BadRequestError):
-    """An exception raised when an invalid watchlist type is specified."""
-
-    def __init__(self, exception, watchlist_type):
-        message = f"'{watchlist_type}' cannot be converted to a valid watchlist type.  Please look at the WatchlistType class for valid types."
-        super().__init__(exception, message, watchlist_type)
-        self._watchlist_type = watchlist_type
-
-    @property
-    def watchlist_type(self):
-        """The specified watchlist type."""
-        return self._watchlist_type
-
-
-class Py42UserRiskProfileNotFound(Py42NotFoundError):
-    """An exception raised when the user with the given ID for a user risk profile was not found."""
-
-    def __init__(self, exception, user_id, identifier="ID"):
-        message = (
-            f"User risk profile for user with the {identifier} '{user_id}' not found."
-        )
-        super().__init__(exception, message, user_id)
-        self._user_id = user_id
-
-    @property
-    def user(self):
-        """The user identifier."""
-        return self._user_id
-
-
-def raise_py42_error(raised_error):
-    """Raises the appropriate :class:`py42.exceptions.Py42HttpError` based on the given
+def raise_pycpg_error(raised_error):
+    """Raises the appropriate :class:`pycpg.exceptions.PycpgHttpError` based on the given
     HTTPError's response status code.
     """
     if raised_error.response.status_code == 400:
-        raise Py42BadRequestError(raised_error)
+        raise PycpgBadRequestError(raised_error)
     elif raised_error.response.status_code == 401:
-        raise Py42UnauthorizedError(raised_error)
+        raise PycpgUnauthorizedError(raised_error)
     elif raised_error.response.status_code == 403:
-        raise Py42ForbiddenError(raised_error)
+        raise PycpgForbiddenError(raised_error)
     elif raised_error.response.status_code == 404:
-        raise Py42NotFoundError(raised_error)
+        raise PycpgNotFoundError(raised_error)
     elif raised_error.response.status_code == 409:
-        raise Py42ConflictError(raised_error)
+        raise PycpgConflictError(raised_error)
     elif raised_error.response.status_code == 429:
-        raise Py42TooManyRequestsError(raised_error)
+        raise PycpgTooManyRequestsError(raised_error)
     elif 500 <= raised_error.response.status_code < 600:
-        raise Py42InternalServerError(raised_error)
+        raise PycpgInternalServerError(raised_error)
     else:
-        raise Py42HTTPError(raised_error)
+        raise PycpgHTTPError(raised_error)

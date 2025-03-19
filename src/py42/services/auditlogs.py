@@ -1,8 +1,8 @@
-from py42 import settings
-from py42.services import BaseService
-from py42.services.util import get_all_pages
-from py42.util import parse_timestamp_to_microseconds_precision
-from py42.util import to_list
+from pycpg import settings
+from pycpg.services import BaseService
+from pycpg.services.util import get_all_pages
+from pycpg.util import parse_timestamp_to_microseconds_precision
+from pycpg.util import to_list
 
 _FILTER_PARAMS = (
     "event_types",
@@ -19,7 +19,7 @@ HEADER_MAP = {"CSV": {"Accept": "text/csv"}, "CEF": {"Accept": "text/x-cef"}}
 
 
 class AuditLogsService(BaseService):
-    """https://support.code42.com/Administrator/Cloud/Monitoring_and_managing/Search_Audit_Log_events_with_the_Code42_API"""
+    """https://support.crashplan.com/hc/en-us/articles/9057566861325--Search-Audit-Log-events-with-the-CrashPlan-API"""
 
     def get_page(
         self,

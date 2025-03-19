@@ -1,13 +1,13 @@
-from py42 import settings
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42Error
-from py42.exceptions import Py42ForbiddenError
-from py42.exceptions import Py42LegalHoldCriteriaMissingError
-from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
-from py42.exceptions import Py42UserAlreadyAddedError
-from py42.services import BaseService
-from py42.services.util import get_all_pages
-from py42.util import parse_timestamp_to_milliseconds_precision
+from pycpg import settings
+from pycpg.exceptions import PycpgBadRequestError
+from pycpg.exceptions import PycpgError
+from pycpg.exceptions import PycpgForbiddenError
+from pycpg.exceptions import PycpgLegalHoldCriteriaMissingError
+from pycpg.exceptions import PycpgLegalHoldNotFoundOrPermissionDeniedError
+from pycpg.exceptions import PycpgUserAlreadyAddedError
+from pycpg.services import BaseService
+from pycpg.services.util import get_all_pages
+from pycpg.util import parse_timestamp_to_milliseconds_precision
 
 
 def _active_state_map(active):
@@ -15,15 +15,15 @@ def _active_state_map(active):
     try:
         return _map[active]
     except KeyError:
-        raise Py42Error(
+        raise PycpgError(
             f"Invalid argument: '{active}'. active must be True, False, or None"
         )
 
 
 class LegalHoldService(BaseService):
-    """A service for interacting with Code42 Legal Hold APIs.
+    """A service for interacting with CrashPlan Legal Hold APIs.
 
-    The LegalHoldService provides the ability to manage Code42 Legal Hold Policies and Matters.
+    The LegalHoldService provides the ability to manage CrashPlan Legal Hold Policies and Matters.
     It can:
     - Create, view, and list all existing Policies.
     - Create, view, deactivate, reactivate, and list all existing Matters.
@@ -39,7 +39,7 @@ class LegalHoldService(BaseService):
                 None (where the server-default backup set is used).
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v4/legal-hold-policy/create"
         data = {"name": name, "policy": policy}
@@ -59,7 +59,7 @@ class LegalHoldService(BaseService):
             hold_ext_ref (str, optional): Optional external reference information. Defaults to None.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v1/LegalHold"
         data = {
@@ -78,7 +78,7 @@ class LegalHoldService(BaseService):
             legal_hold_policy_uid (str): The identifier of the Preservation Policy.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the Policy.
+            :class:`pycpg.response.PycpgResponse`: A response containing the Policy.
         """
         uri = "/api/v4/legal-hold-policy/view"
         params = {"legalHoldPolicyUid": legal_hold_policy_uid}
@@ -88,7 +88,7 @@ class LegalHoldService(BaseService):
         """Gets a list of existing Preservation Policies.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the list of Policies.
+            :class:`pycpg.response.PycpgResponse`: A response containing the list of Policies.
         """
         uri = "/api/v4/legal-hold-policy/list"
         return self._connection.get(uri)
@@ -100,13 +100,13 @@ class LegalHoldService(BaseService):
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class:`py42.response.Py42Response`: A response containing the Matter.
+            :class:`pycpg.response.PycpgResponse`: A response containing the Matter.
         """
         uri = f"/api/v1/LegalHold/{legal_hold_uid}"
         try:
             return self._connection.get(uri)
-        except Py42ForbiddenError as err:
-            raise Py42LegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
+        except PycpgForbiddenError as err:
+            raise PycpgLegalHoldNotFoundOrPermissionDeniedError(err, legal_hold_uid)
 
     def get_matters_page(
         self,
@@ -131,10 +131,10 @@ class LegalHoldService(BaseService):
             hold_ext_ref (str, optional): Find Matters having a matching external reference field.
                 Defaults to None.
             page_size (int, optional): The number of legal hold items to return per page.
-                Defaults to `py42.settings.items_per_page`.
+                Defaults to `pycpg.settings.items_per_page`.
 
         Returns:
-            :class:`py42.response.Py42Response`:
+            :class:`pycpg.response.PycpgResponse`:
         """
 
         active_state = _active_state_map(active)
@@ -167,7 +167,7 @@ class LegalHoldService(BaseService):
                 Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of Legal Hold Matters.
         """
         return get_all_pages(
@@ -208,10 +208,10 @@ class LegalHoldService(BaseService):
             active (bool or None, optional): Find LegalHoldMemberships by their active state. True
                 returns active LegalHoldMemberships, False returns inactive LegalHoldMemberships,
                 None returns all LegalHoldMemberships regardless of state. Defaults to True.
-            page_size (int, optional): The size of the page. Defaults to `py42.settings.items_per_page`.
+            page_size (int, optional): The size of the page. Defaults to `pycpg.settings.items_per_page`.
 
         Returns:
-            :class:`py42.response.Py42Response`:
+            :class:`pycpg.response.PycpgResponse`:
         """
         active_state = _active_state_map(active)
         page_size = page_size or settings.items_per_page
@@ -227,9 +227,9 @@ class LegalHoldService(BaseService):
         uri = "/api/v1/LegalHoldMembership"
         try:
             return self._connection.get(uri, params=params)
-        except Py42BadRequestError as ex:
+        except PycpgBadRequestError as ex:
             if "At least one criteria must be specified" in ex.response.text:
-                raise Py42LegalHoldCriteriaMissingError(ex)
+                raise PycpgLegalHoldCriteriaMissingError(ex)
             raise
 
     def get_all_matter_custodians(
@@ -255,7 +255,7 @@ class LegalHoldService(BaseService):
                 None returns all LegalHoldMemberships regardless of state. Defaults to True.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of LegalHoldMembership objects.
         """
         return get_all_pages(
@@ -289,10 +289,10 @@ class LegalHoldService(BaseService):
                 E.g. yyyy-MM-dd HH:MM:SS. Defaults to None.
             page_num (int): The page number to request. Defaults to 1.
             page_size (int, optional): The size of the page.
-                Defaults to `py42.settings.items_per_page`.
+                Defaults to `pycpg.settings.items_per_page`.
 
         Returns:
-            :class:`py42.response.Py42Response`:
+            :class:`pycpg.response.PycpgResponse`:
         """
         page_size = page_size or settings.items_per_page
         if min_event_date:
@@ -326,7 +326,7 @@ class LegalHoldService(BaseService):
                 E.g. yyyy-MM-dd HH:MM:SS. Defaults to None.
 
         Returns:
-            generator: An object that iterates over :class:`py42.response.Py42Response` objects
+            generator: An object that iterates over :class:`pycpg.response.PycpgResponse` objects
             that each contain a page of LegalHoldEvent objects.
         """
         return get_all_pages(
@@ -345,19 +345,19 @@ class LegalHoldService(BaseService):
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v1/LegalHoldMembership"
         data = {"legalHoldUid": legal_hold_uid, "userUid": user_uid}
         try:
             return self._connection.post(uri, json=data)
-        except Py42BadRequestError as err:
+        except PycpgBadRequestError as err:
             if "USER_ALREADY_IN_HOLD" in err.response.text:
                 matter = self.get_matter_by_uid(legal_hold_uid)
                 matter_id_and_name_text = (
                     f"legal hold matter id={legal_hold_uid}, name={matter['name']}"
                 )
-                raise Py42UserAlreadyAddedError(err, user_uid, matter_id_and_name_text)
+                raise PycpgUserAlreadyAddedError(err, user_uid, matter_id_and_name_text)
             raise
 
     def remove_from_matter(self, legal_hold_membership_uid):
@@ -368,7 +368,7 @@ class LegalHoldService(BaseService):
                 representing the Custodian to Matter relationship.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v1/LegalHoldMembershipDeactivation"
         data = {"legalHoldMembershipUid": legal_hold_membership_uid}
@@ -381,7 +381,7 @@ class LegalHoldService(BaseService):
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = "/api/v4/legal-hold-deactivation/update"
         data = {"legalHoldUid": legal_hold_uid}
@@ -394,7 +394,7 @@ class LegalHoldService(BaseService):
             legal_hold_uid (str): The identifier of the Legal Hold Matter.
 
         Returns:
-            :class:`py42.response.Py42Response`
+            :class:`pycpg.response.PycpgResponse`
         """
         uri = f"/api/v1/LegalHoldReactivation/{legal_hold_uid}"
         return self._connection.put(uri)

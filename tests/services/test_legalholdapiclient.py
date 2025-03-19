@@ -2,15 +2,15 @@ import pytest
 from tests.conftest import create_mock_error
 from tests.conftest import create_mock_response
 
-import py42
-from py42.exceptions import Py42BadRequestError
-from py42.exceptions import Py42ForbiddenError
-from py42.exceptions import Py42LegalHoldAlreadyActiveError
-from py42.exceptions import Py42LegalHoldAlreadyDeactivatedError
-from py42.exceptions import Py42LegalHoldCriteriaMissingError
-from py42.exceptions import Py42LegalHoldNotFoundOrPermissionDeniedError
-from py42.exceptions import Py42UserAlreadyAddedError
-from py42.services.legalholdapiclient import LegalHoldApiClientService
+import pycpg
+from pycpg.exceptions import PycpgBadRequestError
+from pycpg.exceptions import PycpgForbiddenError
+from pycpg.exceptions import PycpgLegalHoldAlreadyActiveError
+from pycpg.exceptions import PycpgLegalHoldAlreadyDeactivatedError
+from pycpg.exceptions import PycpgLegalHoldCriteriaMissingError
+from pycpg.exceptions import PycpgLegalHoldNotFoundOrPermissionDeniedError
+from pycpg.exceptions import PycpgUserAlreadyAddedError
+from pycpg.services.legalholdapiclient import LegalHoldApiClientService
 
 BASE_URI = "/api/v27"
 
@@ -83,14 +83,14 @@ class TestLegalHoldApiClientService:
         }
         mock_connection.get.assert_called_once_with(uri, params=data)
 
-    def test_get_policy_by_uid_raises_py42_error_if_policy_uid_not_found_or_forbidden(
+    def test_get_policy_by_uid_raises_pycpg_error_if_policy_uid_not_found_or_forbidden(
         self, mocker, mock_connection
     ):
         service = LegalHoldApiClientService(mock_connection)
         mock_connection.get.side_effect = create_mock_error(
-            Py42ForbiddenError, mocker, ""
+            PycpgForbiddenError, mocker, ""
         )
-        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+        with pytest.raises(PycpgLegalHoldNotFoundOrPermissionDeniedError) as err:
             service.get_policy_by_uid(TEST_POLICY_UID)
 
         assert (
@@ -155,10 +155,10 @@ class TestLegalHoldApiClientService:
         self, mocker, mock_connection, successful_response
     ):
         mock_connection.get.side_effect = create_mock_error(
-            Py42ForbiddenError, mocker, ""
+            PycpgForbiddenError, mocker, ""
         )
         service = LegalHoldApiClientService(mock_connection)
-        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+        with pytest.raises(PycpgLegalHoldNotFoundOrPermissionDeniedError) as err:
             service.get_matter_by_uid(TEST_MATTER_UID)
 
         expected = f"Matter with UID '{TEST_MATTER_UID}' can not be found. Your account may not have permission to view the matter."
@@ -170,7 +170,7 @@ class TestLegalHoldApiClientService:
         mock_get_all_matters_response,
         mock_get_all_matters_empty_response,
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = LegalHoldApiClientService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_matters_response,
@@ -179,7 +179,7 @@ class TestLegalHoldApiClientService:
         ]
         for _ in service.get_all_matters():
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_all_matter_custodians_calls_get_expected_number_of_times(
@@ -188,7 +188,7 @@ class TestLegalHoldApiClientService:
         mock_get_all_matter_custodians_response,
         mock_get_all_matter_custodians_empty_response,
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = LegalHoldApiClientService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_matter_custodians_response,
@@ -197,7 +197,7 @@ class TestLegalHoldApiClientService:
         ]
         for _ in service.get_all_matter_custodians(user="test"):
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_matters_page_calls_get_with_expected_url_and_params(
@@ -244,10 +244,10 @@ class TestLegalHoldApiClientService:
             "userUid, or userSearch"
         )
         mock_connection.get.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, text
+            PycpgBadRequestError, mocker, text
         )
         service = LegalHoldApiClientService(mock_connection)
-        with pytest.raises(Py42LegalHoldCriteriaMissingError) as err:
+        with pytest.raises(PycpgLegalHoldCriteriaMissingError) as err:
             service.get_custodians_page(1)
 
         assert (
@@ -268,11 +268,11 @@ class TestLegalHoldApiClientService:
         self, mocker, mock_connection
     ):
         mock_connection.post.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, "USER_ALREADY_IN_HOLD"
+            PycpgBadRequestError, mocker, "USER_ALREADY_IN_HOLD"
         )
         mock_connection.get.return_value = {"name": "NAME"}
         service = LegalHoldApiClientService(mock_connection)
-        with pytest.raises(Py42UserAlreadyAddedError) as err:
+        with pytest.raises(PycpgUserAlreadyAddedError) as err:
             service.add_to_matter("user", "legal")
 
         expected = (
@@ -280,14 +280,14 @@ class TestLegalHoldApiClientService:
         )
         assert expected in str(err.value)
 
-    def test_add_to_matter_raises_py42_error_if_membership_uid_not_found_or_forbidden(
+    def test_add_to_matter_raises_pycpg_error_if_membership_uid_not_found_or_forbidden(
         self, mocker, mock_connection
     ):
         service = LegalHoldApiClientService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
-            Py42ForbiddenError, mocker, ""
+            PycpgForbiddenError, mocker, ""
         )
-        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+        with pytest.raises(PycpgLegalHoldNotFoundOrPermissionDeniedError) as err:
             service.add_to_matter("user_uid", TEST_MATTER_UID)
 
         assert (
@@ -307,14 +307,14 @@ class TestLegalHoldApiClientService:
         }
         mock_connection.post.assert_called_once_with(uri, json=data)
 
-    def test_remove_from_matter_raises_py42_error_if_membership_uid_not_found_or_forbidden(
+    def test_remove_from_matter_raises_pycpg_error_if_membership_uid_not_found_or_forbidden(
         self, mocker, mock_connection
     ):
         service = LegalHoldApiClientService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
-            Py42ForbiddenError, mocker, ""
+            PycpgForbiddenError, mocker, ""
         )
-        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+        with pytest.raises(PycpgLegalHoldNotFoundOrPermissionDeniedError) as err:
             service.remove_from_matter(TEST_MEMBERSHIP_UID)
 
         assert (
@@ -334,14 +334,14 @@ class TestLegalHoldApiClientService:
         }
         mock_connection.post.assert_called_once_with(uri, json=data)
 
-    def test_deactivate_matter_raises_py42_error_if_matter_already_deactivated(
+    def test_deactivate_matter_raises_pycpg_error_if_matter_already_deactivated(
         self, mocker, mock_connection
     ):
         service = LegalHoldApiClientService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, '"problem":"ALREADY_DEACTIVATED'
+            PycpgBadRequestError, mocker, '"problem":"ALREADY_DEACTIVATED'
         )
-        with pytest.raises(Py42LegalHoldAlreadyDeactivatedError) as err:
+        with pytest.raises(PycpgLegalHoldAlreadyDeactivatedError) as err:
             service.deactivate_matter(TEST_MATTER_UID)
 
         assert (
@@ -349,14 +349,14 @@ class TestLegalHoldApiClientService:
             == f"Legal Hold Matter with UID '{TEST_MATTER_UID}' has already been deactivated."
         )
 
-    def test_deactivate_matter_raises_py42_error_if_matter_uid_not_found_or_forbidden(
+    def test_deactivate_matter_raises_pycpg_error_if_matter_uid_not_found_or_forbidden(
         self, mocker, mock_connection
     ):
         service = LegalHoldApiClientService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
-            Py42ForbiddenError, mocker, ""
+            PycpgForbiddenError, mocker, ""
         )
-        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+        with pytest.raises(PycpgLegalHoldNotFoundOrPermissionDeniedError) as err:
             service.deactivate_matter(TEST_MATTER_UID)
 
         assert (
@@ -376,14 +376,14 @@ class TestLegalHoldApiClientService:
         }
         mock_connection.post.assert_called_once_with(uri, json=data)
 
-    def test_reactivate_matter_raises_py42_error_if_matter_already_active(
+    def test_reactivate_matter_raises_pycpg_error_if_matter_already_active(
         self, mocker, mock_connection
     ):
         service = LegalHoldApiClientService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
-            Py42BadRequestError, mocker, '"problem":"ALREADY_ACTIVE'
+            PycpgBadRequestError, mocker, '"problem":"ALREADY_ACTIVE'
         )
-        with pytest.raises(Py42LegalHoldAlreadyActiveError) as err:
+        with pytest.raises(PycpgLegalHoldAlreadyActiveError) as err:
             service.reactivate_matter(TEST_MATTER_UID)
 
         assert (
@@ -391,14 +391,14 @@ class TestLegalHoldApiClientService:
             == f"Legal Hold Matter with UID '{TEST_MATTER_UID}' is already active."
         )
 
-    def test_reactivate_matter_raises_py42_error_if_matter_uid_not_found_or_forbidden(
+    def test_reactivate_matter_raises_pycpg_error_if_matter_uid_not_found_or_forbidden(
         self, mocker, mock_connection
     ):
         service = LegalHoldApiClientService(mock_connection)
         mock_connection.post.side_effect = create_mock_error(
-            Py42ForbiddenError, mocker, ""
+            PycpgForbiddenError, mocker, ""
         )
-        with pytest.raises(Py42LegalHoldNotFoundOrPermissionDeniedError) as err:
+        with pytest.raises(PycpgLegalHoldNotFoundOrPermissionDeniedError) as err:
             service.reactivate_matter(TEST_MATTER_UID)
 
         assert (

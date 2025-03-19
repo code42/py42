@@ -1,7 +1,7 @@
 import posixpath
 from collections import namedtuple
 
-from py42.exceptions import Py42ArchiveFileNotFoundError
+from pycpg.exceptions import PycpgArchiveFileNotFoundError
 
 # Data for initiating a web or push restore.
 FileSelection = namedtuple("FileSelection", "file, num_files, num_dirs, num_bytes")
@@ -72,7 +72,7 @@ class ArchiveExplorer(ArchiveAccessor):
             if root["path"].lower() == path_root.lower():
                 return self._walk_tree(backup_set_id, response, root, path_parts[1:])
 
-        raise Py42ArchiveFileNotFoundError(response, self._device_guid, file_path)
+        raise PycpgArchiveFileNotFoundError(response, self._device_guid, file_path)
 
     def _walk_tree(
         self, backup_set_id, response, current_file, remaining_path_components
@@ -90,7 +90,7 @@ class ArchiveExplorer(ArchiveAccessor):
                     backup_set_id, response, child, remaining_path_components[1:]
                 )
 
-        raise Py42ArchiveFileNotFoundError(
+        raise PycpgArchiveFileNotFoundError(
             response, self._device_guid, target_child_path
         )
 

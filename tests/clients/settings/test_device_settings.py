@@ -3,9 +3,9 @@ from copy import deepcopy
 import pytest
 from tests.clients.conftest import param
 
-from py42.clients.settings import get_val
-from py42.clients.settings.device_settings import DeviceSettings
-from py42.exceptions import Py42Error
+from pycpg.clients.settings import get_val
+from pycpg.clients.settings.device_settings import DeviceSettings
+from pycpg.exceptions import PycpgError
 
 TEST_USER_ID = 13548744
 TEST_COMPUTER_ID = 4290210
@@ -674,7 +674,7 @@ class TestDeviceSettingsBackupSets:
             "4300": "Dest43",
             "4400": "Dest44",
         }
-        with pytest.raises(Py42Error):
+        with pytest.raises(PycpgError):
             self.device_settings.backup_sets[0].add_destination(404)
         assert (
             self.device_settings.backup_sets[0].destinations
@@ -711,7 +711,7 @@ class TestDeviceSettingsBackupSets:
             "4200": "Dest42 <LOCKED>",
             "4300": "Dest43",
         }
-        with pytest.raises(Py42Error):
+        with pytest.raises(PycpgError):
             self.device_settings.backup_sets[0].remove_destination(404)
         assert (
             self.device_settings.backup_sets[0].destinations

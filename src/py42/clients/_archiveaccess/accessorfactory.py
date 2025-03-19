@@ -1,10 +1,10 @@
-from py42.clients._archiveaccess import ArchiveContentPusher
-from py42.clients._archiveaccess.restoremanager import create_file_size_poller
-from py42.clients._archiveaccess.restoremanager import create_restore_job_manager
+from pycpg.clients._archiveaccess import ArchiveContentPusher
+from pycpg.clients._archiveaccess.restoremanager import create_file_size_poller
+from pycpg.clients._archiveaccess.restoremanager import create_restore_job_manager
 
 
 class ArchiveAccessorFactory:
-    """Creates different types of :class:`py42.clients._archiveaccess.ArchiveAccessor`
+    """Creates different types of :class:`pycpg.clients._archiveaccess.ArchiveAccessor`
     for use in a web/push restore."""
 
     def __init__(self, archive_service, storage_service_factory):

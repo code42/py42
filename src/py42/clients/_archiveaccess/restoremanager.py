@@ -1,9 +1,9 @@
 import time
 
-from py42.services.storage.restore import PushRestoreExistingFiles
-from py42.services.storage.restore import PushRestoreLocation
-from py42.settings import debug
-from py42.util import format_dict
+from pycpg.services.storage.restore import PushRestoreExistingFiles
+from pycpg.services.storage.restore import PushRestoreLocation
+from pycpg.settings import debug
+from pycpg.util import format_dict
 
 
 def create_restore_job_manager(
@@ -36,7 +36,7 @@ class _RestorePoller:
 
 class FileSizePoller(_RestorePoller):
     """Monitors the status of a poll-job; the bytes and number of files needed for a
-    restore. This affords py42 users a chance to observe the progress of a web/push
+    restore. This affords pycpg users a chance to observe the progress of a web/push
     restore."""
 
     def __init__(self, storage_archive_service, device_guid, job_polling_interval=None):
@@ -177,7 +177,7 @@ class RestoreJobManager(_RestorePoller):
         num_dirs = sum(fs.num_dirs for fs in file_selections)
         num_bytes = sum(fs.num_bytes for fs in file_selections)
 
-        # For py42 backwards compat.
+        # For pycpg backwards compat.
         if show_deleted is None:
             show_deleted = True
 

@@ -3,7 +3,7 @@
 *For legal hold commands compatible with API Client authentication, see [Legal Hold - Api Clients](legalholdapiclient.md).*
 
 ```{eval-rst}
-.. autoclass:: py42.services.legalhold.LegalHoldService
+.. autoclass:: pycpg.services.legalhold.LegalHoldService
     :members:
     :show-inheritance:
 ```

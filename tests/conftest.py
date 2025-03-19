@@ -3,14 +3,14 @@ from requests import HTTPError
 from requests import Response
 from requests import Session
 
-from py42.clients._archiveaccess import FileSelection
-from py42.clients._archiveaccess import FileType
-from py42.exceptions import Py42NotFoundError
-from py42.exceptions import Py42UnauthorizedError
-from py42.response import Py42Response
-from py42.sdk.queries.query_filter import QueryFilter
-from py42.services._connection import Connection
-from py42.usercontext import UserContext
+from pycpg.clients._archiveaccess import FileSelection
+from pycpg.clients._archiveaccess import FileType
+from pycpg.exceptions import PycpgNotFoundError
+from pycpg.exceptions import PycpgUnauthorizedError
+from pycpg.response import PycpgResponse
+from pycpg.sdk.queries.query_filter import QueryFilter
+from pycpg.services._connection import Connection
+from pycpg.usercontext import UserContext
 
 TENANT_ID_FROM_RESPONSE = "00000000-0000-0000-0000-000000000000"
 
@@ -37,11 +37,6 @@ TEST_RESPONSE_CONTENT = '{"key":"test_response_content"}'
 REQUEST_EXCEPTION_MESSAGE = "Internal server error"
 TRACEBACK = "Traceback..."
 
-
-EVENT_FILTER_FIELD_NAME = "filter_field_name"
-OPERATOR_STRING = "IS_IN"
-VALUE_STRING = "value_example"
-VALUE_UNICODE = "您已经发现了秘密信息"
 
 TEST_ACCEPTING_GUID = "accepting-device-guid"
 TEST_ADDED_PATH = "E:/"
@@ -108,7 +103,7 @@ def unauthorized_response(mocker, http_error):
     response.status_code = 401
     response.encoding = None
     error.response = response
-    response.raise_for_status.side_effect = [Py42UnauthorizedError(error)]
+    response.raise_for_status.side_effect = [PycpgUnauthorizedError(error)]
     return response
 
 
@@ -158,28 +153,6 @@ def exception():
 
 
 @pytest.fixture
-def query_filter_list():
-    return [
-        QueryFilter(
-            EVENT_FILTER_FIELD_NAME + str(suffix),
-            OPERATOR_STRING + str(suffix),
-            VALUE_STRING + str(suffix),
-        )
-        for suffix in range(3)
-    ]
-
-
-@pytest.fixture
-def query_filter():
-    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_STRING)
-
-
-@pytest.fixture
-def unicode_query_filter():
-    return QueryFilter(EVENT_FILTER_FIELD_NAME, OPERATOR_STRING, VALUE_UNICODE)
-
-
-@pytest.fixture
 def mock_connection(mocker):
     connection = mocker.MagicMock(spec=Connection)
     connection._session = mocker.MagicMock(spec=Session)
@@ -199,7 +172,7 @@ def create_mock_response(mocker, text, status_code=200):
     response.text = text
     response.status_code = status_code
     response.encoding = None
-    return Py42Response(response)
+    return PycpgResponse(response)
 
 
 def create_mock_error(err_class, mocker, text):
@@ -214,7 +187,7 @@ def mock_post_not_found_session(mocker, mock_connection):
     response.status_code = 404
     exception = mocker.MagicMock(spec=HTTPError)
     exception.response = response
-    mock_connection.post.side_effect = Py42NotFoundError(exception)
+    mock_connection.post.side_effect = PycpgNotFoundError(exception)
     return mock_connection
 
 

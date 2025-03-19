@@ -1,6 +1,6 @@
 import re
 
-import py42.settings as settings
+import pycpg.settings as settings
 
 
 def get_all_pages(func, key, *args, **kwargs):

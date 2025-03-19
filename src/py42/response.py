@@ -1,10 +1,10 @@
 import json
 import reprlib
 
-from py42.exceptions import Py42Error
+from pycpg.exceptions import PycpgError
 
 
-class Py42Response:
+class PycpgResponse:
     def __init__(self, requests_response):
         self._response = requests_response
         self._data = None
@@ -15,10 +15,10 @@ class Py42Response:
         except TypeError:
             data_root_type = type(self._data_root)
             message = (
-                f"The Py42Response root is of type {data_root_type}, but __getitem__ "
+                f"The PycpgResponse root is of type {data_root_type}, but __getitem__ "
                 f"got a key of {key}, which is incompatible."
             )
-            raise Py42Error(message)
+            raise PycpgError(message)
 
     def __setitem__(self, key, value):
         try:
@@ -26,13 +26,13 @@ class Py42Response:
         except TypeError:
             data_root_type = type(self._data_root)
             message = (
-                f"The Py42Response root is of type {data_root_type}, but __setitem__ got a key "
+                f"The PycpgResponse root is of type {data_root_type}, but __setitem__ got a key "
                 f"of {key} and value of {value}, which is incompatible."
             )
-            raise Py42Error(message)
+            raise PycpgError(message)
 
     def __iter__(self):
-        # looping over a Py42Response will loop through list items, dict keys, or str characters
+        # looping over a PycpgResponse will loop through list items, dict keys, or str characters
         return iter(self._data_root)
 
     @property
@@ -65,7 +65,7 @@ class Py42Response:
     @property
     def raw_text(self):
         """The ``response.Response.text`` property. It contains raw metadata that is not included in
-        the Py42Response.text property."""
+        the PycpgResponse.text property."""
         return self._response.text
 
     @property

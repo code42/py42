@@ -3,7 +3,7 @@ from threading import Lock
 from requests.auth import AuthBase
 
 
-class C42RenewableAuth(AuthBase):
+class CPGRenewableAuth(AuthBase):
     def __init__(self):
         self._auth_lock = Lock()
         self._credentials = None
@@ -28,7 +28,7 @@ class C42RenewableAuth(AuthBase):
         raise NotImplementedError()
 
 
-class BearerAuth(C42RenewableAuth):
+class BearerAuth(CPGRenewableAuth):
     def __init__(self, auth_connection, totp=None):
         super().__init__()
         self._auth_connection = auth_connection
@@ -43,7 +43,7 @@ class BearerAuth(C42RenewableAuth):
         return f"Bearer {response['v3_user_token']}"
 
 
-class ApiClientAuth(C42RenewableAuth):
+class ApiClientAuth(CPGRenewableAuth):
     def __init__(self, auth_connnection):
         super().__init__()
         self._auth_connection = auth_connnection
@@ -55,7 +55,7 @@ class ApiClientAuth(C42RenewableAuth):
         return f"Bearer {response['access_token']}"
 
 
-class CustomJWTAuth(C42RenewableAuth):
+class CustomJWTAuth(CPGRenewableAuth):
     def __init__(self, jwt_provider):
         super().__init__()
         self._jwt_provider = jwt_provider

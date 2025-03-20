@@ -24,6 +24,11 @@ class AlertQuery(BaseQuery):
     """
 
     def __init__(self, *args, **kwargs):
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(*args, **kwargs)
         self.sort_key = "CreatedAt"
         self.page_number = 0

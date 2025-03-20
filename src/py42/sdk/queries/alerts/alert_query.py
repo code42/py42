@@ -23,12 +23,6 @@ class AlertQuery(BaseQuery):
         query = AlertQuery.all(state_filter, rule_name_filter)
     """
 
-    warn(
-        "Incydr functionality is deprecated. Use the Incydr SDK instead.",
-        DeprecationWarning,
-        stacklevel=2,
-    )
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.sort_key = "CreatedAt"

@@ -36,15 +36,11 @@ class SavedSearchService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-
-        # deprecation warning for v1 file events
-        if not use_v2:
-            warn(
-                "V1 file events and saved searches are deprecated.  Use v2 apis by passing in the optional use_v2=True arg.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
-
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self._version = "v2" if use_v2 else "v1"
         return self._connection.get(self.uri)
 
@@ -61,14 +57,11 @@ class SavedSearchService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
-
-        # deprecation warning for v1 file events
-        if not use_v2:
-            warn(
-                "V1 file events and saved searches are deprecated.  Use v2 apis by passing in the optional use_v2=True arg.",
-                DeprecationWarning,
-                stacklevel=2,
-            )
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self._version = "v2" if use_v2 else "v1"
         return self._connection.get(f"{self.uri}/{search_id}")
 
@@ -83,6 +76,11 @@ class SavedSearchService(BaseService):
         Returns:
             :class:`py42.sdk.queries.fileevents.v2.file_event_query.FileEventQuery`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         response = self.get_by_id(search_id, use_v2=use_v2)
         search = response["searches"][0]
@@ -106,6 +104,11 @@ class SavedSearchService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         query = self.get_query(
             search_id, page_number=page_number, page_size=page_size, use_v2=use_v2
         )
@@ -129,6 +132,11 @@ class SavedSearchService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self.execute(
             search_id, page_number=page_number, page_size=page_size, use_v2=use_v2
         )

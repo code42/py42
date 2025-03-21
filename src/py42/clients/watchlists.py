@@ -1,4 +1,8 @@
+from warnings import warn
+
 from py42.choices import Choices
+
+# Incydr functionality is deprecated as of 2025-03.
 
 
 class WatchlistType(Choices):
@@ -46,6 +50,11 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._watchlists_service.get(watchlist_id)
 
     def delete(self, watchlist_id):
@@ -57,6 +66,11 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._watchlists_service.delete(watchlist_id)
 
     def get_all(self):
@@ -65,6 +79,11 @@ class WatchlistsClient:
         Returns:
                 generator: An object that iterates over :class:`py42.response.Py42Response` objects that each contain a page of watchlists.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._watchlists_service.get_all()
 
     def create(self, watchlist_type, title=None, description=None):
@@ -78,6 +97,11 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if watchlist_type == "CUSTOM" and not title:
             raise ValueError("`title` value is required for custom watchlists.")
         return self._watchlists_service.create(
@@ -93,6 +117,11 @@ class WatchlistsClient:
         Returns:
                 generator: An object that iterates over :class:`py42.response.Py42Response` objects that each contain a page of included users that match the given query.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._watchlists_service.get_all_included_users(watchlist_id)
 
     def add_included_users_by_watchlist_id(self, user_ids, watchlist_id):
@@ -105,6 +134,11 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._watchlists_service.add_included_users_by_watchlist_id(
             user_ids, watchlist_id
         )
@@ -119,6 +153,11 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if watchlist_type == "CUSTOM":
             raise ValueError(
                 "Users can only be added to CUSTOM watchlists by watchlist ID."
@@ -137,6 +176,11 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._watchlists_service.delete_included_users_by_watchlist_id(
             user_ids, watchlist_id
         )
@@ -151,6 +195,11 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if watchlist_type == "CUSTOM":
             raise ValueError(
                 "Users can only be removed from CUSTOM watchlists by watchlist ID."
@@ -168,6 +217,11 @@ class WatchlistsClient:
         Returns:
                 generator: An object that iterates over :class:`py42.response.Py42Response` objects that each contain a page of watchlist members.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._watchlists_service.get_all_watchlist_members(watchlist_id)
 
     def get_watchlist_member(self, watchlist_id, user_id):
@@ -180,4 +234,9 @@ class WatchlistsClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._watchlists_service.get_watchlist_member(watchlist_id, user_id)

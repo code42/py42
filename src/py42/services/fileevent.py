@@ -58,6 +58,11 @@ class FileEventService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing the query results.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self._mount_retry_adapter()
 
         # if string query
@@ -68,14 +73,6 @@ class FileEventService(BaseService):
             uri = f"/forensic-search/queryservice/api/{version}/fileevent"
         # else query object
         else:
-            # deprecation warning for v1 file events
-            if query.version == "v1":
-                warn(
-                    "V1 file events are deprecated.  Use V2 queries instead.",
-                    DeprecationWarning,
-                    stacklevel=2,
-                )
-
             uri = f"/forensic-search/queryservice/api/{query.version}/fileevent"
             query = dict(query)
 
@@ -97,6 +94,12 @@ class FileEventService(BaseService):
         Returns:
             :class:`py42.response.Py42Response`: A response containing file details.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+
         self._mount_retry_adapter()
 
         uri = "/forensic-search/queryservice/api/v1/filelocations"

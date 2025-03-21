@@ -2,6 +2,8 @@ from py42.exceptions import Py42InvalidRuleError
 from py42.exceptions import Py42NotFoundError
 from py42.services import BaseService
 
+# Incydr functionality is deprecated as of 2025-03.
+
 
 class AlertRulesService(BaseService):
     """A service to manage Alert Rules."""

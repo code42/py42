@@ -1,7 +1,10 @@
 from datetime import datetime
+from warnings import warn
 
 from py42.choices import Choices
 from py42.util import parse_timestamp_to_milliseconds_precision
+
+# Incydr functionality is deprecated as of 2025-03.
 
 
 class CaseStatus(Choices):
@@ -50,6 +53,11 @@ class CasesClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._cases_service.create(
             name,
             subject=subject,
@@ -100,6 +108,11 @@ class CasesClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         created_at = _make_range(min_create_time, max_create_time)
         updated_at = _make_range(min_update_time, max_update_time)
@@ -159,6 +172,11 @@ class CasesClient:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cases.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
         created_at = _make_range(min_create_time, max_create_time)
         updated_at = _make_range(min_update_time, max_update_time)
@@ -186,6 +204,11 @@ class CasesClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._cases_service.get(case_number)
 
     def export_summary(self, case_number):
@@ -199,6 +222,11 @@ class CasesClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._cases_service.export_summary(case_number)
 
     def update(
@@ -227,6 +255,11 @@ class CasesClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._cases_service.update(
             case_number,
             name=name,

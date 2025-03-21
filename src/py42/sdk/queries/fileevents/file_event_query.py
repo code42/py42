@@ -5,6 +5,9 @@ from py42.sdk.queries.fileevents.util import FileEventFilterComparableField
 from py42.sdk.queries.fileevents.util import FileEventFilterStringField
 from py42.sdk.queries.fileevents.util import FileEventFilterTimestampField
 
+# Incydr functionality is deprecated as of 2025-03.
+
+
 # import from util for backwards-compatibility
 
 

@@ -1,5 +1,9 @@
+from warnings import warn
+
 from py42.exceptions import Py42Error
 from py42.exceptions import Py42NotFoundError
+
+# Incydr functionality is deprecated as of 2025-03.
 
 
 class UserRiskProfileClient:
@@ -21,6 +25,11 @@ class UserRiskProfileClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._user_risk_profile_service.get_by_id(user_id)
 
     def get_by_username(self, username):
@@ -32,6 +41,11 @@ class UserRiskProfileClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         user_response = self._user_service.get_by_username(username)
         if len(user_response.data["users"]) == 0:
             err = Py42Error()
@@ -54,6 +68,11 @@ class UserRiskProfileClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._user_risk_profile_service.update(
             user_id, start_date, end_date, notes
         )
@@ -94,6 +113,11 @@ class UserRiskProfileClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._user_risk_profile_service.get_page(
             page_num,
             page_size,
@@ -142,6 +166,11 @@ class UserRiskProfileClient:
         Returns:
                 generator: An object that iterates over :class:`py42.response.Py42Response` objects that each contain a page of user risk profiles.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._user_risk_profile_service.get_all(
             manager_id,
             title,
@@ -166,6 +195,11 @@ class UserRiskProfileClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._user_risk_profile_service.add_cloud_aliases(user_id, cloud_alias)
 
     def delete_cloud_aliases(self, user_id, cloud_aliases):
@@ -178,6 +212,11 @@ class UserRiskProfileClient:
         Returns:
                 :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._user_risk_profile_service.delete_cloud_aliases(
             user_id, cloud_aliases
         )

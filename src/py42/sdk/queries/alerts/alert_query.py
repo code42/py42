@@ -1,4 +1,8 @@
+from warnings import warn
+
 from py42.sdk.queries import BaseQuery
+
+# Incydr functionality is deprecated as of 2025-03.
 
 
 class AlertQuery(BaseQuery):
@@ -20,6 +24,11 @@ class AlertQuery(BaseQuery):
     """
 
     def __init__(self, *args, **kwargs):
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         super().__init__(*args, **kwargs)
         self.sort_key = "CreatedAt"
         self.page_number = 0

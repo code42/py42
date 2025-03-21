@@ -1,4 +1,8 @@
+from warnings import warn
+
 from py42.choices import Choices
+
+# Incydr functionality is deprecated as of 2025-03.
 
 
 class TrustedActivityType(Choices):
@@ -33,6 +37,11 @@ class TrustedActivitiesClient:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of cases.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._trusted_activities_service.get_all(type, page_size)
 
     def create(self, type, value, description=None):
@@ -47,6 +56,11 @@ class TrustedActivitiesClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._trusted_activities_service.create(type, value, description)
 
     def get(self, id):
@@ -59,6 +73,11 @@ class TrustedActivitiesClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._trusted_activities_service.get(id)
 
     def update(self, id, value=None, description=None):
@@ -73,6 +92,11 @@ class TrustedActivitiesClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._trusted_activities_service.update(
             id=id, value=value, description=description
         )
@@ -87,4 +111,9 @@ class TrustedActivitiesClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._trusted_activities_service.delete(id)

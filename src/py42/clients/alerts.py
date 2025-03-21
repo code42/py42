@@ -1,4 +1,8 @@
+from warnings import warn
+
 from py42.sdk.queries.alerts.filters import AlertState
+
+# Incydr functionality is deprecated as of 2025-03.
 
 
 class AlertsClient:
@@ -18,6 +22,11 @@ class AlertsClient:
         Returns:
             :class:`py42.services.alertrules.AlertRulesClient`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alert_rules_client
 
     def search(self, query, page_num=1, page_size=None):
@@ -35,6 +44,11 @@ class AlertsClient:
             :class:`py42.response.Py42Response`: A response containing the alerts that match the given
             query.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alert_service.search(query, page_num, page_size)
 
     def search_all_pages(self, query):
@@ -49,6 +63,11 @@ class AlertsClient:
             generator: An object that iterates over :class:`py42.response.Py42Response` objects
             that each contain a page of alerts that match the given query.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alert_service.search_all_pages(query)
 
     def get_details(self, alert_ids):
@@ -64,6 +83,11 @@ class AlertsClient:
         Returns:
             :class:`py42.response.Py42Response`: A response containing the alert details.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alert_service.get_details(alert_ids)
 
     def resolve(self, alert_ids, reason=None):
@@ -77,6 +101,11 @@ class AlertsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alert_service.update_state(
             AlertState.DISMISSED, alert_ids, note=reason
         )
@@ -92,6 +121,11 @@ class AlertsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alert_service.update_state(AlertState.OPEN, alert_ids, note=reason)
 
     def update_state(self, status, alert_ids, note=None):
@@ -107,6 +141,11 @@ class AlertsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alert_service.update_state(status, alert_ids, note=note)
 
     def update_note(self, alert_id, note):
@@ -120,6 +159,11 @@ class AlertsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alert_service.update_note(alert_id, note)
 
     def get_aggregate_data(self, alert_id):
@@ -131,6 +175,11 @@ class AlertsClient:
         Returns:
             :class:`py42.response.Py42Response`
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._alert_service.get_aggregate_data(alert_id)
 
     def get_all_alert_details(self, query):
@@ -149,6 +198,11 @@ class AlertsClient:
         Returns:
             generator: An object that iterates over alert detail items.
         """
+        warn(
+            "Incydr functionality is deprecated. Use the Incydr SDK instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         query.page_size = 25
         sort_key = query.sort_key[0].lower() + query.sort_key[1:]
         if sort_key == "alertId":

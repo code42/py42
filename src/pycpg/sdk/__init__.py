@@ -248,7 +248,6 @@ class SDKClient:
         """
         return self._clients.auditlogs
 
-
 def _init_services(main_connection, main_auth, auth_flag=None):
     # services are imported within function to prevent circular imports when a service
     # imports anything from pycpg.sdk.queries
@@ -264,7 +263,6 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     from pycpg.services.orgs import OrgService
     from pycpg.services.users import UserService
 
-
     kv_prefix = "simple-key-value-store"
     audit_logs_key = "AUDIT-LOG_API-URL"
 
@@ -277,7 +275,6 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     administration_svc = AdministrationService(main_connection)
 
     user_ctx = UserContext(administration_svc)
-
 
 
     services = Services(

@@ -206,5 +206,3 @@ class TestDeviceService:
         client.update_settings(settings)
         uri = f"/api/v1/Computer/{device_id}"
         mock_connection.put.assert_called_once_with(uri, json=settings)
-
-   

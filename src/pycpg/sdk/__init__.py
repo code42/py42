@@ -250,14 +250,12 @@ class SDKClient:
 
 def _init_services(main_connection, main_auth, auth_flag=None):
     # services are imported within function to prevent circular imports when a service
-    # imports anything from pycpg.sdk.queries
     from pycpg.services import Services
     from pycpg.services._keyvaluestore import KeyValueStoreService
     from pycpg.services.administration import AdministrationService
     from pycpg.services.archive import ArchiveService
     from pycpg.services.auditlogs import AuditLogsService
     from pycpg.services.devices import DeviceService
-    from pycpg.services.fileevent import FileEventService
     from pycpg.services.legalhold import LegalHoldService
     from pycpg.services.legalholdapiclient import LegalHoldApiClientService
     from pycpg.services.orgs import OrgService
@@ -294,14 +292,12 @@ def _init_services(main_connection, main_auth, auth_flag=None):
 
 def _init_clients(services, connection):
     # clients are imported within function to prevent circular imports when a client
-    # imports anything from pycpg.sdk.queries
     from pycpg.clients import Clients
     from pycpg.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
     from pycpg.clients.archive import ArchiveClient
     from pycpg.clients.auditlogs import AuditLogsClient
     from pycpg.clients.authority import AuthorityClient
     from pycpg.clients.loginconfig import LoginConfigurationClient
-    from pycpg.clients.securitydata import SecurityDataClient
     from pycpg.services.storage._service_factory import StorageServiceFactory
 
     authority = AuthorityClient(
@@ -313,9 +309,6 @@ def _init_clients(services, connection):
         users=services.users,
     )
     storage_service_factory = StorageServiceFactory(connection, services.devices)
-    securitydata = SecurityDataClient(
-        storage_service_factory,
-    )
     archive_accessor_factory = ArchiveAccessorFactory(
         services.archive, storage_service_factory
     )
@@ -324,7 +317,6 @@ def _init_clients(services, connection):
     loginconfig = LoginConfigurationClient(connection)
     clients = Clients(
         authority=authority,
-        securitydata=securitydata,
         archive=archive,
         auditlogs=auditlogs,
         loginconfig=loginconfig

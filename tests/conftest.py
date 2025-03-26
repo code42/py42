@@ -8,7 +8,6 @@ from pycpg.clients._archiveaccess import FileType
 from pycpg.exceptions import PycpgNotFoundError
 from pycpg.exceptions import PycpgUnauthorizedError
 from pycpg.response import PycpgResponse
-from pycpg.sdk.queries.query_filter import QueryFilter
 from pycpg.services._connection import Connection
 from pycpg.usercontext import UserContext
 

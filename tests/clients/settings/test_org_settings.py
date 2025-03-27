@@ -243,6 +243,18 @@ class TestOrgSettings:
         attr, expected = param
         assert getattr(org_settings.device_defaults, attr) == expected
 
+    @pytest.mark.parametrize(
+        "param",
+        [
+            param(
+                name="web_restore_enabled",
+                new_val=True,
+                expected_stored_val="true",
+                dict_location="device_webRestore_enabled",
+            ),
+        ],
+    )
+
     def test_org_settings_set_independent_t_setting_properties(
         self, param, org_settings_dict
     ):

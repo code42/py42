@@ -148,7 +148,6 @@ def org_device_defaults_with_multiple_values(org_settings_dict):
 
 class TestOrgSettings:
     @pytest.mark.parametrize(
-        """PARAM DOC STRING TEST"""
         "param",
         [
             ("org_name", "TEST_ORG"),

@@ -17,8 +17,8 @@ import pycpg.__version__ as meta
 # -- Project information -----------------------------------------------------
 
 project = "pycpg"
-copyright = "2025, CrashPlan Software"
-author = "CrashPlan Software"
+copyright = "2025, CrashPlanGroup"
+author = "CrashPlanGroup"
 
 # The short X.Y version
 version = f"pycpg v{meta.__version__}"
@@ -30,7 +30,7 @@ release = f"pycpg v{meta.__version__}"
 
 # If your documentation needs a minimal Sphinx version, state it here.
 
-needs_sphinx = "4.4.0"
+needs_sphinx = "8.2.3"
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom

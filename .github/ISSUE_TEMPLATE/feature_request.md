@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for py42
+about: Suggest an idea for pycpg
 title: "[Enhancement] YOUR IDEA!"
 labels: enhancement
 assignees: ''

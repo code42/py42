@@ -13,7 +13,7 @@ from tests.clients.conftest import TEST_PHOTOS_DIR
 
 from pycpg.clients.settings import get_val
 from pycpg.clients.settings.org_settings import OrgSettings
-from pycpg.exceptions import Py42Error
+from pycpg.exceptions import PycpgError
 
 ONEGB = 1000000000
 
@@ -32,7 +32,7 @@ TEST_T_SETTINGS_DICT = {
     },
     "c42.msa.acceptance": {
         "scope": "ORG",
-        "value": "917633711460206173;tim.putnam+legacyadmin@code42.com;2019-09-05T17:05:09:046",
+        "value": "917633711460206173;tim.putnam+legacyadmin@crashplan.com;2019-09-05T17:05:09:046",
         "locked": True,
         "id": 510682,
     },
@@ -415,7 +415,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets:
             "43": "PROe Cloud, US <LOCKED>",
             "673679195225718785": "PROe Cloud, AMS",
         }
-        with pytest.raises(Py42Error):
+        with pytest.raises(PycpgError):
             org_settings.device_defaults.backup_sets[1].add_destination(404)
         assert (
             org_settings.device_defaults.backup_sets[1].destinations
@@ -448,7 +448,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets:
             "43": "PROe Cloud, US <LOCKED>",
             "673679195225718785": "PROe Cloud, AMS",
         }
-        with pytest.raises(Py42Error):
+        with pytest.raises(PycpgError):
             org_settings.device_defaults.backup_sets[1].remove_destination(404)
         assert (
             org_settings.device_defaults.backup_sets[1].destinations

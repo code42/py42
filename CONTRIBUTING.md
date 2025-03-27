@@ -47,8 +47,8 @@ eval "$(pyenv virtualenv-init -)"
 Then, create your virtual environment.
 
 ```bash
-pyenv install 3.9.10
-pyenv virtualenv 3.9.10 pycpg
+pyenv install 3.11
+pyenv virtualenv 3.11.11 pycpg
 pyenv activate pycpg
 ```
 

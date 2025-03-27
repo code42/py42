@@ -264,7 +264,7 @@ class TestOrgSettings:
             if packet["key"] == param.dict_location:
                 assert packet["value"] == "false"
 
-     def test_org_settings_setting_mutable_property_updates_dict_correctly_and_registers_changes(
+    def test_org_settings_setting_mutable_property_updates_dict_correctly_and_registers_changes(
         self, param, org_settings_dict
     ):
         org_settings = OrgSettings(org_settings_dict, TEST_T_SETTINGS_DICT)

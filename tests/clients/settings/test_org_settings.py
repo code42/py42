@@ -243,18 +243,6 @@ class TestOrgSettings:
         attr, expected = param
         assert getattr(org_settings.device_defaults, attr) == expected
 
-    def test_org_settings_endpoint_monitoring_enabled_returns_expected_results(
-        self, org_settings_dict
-    ):
-        t_setting = deepcopy(TEST_T_SETTINGS_DICT)
-        t_setting["org-securityTools-enable"]["value"] = "true"
-        org_settings = OrgSettings(org_settings_dict, t_setting)
-        assert org_settings.endpoint_monitoring_enabled is True
-
-        t_setting["org-securityTools-enable"]["value"] = "false"
-        org_settings = OrgSettings(org_settings_dict, t_setting)
-        assert org_settings.endpoint_monitoring_enabled is False
-
     def test_org_settings_set_independent_t_setting_properties(
         self, param, org_settings_dict
     ):

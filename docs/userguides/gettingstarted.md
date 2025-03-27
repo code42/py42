@@ -72,13 +72,13 @@ requests use JWT authentication.
 
 Pycpg supports basic auth with your CrashPlan username and password.
 
-If your account uses [two-factor authentication](https://support.crashPlan.com/Administrator/Cloud/Configuring/Two-factor_authentication_for_local_users), include the time-based one-time password (TOTP) when you initialize the `pycpg.sdk.SDKClient`.
+If your account uses [two-factor authentication](https://support.crashplan.com/Administrator/Cloud/Configuring/Two-factor_authentication_for_local_users), include the time-based one-time password (TOTP) when you initialize the `pycpg.sdk.SDKClient`.
 You can also provide a callable object that returns a TOTP. If you pass a callable, it will be called whenever a new TOTP is required to renew the authentication token.
 
 ```python
 import pycpg.sdk
 
-sdk = pycpg.sdk.from_local_account("https://console.crashPlan.com", "username@crashPlan.com", "password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashplan.com", "username@crashplan.com", "password")
 ```
 
 ### CrashPlan API Clients
@@ -88,7 +88,7 @@ Pycpg also supports api clients.  You can use the client ID and secret generated
 ```python
 import pycpg.sdk
 
-sdk = pycpg.sdk.from_api_client("https://console.crashPlan.com", "key-123-42", "my%secret!")
+sdk = pycpg.sdk.from_api_client("https://console.us1.crashplan.com", "key-123-42", "my%secret!")
 ```
 
 ## Troubleshooting and support
@@ -125,7 +125,7 @@ If you are experiencing an issue with pycpg, you can create a *New issue* at the
 ### Contact CrashPlan Support
 
 If you don't have a GitHub account and are experiencing issues, contact
-[CrashPlan support](https://support.crashPlan.com/).
+[CrashPlan support](https://support.crashplan.com/).
 
 ## What's next?
 

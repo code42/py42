@@ -20,7 +20,7 @@ def from_api_client(host_address, client_id, secret):
 
     Args:
         host_address (str): The domain name of the CrashPlan instance being authenticated to, e.g.
-            console.us1.crashPlan.com
+            console.us1.crashplan.com
         client_id (str): The client ID of the API client to authenticate with.
         secret (str): The secret of the API client to authenticate with.
 
@@ -39,7 +39,7 @@ def from_local_account(host_address, username, password, totp=None):
 
     Args:
         host_address (str): The domain name of the CrashPlan instance being authenticated to, e.g.
-            console.us1.crashPlan.com
+            console.us1.crashplan.com
         username (str): The username of the authenticating account.
         password (str): The password of the authenticating account.
         totp (callable or str, optional): The time-based one-time password of the authenticating account. Include only
@@ -70,7 +70,7 @@ def from_jwt_provider(host_address, jwt_provider):
 
     Args:
         host_address (str): The domain name of the CrashPlan instance being authenticated to, e.g.
-            console.us1.crashPlan.com
+            console.us1.crashplan.com
         jwt_provider (function): A function that accepts no parameters and on execution returns a JSON web token string.
 
     Returns:
@@ -96,7 +96,7 @@ class SDKClient:
 
         Args:
             host_address (str): The domain name of the CrashPlan instance being authenticated to, e.g.
-                console.us1.crashPlan.com
+                console.us1.crashplan.com
             client_id (str): The client ID of the API client to authenticate with.
             secret (str): The secret of the API client to authenticate with.
 
@@ -122,7 +122,7 @@ class SDKClient:
 
         Args:
             host_address (str): The domain name of the CrashPlan instance being authenticated to, e.g.
-                console.us1.crashPlan.com
+                console.us1.crashplan.com
             username (str): The username of the authenticating account.
             password (str): The password of the authenticating account.
             totp (callable or str, optional): The time-based one-time password of the authenticating account. Include only
@@ -147,7 +147,7 @@ class SDKClient:
 
         Args:
             host_address (str): The domain name of the CrashPlan instance being authenticated to, e.g.
-                console.us1.crashPlan.com
+                console.us1.crashplan.com
             jwt_provider (function): A function that accepts no parameters and on execution returns a
             JSON web token string.
 

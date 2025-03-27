@@ -3,10 +3,10 @@
 
 
 ![Build status](https://github.com/CrashPlan-Labs/pycpg/workflows/build/badge.svg)
-[![codecov.io](https://codecov.io/github/crashPlan/pycpg/coverage.svg?branch=main)](https://codecov.io/github/crashPlan/pycpg?branch=main)
+[![codecov.io](https://codecov.io/github/CrashPlan-Labs/pycpg/coverage.svg?branch=main)](https://codecov.io/github/CrashPlan-Labs/pycpg?branch=main)
 [![versions](https://img.shields.io/pypi/pyversions/pycpg.svg)](https://pypi.org/project/pycpg/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Documentation Status](https://readthedocs.org/projects/pycpg/badge/?version=latest)](https://pycpgdocs.crashPlan.com/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/pycpg/badge/?version=latest)](https://pycpgdocs.crashplan.com/en/latest/?badge=latest)
 
 
 `pycpg` is a Python wrapper around the CrashPlan REST APIs that also provides several other useful utility methods.
@@ -16,7 +16,7 @@ of session / authentication management.
 ## Requirements
 
 - Python 3.6.0+
-- CrashPlan Server 6.8.x+ or cloud environment (e.g. console.us.crashPlan.com or crashplan.com)
+- CrashPlan Server 6.8.x+ or cloud environment (e.g. console.us1.crashplan.com or crashplan.com)
 
 ## Installation
 
@@ -47,11 +47,11 @@ Import a couple essentials
 Initialize the client.
 
 ```python
->>> sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "john.doe", "password")
+>>> sdk = pycpg.sdk.from_local_account("https://console.us1.crashplan.com", "john.doe", "password")
 ```
 or alternatively
 ```
->>> sdk = pycpg.sdk.from_jwt_provider("https://console.us1.crashPlan.com", jwt_provider_function)
+>>> sdk = pycpg.sdk.from_jwt_provider("https://console.us1.crashplan.com", jwt_provider_function)
 ```
 
 Get and print your user information.
@@ -121,7 +121,7 @@ custom_logger.addHandler(handler)
 settings.debug.logger = custom_logger
 settings.debug.level = logging.DEBUG
 
-sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashplan.com", "my_username", "my_password")
 ```
 
 ## Usage
@@ -131,7 +131,7 @@ The SDK object opens availability to APIs across the CrashPlan environment, incl
 ```python
 import pycpg.sdk
 
-sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashplan.com", "my_username", "my_password")
 
 # clients are organized by feature groups and accessible under the sdk object
 

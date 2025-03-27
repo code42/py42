@@ -19,13 +19,13 @@ To use pycpg, you must initialize the SDK:
 ```python
 import pycpg.sdk
 
-sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashplan.com", "my_username", "my_password")
 ```
 
 If your account uses [two-factor authentication](https://support.crashplan.com/hc/en-us/articles/8720828072717-Two-Factor-Authentication-for-CrashPlan), include the time-based one-time password:
 
 ```python
-sdk = pycpg.sdk.from_local_account("https://console.u1.crashPlan.com", "my_username", "my_password", totp="123456")
+sdk = pycpg.sdk.from_local_account("https://console.u1.crashplan.com", "my_username", "my_password", totp="123456")
 ```
 
 Alternatively, define a function that returns the time-based one-time password:
@@ -34,7 +34,7 @@ Alternatively, define a function that returns the time-based one-time password:
 def promptForPassword():
     return input("Please input your authentication code: ")
 
-sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password", totp=promptForPassword)
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashplan.com", "my_username", "my_password", totp=promptForPassword)
 ```
 
 Alternatively, define a function that returns the auth token based on user's authentication approach
@@ -45,13 +45,13 @@ import requests
 from requests.auth import HTTPBasicAuth
 def jwt_provider():
     res = requests.get(
-            'https://console.us1.crashPlan.com/api/v3/auth/jwt?useBody=true',
+            'https://console.us1.crashplan.com/api/v3/auth/jwt?useBody=true',
             auth=HTTPBasicAuth('username', 'password')
           )
     res_json = json.loads(res.text)
     return res_json['data']['v3_user_token']
 
-sdk_client = pycpg.sdk.from_jwt_provider("https://console.us1.crashPlan.com", jwt_provider)
+sdk_client = pycpg.sdk.from_jwt_provider("https://console.us1.crashplan.com", jwt_provider)
 ```
 
 
@@ -130,7 +130,7 @@ import pycpg.util
 from pycpg.sdk.queries.fileevents.file_event_query import FileEventQuery
 from pycpg.sdk.queries.fileevents.filters.event_filter import EventTimestamp
 
-sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashplan.com", "my_username", "my_password")
 
 # Get the epoch date 14 days in the past
 query_date = datetime.utcnow() - timedelta(days=14)

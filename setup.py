@@ -19,7 +19,7 @@ setup(
     url="https://github.com/CrashPlan-Labs/pycpg",
     project_urls={
         "Issue Tracker": "https://github.com/CrashPlan-Labs/pycpg/issues",
-        "Documentation": "https://pycpgdocs.crashPlan.com/",
+        "Documentation": "https://pycpgdocs.CrashPlan.com/",
         "Source Code": "https://github.com/CrashPlan-Labs/pycpg",
     },
     description="The Official CrashPlan Python API Client",

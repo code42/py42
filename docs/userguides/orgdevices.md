@@ -5,7 +5,7 @@ Using pycpg, you can retrieve information about the active devices in your organ
 To begin, initialize the SDK:
 ```python
 import pycpg.sdk
-sdk = pycpg.sdk.from_local_account("https://console.us1.crashPlan.com", "my_username", "my_password")
+sdk = pycpg.sdk.from_local_account("https://console.us1.crashplan.com", "my_username", "my_password")
 ```
 
 ### The `DeviceClient.get_all()` Function

@@ -16,7 +16,7 @@ calling `pycpg.sdk.from_local_account` or `pycpg.sdk.from_jwt_provider`. For exa
 ```python
 import pycpg.sdk
 
-sdk = pycpg.sdk.from_local_account("console.us1.crashPlan.com", "john.doe@example.com", "my_pw")
+sdk = pycpg.sdk.from_local_account("console.us1.crashplan.com", "john.doe@example.com", "my_pw")
 # access properties on 'sdk' to explore all the available methods
 ```
 

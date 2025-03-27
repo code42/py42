@@ -44,8 +44,8 @@ MOCK_GET_USER_BY_ID_RESPONSE = {
         "userId": 12345,
         "userUid": TEST_USER_UID,
         "status": "Active",
-        "username": "test@crashPlan.com",
-        "email": "test@crashPlan.com",
+        "username": "test@crashplan.com",
+        "email": "test@crashplan.com",
         "firstName": "test",
         "lastName": "mctest",
     }

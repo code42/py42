@@ -65,7 +65,7 @@ class UserService(BaseService):
 
     def get_by_id(self, user_id, **kwargs):
         """Gets the user with the given ID.
-        `Rest Documentation <https://developer.crashPlan.com/api/#tag/User/paths/~1v1~1users~1{userId}/get>`__
+        `Rest Documentation <https://console.us2.crashplan.com/apidocviewer#tag/User>`__
 
         Args:
             user_id (int): An ID for a user.

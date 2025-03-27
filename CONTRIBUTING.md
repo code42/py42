@@ -186,7 +186,7 @@ To simply test that the documentation build without errors, you can run:
 tox -e docs
 ```
 
-Note that the `myst-parser` dependency that contributes to building the docs requires python 3.7+.
+Note that the `myst-parser` and `sphinx` dependency that contributes to building the docs requires python 3.11.
 
 #### Running the docs locally
 

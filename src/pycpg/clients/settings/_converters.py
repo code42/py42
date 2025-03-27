@@ -20,6 +20,7 @@ def to_list(value):
     else:
         return [value]
 
+
 def days_to_minutes(days):
     minutes = int(float(days) * 1440)
     return str(minutes)

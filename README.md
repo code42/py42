@@ -1,4 +1,4 @@
-# CrashPlan fork of pycpg, this will become the  official CrashPlan Python SDK
+# CrashPlan fork of py42, this will become the  official CrashPlan Python SDK
 
 
 

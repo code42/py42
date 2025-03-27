@@ -4,10 +4,8 @@ from pycpg.clients.settings import SettingProperty
 from pycpg.clients.settings import TSettingProperty
 from pycpg.clients.settings._converters import bool_to_str
 from pycpg.clients.settings._converters import bytes_to_gb
-from pycpg.clients.settings._converters import comma_separated_to_list
 from pycpg.clients.settings._converters import gb_to_bytes
 from pycpg.clients.settings._converters import str_to_bool
-from pycpg.clients.settings._converters import to_comma_separated
 from pycpg.clients.settings._converters import to_list
 from pycpg.clients.settings.device_settings import DeviceSettingsDefaults
 

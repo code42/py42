@@ -20,18 +20,6 @@ def to_list(value):
     else:
         return [value]
 
-
-def to_comma_separated(value):
-    if isinstance(value, (list, tuple)):
-        return ",".join(value)
-    else:
-        return value
-
-
-def comma_separated_to_list(value):
-    return value.split(",")
-
-
 def days_to_minutes(days):
     minutes = int(float(days) * 1440)
     return str(minutes)

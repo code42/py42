@@ -13,7 +13,7 @@ from tests.clients.conftest import TEST_PHOTOS_DIR
 
 from pycpg.clients.settings import get_val
 from pycpg.clients.settings.org_settings import OrgSettings
-from pycpg.exceptions import PycpgError
+from pycpg.exceptions import Py42Error
 
 ONEGB = 1000000000
 
@@ -30,9 +30,9 @@ TEST_T_SETTINGS_DICT = {
         "locked": False,
         "id": 537575,
     },
-    "cpg.msa.acceptance": {
+    "c42.msa.acceptance": {
         "scope": "ORG",
-        "value": "917633711460206173;tim.putnam+legacyadmin@crashPlan.com;2019-09-05T17:05:09:046",
+        "value": "917633711460206173;tim.putnam+legacyadmin@code42.com;2019-09-05T17:05:09:046",
         "locked": True,
         "id": 510682,
     },
@@ -243,6 +243,18 @@ class TestOrgSettings:
         attr, expected = param
         assert getattr(org_settings.device_defaults, attr) == expected
 
+    def test_org_settings_endpoint_monitoring_enabled_returns_expected_results(
+        self, org_settings_dict
+    ):
+        t_setting = deepcopy(TEST_T_SETTINGS_DICT)
+        t_setting["org-securityTools-enable"]["value"] = "true"
+        org_settings = OrgSettings(org_settings_dict, t_setting)
+        assert org_settings.endpoint_monitoring_enabled is True
+
+        t_setting["org-securityTools-enable"]["value"] = "false"
+        org_settings = OrgSettings(org_settings_dict, t_setting)
+        assert org_settings.endpoint_monitoring_enabled is False
+
     def test_org_settings_set_independent_t_setting_properties(
         self, param, org_settings_dict
     ):
@@ -264,6 +276,83 @@ class TestOrgSettings:
             if packet["key"] == param.dict_location:
                 assert packet["value"] == "false"
 
+    @pytest.mark.parametrize(
+        "param",
+        [
+            param(
+                name="org_name",
+                new_val="Org Name Updated",
+                expected_stored_val="Org Name Updated",
+                dict_location=["orgName"],
+            ),
+            param(
+                name="external_reference",
+                new_val="Updated Reference",
+                expected_stored_val="Updated Reference",
+                dict_location=["orgExtRef"],
+            ),
+            param(
+                name="notes",
+                new_val="Updated Note",
+                expected_stored_val="Updated Note",
+                dict_location=["notes"],
+            ),
+            param(
+                name="maximum_user_subscriptions",
+                new_val=99,
+                expected_stored_val=99,
+                dict_location=["settings", "maxSeats"],
+            ),
+            param(
+                name="org_backup_quota",
+                new_val=42,
+                expected_stored_val=ONEGB * 42,
+                dict_location=["settings", "maxBytes"],
+            ),
+            param(
+                name="user_backup_quota",
+                new_val=42,
+                expected_stored_val=ONEGB * 42,
+                dict_location=["settings", "defaultUserMaxBytes"],
+            ),
+            param(
+                name="web_restore_admin_limit",
+                new_val=42,
+                expected_stored_val=42,
+                dict_location=["settings", "webRestoreAdminLimitMb"],
+            ),
+            param(
+                name="web_restore_user_limit",
+                new_val=42,
+                expected_stored_val=42,
+                dict_location=["settings", "webRestoreUserLimitMb"],
+            ),
+            param(
+                name="backup_warning_email_days",
+                new_val=14,
+                expected_stored_val=14,
+                dict_location=["settings", "warnInDays"],
+            ),
+            param(
+                name="backup_critical_email_days",
+                new_val=25,
+                expected_stored_val=25,
+                dict_location=["settings", "alertInDays"],
+            ),
+            param(
+                name="backup_alert_recipient_emails",
+                new_val="test2@example.com",  # test string input
+                expected_stored_val=["test2@example.com"],
+                dict_location=["settings", "recipients"],
+            ),
+            param(
+                name="backup_alert_recipient_emails",
+                new_val=["test@example.com", "test2@example.com"],  # test list input
+                expected_stored_val=["test@example.com", "test2@example.com"],
+                dict_location=["settings", "recipients"],
+            ),
+        ],
+    )
     def test_org_settings_setting_mutable_property_updates_dict_correctly_and_registers_changes(
         self, param, org_settings_dict
     ):
@@ -326,7 +415,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets:
             "43": "PROe Cloud, US <LOCKED>",
             "673679195225718785": "PROe Cloud, AMS",
         }
-        with pytest.raises(PycpgError):
+        with pytest.raises(Py42Error):
             org_settings.device_defaults.backup_sets[1].add_destination(404)
         assert (
             org_settings.device_defaults.backup_sets[1].destinations
@@ -359,7 +448,7 @@ class TestOrgDeviceSettingsDefaultsBackupSets:
             "43": "PROe Cloud, US <LOCKED>",
             "673679195225718785": "PROe Cloud, AMS",
         }
-        with pytest.raises(PycpgError):
+        with pytest.raises(Py42Error):
             org_settings.device_defaults.backup_sets[1].remove_destination(404)
         assert (
             org_settings.device_defaults.backup_sets[1].destinations

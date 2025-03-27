@@ -254,7 +254,6 @@ class TestOrgSettings:
             ),
         ],
     )
-
     def test_org_settings_set_independent_t_setting_properties(
         self, param, org_settings_dict
     ):

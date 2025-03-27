@@ -185,7 +185,6 @@ DEVICE_DICT_W_SETTINGS = {
                 "numValidateWorkers": "100",
                 "reduceEnabled": "true",
                 "scrapPercentAllowed": "10",
-                "shouldThrottleFFS": {"#text": "true", "@locked": "true"},
                 "smallBlockSize": "4096",
                 "softDeleteOfFiles": "false",
                 "strongBlockCacheLoadFactor": "0.8",

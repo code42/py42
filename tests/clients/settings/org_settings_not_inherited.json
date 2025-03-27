@@ -567,7 +567,7 @@
                             },
                             {
                                 "@id": "1",
-                                "name": "Next-Gen Platinum Support Test Environment - Backup Backup Set",
+                                "name": "CrashPlan Platinum Support Test Environment - Backup Backup Set",
                                 "priority": "2",
                                 "backupPaths": {
                                     "lastModified": "1",
@@ -651,10 +651,6 @@
                     "numCloseWorkers": "10",
                     "idleThrottleRate": "80",
                     "activeThrottleRate": "20",
-                    "shouldThrottleFFS": {
-                        "@locked": "true",
-                        "#text": "true"
-                    },
                     "checksumIncomingBackupData": "true",
                     "checksumIncomingRestoreData": "true",
                     "blockArchiveDataFileSize": "4242538496",

@@ -15,21 +15,3 @@ def get_all_pages(func, key, *args, **kwargs):
         yield response
         page_items = response[key] if key else response.data
         item_count = len(page_items)
-
-
-def escape_quote_chars(token):
-    """
-    The `nextPgToken` returned in Forensic Search requests with > 10k results is the eventId
-    of the last event returned in the response. Some eventIds have double-quote chars in
-    them, which need to be escaped when passing the token in the next search request.
-    """
-    if not isinstance(token, (str, bytes)):
-        return token
-
-    unescaped_quote_pattern = r'[^\\]"'
-
-    return re.sub(
-        pattern=unescaped_quote_pattern,
-        repl=lambda match: match.group().replace('"', r"\""),
-        string=token,
-    )

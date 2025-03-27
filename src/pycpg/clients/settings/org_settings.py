@@ -148,49 +148,6 @@ class OrgSettings(UserDict):
     admin users get these automatically).
     """
 
-    _endpoint_monitoring_enabled = TSettingProperty(
-        "endpoint_monitoring_enabled",
-        "org-securityTools-enable",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-    _aed_enabled = TSettingProperty(
-        "aed_enabled",
-        "device_advancedExfiltrationDetection_enabled",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-    _removable_media_enabled = TSettingProperty(
-        "removable_media_enabled",
-        "org-securityTools-device-detection-enable",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-    _cloud_sync_enabled = TSettingProperty(
-        "cloud_sync_enabled",
-        "org-securityTools-cloud-detection-enable",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-    _browser_and_applications_enabled = TSettingProperty(
-        "browser_and_applications_enabled",
-        "org-securityTools-open-file-detection-enable",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-    _file_metadata_collection_enabled = TSettingProperty(
-        "file_metadata_collection_enabled",
-        "device_fileForensics_enabled",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-    _printer_detection_enabled = TSettingProperty(
-        "printer_detection_enabled",
-        "org_securityTools_printer_detection_enable",
-        get_converter=str_to_bool,
-        set_converter=bool_to_str,
-    )
-
     web_restore_enabled = TSettingProperty(
         "web_restore_enabled",
         "device_webRestore_enabled",

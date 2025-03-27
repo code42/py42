@@ -9,7 +9,6 @@ proxies = None
 verify_ssl_certs = True
 
 items_per_page = 500
-security_events_per_page = 500
 
 _custom_user_prefix = ""
 _custom_user_suffix = ""

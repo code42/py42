@@ -27,9 +27,8 @@ of session / authentication management.
 ## Features
 
 * Managing users, organizations, and devices.
-* Searching file events, alerts and auditlogs.
-* Adding/Removing employees from detection lists.
-* Managing cases.
+* Restoring files
+* Managing and searching legal holds
 
 ## Content
 

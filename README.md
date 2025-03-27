@@ -16,7 +16,7 @@ of session / authentication management.
 ## Requirements
 
 - Python 3.6.0+
-- CrashPlan Server 6.8.x+ or cloud environment (e.g. console.us1.crashplan.com or crashplan.com)
+- CrashPlan Cloud environment (e.g. console.us1.crashplan.com or console.us2.crashplan.com)
 
 ## Installation
 

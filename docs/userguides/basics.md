@@ -69,15 +69,16 @@ returned by the generator gives you access to the actual list of items. Use the 
 for working with generators and paging in pycpg:
 
 ```python
-# Prints the username and user ID for all employees included on a watchlist
+# Prints the userUid and device name for all active devices
 
-pages = sdk.watchlists.get_all_included_users(WATCHLIST_ID)  # pages has 'generator' type
+pages = sdk.devices.get_all(active=True,include_backup_usage=True)  # pages has 'generator' type
 for page in pages:  # page has 'PycpgResponse' type
-    users = page["includedUsers"]
-    for user in users:
-        username = user["username"]
-        user_id = user["userId"]
-        print(f"{username}: {user_id}")
+    devices = page["computers"]
+    for device in devices:
+        userUid = device["userUid"]
+        name = device["name"]
+        print(f"{userUid}: {name}")
+
 ```
 
 Each page is a typical pycpg response. The next section covers what you can do with `PycpgResponse` objects.
@@ -100,16 +101,16 @@ essentially print its text property:
 ```python
 # Prints details about the response from a getting a detection list user.
 
-response = sdk.detectionlists.get_user("test.user@example.com")
+response = sdk.devices.get_by_guid("test.user@example.com")
 print(response)  # JSON as Dictionary - same as print(response.text)
 print(response.raw_text)  # Raw API response
 print(response.status_code)  # 200
-cloud_usernames = response["cloudUsernames"]
+alert_state = response["alertStates"]
 # if the response might not contain the property you're looking for,
 # check to see if it exists with data.get
-cloud_usernames = response.data.get("cloudUsernames")
-if cloud_usernames:
-    print(cloud_usernames)
+alert_state = response.data.get("alertStates")
+if alert_state:
+    print(alert_state)
 ```
 
 ```{eval-rst}
@@ -119,7 +120,7 @@ if cloud_usernames:
 ## Dates
 
 Most dates in pycpg support [POSIX timestamps](https://en.wikipedia.org/wiki/Unix_time) for date parameters. As an
-example, see :class:`sdk.queries.filevents.filters.event_filter.EventTimestamp` which is used for querying file events
+example, see :class:`sdk.legalhold.get_all_events` which is used for querying legal hold events
 by their event timestamp.
 
 ```python
@@ -127,23 +128,17 @@ from datetime import datetime, timedelta
 
 import pycpg.sdk
 import pycpg.util
-from pycpg.sdk.queries.fileevents.file_event_query import FileEventQuery
-from pycpg.sdk.queries.fileevents.filters.event_filter import EventTimestamp
 
 sdk = pycpg.sdk.from_local_account("https://console.us1.crashplan.com", "my_username", "my_password")
 
 # Get the epoch date 14 days in the past
-query_date = datetime.utcnow() - timedelta(days=14)
-query_epoch = (query_date - datetime.utcfromtimestamp(0)).total_seconds()
+event_date = datetime.utcnow() - timedelta(days=14)
+event_epoch = (event_date - datetime.utcfromtimestamp(0)).total_seconds()
 
-query = FileEventQuery(EventTimestamp.on_or_after(query_epoch))
-
-response = sdk.securitydata.search_file_events(query)
-
-# Print all the md5 Checksums from every file event within the past 14 days.
-file_events = response["fileEvents"]
-for event in file_events:
-    print(event["md5Checksum"])
+#print all the event types for all events in the past 14 days
+hold_events = sdk.legalhold.get_all_events(min_event_date=event_epoch)
+for event in hold_events:
+    print(['eventType'])
 ```
 
 ## Exceptions

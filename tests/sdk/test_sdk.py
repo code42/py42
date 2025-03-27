@@ -52,7 +52,6 @@ class TestSDK:
         client = SDKClient(pycpg_connection, mock_auth)
         assert type(client.devices) == devices.DeviceService
 
-
     def test_has_legal_hold_service_set(self, pycpg_connection, mock_auth):
         client = SDKClient(pycpg_connection, mock_auth)
         assert type(client.legalhold) == legalhold.LegalHoldService

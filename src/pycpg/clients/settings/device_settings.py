@@ -17,6 +17,7 @@ destination_not_added_error = PycpgError(
     "Destination is not added to device, unable to lock."
 )
 
+
 class DeviceSettingsDefaults(UserDict):
     """Class used for managing an Organization's Device Default settings. Also acts as a
     base class for `DeviceSettings` to manage individual device settings."""

@@ -85,4 +85,3 @@ class TestStorageServiceFactory:
         mock_device_service.get_by_guid.return_value = response
         with pytest.raises(PycpgError):
             factory.auto_select_destination_guid(TEST_DEVICE_GUID)
-            

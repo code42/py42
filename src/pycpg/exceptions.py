@@ -273,7 +273,6 @@ class PycpgLegalHoldAlreadyActiveError(PycpgBadRequestError):
         return self._legal_hold_matter_uid
 
 
-
 class PycpgMFARequiredError(PycpgUnauthorizedError):
     """Deprecated: An exception raised when a request requires multi-factor authentication"""
 
@@ -329,7 +328,6 @@ class PycpgInvalidUsernameError(PycpgInternalServerError):
         super().__init__(exception, message)
 
 
-
 class PycpgBadRestoreRequestError(PycpgBadRequestError):
     """An error raised when the given restore arguments are not compatible and cause
     a bad request."""
@@ -357,7 +355,6 @@ class PycpgInvalidPageTokenError(PycpgBadRequestError):
     def page_token(self):
         """The page token."""
         return self._page_token
-
 
 
 def raise_pycpg_error(raised_error):

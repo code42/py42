@@ -155,7 +155,7 @@ with open("/path/to/my/file", 'wb') as f:
         if chunk:
             f.write(chunk)
 
-# search file events
+# search file events -- deprecated, to be replaced with another example
 from pycpg.sdk.queries.fileevents.file_event_query import FileEventQuery
 from pycpg.sdk.queries.fileevents.filters import *
 

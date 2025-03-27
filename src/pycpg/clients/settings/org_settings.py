@@ -191,8 +191,6 @@ class OrgSettings(UserDict):
         set_converter=bool_to_str,
     )
 
-  
-
     web_restore_enabled = TSettingProperty(
         "web_restore_enabled",
         "device_webRestore_enabled",
@@ -206,4 +204,3 @@ class OrgSettings(UserDict):
 
     def __str__(self):
         return str(self.data)
-    

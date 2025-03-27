@@ -263,6 +263,7 @@ class TestOrgSettings:
         for packet in org_settings.packets:
             if packet["key"] == param.dict_location:
                 assert packet["value"] == "false"
+
     @pytest.mark.parametrize(
         "param",
         [

@@ -248,6 +248,7 @@ class SDKClient:
         """
         return self._clients.auditlogs
 
+
 def _init_services(main_connection, main_auth, auth_flag=None):
     # services are imported within function to prevent circular imports when a service
     from pycpg.services import Services
@@ -274,7 +275,6 @@ def _init_services(main_connection, main_auth, auth_flag=None):
 
     user_ctx = UserContext(administration_svc)
 
-
     services = Services(
         administration=administration_svc,
         archive=ArchiveService(main_connection),
@@ -289,6 +289,7 @@ def _init_services(main_connection, main_auth, auth_flag=None):
     )
 
     return services, user_ctx
+
 
 def _init_clients(services, connection):
     # clients are imported within function to prevent circular imports when a client
@@ -319,6 +320,6 @@ def _init_clients(services, connection):
         authority=authority,
         archive=archive,
         auditlogs=auditlogs,
-        loginconfig=loginconfig
+        loginconfig=loginconfig,
     )
     return clients

@@ -187,7 +187,6 @@ class TestDeviceService:
         settings = client.get_settings("42")
         assert isinstance(settings, DeviceSettings)
 
-
     def test_update_settings_calls_api_with_expected_params_when_crashplan(
         self, mock_connection
     ):
@@ -206,4 +205,3 @@ class TestDeviceService:
         client.update_settings(settings)
         uri = f"/api/v1/Computer/{device_id}"
         mock_connection.put.assert_called_once_with(uri, json=settings)
-        

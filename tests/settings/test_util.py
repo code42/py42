@@ -1,8 +1,8 @@
 import pytest
 from tests.conftest import create_mock_response
 
-import py42.settings as settings
-from py42.services.util import get_all_pages
+import pycpg.settings as settings
+from pycpg.services.util import get_all_pages
 
 
 @pytest.fixture

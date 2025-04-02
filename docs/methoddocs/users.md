@@ -1,13 +1,13 @@
 # Users
 
 ```{eval-rst}
-.. autoclass:: py42.services.users.UserService
+.. autoclass:: pycpg.services.users.UserService
     :members:
     :show-inheritance:
 ```
 
 ```{eval-rst}
-.. autoclass:: py42.usercontext.UserContext
+.. autoclass:: pycpg.usercontext.UserContext
     :members:
     :show-inheritance:
 ```

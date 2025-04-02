@@ -3,16 +3,12 @@ from datetime import datetime
 
 import pytest
 
-import py42.sdk as _sdk
-from py42.util import convert_datetime_to_epoch
+import pycpg.sdk as _sdk
+from pycpg.util import convert_datetime_to_epoch
 
 
 def pytest_addoption(parser):
-    parser.addini("alert_id", "Alert id that exists in the system.")
     parser.addini("device_id", "Device id that exists in the system.")
-    parser.addini("observer_rule_id", "Observer rule id.")
-    parser.addini("md5_hash", "MD5 hash of a file that exists on the device.")
-    parser.addini("sha256_hash", "SHA256 hash of a file that exists on the device.")
     parser.addini(
         "user_uid", "The UID of the user to get plan storage information for."
     )
@@ -20,25 +16,13 @@ def pytest_addoption(parser):
     parser.addini("destination_device_guid", "Device guid to which archival was done.")
     parser.addini("archive_guid", "Guid of the archival.")
     parser.addini("path", "Complete path of the file with filename which was archived.")
-    parser.addini("file_data", "Content of the file during archival.")
-    parser.addini("case_event_id", "Event id to associate to a case.")
-
-
-@pytest.fixture(scope="session")
-def alert_id(request):
-    return request.config.getini("alert_id")
-
-
-@pytest.fixture(scope="session")
-def observer_id(request):
-    return request.config.getini("observer_rule_id")
 
 
 @pytest.fixture(scope="session")
 def connection():
-    host = os.environ.get("C42_HOST") or "http://127.0.0.1:4200"
-    user = os.environ.get("C42_USER") or "test.user@example.com"
-    pw = os.environ.get("C42_PW") or "password"
+    host = os.environ.get("CPG_HOST") or "http://127.0.0.1:4200"
+    user = os.environ.get("CPG_USER") or "test.user@example.com"
+    pw = os.environ.get("CPG_PW") or "password"
     return _get_sdk(host, user, pw)
 
 
@@ -54,9 +38,9 @@ def _get_sdk(host, user, pw):
 
 @pytest.fixture(scope="session")
 def api_client_connection():
-    host = os.environ.get("C42_HOST") or "http://127.0.0.1:4200"
-    client = os.environ.get("C42_API_CLIENT_ID") or "client_id"
-    secret = os.environ.get("C42_API_CLIENT_SECRET") or "secret"
+    host = os.environ.get("CPG_HOST") or "http://127.0.0.1:4200"
+    client = os.environ.get("CPG_API_CLIENT_ID") or "client_id"
+    secret = os.environ.get("CPG_API_CLIENT_SECRET") or "secret"
     return _get_api_client_sdk(host, client, secret)
 
 
@@ -73,11 +57,6 @@ def _get_api_client_sdk(host, client, secret):
 @pytest.fixture(scope="session")
 def timestamp():
     return convert_datetime_to_epoch(datetime.utcnow())
-
-
-@pytest.fixture(scope="session")
-def event_id(request):
-    return request.config.getini("case_event_id")
 
 
 @pytest.fixture(scope="session")

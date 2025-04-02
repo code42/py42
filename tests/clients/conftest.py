@@ -8,7 +8,7 @@ from tests.conftest import TEST_DESTINATION_GUID_1
 from tests.conftest import TEST_DEVICE_GUID
 from tests.conftest import TEST_NODE_GUID
 
-from py42.services.archive import ArchiveService
+from pycpg.services.archive import ArchiveService
 
 param = namedtuple("param", "name new_val expected_stored_val dict_location")
 

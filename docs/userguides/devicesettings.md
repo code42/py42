@@ -1,11 +1,11 @@
 # View or Modify device settings
 
-Use py42 to easily view and update the settings for devices with the `DeviceSettings` and `IncydrDeviceSettings` objects for Crashplan and Incydr customers, respectively.
+Use pycpg to easily view and update the settings for devices with the `DeviceSettings` objects for Crashplan customers, respectively.
 
-The [Device Settings](../methoddocs/devicesettings.md) objects are wrappers around the complex nested dict that the Code42 `Computer` API endpoint expects,
+The [Device Settings](../methoddocs/devicesettings.md) objects are wrappers around the complex nested dict that the CrashPlan `Computer` API endpoint expects,
 providing helper properties that can be used to get/set values, without having to know the underlying nested structure.
 
-To get started, create a `DeviceSettings` or `IncydrDeviceSettings` object for a given device guid.  The `get_settings()` method will create the appropriate object automatically based on the corresponding service running on the device:
+To get started, create a `DeviceSettings` object for a given device guid.  The `get_settings()` method will create the appropriate object automatically based on the corresponding service running on the device:
 
 ```python
 device_settings = sdk.devices.get_settings(908765043021)
@@ -43,12 +43,12 @@ For convenience and logging purposes, all changes are tracked in the `.changes` 
 {'destinations': "{'43': 'PROe Cloud, US <LOCKED>'} -> {'43': 'PROe Cloud, US <LOCKED>', '632540230984925185': 'PROe Cloud, US - West'}"}
 ```
 
-Once you've made all the desired changes to a `DeviceSettings` object, you can post the changes by passing it to the `sdk.devices.update_settings` method, which returns a `Py42Response` object
+Once you've made all the desired changes to a `DeviceSettings` object, you can post the changes by passing it to the `sdk.devices.update_settings` method, which returns a `PycpgResponse` object
 with the server response:
 
 ```python
 >>> sdk.devices.update_settings(device_settings)
-<Py42Response [status=200, data={'active': True, 'address': '192.168.74.144:4247', 'alertState': 0, 'alertStates': ['OK'], ...}]>
+<PycpgResponse [status=200, data={'active': True, 'address': '192.168.74.144:4247', 'alertState': 0, 'alertStates': ['OK'], ...}]>
 ```
 
 
@@ -78,7 +78,7 @@ Because `DeviceSettings` is a subclass of `UserDict` with added attributes/metho
 the underlying dict that ultimately gets posted to the server is stored on the `.data` attribute of `DeviceSettings` instances,
 and a `DeviceSettings` object otherwise behaves like a normal dict.
 
-If there is a setting that is not yet implemented by py42 as a helper method/attribute, those values can be manually managed
+If there is a setting that is not yet implemented by pycpg as a helper method/attribute, those values can be manually managed
 by treating the `DeviceSettings` object as a normal dict.
 
 For example, setting the "backup status email frequency" value to only send every 10 days, via the helper attribute:
@@ -93,9 +93,9 @@ And doing the same thing by setting the value manually on the underlying dict:
 >>> device_settings["settings"]["serviceBackupConfig"]["backupStatusEmailFreqInMinutes"] = "14400"
 ```
 
-The benefits of the py42 helper attributes/methods is that the values mimic what the Console UI uses (in this case days
+The benefits of the pycpg helper attributes/methods is that the values mimic what the Console UI uses (in this case days
 vs the minutes expected by the API endpoint), so you don't have to worry about doing conversions yourself. But since
-the underlying dict is accessible, you aren't constrained to only what py42 has so far implemented.
+the underlying dict is accessible, you aren't constrained to only what pycpg has so far implemented.
 
 ```{eval-rst}
 .. warning::

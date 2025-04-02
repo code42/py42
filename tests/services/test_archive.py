@@ -1,8 +1,8 @@
 import pytest
 from tests.conftest import create_mock_response
 
-import py42.settings
-from py42.services.archive import ArchiveService
+import pycpg.settings
+from pycpg.services.archive import ArchiveService
 
 ARCHIVE_URI = "/api/v1/Archive"
 DEFAULT_GET_ARCHIVES_PARAMS = {
@@ -70,7 +70,7 @@ class TestArchiveService:
         mock_get_archives_empty_response,
     ):
         device_guid = "42"
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = ArchiveService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_archives_response,
@@ -79,7 +79,7 @@ class TestArchiveService:
         ]
         for _ in service.get_all_archives_from_value(device_guid, "backupSourceGuid"):
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_by_value_calls_get_with_expected_uri_and_params(self, mock_connection):
@@ -96,7 +96,7 @@ class TestArchiveService:
         mock_get_all_restore_history_response,
         mock_get_all_restore_history_empty_response,
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = ArchiveService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_restore_history_response,
@@ -105,7 +105,7 @@ class TestArchiveService:
         ]
         for _ in service.get_all_restore_history(10, "orgId", "123"):
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_web_restore_info_calls_get_with_expected_url_and_params(
@@ -135,7 +135,7 @@ class TestArchiveService:
         mock_get_all_org_cold_storage_response,
         mock_get_all_org_cold_storage_empty_response,
     ):
-        py42.settings.items_per_page = 1
+        pycpg.settings.items_per_page = 1
         service = ArchiveService(mock_connection)
         mock_connection.get.side_effect = [
             mock_get_all_org_cold_storage_response,
@@ -144,7 +144,7 @@ class TestArchiveService:
         ]
         for _ in service.get_all_org_cold_storage_archives("orgId"):
             pass
-        py42.settings.items_per_page = 500
+        pycpg.settings.items_per_page = 500
         assert mock_connection.get.call_count == 3
 
     def test_get_all_org_cold_storage_archives_calls_get_with_expected_uri_and_params(

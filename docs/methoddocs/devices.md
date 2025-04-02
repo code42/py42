@@ -1,7 +1,7 @@
 # Devices
 
 ```{eval-rst}
-.. autoclass:: py42.services.devices.DeviceService
+.. autoclass:: pycpg.services.devices.DeviceService
     :members:
     :show-inheritance:
 ```

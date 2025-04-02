@@ -10,12 +10,12 @@ from tests.conftest import TEST_ENCRYPTION_KEY
 from tests.conftest import TEST_PASSWORD
 from tests.conftest import TEST_SESSION_ID
 
-from py42.exceptions import Py42InternalServerError
-from py42.exceptions import Py42InvalidArchiveEncryptionKey
-from py42.exceptions import Py42InvalidArchivePassword
-from py42.response import Py42Response
-from py42.services._connection import Connection
-from py42.services.storage.archive import StorageArchiveService
+from pycpg.exceptions import PycpgInternalServerError
+from pycpg.exceptions import PycpgInvalidArchiveEncryptionKey
+from pycpg.exceptions import PycpgInvalidArchivePassword
+from pycpg.response import PycpgResponse
+from pycpg.services._connection import Connection
+from pycpg.services.storage.archive import StorageArchiveService
 
 
 JSON_KEYWORD = "json"
@@ -192,12 +192,12 @@ class TestStorageArchiveService:
                 [{"name":"PRIVATE_PASSWORD_INVALID","description":"An error has
                 occurred. See server logs for more information.","objects":[]}]
             """
-            raise Py42InternalServerError(base_err)
+            raise PycpgInternalServerError(base_err)
 
         connection.post.side_effect = side_effect
         storage_archive_service = StorageArchiveService(connection)
 
-        with pytest.raises(Py42InvalidArchivePassword) as err:
+        with pytest.raises(PycpgInvalidArchivePassword) as err:
             storage_archive_service.create_restore_session(
                 TEST_DEVICE_GUID, private_password=TEST_PASSWORD
             )
@@ -225,12 +225,12 @@ class TestStorageArchiveService:
                 [{"name":"CUSTOM_KEY_INVALID","description":"An error has
                 occurred. See server logs for more information.","objects":[]}]
             """
-            raise Py42InternalServerError(base_err)
+            raise PycpgInternalServerError(base_err)
 
         connection.post.side_effect = side_effect
         storage_archive_service = StorageArchiveService(connection)
 
-        with pytest.raises(Py42InvalidArchiveEncryptionKey) as err:
+        with pytest.raises(PycpgInvalidArchiveEncryptionKey) as err:
             storage_archive_service.create_restore_session(
                 TEST_DEVICE_GUID, encryption_key=TEST_ENCRYPTION_KEY
             )
@@ -285,7 +285,7 @@ class TestStorageArchiveService:
 
     def test_get_restore_status_calls_get_with_correct_url(self, mocker, connection):
         storage_archive_service = StorageArchiveService(connection)
-        api_response = mocker.MagicMock(spec=Py42Response)
+        api_response = mocker.MagicMock(spec=PycpgResponse)
         connection.get.return_value = api_response
         storage_archive_service.get_restore_status(TEST_JOB_ID)
         expected_url = WEB_RESTORE_JOB_URL + "/" + TEST_JOB_ID
@@ -295,7 +295,7 @@ class TestStorageArchiveService:
         self, mocker, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        api_response = mocker.MagicMock(spec=Py42Response)
+        api_response = mocker.MagicMock(spec=PycpgResponse)
         connection.delete.return_value = api_response
         storage_archive_service.cancel_restore(TEST_JOB_ID)
         connection.delete.assert_called_once_with(
@@ -306,7 +306,7 @@ class TestStorageArchiveService:
         self, mocker, connection
     ):
         storage_archive_service = StorageArchiveService(connection)
-        api_response = mocker.MagicMock(spec=Py42Response)
+        api_response = mocker.MagicMock(spec=PycpgResponse)
         connection.get.return_value = api_response
         storage_archive_service.stream_restore_result(TEST_JOB_ID)
         expected_url = WEB_RESTORE_JOB_RESULT_URL + "/" + TEST_JOB_ID

@@ -18,11 +18,11 @@
 
 ## Set up your Development environment
 
-The very first thing to do is to fork the py42 repo, clone it, and make it your working directory!
+The very first thing to do is to fork the pycpg repo, clone it, and make it your working directory!
 
 ```bash
-git clone https://github.com/myaccount/py42
-cd py42
+git clone https://github.com/myaccount/pycpg
+cd pycpg
 ```
 
 To set up your development environment, create a python virtual environment and activate it. This keeps your dependencies sandboxed so that they are unaffected by (and do not affect) other python packages you may have installed.
@@ -47,12 +47,12 @@ eval "$(pyenv virtualenv-init -)"
 Then, create your virtual environment.
 
 ```bash
-pyenv install 3.9.10
-pyenv virtualenv 3.9.10 py42
-pyenv activate py42
+pyenv install 3.11
+pyenv virtualenv 3.11.11 pycpg
+pyenv activate pycpg
 ```
 
-**Note**: Py42 for end users supports Pythons versions <3.6 and <4 - However due to some of the build dependencies, you'll need a version >=3.7 for your virtual environment.  Use `pyenv --versions` to see all versions available for install. There are some known issues installing python 3.6 with pyenv on certain OS.
+**Note**: Pycpg for end users supports Pythons versions <3.6 and <4 - However due to some of the build dependencies, you'll need a version >=3.7 for your virtual environment.  Use `pyenv --versions` to see all versions available for install. There are some known issues installing python 3.6 with pyenv on certain OS.
 
 If running into issues on Big Sur(Version 11) while installing python 3.6 the below may work
 
@@ -60,7 +60,7 @@ If running into issues on Big Sur(Version 11) while installing python 3.6 the be
 pyenv install --patch 3.6.14 < <(curl -sSL https://github.com/python/cpython/commit/8ea6353.patch)
 ```
 
-Use `source deactivate` to exit the virtual environment and `pyenv activate py42` to reactivate it.
+Use `source deactivate` to exit the virtual environment and `pyenv activate pycpg` to reactivate it.
 
 ### Windows/Linux
 
@@ -68,11 +68,11 @@ Install a version of python 3.6 or higher from [python.org](https://python.org).
 Next, in a directory somewhere outside the project, create and activate your virtual environment:
 
 ```bash
-python -m venv py42
+python -m venv pycpg
 # macOS/Linux
-source py42/bin/activate
+source pycpg/bin/activate
 # Windows
-.\py42\Scripts\Activate
+.\pycpg\Scripts\Activate
 ```
 
 To leave the virtual environment, simply use:
@@ -82,7 +82,7 @@ deactivate
 
 ## Installation
 
-Next, with your virtual environment activated, install py42 and its development dependencies. The `-e` option installs py42 in
+Next, with your virtual environment activated, install pycpg and its development dependencies. The `-e` option installs pycpg in
 ["editable mode"](https://pip.pypa.io/en/stable/reference/pip_install/#editable-installs).
 
 ```bash
@@ -159,8 +159,8 @@ def test_add_one_and_one_equals_two():
 
 #### Integration tests
 
-If not using the mock server, set the environment variables `C42_HOST`, `C42_USER`,
-and `C42_PW` with CCA credentials. Otherwise, the integration tests default to using
+If not using the mock server, set the environment variables `CPG_HOST`, `CPG_USER`,
+and `CPG_PW` with CCA credentials. Otherwise, the integration tests default to using
 `http://127.0.0.1:4200`, which is the same address that the mock server is set to run on.
 
 To execute integration tests:
@@ -176,7 +176,7 @@ Follow [Google's format](https://google.github.io/styleguide/pyguide.html#38-com
 
 ### Generating documentation
 
-py42 uses [Sphinx](http://www.sphinx-doc.org/) to generate documentation.
+pycpg uses [Sphinx](http://www.sphinx-doc.org/) to generate documentation.
 
 #### Performing a test build
 
@@ -186,7 +186,7 @@ To simply test that the documentation build without errors, you can run:
 tox -e docs
 ```
 
-Note that the `myst-parser` dependency that contributes to building the docs requires python 3.7+.
+Note that the `myst-parser` and `sphinx` dependency that contributes to building the docs requires python 3.11.
 
 #### Running the docs locally
 
@@ -216,9 +216,5 @@ Document all notable consumer-affecting changes in CHANGELOG.md per principles a
 ## Opening a PR
 
 When you're satisfied with your changes, open a PR and fill out the pull request template file. We recommend prefixing the name of your branch and/or PR title with `bugfix`, `chore`, or `feature` to help quickly categorize your change. Your unit tests and other checks will run against all supported python versions when you do this.
-
-For contributions from non-Code42 employees, we require you to agree to our [Contributor License Agreement](https://code42.github.io/code42-cla/Code42_Individual_Contributor_License_Agreement).
-
-On submission of your first PR, a GitHub action will run requiring you to reply in a comment with your affirmation of the CLA before the PR will be able to be merged.
 
 A team member should get in contact with you shortly to help merge your PR to completion and get it ready for a release!

@@ -5,8 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-The intended audience of this file is for py42 consumers -- as such, changes that don't affect
+The intended audience of this file is for pycpg consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
+
+## Removed 1.0.0
+
+ - As this is the first version of pycpg setting version number to 1.0.0
+ - Removed Incydr functionality
+ - Renamed base to pycpg from py42. This tool can now be used by calling py42.sdk.method
 
 ## 1.27.3 - 2024-12-18
 

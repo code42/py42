@@ -2,7 +2,7 @@ import pytest
 from requests import Request
 from tests.conftest import create_mock_response
 
-from py42.services._connection import Connection
+from pycpg.services._connection import Connection
 
 TEST_USER_ID = "0123456789"
 TEST_DEVICE_GUID = "testdeviceguid"
@@ -34,7 +34,7 @@ def mock_storage_auth_token_conn(mocker):
         mocker, '["TEST_V1", "TOKEN_VALUE"]'
     )
     mocker.patch(
-        "py42.services.storage._auth._get_new_storage_connection",
+        "pycpg.services.storage._auth._get_new_storage_connection",
         return_value=mock_connection,
     )
     return mock_connection

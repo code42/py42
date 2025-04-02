@@ -1,6 +1,6 @@
 from datetime import datetime
 
-import py42.util as util
+import pycpg.util as util
 
 
 def test_convert_timestamp_to_str_returns_expected_str():

@@ -8,10 +8,10 @@ from tests.conftest import TEST_NODE_GUID
 from tests.conftest import TEST_PASSWORD
 from tests.conftest import TEST_SESSION_ID
 
-import py42.clients._archiveaccess.restoremanager
-from py42.clients._archiveaccess import ArchiveAccessor
-from py42.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
-from py42.services.storage._service_factory import StorageServiceFactory
+import pycpg.clients._archiveaccess.restoremanager
+from pycpg.clients._archiveaccess import ArchiveAccessor
+from pycpg.clients._archiveaccess.accessorfactory import ArchiveAccessorFactory
+from pycpg.services.storage._service_factory import StorageServiceFactory
 
 
 INVALID_DEVICE_GUID = "invalid-device-guid"
@@ -157,7 +157,7 @@ class TestArchiveAccessFactory:
         storage_archive_service,
     ):
         spy = mocker.spy(
-            py42.clients._archiveaccess.accessorfactory, "create_restore_job_manager"
+            pycpg.clients._archiveaccess.accessorfactory, "create_restore_job_manager"
         )
         storage_service_factory.create_archive_service.return_value = (
             storage_archive_service

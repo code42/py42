@@ -31,7 +31,7 @@ setup(
     zip_safe=False,
     python_requires=">=3.6, <4",
     install_requires=[
-        "urllib3>=1.26.6,<2",
+        "urllib3>=1.26.6,<3",
         "requests>=2.25.0",
     ],
     extras_require={

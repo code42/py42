@@ -7,6 +7,7 @@ on:
     tags:
       - v*
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,7 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [3.9, "3.10", 3.11]
+        python: ["3.9", "3.10", "3.11"]
+    env:
+      CPG_HOST: ${{ vars.CPG_HOST }}
+      CPG_USER: ${{ vars.CPG_USER }}
+      CPG_API_CLIENT_ID: ${{ vars.CPG_API_CLIENT_ID }}
 
     steps:
       - uses: actions/checkout@v2

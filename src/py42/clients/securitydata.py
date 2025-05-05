@@ -1,3 +1,4 @@
+import re
 from warnings import warn
 
 from py42.exceptions import Py42ChecksumNotFoundError
@@ -136,76 +137,22 @@ class SecurityDataClient:
         raise Py42Error(f"No file with hash {checksum} available for download.")
 
     def _get_file_version_for_stream(self, device_guid, md5_hash, sha256_hash, path):
-        version = self._get_device_file_version(
-            device_guid, md5_hash, sha256_hash, path
-        )
-        if not version:
-            version = self._get_other_file_location_version(md5_hash, sha256_hash)
-        return version
-
-    def _get_device_file_version(self, device_guid, md5_hash, sha256_hash, path):
         response = self._preservation_data_service.get_file_version_list(
             device_guid, md5_hash, sha256_hash, path
         )
-        versions = (
-            response.data.get("securityEventVersionsMatchingChecksum")
-            or response.data.get("securityEventVersionsAtPath")
-            or response.data.get("preservationVersions")
-        )
-
-        if versions:
-            if not response.data.get("securityEventVersionsAtPath"):
-                exact_match = _get_first_matching_version(versions, md5_hash)
-                if exact_match:
-                    return exact_match
-
-            most_recent = sorted(
-                versions, key=lambda i: i["versionTimestamp"], reverse=True
-            )
-            return most_recent[0]
-
-    def _get_other_file_location_version(self, md5_hash, sha256_hash):
-        response = self._file_event_service.get_file_location_detail_by_sha256(
-            sha256_hash
-        )
-        locations = response["locations"]
-        if locations:
-            paths = _parse_file_location_response(locations)
-            version = self._preservation_data_service.find_file_version(
-                md5_hash, sha256_hash, paths
-            )
-            if version.status_code == 200:
-                return version.data
+        return response.data.get("match")
 
     def _get_file_stream(self, version):
-        if version.get("edsUrl"):
+        if version.get("downloadTokenRequest"):
             return self._get_exfiltrated_file(version)
 
-        return self._get_stored_file(version)
+        raise Py42Error(f"Unable to download file from version {version}")
 
     def _get_exfiltrated_file(self, version):
-        eds = self._storage_service_factory.create_exfiltrated_data_service(
-            version["edsUrl"]
-        )
-        token = eds.get_download_token(
-            version["eventId"],
-            version["deviceUid"],
-            version["filePath"],
-            version["fileSHA256"],
-            version["versionTimestamp"],
-        )
-        return eds.get_file(str(token))
-
-    def _get_stored_file(self, version):
-        pds = self._storage_service_factory.create_preservation_data_service(
-            version["storageNodeURL"]
-        )
-        token = pds.get_download_token(
-            version["archiveGuid"],
-            version["fileId"],
-            version["versionTimestamp"],
-        )
-        return pds.get_file(str(token))
+        downloadToken = version.get("downloadTokenRequest")
+        edsUrl = re.match(r"(https?://[^/]+)((/.*)|$)", downloadToken).group(1)
+        eds = self._storage_service_factory.create_exfiltrated_data_service(edsUrl)
+        return eds.get_file(downloadToken)
 
 
 def _parse_file_location_response(locations):

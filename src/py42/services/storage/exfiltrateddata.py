@@ -9,7 +9,20 @@ class ExfiltratedDataService(BaseService):
         super().__init__(main_connection)
         self._streaming_session = streaming_session
 
-    def get_file(self, downloadUrl):
+    def get_download_token(self, downloadRequestUrl):
+        """Get EDS download token for a file.
+
+        Args:
+            downloadRequestUrl (str): The download request url to get the token
+
+        Returns:
+            :class:`py42.response.Py42Response`: A response containing download token for the file.
+        """
+        headers = {"Accept": "*/*"}
+        uri = f"{downloadRequestUrl}"
+        return self._connection.get(uri, headers=headers)
+
+    def get_file(self, token):
         """Streams a file.
 
         Args:
@@ -18,6 +31,6 @@ class ExfiltratedDataService(BaseService):
         Returns:
             Returns a stream of the file indicated by the input token.
         """
-        uri = f"{downloadUrl}"
+        uri = f"{token}"
         headers = {"Accept": "*/*"}
         return self._streaming_session.get(uri, headers=headers, stream=True)

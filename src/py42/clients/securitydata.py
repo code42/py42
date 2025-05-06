@@ -149,10 +149,11 @@ class SecurityDataClient:
         raise Py42Error(f"Unable to download file from version {version}")
 
     def _get_exfiltrated_file(self, version):
-        downloadToken = version.get("downloadTokenRequest")
-        edsUrl = re.match(r"(https?://[^/]+)((/.*)|$)", downloadToken).group(1)
+        downloadTokenRequest = version.get("downloadTokenRequest")
+        edsUrl = re.match(r"(https?://[^/]+)((/.*)|$)", downloadTokenRequest).group(1)
         eds = self._storage_service_factory.create_exfiltrated_data_service(edsUrl)
-        return eds.get_file(downloadToken)
+        token_response = eds.get_download_token(downloadTokenRequest)
+        return eds.get_file(token_response.text)
 
 
 def _parse_file_location_response(locations):

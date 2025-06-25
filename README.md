@@ -8,6 +8,12 @@
 [![Documentation Status](https://readthedocs.org/projects/py42/badge/?version=latest)](https://py42docs.code42.com/en/latest/?badge=latest)
 
 
+## Py42 end-of-life
+Py42 is now deprecated. It has been replaced by the [Incydr SDK](https://support.code42.com/hc/en-us/articles/14827671243799-Introduction-to-the-Incydr-SDK).
+- Py42 will reach **end-of-support on January 1, 2026**, and **end-of-life on January 1, 2027**.
+- To ensure uninterrupted functionality and access to the latest features, migrate your integrations to the Incydr SDK as soon as possible.
+For more details, [see our FAQ](https://support.code42.com/hc/en-us/articles/32154640298263-Code42-CLI-end-of-life-FAQ).
+
 `py42` is a Python wrapper around the Code42 REST APIs that also provides several other useful utility methods.
 It is designed to be used for developing your own tools for working with Code42 data while avoiding the overhead
 of session / authentication management.

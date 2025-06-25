@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 The intended audience of this file is for py42 consumers -- as such, changes that don't affect
 how a consumer would use the library (e.g. adding unit tests, updating documentation, etc) are not captured here.
 
+## 1.29.1 - 2025-06-25
+
+### Updated
+
+- Updated readme to clarify deprecation.
+- Removed version cap for urllib3 dependency, allowing the use of more modern versions.
+
 ## 1.29.0 - 2025-05-06
 
 ### Fixed
